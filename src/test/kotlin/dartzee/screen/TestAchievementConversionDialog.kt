@@ -1,21 +1,21 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.awaitCondition
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeDisabled
 import com.github.alyssaburlton.swingtest.shouldBeEnabled
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getAllAchievements
 import dartzee.bean.PlayerSelector
 import dartzee.bean.getAllPlayers
-import dartzee.clickOk
 import dartzee.core.bean.selectedItemTyped
 import dartzee.core.screen.ProgressDialog
-import dartzee.findWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.preparePlayers
 import dartzee.logging.CODE_ACHIEVEMENT_CONVERSION_FINISHED
@@ -24,6 +24,7 @@ import dartzee.logging.KEY_ACHIEVEMENT_TYPES
 import dartzee.logging.KEY_PLAYER_IDS
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JComboBox
@@ -120,7 +121,7 @@ class TestAchievementConversionDialog : AbstractTest()
 
     private fun waitForConversionToFinish()
     {
-        awaitCondition { findLog(CODE_ACHIEVEMENT_CONVERSION_FINISHED) != null }
+        waitForAssertion { findLog(CODE_ACHIEVEMENT_CONVERSION_FINISHED) shouldNotBe null }
         flushEdt()
     }
 }

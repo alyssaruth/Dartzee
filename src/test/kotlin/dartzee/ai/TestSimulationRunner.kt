@@ -1,16 +1,16 @@
 package dartzee.ai
 
-import com.github.alyssaburlton.swingtest.awaitCondition
+import com.github.alyssaburlton.swingtest.clickCancel
+import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
-import dartzee.clickCancel
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.db.EntityName
-import dartzee.findWindow
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
@@ -28,6 +28,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -75,7 +76,7 @@ class TestSimulationRunner : AbstractTest()
         val runner = SimulationRunner()
         runner.runSimulation(blockingSimulation, 5, false)
 
-        awaitCondition { findWindow<ProgressDialog>() != null }
+        waitForAssertion { findWindow<ProgressDialog>() shouldNotBe null }
         flushEdt()
         val progressDialog = findWindow<ProgressDialog>()!!
         progressDialog.shouldBeVisible()
@@ -189,7 +190,7 @@ class TestSimulationRunner : AbstractTest()
     private fun findResultsDialog() = findWindow<JDialog> { it.title.contains("Simulation Results") }
 
     private fun waitForSimulation(loggingCode: LoggingCode = CODE_SIMULATION_FINISHED) {
-        awaitCondition { findLog(loggingCode) != null }
+        waitForAssertion { findLog(loggingCode) shouldNotBe null }
         flushEdt()
     }
 }

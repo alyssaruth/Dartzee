@@ -1,12 +1,12 @@
 package dartzee.bean
 
+import com.github.alyssaburlton.swingtest.clickCancel
+import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.getChild
-import dartzee.awaitFileChooser
-import dartzee.clickButton
-import dartzee.clickCancel
 import dartzee.core.bean.FileUploader
 import dartzee.core.bean.IFileUploadListener
 import dartzee.core.helper.verifyNotCalled
+import dartzee.getFileChooser
 import dartzee.helper.AbstractTest
 import dartzee.uploadFileFromResource
 import io.kotest.matchers.collections.shouldContainExactly
@@ -16,6 +16,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import java.io.File
+import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JTextField
 import javax.swing.filechooser.FileNameExtensionFilter
@@ -29,7 +30,7 @@ class TestFileUploader : AbstractTest()
         val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
 
-        uploader.clickButton("Upload")
+        uploader.clickChild<JButton>(text = "Upload")
         verifyNotCalled { listener.fileUploaded(any()) }
         dialogFactory.errorsShown.shouldContainExactly("You must select a file to upload.")
     }
@@ -41,9 +42,9 @@ class TestFileUploader : AbstractTest()
         val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
 
-        uploader.clickButton("...", async = true)
+        uploader.clickChild<JButton>(text = "...", async = true)
 
-        val chooserDialog = awaitFileChooser()
+        val chooserDialog = getFileChooser()
         chooserDialog.clickCancel()
 
         uploader.getChild<JTextField>().text shouldBe ""
@@ -88,9 +89,9 @@ class TestFileUploader : AbstractTest()
         val listener = makeFileListener(false)
         uploader.addFileUploadListener(listener)
 
-        uploader.clickButton("...", async = true)
+        uploader.clickChild<JButton>(text = "...", async = true)
 
-        val chooserDialog = awaitFileChooser()
+        val chooserDialog = getFileChooser()
         val combo = chooserDialog.getChild<JComboBox<FileNameExtensionFilter>> { it.selectedItem is FileNameExtensionFilter }
         combo.selectedItem.shouldBe(filter)
         combo.itemCount shouldBe 1

@@ -1,12 +1,12 @@
 package dartzee.screen.dartzee
 
-import com.github.alyssaburlton.swingtest.awaitCondition
+import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.makeMouseEvent
 import com.github.alyssaburlton.swingtest.toBufferedImage
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.bean.PresentationDartboard
-import dartzee.clickCancel
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.doClick
 import dartzee.getPointForSegment
@@ -18,6 +18,7 @@ import dartzee.utils.getAllNonMissSegments
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.Component
@@ -132,7 +133,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
     fun `selecting segments should update their colour`()
     {
         val (_, dartboard) = setup()
-        awaitCondition { dartboard.width > 0 }
+        waitForAssertion { dartboard.width shouldBeGreaterThan 0 }
 
         val pt = dartboard.getPointForSegment(segment)
         dartboard.doClick(pt)

@@ -1,12 +1,13 @@
 package dartzee.screen.dartzee
 
+import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeDisabled
 import com.github.alyssaburlton.swingtest.shouldBeEnabled
-import dartzee.awaitWindow
-import dartzee.clickCancel
-import dartzee.clickOk
+import com.github.alyssaburlton.swingtest.typeText
 import dartzee.core.bean.ScrollTable
 import dartzee.core.helper.processKeyPress
 import dartzee.dartzee.DartzeeRuleDto
@@ -24,7 +25,6 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertTemplateAndRule
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.helper.totalIsFifty
-import dartzee.typeText
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -186,7 +186,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         scrn.initialise()
         scrn.clickChild<JButton>("add")
 
-        val dlg = awaitWindow<DartzeeTemplateDialog>()
+        val dlg = findWindow<DartzeeTemplateDialog>()!!
         dlg.clickCancel()
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 0
@@ -201,7 +201,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         scrn.getChild<ScrollTable>().rowCount shouldBe 0
         scrn.clickChild<JButton>("add")
 
-        val dlg = awaitWindow<DartzeeTemplateDialog>()
+        val dlg = findWindow<DartzeeTemplateDialog>()!!
         dlg.getChild<JTextField>().typeText("BTBF's House Party")
         dlg.rulePanel.addRulesToTable(listOf(innerOuterInner, totalIsFifty))
         dlg.clickOk()
@@ -221,7 +221,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         scrn.getChild<ScrollTable>().selectRow(0)
         scrn.clickChild<JButton>("copy")
 
-        val dlg = awaitWindow<DartzeeTemplateDialog>()
+        val dlg = findWindow<DartzeeTemplateDialog>()!!
         dlg.clickCancel()
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 1
@@ -238,7 +238,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         scrn.getChild<ScrollTable>().selectRow(0)
         scrn.clickChild<JButton>("copy")
 
-        val dlg = awaitWindow<DartzeeTemplateDialog>()
+        val dlg = findWindow<DartzeeTemplateDialog>()!!
         dlg.clickOk()
         dialogFactory.errorsShown.shouldBeEmpty()
 

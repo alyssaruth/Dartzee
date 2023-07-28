@@ -1,9 +1,9 @@
 package e2e
 
-import com.github.alyssaburlton.swingtest.awaitCondition
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.getAllAchievements
 import dartzee.achievements.runConversionsWithProgressBar
 import dartzee.ai.AimDart
@@ -105,7 +105,7 @@ fun DartsGamePanel<*, *>.startGame(players: List<PlayerEntity>)
 
 fun awaitGameFinish(game: GameEntity)
 {
-    awaitCondition(timeout = 30000) { game.isFinished() }
+    waitForAssertion(timeout = 30000) { game.isFinished() shouldBe true }
 
     // Flush the EDT to ensure UI actions fired off from the AI threads are all completed
     flushEdt()

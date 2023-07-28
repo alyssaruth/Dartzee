@@ -2,9 +2,9 @@ package dartzee.screen
 
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
-import dartzee.findWindow
 import dartzee.helper.AbstractTest
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.screen.player.PlayerManagementScreen

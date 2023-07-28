@@ -1,15 +1,15 @@
 package dartzee.db.sanity
 
-import com.github.alyssaburlton.swingtest.awaitCondition
+import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.clickTableButton
 import dartzee.core.bean.ScrollTable
 import dartzee.core.screen.TableModelDialog
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.findWindow
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
@@ -19,6 +19,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -102,8 +103,8 @@ class TestDatabaseSanityCheck : AbstractTest()
 
     private fun awaitSanityCheck()
     {
-        awaitCondition {
-            findLog(CODE_SANITY_CHECK_COMPLETED) != null
+        waitForAssertion {
+            findLog(CODE_SANITY_CHECK_COMPLETED) shouldNotBe null
         }
 
         flushEdt()

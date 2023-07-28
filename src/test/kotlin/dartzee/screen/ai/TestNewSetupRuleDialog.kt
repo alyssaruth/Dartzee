@@ -1,8 +1,8 @@
 package dartzee.screen.ai
 
 import dartzee.ai.AimDart
-import dartzee.clickCancel
-import dartzee.clickOk
+import com.github.alyssaburlton.swingtest.clickCancel
+import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly

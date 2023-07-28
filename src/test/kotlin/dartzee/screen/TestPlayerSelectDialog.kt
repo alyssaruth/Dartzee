@@ -1,7 +1,7 @@
 package dartzee.screen
 
 import dartzee.bean.getAllPlayers
-import dartzee.clickOk
+import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.core.helper.doubleClick
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer

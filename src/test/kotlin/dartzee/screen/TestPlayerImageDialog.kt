@@ -4,7 +4,7 @@ import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldMatch
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.bean.PlayerImageRadio
-import dartzee.clickOk
+import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.core.bean.FileUploader
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.getAllChildComponentsForType

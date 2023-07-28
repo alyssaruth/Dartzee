@@ -1,11 +1,11 @@
 package dartzee.bean
 
+import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.doHover
 import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.achievements.x01.AchievementX01BestThreeDarts
-import dartzee.clickButton
 import dartzee.game.GameLauncher
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -20,6 +20,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.awt.Cursor
+import javax.swing.JButton
 import javax.swing.JLabel
 import javax.swing.table.DefaultTableModel
 
@@ -142,7 +143,7 @@ class TestAchievementMedal: AbstractTest()
         currentScreen.shouldBeInstanceOf<PlayerAchievementBreakdown>()
         currentScreen.achievement shouldBe achievement
 
-        ScreenCache.mainScreen.clickButton(" < Back")
+        ScreenCache.mainScreen.clickChild<JButton>(text = " < Back")
         ScreenCache.currentScreen() shouldBe scrn
     }
 

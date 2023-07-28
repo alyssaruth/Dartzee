@@ -1,11 +1,11 @@
 package e2e
 
-import com.github.alyssaburlton.swingtest.awaitCondition
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.ai.AimDart
 import dartzee.ai.SimulationRunner
 import dartzee.bean.ScrollTableDartsGame
-import dartzee.clickOk
+import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.ScrollTable
 import dartzee.game.GameType
@@ -49,10 +49,9 @@ class SimulationE2E: AbstractTest()
         statsScrn.gameType shouldBe GameType.X01
 
         val totalScorePanel = statsScrn.getChild<StatisticsTabTotalScore>()
-        awaitCondition {
+        waitForAssertion {
             val mean = totalScorePanel.getChild<NumberField> { it.testId == "Mean" }.value
-            println("Waiting for mean, got value $mean...")
-            mean == 9.0
+            mean shouldBe 9.0
         }
         totalScorePanel.getChild<NumberField> { it.testId == "Median" }.value shouldBe 9.0
         val allScoreRows = totalScorePanel.getChild<ScrollTableDartsGame>().getRows()

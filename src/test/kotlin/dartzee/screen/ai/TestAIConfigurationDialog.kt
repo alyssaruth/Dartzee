@@ -5,7 +5,7 @@ import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 import dartzee.bean.PlayerAvatar
-import dartzee.clickOk
+import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.selectedItemTyped
 import dartzee.db.PlayerEntity
