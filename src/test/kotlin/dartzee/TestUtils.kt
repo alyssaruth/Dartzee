@@ -181,14 +181,8 @@ fun List<List<Dart>>.zipDartRounds(other: List<List<Dart>>): List<List<Dart>> {
 
 fun PresentationDartboard.getPointForSegment(segment: DartboardSegment) = getAverage(getPointsForSegment(segment))
 
-/**
- * TODO - swing-test should do all the interactions on the event thread
- */
 fun PresentationDartboard.doClick(pt: Point) {
-    runOnEventThreadBlocking {
-        doClick(pt.x, pt.y)
-    }
-
+    doClick(pt.x, pt.y)
     flushEdt()
 }
 

@@ -9,7 +9,6 @@ import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.screen.ProgressDialog
-import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
@@ -80,7 +79,7 @@ class TestSimulationRunner : AbstractTest()
         flushEdt()
         val progressDialog = findWindow<ProgressDialog>()!!
         progressDialog.shouldBeVisible()
-        runOnEventThreadBlocking { progressDialog.clickCancel() }
+        progressDialog.clickCancel()
         lock.unlock()
 
         waitForSimulation(CODE_SIMULATION_CANCELLED)
