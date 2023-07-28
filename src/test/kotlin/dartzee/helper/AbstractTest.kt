@@ -1,5 +1,6 @@
 package dartzee.helper
 
+import com.github.alyssaburlton.swingtest.SwingTestCleanupExtension
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
 import dartzee.logging.LogDestinationSystemOut
@@ -20,9 +21,6 @@ import io.mockk.mockk
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
-import sun.awt.AppContext
-import java.awt.Window
-import javax.swing.SwingUtilities
 
 private val logDestination = FakeLogDestination()
 val logger = Logger(listOf(logDestination, LogDestinationSystemOut()))
@@ -32,6 +30,7 @@ const val TEST_ROOT = "Test/"
 const val TEST_DB_DIRECTORY = "Test/Databases"
 
 @ExtendWith(BeforeAllTestsExtension::class)
+@ExtendWith(SwingTestCleanupExtension::class)
 abstract class AbstractTest
 {
     val dialogFactory = TestMessageDialogFactory()
@@ -72,17 +71,6 @@ abstract class AbstractTest
                 fail("Unexpected error(s) were logged during test: ${errors.map { it.toJsonString() } }")
             }
             errorLogged() shouldBe false
-        }
-
-        val windows = Window.getWindows()
-        if (windows.isNotEmpty())
-        {
-            SwingUtilities.invokeAndWait {
-                val visibleWindows = windows.filter { it.isVisible }
-                visibleWindows.forEach { it.dispose() }
-            }
-
-            AppContext.getAppContext().remove(Window::class.java)
         }
 
         checkedForExceptions = false

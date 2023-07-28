@@ -256,8 +256,9 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
         SwingUtilities.invokeAndWait {
             dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
             dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-            dlg.clickOk()
         }
+
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("Dart 2: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
@@ -266,8 +267,9 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
         SwingUtilities.invokeAndWait {
             dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
             dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-            dlg.clickOk()
         }
+
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("Dart 3: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()

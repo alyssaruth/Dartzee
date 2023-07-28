@@ -39,7 +39,6 @@ import io.mockk.mockk
 import io.mockk.verifySequence
 import javax.swing.JButton
 import javax.swing.JToggleButton
-import javax.swing.SwingUtilities
 
 fun AbstractDartsScorerPausable<*>.shouldBePaused()
 {
@@ -48,12 +47,12 @@ fun AbstractDartsScorerPausable<*>.shouldBePaused()
 
 fun AbstractDartsScorerPausable<*>.resume()
 {
-    SwingUtilities.invokeAndWait { clickChild<JButton> { it.icon == ICON_RESUME } }
+    clickChild<JButton> { it.icon == ICON_RESUME }
 }
 
 fun AbstractDartsGameScreen.toggleStats()
 {
-    SwingUtilities.invokeAndWait { clickChild<JToggleButton> { it.icon == dartzee.utils.ResourceCache.ICON_STATS_LARGE } }
+    clickChild<JToggleButton> { it.icon == dartzee.utils.ResourceCache.ICON_STATS_LARGE }
 }
 
 fun AbstractDartsGameScreen.getScorer(playerName: String): DartsScorerX01
