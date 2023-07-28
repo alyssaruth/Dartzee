@@ -2,7 +2,7 @@ package dartzee.screen
 
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.PlayerAvatar
-import dartzee.clickOk
+import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer

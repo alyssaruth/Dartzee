@@ -3,8 +3,8 @@ package dartzee.screen.ai
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.AimDart
-import dartzee.clickCancel
-import dartzee.clickOk
+import com.github.alyssaburlton.swingtest.clickCancel
+import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.core.bean.ScrollTable
 import dartzee.getRows
 import dartzee.helper.AbstractTest

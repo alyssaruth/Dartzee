@@ -3,8 +3,9 @@ package dartzee.screen.dartzee
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
-import dartzee.clickCancel
-import dartzee.clickOk
+import com.github.alyssaburlton.swingtest.typeText
+import com.github.alyssaburlton.swingtest.clickCancel
+import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.core.helper.verifyNotCalled
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
@@ -17,7 +18,6 @@ import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.makeDartzeeRuleCalculationResult
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.only
-import dartzee.typeText
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe

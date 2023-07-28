@@ -1,8 +1,8 @@
 package e2e
 
-import com.github.alyssaburlton.swingtest.awaitCondition
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.EntityName
@@ -11,7 +11,13 @@ import dartzee.db.PlayerEntity
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
 import dartzee.game.GameType
-import dartzee.helper.*
+import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.TEST_DB_DIRECTORY
+import dartzee.helper.TEST_ROOT
+import dartzee.helper.getCountFromTable
+import dartzee.helper.retrieveGame
+import dartzee.helper.retrieveParticipant
+import dartzee.helper.wipeTable
 import dartzee.screen.DartsApp
 import dartzee.screen.ScreenCache
 import dartzee.screen.UtilitiesScreen
@@ -22,8 +28,15 @@ import dartzee.screen.sync.SyncSetupPanel
 import dartzee.sync.AmazonS3RemoteDatabaseStore
 import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
-import dartzee.utils.*
+import dartzee.utils.DartsDatabaseUtil
+import dartzee.utils.Database
+import dartzee.utils.DevUtilities
+import dartzee.utils.InjectedThings
+import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
+import dartzee.utils.PREFERENCES_INT_AI_SPEED
+import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
@@ -109,10 +122,10 @@ class SyncE2E: AbstractRegistryTest()
         ScreenCache.switch<SyncManagementScreen>()
         mainScreen.clickChild<JButton>(text = "Perform Sync")
 
-        awaitCondition { SyncProgressDialog.isVisible() }
-        awaitCondition { !SyncProgressDialog.isVisible() }
+        waitForAssertion { SyncProgressDialog.isVisible() shouldBe true }
+        waitForAssertion { SyncProgressDialog.isVisible() shouldBe false }
 
-        awaitCondition { dialogFactory.infosShown.last() == "Sync completed successfully!\n\nGames pushed: 0\nGames pulled: 0" }
+        waitForAssertion { dialogFactory.infosShown.lastOrNull() shouldBe "Sync completed successfully!\n\nGames pushed: 0\nGames pulled: 0" }
         getCountFromTable(EntityName.Game) shouldBe 0
         getCountFromTable(EntityName.Dart) shouldBe 0
         getCountFromTable(EntityName.Participant) shouldBe 0
@@ -133,7 +146,7 @@ class SyncE2E: AbstractRegistryTest()
         GameLauncher().launchNewGame(params)
 
         val gameId = retrieveGame().rowId
-        awaitCondition(15000) { !retrieveParticipant(gameId, loser.rowId).isActive() }
+        waitForAssertion(15000) { retrieveParticipant(gameId, loser.rowId).isActive() shouldBe false }
         closeOpenGames()
         return gameId
     }
@@ -145,7 +158,7 @@ class SyncE2E: AbstractRegistryTest()
         dialogFactory.optionSequence.add("Create '$remoteName'")
         mainScreen.clickChild<JButton>(text = "Get Started > ")
 
-        awaitCondition { mainScreen.findChild<SyncManagementPanel>() != null }
+        waitForAssertion { mainScreen.findChild<SyncManagementPanel>() shouldNotBe null }
 
         return remoteName
     }
@@ -154,7 +167,7 @@ class SyncE2E: AbstractRegistryTest()
     {
         dialogFactory.optionSequence.add("Sync with local data")
         mainScreen.clickChild<JButton>(text = "Get Started > ")
-        awaitCondition { mainScreen.findChild<SyncManagementPanel>() != null }
+        waitForAssertion { mainScreen.findChild<SyncManagementPanel>() shouldNotBe null }
     }
 
     private fun wipeGamesAndResetRemote(mainScreen: DartsApp)
@@ -164,6 +177,6 @@ class SyncE2E: AbstractRegistryTest()
         wipeTable(EntityName.DeletionAudit)
         wipeTable(EntityName.Achievement)
         mainScreen.clickChild<JButton>(text = "Reset")
-        awaitCondition { mainScreen.findChild<SyncSetupPanel>() != null }
+        waitForAssertion { mainScreen.findChild<SyncSetupPanel>() shouldNotBe null }
     }
 }

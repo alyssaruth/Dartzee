@@ -1,20 +1,20 @@
 package dartzee.screen.player
 
+import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.typeText
 import dartzee.bean.PlayerAvatar
 import dartzee.bean.getAllPlayers
-import dartzee.clickCancel
-import dartzee.clickOk
 import dartzee.core.bean.ScrollTable
-import dartzee.findWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import dartzee.screen.HumanConfigurationDialog
 import dartzee.screen.ai.AIConfigurationDialog
-import dartzee.typeText
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe

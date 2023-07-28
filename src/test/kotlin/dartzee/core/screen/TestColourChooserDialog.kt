@@ -1,7 +1,7 @@
 package dartzee.core.screen
 
-import dartzee.clickCancel
-import dartzee.clickOk
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.clickCancel
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import io.mockk.spyk

@@ -1,6 +1,8 @@
 package dartzee.screen.dartzee
 
+import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.makeActionEvent
@@ -9,8 +11,6 @@ import com.github.alyssaburlton.swingtest.shouldBeEnabled
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.bean.DartzeeDartRuleSelector
-import dartzee.clickCancel
-import dartzee.clickOk
 import dartzee.core.bean.selectByClass
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.dartzee.DartzeeCalculator
@@ -245,8 +245,9 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
 
         SwingUtilities.invokeAndWait {
             dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-            dlg.clickOk()
         }
+
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("Dart 1: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
@@ -255,8 +256,9 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
         SwingUtilities.invokeAndWait {
             dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
             dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-            dlg.clickOk()
         }
+
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("Dart 2: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
@@ -265,8 +267,9 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
         SwingUtilities.invokeAndWait {
             dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
             dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-            dlg.clickOk()
         }
+
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("Dart 3: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
@@ -280,9 +283,9 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
         SwingUtilities.invokeAndWait {
             dlg.rdbtnAtLeastOne.doClick()
             dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-            dlg.clickOk()
         }
 
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("Target: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
@@ -301,9 +304,9 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
             dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
             dlg.aggregateSelector.cbDesc.doClick()
             dlg.aggregateSelector.comboBoxRuleType.selectByClass<DartzeeTotalRuleOdd>()
-            dlg.clickOk()
         }
 
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("This rule is impossible!")
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
@@ -313,10 +316,7 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
     fun `Should dispose if valid`()
     {
         val dlg = showRuleCreationDialog()
-
-        SwingUtilities.invokeAndWait {
-            dlg.clickOk()
-        }
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldBeEmpty()
         dlg.shouldNotBeVisible()

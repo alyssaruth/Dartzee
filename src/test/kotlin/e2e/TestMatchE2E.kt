@@ -1,7 +1,7 @@
 package e2e
 
-import com.github.alyssaburlton.swingtest.awaitCondition
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.core.util.DateStatics
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
@@ -52,7 +52,7 @@ class TestMatchE2E: AbstractRegistryTest()
         val launchParams = GameLaunchParams(listOf(winner, loser), GameType.X01, "501", false)
         GameLauncher().launchNewMatch(match, launchParams)
 
-        awaitCondition { retrieveDartsMatch().dtFinish != DateStatics.END_OF_TIME }
+        waitForAssertion { retrieveDartsMatch().dtFinish shouldNotBe DateStatics.END_OF_TIME }
 
         verifyDatabase(match.rowId, winner, loser)
         verifyUi()

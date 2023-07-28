@@ -1,9 +1,9 @@
 package e2e
 
-import com.github.alyssaburlton.swingtest.awaitCondition
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.getAllAchievements
 import dartzee.achievements.runConversionsWithProgressBar
 import dartzee.ai.AimDart
@@ -39,7 +39,6 @@ import io.mockk.mockk
 import io.mockk.verifySequence
 import javax.swing.JButton
 import javax.swing.JToggleButton
-import javax.swing.SwingUtilities
 
 fun AbstractDartsScorerPausable<*>.shouldBePaused()
 {
@@ -48,12 +47,12 @@ fun AbstractDartsScorerPausable<*>.shouldBePaused()
 
 fun AbstractDartsScorerPausable<*>.resume()
 {
-    SwingUtilities.invokeAndWait { clickChild<JButton> { it.icon == ICON_RESUME } }
+    clickChild<JButton> { it.icon == ICON_RESUME }
 }
 
 fun AbstractDartsGameScreen.toggleStats()
 {
-    SwingUtilities.invokeAndWait { clickChild<JToggleButton> { it.icon == dartzee.utils.ResourceCache.ICON_STATS_LARGE } }
+    clickChild<JToggleButton> { it.icon == dartzee.utils.ResourceCache.ICON_STATS_LARGE }
 }
 
 fun AbstractDartsGameScreen.getScorer(playerName: String): DartsScorerX01
@@ -105,7 +104,7 @@ fun DartsGamePanel<*, *>.startGame(players: List<PlayerEntity>)
 
 fun awaitGameFinish(game: GameEntity)
 {
-    awaitCondition(timeout = 30000) { game.isFinished() }
+    waitForAssertion(timeout = 30000) { game.isFinished() shouldBe true }
 
     // Flush the EDT to ensure UI actions fired off from the AI threads are all completed
     flushEdt()

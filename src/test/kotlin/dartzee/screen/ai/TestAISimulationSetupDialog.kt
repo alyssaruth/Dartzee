@@ -6,7 +6,7 @@ import dartzee.ai.AbstractDartsSimulation
 import dartzee.ai.AbstractSimulationRunner
 import dartzee.ai.DartsSimulationGolf
 import dartzee.ai.DartsSimulationX01
-import dartzee.clickOk
+import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.core.bean.NumberField
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer

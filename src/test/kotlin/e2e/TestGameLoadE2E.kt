@@ -1,7 +1,7 @@
 package e2e
 
-import com.github.alyssaburlton.swingtest.awaitCondition
 import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.core.util.DateStatics
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
@@ -18,6 +18,7 @@ import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -43,7 +44,7 @@ class TestGameLoadE2E: AbstractRegistryTest()
         val params = GameLaunchParams(listOf(winner, loser), GameType.X01, "501", false)
         GameLauncher().launchNewGame(params)
 
-        awaitCondition { retrieveGame().isFinished() }
+        waitForAssertion { retrieveGame().isFinished() shouldBe true }
 
         val gameId = retrieveGame().rowId
         val originalGameScreen = ScreenCache.getDartsGameScreen(gameId)!!
@@ -65,7 +66,7 @@ class TestGameLoadE2E: AbstractRegistryTest()
         loserScorer.shouldBePaused()
         loserScorer.resume()
 
-        awaitCondition { retrieveParticipant().dtFinished != DateStatics.END_OF_TIME }
+        waitForAssertion { retrieveParticipant().dtFinished shouldNotBe DateStatics.END_OF_TIME }
     }
 
     private fun verifyGameLoadedCorrectly(gameScreen: AbstractDartsGameScreen)

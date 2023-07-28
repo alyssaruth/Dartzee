@@ -1,22 +1,23 @@
 package dartzee.screen.player
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldMatch
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
+import com.github.alyssaburlton.swingtest.typeText
 import dartzee.achievements.AchievementType
 import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.golf.AchievementGolfBestGame
 import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.bean.PlayerAvatar
-import dartzee.clickOk
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
-import dartzee.findWindow
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
@@ -28,7 +29,6 @@ import dartzee.screen.HumanConfigurationDialog
 import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetupDialog
-import dartzee.typeText
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull

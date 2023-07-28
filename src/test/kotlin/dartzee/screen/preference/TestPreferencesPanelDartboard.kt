@@ -1,8 +1,8 @@
 package dartzee.screen.preference
 
-import com.github.alyssaburlton.swingtest.awaitCondition
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.toBufferedImage
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.bean.PresentationDartboard
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.utils.DartsColour
@@ -13,6 +13,7 @@ import dartzee.utils.PREFERENCES_STRING_ODD_DOUBLE_COLOUR
 import dartzee.utils.PREFERENCES_STRING_ODD_SINGLE_COLOUR
 import dartzee.utils.PREFERENCES_STRING_ODD_TREBLE_COLOUR
 import dartzee.utils.PreferenceUtil
+import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.awt.BorderLayout
@@ -46,7 +47,10 @@ class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPane
 
     private fun verifyDartboardCenterColour(panel: PreferencesPanelDartboard, color: Color) {
         val dartboard = panel.getChild<PresentationDartboard>()
-        awaitCondition { dartboard.isShowing && dartboard.width > 0 }
+        waitForAssertion {
+            dartboard.isShowing shouldBe true
+            dartboard.width shouldBeGreaterThan 0
+        }
 
         val center = dartboard.computeCenter()
         val oldRgb = dartboard.toBufferedImage().getRGB(center.x, center.y)
