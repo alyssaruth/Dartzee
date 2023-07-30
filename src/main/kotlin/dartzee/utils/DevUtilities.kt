@@ -80,7 +80,7 @@ object DevUtilities
             X01FinishEntity().deleteWhere("GameId = '$gameId'")
             GameEntity().deleteWhere("RowId = '$gameId'")
 
-            DialogUtil.showInfo("Game #$localId has been purged.")
+            DialogUtil.showInfoOLD("Game #$localId has been purged.")
         }
     }
 }
