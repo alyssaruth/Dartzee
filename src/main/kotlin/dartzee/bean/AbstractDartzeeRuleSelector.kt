@@ -11,7 +11,11 @@ import dartzee.screen.dartzee.DartzeeRuleCreationDialog
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.DefaultComboBoxModel
+import javax.swing.JCheckBox
+import javax.swing.JComboBox
+import javax.swing.JLabel
+import javax.swing.JPanel
 
 abstract class AbstractDartzeeRuleSelector<BaseRuleType: AbstractDartzeeRule>(val desc: String): JPanel(), ActionListener
 {
@@ -76,7 +80,7 @@ abstract class AbstractDartzeeRuleSelector<BaseRuleType: AbstractDartzeeRule>(va
         val errorStr = getSelection().validate()
         if (!errorStr.isEmpty())
         {
-            DialogUtil.showError("$desc: $errorStr")
+            DialogUtil.showErrorOLD("$desc: $errorStr")
             return false
         }
 

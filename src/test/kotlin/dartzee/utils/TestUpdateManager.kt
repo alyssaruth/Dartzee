@@ -1,16 +1,30 @@
 package dartzee.utils
 
+import com.github.alyssaburlton.swingtest.clickNo
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.clickYes
+import com.github.alyssaburlton.swingtest.findWindow
+import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import com.mashape.unirest.http.Unirest
 import com.mashape.unirest.http.exceptions.UnirestException
 import dartzee.core.bean.LinkLabel
+import dartzee.core.screen.LoadingDialog
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
+import dartzee.getInfoDialog
+import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.assertDoesNotExit
 import dartzee.helper.assertExits
-import dartzee.logging.*
+import dartzee.logging.CODE_BATCH_ERROR
+import dartzee.logging.CODE_PARSE_ERROR
+import dartzee.logging.CODE_UPDATE_CHECK_RESULT
+import dartzee.logging.CODE_UPDATE_ERROR
+import dartzee.logging.KEY_RESPONSE_BODY
+import dartzee.logging.Severity
 import dartzee.`object`.DartsClient
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
@@ -25,8 +39,8 @@ import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.io.IOException
-import javax.swing.JOptionPane
-import javax.swing.JPanel
+import java.util.concurrent.atomic.AtomicBoolean
+import javax.swing.SwingUtilities
 
 class TestUpdateManager: AbstractTest()
 {
@@ -38,17 +52,14 @@ class TestUpdateManager: AbstractTest()
     fun `Should log out an unexpected HTTP response, along with the full JSON payload`()
     {
         Unirest.setTimeouts(2000, 2000)
-        val result = UpdateManager.queryLatestReleaseJson("https://api.github.com/repos/alexburlton/foo")
-        result shouldBe null
+        val errorMessage = queryLatestReleastJsonExpectingError("https://api.github.com/repos/alyssaburlton/foo")
+        errorMessage shouldBe "Failed to check for updates (unable to connect)."
 
         val log = verifyLog(CODE_UPDATE_ERROR, Severity.ERROR)
         log.message shouldBe "Received non-success HTTP status: 404 - Not Found"
         log.keyValuePairs[KEY_RESPONSE_BODY].toString() shouldContain """"message":"Not Found""""
 
-        dialogFactory.errorsShown.shouldContainExactly("Failed to check for updates (unable to connect).")
-
-        dialogFactory.loadingsShown.shouldContainExactly("Checking for updates...")
-        dialogFactory.loadingVisible shouldBe false
+        findWindow<LoadingDialog>()!!.shouldNotBeVisible()
     }
 
     @Test
@@ -56,16 +67,31 @@ class TestUpdateManager: AbstractTest()
     fun `Should catch and log any exceptions communicating over HTTPS`()
     {
         Unirest.setTimeouts(100, 100)
-        val result = UpdateManager.queryLatestReleaseJson("https://ww.blargh.zcss.w")
+
+        val errorMessage = queryLatestReleastJsonExpectingError("https://ww.blargh.zcss.w")
+        errorMessage shouldBe "Failed to check for updates (unable to connect)."
+
+        val errorLog = verifyLog(CODE_UPDATE_ERROR, Severity.ERROR)
+        errorLog.errorObject.shouldBeInstanceOf<UnirestException>()
+
+        findWindow<LoadingDialog>()!!.shouldNotBeVisible()
+    }
+
+    private fun queryLatestReleastJsonExpectingError(repositoryUrl: String): String {
+        var result: JSONObject? = null
+        SwingUtilities.invokeLater {
+            result = UpdateManager.queryLatestReleaseJson(repositoryUrl)
+        }
+        flushEdt()
+
+        val error = getErrorDialog()
+        val errorText = error.getDialogMessage()
+
+        error.clickOk()
+        flushEdt()
 
         result shouldBe null
-        val errorLog = verifyLog(CODE_UPDATE_ERROR, Severity.ERROR)
-
-        errorLog.errorObject.shouldBeInstanceOf<UnirestException>()
-        dialogFactory.errorsShown.shouldContainExactly("Failed to check for updates (unable to connect).")
-
-        dialogFactory.loadingsShown.shouldContainExactly("Checking for updates...")
-        dialogFactory.loadingVisible shouldBe false
+        return errorText
     }
 
     @Test
@@ -152,16 +178,13 @@ class TestUpdateManager: AbstractTest()
         DartsClient.operatingSystem = "foo"
 
         val metadata = UpdateMetadata("v100", 123456, "Dartzee_x_y.jar", 100)
-        UpdateManager.shouldUpdate(DARTS_VERSION_NUMBER, metadata) shouldBe false
+        shouldUpdateAsync(DARTS_VERSION_NUMBER, metadata).get() shouldBe false
 
         val log = verifyLog(CODE_UPDATE_CHECK_RESULT)
         log.message shouldBe "Newer release available - v100"
 
-        dialogFactory.questionsShown.shouldBeEmpty()
-        dialogFactory.customsShown.size shouldBe 1
-
-        val content = dialogFactory.customsShown.first() as JPanel
-        val linkLabel = content.getChild<LinkLabel>()
+        val info = getInfoDialog()
+        val linkLabel = info.getChild<LinkLabel>()
         linkLabel.text shouldBe "<html><u>$DARTZEE_MANUAL_DOWNLOAD_URL/tag/v100</u></html>"
     }
 
@@ -171,11 +194,14 @@ class TestUpdateManager: AbstractTest()
         DartsClient.operatingSystem = "windows"
 
         val metadata = UpdateMetadata("foo", 123456, "Dartzee_x_y.jar", 100)
+        val result = shouldUpdateAsync("bar", metadata)
 
-        dialogFactory.questionOption = JOptionPane.NO_OPTION
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe "An update is available (foo). Would you like to download it now?"
+        question.clickNo()
+        flushEdt()
 
-        UpdateManager.shouldUpdate("bar", metadata) shouldBe false
-        dialogFactory.questionsShown.shouldContainExactly("An update is available (foo). Would you like to download it now?")
+        result.get() shouldBe false
     }
 
     @Test
@@ -184,11 +210,25 @@ class TestUpdateManager: AbstractTest()
         DartsClient.operatingSystem = "windows"
 
         val metadata = UpdateMetadata("foo", 123456, "Dartzee_x_y.jar", 100)
+        val result = shouldUpdateAsync("bar", metadata)
 
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe "An update is available (foo). Would you like to download it now?"
+        question.clickYes()
+        flushEdt()
 
-        UpdateManager.shouldUpdate("bar", metadata) shouldBe true
-        dialogFactory.questionsShown.shouldContainExactly("An update is available (foo). Would you like to download it now?")
+        result.get() shouldBe true
+    }
+
+    private fun shouldUpdateAsync(currentVersion: String, metadata: UpdateMetadata): AtomicBoolean
+    {
+        val result = AtomicBoolean(false)
+        SwingUtilities.invokeLater {
+            result.set(UpdateManager.shouldUpdate(currentVersion, metadata))
+        }
+
+        flushEdt()
+        return result
     }
 
     /**
@@ -216,14 +256,19 @@ class TestUpdateManager: AbstractTest()
         val error = IOException("Argh")
         every { runtime.exec(any<String>()) } throws error
 
-        assertDoesNotExit {
-            UpdateManager.startUpdate("foo", runtime)
+        SwingUtilities.invokeLater {
+            assertDoesNotExit {
+                UpdateManager.startUpdate("foo", runtime)
+            }
         }
+
+        flushEdt()
+
+        val errorDialog = getErrorDialog()
+        errorDialog.getDialogMessage() shouldBe "Failed to launch update.bat - call the following manually to perform the update: \n\nupdate.bat foo"
 
         val log = verifyLog(CODE_BATCH_ERROR, Severity.ERROR)
         log.errorObject shouldBe error
-
-        dialogFactory.errorsShown.shouldContainExactly("Failed to launch update.bat - call the following manually to perform the update: \n\nupdate.bat foo")
     }
 
     @Test

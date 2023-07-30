@@ -2,7 +2,11 @@ package dartzee.db
 
 import dartzee.core.screen.ProgressDialog
 import dartzee.core.util.DialogUtil
-import dartzee.logging.*
+import dartzee.logging.CODE_DATABASE_CREATED
+import dartzee.logging.CODE_DATABASE_CREATING
+import dartzee.logging.CODE_DATABASE_NEEDS_UPDATE
+import dartzee.logging.CODE_DATABASE_TOO_OLD
+import dartzee.logging.CODE_DATABASE_UP_TO_DATE
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
@@ -35,7 +39,7 @@ class DatabaseMigrator(private val migrations: Map<Int, List<((database: Databas
         {
             val dbDetails = "$databaseDesc version: $version, min supported: ${minSupported}, current: ${DartsDatabaseUtil.DATABASE_VERSION}"
             logger.warn(CODE_DATABASE_TOO_OLD, "$databaseDesc database too old, exiting. $dbDetails")
-            DialogUtil.showError("$databaseDesc database is too out-of-date to be upgraded by this version of Dartzee. " +
+            DialogUtil.showErrorOLD("$databaseDesc database is too out-of-date to be upgraded by this version of Dartzee. " +
                     "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails")
 
             return MigrationResult.TOO_OLD

@@ -17,7 +17,12 @@ import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JCheckBox
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JRadioButton
 
 class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
 {
@@ -119,7 +124,7 @@ class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
         val playersToRemove = scrollTable.getSelectedPlayers()
         if (playersToRemove.isEmpty())
         {
-            DialogUtil.showError("You must select player(s) to remove.")
+            DialogUtil.showErrorOLD("You must select player(s) to remove.")
             return
         }
 

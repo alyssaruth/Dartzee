@@ -27,10 +27,10 @@ class TestDialogUtil: AbstractTest()
     {
         DialogUtil.init(factoryMock)
 
-        DialogUtil.showInfo("Info")
-        DialogUtil.showLoadingDialog("Loading...")
-        DialogUtil.showQuestion("Q")
-        DialogUtil.dismissLoadingDialog()
+        DialogUtil.showInfoOLD("Info")
+        DialogUtil.showLoadingDialogOLD("Loading...")
+        DialogUtil.showQuestionOLD("Q")
+        DialogUtil.dismissLoadingDialogOLD()
         DialogUtil.showOption("Free Pizza", "Would you like some?", listOf("Yes please", "No thanks"))
         DialogUtil.chooseDirectory(null)
 
@@ -45,7 +45,7 @@ class TestDialogUtil: AbstractTest()
 
         clearAllMocks()
 
-        DialogUtil.showError("Test")
+        DialogUtil.showErrorOLD("Test")
 
         verifySequence {
             factoryMock.dismissLoading()
@@ -58,7 +58,7 @@ class TestDialogUtil: AbstractTest()
     @Test
     fun `Should log for INFO dialogs`()
     {
-        DialogUtil.showInfo("Something useful")
+        DialogUtil.showInfoOLD("Something useful")
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Info dialog shown: Something useful"
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Info dialog closed"
@@ -67,7 +67,7 @@ class TestDialogUtil: AbstractTest()
     @Test
     fun `Should log for ERROR dialogs`()
     {
-        DialogUtil.showError("Something bad")
+        DialogUtil.showErrorOLD("Something bad")
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Error dialog shown: Something bad"
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Error dialog closed"
@@ -89,21 +89,21 @@ class TestDialogUtil: AbstractTest()
     {
         dialogFactory.questionOption = JOptionPane.YES_OPTION
 
-        DialogUtil.showQuestion("Do you like cheese?")
+        DialogUtil.showQuestionOLD("Do you like cheese?")
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Question dialog shown: Do you like cheese?"
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Question dialog closed - selected Yes"
 
         clearLogs()
 
         dialogFactory.questionOption = JOptionPane.NO_OPTION
-        DialogUtil.showQuestion("Do you like mushrooms?")
+        DialogUtil.showQuestionOLD("Do you like mushrooms?")
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Question dialog shown: Do you like mushrooms?"
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Question dialog closed - selected No"
 
         clearLogs()
 
         dialogFactory.questionOption = JOptionPane.CANCEL_OPTION
-        DialogUtil.showQuestion("Do you want to delete all data?", true)
+        DialogUtil.showQuestionOLD("Do you want to delete all data?", true)
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Question dialog shown: Do you want to delete all data?"
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Question dialog closed - selected Cancel"
     }
@@ -111,17 +111,17 @@ class TestDialogUtil: AbstractTest()
     @Test
     fun `Should log when showing and dismissing loading dialog`()
     {
-        DialogUtil.showLoadingDialog("One moment...")
+        DialogUtil.showLoadingDialogOLD("One moment...")
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Loading dialog shown: One moment..."
 
-        DialogUtil.dismissLoadingDialog()
+        DialogUtil.dismissLoadingDialogOLD()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Loading dialog closed"
     }
 
     @Test
     fun `Should not log if loading dialog wasn't visible`()
     {
-        DialogUtil.dismissLoadingDialog()
+        DialogUtil.dismissLoadingDialogOLD()
         verifyNoLogs(CODE_DIALOG_CLOSED)
     }
 

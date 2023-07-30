@@ -154,7 +154,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
 
     private fun confirmAndDeletePlayer(selectedPlayer: PlayerEntity)
     {
-        val option = DialogUtil.showQuestion("Are you sure you want to delete ${selectedPlayer.name}?", false)
+        val option = DialogUtil.showQuestionOLD("Are you sure you want to delete ${selectedPlayer.name}?", false)
         if (option == JOptionPane.YES_OPTION)
         {
             selectedPlayer.dtDeleted = getSqlDateNow()

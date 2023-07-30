@@ -38,7 +38,7 @@ abstract class AbstractPlayerConfigurationDialog(protected val saveCallback: (pl
         val avatarId = avatar.avatarId
         if (avatarId.isEmpty())
         {
-            DialogUtil.showError("You must select an avatar.")
+            DialogUtil.showErrorOLD("You must select an avatar.")
             return false
         }
 
@@ -49,20 +49,20 @@ abstract class AbstractPlayerConfigurationDialog(protected val saveCallback: (pl
     {
         if (name == null || name.isEmpty())
         {
-            DialogUtil.showError("You must enter a name for this player.")
+            DialogUtil.showErrorOLD("You must enter a name for this player.")
             return false
         }
 
         val length = name.length
         if (length < 3)
         {
-            DialogUtil.showError("The player name must be at least 3 characters long.")
+            DialogUtil.showErrorOLD("The player name must be at least 3 characters long.")
             return false
         }
 
         if (length > 25)
         {
-            DialogUtil.showError("The player name cannot be more than 25 characters long.")
+            DialogUtil.showErrorOLD("The player name cannot be more than 25 characters long.")
             return false
         }
 
@@ -70,7 +70,7 @@ abstract class AbstractPlayerConfigurationDialog(protected val saveCallback: (pl
         val existingPlayer = PlayerEntity.retrieveForName(name)
         if (existingPlayer != null && existingPlayer.rowId != player.rowId)
         {
-            DialogUtil.showError("A player with the name $name already exists.")
+            DialogUtil.showErrorOLD("A player with the name $name already exists.")
             return false
         }
 

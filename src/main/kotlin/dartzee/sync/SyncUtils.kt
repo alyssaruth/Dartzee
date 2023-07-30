@@ -43,7 +43,7 @@ fun validateSyncAction(): Boolean
     val openScreens = ScreenCache.getDartsGameScreens()
     if (openScreens.isNotEmpty())
     {
-        DialogUtil.showError("You must close all open games before performing this action.")
+        DialogUtil.showErrorOLD("You must close all open games before performing this action.")
         return false
     }
 

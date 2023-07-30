@@ -16,13 +16,13 @@ abstract class AbstractSanityCheckResultEntities(val entities: List<AbstractEnti
         fun() {
             val rows = t.selectedModelRows
 
-            val ans = DialogUtil.showQuestion("Are you sure you want to delete ${rows.size} row(s) from $entityName?", false)
+            val ans = DialogUtil.showQuestionOLD("Are you sure you want to delete ${rows.size} row(s) from $entityName?", false)
             if (ans == JOptionPane.YES_OPTION)
             {
                 val success = deleteSelectedRows(t, rows)
                 if (!success)
                 {
-                    DialogUtil.showError("An error occurred deleting the rows. You should re-run the sanity check and check logs.")
+                    DialogUtil.showErrorOLD("An error occurred deleting the rows. You should re-run the sanity check and check logs.")
                 }
             }
         }

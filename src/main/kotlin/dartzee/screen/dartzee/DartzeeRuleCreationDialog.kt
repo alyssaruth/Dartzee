@@ -1,7 +1,7 @@
 package dartzee.screen.dartzee
 
-import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.bean.DartzeeAggregateRuleSelector
+import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
@@ -14,7 +14,14 @@ import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
-import javax.swing.*
+import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JCheckBox
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JRadioButton
+import javax.swing.JTextField
+import javax.swing.SwingUtilities
 import javax.swing.border.TitledBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
@@ -192,7 +199,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
         val combinations = calculationResult.validCombinations
         if (combinations == 0)
         {
-            DialogUtil.showError("This rule is impossible!")
+            DialogUtil.showErrorOLD("This rule is impossible!")
             return
         }
 
@@ -226,13 +233,13 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
 
             if (ruleName.isBlank())
             {
-                DialogUtil.showError("You cannot have an empty rule name.")
+                DialogUtil.showErrorOLD("You cannot have an empty rule name.")
                 return false
             }
 
             if (ruleName.length > MAX_RULE_NAME)
             {
-                DialogUtil.showError("Rule name cannot exceed $MAX_RULE_NAME characters.")
+                DialogUtil.showErrorOLD("Rule name cannot exceed $MAX_RULE_NAME characters.")
                 return false
             }
         }

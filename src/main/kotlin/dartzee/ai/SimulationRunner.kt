@@ -90,7 +90,7 @@ class SimulationRunner: AbstractSimulationRunner()
     {
         if (DartsClient.devMode)
         {
-            val ans = DialogUtil.showQuestion("Save real entities?")
+            val ans = DialogUtil.showQuestionOLD("Save real entities?")
             handleSavingEntities(ans == JOptionPane.YES_OPTION, hmGameIdToWrapper)
         }
 

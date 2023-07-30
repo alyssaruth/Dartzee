@@ -42,7 +42,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
 
         try
         {
-            SwingUtilities.invokeLater { DialogUtil.showLoadingDialog("Pushing $remoteName...") }
+            SwingUtilities.invokeLater { DialogUtil.showLoadingDialogOLD("Pushing $remoteName...") }
             setUpSyncDir()
 
             auditEntry = SyncAuditEntity.insertSyncAudit(mainDatabase, remoteName)
@@ -56,7 +56,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         finally
         {
             tidyUpAllSyncDirs()
-            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
+            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialogOLD() }
             ScreenCache.get<SyncManagementScreen>().initialise()
         }
     }
@@ -66,7 +66,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
     {
         try
         {
-            SwingUtilities.invokeLater { DialogUtil.showLoadingDialog("Pulling $remoteName...") }
+            SwingUtilities.invokeLater { DialogUtil.showLoadingDialogOLD("Pulling $remoteName...") }
             setUpSyncDir()
 
             val remote = dbStore.fetchDatabase(remoteName).database
@@ -84,7 +84,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         finally
         {
             tidyUpAllSyncDirs()
-            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
+            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialogOLD() }
             ScreenCache.get<SyncManagementScreen>().initialise()
         }
     }
@@ -111,7 +111,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
             if (result != null)
             {
                 val summary = "\n\nGames pushed: ${result.gamesPushed}\nGames pulled: ${result.gamesPulled}"
-                DialogUtil.showInfo("Sync completed successfully!$summary")
+                DialogUtil.showInfoOLD("Sync completed successfully!$summary")
             }
         }
         catch (e: Exception)
@@ -194,23 +194,23 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         {
             is SocketException, is InterruptedIOException -> {
                 logger.warn(code, "Caught network error during sync: $e")
-                DialogUtil.showError("A connection error occurred. Check your internet connection and try again.")
+                DialogUtil.showErrorOLD("A connection error occurred. Check your internet connection and try again.")
             }
             is ConcurrentModificationException -> {
                 logger.warn(code, "$e")
-                DialogUtil.showError("Another sync has been performed since this one started. \n\nResults have been discarded.")
+                DialogUtil.showErrorOLD("Another sync has been performed since this one started. \n\nResults have been discarded.")
             }
             is SyncDataLossError -> {
                 logger.error(code, "$e", e, KEY_GAME_IDS to e.missingGameIds)
-                DialogUtil.showError("Sync resulted in missing data. \n\nResults have been discarded.")
+                DialogUtil.showErrorOLD("Sync resulted in missing data. \n\nResults have been discarded.")
             }
             is WrappedSqlException -> {
                 logger.logSqlException(e.sqlStatement, e.genericStatement, e.sqlException)
-                DialogUtil.showError("An unexpected error occurred - no data has been changed.")
+                DialogUtil.showErrorOLD("An unexpected error occurred - no data has been changed.")
             }
             else -> {
                 logger.error(code, "Unexpected error: $e", e)
-                DialogUtil.showError("An unexpected error occurred - no data has been changed.")
+                DialogUtil.showErrorOLD("An unexpected error occurred - no data has been changed.")
             }
         }
     }

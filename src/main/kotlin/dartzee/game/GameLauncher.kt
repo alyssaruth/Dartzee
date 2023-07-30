@@ -60,7 +60,7 @@ class GameLauncher
         val gameEntity = GameEntity().retrieveForId(gameId, false)
         if (gameEntity == null)
         {
-            DialogUtil.showError("Game $gameId does not exist.")
+            DialogUtil.showErrorOLD("Game $gameId does not exist.")
             return
         }
 
@@ -90,7 +90,7 @@ class GameLauncher
         catch (t: Throwable)
         {
             logger.error(CODE_LOAD_ERROR, "Failed to load Game ${gameEntity.rowId}", t)
-            DialogUtil.showError("Failed to load Game #${gameEntity.localId}")
+            DialogUtil.showErrorOLD("Failed to load Game #${gameEntity.localId}")
             scrn.dispose()
             ScreenCache.removeDartsGameScreen(scrn)
         }
@@ -119,7 +119,7 @@ class GameLauncher
         catch (t: Throwable)
         {
             logger.error(CODE_LOAD_ERROR, "Failed to load Match $matchId", t)
-            DialogUtil.showError("Failed to load Match #${match.localId}")
+            DialogUtil.showErrorOLD("Failed to load Match #${match.localId}")
             scrn.dispose()
             ScreenCache.removeDartsGameScreen(scrn)
         }

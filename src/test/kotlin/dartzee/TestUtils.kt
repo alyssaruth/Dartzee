@@ -2,6 +2,7 @@ package dartzee
 
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.findAll
 import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
@@ -225,6 +226,15 @@ fun FileUploader.uploadFileFromResource(resourceName: String)
     getChild<JTextField>().text shouldBe rsrcPath
     clickChild<JButton>(text = "Upload")
     flushEdt()
+}
+
+fun getInfoDialog() = findWindow<JDialog> { it.title == "Information" }!!
+fun getQuestionDialog() = findWindow<JDialog> { it.title == "Question" }!!
+fun getErrorDialog() = findWindow<JDialog> { it.title == "Error" }!!
+
+fun JDialog.getDialogMessage(): String {
+    val messageLabels = findAll<JLabel>().filter { it.name == "OptionPane.label" }
+    return messageLabels.joinToString("\n\n") { it.text }
 }
 
 /**

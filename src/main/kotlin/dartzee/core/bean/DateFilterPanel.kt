@@ -2,7 +2,7 @@ package dartzee.core.bean
 
 import com.github.lgooddatepicker.components.DatePicker
 import com.github.lgooddatepicker.components.DatePickerSettings
-import dartzee.core.util.DialogUtil.showError
+import dartzee.core.util.DialogUtil.showErrorOLD
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import javax.swing.JLabel
@@ -37,7 +37,7 @@ class DateFilterPanel : JPanel()
 
         if (getDtFrom().isAfter(getDtTo()))
         {
-            showError("The 'date from' cannot be after the 'date to'")
+            showErrorOLD("The 'date from' cannot be after the 'date to'")
             return false
         }
 

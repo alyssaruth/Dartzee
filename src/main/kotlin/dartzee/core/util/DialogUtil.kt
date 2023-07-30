@@ -1,6 +1,13 @@
 package dartzee.core.util
 
-import dartzee.logging.*
+import dartzee.core.screen.LoadingDialog
+import dartzee.logging.CODE_DIALOG_CLOSED
+import dartzee.logging.CODE_DIALOG_SHOWN
+import dartzee.logging.KEY_DIALOG_MESSAGE
+import dartzee.logging.KEY_DIALOG_SELECTION
+import dartzee.logging.KEY_DIALOG_TITLE
+import dartzee.logging.KEY_DIALOG_TYPE
+import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
 import java.awt.Component
 import java.io.File
@@ -9,6 +16,7 @@ import javax.swing.SwingUtilities
 
 object DialogUtil
 {
+    private var loadingDialog: LoadingDialog? = null
     private var dialogFactory: AbstractMessageDialogFactory = MessageDialogFactory()
 
     fun init(implementation: AbstractMessageDialogFactory)
@@ -16,35 +24,51 @@ object DialogUtil
         dialogFactory = implementation
     }
 
-    fun showInfo(infoText: String)
+    fun showInfoOLD(infoText: String)
     {
         logDialogShown("Info", "Information", infoText)
         dialogFactory.showInfo(infoText)
         logDialogClosed("Info", null)
     }
 
-    fun showCustomMessage(message: Any)
+    fun showInfo(infoText: String, parent: Component = ScreenCache.mainScreen)
+    {
+        logDialogShown("Info", "Information", infoText)
+        JOptionPane.showMessageDialog(parent, infoText, "Information", JOptionPane.INFORMATION_MESSAGE)
+        logDialogClosed("Info", null)
+    }
+
+    fun showCustomMessage(message: Any, parent: Component = ScreenCache.mainScreen)
     {
         logDialogShown("CustomInfo", "Information", "?")
-        dialogFactory.showCustomMessage(message)
+        JOptionPane.showMessageDialog(parent, message, "Information", JOptionPane.INFORMATION_MESSAGE)
         logDialogClosed("CustomInfo", null)
     }
 
-    fun showError(errorText: String)
+    fun showErrorOLD(errorText: String)
     {
-        dismissLoadingDialog()
+        dismissLoadingDialogOLD()
 
         logDialogShown("Error", "Error", errorText)
         dialogFactory.showError(errorText)
         logDialogClosed("Error", null)
     }
 
-    fun showErrorLater(errorText: String)
+    fun showError(errorText: String, parent: Component? = ScreenCache.mainScreen)
     {
-        SwingUtilities.invokeLater { showError(errorText) }
+        dismissLoadingDialog()
+
+        logDialogShown("Error", "Error", errorText)
+        JOptionPane.showMessageDialog(parent, errorText, "Error", JOptionPane.ERROR_MESSAGE)
+        logDialogClosed("Error", null)
     }
 
-    fun showQuestion(message: String, allowCancel: Boolean = false): Int
+    fun showErrorLater(errorText: String)
+    {
+        SwingUtilities.invokeLater { showErrorOLD(errorText) }
+    }
+
+    fun showQuestionOLD(message: String, allowCancel: Boolean = false): Int
     {
         logDialogShown("Question", "Question", message)
         val selection = dialogFactory.showQuestion(message, allowCancel)
@@ -52,13 +76,39 @@ object DialogUtil
         return selection
     }
 
-    fun showLoadingDialog(text: String)
+    fun showQuestion(message: String, allowCancel: Boolean = false, parent: Component = ScreenCache.mainScreen): Int
+    {
+        logDialogShown("Question", "Question", message)
+        val option = if (allowCancel) JOptionPane.YES_NO_CANCEL_OPTION else JOptionPane.YES_NO_OPTION
+        val selection = JOptionPane.showConfirmDialog(parent, message, "Question", option, JOptionPane.QUESTION_MESSAGE)
+        logDialogClosed("Question", selection)
+        return selection
+    }
+
+    fun showLoadingDialogOLD(text: String)
     {
         logDialogShown("Loading", "", text)
         dialogFactory.showLoading(text)
     }
 
+    fun showLoadingDialog(text: String)
+    {
+        logDialogShown("Loading", "", text)
+        loadingDialog = LoadingDialog()
+        loadingDialog?.showDialog(text)
+    }
+
     fun dismissLoadingDialog()
+    {
+        val wasVisible = loadingDialog?.isVisible ?: false
+        loadingDialog?.dismissDialog()
+        if (wasVisible)
+        {
+            logDialogClosed("Loading", null)
+        }
+    }
+
+    fun dismissLoadingDialogOLD()
     {
         val dismissed = dialogFactory.dismissLoading()
         if (dismissed)

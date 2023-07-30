@@ -16,7 +16,7 @@ object DevUtilities
         val gameIds = getAllGameIds()
         if (gameIds == null)
         {
-            DialogUtil.showError("No games to delete.")
+            DialogUtil.showErrorOLD("No games to delete.")
             return
         }
 
@@ -49,14 +49,14 @@ object DevUtilities
         val gameId = GameEntity.getGameId(localId)
         if (gameId == null)
         {
-            DialogUtil.showError("No game exists for ID $localId")
+            DialogUtil.showErrorOLD("No game exists for ID $localId")
             return
         }
 
         val scrn = ScreenCache.getDartsGameScreen(gameId)
         if (scrn != null)
         {
-            DialogUtil.showError("Cannot delete a game that's open.")
+            DialogUtil.showErrorOLD("Cannot delete a game that's open.")
             return
         }
 
@@ -68,7 +68,7 @@ object DevUtilities
                 + "\n\n Participant: ${participantIds.size} rows"
                 + "\n Dart: $dartCount rows")
 
-        val answer = DialogUtil.showQuestion(question, false)
+        val answer = DialogUtil.showQuestionOLD(question, false)
         if (answer == JOptionPane.YES_OPTION)
         {
             if (participantIds.isNotEmpty())

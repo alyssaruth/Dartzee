@@ -135,7 +135,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         catch (t: Throwable)
         {
             logger.error(CODE_SCREEN_LOAD_ERROR, "Failed to load screen ${scrn.getScreenName()}", t)
-            DialogUtil.showError("Error loading screen - " + scrn.getScreenName())
+            DialogUtil.showErrorOLD("Error loading screen - " + scrn.getScreenName())
             return
         }
 
@@ -199,7 +199,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         }
         else if (cmd == "load")
         {
-            DialogUtil.showLoadingDialog("Testing")
+            DialogUtil.showLoadingDialogOLD("Testing")
         }
         else if (cmd == "stacktrace")
         {

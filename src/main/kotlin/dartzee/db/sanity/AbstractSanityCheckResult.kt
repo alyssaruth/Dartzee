@@ -36,7 +36,7 @@ abstract class AbstractSanityCheckResult
 
     open fun autoFix()
     {
-        DialogUtil.showError("No auto-fix available.")
+        DialogUtil.showErrorOLD("No auto-fix available.")
     }
 
     override fun toString() = getDescription()

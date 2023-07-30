@@ -103,7 +103,7 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
         val playerImageId = getPlayerImageIdFromSelection()
         if (playerImageId == null)
         {
-            DialogUtil.showError("You must select an image.")
+            DialogUtil.showErrorOLD("You must select an image.")
             return
         }
 
@@ -116,14 +116,14 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
         val imageReaders = ImageIO.getImageReadersBySuffix(file.extension)
         if (!imageReaders.hasNext())
         {
-            DialogUtil.showError("You must select a valid image file.")
+            DialogUtil.showErrorOLD("You must select a valid image file.")
             return false
         }
 
         val imgDim = FileUtil.getImageDim(file) ?: Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
         if (imgDim.getWidth() < PLAYER_IMAGE_WIDTH || imgDim.getHeight() < PLAYER_IMAGE_HEIGHT)
         {
-            DialogUtil.showError("The image is too small - it must be at least $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px.")
+            DialogUtil.showErrorOLD("The image is too small - it must be at least $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px.")
             return false
         }
 

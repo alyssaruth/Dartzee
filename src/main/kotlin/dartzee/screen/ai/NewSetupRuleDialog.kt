@@ -1,12 +1,12 @@
 package dartzee.screen.ai
 
-import dartzee.`object`.Dart
 import dartzee.ai.AimDart
 import dartzee.bean.SpinnerSingleSelector
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
+import dartzee.`object`.Dart
 import dartzee.screen.ScreenCache
 import dartzee.utils.isBust
 import getDefaultDartToAimAt
@@ -106,20 +106,20 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : 
         val score = nfScore.getNumber()
         if (score == -1)
         {
-            DialogUtil.showError("You must enter a score for this rule to apply to.")
+            DialogUtil.showErrorOLD("You must enter a score for this rule to apply to.")
             return false
         }
 
         val drt = getDartFromSelections()
         if (drt.score == 25 && drt.multiplier == 3)
         {
-            DialogUtil.showError("Treble 25 is not a valid dart!")
+            DialogUtil.showErrorOLD("Treble 25 is not a valid dart!")
             return false
         }
 
         if (isBust(score, Dart(drt.score, drt.multiplier)))
         {
-            DialogUtil.showError("This target would bust the player")
+            DialogUtil.showErrorOLD("This target would bust the player")
             return false
         }
 
@@ -130,7 +130,7 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : 
             val defaultDart = getDefaultDartToAimAt(score)
             if (defaultDart == drt)
             {
-                DialogUtil.showError("The selected dart is already the default for this starting score.")
+                DialogUtil.showErrorOLD("The selected dart is already the default for this starting score.")
                 return false
             }
         }
