@@ -1,12 +1,21 @@
 package dartzee.core.util
 
+import com.github.alyssaburlton.swingtest.clickCancel
+import com.github.alyssaburlton.swingtest.clickNo
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.purgeWindows
 import dartzee.core.helper.TestMessageDialogFactory
+import dartzee.getErrorDialog
+import dartzee.getInfoDialog
+import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.TEST_ROOT
 import dartzee.logging.CODE_DIALOG_CLOSED
 import dartzee.logging.CODE_DIALOG_SHOWN
 import dartzee.logging.Severity
+import dartzee.runAsync
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -15,7 +24,6 @@ import io.mockk.mockk
 import io.mockk.verifySequence
 import org.junit.jupiter.api.Test
 import java.io.File
-import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
 
 class TestDialogUtil: AbstractTest()
@@ -58,18 +66,23 @@ class TestDialogUtil: AbstractTest()
     @Test
     fun `Should log for INFO dialogs`()
     {
-        DialogUtil.showInfoOLD("Something useful")
+        runAsync { DialogUtil.showInfo("Something useful") }
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Info dialog shown: Something useful"
+
+        getInfoDialog().clickOk()
+        flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Info dialog closed"
     }
 
     @Test
     fun `Should log for ERROR dialogs`()
     {
-        DialogUtil.showErrorOLD("Something bad")
+        runAsync { DialogUtil.showError("Something bad") }
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Error dialog shown: Something bad"
+        getErrorDialog().clickOk()
+        flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Error dialog closed"
     }
 
@@ -87,41 +100,46 @@ class TestDialogUtil: AbstractTest()
     @Test
     fun `Should log for QUESTION dialogs, with the correct selection`()
     {
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
-
-        DialogUtil.showQuestionOLD("Do you like cheese?")
+        runAsync { DialogUtil.showQuestion("Do you like cheese?") }
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Question dialog shown: Do you like cheese?"
+        getQuestionDialog().clickYes()
+        flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Question dialog closed - selected Yes"
 
         clearLogs()
+        purgeWindows()
 
-        dialogFactory.questionOption = JOptionPane.NO_OPTION
-        DialogUtil.showQuestionOLD("Do you like mushrooms?")
+        runAsync { DialogUtil.showQuestion("Do you like mushrooms?") }
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Question dialog shown: Do you like mushrooms?"
+        getQuestionDialog().clickNo()
+        flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Question dialog closed - selected No"
 
         clearLogs()
+        purgeWindows()
 
-        dialogFactory.questionOption = JOptionPane.CANCEL_OPTION
-        DialogUtil.showQuestionOLD("Do you want to delete all data?", true)
+        runAsync { DialogUtil.showQuestion("Do you want to delete all data?", true) }
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Question dialog shown: Do you want to delete all data?"
+        getQuestionDialog().clickCancel()
+        flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Question dialog closed - selected Cancel"
     }
 
     @Test
     fun `Should log when showing and dismissing loading dialog`()
     {
-        DialogUtil.showLoadingDialogOLD("One moment...")
+        DialogUtil.showLoadingDialog("One moment...")
+        flushEdt()
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Loading dialog shown: One moment..."
 
-        DialogUtil.dismissLoadingDialogOLD()
+        DialogUtil.dismissLoadingDialog()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Loading dialog closed"
     }
 
     @Test
     fun `Should not log if loading dialog wasn't visible`()
     {
-        DialogUtil.dismissLoadingDialogOLD()
+        DialogUtil.dismissLoadingDialog()
         verifyNoLogs(CODE_DIALOG_CLOSED)
     }
 

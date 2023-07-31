@@ -48,6 +48,7 @@ import javax.swing.JPanel
 import javax.swing.JRadioButton
 import javax.swing.JTabbedPane
 import javax.swing.JTextField
+import javax.swing.SwingUtilities
 import javax.swing.table.DefaultTableModel
 import javax.swing.text.JTextComponent
 
@@ -235,6 +236,16 @@ fun getErrorDialog() = findWindow<JDialog> { it.title == "Error" }!!
 fun JDialog.getDialogMessage(): String {
     val messageLabels = findAll<JLabel>().filter { it.name == "OptionPane.label" }
     return messageLabels.joinToString("\n\n") { it.text }
+}
+
+fun <T> runAsync(block: () -> T?): T? {
+    var result: T? = null
+    SwingUtilities.invokeLater {
+        result = block()
+    }
+
+    flushEdt()
+    return result
 }
 
 /**

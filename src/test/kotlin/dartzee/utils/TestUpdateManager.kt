@@ -7,8 +7,6 @@ import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
-import com.mashape.unirest.http.Unirest
-import com.mashape.unirest.http.exceptions.UnirestException
 import dartzee.core.bean.LinkLabel
 import dartzee.core.screen.LoadingDialog
 import dartzee.getDialogMessage
@@ -25,6 +23,7 @@ import dartzee.logging.CODE_UPDATE_ERROR
 import dartzee.logging.KEY_RESPONSE_BODY
 import dartzee.logging.Severity
 import dartzee.`object`.DartsClient
+import dartzee.runAsync
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
@@ -33,8 +32,11 @@ import io.kotest.matchers.string.shouldStartWith
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
-import org.json.JSONException
-import org.json.JSONObject
+import kong.unirest.Unirest
+import kong.unirest.UnirestException
+import kong.unirest.json.JSONException
+import kong.unirest.json.JSONObject
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -44,6 +46,14 @@ import javax.swing.SwingUtilities
 
 class TestUpdateManager: AbstractTest()
 {
+    @BeforeEach
+    fun beforeEach()
+    {
+        Unirest.config().reset()
+        Unirest.config().connectTimeout(2000)
+        Unirest.config().socketTimeout(2000)
+    }
+
     /**
      * Communication
      */
@@ -51,7 +61,6 @@ class TestUpdateManager: AbstractTest()
     @Tag("integration")
     fun `Should log out an unexpected HTTP response, along with the full JSON payload`()
     {
-        Unirest.setTimeouts(2000, 2000)
         val errorMessage = queryLatestReleastJsonExpectingError("https://api.github.com/repos/alyssaburlton/foo")
         errorMessage shouldBe "Failed to check for updates (unable to connect)."
 
@@ -66,7 +75,8 @@ class TestUpdateManager: AbstractTest()
     @Tag("integration")
     fun `Should catch and log any exceptions communicating over HTTPS`()
     {
-        Unirest.setTimeouts(100, 100)
+        Unirest.config().connectTimeout(100)
+        Unirest.config().socketTimeout(100)
 
         val errorMessage = queryLatestReleastJsonExpectingError("https://ww.blargh.zcss.w")
         errorMessage shouldBe "Failed to check for updates (unable to connect)."
@@ -78,11 +88,7 @@ class TestUpdateManager: AbstractTest()
     }
 
     private fun queryLatestReleastJsonExpectingError(repositoryUrl: String): String {
-        var result: JSONObject? = null
-        SwingUtilities.invokeLater {
-            result = UpdateManager.queryLatestReleaseJson(repositoryUrl)
-        }
-        flushEdt()
+        val result = runAsync { UpdateManager.queryLatestReleaseJson(repositoryUrl) }
 
         val error = getErrorDialog()
         val errorText = error.getDialogMessage()
@@ -256,13 +262,11 @@ class TestUpdateManager: AbstractTest()
         val error = IOException("Argh")
         every { runtime.exec(any<String>()) } throws error
 
-        SwingUtilities.invokeLater {
+        runAsync {
             assertDoesNotExit {
                 UpdateManager.startUpdate("foo", runtime)
             }
         }
-
-        flushEdt()
 
         val errorDialog = getErrorDialog()
         errorDialog.getDialogMessage() shouldBe "Failed to launch update.bat - call the following manually to perform the update: \n\nupdate.bat foo"
