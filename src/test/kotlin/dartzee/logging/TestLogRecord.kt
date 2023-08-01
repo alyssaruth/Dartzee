@@ -39,6 +39,6 @@ class TestLogRecord: AbstractTest()
         val record = makeLogRecord(loggingCode = LoggingCode("someEvent"), keyValuePairs = mapOf("devMode" to true, "currentScreen" to null))
 
         val str = record.toJsonString()
-        str shouldBe """{"severity":"INFO","currentScreen":"null","devMode":"true","loggingCode":"someEvent","message":"A thing happened","timestamp":"2020-04-13T11:04:00Z"}"""
+        str shouldBe """{"timestamp":"2020-04-13T11:04:00Z","severity":"INFO","loggingCode":"someEvent","message":"A thing happened","devMode":"true","currentScreen":"null"}"""
     }
 }
