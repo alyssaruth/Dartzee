@@ -66,7 +66,7 @@ class PlayerSelectDialog(selectionMode: Int) : SimpleDialog(), IDoubleClickListe
         selectedPlayers = tablePlayers.getSelectedPlayers()
         if (selectedPlayers.isEmpty())
         {
-            DialogUtil.showError("You must select at least one player.")
+            DialogUtil.showErrorOLD("You must select at least one player.")
             return
         }
 

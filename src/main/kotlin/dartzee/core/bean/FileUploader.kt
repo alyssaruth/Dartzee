@@ -69,7 +69,7 @@ class FileUploader(ff: FileFilter) : JPanel(), ActionListener
         val file = selectedFile
         if (file == null)
         {
-            DialogUtil.showError("You must select a file to upload.")
+            DialogUtil.showErrorOLD("You must select a file to upload.")
             return
         }
 

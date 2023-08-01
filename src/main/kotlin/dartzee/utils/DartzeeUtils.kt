@@ -71,7 +71,7 @@ fun generateDartzeeTemplateFromGame(game: GameEntity, dtos: List<DartzeeRuleDto>
     game.gameParams = template.rowId
     game.saveToDatabase()
 
-    DialogUtil.showInfo("Template '$templateName' successfully created.")
+    DialogUtil.showInfoOLD("Template '$templateName' successfully created.")
 
     return template
 }
@@ -85,7 +85,7 @@ fun deleteDartzeeTemplate(template: DartzeeTemplateEntity, gameCount: Int): Bool
                 "\n\nThese will become custom games if you delete it. Are you sure you want to continue?"
     }
 
-    val ans = DialogUtil.showQuestion(message)
+    val ans = DialogUtil.showQuestionOLD(message)
     if (ans != JOptionPane.YES_OPTION)
     {
         return false

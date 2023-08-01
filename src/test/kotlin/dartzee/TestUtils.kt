@@ -2,6 +2,7 @@ package dartzee
 
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.findAll
 import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
@@ -47,6 +48,7 @@ import javax.swing.JPanel
 import javax.swing.JRadioButton
 import javax.swing.JTabbedPane
 import javax.swing.JTextField
+import javax.swing.SwingUtilities
 import javax.swing.table.DefaultTableModel
 import javax.swing.text.JTextComponent
 
@@ -225,6 +227,25 @@ fun FileUploader.uploadFileFromResource(resourceName: String)
     getChild<JTextField>().text shouldBe rsrcPath
     clickChild<JButton>(text = "Upload")
     flushEdt()
+}
+
+fun getInfoDialog() = findWindow<JDialog> { it.title == "Information" }!!
+fun getQuestionDialog() = findWindow<JDialog> { it.title == "Question" }!!
+fun getErrorDialog() = findWindow<JDialog> { it.title == "Error" }!!
+
+fun JDialog.getDialogMessage(): String {
+    val messageLabels = findAll<JLabel>().filter { it.name == "OptionPane.label" }
+    return messageLabels.joinToString("\n\n") { it.text }
+}
+
+fun <T> runAsync(block: () -> T?): T? {
+    var result: T? = null
+    SwingUtilities.invokeLater {
+        result = block()
+    }
+
+    flushEdt()
+    return result
 }
 
 /**

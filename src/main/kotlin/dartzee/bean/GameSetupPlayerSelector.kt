@@ -42,7 +42,7 @@ class GameSetupPlayerSelector: AbstractPlayerSelector<ScrollTableOrdered>()
         val rowCount = selectedPlayers.size
         if (rowCount < 1)
         {
-            DialogUtil.showError("You must select at least 1 player.")
+            DialogUtil.showErrorOLD("You must select at least 1 player.")
             return false
         }
 
@@ -50,14 +50,14 @@ class GameSetupPlayerSelector: AbstractPlayerSelector<ScrollTableOrdered>()
         val matchMinimum = if (btnPairs.isSelected) 4 else 2
         if (match && rowCount < matchMinimum)
         {
-            DialogUtil.showError("You must select at least 2 $playerOrTeamDesc for a match.")
+            DialogUtil.showErrorOLD("You must select at least 2 $playerOrTeamDesc for a match.")
             return false
         }
 
         val maxPlayers = if (btnPairs.isSelected) MAX_PLAYERS * 2 else MAX_PLAYERS
         if (rowCount > maxPlayers)
         {
-            DialogUtil.showError("You cannot select more than $MAX_PLAYERS $playerOrTeamDesc.")
+            DialogUtil.showErrorOLD("You cannot select more than $MAX_PLAYERS $playerOrTeamDesc.")
             return false
         }
 

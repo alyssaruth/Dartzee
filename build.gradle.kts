@@ -24,7 +24,7 @@ dependencies {
     implementation("org.apache.commons:commons-math3:3.6.1")
     implementation("com.miglayout:miglayout-swing:11.0")
     implementation("org.jfree:jfreechart:1.5.4")
-    implementation("com.mashape.unirest:unirest-java:1.4.9")
+    implementation("com.konghq:unirest-java:3.14.2")
     implementation("com.github.lgooddatepicker:LGoodDatePicker:11.2.1")
     implementation("org.apache.derby:derby:10.14.2.0")
     implementation("com.amazonaws:aws-java-sdk-elasticsearch:1.12.396")

@@ -1,6 +1,6 @@
 package dartzee.logging
 
-import org.json.JSONObject
+import kong.unirest.json.JSONObject
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter

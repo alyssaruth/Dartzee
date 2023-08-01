@@ -140,7 +140,7 @@ class AISetupConfigurationDialog(private val hmScoreToSingle: MutableMap<Int, Ai
         val rows = tableScores.selectedModelRows
         if (rows.isEmpty())
         {
-            DialogUtil.showError("You must select row(s) to remove.")
+            DialogUtil.showErrorOLD("You must select row(s) to remove.")
             return
         }
 

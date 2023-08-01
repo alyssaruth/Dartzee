@@ -1,12 +1,21 @@
 package dartzee.core.util
 
+import com.github.alyssaburlton.swingtest.clickCancel
+import com.github.alyssaburlton.swingtest.clickNo
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.purgeWindows
 import dartzee.core.helper.TestMessageDialogFactory
+import dartzee.getErrorDialog
+import dartzee.getInfoDialog
+import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.TEST_ROOT
 import dartzee.logging.CODE_DIALOG_CLOSED
 import dartzee.logging.CODE_DIALOG_SHOWN
 import dartzee.logging.Severity
+import dartzee.runAsync
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -15,7 +24,6 @@ import io.mockk.mockk
 import io.mockk.verifySequence
 import org.junit.jupiter.api.Test
 import java.io.File
-import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
 
 class TestDialogUtil: AbstractTest()
@@ -27,10 +35,10 @@ class TestDialogUtil: AbstractTest()
     {
         DialogUtil.init(factoryMock)
 
-        DialogUtil.showInfo("Info")
-        DialogUtil.showLoadingDialog("Loading...")
-        DialogUtil.showQuestion("Q")
-        DialogUtil.dismissLoadingDialog()
+        DialogUtil.showInfoOLD("Info")
+        DialogUtil.showLoadingDialogOLD("Loading...")
+        DialogUtil.showQuestionOLD("Q")
+        DialogUtil.dismissLoadingDialogOLD()
         DialogUtil.showOption("Free Pizza", "Would you like some?", listOf("Yes please", "No thanks"))
         DialogUtil.chooseDirectory(null)
 
@@ -45,7 +53,7 @@ class TestDialogUtil: AbstractTest()
 
         clearAllMocks()
 
-        DialogUtil.showError("Test")
+        DialogUtil.showErrorOLD("Test")
 
         verifySequence {
             factoryMock.dismissLoading()
@@ -58,18 +66,23 @@ class TestDialogUtil: AbstractTest()
     @Test
     fun `Should log for INFO dialogs`()
     {
-        DialogUtil.showInfo("Something useful")
+        runAsync { DialogUtil.showInfo("Something useful") }
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Info dialog shown: Something useful"
+
+        getInfoDialog().clickOk()
+        flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Info dialog closed"
     }
 
     @Test
     fun `Should log for ERROR dialogs`()
     {
-        DialogUtil.showError("Something bad")
+        runAsync { DialogUtil.showError("Something bad") }
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Error dialog shown: Something bad"
+        getErrorDialog().clickOk()
+        flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Error dialog closed"
     }
 
@@ -87,24 +100,28 @@ class TestDialogUtil: AbstractTest()
     @Test
     fun `Should log for QUESTION dialogs, with the correct selection`()
     {
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
-
-        DialogUtil.showQuestion("Do you like cheese?")
+        runAsync { DialogUtil.showQuestion("Do you like cheese?") }
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Question dialog shown: Do you like cheese?"
+        getQuestionDialog().clickYes()
+        flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Question dialog closed - selected Yes"
 
         clearLogs()
+        purgeWindows()
 
-        dialogFactory.questionOption = JOptionPane.NO_OPTION
-        DialogUtil.showQuestion("Do you like mushrooms?")
+        runAsync { DialogUtil.showQuestion("Do you like mushrooms?") }
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Question dialog shown: Do you like mushrooms?"
+        getQuestionDialog().clickNo()
+        flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Question dialog closed - selected No"
 
         clearLogs()
+        purgeWindows()
 
-        dialogFactory.questionOption = JOptionPane.CANCEL_OPTION
-        DialogUtil.showQuestion("Do you want to delete all data?", true)
+        runAsync { DialogUtil.showQuestion("Do you want to delete all data?", true) }
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Question dialog shown: Do you want to delete all data?"
+        getQuestionDialog().clickCancel()
+        flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Question dialog closed - selected Cancel"
     }
 
@@ -112,6 +129,7 @@ class TestDialogUtil: AbstractTest()
     fun `Should log when showing and dismissing loading dialog`()
     {
         DialogUtil.showLoadingDialog("One moment...")
+        flushEdt()
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "Loading dialog shown: One moment..."
 
         DialogUtil.dismissLoadingDialog()

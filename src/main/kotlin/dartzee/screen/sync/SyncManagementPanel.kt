@@ -19,7 +19,12 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.sql.Timestamp
 import java.time.Duration
-import javax.swing.*
+import javax.swing.AbstractButton
+import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JLabel
+import javax.swing.JOptionPane
+import javax.swing.JPanel
 import javax.swing.border.LineBorder
 import javax.swing.border.TitledBorder
 
@@ -135,7 +140,7 @@ class SyncManagementPanel: JPanel(), ActionListener
         if (InjectedThings.syncManager.databaseExists(remoteName))
         {
             val q = "Are you sure you want to push to $remoteName? \n\nThis will overwrite any data that hasn't been synced to this device."
-            val ans = DialogUtil.showQuestion(q)
+            val ans = DialogUtil.showQuestionOLD(q)
             if (ans != JOptionPane.YES_OPTION)
             {
                 return
@@ -153,7 +158,7 @@ class SyncManagementPanel: JPanel(), ActionListener
         }
 
         val q = "Are you sure you want to pull from $remoteName? \n\nThis will overwrite any local data that hasn't been synced to $remoteName from this device."
-        val ans = DialogUtil.showQuestion(q)
+        val ans = DialogUtil.showQuestionOLD(q)
         if (ans != JOptionPane.YES_OPTION)
         {
             return
@@ -175,7 +180,7 @@ class SyncManagementPanel: JPanel(), ActionListener
     private fun resetPressed()
     {
         val q = "Are you sure you want to reset?\n\nThis will not delete any local data, but will sever the link with $remoteName, requiring you to set it up again."
-        val answer = DialogUtil.showQuestion(q)
+        val answer = DialogUtil.showQuestionOLD(q)
         if (answer == JOptionPane.YES_OPTION)
         {
             resetRemote()

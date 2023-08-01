@@ -81,7 +81,7 @@ class AchievementConversionDialog : SimpleDialog()
     {
         if (playerSelector.getSelectedPlayers().isEmpty())
         {
-            val ans = DialogUtil.showQuestion("This will run the conversion(s) for ALL players. Proceed?", false)
+            val ans = DialogUtil.showQuestionOLD("This will run the conversion(s) for ALL players. Proceed?", false)
             return ans == JOptionPane.YES_OPTION
         }
 

@@ -1,10 +1,16 @@
 package dartzee.main
 
-import dartzee.`object`.DartsClient
 import dartzee.core.util.CoreRegistry.INSTANCE_STRING_DEVICE_ID
 import dartzee.core.util.CoreRegistry.instance
 import dartzee.core.util.DialogUtil
-import dartzee.logging.*
+import dartzee.logging.CODE_LOOK_AND_FEEL_ERROR
+import dartzee.logging.CODE_LOOK_AND_FEEL_SET
+import dartzee.logging.KEY_APP_VERSION
+import dartzee.logging.KEY_DEVICE_ID
+import dartzee.logging.KEY_DEV_MODE
+import dartzee.logging.KEY_OPERATING_SYSTEM
+import dartzee.logging.KEY_USERNAME
+import dartzee.`object`.DartsClient
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings.logger
 import java.util.*
@@ -27,7 +33,7 @@ fun setLookAndFeel(laf: String)
     catch (e: Throwable)
     {
         logger.error(CODE_LOOK_AND_FEEL_ERROR, "Failed to load laf $laf", e)
-        DialogUtil.showError("Failed to load Look & Feel 'Nimbus'.")
+        DialogUtil.showErrorOLD("Failed to load Look & Feel 'Nimbus'.")
     }
 
     logger.info(CODE_LOOK_AND_FEEL_SET, "Set look and feel to $laf")

@@ -17,7 +17,7 @@ class ScrollTableDartsGame(linkColumnName: String = "Game", testId: String = "")
         }
         else
         {
-            DialogUtil.showError("It isn't possible to display individual games from a simulation.")
+            DialogUtil.showErrorOLD("It isn't possible to display individual games from a simulation.")
         }
     }
 

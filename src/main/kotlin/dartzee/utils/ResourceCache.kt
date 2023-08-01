@@ -87,7 +87,7 @@ object ResourceCache
     {
         try
         {
-            DialogUtil.showLoadingDialog("Loading resources...")
+            DialogUtil.showLoadingDialogOLD("Loading resources...")
 
             val wavFiles = getWavFiles()
 
@@ -111,7 +111,7 @@ object ResourceCache
         }
         finally
         {
-            DialogUtil.dismissLoadingDialog()
+            DialogUtil.dismissLoadingDialogOLD()
         }
     }
 

@@ -128,7 +128,7 @@ object DatabaseSanityCheck
         }
         else
         {
-            DialogUtil.showInfo("Sanity check completed and found no issues")
+            DialogUtil.showInfoOLD("Sanity check completed and found no issues")
         }
     }
 

@@ -1,10 +1,14 @@
 package dartzee.utils
 
 import dartzee.core.util.DialogUtil
-import dartzee.db.LocalIdGenerator
 import dartzee.db.EntityName
+import dartzee.db.LocalIdGenerator
 import dartzee.db.VersionEntity
-import dartzee.logging.*
+import dartzee.logging.CODE_DATABASE_IN_USE
+import dartzee.logging.CODE_NEW_CONNECTION
+import dartzee.logging.CODE_TABLE_CREATED
+import dartzee.logging.CODE_TABLE_EXISTS
+import dartzee.logging.CODE_TEST_CONNECTION_ERROR
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.InjectedThings.databaseDirectory
 import dartzee.utils.InjectedThings.logger
@@ -205,7 +209,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
              && next.message!!.contains("Another instance of Derby may have already booted the database"))
             {
                 logger.warn(CODE_DATABASE_IN_USE, "Failed multiple instance check, exiting.")
-                DialogUtil.showError("Database already in use - Dartzee will now exit.")
+                DialogUtil.showErrorOLD("Database already in use - Dartzee will now exit.")
                 exitProcess(1)
             }
             else

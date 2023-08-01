@@ -26,7 +26,7 @@ class SanityCheckResultDuplicateMatchOrdinals(entities: List<AbstractEntity<*>>)
         }
 
         //Just double-check...
-        val ans = DialogUtil.showQuestion("This will reset the ordinal for all games in ${matchIds.size} matches. Proceed?", false)
+        val ans = DialogUtil.showQuestionOLD("This will reset the ordinal for all games in ${matchIds.size} matches. Proceed?", false)
         if (ans == JOptionPane.NO_OPTION)
         {
             return
@@ -44,7 +44,7 @@ class SanityCheckResultDuplicateMatchOrdinals(entities: List<AbstractEntity<*>>)
             }
         }
 
-        DialogUtil.showInfo("Auto-fix complete. You should re-run the sanity check and check there are no errors.")
+        DialogUtil.showInfoOLD("Auto-fix complete. You should re-run the sanity check and check there are no errors.")
     }
 
     override fun getDescription() = "Games with duplicate MatchOrdinals"
