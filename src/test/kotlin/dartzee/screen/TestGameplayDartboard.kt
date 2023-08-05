@@ -119,6 +119,21 @@ class TestGameplayDartboard : AbstractTest()
 
     @Test
     @Tag("screenshot")
+    fun `Should get rid of hover state when a dart is thrown`()
+    {
+        val dartboard = factoryGameplayDartboard()
+
+        val interactiveDartboard = dartboard.getChild<InteractiveDartboard>()
+        val pt = interactiveDartboard.getPointForSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 1))
+
+        interactiveDartboard.highlightDartboard(pt)
+        interactiveDartboard.doClick(pt.x, pt.y)
+
+        dartboard.shouldMatchImage("dart-thrown")
+    }
+
+    @Test
+    @Tag("screenshot")
     fun `Should re-render darts in the right places on resize`()
     {
         val dartboard = factoryGameplayDartboard()

@@ -110,6 +110,7 @@ class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs
     {
         if (!suppressClickForGameWindow() && allowInteraction)
         {
+            dartboard.clearHover()
             dartThrown(dartboard.toComputedPoint(e.point))
         }
     }

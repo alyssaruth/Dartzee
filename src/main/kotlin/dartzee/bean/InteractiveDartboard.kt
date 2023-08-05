@@ -62,8 +62,7 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
 
     fun stopInteraction()
     {
-        hoveredSegment?.let(::revertOverriddenSegmentColour)
-        hoveredSegment = null
+        clearHover()
 
         allowInteraction = false
     }
@@ -71,6 +70,12 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
     fun allowInteraction()
     {
         allowInteraction = true
+    }
+
+    fun clearHover()
+    {
+        hoveredSegment?.let(::revertOverriddenSegmentColour)
+        hoveredSegment = null
     }
 
     override fun mouseMoved(e: MouseEvent)
