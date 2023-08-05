@@ -4,6 +4,7 @@ import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.AchievementType
+import dartzee.confirmGameDeletion
 import dartzee.db.AchievementEntity
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
@@ -18,6 +19,7 @@ import dartzee.helper.getCountFromTable
 import dartzee.helper.retrieveGame
 import dartzee.helper.retrieveParticipant
 import dartzee.helper.wipeTable
+import dartzee.purgeGameAndConfirm
 import dartzee.screen.DartsApp
 import dartzee.screen.ScreenCache
 import dartzee.screen.UtilitiesScreen
@@ -30,7 +32,6 @@ import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
-import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
@@ -137,7 +138,8 @@ class SyncE2E: AbstractRegistryTest()
         ScreenCache.switch<UtilitiesScreen>()
         dialogFactory.inputSelection = 1L
         dialogFactory.questionOption = JOptionPane.YES_OPTION
-        mainScreen.clickChild<JButton>(text = "Delete Game")
+        mainScreen.clickChild<JButton>(text = "Delete Game", async = true)
+        confirmGameDeletion(1)
     }
 
     private fun runGame(winner: PlayerEntity, loser: PlayerEntity): String
@@ -172,10 +174,11 @@ class SyncE2E: AbstractRegistryTest()
 
     private fun wipeGamesAndResetRemote(mainScreen: DartsApp)
     {
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
-        DevUtilities.purgeGame(1)
+        purgeGameAndConfirm(1)
         wipeTable(EntityName.DeletionAudit)
         wipeTable(EntityName.Achievement)
+
+        dialogFactory.questionOption = JOptionPane.YES_OPTION
         mainScreen.clickChild<JButton>(text = "Reset")
         waitForAssertion { mainScreen.findChild<SyncSetupPanel>() shouldNotBe null }
     }

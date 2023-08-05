@@ -13,7 +13,6 @@ import dartzee.game.loadParticipants
 import dartzee.game.prepareParticipants
 import dartzee.getDialogMessage
 import dartzee.getErrorDialog
-import dartzee.getInfoDialog
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
@@ -30,6 +29,7 @@ import dartzee.helper.retrieveParticipant
 import dartzee.helper.retrieveX01Finish
 import dartzee.helper.testRules
 import dartzee.only
+import dartzee.purgeGameAndConfirm
 import dartzee.runAsync
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.FakeDartsScreen
@@ -222,21 +222,5 @@ class TestDevUtilities: AbstractTest()
 
         val remainingResult = DartzeeRoundResultEntity().retrieveEntities().only()
         remainingResult.participantId shouldBe pt2.rowId
-    }
-
-    private fun purgeGameAndConfirm(localId: Long): String {
-        runAsync { DevUtilities.purgeGame(localId) }
-
-        val dlg = getQuestionDialog()
-        val questionText = dlg.getDialogMessage()
-        dlg.clickYes()
-        flushEdt()
-
-        val info = getInfoDialog()
-        info.getDialogMessage() shouldBe "Game #$localId has been purged."
-        info.clickOk()
-        flushEdt()
-
-        return questionText
     }
 }
