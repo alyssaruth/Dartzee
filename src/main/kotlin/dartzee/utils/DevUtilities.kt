@@ -2,6 +2,8 @@ package dartzee.utils
 
 import dartzee.core.util.DialogUtil
 import dartzee.db.DartEntity
+import dartzee.db.DartzeeRoundResultEntity
+import dartzee.db.DartzeeRuleEntity
 import dartzee.db.GameEntity
 import dartzee.db.IParticipant
 import dartzee.db.ParticipantEntity
@@ -52,23 +54,25 @@ object DevUtilities
         val gameId = GameEntity.getGameId(localId)
         if (gameId == null)
         {
-            DialogUtil.showErrorOLD("No game exists for ID $localId")
+            DialogUtil.showError("No game exists for ID $localId")
             return
         }
 
         val scrn = ScreenCache.getDartsGameScreen(gameId)
         if (scrn != null)
         {
-            DialogUtil.showErrorOLD("Cannot delete a game that's open.")
+            DialogUtil.showError("Cannot delete a game that's open.")
             return
         }
 
         val participants = loadParticipants(gameId)
-        val participantEntities: List<IParticipant> = participants.flatMap { it.individuals + it.participant }
+        val participantEntities: List<IParticipant> = participants.flatMap { it.individuals + it.participant }.distinct()
         val participantIds = participantEntities.filterIsInstance<ParticipantEntity>().map { it.rowId }
         val teamIds = participantEntities.filterIsInstance<TeamEntity>().map { it.rowId }
         val ptSql = participantIds.getQuotedIdStr()
         val dartCount = if (participantIds.isEmpty()) 0 else DartEntity().countWhere("ParticipantId IN $ptSql")
+        val dartzeeRoundResultCount = if (participantIds.isEmpty()) 0 else DartzeeRoundResultEntity().countWhere("ParticipantId IN $ptSql")
+        val dartzeeRules = DartzeeRuleEntity().retrieveForGame(gameId)
 
         val question = """
             Purge all data for Game #$localId? The following rows will be deleted:
@@ -76,22 +80,26 @@ object DevUtilities
             Participant: ${participantIds.size} rows
             Team: ${teamIds.size} rows
             Dart: $dartCount rows
+            DartzeeRoundResult: $dartzeeRoundResultCount rows
+            DartzeeRule: ${dartzeeRules.size} rows
         """.trimIndent()
 
-        val answer = DialogUtil.showQuestionOLD(question, false)
+        val answer = DialogUtil.showQuestion(question, false)
         if (answer == JOptionPane.YES_OPTION)
         {
             if (participantIds.isNotEmpty())
             {
                 DartEntity().deleteWhere("ParticipantId IN $ptSql")
+                DartzeeRoundResultEntity().deleteWhere("ParticipantId IN $ptSql")
             }
 
             TeamEntity().deleteWhere("GameId = '$gameId'")
             ParticipantEntity().deleteWhere("GameId = '$gameId'")
             X01FinishEntity().deleteWhere("GameId = '$gameId'")
             GameEntity().deleteWhere("RowId = '$gameId'")
+            DartzeeRuleEntity().deleteForGame(gameId)
 
-            DialogUtil.showInfoOLD("Game #$localId has been purged.")
+            DialogUtil.showInfo("Game #$localId has been purged.")
         }
     }
 }
