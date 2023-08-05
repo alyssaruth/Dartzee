@@ -177,6 +177,26 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
     }
 
     @Test
+    fun `Should delete rows for a game`()
+    {
+        val gameA = insertGame()
+        val gameB = insertGame()
+
+        insertDartzeeRule(entityName = EntityName.Game, entityId = gameA.rowId, ordinal = 3)
+        insertDartzeeRule(entityName = EntityName.Game, entityId = gameA.rowId, ordinal = 1)
+        insertDartzeeRule(entityName = EntityName.Game, entityId = gameA.rowId, ordinal = 2)
+
+        val ruleB1 = insertDartzeeRule(entityName = EntityName.Game, entityId = gameB.rowId, ordinal = 1)
+        val templateRule = insertDartzeeRule(entityName = EntityName.DartzeeTemplate, entityId = insertDartzeeTemplate().rowId, ordinal = 1)
+
+        DartzeeRuleEntity().deleteForGame(gameA.rowId)
+
+        val remainingRules = DartzeeRuleEntity().retrieveEntities()
+
+        remainingRules.map { it.rowId }.shouldContainExactlyInAnyOrder(ruleB1.rowId, templateRule.rowId)
+    }
+
+    @Test
     fun `Should retrieve rules for a game, sorted by ordinal`()
     {
         val gameA = insertGame()

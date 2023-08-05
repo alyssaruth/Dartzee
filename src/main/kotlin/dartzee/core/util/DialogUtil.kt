@@ -24,6 +24,7 @@ object DialogUtil
         dialogFactory = implementation
     }
 
+    @Deprecated("Use showInfo")
     fun showInfoOLD(infoText: String)
     {
         logDialogShown("Info", "Information", infoText)
@@ -45,6 +46,7 @@ object DialogUtil
         logDialogClosed("CustomInfo", null)
     }
 
+    @Deprecated("Use showError")
     fun showErrorOLD(errorText: String)
     {
         dismissLoadingDialogOLD()
@@ -68,6 +70,7 @@ object DialogUtil
         SwingUtilities.invokeLater { showErrorOLD(errorText) }
     }
 
+    @Deprecated("Use showQuestion")
     fun showQuestionOLD(message: String, allowCancel: Boolean = false): Int
     {
         logDialogShown("Question", "Question", message)
@@ -85,6 +88,7 @@ object DialogUtil
         return selection
     }
 
+    @Deprecated("Use showLoadingDialog / dismissLoadingDialog")
     fun showLoadingDialogOLD(text: String)
     {
         logDialogShown("Loading", "", text)
@@ -108,6 +112,7 @@ object DialogUtil
         }
     }
 
+    @Deprecated("Use showLoadingDialog / dismissLoadingDialog")
     fun dismissLoadingDialogOLD()
     {
         val dismissed = dialogFactory.dismissLoading()

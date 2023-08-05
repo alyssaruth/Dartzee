@@ -2,8 +2,8 @@ package dartzee.db
 
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
-import dartzee.dartzee.parseDartRule
 import dartzee.dartzee.parseAggregateRule
+import dartzee.dartzee.parseDartRule
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 
@@ -61,7 +61,9 @@ class DartzeeRuleEntity(database: Database = mainDatabase): AbstractEntity<Dartz
     fun retrieveForTemplate(templateId: String) = retrieveEntities(getTemplateWhere(templateId)).sortedBy { it.ordinal }
     fun deleteForTemplate(templateId: String) = deleteWhere(getTemplateWhere(templateId))
 
-    fun retrieveForGame(gameId: String) = retrieveEntities("EntityName = 'Game' AND EntityId = '$gameId'").sortedBy { it.ordinal }
+    fun retrieveForGame(gameId: String) = retrieveEntities(getGameWhere(gameId)).sortedBy { it.ordinal }
+    fun deleteForGame(gameId: String) = deleteWhere(getGameWhere(gameId))
 
     private fun getTemplateWhere(templateId: String) = "EntityName = '${EntityName.DartzeeTemplate}' AND EntityId = '$templateId'"
+    private fun getGameWhere(gameId: String) = "EntityName = '${EntityName.Game}' AND EntityId = '$gameId'"
 }

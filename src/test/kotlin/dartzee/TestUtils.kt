@@ -1,6 +1,8 @@
 package dartzee
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.findAll
 import com.github.alyssaburlton.swingtest.findWindow
@@ -27,6 +29,7 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.GameplayDartboard
 import dartzee.screen.PlayerImageDialog
+import dartzee.utils.DevUtilities
 import dartzee.utils.getAverage
 import io.kotest.matchers.doubles.shouldBeBetween
 import io.kotest.matchers.maps.shouldContainExactly
@@ -246,6 +249,26 @@ fun <T> runAsync(block: () -> T?): T? {
 
     flushEdt()
     return result
+}
+
+fun purgeGameAndConfirm(localId: Long): String {
+    runAsync { DevUtilities.purgeGame(localId) }
+
+    return confirmGameDeletion(localId)
+}
+
+fun confirmGameDeletion(localId: Long): String {
+    val dlg = getQuestionDialog()
+    val questionText = dlg.getDialogMessage()
+    dlg.clickYes()
+    flushEdt()
+
+    val info = getInfoDialog()
+    info.getDialogMessage() shouldBe "Game #$localId has been purged."
+    info.clickOk()
+    flushEdt()
+
+    return questionText
 }
 
 /**
