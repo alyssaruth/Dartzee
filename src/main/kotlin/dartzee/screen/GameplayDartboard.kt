@@ -72,9 +72,10 @@ class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs
 
     fun dartThrown(pt: ComputedPoint)
     {
-        dartsThrown.add(pt)
-
-        runOnEventThreadBlocking { addDartLabel(pt) }
+        runOnEventThreadBlocking {
+            dartsThrown.add(pt)
+            addDartLabel(pt)
+        }
 
         listeners.forEach { it.dartThrown(getDartForSegment(pt.segment)) }
     }
