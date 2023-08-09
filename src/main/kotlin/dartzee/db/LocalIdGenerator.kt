@@ -5,7 +5,12 @@ import dartzee.utils.Database
 class LocalIdGenerator(private val database: Database)
 {
     private val uniqueIdSyncObject = Any()
-    val hmLastAssignedIdByEntityName = mutableMapOf<EntityName, Long>()
+    private val hmLastAssignedIdByEntityName = mutableMapOf<EntityName, Long>()
+
+    fun clearCache()
+    {
+        hmLastAssignedIdByEntityName.clear()
+    }
 
     fun generateLocalId(entityName: EntityName): Long
     {
