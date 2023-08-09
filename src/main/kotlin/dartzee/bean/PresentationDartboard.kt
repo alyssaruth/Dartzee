@@ -37,7 +37,7 @@ import javax.swing.SwingConstants
 import kotlin.math.roundToInt
 
 open class PresentationDartboard(
-    protected val colourWrapper: ColourWrapper = getColourWrapperFromPrefs(),
+    private val colourWrapper: ColourWrapper = getColourWrapperFromPrefs(),
     private val renderScoreLabels: Boolean = false
 ) : JComponent(), IDartboard
 {

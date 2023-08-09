@@ -229,6 +229,7 @@ object DartsDatabaseUtil
         finally
         {
             mainDatabase.initialiseConnectionPool(connectionPoolSize)
+            mainDatabase.localIdGenerator.clearCache()
         }
 
         return true

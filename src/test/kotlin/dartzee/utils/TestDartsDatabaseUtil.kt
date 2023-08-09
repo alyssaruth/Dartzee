@@ -3,8 +3,18 @@ package dartzee.utils
 import dartzee.db.DatabaseMigrator
 import dartzee.db.EntityName
 import dartzee.db.MigrationResult
-import dartzee.helper.*
-import dartzee.logging.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.TEST_DB_DIRECTORY
+import dartzee.helper.TEST_ROOT
+import dartzee.helper.assertExits
+import dartzee.helper.insertGame
+import dartzee.helper.usingInMemoryDatabase
+import dartzee.logging.CODE_BACKUP_ERROR
+import dartzee.logging.CODE_DATABASE_CREATED
+import dartzee.logging.CODE_DATABASE_CREATING
+import dartzee.logging.CODE_RESTORE_ERROR
+import dartzee.logging.CODE_TEST_CONNECTION_ERROR
+import dartzee.logging.Severity
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGameScreen
 import dartzee.utils.DartsDatabaseUtil.DATABASE_NAME
@@ -180,9 +190,12 @@ class TestDartsDatabaseUtil: AbstractTest()
     }
 
     @Test
-    fun `Should swap in the selected database if confirmed`()
+    fun `Should swap in the selected database if confirmed, and clear localId cache`()
     {
         usingInMemoryDatabase(withSchema = true) { db ->
+            mainDatabase.generateLocalId(EntityName.Game) shouldBe 1L
+            insertGame(localId = 5L)
+
             dialogFactory.questionOption = JOptionPane.YES_OPTION
             val f = File("${db.getDirectoryStr()}/SomeFile.txt")
             f.createNewFile()
@@ -193,6 +206,8 @@ class TestDartsDatabaseUtil: AbstractTest()
 
             dialogFactory.questionsShown.shouldContainExactly("Successfully connected to target database.\n\nAre you sure you want to restore this database? All current data will be lost.")
             dialogFactory.infosShown.shouldContainExactly("Database restored successfully.")
+
+            mainDatabase.generateLocalId(EntityName.Game) shouldBe 6L
         }
     }
 

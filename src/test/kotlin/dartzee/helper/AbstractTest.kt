@@ -46,7 +46,7 @@ abstract class AbstractTest
         DialogUtil.init(dialogFactory)
         DartsClient.devMode = false
 
-        mainDatabase.localIdGenerator.hmLastAssignedIdByEntityName.clear()
+        mainDatabase.localIdGenerator.clearCache()
 
         if (logDestination.haveRunInsert)
         {
