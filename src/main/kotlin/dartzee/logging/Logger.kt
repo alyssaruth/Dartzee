@@ -79,7 +79,7 @@ class Logger(private val destinations: List<ILogDestination>)
         val logRecord = LogRecord(timestamp, severity, code, message, errorObject, loggingContext + keyValuePairs)
 
         val runnable = Runnable { destinations.forEach { it.log(logRecord) } }
-        if (Thread.currentThread().name != LOGGER_THREAD)
+        if (Thread.currentThread().name != LOGGER_THREAD && !logService.isShutdown && !logService.isTerminated)
         {
             logService.execute(runnable)
         }

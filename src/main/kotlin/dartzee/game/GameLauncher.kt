@@ -4,7 +4,14 @@ import dartzee.core.util.DialogUtil
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
 import dartzee.game.state.IWrappedParticipant
+import dartzee.logging.CODE_GAME_LAUNCHED
 import dartzee.logging.CODE_LOAD_ERROR
+import dartzee.logging.CODE_MATCH_LAUNCHED
+import dartzee.logging.KEY_FROM_MATCH
+import dartzee.logging.KEY_GAME_ID
+import dartzee.logging.KEY_GAME_LOCAL_ID
+import dartzee.logging.KEY_MATCH_ID
+import dartzee.logging.KEY_MATCH_LOCAL_ID
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGameScreen
 import dartzee.screen.game.dartzee.DartzeeMatchScreen
@@ -27,6 +34,9 @@ class GameLauncher
 
         val panel = scrn.addGameToMatch(game, participants.size)
         panel.startNewGame(participants)
+
+        logger.info(CODE_MATCH_LAUNCHED, "Launched ${scrn.windowName}",
+            KEY_MATCH_ID to match.rowId, KEY_MATCH_LOCAL_ID to match.localId)
     }
 
     fun launchNewGame(params: GameLaunchParams)
@@ -39,6 +49,9 @@ class GameLauncher
         val scrn = DartsGameScreen(game, params.teamCount())
         scrn.isVisible = true
         scrn.gamePanel.startNewGame(participants)
+
+        logger.info(CODE_GAME_LAUNCHED, "Launched ${scrn.windowName}",
+            KEY_GAME_ID to game.rowId, KEY_GAME_LOCAL_ID to game.localId, KEY_FROM_MATCH to false)
     }
 
     private fun insertNewGameEntities(gameId: String, params: GameLaunchParams): List<IWrappedParticipant>

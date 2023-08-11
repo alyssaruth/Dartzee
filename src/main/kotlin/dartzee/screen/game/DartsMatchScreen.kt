@@ -7,7 +7,15 @@ import dartzee.db.GameEntity
 import dartzee.game.matchIsComplete
 import dartzee.game.prepareNextEntities
 import dartzee.game.state.AbstractPlayerState
+import dartzee.logging.CODE_GAME_LAUNCHED
+import dartzee.logging.CODE_MATCH_FINISHED
+import dartzee.logging.KEY_FROM_MATCH
+import dartzee.logging.KEY_GAME_ID
+import dartzee.logging.KEY_GAME_LOCAL_ID
+import dartzee.logging.KEY_MATCH_ID
+import dartzee.logging.KEY_MATCH_LOCAL_ID
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings.logger
 import java.awt.BorderLayout
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
@@ -72,6 +80,8 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
     {
         if (isMatchComplete())
         {
+            logger.info(CODE_MATCH_FINISHED, "Match #${match.localId} finished.",
+                KEY_MATCH_ID to match.rowId, KEY_MATCH_LOCAL_ID to match.localId)
             match.dtFinish = getSqlDateNow()
             match.saveToDatabase()
             return
@@ -83,6 +93,16 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         val firstGameParticipants = firstGamePanel.getPlayerStates().map { it.wrappedParticipant }
 
         val (nextGame, nextParticipants) = prepareNextEntities(firstGamePanel.gameEntity, firstGameParticipants, hmGameIdToTab.size + 1)
+
+        logger.info(
+            CODE_GAME_LAUNCHED,
+            "Launched game ${nextGame.matchOrdinal} of match #${match.localId}.",
+            KEY_MATCH_ID to match.rowId,
+            KEY_MATCH_LOCAL_ID to match.localId,
+            KEY_GAME_ID to nextGame.rowId,
+            KEY_GAME_LOCAL_ID to nextGame.localId,
+            KEY_FROM_MATCH to true
+        )
 
         val panel = addGameToMatch(nextGame, nextParticipants.size)
         panel.startNewGame(nextParticipants)

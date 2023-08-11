@@ -5,8 +5,8 @@ import dartzee.core.bean.AbstractDevScreen
 import dartzee.core.bean.CheatBar
 import dartzee.core.util.DialogUtil
 import dartzee.db.GameEntity
-import dartzee.db.sanity.DatabaseSanityCheck
 import dartzee.logging.CODE_SCREEN_LOAD_ERROR
+import dartzee.logging.CODE_SWITCHED_SCREEN
 import dartzee.logging.KEY_CURRENT_SCREEN
 import dartzee.logging.LoggingCode
 import dartzee.main.exitApplication
@@ -38,7 +38,6 @@ private const val CMD_PURGE_GAME = "purge "
 private const val CMD_LOAD_GAME = "load "
 private const val CMD_CLEAR_CONSOLE = "cls"
 private const val CMD_EMPTY_SCREEN_CACHE = "emptyscr"
-private const val CMD_SANITY = "sanity"
 private const val CMD_GUID = "guid"
 private const val CMD_TEST = "test"
 
@@ -139,6 +138,8 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
             return
         }
 
+        logger.info(CODE_SWITCHED_SCREEN, "Switched to screen ${scrn.getScreenName()}")
+
         contentPane.remove(this.currentScreen)
 
         this.currentScreen = scrn
@@ -189,17 +190,9 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         {
             ScreenCache.emptyCache()
         }
-        else if (cmd == CMD_SANITY)
-        {
-            DatabaseSanityCheck.runSanityCheck()
-        }
         else if (cmd == CMD_GUID)
         {
             textToShow = UUID.randomUUID().toString()
-        }
-        else if (cmd == "load")
-        {
-            DialogUtil.showLoadingDialogOLD("Testing")
         }
         else if (cmd == "stacktrace")
         {
