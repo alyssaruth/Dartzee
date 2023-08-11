@@ -1,6 +1,7 @@
 package dartzee.logging
 
 import dartzee.core.util.MathsUtil
+import dartzee.db.SqlStatementType
 import dartzee.utils.InjectedThings
 import java.sql.SQLException
 import java.util.concurrent.ConcurrentHashMap
@@ -30,7 +31,8 @@ class Logger(private val destinations: List<ILogDestination>)
             KEY_GENERIC_SQL to genericStatement,
             KEY_SQL to sqlStatement,
             KEY_ROW_COUNT to rowCount,
-            KEY_DATABASE_NAME to dbName)
+            KEY_DATABASE_NAME to dbName,
+            KEY_STATEMENT_TYPE to SqlStatementType.fromStatement(genericStatement).name)
     }
 
     fun logProgress(code: LoggingCode, workDone: Long, workToDo: Long, percentageToLogAt: Int = 10)
@@ -77,7 +79,7 @@ class Logger(private val destinations: List<ILogDestination>)
         val logRecord = LogRecord(timestamp, severity, code, message, errorObject, loggingContext + keyValuePairs)
 
         val runnable = Runnable { destinations.forEach { it.log(logRecord) } }
-        if (Thread.currentThread().name != LOGGER_THREAD)
+        if (Thread.currentThread().name != LOGGER_THREAD && !logService.isShutdown && !logService.isTerminated)
         {
             logService.execute(runnable)
         }
@@ -94,7 +96,7 @@ class Logger(private val destinations: List<ILogDestination>)
             logService.shutdown()
             logService.awaitTermination(30, TimeUnit.SECONDS)
         }
-        catch (ie: InterruptedException) { }
+        catch (_: InterruptedException) { }
         finally
         {
             logService = Executors.newFixedThreadPool(1, loggerFactory)

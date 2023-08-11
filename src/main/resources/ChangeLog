@@ -1,3 +1,12 @@
+--------- v7.0.1 ---------
+
+= Fixed bugs with game deletion that left behind some data
+= Fixed a bug that prevented launching new games sometimes after having performed a database sync
+= Fixed a bug where segments would retain hover state after a dart was thrown
+= Fixed a bug leading to some achievements having a date of end of time (9999-12-31)
+= Fixed a benign error log from resizing a game window whilst AI players were throwing
+= 93.5% test coverage (12876 / 13769 lines covered by 2381 tests)
+
 --------- v7.0.0 ---------
 
 + Redesigned the main menu to be responsive and a bit prettier

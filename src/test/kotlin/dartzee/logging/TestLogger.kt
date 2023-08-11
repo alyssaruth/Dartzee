@@ -112,7 +112,8 @@ class TestLogger: AbstractTest()
             KEY_GENERIC_SQL to genericSql,
             KEY_SQL to sql,
             KEY_ROW_COUNT to 20,
-            KEY_DATABASE_NAME to "some_database")
+            KEY_DATABASE_NAME to "some_database",
+            KEY_STATEMENT_TYPE to "INSERT")
     }
 
     @Test

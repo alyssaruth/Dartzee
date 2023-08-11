@@ -3,6 +3,7 @@ package dartzee.logging
 import dartzee.core.bean.WrapLayout
 import dartzee.core.util.runOnEventThread
 import dartzee.core.util.setMargins
+import dartzee.db.SqlStatementType
 import dartzee.screen.FocusableWindow
 import dartzee.utils.DartsDatabaseUtil
 import java.awt.BorderLayout
@@ -53,12 +54,12 @@ class LoggingConsole: FocusableWindow(), ILogDestination
         val style = cx.addStyle(text, null)
         if (record.loggingCode == CODE_SQL)
         {
-            when
+            val type = SqlStatementType.fromStatement(text)
+            when (type)
             {
-                text.contains("INSERT") -> StyleConstants.setForeground(style, Color.ORANGE)
-                text.contains("UPDATE") -> StyleConstants.setForeground(style, Color.ORANGE)
-                text.contains("DELETE") -> StyleConstants.setForeground(style, Color.PINK)
-                else -> StyleConstants.setForeground(style, Color.CYAN)
+                SqlStatementType.INSERT, SqlStatementType.UPDATE -> StyleConstants.setForeground(style, Color.ORANGE)
+                SqlStatementType.DELETE -> StyleConstants.setForeground(style, Color.PINK)
+                SqlStatementType.SELECT -> StyleConstants.setForeground(style, Color.CYAN)
             }
 
             val dbName = record.keyValuePairs[KEY_DATABASE_NAME]
