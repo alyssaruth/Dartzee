@@ -92,7 +92,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
     fun `Should include the round score and description of the rule`()
     {
         val pt = insertRelevantParticipant(finalScore = 275)
-        insertValidRoundResult(pt, testRules)
+        val drr = insertValidRoundResult(pt, testRules)
 
         runConversion()
 
@@ -101,6 +101,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
         a.achievementCounter shouldBe 50
         a.achievementDetail shouldBe "Total = 50"
         a.gameIdEarned shouldBe pt.gameId
+        a.dtAchieved shouldBe drr.dtCreation
     }
 
     @Test
@@ -117,11 +118,11 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
         getAchievementCount() shouldBe 2
     }
 
-    private fun insertValidRoundResult(participant: ParticipantEntity, rules: List<DartzeeRuleDto>, database: Database = mainDatabase)
+    private fun insertValidRoundResult(participant: ParticipantEntity, rules: List<DartzeeRuleDto>, database: Database = mainDatabase): DartzeeRoundResultEntity
     {
         insertDartzeeRules(participant.gameId, rules, database)
         val roundResult = getHardestRulePass(rules)
-        DartzeeRoundResultEntity.factoryAndSave(roundResult, participant, rules.size + 1, database)
+        return DartzeeRoundResultEntity.factoryAndSave(roundResult, participant, rules.size + 1, database)
     }
 
     private fun getHardestRulePass(rules: List<DartzeeRuleDto>) = DartzeeRoundResult(rules.size, true, 50)

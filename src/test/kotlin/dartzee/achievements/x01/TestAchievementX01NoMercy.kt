@@ -26,10 +26,11 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
     fun `Should include participants who were part of a team`()
     {
         val pt = insertRelevantParticipant(team = true, finalScore = 21)
-        insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1)
+        val drt = insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1)
 
         runConversion()
         getAchievementCount() shouldBe 1
+        retrieveAchievement().dtAchieved shouldBe drt.dtCreation
     }
 
     @Test
@@ -89,7 +90,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
     }
 
     @Test
-    fun `Should count higher odd numbers, or even finishes`()
+    fun `Should not count higher odd numbers, or even finishes`()
     {
         val alice = insertPlayer(name = "Alice")
 

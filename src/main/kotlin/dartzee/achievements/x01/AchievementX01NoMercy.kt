@@ -30,7 +30,7 @@ class AchievementX01NoMercy: AbstractMultiRowAchievement()
     override fun populateForConversion(playerIds: List<String>, database: Database)
     {
         val sb = StringBuilder()
-        sb.append(" SELECT drt.StartingScore, pt.PlayerId, pt.GameId, pt.DtFinished AS DtAchieved")
+        sb.append(" SELECT drt.StartingScore, pt.PlayerId, pt.GameId, drt.DtCreation AS DtAchieved")
         sb.append(" FROM Game g, Dart drt, Participant pt")
         sb.append(" LEFT OUTER JOIN Team t ON (pt.TeamId = t.RowId)")
         sb.append(" WHERE pt.GameId = g.RowId")

@@ -54,7 +54,7 @@ class AchievementDartzeeUnderPressure: AbstractMultiRowAchievement()
         if (!database.executeUpdate(sb)) return
 
         sb = StringBuilder()
-        sb.append(" SELECT pt.PlayerId, pt.DtFinished AS DtAchieved, zz.GameId, zz.RuleId, drr.Score")
+        sb.append(" SELECT pt.PlayerId, drr.DtCreation AS DtAchieved, zz.GameId, zz.RuleId, drr.Score")
         sb.append(" FROM $dartzeeGamesHardestRule zz, ${EntityName.DartzeeRoundResult} drr, ${EntityName.Participant} pt")
         sb.append(" LEFT OUTER JOIN ${EntityName.Team} t ON (pt.TeamId = t.RowId)")
         sb.append(" WHERE pt.GameId = zz.GameId")
