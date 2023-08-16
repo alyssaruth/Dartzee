@@ -4,9 +4,9 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.logging.CODE_BULK_SQL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.SQLException
 
 object BulkInserter
@@ -34,12 +34,8 @@ object BulkInserter
             return
         }
 
-        val threads = mutableListOf<Thread>()
         val entitiesBatched = entities.chunked(rowsPerThread)
-        entitiesBatched.forEach {
-            val t = getInsertThreadForBatch(it, tableName, rowsPerStatement, database)
-            threads.add(t)
-        }
+        val threads = entitiesBatched.map { getInsertThreadForBatch(it, tableName, rowsPerStatement, database) }
 
         doBulkInsert(threads, tableName, entities.size, rowsPerStatement)
 

@@ -121,9 +121,9 @@ class MenuScreen : EmbeddedScreen()
 
     private fun linkClicked()
     {
-        changeLog.also {
-            it.setLocationRelativeTo(this)
-            it.isVisible = true
+        changeLog.apply {
+            setLocationRelativeTo(this)
+            isVisible = true
         }
     }
 

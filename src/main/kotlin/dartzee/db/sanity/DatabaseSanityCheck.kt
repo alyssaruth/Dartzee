@@ -65,8 +65,8 @@ object DatabaseSanityCheck
 
         try
         {
-            checks.forEach {
-                val results = it.runCheck()
+            checks.forEach { check ->
+                val results = check.runCheck()
                 sanityErrors.addAll(results)
 
                 dlg.incrementProgressLater()

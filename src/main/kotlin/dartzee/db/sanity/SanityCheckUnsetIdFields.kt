@@ -10,10 +10,10 @@ class SanityCheckUnsetIdFields(val entity: AbstractEntity<*>): AbstractSanityChe
     {
         val idColumns = getIdColumns(entity)
 
-        idColumns.forEach{
-            if (!entity.columnCanBeUnset(it))
+        idColumns.forEach { column ->
+            if (!entity.columnCanBeUnset(column))
             {
-                checkForUnsetValues(entity, it)
+                checkForUnsetValues(entity, column)
             }
         }
 

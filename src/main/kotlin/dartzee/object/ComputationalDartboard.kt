@@ -24,8 +24,8 @@ class ComputationalDartboard(private val width: Int, private val height: Int): I
     fun getPotentialAimPoints() = getPotentialAimPoints(computeCenter(), computeRadius())
 
     private fun constructCenterPointMap() =
-        getAllNonMissSegments().associateWith {
-            val pt = getAverage(getPointsForSegment(it))
+        getAllNonMissSegments().associateWith { segment ->
+            val pt = getAverage(getPointsForSegment(segment))
             toComputedPoint(pt)
         }
 }

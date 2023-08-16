@@ -67,9 +67,9 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
     {
         if (dartsSoFar.size == 2 && aggregateRule != null)
         {
-            return validSegments.filter {
+            return validSegments.filter { segment ->
                 val scoringDartsAfterTwo = aggregateRule.getScoringDarts(dartsSoFar).size
-                val scoringDartsAfterThree = aggregateRule.getScoringDarts(dartsSoFar + Dart(it.score, it.getMultiplier())).size
+                val scoringDartsAfterThree = aggregateRule.getScoringDarts(dartsSoFar + Dart(segment.score, segment.getMultiplier())).size
                 scoringDartsAfterThree > scoringDartsAfterTwo
             }
         }

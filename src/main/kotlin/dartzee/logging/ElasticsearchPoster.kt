@@ -28,9 +28,9 @@ class ElasticsearchPoster(private val credentials: AWSCredentials?,
     {
         try
         {
-            val signer = AWS4Signer().also {
-                it.serviceName = AWSElasticsearch.ENDPOINT_PREFIX
-                it.regionName = "eu-west-2"
+            val signer = AWS4Signer().apply {
+                serviceName = AWSElasticsearch.ENDPOINT_PREFIX
+                regionName = "eu-west-2"
             }
 
             val interceptor = AWSRequestSigningApacheInterceptor(signer.serviceName, signer, AWSStaticCredentialsProvider(credentials))

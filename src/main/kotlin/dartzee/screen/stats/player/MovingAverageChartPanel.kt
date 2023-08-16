@@ -52,8 +52,8 @@ class MovingAverageChartPanel(private val parentTab: AbstractStatisticsTab) : JP
         //Go through what's left and add any others that are required by the graph (e.g. just added a comparison)
         val checkBoxes = panelCheckBoxes.getAllChildComponentsForType<JCheckBox>()
         val allSeries: List<XYSeries> = graphCollection.getXYSeries()
-        allSeries.forEach {
-            val key = "${it.key}"
+        allSeries.forEach { series ->
+            val key = "${series.key}"
             if (checkBoxes.none { cb -> cb.text == key} )
             {
                 val checkBox = JCheckBox(key)

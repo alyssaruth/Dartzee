@@ -103,10 +103,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
     fun executeUpdates(statements: List<String>): Boolean
     {
         statements.forEach {
-            if (!executeUpdate(it))
-            {
-                return false
-            }
+            if (!executeUpdate(it)) return false
         }
 
         return true
@@ -328,8 +325,8 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
     fun deleteRowsFromTable(entityName: EntityName, rowIds: List<String>): Boolean
     {
         var success = true
-        rowIds.chunked(50).forEach {
-            val idStr = it.getQuotedIdStr()
+        rowIds.chunked(50).forEach { rowIdBatch ->
+            val idStr = rowIdBatch.getQuotedIdStr()
             val sql = "DELETE FROM $entityName WHERE RowId IN $idStr"
             success = executeUpdate(sql)
         }

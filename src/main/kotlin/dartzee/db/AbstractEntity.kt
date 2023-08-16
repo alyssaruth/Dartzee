@@ -1,20 +1,28 @@
 package dartzee.db
 
-import dartzee.`object`.SegmentType
 import dartzee.achievements.AchievementType
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.core.util.getSqlString
 import dartzee.game.GameType
 import dartzee.game.MatchMode
-import dartzee.logging.*
+import dartzee.logging.CODE_DELETE_ERROR
+import dartzee.logging.CODE_INSTANTIATION_ERROR
+import dartzee.logging.CODE_MERGE_ERROR
+import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.logging.KEY_SQL
 import dartzee.logging.exceptions.ApplicationFault
 import dartzee.logging.exceptions.WrappedSqlException
+import dartzee.`object`.SegmentType
 import dartzee.utils.Database
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
-import java.sql.*
+import java.sql.Blob
+import java.sql.PreparedStatement
+import java.sql.ResultSet
+import java.sql.SQLException
+import java.sql.Timestamp
 import java.util.*
 import java.util.regex.Pattern
 
@@ -75,9 +83,9 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         ret.dtLastUpdate = rs.getTimestamp("DtLastUpdate")
         ret.retrievedFromDb = true
 
-        getColumnsExcluding("RowId", "DtCreation", "DtLastUpdate").forEach{
-            val rsValue = getFieldFromResultSet(rs, it)
-            ret.setField(it, rsValue)
+        getColumnsExcluding("RowId", "DtCreation", "DtLastUpdate").forEach { column ->
+            val rsValue = getFieldFromResultSet(rs, column)
+            ret.setField(column, rsValue)
         }
 
         ret.cacheValuesWhileResultSetActive()

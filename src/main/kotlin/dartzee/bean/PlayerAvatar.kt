@@ -64,9 +64,9 @@ class PlayerAvatar : JLabel(ResourceCache.AVATAR_UNSET)
             val newIcon = PlayerImageEntity.retrieveImageIconForId(avatarId)
             icon = newIcon
 
-            player?.let {
-                it.playerImageId = avatarId
-                it.saveToDatabase()
+            player?.let { player ->
+                player.playerImageId = avatarId
+                player.saveToDatabase()
             }
         }
 

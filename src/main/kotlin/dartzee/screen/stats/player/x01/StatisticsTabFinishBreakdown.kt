@@ -88,9 +88,9 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
 
         //Build up the pie set. Unlike the table, we need ALL values
         val dataset = DefaultPieDataset<String>()
-        getCheckoutSingles().sorted().forEach {
-            val count = scores.count { score -> score == it }
-            dataset.setValue(it.toString(), count)
+        getCheckoutSingles().sorted().forEach { checkout ->
+            val count = scores.count { score -> score == checkout }
+            dataset.setValue(checkout.toString(), count)
         }
 
         return dataset

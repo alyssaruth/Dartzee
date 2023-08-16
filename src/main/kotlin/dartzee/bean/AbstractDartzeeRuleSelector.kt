@@ -116,9 +116,9 @@ abstract class AbstractDartzeeRuleSelector<BaseRuleType: AbstractDartzeeRule>(va
             add(rule.configPanel)
         }
 
-        listener?.let {
-            addActionListenerToAllChildren(it)
-            addChangeListenerToAllChildren(it)
+        listener?.let { listener ->
+            addActionListenerToAllChildren(listener)
+            addChangeListenerToAllChildren(listener)
         }
 
         this.isEnabled = shouldBeEnabled()
