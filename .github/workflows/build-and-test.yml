@@ -10,7 +10,6 @@ jobs:
         with:
           distribution: zulu
           java-version: 11.0.18
-          cache: 'gradle'
       - name: Verify tests
         run: |
           sh scripts/verify-test-files.sh
