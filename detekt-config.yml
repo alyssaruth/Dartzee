@@ -1,0 +1,92 @@
+complexity:
+  ComplexCondition:
+    active: false
+  CyclomaticComplexMethod:
+    active: false
+  LargeClass:
+    excludes: '**/src/test/**/*.kt'
+  LongMethod:
+    active: false
+    # excludes: '**/src/test/**/*.kt'
+  LongParameterList:
+    active: false
+  TooManyFunctions:
+    active: false
+
+coroutines:
+  InjectDispatcher:
+    active: false # We don't use coroutines enough to get value from injecting dispatchers
+
+empty-blocks:
+  EmptyFunctionBlock:
+    active: false
+
+exceptions:
+  SwallowedException:
+    ignoredExceptionTypes:
+      ['NumberFormatException', 'JsonPatchApplicationException', 'IllegalArgumentException', 'TimeoutException']
+    excludes: '**/src/test/**/*.kt'
+  TooGenericExceptionCaught:
+    active: false
+  TooGenericExceptionThrown:
+    excludes: '**/src/test/**/*.kt'
+
+naming:
+  ConstructorParameterNaming:
+    active: false
+  InvalidPackageDeclaration:
+    active: true
+  MatchingDeclarationName:
+    active: false
+  TopLevelPropertyNaming:
+    active: false
+  VariableNaming:
+    active: false
+
+performance:
+  active: false
+
+style:
+  DestructuringDeclarationWithTooManyEntries:
+    active: false
+  DoubleNegativeLambda:
+    active: true
+  ExplicitItLambdaParameter:
+    active: true
+  ExpressionBodySyntax:
+    active: true
+  ForbiddenAnnotation:
+    active: true
+  MagicNumber:
+    active: false
+  MaxLineLength:
+    active: false
+  MultilineLambdaItParameter:
+    active: true
+    excludes: '**/src/test/**/*.kt'
+  ReturnCount:
+    excludeGuardClauses: true
+  ThrowsCount:
+    active: false
+  UnnecessaryAbstractClass:
+    active: false
+  UnnecessaryBracesAroundTrailingLambda:
+    active: true
+  UnnecessaryLet:
+    active: false
+  UnusedImports:
+    active: true
+  UseAnyOrNoneInsteadOfFind:
+    active: true
+  UseLet:
+    active: true
+
+potential-bugs:
+  CastNullableToNonNullableType:
+    active: true
+  MissingPackageDeclaration:
+    active: true
+    excludes:
+      - '**/*.kts'
+  PropertyUsedBeforeDeclaration:
+    active: true
