@@ -32,7 +32,7 @@ class Logger(private val destinations: List<ILogDestination>)
             KEY_SQL to sqlStatement,
             KEY_ROW_COUNT to rowCount,
             KEY_DATABASE_NAME to dbName,
-            KEY_STATEMENT_TYPE to SqlStatementType.fromStatement(genericStatement).name)
+            KEY_STATEMENT_TYPE to SqlStatementType.fromStatement(sqlStatement).name)
     }
 
     fun logProgress(code: LoggingCode, workDone: Long, workToDo: Long, percentageToLogAt: Int = 10)
