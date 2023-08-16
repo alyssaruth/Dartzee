@@ -1,8 +1,8 @@
 package dartzee.dartzee.dart
 
-import dartzee.`object`.DartboardSegment
 import dartzee.bean.SpinnerSingleSelector
 import dartzee.core.util.getAttributeInt
+import dartzee.`object`.DartboardSegment
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import java.awt.FlowLayout
@@ -24,10 +24,7 @@ class DartzeeDartRuleScore: AbstractDartzeeDartRuleConfigurable(), ChangeListene
         spinner.value = score
     }
 
-    override fun isValidSegment(segment: DartboardSegment): Boolean
-    {
-        return segment.score == score && !segment.isMiss()
-    }
+    override fun isValidSegment(segment: DartboardSegment) = segment.score == score && !segment.isMiss()
 
     override fun getRuleIdentifier() = "Score"
     override fun getDescription() = "$score"

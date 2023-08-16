@@ -96,10 +96,10 @@ class DartzeeDartRuleColour: AbstractDartzeeDartRuleConfigurable(), ActionListen
 
     override fun populate(rootElement: Element)
     {
-        cbBlack.isSelected = rootElement.getAttribute("Black")?.toBoolean() ?: false
-        cbWhite.isSelected = rootElement.getAttribute("White")?.toBoolean() ?: false
-        cbRed.isSelected = rootElement.getAttribute("Red")?.toBoolean() ?: false
-        cbGreen.isSelected = rootElement.getAttribute("Green")?.toBoolean() ?: false
+        cbBlack.isSelected = rootElement.getAttribute("Black").toBoolean()
+        cbWhite.isSelected = rootElement.getAttribute("White").toBoolean()
+        cbRed.isSelected = rootElement.getAttribute("Red").toBoolean()
+        cbGreen.isSelected = rootElement.getAttribute("Green").toBoolean()
 
         updateFromUi()
     }

@@ -105,10 +105,7 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
         dateFilter.enableChildren(chckbxDatePlayed.isSelected)
     }
 
-    private fun valid():Boolean
-    {
-        return dateFilter.valid()
-    }
+    private fun valid() = dateFilter.valid()
 
     fun includeGameBasedOnFilters(game:GameWrapper):Boolean
     {

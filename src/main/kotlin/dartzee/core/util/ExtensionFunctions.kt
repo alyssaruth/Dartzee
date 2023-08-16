@@ -13,9 +13,8 @@ fun <K: Comparable<K>, V> Map<K, V>.getSortedValues(): List<V> = entries.sortedB
 fun List<Int>.minOrZero() = minOrNull() ?: 0
 fun List<Int>.maxOrZero() = maxOrNull() ?: 0
 
-inline fun <T, R : Comparable<R>> Iterable<T>.sortedBy(descending: Boolean, crossinline selector: (T) -> R?): List<T> {
-    return if (descending) this.sortedByDescending(selector) else this.sortedBy(selector)
-}
+inline fun <T, R : Comparable<R>> Iterable<T>.sortedBy(descending: Boolean, crossinline selector: (T) -> R?) =
+    if (descending) this.sortedByDescending(selector) else this.sortedBy(selector)
 
 fun IntRange.getDescription(): String
 {

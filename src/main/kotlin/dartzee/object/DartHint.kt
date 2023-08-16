@@ -2,7 +2,7 @@ package dartzee.`object`
 
 class DartHint(score: Int, multiplier: Int): Dart(score, multiplier)
 
-fun factoryDartHintFromString(dartStr: String): DartHint?
+fun factoryDartHintFromString(dartStr: String): DartHint
 {
     return if (dartStr.startsWith("D"))
     {

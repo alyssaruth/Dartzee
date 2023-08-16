@@ -93,7 +93,7 @@ class TestDartsGamePanel : AbstractTest()
     {
         override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(501, pt)
 
-        override fun computeAiDart(model: DartsAiModel): ComputedPoint?
+        override fun computeAiDart(model: DartsAiModel): ComputedPoint
         {
             val currentScore = getCurrentPlayerState().getRemainingScore()
             return model.throwX01Dart(currentScore)

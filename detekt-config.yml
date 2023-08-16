@@ -64,6 +64,8 @@ style:
   MultilineLambdaItParameter:
     active: true
     excludes: '**/src/test/**/*.kt'
+  NewLineAtEndOfFile:
+    active: false
   ReturnCount:
     excludeGuardClauses: true
   ThrowsCount:

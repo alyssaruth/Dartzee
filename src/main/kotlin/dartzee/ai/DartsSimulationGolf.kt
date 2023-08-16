@@ -12,10 +12,7 @@ class DartsSimulationGolf(player: PlayerEntity, model: DartsAiModel) : AbstractD
     override val gameParams = "$ROUNDS"
     var score = 0
 
-    override fun shouldPlayCurrentRound(): Boolean
-    {
-        return currentRound <= ROUNDS
-    }
+    override fun shouldPlayCurrentRound() = currentRound <= ROUNDS
 
     override fun resetVariables()
     {

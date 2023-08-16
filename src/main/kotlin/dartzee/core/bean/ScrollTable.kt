@@ -45,16 +45,12 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
 
     private val scrollPane = JScrollPane()
     val table: JTable = object : JTable() {
-        override fun isCellEditable(arg0: Int, arg1: Int): Boolean {
-            return isEditable(arg0, arg1)
-        }
+        override fun isCellEditable(arg0: Int, arg1: Int) = isEditable(arg0, arg1)
     }
     val lblRowCount = JLabel("<Row Count>")
     private val panelRowCount = JPanel()
     private val tableFooter: JTable = object : JTable() {
-        override fun isCellEditable(row: Int, column: Int): Boolean {
-            return false
-        }
+        override fun isCellEditable(row: Int, column: Int) = false
     }
     private val panelCenter = JPanel()
 
@@ -229,9 +225,7 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
     val editingRow: Int
         get() = table.editingRow
 
-    fun convertRowIndexToModel(viewRowIndex: Int): Int {
-        return table.convertRowIndexToModel(viewRowIndex)
-    }
+    fun convertRowIndexToModel(viewRowIndex: Int) = table.convertRowIndexToModel(viewRowIndex)
 
     fun setTableFont(font: Font)
     {
@@ -305,9 +299,7 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
         table.removeColumn(col)
     }
 
-    fun getColumn(col: Int): TableColumn {
-        return table.columnModel.getColumn(col)
-    }
+    fun getColumn(col: Int): TableColumn = table.columnModel.getColumn(col)
 
     val selectedModelRow: Int
         get() {
@@ -382,9 +374,7 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
     /**
      * Default methods
      */
-    open fun isEditable(row: Int, col: Int): Boolean {
-        return false
-    }
+    open fun isEditable(row: Int, col: Int) = false
 
     /**
      * TableColumnModelListener

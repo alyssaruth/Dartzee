@@ -10,10 +10,7 @@ val WIREFRAME_COLOUR_WRAPPER = ColourWrapper(DartsColour.TRANSPARENT).also { it.
 
 val GREY_COLOUR_WRAPPER = makeMonochromeWrapper(Color.GRAY.brighter(), Color.LIGHT_GRAY).also { it.outerDartboardColour = Color.GRAY }
 
-fun makeMonochromeWrapper(dark: Color, light: Color): ColourWrapper
-{
-    return ColourWrapper(dark, light, light, light, dark, dark, dark, light)
-}
+fun makeMonochromeWrapper(dark: Color, light: Color) = ColourWrapper(dark, light, light, light, dark, dark, dark, light)
 
 data class ColourWrapper(private var evenSingleColour : Color, private var evenDoubleColour : Color,
                     private var evenTrebleColour : Color, private var oddSingleColour : Color,
@@ -30,7 +27,7 @@ data class ColourWrapper(private var evenSingleColour : Color, private var evenD
     /**
      * Helpers
      */
-    fun getBullColour(multiplier: Int): Color
+    private fun getBullColour(multiplier: Int): Color
     {
         return when (multiplier)
         {
@@ -58,18 +55,9 @@ data class ColourWrapper(private var evenSingleColour : Color, private var evenD
         }
     }
 
-    private fun getSingleColour(even: Boolean): Color
-    {
-        return if (even) evenSingleColour else oddSingleColour
-    }
+    private fun getSingleColour(even: Boolean) = if (even) evenSingleColour else oddSingleColour
 
-    private fun getDoubleColour(even: Boolean): Color
-    {
-        return if (even) evenDoubleColour else oddDoubleColour
-    }
+    private fun getDoubleColour(even: Boolean) = if (even) evenDoubleColour else oddDoubleColour
 
-    private fun getTrebleColour(even: Boolean): Color
-    {
-        return if (even) evenTrebleColour else oddTrebleColour
-    }
+    private fun getTrebleColour(even: Boolean) = if (even) evenTrebleColour else oddTrebleColour
 }

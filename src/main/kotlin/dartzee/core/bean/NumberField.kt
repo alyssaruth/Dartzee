@@ -6,7 +6,7 @@ import javax.swing.text.NumberFormatter
 /**
  * Text field to contain integer values
  */
-class NumberField constructor(min: Int? = null, max: Int? = null, val testId: String = "") : JFormattedTextField(NumberFormatter())
+class NumberField(min: Int? = null, max: Int? = null, val testId: String = "") : JFormattedTextField(NumberFormatter())
 {
     init
     {

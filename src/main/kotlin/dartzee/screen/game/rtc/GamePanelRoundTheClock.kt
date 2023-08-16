@@ -68,10 +68,7 @@ class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, 
 
     }
 
-    override fun mustContinueThrowing(): Boolean
-    {
-        return !shouldStopAfterDartThrown()
-    }
+    override fun mustContinueThrowing() = !shouldStopAfterDartThrown()
 
     override fun saveDartsAndProceed()
     {

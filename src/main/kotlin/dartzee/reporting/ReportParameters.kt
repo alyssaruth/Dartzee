@@ -8,7 +8,6 @@ import dartzee.db.SyncAuditEntity
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.Timestamp
-import java.util.*
 
 class ReportParameters
 {
@@ -132,10 +131,7 @@ class ReportParameters
         return sb.toString()
     }
 
-    override fun toString(): String
-    {
-        return "[$gameType, $gameParams, $dtStartFrom, $dtStartTo, $dtFinishFrom, $dtFinishTo]"
-    }
+    override fun toString() = "[$gameType, $gameParams, $dtStartFrom, $dtStartTo, $dtFinishFrom, $dtFinishTo]"
 
     fun setEnforceMatch(matches: Boolean)
     {

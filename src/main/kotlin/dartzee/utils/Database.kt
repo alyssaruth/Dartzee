@@ -151,10 +151,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         }
     }
 
-    fun executeQuery(sb: StringBuilder): ResultSet
-    {
-        return executeQuery(sb.toString())
-    }
+    fun executeQuery(sb: StringBuilder) = executeQuery(sb.toString())
 
     fun executeQuery(query: String): ResultSet
     {
@@ -184,10 +181,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         }
     }
 
-    fun executeQueryAggregate(sb: StringBuilder): Int
-    {
-        return executeQueryAggregate(sb.toString())
-    }
+    fun executeQueryAggregate(sb: StringBuilder) = executeQueryAggregate(sb.toString())
 
     fun executeQueryAggregate(sql: String): Int
     {

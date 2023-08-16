@@ -36,7 +36,7 @@ class TestVisualisationPanelScatter: AbstractTest()
 
     internal inner class JsonPointDeserializer : KeyDeserializer()
     {
-        override fun deserializeKey(key: String, ctxt: DeserializationContext): Any?
+        override fun deserializeKey(key: String, ctxt: DeserializationContext): Any
         {
             val x = key.substringAfter("x=").substringBefore(",").toInt()
             val y = key.substringAfter("y=").substringBefore(")").toInt()

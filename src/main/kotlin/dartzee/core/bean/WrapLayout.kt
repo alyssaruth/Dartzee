@@ -18,10 +18,7 @@ class WrapLayout : FlowLayout()
      * @return the preferred dimensions to lay out the
      * subcomponents of the specified container
      */
-    override fun preferredLayoutSize(target: Container): Dimension
-    {
-        return layoutSize(target, true)
-    }
+    override fun preferredLayoutSize(target: Container) = layoutSize(target, true)
 
     /**
      * Returns the minimum dimensions needed to layout the *visible*

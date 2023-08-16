@@ -109,10 +109,8 @@ object DartsColour
         return getScorerColour(totalScore, hueFactor, bgBrightness)
     }
 
-    fun getScorerColour(totalScore: Double, multiplier: Double, brightness: Double): Color
-    {
-        return getProportionalColour(totalScore, 180, multiplier, brightness)
-    }
+    fun getScorerColour(totalScore: Double, multiplier: Double, brightness: Double) =
+        getProportionalColour(totalScore, 180, multiplier, brightness)
 
     private fun getProportionalColour(value: Double, total: Int, multiplier: Double, brightness: Double): Color
     {

@@ -49,7 +49,7 @@ abstract class AbstractTableRenderer<E> : DefaultTableCellRenderer()
     }
 
 
-    private fun getReplacementValue(typedValue: E?, row: Int, column: Int): Any?
+    private fun getReplacementValue(typedValue: E?, row: Int, column: Int): Any
     {
         if (typedValue == null)
         {

@@ -35,8 +35,5 @@ class DartzeeRoundResultRenderer : AbstractTableRenderer<DartzeeRoundResult>()
         font = Font(font.name, Font.BOLD, 12)
     }
 
-    override fun allowNulls(): Boolean
-    {
-        return true
-    }
+    override fun allowNulls() = true
 }

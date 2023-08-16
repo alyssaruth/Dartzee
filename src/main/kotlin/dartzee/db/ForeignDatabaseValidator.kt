@@ -32,11 +32,6 @@ class ForeignDatabaseValidator(private val migrator: DatabaseMigrator)
         }
 
         val result = migrator.migrateToLatest(database, desc.replaceFirstChar { it.uppercase() })
-        if (result != MigrationResult.SUCCESS)
-        {
-            return false
-        }
-
-        return true
+        return result == MigrationResult.SUCCESS
     }
 }

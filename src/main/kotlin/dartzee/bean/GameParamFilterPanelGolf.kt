@@ -39,10 +39,7 @@ class GameParamFilterPanelGolf : GameParamFilterPanel()
         }
     }
 
-    override fun getFilterDesc(): String
-    {
-        return "games of ${panel.getSelectionStr()}"
-    }
+    override fun getFilterDesc() = "games of ${panel.getSelectionStr()}"
 
     override fun enableChildren(enabled: Boolean)
     {

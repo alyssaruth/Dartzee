@@ -1,8 +1,8 @@
 package dartzee.screen.game.scorer
 
+import dartzee.core.bean.AbstractTableRenderer
 import dartzee.`object`.Dart
 import dartzee.`object`.DartHint
-import dartzee.core.bean.AbstractTableRenderer
 import java.awt.Color
 import java.awt.Font
 
@@ -33,8 +33,5 @@ class DartRenderer : AbstractTableRenderer<Dart>()
         font = Font(font.name, style, font.size)
     }
 
-    override fun allowNulls(): Boolean
-    {
-        return true
-    }
+    override fun allowNulls() = true
 }

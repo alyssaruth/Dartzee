@@ -12,10 +12,7 @@ class ScrollTableButton(tm: DefaultTableModel): ScrollTable()
         model = tm
     }
 
-    override fun isEditable(row: Int, col: Int): Boolean
-    {
-        return buttonColumns.contains(col)
-    }
+    override fun isEditable(row: Int, col: Int) = buttonColumns.contains(col)
 
     fun setButtonColumn(column: Int, action: Action)
     {

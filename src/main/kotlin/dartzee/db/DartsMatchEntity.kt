@@ -1,7 +1,8 @@
 package dartzee.db
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import dartzee.core.util.*
+import dartzee.core.util.DateStatics
+import dartzee.core.util.jsonMapper
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.utils.Database
@@ -32,10 +33,8 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
 
     override fun getTableName() = EntityName.DartsMatch
 
-    override fun getCreateTableSqlSpecific(): String
-    {
-        return "LocalId INT UNIQUE NOT NULL, Games INT NOT NULL, Mode VARCHAR(255) NOT NULL, DtFinish TIMESTAMP NOT NULL, MatchParams VARCHAR(500) NOT NULL"
-    }
+    override fun getCreateTableSqlSpecific() =
+        "LocalId INT UNIQUE NOT NULL, Games INT NOT NULL, Mode VARCHAR(255) NOT NULL, DtFinish TIMESTAMP NOT NULL, MatchParams VARCHAR(500) NOT NULL"
 
     override fun assignRowId(): String
     {

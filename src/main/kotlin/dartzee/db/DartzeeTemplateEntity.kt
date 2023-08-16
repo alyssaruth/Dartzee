@@ -9,10 +9,7 @@ class DartzeeTemplateEntity(database: Database = mainDatabase): AbstractEntity<D
 
     override fun getTableName() = EntityName.DartzeeTemplate
 
-    override fun getCreateTableSqlSpecific(): String
-    {
-        return ("Name VARCHAR(1000) NOT NULL")
-    }
+    override fun getCreateTableSqlSpecific() = "Name VARCHAR(1000) NOT NULL"
 
     companion object
     {

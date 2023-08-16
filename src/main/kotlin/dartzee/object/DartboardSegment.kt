@@ -23,9 +23,7 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
 
     override fun toString() = "$score ($type)"
 
-    fun getRoughProbability(): Double {
-        return type.getRoughSize(score).toDouble() / getRoughScoringArea()
-    }
+    fun getRoughProbability() = type.getRoughSize(score).toDouble() / getRoughScoringArea()
 
     fun writeXml(root: Element, name: String)
     {

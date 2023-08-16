@@ -91,10 +91,8 @@ open class Dart(
     override fun toString() = format()
 
     fun hitClockTarget(clockType: ClockType) = score == startingScore && isRightClockMultiplier(clockType)
-    fun hitAnyClockTarget(clockType: ClockType): Boolean
-    {
-        return hitClockTarget(clockType) || (clockTargets.contains(score) && isRightClockMultiplier(clockType))
-    }
+    fun hitAnyClockTarget(clockType: ClockType) =
+        hitClockTarget(clockType) || (clockTargets.contains(score) && isRightClockMultiplier(clockType))
 
     private fun isRightClockMultiplier(clockType: ClockType): Boolean =
         when (clockType)

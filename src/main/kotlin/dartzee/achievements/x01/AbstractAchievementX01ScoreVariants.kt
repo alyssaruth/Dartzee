@@ -108,21 +108,15 @@ abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement
         return sb.toString()
     }
 
-    private fun getThreeDartMethodSqlStr(): String
-    {
-        return "${getDartStrSql("highestDart")} || ', ' || ${getDartStrSql("mediumDart")} || ', ' || ${getDartStrSql("lowestDart")}"
-    }
+    private fun getThreeDartMethodSqlStr() =
+        "${getDartStrSql("highestDart")} || ', ' || ${getDartStrSql("mediumDart")} || ', ' || ${getDartStrSql("lowestDart")}"
 
-    private fun getDartStrSql(alias: String): String
-    {
-        return "${getDartMultiplierStrSql(alias)} || ${getDartScoreStrSql(alias)}"
-    }
-    private fun getDartMultiplierStrSql(alias: String): String
-    {
-        return "CASE WHEN $alias.Multiplier = 3 THEN 'T' WHEN $alias.Multiplier = 2 THEN 'D' ELSE '' END"
-    }
-    private fun getDartScoreStrSql(alias: String): String
-    {
-        return "RTRIM(CAST(CASE WHEN $alias.Multiplier = 0 THEN 0 ELSE $alias.Score END AS CHAR(5)))"
-    }
+    private fun getDartStrSql(alias: String) =
+        "${getDartMultiplierStrSql(alias)} || ${getDartScoreStrSql(alias)}"
+
+    private fun getDartMultiplierStrSql(alias: String) =
+        "CASE WHEN $alias.Multiplier = 3 THEN 'T' WHEN $alias.Multiplier = 2 THEN 'D' ELSE '' END"
+
+    private fun getDartScoreStrSql(alias: String) =
+        "RTRIM(CAST(CASE WHEN $alias.Multiplier = 0 THEN 0 ELSE $alias.Score END AS CHAR(5)))"
 }

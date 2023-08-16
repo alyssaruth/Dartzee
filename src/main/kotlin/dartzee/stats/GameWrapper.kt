@@ -62,10 +62,7 @@ class GameWrapper(
         hmRoundNumberToDarts.putInList(dart.roundNumber, dart)
     }
 
-    private fun getDartsForRound(roundNumber: Int): List<Dart>
-    {
-        return hmRoundNumberToDarts[roundNumber] ?: emptyList()
-    }
+    private fun getDartsForRound(roundNumber: Int) = hmRoundNumberToDarts[roundNumber] ?: emptyList()
 
     private fun getScoreForRound(roundNumber: Int): Int
     {
