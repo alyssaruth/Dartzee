@@ -36,7 +36,7 @@ data class DartzeePlayerState(override val wrappedParticipant: IWrappedParticipa
     fun getCumulativeScore(roundNumber: Int): Int
     {
         val roundResultTotal = roundResults.filter { it.roundNumber <= roundNumber }.sumOf { it.score }
-        return roundResultTotal + sumScore(completedRounds.firstOrNull() ?: emptyList())
+        return roundResultTotal + sumScore(completedRounds.firstOrNull().orEmpty())
     }
 
     override fun getScoreSoFar() = getCumulativeScore(currentRoundNumber())

@@ -1,9 +1,9 @@
 package dartzee.screen.game.golf
 
-import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
 import dartzee.game.UniqueParticipantName
 import dartzee.game.state.GolfPlayerState
+import dartzee.`object`.Dart
 import dartzee.screen.game.AbstractGameStatisticsPanel
 
 open class GameStatisticsPanelGolf: AbstractGameStatisticsPanel<GolfPlayerState>()
@@ -41,8 +41,8 @@ open class GameStatisticsPanelGolf: AbstractGameStatisticsPanel<GolfPlayerState>
      * Any round where you could have "banked" and ended on something higher.
      */
     private fun getGambleRow(f: (rnd: List<Dart>) -> Int, desc: String) = prepareRow(desc) { playerName ->
-        val rounds = hmPlayerToDarts[playerName] ?: listOf()
-        rounds.map { f(it) }.sum()
+        val rounds = hmPlayerToDarts[playerName].orEmpty()
+        rounds.sumOf { f(it) }
     }
 
     private fun getPointsSquandered(round: List<Dart>): Int

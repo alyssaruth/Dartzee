@@ -135,7 +135,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
     fun populate(rule: DartzeeRuleDto)
     {
         cbRuleName.isSelected = rule.ruleName != null
-        tfRuleName.text = rule.ruleName ?: ""
+        tfRuleName.text = rule.ruleName.orEmpty()
 
         if (rule.dart1Rule == null)
         {

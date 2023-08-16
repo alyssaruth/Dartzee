@@ -17,6 +17,6 @@ class DartzeeAggregateRuleRepeats: AbstractDartzeeAggregateRule()
     override fun getScoringDarts(darts: List<Dart>): List<Dart>
     {
         val nonMissGroups = darts.filterNot { it.multiplier == 0 }.groupBy { it.score }.values
-        return nonMissGroups.firstOrNull { it.size > 1 } ?: emptyList()
+        return nonMissGroups.firstOrNull { it.size > 1 }.orEmpty()
     }
 }

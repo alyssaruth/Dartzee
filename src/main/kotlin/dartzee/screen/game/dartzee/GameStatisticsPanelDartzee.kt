@@ -55,6 +55,6 @@ open class GameStatisticsPanelDartzee: AbstractGameStatisticsPanel<DartzeePlayer
     private fun getRoundResults(playerName: UniqueParticipantName): List<List<DartzeeRoundResultEntity>>
     {
         val states = hmPlayerToStates[playerName]
-        return states?.map { it.roundResults } ?: listOf()
+        return states?.map { it.roundResults }.orEmpty()
     }
 }

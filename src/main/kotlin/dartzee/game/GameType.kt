@@ -36,6 +36,6 @@ enum class GameType
             X01 -> gameParams
             GOLF -> "$gameParams holes"
             ROUND_THE_CLOCK -> RoundTheClockConfig.fromJson(gameParams).getDescription()
-            DARTZEE -> DartzeeTemplateEntity().retrieveForId(gameParams, false)?.name ?: ""
+            DARTZEE -> DartzeeTemplateEntity().retrieveForId(gameParams, false)?.name.orEmpty()
         }
 }

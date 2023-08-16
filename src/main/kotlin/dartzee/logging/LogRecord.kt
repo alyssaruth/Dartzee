@@ -26,8 +26,8 @@ data class LogRecord(val timestamp: Instant,
 
     override fun toString(): String
     {
-        val durationStr = keyValuePairs[KEY_DURATION]?.let { " (${it}ms) " } ?: ""
-        val rowCountStr = keyValuePairs[KEY_ROW_COUNT]?.let { " (${it} rows) " } ?: ""
+        val durationStr = keyValuePairs[KEY_DURATION]?.let { " (${it}ms) " }.orEmpty()
+        val rowCountStr = keyValuePairs[KEY_ROW_COUNT]?.let { " (${it} rows) " }.orEmpty()
         return "$dateStr   [$loggingCode] $durationStr$rowCountStr$message"
     }
 
