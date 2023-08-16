@@ -4,6 +4,7 @@ import dartzee.ai.AI_DARTBOARD
 import dartzee.ai.AimDart
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
+import dartzee.ai.getComputedPointForScore
 import dartzee.`object`.ComputationalDartboard
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.SegmentType
@@ -11,7 +12,6 @@ import dartzee.utils.UPPER_BOUND_DOUBLE_RATIO
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.getAnglesForScore
 import dartzee.utils.translatePoint
-import getComputedPointForScore
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
