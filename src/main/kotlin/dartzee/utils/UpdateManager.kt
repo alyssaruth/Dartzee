@@ -12,7 +12,6 @@ import dartzee.`object`.DartsClient
 import dartzee.utils.InjectedThings.logger
 import kong.unirest.Unirest
 import kong.unirest.json.JSONObject
-import launchUrl
 import java.awt.BorderLayout
 import java.io.File
 import javax.swing.JLabel
