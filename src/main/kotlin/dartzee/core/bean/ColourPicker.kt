@@ -17,7 +17,7 @@ class ColourPicker : JLabel(), IMouseListener
         private set
 
     private var listener: ColourSelectionListener? = null
-    private var img: BufferedImage = BufferedImage(45, 30, BufferedImage.TYPE_INT_ARGB)
+    private val img: BufferedImage = BufferedImage(45, 30, BufferedImage.TYPE_INT_ARGB)
 
     init
     {

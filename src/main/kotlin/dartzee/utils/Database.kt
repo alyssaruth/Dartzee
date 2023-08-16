@@ -41,8 +41,7 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         synchronized(connectionPoolLock)
         {
             hsConnections.clear()
-            for (i in 0 until initialCount)
-            {
+            repeat(initialCount) {
                 val conn = createDatabaseConnection()
                 hsConnections.add(conn)
             }

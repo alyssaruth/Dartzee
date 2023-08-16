@@ -82,6 +82,8 @@ style:
     active: true
   UseLet:
     active: true
+  WildcardImport:
+    active: false
 
 potential-bugs:
   CastNullableToNonNullableType:
