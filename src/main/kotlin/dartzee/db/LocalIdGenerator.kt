@@ -24,8 +24,6 @@ class LocalIdGenerator(private val database: Database)
             return nextId
         }
     }
-    private fun retrieveLastAssignedId(entityName: EntityName): Long
-    {
-        return database.executeQueryAggregate("SELECT MAX(LocalId) FROM $entityName").toLong()
-    }
+    private fun retrieveLastAssignedId(entityName: EntityName) =
+        database.executeQueryAggregate("SELECT MAX(LocalId) FROM $entityName").toLong()
 }

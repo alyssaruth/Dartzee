@@ -16,20 +16,14 @@ class GameParamFilterPanelX01 : GameParamFilterPanel()
         panel.add(spinner)
     }
 
-    override fun getGameParams(): String
-    {
-        return "${spinner.value}"
-    }
+    override fun getGameParams() = "${spinner.value}"
 
     override fun setGameParams(gameParams: String)
     {
         spinner.value = gameParams.toInt()
     }
 
-    override fun getFilterDesc(): String
-    {
-        return "games of ${getGameParams()}"
-    }
+    override fun getFilterDesc() = "games of ${getGameParams()}"
 
     override fun enableChildren(enabled: Boolean)
     {

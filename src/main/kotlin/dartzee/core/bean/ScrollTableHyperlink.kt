@@ -6,7 +6,6 @@ import java.awt.Cursor
 import java.awt.Font
 import java.awt.event.MouseEvent
 import java.awt.font.TextAttribute
-import java.util.*
 import javax.swing.JTable
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
@@ -83,11 +82,7 @@ abstract class ScrollTableHyperlink(private val linkColumnName: String, testId: 
     }
 
     abstract fun linkClicked(value: Any)
-    open fun renderValue(value: Any): String
-    {
-        return "$value"
-    }
-
+    open fun renderValue(value: Any) = "$value"
 
     override fun setCursor(arg0: Cursor)
     {

@@ -81,10 +81,8 @@ class PlayerSelectDialog(selectionMode: Int) : SimpleDialog(), IDoubleClickListe
             return if (players.isEmpty()) null else players.first()
         }
 
-        fun selectPlayers(playersToExclude: List<PlayerEntity>): List<PlayerEntity>
-        {
-            return selectPlayers(playersToExclude, ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
-        }
+        fun selectPlayers(playersToExclude: List<PlayerEntity>) =
+            selectPlayers(playersToExclude, ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
 
         private fun selectPlayers(playersToExclude: List<PlayerEntity>, selectionMode: Int): List<PlayerEntity>
         {

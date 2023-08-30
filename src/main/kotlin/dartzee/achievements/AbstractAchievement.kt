@@ -141,10 +141,7 @@ abstract class AbstractAchievement
         return col
     }
 
-    fun getAngle() : Double
-    {
-        return getAngle(attainedValue)
-    }
+    fun getAngle() = getAngle(attainedValue)
     fun getAngle(attainedValue : Int) : Double
     {
         if (attainedValue == -1)
@@ -250,8 +247,5 @@ abstract class AbstractAchievement
         return ret
     }
 
-    open fun retrieveAllRows(): List<AchievementEntity>
-    {
-        return AchievementEntity().retrieveEntities("AchievementType = '$achievementType'")
-    }
+    open fun retrieveAllRows() = AchievementEntity().retrieveEntities("AchievementType = '$achievementType'")
 }

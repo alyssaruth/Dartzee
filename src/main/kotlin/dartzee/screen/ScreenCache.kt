@@ -16,10 +16,8 @@ object ScreenCache
 
     fun getDartsGameScreens() = hmGameIdToGameScreen.values.distinct()
 
-    inline fun <reified K : EmbeddedScreen> get(): K
-    {
-        return hmClassToScreen.getOrPut(K::class.java) { K::class.java.getConstructor().newInstance() } as K
-    }
+    inline fun <reified K : EmbeddedScreen> get() =
+        hmClassToScreen.getOrPut(K::class.java) { K::class.java.getConstructor().newInstance() } as K
 
     fun currentScreen() = mainScreen.currentScreen
 

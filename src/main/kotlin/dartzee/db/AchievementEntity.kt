@@ -74,10 +74,8 @@ class AchievementEntity(database: Database = mainDatabase) : AbstractEntity<Achi
         }
 
 
-        fun retrieveAchievement(achievementType: AchievementType, playerId: String): AchievementEntity?
-        {
-            return AchievementEntity().retrieveEntity("PlayerId = '$playerId' AND achievementType = '$achievementType'")
-        }
+        fun retrieveAchievement(achievementType: AchievementType, playerId: String) =
+            AchievementEntity().retrieveEntity("PlayerId = '$playerId' AND achievementType = '$achievementType'")
 
         /**
          * Methods for gameplay logic to update achievements

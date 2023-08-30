@@ -68,10 +68,7 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
         }
     }
 
-    open fun getNextText() : String
-    {
-        return "Next"
-    }
+    open fun getNextText() = "Next"
 
     open fun hideBackButton()
     {
@@ -97,13 +94,6 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
     /**
      * Default methods
      */
-    open fun showBackButton(): Boolean
-    {
-        return true
-    }
-
-    open fun showNextButton(): Boolean
-    {
-        return false
-    }
+    open fun showBackButton() = true
+    open fun showNextButton() = false
 }

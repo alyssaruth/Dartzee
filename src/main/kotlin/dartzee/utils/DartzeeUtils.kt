@@ -30,10 +30,7 @@ fun Component.setColoursForDartzeeResult(success: Boolean)
     }
 }
 
-fun factoryHighScoreResult(darts: List<Dart>): DartzeeRoundResult
-{
-    return DartzeeRoundResult(-1, success = true, score = sumScore(darts))
-}
+fun factoryHighScoreResult(darts: List<Dart>) = DartzeeRoundResult(-1, success = true, score = sumScore(darts))
 
 fun insertDartzeeRules(gameId: String, dartzeeDtos: List<DartzeeRuleDto>? = null, database: Database = mainDatabase)
 {
