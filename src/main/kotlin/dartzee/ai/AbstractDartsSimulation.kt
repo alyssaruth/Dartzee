@@ -18,7 +18,7 @@ abstract class AbstractDartsSimulation(val player: PlayerEntity,
     protected var dtStart: Timestamp? = null
     protected var dtFinish: Timestamp? = null
     protected var currentRound = -1
-    protected var dartsThrown = mutableListOf<Dart>()
+    protected val dartsThrown = mutableListOf<Dart>()
 
     protected var hmRoundNumberToDarts = HashMapList<Int, Dart>()
 
@@ -60,14 +60,14 @@ abstract class AbstractDartsSimulation(val player: PlayerEntity,
 
     protected open fun resetVariables()
     {
-        dartsThrown = mutableListOf()
+        dartsThrown.clear()
         hmRoundNumberToDarts = HashMapList()
         currentRound = 1
     }
 
     protected fun resetRound()
     {
-        dartsThrown = mutableListOf()
+        dartsThrown.clear()
     }
 
     protected fun dartThrown(aiPt: ComputedPoint)

@@ -5,7 +5,7 @@ import javax.swing.table.DefaultTableModel
 
 class ScrollTableButton(tm: DefaultTableModel): ScrollTable()
 {
-    private var buttonColumns = mutableListOf<Int>()
+    private val buttonColumns = mutableListOf<Int>()
 
     init
     {

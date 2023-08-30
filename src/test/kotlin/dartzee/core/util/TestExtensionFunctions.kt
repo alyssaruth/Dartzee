@@ -154,9 +154,9 @@ class TestExtensionFunctions: AbstractTest()
     @Test
     fun `Should correctly report the longest streak`()
     {
-        val list: List<Boolean> = listOf(true, true, false, false, false, true, false, true, true, true, true, false, false, true)
+        val list: List<Any> = listOf(1, 2, "a", "b", "c", 4, "d", 6, 7, 8, 9, "e", "f", 1)
 
-        list.getLongestStreak { it } shouldBe listOf(true, true, true, true)
-        list.getLongestStreak { !it } shouldBe listOf(false, false, false)
+        list.getLongestStreak { it is String } shouldBe listOf("a", "b", "c")
+        list.getLongestStreak { it is Int } shouldBe listOf(6, 7, 8, 9)
     }
 }
