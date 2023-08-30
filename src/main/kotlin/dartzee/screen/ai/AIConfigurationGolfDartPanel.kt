@@ -1,11 +1,16 @@
 package dartzee.screen.ai
 
-import dartzee.`object`.SegmentType
 import dartzee.ai.DartsAiModel
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
 import dartzee.core.bean.selectedItemTyped
-import javax.swing.*
+import dartzee.`object`.SegmentType
+import javax.swing.Box
+import javax.swing.JComboBox
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JSpinner
+import javax.swing.SpinnerNumberModel
 import javax.swing.border.TitledBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener

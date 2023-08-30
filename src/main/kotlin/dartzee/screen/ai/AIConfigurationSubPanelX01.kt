@@ -5,7 +5,11 @@ import dartzee.ai.DartsAiModel
 import dartzee.bean.SpinnerSingleSelector
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.JButton
+import javax.swing.JCheckBox
+import javax.swing.JLabel
+import javax.swing.JSpinner
+import javax.swing.SpinnerNumberModel
 
 class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionListener
 {

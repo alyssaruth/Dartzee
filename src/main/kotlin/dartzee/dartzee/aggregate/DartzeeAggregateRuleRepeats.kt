@@ -8,7 +8,7 @@ class DartzeeAggregateRuleRepeats: AbstractDartzeeAggregateRule()
     override fun isValidRound(segments: List<DartboardSegment>): Boolean
     {
         val nonMissGroups = segments.filterNot { it.isMiss() }.groupBy { it.score }.values
-        return nonMissGroups.firstOrNull { it.size > 1 } != null
+        return nonMissGroups.any { it.size > 1 }
     }
 
     override fun getRuleIdentifier() = "DartRepeats"

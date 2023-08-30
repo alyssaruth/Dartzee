@@ -1,7 +1,7 @@
 package dartzee.dartzee.dart
 
-import dartzee.`object`.DartboardSegment
 import dartzee.core.bean.addUpdateListener
+import dartzee.`object`.DartboardSegment
 import dartzee.utils.InjectedThings
 import org.w3c.dom.Document
 import org.w3c.dom.Element
@@ -33,7 +33,7 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
 
     override fun isValidSegment(segment: DartboardSegment): Boolean
     {
-        return segments.find{it.score == segment.score && it.type == segment.type} != null
+        return segments.any { it.score == segment.score && it.type == segment.type}
     }
 
     override fun getRuleIdentifier() = "Custom"

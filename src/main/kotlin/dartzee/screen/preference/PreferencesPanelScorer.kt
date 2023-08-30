@@ -1,13 +1,21 @@
 package dartzee.screen.preference
 
 import dartzee.core.util.getAllChildComponentsForType
-import dartzee.utils.*
+import dartzee.utils.DartsColour
+import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
+import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
+import dartzee.utils.PREFERENCES_DOUBLE_HUE_FACTOR
+import dartzee.utils.PreferenceUtil
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.Font
-import javax.swing.*
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JSpinner
+import javax.swing.SpinnerNumberModel
+import javax.swing.SwingConstants
 import javax.swing.border.TitledBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener

@@ -1,7 +1,12 @@
 package dartzee.core.screen
 
 import net.miginfocom.swing.MigLayout
-import javax.swing.*
+import javax.swing.JDialog
+import javax.swing.JLabel
+import javax.swing.JProgressBar
+import javax.swing.SwingConstants
+import javax.swing.SwingUtilities
+import javax.swing.WindowConstants
 
 class LoadingDialog : JDialog()
 {

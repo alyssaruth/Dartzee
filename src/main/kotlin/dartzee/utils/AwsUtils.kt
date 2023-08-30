@@ -21,7 +21,6 @@ object AwsUtils
         catch (t: Throwable)
         {
             println("Failed to read in AWS credentials: $t")
-            t.printStackTrace()
             null
         }
 
