@@ -28,10 +28,10 @@ class HashMapCount<K>: HashMap<K, Int>()
             list.sortWith(entryComparator)
         }
 
-        list.forEach{
-            for (i in 0 until it.value)
+        list.forEach{ entry ->
+            repeat(entry.value)
             {
-                ret.add(it.key)
+                ret.add(entry.key)
             }
         }
 

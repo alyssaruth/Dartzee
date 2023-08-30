@@ -63,24 +63,16 @@ inline fun <T> Iterable<T>.allIndexed(predicate: (index: Int, T) -> Boolean): Bo
 
 fun <T> List<T>.getLongestStreak(isHit: (item: T) -> Boolean): List<T>
 {
-    var biggestChain = mutableListOf<T>()
-    var currentChain = mutableListOf<T>()
-
-    for (item in this)
-    {
-        if (!isHit(item))
-        {
-            currentChain = mutableListOf()
-            continue
+    val chains = fold(listOf(mutableListOf<T>())) { currentChains, item ->
+        val latestChain = currentChains.last()
+        if (isHit(item)) {
+            latestChain.add(item)
+        } else if (latestChain.isNotEmpty()) {
+            return@fold currentChains + listOf(mutableListOf())
         }
 
-        //It's a hit and we've reset for a new game if necessary. Just increment.
-        currentChain.add(item)
-        if (currentChain.size > biggestChain.size)
-        {
-            biggestChain = currentChain.toMutableList()
-        }
+        currentChains
     }
 
-    return biggestChain
+    return chains.maxBy { it.size }
 }

@@ -5,7 +5,6 @@ import dartzee.achievements.getPlayerAchievementScore
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.screen.ScreenCache
-import dartzee.screen.stats.player.PlayerAchievementsScreen
 import javax.swing.ImageIcon
 
 class PlayerAchievementsButton(private val player: PlayerEntity,

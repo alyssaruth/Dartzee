@@ -47,7 +47,7 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) : AbstractDa
 
     private fun finishedRound()
     {
-        hmRoundNumberToDarts[currentRound] = dartsThrown
+        confirmRound()
 
         //If we've bust, then reset the current score back
         if (isBust(dartsThrown.last()))

@@ -13,7 +13,7 @@ import javax.swing.SpinnerNumberModel
 
 class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionListener
 {
-    var hmScoreToDart = mutableMapOf<Int, AimDart>()
+    val hmScoreToDart = mutableMapOf<Int, AimDart>()
 
     val spinnerScoringDart = SpinnerSingleSelector()
     private val btnConfigureSetupDarts = JButton("Configure Setup...")
@@ -64,7 +64,8 @@ class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionList
 
         spinnerMercyThreshold.value = if (mercyRule) mercyThreshold else 10
 
-        hmScoreToDart = model.hmScoreToDart.toMutableMap()
+        hmScoreToDart.clear()
+        hmScoreToDart.putAll(model.hmScoreToDart)
     }
 
     override fun actionPerformed(arg0: ActionEvent)

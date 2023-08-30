@@ -88,3 +88,9 @@ potential-bugs:
       - '**/*.kts'
   PropertyUsedBeforeDeclaration:
     active: true
+  # Temporarily disable due to false positives: https://github.com/detekt/detekt/issues/6129
+  UnreachableCode:
+    active: false
+  # Disable until we've resolved, got https://trello.com/c/pJKhQth6/112-remove-instances-of for it
+  UnsafeCallOnNullableType:
+    active: false
