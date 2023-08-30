@@ -189,10 +189,7 @@ fun makeGameWrapper(
     teamGame: Boolean = false
 ): GameWrapper
 {
-    return GameWrapper(localId, gameParams, dtStart, dtFinish, finalScore, teamGame).also {
-        it.setHmRoundNumberToDartsThrown(dartRounds)
-        it.setTotalRounds(totalRounds)
-    }
+    return GameWrapper(localId, gameParams, dtStart, dtFinish, finalScore, teamGame, totalRounds, dartRounds)
 }
 
 fun makeGolfGameWrapper(

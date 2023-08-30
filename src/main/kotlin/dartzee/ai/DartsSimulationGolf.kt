@@ -36,7 +36,7 @@ class DartsSimulationGolf(player: PlayerEntity, model: DartsAiModel) : AbstractD
 
     private fun finishedRound()
     {
-        hmRoundNumberToDarts[currentRound] = dartsThrown
+        confirmRound()
 
         val drt = dartsThrown.last()
         val roundScore = drt.getGolfScore(currentRound)

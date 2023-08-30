@@ -32,11 +32,10 @@ class GameWrapper(
     val dtStart: Timestamp,
     val dtFinish: Timestamp,
     val finalScore: Int,
-    val teamGame: Boolean
+    val teamGame: Boolean,
+    private var totalRounds: Int = 0,
+    private val hmRoundNumberToDarts: HashMapList<Int, Dart> = HashMapList(),
 ) {
-    private var hmRoundNumberToDarts = HashMapList<Int, Dart>()
-    private var totalRounds = 0
-
     /**
      * Helpers
      */
@@ -245,20 +244,6 @@ class GameWrapper(
         return getAllDarts().groupBy{ it.startingScore }
                             .mapValues{ it.value.size }
                             .mapValues{ e -> ranges.find{ it.contains(e.value) }!! }
-    }
-
-    /**
-     * These are normally calculated when adding darts retrieved from the DB.
-     * Need direct setters if we're from a simulation
-     */
-    fun setTotalRounds(totalRounds: Int)
-    {
-        this.totalRounds = totalRounds
-    }
-
-    fun setHmRoundNumberToDartsThrown(hmRoundNumberToDarts: HashMapList<Int, Dart>)
-    {
-        this.hmRoundNumberToDarts = hmRoundNumberToDarts
     }
 
     var gameEntity: GameEntity? = null

@@ -9,14 +9,11 @@ import dartzee.`object`.Dart
 import dartzee.`object`.DartsClient
 import dartzee.stats.GameWrapper
 import dartzee.utils.getDartForSegment
-import java.sql.Timestamp
 
 abstract class AbstractDartsSimulation(val player: PlayerEntity,
                                        val model: DartsAiModel)
 {
     //Transient things
-    protected var dtStart: Timestamp? = null
-    protected var dtFinish: Timestamp? = null
     protected var currentRound = -1
     protected val dartsThrown = mutableListOf<Dart>()
 
@@ -34,21 +31,19 @@ abstract class AbstractDartsSimulation(val player: PlayerEntity,
     {
         resetVariables()
 
-        dtStart = getSqlDateNow()
+        val dtStart = getSqlDateNow()
 
         while (shouldPlayCurrentRound())
         {
             startRound()
         }
 
-        dtFinish = getSqlDateNow()
+        val dtFinish = getSqlDateNow()
 
         val totalRounds = currentRound - 1
         val totalScore = getTotalScore()
 
-        val wrapper = GameWrapper(gameId, gameParams, dtStart!!, dtFinish!!, totalScore, false)
-        wrapper.setHmRoundNumberToDartsThrown(hmRoundNumberToDarts)
-        wrapper.setTotalRounds(totalRounds)
+        val wrapper = GameWrapper(gameId, gameParams, dtStart, dtFinish, totalScore, false, totalRounds, hmRoundNumberToDarts)
 
         if (DartsClient.devMode)
         {
@@ -68,6 +63,11 @@ abstract class AbstractDartsSimulation(val player: PlayerEntity,
     protected fun resetRound()
     {
         dartsThrown.clear()
+    }
+
+    protected fun confirmRound()
+    {
+        hmRoundNumberToDarts[currentRound] = dartsThrown.toMutableList()
     }
 
     protected fun dartThrown(aiPt: ComputedPoint)
