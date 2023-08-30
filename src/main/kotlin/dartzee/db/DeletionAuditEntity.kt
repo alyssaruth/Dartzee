@@ -41,9 +41,7 @@ class DeletionAuditEntity(database: Database = mainDatabase): AbstractEntity<Del
             return result
         }
 
-        fun factoryAndSave(entity: AbstractEntity<*>, database: Database = mainDatabase): DeletionAuditEntity
-        {
-            return factory(entity, database).also { it.saveToDatabase() }
-        }
+        fun factoryAndSave(entity: AbstractEntity<*>, database: Database = mainDatabase) =
+            factory(entity, database).also { it.saveToDatabase() }
     }
 }
