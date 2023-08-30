@@ -1,4 +1,4 @@
-package e2e
+package dartzee.e2e
 
 import dartzee.ai.AimDart
 import dartzee.game.GameType

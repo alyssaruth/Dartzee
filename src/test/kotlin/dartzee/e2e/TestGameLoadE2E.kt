@@ -1,4 +1,4 @@
-package e2e
+package dartzee.e2e
 
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.waitForAssertion
