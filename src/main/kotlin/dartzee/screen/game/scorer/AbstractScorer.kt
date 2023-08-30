@@ -75,7 +75,7 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), 
 
         //TableModel
         tableScores.setRowHeight(25)
-        for (i in 0 until getNumberOfColumns())
+        repeat(getNumberOfColumns())
         {
             model.addColumn("")
         }

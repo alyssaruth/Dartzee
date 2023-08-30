@@ -12,7 +12,6 @@ import javax.swing.JPanel
  */
 abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
 {
-    private val innerPanel = JPanel()
     val panelEast = JPanel()
     val panelWest = JPanel()
     protected val panelCenter = JPanel()

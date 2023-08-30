@@ -93,7 +93,7 @@ object ResourceCache
 
             for (wavFile in wavFiles)
             {
-                for (i in 0..2)
+                repeat(3)
                 {
                     val ais = getAudioInputStream(wavFile)
                     ais.mark(Integer.MAX_VALUE)
