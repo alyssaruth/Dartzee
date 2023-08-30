@@ -20,10 +20,7 @@ class TestPreferencesPanelMisc: AbstractPreferencePanelTest<PreferencesPanelMisc
                 PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)
     }
 
-    override fun factory(): PreferencesPanelMisc
-    {
-        return PreferencesPanelMisc()
-    }
+    override fun factory() = PreferencesPanelMisc()
 
     override fun setUiFieldValuesToNonDefaults(panel: PreferencesPanelMisc)
     {

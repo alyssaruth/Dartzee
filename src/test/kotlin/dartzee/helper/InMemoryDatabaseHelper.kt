@@ -387,10 +387,8 @@ fun insertPlayerImage(resource: String = "BaboOne", database: Database = mainDat
 }
 
 fun getCountFromTable(table: EntityName, database: Database = mainDatabase) = getCountFromTable(table.name, database)
-fun getCountFromTable(table: String, database: Database = mainDatabase): Int
-{
-    return database.executeQueryAggregate("SELECT COUNT(1) FROM $table")
-}
+fun getCountFromTable(table: String, database: Database = mainDatabase) =
+    database.executeQueryAggregate("SELECT COUNT(1) FROM $table")
 
 /**
  * Retrieve
@@ -401,19 +399,13 @@ fun retrieveDartsMatch() = DartsMatchEntity().retrieveEntities().first()
 fun retrieveParticipant() = ParticipantEntity().retrieveEntities().first()
 fun retrieveAchievement() = AchievementEntity().retrieveEntities().first()
 fun retrieveX01Finish()  = X01FinishEntity().retrieveEntities().first()
-fun retrieveDartzeeRule() = DartzeeRuleEntity().retrieveEntities().first()
 fun retrieveDeletionAudit() = DeletionAuditEntity().retrieveEntities().first()
 fun retrieveTeam() = TeamEntity().retrieveEntities().first()
 
-fun getAchievementCount(type: AchievementType): Int
-{
-    return mainDatabase.executeQueryAggregate("SELECT COUNT(1) FROM Achievement WHERE AchievementType = '$type'")
-}
+fun getAchievementCount(type: AchievementType) =
+    mainDatabase.executeQueryAggregate("SELECT COUNT(1) FROM Achievement WHERE AchievementType = '$type'")
 
-fun getAchievementRows(type: AchievementType): List<AchievementEntity>
-{
-    return AchievementEntity().retrieveEntities("AchievementType = '$type'")
-}
+fun getAchievementRows(type: AchievementType) = AchievementEntity().retrieveEntities("AchievementType = '$type'")
 fun retrieveParticipant(gameId: String, playerId: String) = ParticipantEntity().retrieveEntities("GameId = '$gameId' AND PlayerId = '$playerId'").first()
 
 data class AchievementSummary(val achievementType: AchievementType, val achievementCounter: Int, val gameIdEarned: String, val achievementDetail: String = "")
@@ -423,10 +415,8 @@ fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary>
     return achievements.map { AchievementSummary(it.achievementType, it.achievementCounter, it.gameIdEarned, it.achievementDetail) }
 }
 
-private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString()): Database
-{
-    return Database(dbName = dbName, inMemory = true).also { it.initialiseConnectionPool(1) }
-}
+private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString()) =
+    Database(dbName = dbName, inMemory = true).also { it.initialiseConnectionPool(1) }
 
 fun usingInMemoryDatabase(dbName: String = UUID.randomUUID().toString(),
                           withSchema: Boolean = false,

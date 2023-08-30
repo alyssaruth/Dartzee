@@ -2,7 +2,11 @@ package dartzee.screen.game
 
 import dartzee.core.util.maxOrZero
 import dartzee.game.state.X01PlayerState
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.makeDart
+import dartzee.helper.makeX01PlayerState
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import io.kotest.matchers.shouldBe
@@ -170,7 +174,7 @@ private class FakeGameStatisticsPanel(private val highestWins: List<String> = em
     }
 
     private fun getDartsThrownRow() = prepareRow("Darts Thrown") { playerName ->
-        val darts = hmPlayerToDarts[playerName] ?: emptyList()
+        val darts = hmPlayerToDarts[playerName].orEmpty()
         darts.map { it.size }.sum()
     }
 
