@@ -26,7 +26,7 @@ class TestResizeE2E : AbstractRegistryTest()
     }
 
     @Test
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     fun `E2E - Small dartboard`()
     {
         val game = insertGame(gameType = GameType.X01, gameParams = "501")

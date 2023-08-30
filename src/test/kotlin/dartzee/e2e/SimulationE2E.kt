@@ -35,7 +35,7 @@ class SimulationE2E: AbstractTest()
     }
 
     @Test
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     fun `Should be able to run a simulation of 500 games`()
     {
         val model = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))

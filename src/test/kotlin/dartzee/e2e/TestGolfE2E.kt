@@ -62,7 +62,7 @@ class TestGolfE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     fun `E2E - Golf`()
     {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "18")
@@ -86,7 +86,7 @@ class TestGolfE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     fun `E2E - Golf - Gambler, stop threshold`()
     {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "9")
@@ -129,7 +129,7 @@ class TestGolfE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     fun `E2E - 9 holes - Team of 2`()
     {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "9")

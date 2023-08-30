@@ -36,7 +36,7 @@ class TestGameLoadE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     fun `E2E - Game load and AI resume`()
     {
         val (winner, loser) = createPlayers()

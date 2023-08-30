@@ -45,7 +45,7 @@ class TestDartzeeE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     fun `E2E - Dartzee`()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
@@ -88,7 +88,7 @@ class TestDartzeeE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     fun `E2E - Dartzee - 2 player team`()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()

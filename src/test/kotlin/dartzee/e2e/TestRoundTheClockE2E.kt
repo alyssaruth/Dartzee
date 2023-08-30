@@ -61,7 +61,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     fun `E2E - RTC - perfect game`()
     {
         val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson())
@@ -89,7 +89,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     fun `E2E - RTC - unordered`()
     {
         val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, false).toJson())
@@ -125,7 +125,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     fun `E2E - In Order- Team of 2`()
     {
         val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson())

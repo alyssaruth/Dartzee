@@ -41,7 +41,7 @@ class TestMatchE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     fun `E2E - Two game match`()
     {
         val match = insertDartsMatch(games = 2, matchParams = "", mode = MatchMode.FIRST_TO)

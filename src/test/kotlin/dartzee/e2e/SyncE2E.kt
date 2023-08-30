@@ -75,7 +75,7 @@ class SyncE2E: AbstractRegistryTest()
         File(TEST_ROOT).deleteRecursively()
     }
 
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     @Test
     fun `Syncing two games with same local ID`()
     {
@@ -105,7 +105,7 @@ class SyncE2E: AbstractRegistryTest()
         x01Wins.size shouldBe 2
     }
 
-    @Tag("dartzee/e2e")
+    @Tag("e2e")
     @Test
     fun `Syncing deleted data`()
     {
