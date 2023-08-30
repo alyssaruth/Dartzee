@@ -78,19 +78,19 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
     {
         val scores = filteredGames.filter { it.isFinished() }.map { it.getDartsForFinalRound().last().score }
 
-        val rows: List<Array<Any>> = scores.distinct().map {
-            val count = scores.count { score -> score == it }
+        val rows: List<Array<Any>> = scores.distinct().map { double ->
+            val count = scores.count { score -> score == double }
             val percent = getPercentage(count, scores.size.toDouble())
-            arrayOf(it, count, percent)
+            arrayOf(double, count, percent)
         }
 
         model.addRows(rows)
 
         //Build up the pie set. Unlike the table, we need ALL values
         val dataset = DefaultPieDataset<String>()
-        getCheckoutSingles().sorted().forEach {
-            val count = scores.count { score -> score == it }
-            dataset.setValue(it.toString(), count)
+        getCheckoutSingles().sorted().forEach { double ->
+            val count = scores.count { score -> score == double }
+            dataset.setValue(double.toString(), count)
         }
 
         return dataset

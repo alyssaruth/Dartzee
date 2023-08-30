@@ -17,11 +17,11 @@ object DartzeeRuleConversion
 
             try
             {
-                allRules.forEach {
-                    val dto = it.toDto(false)
+                allRules.forEach { rule ->
+                    val dto = rule.toDto(false)
                     val newResult = dto.runStrengthCalculation()
-                    it.calculationResult = newResult.toDbString()
-                    it.saveToDatabase()
+                    rule.calculationResult = newResult.toDbString()
+                    rule.saveToDatabase()
 
                     dlg.incrementProgressLater()
                 }

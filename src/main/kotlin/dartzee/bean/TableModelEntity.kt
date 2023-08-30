@@ -21,11 +21,11 @@ class TableModelEntity(entities: List<AbstractEntity<*>>) : DefaultTableModel()
 
     private fun addRows(entities: List<AbstractEntity<*>>, columns: List<String>)
     {
-        entities.forEach{
+        entities.forEach { entity ->
             val row = arrayOfNulls<Any>(columns.size)
             for (i in columns.indices)
             {
-                row[i] = it.getField(columns[i])
+                row[i] = entity.getField(columns[i])
             }
 
             addRow(row)

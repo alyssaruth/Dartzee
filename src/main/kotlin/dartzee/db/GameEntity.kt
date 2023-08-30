@@ -73,7 +73,7 @@ class GameEntity(database: Database = mainDatabase): AbstractEntity<GameEntity>(
         {
             val game = factory(launchParams.gameType, launchParams.gameParams)
             match?.let {
-                game.dartsMatchId = it.rowId
+                game.dartsMatchId = match.rowId
                 game.matchOrdinal = 1
             }
 

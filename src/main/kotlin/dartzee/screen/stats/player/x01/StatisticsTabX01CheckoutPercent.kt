@@ -1,10 +1,10 @@
 package dartzee.screen.stats.player.x01
 
-import dartzee.`object`.Dart
 import dartzee.core.bean.ScrollTable
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.TableUtil.DefaultModel
+import dartzee.`object`.Dart
 import dartzee.screen.stats.player.AbstractStatisticsTab
 import dartzee.stats.GameWrapper
 import dartzee.utils.getCheckoutScores
@@ -66,13 +66,13 @@ class StatisticsTabX01CheckoutPercent : AbstractStatisticsTab()
         var totalOpportunities = 0
         var totalHits = 0
 
-        getCheckoutScores().forEach{
-            val darts = hmDoubleToDartsThrown[it] ?: mutableListOf()
+        getCheckoutScores().forEach { checkout ->
+            val darts = hmDoubleToDartsThrown[checkout] ?: mutableListOf()
 
             val opportunities = darts.size
-            val hits = darts.filter { drt -> drt.isDouble() && drt.getTotal() == it }.size
+            val hits = darts.filter { drt -> drt.isDouble() && drt.getTotal() == checkout }.size
 
-            val row = arrayOf(it / 2, opportunities, hits, MathsUtil.getPercentage(hits, opportunities.toDouble()))
+            val row = arrayOf(checkout / 2, opportunities, hits, MathsUtil.getPercentage(hits, opportunities.toDouble()))
             model.addRow(row)
 
             totalOpportunities += opportunities

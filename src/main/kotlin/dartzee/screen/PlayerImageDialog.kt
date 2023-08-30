@@ -83,8 +83,8 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
 
     private fun populatePanel(panel: JPanel, entities: List<PlayerImageEntity>, bg: ButtonGroup)
     {
-        entities.forEach {
-            val radio = PlayerImageRadio(it)
+        entities.forEach { img ->
+            val radio = PlayerImageRadio(img)
             panel.add(radio)
             radio.addToButtonGroup(bg)
         }

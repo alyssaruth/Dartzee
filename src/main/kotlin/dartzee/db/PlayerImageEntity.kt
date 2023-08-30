@@ -47,8 +47,8 @@ class PlayerImageEntity(database: Database = mainDatabase): AbstractEntity<Playe
 
     fun createPresets()
     {
-        avatarPresets.forEach {
-            val resourceLocation = "/avatars/$it.png"
+        avatarPresets.forEach { preset ->
+            val resourceLocation = "/avatars/$preset.png"
             val bytes = FileUtil.getByteArrayForResource(resourceLocation)
             factoryAndSave("rsrc:$resourceLocation", bytes, true, database)
         }

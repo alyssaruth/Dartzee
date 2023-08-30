@@ -78,7 +78,7 @@ abstract class AbstractDartzeeRuleSelector<BaseRuleType: AbstractDartzeeRule>(va
     fun valid(): Boolean
     {
         val errorStr = getSelection().validate()
-        if (!errorStr.isEmpty())
+        if (errorStr.isNotEmpty())
         {
             DialogUtil.showErrorOLD("$desc: $errorStr")
             return false
@@ -116,9 +116,9 @@ abstract class AbstractDartzeeRuleSelector<BaseRuleType: AbstractDartzeeRule>(va
             add(rule.configPanel)
         }
 
-        listener?.let {
-            addActionListenerToAllChildren(it)
-            addChangeListenerToAllChildren(it)
+        listener?.let { listener ->
+            addActionListenerToAllChildren(listener)
+            addChangeListenerToAllChildren(listener)
         }
 
         this.isEnabled = shouldBeEnabled()

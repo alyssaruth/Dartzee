@@ -58,9 +58,9 @@ class StatisticsTabRoundTheClockHitRate : AbstractStatisticsTabPieBreakdown()
         val hmRangeBreakdown = mutableMapOf<Int, HashMapCount<IntRange>>()
 
         val hmCountConstructor = { HashMapCount<IntRange>() }
-        val individualGameRanges = games.map{ it.getRangeByTarget(ranges) }
-        individualGameRanges.forEach{
-            it.forEach { (target, range) ->
+        val individualGameRanges = games.map { it.getRangeByTarget(ranges) }
+        individualGameRanges.forEach { gameRange ->
+            gameRange.forEach { (target, range) ->
                 val hmCount = hmRangeBreakdown.getOrPut(target, hmCountConstructor)
                 hmCount.incrementCount(range)
             }
