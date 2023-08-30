@@ -125,10 +125,10 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
                 getRuleNumber(rule)
             )
         })
-        pendingTiles.forEach {
-            it.addActionListener(this)
-            it.addMouseListener(this)
-            it.updateState(dartsThrown)
+        pendingTiles.forEach { tile ->
+            tile.addActionListener(this)
+            tile.addMouseListener(this)
+            tile.updateState(dartsThrown)
         }
     }
 

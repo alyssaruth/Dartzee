@@ -102,12 +102,12 @@ private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>,
     {
         database.dropUnexpectedTables()
 
-        achievements.forEach {
+        achievements.forEach { achievement ->
             val timer = DurationTimer()
-            it.runConversion(playerIds, database)
+            achievement.runConversion(playerIds, database)
 
             val timeElapsed = timer.getDuration()
-            timings[it.name] = timeElapsed
+            timings[achievement.name] = timeElapsed
 
             dlg.incrementProgressLater()
         }

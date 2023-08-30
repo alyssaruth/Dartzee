@@ -83,9 +83,9 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         ret.dtLastUpdate = rs.getTimestamp("DtLastUpdate")
         ret.retrievedFromDb = true
 
-        getColumnsExcluding("RowId", "DtCreation", "DtLastUpdate").forEach{
-            val rsValue = getFieldFromResultSet(rs, it)
-            ret.setField(it, rsValue)
+        getColumnsExcluding("RowId", "DtCreation", "DtLastUpdate").forEach { column ->
+            val rsValue = getFieldFromResultSet(rs, column)
+            ret.setField(column, rsValue)
         }
 
         ret.cacheValuesWhileResultSetActive()

@@ -57,8 +57,8 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
         //Add labels at 10% increments
         val lblXPosition = panel.width / 2 - LABEL_WIDTH / 2
         val yPositions = (1 until 500).filter { it % (500/10) == 0 }
-        yPositions.forEach {
-            val probInt = 10 * it / 50
+        yPositions.forEach { y ->
+            val probInt = 10 * y / 50
             val label = JLabel("-   $probInt%   -")
             label.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 14f)
             label.setSize(LABEL_WIDTH, LABEL_HEIGHT)
@@ -66,7 +66,7 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
 
             val g = keyImg.graphics as Graphics2D
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-            g.translate(lblXPosition, it - LABEL_HEIGHT / 2)
+            g.translate(lblXPosition, y - LABEL_HEIGHT / 2)
             label.paint(g)
         }
 

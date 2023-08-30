@@ -115,13 +115,13 @@ class SimulationRunner: AbstractSimulationRunner()
             val participants = mutableListOf<ParticipantEntity>()
             val darts = mutableListOf<DartEntity>()
 
-            wrappers.forEach {
-                games.add(it.gameEntity!!)
-                participants.add(it.participantEntity!!)
+            wrappers.forEach { wrapper ->
+                games.add(wrapper.gameEntity!!)
+                participants.add(wrapper.participantEntity!!)
 
-                darts += it.simulationDartEntities
+                darts += wrapper.simulationDartEntities
 
-                it.clearEntities()
+                wrapper.clearEntities()
             }
 
             BulkInserter.insert(games)

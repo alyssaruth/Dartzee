@@ -121,9 +121,9 @@ class GameLauncher
 
         try
         {
-            allGames.forEach {
-                val participants = loadParticipants(it.rowId)
-                val panel = scrn.addGameToMatch(it, participants.size)
+            allGames.forEach { game ->
+                val participants = loadParticipants(game.rowId)
+                val panel = scrn.addGameToMatch(game, participants.size)
                 panel.loadGame(participants)
             }
 

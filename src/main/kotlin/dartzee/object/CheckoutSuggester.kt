@@ -44,12 +44,12 @@ object CheckoutSuggester
     {
         val map = mutableMapOf<String, List<DartHint>>()
 
-        checkouts.forEach {
-            val split = it.split("=")
+        checkouts.forEach { checkout ->
+            val split = checkout.split("=")
 
             val score = split[0].toInt()
             val dartStrs = split[1].split(",")
-            val darts = dartStrs.map{d -> factoryDartHintFromString(d)!!}.toList()
+            val darts = dartStrs.map { d -> factoryDartHintFromString(d)!! }.toList()
 
             addCheckoutsToMap(score, darts, map)
         }

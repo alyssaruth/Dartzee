@@ -42,8 +42,8 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
         {
             val list = root.getElementsByTagName(itemName)
 
-            return (0 until list.length).map {
-                val node = list.item(it) as Element
+            return (0 until list.length).map { i ->
+                val node = list.item(i) as Element
                 val score = node.getAttributeInt("Score")
                 val type = SegmentType.valueOf(node.getAttribute("Type"))
                 DartboardSegment(type, score)

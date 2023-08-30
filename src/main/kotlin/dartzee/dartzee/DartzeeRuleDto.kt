@@ -1,11 +1,11 @@
 package dartzee.dartzee
 
-import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
 import dartzee.dartzee.aggregate.AbstractDartzeeAggregateRule
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.EntityName
+import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.dartzeeCalculator
 import dartzee.utils.InjectedThings.mainDatabase
@@ -67,9 +67,9 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
     {
         if (dartsSoFar.size == 2 && aggregateRule != null)
         {
-            return validSegments.filter {
+            return validSegments.filter { segment ->
                 val scoringDartsAfterTwo = aggregateRule.getScoringDarts(dartsSoFar).size
-                val scoringDartsAfterThree = aggregateRule.getScoringDarts(dartsSoFar + Dart(it.score, it.getMultiplier())).size
+                val scoringDartsAfterThree = aggregateRule.getScoringDarts(dartsSoFar + Dart(segment.score, segment.getMultiplier())).size
                 scoringDartsAfterThree > scoringDartsAfterTwo
             }
         }
