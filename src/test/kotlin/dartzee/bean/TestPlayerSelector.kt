@@ -201,8 +201,6 @@ class TestPlayerSelector: AbstractTest()
     private fun PlayerSelector.clickSelect() = clickChild<JButton>("Select")
     private fun PlayerSelector.clickUnselect() = clickChild<JButton>("Unselect")
 
-    private fun getPlayerNamesToSelectFrom(selector: PlayerSelector): List<String>
-    {
-        return selector.tablePlayersToSelectFrom.getAllPlayers().map { it.name }
-    }
+    private fun getPlayerNamesToSelectFrom(selector: PlayerSelector) =
+        selector.tablePlayersToSelectFrom.getAllPlayers().map { it.name }
 }

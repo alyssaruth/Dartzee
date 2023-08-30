@@ -150,10 +150,8 @@ class TestRadioButtonPanel: AbstractTest()
     {
         val sources = mutableListOf<Any>()
 
-        override fun actionPerformed(e: ActionEvent?)
+        override fun actionPerformed(e: ActionEvent)
         {
-            e ?: return
-
             sources.add(e.source)
         }
     }

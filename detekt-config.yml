@@ -7,15 +7,10 @@ complexity:
     excludes: '**/src/test/**/*.kt'
   LongMethod:
     active: false
-    # excludes: '**/src/test/**/*.kt'
   LongParameterList:
     active: false
   TooManyFunctions:
     active: false
-
-coroutines:
-  InjectDispatcher:
-    active: false # We don't use coroutines enough to get value from injecting dispatchers
 
 empty-blocks:
   EmptyFunctionBlock:
@@ -64,6 +59,8 @@ style:
   MultilineLambdaItParameter:
     active: true
     excludes: '**/src/test/**/*.kt'
+  NewLineAtEndOfFile:
+    active: false
   ReturnCount:
     excludeGuardClauses: true
   ThrowsCount:
@@ -84,6 +81,7 @@ style:
 potential-bugs:
   CastNullableToNonNullableType:
     active: true
+    excludes: '**/src/test/**/*.kt'
   MissingPackageDeclaration:
     active: true
     excludes:

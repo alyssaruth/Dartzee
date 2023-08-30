@@ -41,7 +41,7 @@ class TestDatabaseMigrations: AbstractTest()
                 val conversionFns = DatabaseMigrations.getConversionsMap().values.flatten()
                 for (conversion in conversionFns)
                 {
-                    try { conversion(dbToRunOn) } catch (e: Exception) {}
+                    try { conversion(dbToRunOn) } catch (_: Exception) {}
                 }
 
                 //Will probably have one logged, which is fine

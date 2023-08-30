@@ -55,10 +55,8 @@ fun AbstractDartsGameScreen.toggleStats()
     clickChild<JToggleButton> { it.icon == dartzee.utils.ResourceCache.ICON_STATS_LARGE }
 }
 
-fun AbstractDartsGameScreen.getScorer(playerName: String): DartsScorerX01
-{
-    return getChild { it.playerName.contains(playerName) }
-}
+fun AbstractDartsGameScreen.getScorer(playerName: String) =
+    getChild<DartsScorerX01> { it.playerName.contains(playerName) }
 
 data class TwoPlayers(val winner: PlayerEntity, val loser: PlayerEntity)
 fun createPlayers(): TwoPlayers

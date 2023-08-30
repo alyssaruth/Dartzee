@@ -54,10 +54,8 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         return AchievementEntity(database).countWhere("AchievementType = '$type'")
     }
 
-    open fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow(), database: Database = mainDatabase): GameEntity
-    {
-        return insertGame(gameType = factoryAchievement().gameType!!, dtLastUpdate = dtLastUpdate, database = database)
-    }
+    open fun insertRelevantGame(dtLastUpdate: Timestamp = getSqlDateNow(), database: Database = mainDatabase) =
+        insertGame(gameType = factoryAchievement().gameType!!, dtLastUpdate = dtLastUpdate, database = database)
 
     fun insertRelevantParticipant(player: PlayerEntity = insertPlayer(), finalScore: Int = -1, team: Boolean = false): ParticipantEntity
     {
@@ -65,7 +63,7 @@ abstract class AbstractAchievementTest<E: AbstractAchievement>: AbstractTest()
         val teamEntity = if (team) insertTeam(gameId = g.rowId, finalScore = finalScore) else null
 
         val ptFinalScore = if (team) -1 else finalScore
-        return insertParticipant(playerId = player.rowId, gameId = g.rowId, finalScore = ptFinalScore, teamId = teamEntity?.rowId ?: "")
+        return insertParticipant(playerId = player.rowId, gameId = g.rowId, finalScore = ptFinalScore, teamId = teamEntity?.rowId.orEmpty())
     }
 
     @Test

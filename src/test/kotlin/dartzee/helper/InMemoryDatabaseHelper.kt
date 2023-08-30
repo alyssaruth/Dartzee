@@ -492,6 +492,6 @@ fun Database.getTableNames(): List<String>
 
 fun runConversion(fromVersion: Int)
 {
-    val conversions = DatabaseMigrations.getConversionsMap()[fromVersion]!!
+    val conversions = DatabaseMigrations.getConversionsMap().getValue(fromVersion)
     conversions.forEach { it(mainDatabase) }
 }

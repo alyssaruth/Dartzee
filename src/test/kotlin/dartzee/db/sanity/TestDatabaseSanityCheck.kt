@@ -113,9 +113,8 @@ class TestDatabaseSanityCheck : AbstractTest()
 
 private class DummySanityCheckBadGames(private val games: List<GameEntity>) : AbstractSanityCheck()
 {
-    override fun runCheck(): List<AbstractSanityCheckResult> {
-        return listOf(SanityCheckResultEntitiesSimple(games, "Games where something's wrong"))
-    }
+    override fun runCheck(): List<AbstractSanityCheckResult> =
+        listOf(SanityCheckResultEntitiesSimple(games, "Games where something's wrong"))
 }
 
 private class DummySanityCheckMultipleThings(private val players: List<PlayerEntity>): AbstractSanityCheck()

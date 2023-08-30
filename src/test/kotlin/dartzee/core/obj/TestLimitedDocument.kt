@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 class TestLimitedDocument: AbstractTest()
 {
     @Test
-    fun testLimitedDocument()
+    fun `should restrict the length of text that can be inserted`()
     {
         val limitedDocument = LimitedDocument(50)
 

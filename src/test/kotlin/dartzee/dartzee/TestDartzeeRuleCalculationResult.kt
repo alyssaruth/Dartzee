@@ -69,8 +69,6 @@ class TestDartzeeRuleCalculationResult: AbstractTest()
         newResult.validSegments.shouldContainExactlyInAnyOrder(doubleNineteen, singleTwenty, outerBull)
     }
 
-    private fun makeCalculationResult(percentage: Double, validCombinations: Int = 100): DartzeeRuleCalculationResult
-    {
-        return makeDartzeeRuleCalculationResult(validCombinations = validCombinations, validCombinationProbability = percentage, allCombinationsProbability = 100.0)
-    }
+    private fun makeCalculationResult(percentage: Double, validCombinations: Int = 100) =
+        makeDartzeeRuleCalculationResult(validCombinations = validCombinations, validCombinationProbability = percentage, allCombinationsProbability = 100.0)
 }

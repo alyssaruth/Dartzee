@@ -113,8 +113,6 @@ class TestBulkInserter: AbstractTest()
     }
 
     private fun prepareRows(numberToGenerate: Int) = (1..numberToGenerate).map {
-        GameEntity().also {
-            it.assignRowId()
-        }
+        GameEntity().also { g -> g.assignRowId() }
     }
 }

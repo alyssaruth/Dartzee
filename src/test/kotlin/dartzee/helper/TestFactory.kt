@@ -100,10 +100,10 @@ fun makeX01Round(startingScore: Int = 501, roundNumber: Int = 1, vararg darts: D
 fun makeX01Rounds(startingScore: Int = 501, vararg darts: List<Dart>): List<List<Dart>>
 {
     var currentScore = startingScore
-    darts.forEachIndexed { ix, it ->
-        makeX01Round(currentScore, ix + 1, *it.toTypedArray())
+    darts.forEachIndexed { ix, dartRound ->
+        makeX01Round(currentScore, ix + 1, *dartRound.toTypedArray())
 
-        val lastDartForRound = it.last()
+        val lastDartForRound = dartRound.last()
         if (!isBust(lastDartForRound))
         {
             currentScore = lastDartForRound.startingScore - lastDartForRound.getTotal()
@@ -156,10 +156,8 @@ fun makeClockPlayerState(clockType: ClockType = ClockType.Standard,
 fun makeX01PlayerState(startingScore: Int = 501,
                        player: PlayerEntity = insertPlayer(),
                        participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
-                       completedRound: List<Dart> = listOf()): X01PlayerState
-{
-    return X01PlayerState(startingScore, SingleParticipant(participant), mutableListOf(completedRound))
-}
+                       completedRound: List<Dart> = listOf()): X01PlayerState =
+    X01PlayerState(startingScore, SingleParticipant(participant), mutableListOf(completedRound))
 
 fun makeX01PlayerStateWithRounds(startingScore: Int = 501,
                                  player: PlayerEntity = insertPlayer(),

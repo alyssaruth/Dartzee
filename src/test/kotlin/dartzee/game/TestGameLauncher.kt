@@ -4,7 +4,6 @@ import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.EntityName
 import dartzee.game.state.GolfPlayerState
-import dartzee.game.state.X01PlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDartsMatch

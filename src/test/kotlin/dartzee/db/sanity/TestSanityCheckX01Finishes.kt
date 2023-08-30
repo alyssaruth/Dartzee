@@ -2,7 +2,12 @@ package dartzee.db.sanity
 
 import dartzee.game.GameType
 import dartzee.getRows
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertDart
+import dartzee.helper.insertFinishForPlayer
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly

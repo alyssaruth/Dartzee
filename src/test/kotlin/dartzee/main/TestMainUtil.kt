@@ -1,17 +1,24 @@
 package dartzee.main
 
-import dartzee.`object`.DartsClient
 import dartzee.core.util.CoreRegistry.INSTANCE_STRING_DEVICE_ID
 import dartzee.core.util.CoreRegistry.instance
 import dartzee.helper.AbstractTest
 import dartzee.helper.logger
-import dartzee.logging.*
+import dartzee.logging.CODE_LOOK_AND_FEEL_ERROR
+import dartzee.logging.CODE_LOOK_AND_FEEL_SET
+import dartzee.logging.KEY_APP_VERSION
+import dartzee.logging.KEY_DEVICE_ID
+import dartzee.logging.KEY_DEV_MODE
+import dartzee.logging.KEY_OPERATING_SYSTEM
+import dartzee.logging.KEY_USERNAME
+import dartzee.logging.Severity
+import dartzee.`object`.DartsClient
 import dartzee.utils.DARTS_VERSION_NUMBER
 import io.kotest.matchers.maps.shouldContainAll
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotBeEmpty
 import io.kotest.matchers.types.shouldBeInstanceOf
-import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import javax.swing.UIManager
