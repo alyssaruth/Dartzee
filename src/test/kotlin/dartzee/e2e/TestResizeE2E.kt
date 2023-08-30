@@ -1,4 +1,4 @@
-package e2e
+package dartzee.e2e
 
 import dartzee.ai.AimDart
 import dartzee.game.GameType
@@ -26,7 +26,7 @@ class TestResizeE2E : AbstractRegistryTest()
     }
 
     @Test
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     fun `E2E - Small dartboard`()
     {
         val game = insertGame(gameType = GameType.X01, gameParams = "501")

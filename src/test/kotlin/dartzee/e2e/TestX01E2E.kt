@@ -1,4 +1,4 @@
-package e2e
+package dartzee.e2e
 
 import dartzee.achievements.AchievementType
 import dartzee.ai.AimDart
@@ -33,7 +33,7 @@ class TestX01E2E : AbstractRegistryTest()
     }
 
     @Test
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     fun `E2E - 501 - 9 dart game`()
     {
         val game = insertGame(gameType = GameType.X01, gameParams = "501")
@@ -64,7 +64,7 @@ class TestX01E2E : AbstractRegistryTest()
     }
 
     @Test
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     fun `E2E - 301 - bust and mercy rule`()
     {
         val game = insertGame(gameType = GameType.X01, gameParams = "301")
@@ -102,7 +102,7 @@ class TestX01E2E : AbstractRegistryTest()
     }
 
     @Test
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     fun `E2E - 501 - Team of 2`()
     {
         val game = insertGame(gameType = GameType.X01, gameParams = "501")

@@ -1,4 +1,4 @@
-package e2e
+package dartzee.e2e
 
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.findChild
@@ -75,7 +75,7 @@ class SyncE2E: AbstractRegistryTest()
         File(TEST_ROOT).deleteRecursively()
     }
 
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     @Test
     fun `Syncing two games with same local ID`()
     {
@@ -105,7 +105,7 @@ class SyncE2E: AbstractRegistryTest()
         x01Wins.size shouldBe 2
     }
 
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     @Test
     fun `Syncing deleted data`()
     {

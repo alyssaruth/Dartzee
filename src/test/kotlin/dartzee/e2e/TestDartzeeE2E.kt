@@ -1,4 +1,4 @@
-package e2e
+package dartzee.e2e
 
 import dartzee.achievements.AchievementType
 import dartzee.ai.DartzeePlayStyle
@@ -45,7 +45,7 @@ class TestDartzeeE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     fun `E2E - Dartzee`()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
@@ -88,7 +88,7 @@ class TestDartzeeE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     fun `E2E - Dartzee - 2 player team`()
     {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()

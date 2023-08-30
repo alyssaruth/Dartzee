@@ -1,10 +1,10 @@
-package e2e
+package dartzee.e2e
 
 import com.github.alyssaburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.waitForAssertion
-import com.github.alyssaburlton.swingtest.findWindow
 import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_SIMULATION_FINISHED
 import dartzee.screen.stats.player.PlayerStatisticsScreen

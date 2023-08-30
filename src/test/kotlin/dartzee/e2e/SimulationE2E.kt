@@ -1,11 +1,11 @@
-package e2e
+package dartzee.e2e
 
+import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.ai.AimDart
 import dartzee.ai.SimulationRunner
 import dartzee.bean.ScrollTableDartsGame
-import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.ScrollTable
 import dartzee.game.GameType
@@ -35,7 +35,7 @@ class SimulationE2E: AbstractTest()
     }
 
     @Test
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     fun `Should be able to run a simulation of 500 games`()
     {
         val model = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))

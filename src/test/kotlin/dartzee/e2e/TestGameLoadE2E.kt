@@ -1,4 +1,4 @@
-package e2e
+package dartzee.e2e
 
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.waitForAssertion
@@ -36,7 +36,7 @@ class TestGameLoadE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     fun `E2E - Game load and AI resume`()
     {
         val (winner, loser) = createPlayers()

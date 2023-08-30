@@ -1,4 +1,4 @@
-package e2e
+package dartzee.e2e
 
 import dartzee.achievements.AchievementType
 import dartzee.ai.AimDart
@@ -61,7 +61,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     fun `E2E - RTC - perfect game`()
     {
         val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson())
@@ -89,7 +89,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     fun `E2E - RTC - unordered`()
     {
         val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, false).toJson())
@@ -125,7 +125,7 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     fun `E2E - In Order- Team of 2`()
     {
         val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson())

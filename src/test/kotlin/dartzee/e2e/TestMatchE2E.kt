@@ -1,4 +1,4 @@
-package e2e
+package dartzee.e2e
 
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.waitForAssertion
@@ -41,7 +41,7 @@ class TestMatchE2E: AbstractRegistryTest()
     }
 
     @Test
-    @Tag("e2e")
+    @Tag("dartzee/e2e")
     fun `E2E - Two game match`()
     {
         val match = insertDartsMatch(games = 2, matchParams = "", mode = MatchMode.FIRST_TO)
