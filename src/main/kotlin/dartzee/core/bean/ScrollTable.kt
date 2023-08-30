@@ -61,7 +61,7 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
     init
     {
         layout = BorderLayout(0, 0)
-        columnModel.addColumnModelListener(this)
+        table.columnModel.addColumnModelListener(this)
         table.addMouseListener(this)
         table.selectionModel.addListSelectionListener(this)
         tableFooter.selectionModel.addListSelectionListener(this)
@@ -85,12 +85,12 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
 
         addKeyAction(KeyEvent.VK_DOWN) {
             val row = table.selectedRow
-            if (row == rowCount - 1
+            if (row == table.rowCount - 1
                 && tableFooter.isVisible
             ) {
                 selectRow(TABLE_ROW_FOOTER)
                 tableFooter.requestFocus()
-            } else if (row < rowCount - 1) {
+            } else if (row < table.rowCount - 1) {
                 selectRow(row + 1)
             }
         }
