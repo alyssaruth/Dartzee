@@ -5,10 +5,14 @@ import dartzee.sync.SyncStage
 import dartzee.sync.desc
 import java.awt.BorderLayout
 import java.awt.Dimension
-import javax.swing.*
+import javax.swing.JDialog
+import javax.swing.JPanel
+import javax.swing.JProgressBar
+import javax.swing.SwingUtilities
+import javax.swing.WindowConstants
 import javax.swing.border.EmptyBorder
 
-class SyncProgressDialog() : JDialog()
+class SyncProgressDialog : JDialog()
 {
     private val progressBar = JProgressBar()
 
