@@ -187,10 +187,7 @@ fun makeGameWrapper(
     dartRounds: HashMapList<Int, Dart> = HashMapList(),
     totalRounds: Int = dartRounds.size,
     teamGame: Boolean = false
-): GameWrapper
-{
-    return GameWrapper(localId, gameParams, dtStart, dtFinish, finalScore, teamGame, totalRounds, dartRounds)
-}
+) = GameWrapper(localId, gameParams, dtStart, dtFinish, finalScore, teamGame, totalRounds, dartRounds)
 
 fun makeGolfGameWrapper(
     localId: Long = 1L,
