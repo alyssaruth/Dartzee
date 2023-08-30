@@ -158,5 +158,7 @@ class TestExtensionFunctions: AbstractTest()
 
         list.getLongestStreak { it is String } shouldBe listOf("a", "b", "c")
         list.getLongestStreak { it is Int } shouldBe listOf(6, 7, 8, 9)
+        list.getLongestStreak { true } shouldBe list
+        list.getLongestStreak { false } shouldBe emptyList()
     }
 }
