@@ -112,10 +112,7 @@ abstract class AbstractTest
 
     private fun getErrorsLogged() = flushAndGetLogRecords().filter { it.severity == Severity.ERROR }
 
-    fun getLogRecordsSoFar(): List<LogRecord>
-    {
-        return logDestination.logRecords.toList()
-    }
+    fun getLogRecordsSoFar() = logDestination.logRecords.toList()
 
     fun flushAndGetLogRecords(): List<LogRecord>
     {

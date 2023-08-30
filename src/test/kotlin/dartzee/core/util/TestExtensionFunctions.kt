@@ -81,10 +81,7 @@ class TestExtensionFunctions: AbstractTest()
 
     class ElementValidator
     {
-        fun isValid(text: String, index: Int): Boolean
-        {
-            return text == index.toString()
-        }
+        fun isValid(text: String, index: Int) = text == index.toString()
     }
 
     @Test

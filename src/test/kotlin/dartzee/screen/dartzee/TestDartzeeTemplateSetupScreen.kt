@@ -301,13 +301,9 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         rules.map { (it as DartzeeRuleDto).generateRuleDescription() }.shouldContainExactly(ruleOne.generateRuleDescription(), ruleTwo.generateRuleDescription())
     }
 
-    private fun DartzeeTemplateSetupScreen.getTemplate(row: Int): DartzeeTemplateEntity
-    {
-        return getChild<ScrollTable>().getValueAt(row, 0) as DartzeeTemplateEntity
-    }
+    private fun DartzeeTemplateSetupScreen.getTemplate(row: Int) =
+        getChild<ScrollTable>().getValueAt(row, 0) as DartzeeTemplateEntity
 
-    private fun DartzeeTemplateSetupScreen.getGameCount(row: Int): Int
-    {
-        return getChild<ScrollTable>().getValueAt(row, 2) as Int
-    }
+    private fun DartzeeTemplateSetupScreen.getGameCount(row: Int) =
+        getChild<ScrollTable>().getValueAt(row, 2) as Int
 }

@@ -116,10 +116,7 @@ class TestDevScreenCommands: AbstractTest()
     {
         override val windowName = "Test"
 
-        override fun commandsEnabled(): Boolean
-        {
-            return commandsEnabled
-        }
+        override fun commandsEnabled() = commandsEnabled
 
         override fun processCommand(cmd: String): String
         {

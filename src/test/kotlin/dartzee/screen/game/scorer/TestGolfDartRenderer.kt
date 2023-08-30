@@ -1,7 +1,11 @@
 package dartzee.screen.game.scorer
 
-import dartzee.*
 import dartzee.core.util.TableUtil
+import dartzee.drtDoubleOne
+import dartzee.drtInnerOne
+import dartzee.drtOuterEighteen
+import dartzee.drtOuterOne
+import dartzee.drtTrebleOne
 import dartzee.helper.AbstractTest
 import dartzee.`object`.Dart
 import io.kotest.matchers.shouldBe

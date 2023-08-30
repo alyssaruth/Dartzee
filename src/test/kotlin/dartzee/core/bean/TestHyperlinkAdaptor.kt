@@ -88,10 +88,7 @@ class TestHyperlinkAdaptor: AbstractTest()
 
 private class TestHyperlinkListener: JPanel(), IHyperlinkListener
 {
-    override fun isOverHyperlink(arg0: MouseEvent): Boolean
-    {
-        return arg0 === mouseEventOverLink
-    }
+    override fun isOverHyperlink(arg0: MouseEvent) = arg0 === mouseEventOverLink
 
     override fun linkClicked(arg0: MouseEvent){}
 }

@@ -84,10 +84,8 @@ fun makeLogRecord(timestamp: Instant = CURRENT_TIME,
                   loggingCode: LoggingCode = LoggingCode("log"),
                   message: String = "A thing happened",
                   errorObject: Throwable? = null,
-                  keyValuePairs: Map<String, Any?> = mapOf()): LogRecord
-{
-    return LogRecord(timestamp, severity, loggingCode, message, errorObject, keyValuePairs)
-}
+                  keyValuePairs: Map<String, Any?> = mapOf()) =
+    LogRecord(timestamp, severity, loggingCode, message, errorObject, keyValuePairs)
 
 fun Float.shouldBeBetween(a: Double, b: Double) {
     toDouble().shouldBeBetween(a, b, 0.0)

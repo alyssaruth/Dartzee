@@ -73,15 +73,11 @@ fun makeDartzeeRuleCalculationResult(scoringSegments: List<DartboardSegment> = e
                                      validCombinations: Int = 10,
                                      allCombinations: Int = 50,
                                      validCombinationProbability: Double = 1.0,
-                                     allCombinationsProbability: Double = 6.0): DartzeeRuleCalculationResult
-{
-    return DartzeeRuleCalculationResult(scoringSegments, validSegments, validCombinations, allCombinations, validCombinationProbability, allCombinationsProbability)
-}
+                                     allCombinationsProbability: Double = 6.0) =
+    DartzeeRuleCalculationResult(scoringSegments, validSegments, validCombinations, allCombinations, validCombinationProbability, allCombinationsProbability)
 
-fun makeDartzeeRuleCalculationResult(percentage: Int): DartzeeRuleCalculationResult
-{
-    return DartzeeRuleCalculationResult(emptyList(), emptyList(), 10, 50, percentage.toDouble(), 100.toDouble())
-}
+fun makeDartzeeRuleCalculationResult(percentage: Int) =
+    DartzeeRuleCalculationResult(emptyList(), emptyList(), 10, 50, percentage.toDouble(), 100.toDouble())
 
 fun makeScoreRule(score: Int) = DartzeeDartRuleScore().also { it.score = score }
 fun makeColourRule(red: Boolean = false, green: Boolean = false, black: Boolean = false, white: Boolean = false): DartzeeDartRuleColour

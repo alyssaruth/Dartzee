@@ -100,7 +100,7 @@ class TestGeometryUtil: AbstractTest()
     @Test
     fun testGenerateRandomAngle()
     {
-        for (i in 0..999)
+        repeat(999)
         {
             val angle = generateRandomAngle()
             angle.shouldBeGreaterThanOrEqual(0.0)

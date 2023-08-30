@@ -10,10 +10,8 @@ abstract class AbstractStatsPieBreakdownTest<E: AbstractStatisticsTabPieBreakdow
 {
     abstract fun getAllPossibilitiesForScores(): IntRange
 
-    override fun getComponentsForComparison(tab: E): List<Component>
-    {
-        return listOf(tab.otherPieChartPanel, tab.tableHoleBreakdownOther)
-    }
+    override fun getComponentsForComparison(tab: E): List<Component> =
+        listOf(tab.otherPieChartPanel, tab.tableHoleBreakdownOther)
 
     @Test
     fun `Ranges should be distinct and cover all possibilities`()
