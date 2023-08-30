@@ -20,7 +20,7 @@ class TestDatabaseMigrationV19toV20: AbstractTest()
         mainDatabase.dropTable(EntityName.Team)
         mainDatabase.executeUpdate("ALTER TABLE Participant DROP COLUMN TeamId")
 
-        val conversions = DatabaseMigrations.getConversionsMap()[19]!!
+        val conversions = DatabaseMigrations.getConversionsMap().getValue(19)
         conversions.forEach { it(mainDatabase) }
 
         getCountFromTable(EntityName.Team) shouldBe 0

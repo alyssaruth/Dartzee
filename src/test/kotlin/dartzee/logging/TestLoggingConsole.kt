@@ -135,7 +135,7 @@ class TestLoggingConsole: AbstractTest()
         console.pack()
         console.scrollPane.verticalScrollBar.value shouldBe 0
 
-        for (i in 1..50)
+        repeat(50)
         {
             console.log(makeLogRecord())
         }

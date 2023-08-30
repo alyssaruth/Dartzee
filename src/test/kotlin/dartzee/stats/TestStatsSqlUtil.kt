@@ -57,7 +57,7 @@ class TestStatsSqlUtil : AbstractTest()
         retrieveGameData(randomGuid(), GameType.GOLF).size shouldBe 0
 
         val map = retrieveGameData(player.rowId, GameType.GOLF)
-        val wrapper = map[game.localId]!!
+        val wrapper = map.getValue(game.localId)
         wrapper.gameParams shouldBe "9"
         wrapper.finalScore shouldBe -1
         wrapper.teamGame shouldBe false

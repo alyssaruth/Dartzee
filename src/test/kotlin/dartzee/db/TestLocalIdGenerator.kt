@@ -61,7 +61,7 @@ class TestLocalIdGenerator: AbstractTest()
 
         val threads = mutableListOf<Thread>()
         val runnables = mutableListOf<IdGeneratorRunnable>()
-        for (i in 1..10)
+        repeat(10)
         {
             val runnable = IdGeneratorRunnable(generator, mutableListOf())
             runnables.add(runnable)
@@ -103,7 +103,7 @@ class TestLocalIdGenerator: AbstractTest()
     {
         override fun run()
         {
-            for (i in 1..20)
+            repeat(20)
             {
                 val id = generator.generateLocalId(EntityName.Game)
                 list.add(id)

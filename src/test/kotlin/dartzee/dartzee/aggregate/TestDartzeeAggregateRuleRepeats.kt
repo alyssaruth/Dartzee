@@ -1,11 +1,11 @@
 package dartzee.dartzee.aggregate
 
-import dartzee.`object`.Dart
 import dartzee.dartzee.AbstractDartzeeRuleTest
 import dartzee.helper.double
 import dartzee.helper.miss
 import dartzee.helper.outerSingle
 import dartzee.helper.treble
+import dartzee.`object`.Dart
 import dartzee.utils.sumScore
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -44,8 +44,6 @@ class TestDartzeeAggregateRuleRepeats: AbstractDartzeeRuleTest<DartzeeAggregateR
         factory().getScore(Dart(5, 1), Dart(20, 0), Dart(5, 1)) shouldBe 10
     }
 
-    private fun DartzeeAggregateRuleRepeats.getScore(vararg darts: Dart): Int
-    {
-        return sumScore(getScoringDarts(darts.toList()))
-    }
+    private fun DartzeeAggregateRuleRepeats.getScore(vararg darts: Dart) =
+        sumScore(getScoringDarts(darts.toList()))
 }
