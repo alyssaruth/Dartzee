@@ -2,7 +2,14 @@ package dartzee.sync
 
 import com.amazonaws.services.s3.model.GetObjectRequest
 import dartzee.core.util.getFileTimeString
-import dartzee.logging.*
+import dartzee.logging.CODE_FETCHED_DATABASE
+import dartzee.logging.CODE_FETCHING_DATABASE
+import dartzee.logging.CODE_PUSHED_DATABASE
+import dartzee.logging.CODE_PUSHED_DATABASE_BACKUP
+import dartzee.logging.CODE_PUSHING_DATABASE
+import dartzee.logging.CODE_UNZIPPED_DATABASE
+import dartzee.logging.CODE_ZIPPED_DATABASE
+import dartzee.logging.KEY_REMOTE_NAME
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.utils.AwsUtils
 import dartzee.utils.DartsDatabaseUtil
@@ -12,7 +19,6 @@ import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
 import java.io.File
 import java.util.*
-import kotlin.ConcurrentModificationException
 
 class AmazonS3RemoteDatabaseStore(private val bucketName: String): IRemoteDatabaseStore
 {

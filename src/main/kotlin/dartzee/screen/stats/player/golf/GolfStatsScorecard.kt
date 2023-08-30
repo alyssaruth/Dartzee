@@ -2,7 +2,11 @@ package dartzee.screen.stats.player.golf
 
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.util.TableUtil
-import dartzee.screen.game.scorer.*
+import dartzee.screen.game.scorer.GOLF_GAME_ID_COLUMN
+import dartzee.screen.game.scorer.GOLF_SCORE_COLUMN
+import dartzee.screen.game.scorer.GolfDartRenderer
+import dartzee.screen.game.scorer.IGolfScorerTable
+import dartzee.screen.game.scorer.SCORER_WIDTH
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension

@@ -3,7 +3,11 @@ package dartzee.core.bean
 import java.awt.EventQueue
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.AbstractAction
+import javax.swing.BorderFactory
+import javax.swing.JComponent
+import javax.swing.JPanel
+import javax.swing.JTextField
 
 class CheatBar : JTextField(), ActionListener
 {
