@@ -1,10 +1,9 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractAchievementBestGame
+import dartzee.achievements.AchievementType
 import dartzee.game.GameType
 import dartzee.utils.ResourceCache
-import java.net.URL
 
 class AchievementX01BestGame : AbstractAchievementBestGame()
 {
