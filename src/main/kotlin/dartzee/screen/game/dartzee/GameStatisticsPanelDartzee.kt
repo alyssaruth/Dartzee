@@ -44,17 +44,17 @@ open class GameStatisticsPanelDartzee: AbstractGameStatisticsPanel<DartzeePlayer
     private fun getLongestStreakRow() = prepareRow("Longest Streak") { playerName ->
         val allResults = getRoundResults(playerName)
 
-        allResults.map { results -> results.getLongestStreak { it.success }.size }.maxOrNull()
+        allResults.maxOfOrNull { results -> results.getLongestStreak { it.success }.size }
     }
 
     private fun getHardestRuleRow() = prepareRow("Hardest Rule") { playerName ->
         val allResults = getRoundResults(playerName).flatten()
-        allResults.filter { it.success }.map { it.ruleNumber }.maxOrNull()
+        allResults.filter { it.success }.maxOfOrNull { it.ruleNumber }
     }
 
     private fun getRoundResults(playerName: UniqueParticipantName): List<List<DartzeeRoundResultEntity>>
     {
         val states = hmPlayerToStates[playerName]
-        return states?.map { it.roundResults } ?: listOf()
+        return states?.map { it.roundResults }.orEmpty()
     }
 }

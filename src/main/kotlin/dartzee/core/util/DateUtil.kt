@@ -1,15 +1,14 @@
 package dartzee.core.util
 
-import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
 
 fun getSqlDateNow() = Timestamp(System.currentTimeMillis())
 
-fun getEndOfTimeSqlString() = END_OF_TIME.getSqlString()
+fun getEndOfTimeSqlString() = DateStatics.END_OF_TIME.getSqlString()
 
-fun isEndOfTime(dt: Timestamp?) = dt?.equals(END_OF_TIME) ?: false
+fun isEndOfTime(dt: Timestamp?) = dt?.equals(DateStatics.END_OF_TIME) ?: false
 
 fun Timestamp.formatTimestamp(): String
 {

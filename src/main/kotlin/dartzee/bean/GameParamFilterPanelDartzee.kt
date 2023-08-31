@@ -45,7 +45,7 @@ class GameParamFilterPanelDartzee: GameParamFilterPanel()
         comboBox.selectedItem = item
     }
 
-    override fun getGameParams() = getSelectedTemplate()?.rowId ?: ""
+    override fun getGameParams() = getSelectedTemplate()?.rowId.orEmpty()
 
     fun getSelectedTemplate() = comboBox.selectedItemTyped().hiddenData
 

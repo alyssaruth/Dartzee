@@ -657,12 +657,6 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         scorersOrdered.find { it.playerIds.contains(playerId) }?.achievementUnlocked(achievement, playerId)
     }
 
-    private fun dismissSlider()
-    {
-        btnSlider.isSelected = false
-        toggleSlider()
-    }
-
     fun disableInputButtons()
     {
         btnConfirm.isEnabled = false

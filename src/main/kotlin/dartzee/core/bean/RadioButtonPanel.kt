@@ -46,7 +46,7 @@ open class RadioButtonPanel : JPanel(), ChangeListener
         }
     }
 
-    fun getSelectionStr() = selection?.text ?: ""
+    fun getSelectionStr() = selection?.text.orEmpty()
 
     fun setSelection(selectionStr: String)
     {

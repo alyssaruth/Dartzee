@@ -515,12 +515,4 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
             EntityName::class.java -> EntityName.valueOf(rs.getString(columnName))
             else -> null
         }
-
-    private fun getValueForLogging(value: Any) =
-        when (value.javaClass)
-        {
-            String::class.java, Timestamp::class.java -> "'$value'"
-            Blob::class.java -> "BLOB:${(value as Blob).length()}"
-            else -> "$value"
-        }
 }

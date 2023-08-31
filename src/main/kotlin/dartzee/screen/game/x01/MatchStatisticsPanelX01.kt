@@ -17,9 +17,9 @@ class MatchStatisticsPanelX01(gameParams: String): GameStatisticsPanelX01(gamePa
     }
 
     private fun getHighestFinishRow() = prepareRow("Best Finish") { playerName ->
-        val rounds = hmPlayerToDarts[playerName] ?: listOf()
+        val rounds = hmPlayerToDarts[playerName].orEmpty()
         val finishRounds = rounds.filter { r -> isFinishRound(r) }
-        finishRounds.map { r -> sumScore(r) }.maxOrNull()
+        finishRounds.maxOfOrNull { r -> sumScore(r) }
     }
 
     override fun getRankedRowsHighestWins() = super.getRankedRowsHighestWins() + "Best Finish"

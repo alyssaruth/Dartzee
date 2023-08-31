@@ -1,6 +1,5 @@
 package dartzee.screen.game
 
-import dartzee.`object`.Dart
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.TableUtil
@@ -8,6 +7,7 @@ import dartzee.core.util.addUnique
 import dartzee.game.UniqueParticipantName
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
+import dartzee.`object`.Dart
 import java.awt.BorderLayout
 import java.awt.Color
 import javax.swing.JPanel
@@ -111,7 +111,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
     protected fun getFlattenedDarts(uniqueParticipantName: UniqueParticipantName): List<Dart>
     {
         val rounds = hmPlayerToDarts[uniqueParticipantName]
-        return rounds?.flatten() ?: listOf()
+        return rounds?.flatten().orEmpty()
     }
 
     protected fun factoryRow(rowName: String): Array<Any?>

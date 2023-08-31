@@ -1,6 +1,5 @@
 package dartzee.core.util
 
-import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.utils.InjectedThings.mainDatabase
@@ -41,7 +40,7 @@ class TestDateUtil: AbstractTest()
     {
         isEndOfTime(null).shouldBeFalse()
         isEndOfTime(getSqlDateNow()).shouldBeFalse()
-        isEndOfTime(END_OF_TIME).shouldBeTrue()
+        isEndOfTime(DateStatics.END_OF_TIME).shouldBeTrue()
     }
 
     @Test
@@ -58,8 +57,8 @@ class TestDateUtil: AbstractTest()
     @Test
     fun `Should format end of time correctly`()
     {
-        END_OF_TIME.formatAsDate().shouldBeEmpty()
-        END_OF_TIME.formatTimestamp().shouldBeEmpty()
+        DateStatics.END_OF_TIME.formatAsDate().shouldBeEmpty()
+        DateStatics.END_OF_TIME.formatTimestamp().shouldBeEmpty()
     }
 
     @Test

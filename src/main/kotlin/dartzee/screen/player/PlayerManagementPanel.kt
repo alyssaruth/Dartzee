@@ -88,7 +88,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
     {
         this.player = player
 
-        lblPlayerName.text = player?.name ?: ""
+        lblPlayerName.text = player?.name.orEmpty()
 
         //Only show this for AIs
         btnRunSimulation.isVisible = player?.isAi() == true
