@@ -33,7 +33,7 @@ abstract class AbstractSanityCheckResultEntities(val entities: List<AbstractEnti
         val rowIds = mutableListOf<String>()
         for (i in selectedRows.indices)
         {
-            val rowId = t.getValueAt(selectedRows[i], 0) as String
+            val rowId = t.getNonNullValueAt(selectedRows[i], 0) as String
             rowIds.add(rowId)
         }
 

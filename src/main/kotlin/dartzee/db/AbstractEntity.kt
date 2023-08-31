@@ -481,7 +481,8 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
     private fun writeValue(ps: PreparedStatement, ix: Int, columnName: String, statementStr: String): String
     {
-        val value = getField(columnName)
+        val value = getField(columnName) ?: throw Exception("Attempted to write NULL value to ${getTableName()}.$columnName")
+
         return when (getFieldType(columnName))
         {
             String::class.java -> writeString(ps, ix, value as String, statementStr)

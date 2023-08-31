@@ -170,7 +170,7 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
             return
         }
 
-        val game = src.getValueAt(row, 2) as GameWrapper
+        val game = src.getNonNullValueAt(row, 2) as GameWrapper
         when (src)
         {
             scrollTableMine -> displayScorecard(game, panelMyScorecard, false)

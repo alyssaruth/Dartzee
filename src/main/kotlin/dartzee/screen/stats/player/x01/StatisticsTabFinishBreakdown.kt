@@ -117,7 +117,7 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
         val pieChart = pieChartPanel.chart
 
         @Suppress("UNCHECKED_CAST")
-        val plot = pieChart.plot as PiePlot<String>
+        val plot = pieChart.plot!! as PiePlot<String>
 
         //Unset the old value
         selectedScore?.let { plot.setExplodePercent(it.toString(), 0.0) }
@@ -125,7 +125,7 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
         val selectedRow = src.selectedModelRow
         if (selectedRow > -1)
         {
-            val newSelection = src.getValueAt(selectedRow, 0) as Int
+            val newSelection = src.getNonNullValueAt(selectedRow, 0) as Int
             plot.setExplodePercent(newSelection.toString(), 0.2)
             selectedScore = newSelection
         }

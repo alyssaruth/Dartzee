@@ -34,7 +34,7 @@ class MatchScorer(pt: IWrappedParticipant, private val match: DartsMatchEntity) 
         val rowCount = tableScores.rowCount
         for (i in 0 until rowCount)
         {
-            val pt = tableScores.getValueAt(i, COLUMN_NO_MATCH_POINTS) as IWrappedParticipant
+            val pt = tableScores.getNonNullValueAt(i, COLUMN_NO_MATCH_POINTS) as IWrappedParticipant
             totalScore += match.getScoreForFinishingPosition(pt.participant.finishingPosition)
         }
 

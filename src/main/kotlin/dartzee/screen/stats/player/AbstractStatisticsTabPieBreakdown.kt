@@ -117,7 +117,7 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
         val plot = pieChart.plot as PiePlot<*>
 
         ranges.forEachIndexed { ix, range ->
-            dataset.setValue(range.getDescription(), (table.getValueAt(selectedRow, ix + 1) as Int))
+            dataset.setValue(range.getDescription(), (table.getNonNullValueAt(selectedRow, ix + 1) as Int))
 
             val col = getColorForRange(range)
             plot.setSectionPaint(range.getDescription(), col)

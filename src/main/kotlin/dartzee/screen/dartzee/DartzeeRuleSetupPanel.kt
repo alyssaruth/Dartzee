@@ -125,7 +125,7 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
     }
     private fun sortRulesByDifficulty()
     {
-        tableRules.reorderRows { -(it[0] as DartzeeRuleDto).getDifficulty() }
+        tableRules.reorderRows { -(it[0]!! as DartzeeRuleDto).getDifficulty() }
     }
 
     fun addRulesToTable(rules: List<DartzeeRuleDto>)
@@ -143,5 +143,5 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
         btnRemoveRule.isEnabled = src.selectedModelRow != -1
     }
 
-    fun getRules() = tableRules.getAllRows().map { it[0] as DartzeeRuleDto }
+    fun getRules() = tableRules.getAllRows().map { it[0]!! as DartzeeRuleDto }
 }
