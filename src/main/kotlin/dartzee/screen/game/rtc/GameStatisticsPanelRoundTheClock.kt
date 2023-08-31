@@ -49,12 +49,12 @@ open class GameStatisticsPanelRoundTheClock(gameParams: String): AbstractGameSta
 
     private fun getBruceys(desc: String, enforceSuccess: Boolean) = prepareRow(desc) { playerName ->
         val rounds = hmPlayerToDarts[playerName].orEmpty()
-        rounds.filter { it.size == 4 }.count { it.last().hitClockTarget(config.clockType) || !enforceSuccess }
+        rounds.count { it.size == 4 && it.last().hitClockTarget(config.clockType) || !enforceSuccess }
     }
 
     private fun getDartsPerNumber(min: Int, max: Int, desc: String = "$min - $max") = prepareRow(desc) { playerName ->
         val dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName)
-        dartsGrouped.filter { it.last().hitClockTarget(config.clockType) }.count { it.size in min..max }
+        dartsGrouped.count { it.size in min..max && it.last().hitClockTarget(config.clockType) }
     }
 
     private fun getDartsPerNumber(desc: String,
