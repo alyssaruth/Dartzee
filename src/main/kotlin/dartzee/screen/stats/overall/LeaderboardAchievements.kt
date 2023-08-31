@@ -8,7 +8,6 @@ import dartzee.core.util.TableUtil
 import dartzee.core.util.sortedBy
 import dartzee.db.PlayerEntity
 import java.awt.BorderLayout
-import java.awt.Color
 import java.awt.event.ActionEvent
 import java.util.*
 import javax.swing.Box
@@ -114,10 +113,7 @@ class LeaderboardAchievements: AbstractLeaderboard()
 
     class AchievementProgressBarRenderer: AbstractProgressBarRenderer()
     {
-        override fun getColorForValue(value: Any?): Color
-        {
-            return (value as AbstractAchievement).getColor(false)
-        }
+        override fun getColorForValue(value: Any?) = (value as AbstractAchievement).getColor(false)
 
         override fun getScoreForValue(value: Any?): Int
         {

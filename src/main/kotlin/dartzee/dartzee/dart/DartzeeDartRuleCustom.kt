@@ -31,10 +31,8 @@ class DartzeeDartRuleCustom: AbstractDartzeeDartRuleConfigurable(), ActionListen
         btnConfigure.addActionListener(this)
     }
 
-    override fun isValidSegment(segment: DartboardSegment): Boolean
-    {
-        return segments.any { it.score == segment.score && it.type == segment.type}
-    }
+    override fun isValidSegment(segment: DartboardSegment) =
+        segments.any { it.score == segment.score && it.type == segment.type }
 
     override fun getRuleIdentifier() = "Custom"
 

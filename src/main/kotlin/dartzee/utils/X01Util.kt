@@ -34,10 +34,7 @@ fun isCheckoutDart(drt: Dart): Boolean
     val startingScore = drt.startingScore
     return isCheckoutScore(startingScore)
 }
-fun isCheckoutScore(score: Int): Boolean
-{
-    return getCheckoutScores().contains(score)
-}
+fun isCheckoutScore(score: Int) = getCheckoutScores().contains(score)
 
 fun isNearMissDouble(dart: Dart): Boolean
 {
@@ -86,10 +83,8 @@ fun getScoringDarts(allDarts: List<Dart>?, scoreCutOff: Int): List<Dart>
     return allDarts.filter { it.startingScore > scoreCutOff }.toList()
 }
 
-fun getScoringRounds(dartRounds: List<List<Dart>>, scoreCutOff: Int): List<List<Dart>>
-{
-    return dartRounds.filter { round -> round.all { it.startingScore > scoreCutOff } }
-}
+fun getScoringRounds(dartRounds: List<List<Dart>>, scoreCutOff: Int) =
+    dartRounds.filter { round -> round.all { it.startingScore > scoreCutOff } }
 
 fun calculateThreeDartAverage(darts: List<Dart>, scoreCutOff: Int): Double
 {

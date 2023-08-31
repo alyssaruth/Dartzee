@@ -21,8 +21,5 @@ class ScrollTableDartsGame(linkColumnName: String = "Game", testId: String = "")
         }
     }
 
-    override fun renderValue(value: Any): String
-    {
-        return "#$value"
-    }
+    override fun renderValue(value: Any) = "#$value"
 }

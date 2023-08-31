@@ -56,10 +56,8 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
             validPixelPossibility,
             allProbabilities)
     }
-    private fun isValidFromMisses(combination: List<DartboardSegment>, rule: DartzeeRuleDto): Boolean
-    {
-        return rule.allowMisses || combination.all { !it.isMiss() }
-    }
+    private fun isValidFromMisses(combination: List<DartboardSegment>, rule: DartzeeRuleDto) =
+        rule.allowMisses || combination.all { !it.isMiss() }
 
     private fun isValidCombinationForAggregateRule(combination: List<DartboardSegment>, aggregateRule: AbstractDartzeeAggregateRule?): Boolean
     {
@@ -108,10 +106,8 @@ class DartzeeCalculator: AbstractDartzeeCalculator()
             }
         }
     }
-    private fun isValidCombinationForOrderedDartRule(rules: List<AbstractDartzeeDartRule>, combination: List<DartboardSegment>): Boolean
-    {
-        return rules.allIndexed { ix, rule -> rule.isValidSegment(combination[ix]) }
-    }
+    private fun isValidCombinationForOrderedDartRule(rules: List<AbstractDartzeeDartRule>, combination: List<DartboardSegment>) =
+        rules.allIndexed { ix, rule -> rule.isValidSegment(combination[ix]) }
 
     private fun mapCombinationToProbability(combination: List<DartboardSegment>): Double
     {

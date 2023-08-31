@@ -43,10 +43,7 @@ fun getNumbersWithinN(number: Int, n: Int): List<Int>
     return range.map { numberOrder[(it+20) % 20] }
 }
 
-fun getAdjacentNumbers(number: Int): List<Int>
-{
-    return getNumbersWithinN(number, 1).filterNot { it == number }
-}
+fun getAdjacentNumbers(number: Int) = getNumbersWithinN(number, 1).filterNot { it == number }
 
 fun computePointsForSegment(segment: DartboardSegment, centre: Point, radius: Double): Set<Point>
 {
@@ -288,11 +285,7 @@ fun getFontForDartboardLabels(lblHeight: Int): Font
     return font
 }
 
-fun factoryFontMetrics(font: Font): FontMetrics
-{
-    //Use a new Canvas rather than going via graphics, as then this will work headless (e.g. from tests)
-    return Canvas().getFontMetrics(font)
-}
+fun factoryFontMetrics(font: Font): FontMetrics = Canvas().getFontMetrics(font)
 
 fun getHighlightedColour(colour: Color): Color =
     if (colour == DartsColour.DARTBOARD_BLACK)

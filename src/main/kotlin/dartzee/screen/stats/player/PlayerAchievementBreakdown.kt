@@ -17,11 +17,7 @@ class PlayerAchievementBreakdown : EmbeddedScreen()
         add(tableBreakdown, BorderLayout.CENTER)
     }
 
-    override fun getScreenName(): String
-    {
-        return "${achievement?.name} Breakdown - ${achievement?.player?.name}"
-    }
-
+    override fun getScreenName() = "${achievement?.name} Breakdown - ${achievement?.player?.name}"
 
     fun setState(achievement: AbstractAchievement)
     {
@@ -31,6 +27,5 @@ class PlayerAchievementBreakdown : EmbeddedScreen()
     }
 
     override fun getBackTarget() = ScreenCache.get<PlayerAchievementsScreen>()
-
 }
 

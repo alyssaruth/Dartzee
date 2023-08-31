@@ -103,10 +103,8 @@ fun getAngleForPoint(dartPt: Point, centerPt: Point): Double
 private fun getQuadrantForAngle(angle: Double) =
     QUADRANTS.find { it.minimumAngle < angle && angle < it.maximumAngle }
 
-private fun getQuadrant(xIsPositive: Boolean, yIsPositive: Boolean): Quadrant?
-{
-    return QUADRANTS.find { it.xIsPositive == xIsPositive && it.yIsPositive == yIsPositive }
-}
+private fun getQuadrant(xIsPositive: Boolean, yIsPositive: Boolean) =
+    QUADRANTS.find { it.xIsPositive == xIsPositive && it.yIsPositive == yIsPositive }
 
 /**
  * For a group of points, calculate the average point

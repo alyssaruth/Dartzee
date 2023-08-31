@@ -506,10 +506,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         }
     }
 
-    protected open fun shouldAnimateMiss(dart: Dart): Boolean
-    {
-        return true
-    }
+    protected open fun shouldAnimateMiss(dart: Dart) = true
 
 
     protected open fun doMissAnimation()

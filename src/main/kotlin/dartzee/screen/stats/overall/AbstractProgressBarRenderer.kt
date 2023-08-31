@@ -52,14 +52,8 @@ abstract class AbstractProgressBarRenderer: JProgressBar(), TableCellRenderer
 
     private class AchievementProgressUI : BasicProgressBarUI()
     {
-        override fun getSelectionBackground(): Color
-        {
-            return progressBar.foreground
-        }
+        override fun getSelectionBackground(): Color = progressBar.foreground
 
-        override fun getSelectionForeground(): Color
-        {
-            return progressBar.foreground.darker()
-        }
+        override fun getSelectionForeground(): Color = progressBar.foreground.darker()
     }
 }

@@ -36,9 +36,6 @@ class EdtMonitor(private val waitTime: Long) : Runnable
 
     companion object
     {
-        fun start(waitTime: Long = EDT_WAIT_TIME): Thread
-        {
-            return Thread(EdtMonitor(waitTime), "EDT Monitor").also { it.start() }
-        }
+        fun start(waitTime: Long = EDT_WAIT_TIME) = Thread(EdtMonitor(waitTime), "EDT Monitor").also { it.start() }
     }
 }

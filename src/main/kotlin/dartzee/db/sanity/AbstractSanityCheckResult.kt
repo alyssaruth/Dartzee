@@ -27,10 +27,7 @@ abstract class AbstractSanityCheckResult
         return TableModelDialog(getDescription(), t)
     }
 
-    open fun getDeleteAction(t: ScrollTable): (() -> Unit)?
-    {
-        return null
-    }
+    open fun getDeleteAction(t: ScrollTable): (() -> Unit)? = null
 
     open fun getScrollTable() = ScrollTable()
 

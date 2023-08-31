@@ -21,10 +21,8 @@ class PlayerImageEntity(database: Database = mainDatabase): AbstractEntity<Playe
 
     override fun getTableName() = EntityName.PlayerImage
 
-    override fun getCreateTableSqlSpecific(): String
-    {
-        return "BlobData Blob NOT NULL, Filepath VARCHAR(1000) NOT NULL, Preset BOOLEAN NOT NULL"
-    }
+    override fun getCreateTableSqlSpecific() =
+        "BlobData Blob NOT NULL, Filepath VARCHAR(1000) NOT NULL, Preset BOOLEAN NOT NULL"
 
     override fun cacheValuesWhileResultSetActive()
     {
@@ -63,10 +61,8 @@ class PlayerImageEntity(database: Database = mainDatabase): AbstractEntity<Playe
         //Image cache, to prevent us hitting the DB too often
         private val hmRowIdToImageIcon = HashMap<String, ImageIcon>()
 
-        fun factoryAndSave(originalPath: String, bytes: ByteArray, preset: Boolean): PlayerImageEntity?
-        {
-            return factoryAndSave(originalPath, bytes, preset, mainDatabase)
-        }
+        fun factoryAndSave(originalPath: String, bytes: ByteArray, preset: Boolean) =
+            factoryAndSave(originalPath, bytes, preset, mainDatabase)
 
         private fun factoryAndSave(filepath: String, fileBytes: ByteArray?, preset: Boolean, database: Database): PlayerImageEntity?
         {

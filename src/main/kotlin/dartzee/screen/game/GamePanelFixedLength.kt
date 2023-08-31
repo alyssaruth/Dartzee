@@ -42,9 +42,5 @@ abstract class GamePanelFixedLength<S : AbstractDartsScorer<PlayerState>, Player
         parentWindow.startNextGameIfNecessary()
     }
 
-    override fun getFinishingPositionFromPlayersRemaining(): Int
-    {
-        //Finishing positions are determined at the end
-        return -1
-    }
+    override fun getFinishingPositionFromPlayersRemaining() = -1
 }

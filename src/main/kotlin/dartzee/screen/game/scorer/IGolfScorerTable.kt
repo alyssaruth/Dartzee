@@ -8,10 +8,7 @@ const val ROUNDS_FULL = 18
 const val GOLF_SCORE_COLUMN = 4
 const val GOLF_GAME_ID_COLUMN = 5
 
-fun isScoreRow(row: Int): Boolean
-{
-    return row == ROUNDS_HALFWAY || row == ROUNDS_FULL + 1
-}
+fun isScoreRow(row: Int) = row == ROUNDS_HALFWAY || row == ROUNDS_FULL + 1
 
 fun getGolfScorerColour(score: Int, brightness: Double): Color
 {

@@ -65,10 +65,7 @@ class ProgressDialog(private var workToDo: Int, private var message: String) : J
     }
 
 
-    fun cancelPressed(): Boolean
-    {
-        return cancelPressed
-    }
+    fun cancelPressed() = cancelPressed
 
     fun disposeLater()
     {
