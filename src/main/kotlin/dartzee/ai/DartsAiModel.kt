@@ -13,9 +13,6 @@ import dartzee.utils.InjectedThings.logger
 import dartzee.utils.generateRandomAngle
 import dartzee.utils.getAngleForPoint
 import dartzee.utils.translatePoint
-import getComputedPointForScore
-import getDefaultDartToAimAt
-import getPointForScore
 import org.apache.commons.math3.distribution.NormalDistribution
 import java.awt.Point
 import kotlin.math.abs

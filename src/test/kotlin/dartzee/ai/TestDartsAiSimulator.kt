@@ -15,7 +15,6 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.makeThrowDartFn
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
-import getComputedPointForScore
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk

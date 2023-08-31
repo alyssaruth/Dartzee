@@ -1,6 +1,5 @@
+package dartzee.ai
 
-import dartzee.ai.AI_DARTBOARD
-import dartzee.ai.AimDart
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType

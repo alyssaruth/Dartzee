@@ -1,6 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.ai.AimDart
+import dartzee.ai.getDefaultDartToAimAt
 import dartzee.bean.SpinnerSingleSelector
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.RadioButtonPanel
@@ -9,7 +10,6 @@ import dartzee.core.util.DialogUtil
 import dartzee.`object`.Dart
 import dartzee.screen.ScreenCache
 import dartzee.utils.isBust
-import getDefaultDartToAimAt
 import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
