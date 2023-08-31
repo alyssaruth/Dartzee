@@ -56,7 +56,6 @@ object UpdateManager
             {
                 logger.error(CODE_UPDATE_ERROR,
                         "Received non-success HTTP status: ${response.status} - ${response.statusText}",
-                        Throwable(),
                         KEY_RESPONSE_BODY to response.body)
                 DialogUtil.showError("Failed to check for updates (unable to connect).")
                 return null

@@ -62,7 +62,7 @@ style:
   NewLineAtEndOfFile:
     active: false
   ReturnCount:
-    excludeGuardClauses: true
+    active: false
   ThrowsCount:
     active: false
   UnnecessaryAbstractClass:

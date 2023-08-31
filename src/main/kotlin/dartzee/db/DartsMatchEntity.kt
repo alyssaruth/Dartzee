@@ -60,7 +60,7 @@ class DartsMatchEntity(database: Database = mainDatabase) : AbstractEntity<Darts
         when(mode)
         {
             MatchMode.FIRST_TO -> if (position == 1) 1 else 0
-            MatchMode.POINTS -> if (position == -1) 0 else getHmPositionToPoints()[position]!!
+            MatchMode.POINTS -> if (position == -1) 0 else getHmPositionToPoints().getValue(position)
         }
 
     private fun getHmPositionToPoints(): Map<Int, Int>

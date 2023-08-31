@@ -114,7 +114,7 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
         val allScoringDarts = sortedGames.flatMap { it.getScoringDarts(scoreThreshold) }
 
         val totalScoringDarts = allScoringDarts.size.toDouble()
-        val misses = allScoringDarts.filter { it.multiplier == 0 }.size.toDouble()
+        val misses = allScoringDarts.count { it.multiplier == 0 }.toDouble()
         val overallThreeDartAvg = 3 * allScoringDarts.sumOf { it.getTotal() } / allScoringDarts.size.toDouble()
 
         val rawAverages = XYSeries("Avg$graphSuffix")
