@@ -6,7 +6,6 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.markPoints
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.SegmentType
-import getPointForScore
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
