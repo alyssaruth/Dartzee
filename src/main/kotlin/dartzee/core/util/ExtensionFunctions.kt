@@ -55,7 +55,7 @@ fun <E> List<E>.getAllPermutations(): List<List<E>>
 inline fun <T> Iterable<T>.allIndexed(predicate: (index: Int, T) -> Boolean): Boolean {
     if (this is Collection && isEmpty()) return true
 
-    this.forEachIndexed { ix, it -> if (!predicate(ix, it)) return false }
+    this.forEachIndexed { ix, element -> if (!predicate(ix, element)) return false }
 
     return true
 }

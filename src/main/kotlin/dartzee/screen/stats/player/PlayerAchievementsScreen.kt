@@ -91,8 +91,8 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
     override fun initialise()
     {
         val achievementRows = AchievementEntity.retrieveAchievements(player.rowId)
-        GameType.values().forEachIndexed { ix, it ->
-            addAchievementTab(it, ix, achievementRows)
+        GameType.values().forEachIndexed { ix, gameType ->
+            addAchievementTab(gameType, ix, achievementRows)
         }
 
         val score = getPlayerAchievementScore(achievementRows, player)
