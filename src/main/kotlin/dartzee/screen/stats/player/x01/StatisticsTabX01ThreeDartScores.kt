@@ -148,7 +148,7 @@ class StatisticsTabX01ThreeDartScores : AbstractStatisticsTab(), RowSelectionLis
             return
         }
 
-        val wrapper = src.getValueAt(selectedRow, 2) as ThreeDartScoreWrapper
+        val wrapper = src.getNonNullValueAt(selectedRow, 2) as ThreeDartScoreWrapper
 
         when (src)
         {

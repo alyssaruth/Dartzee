@@ -192,6 +192,8 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
         table.rowHeight = height
     }
 
+    fun getNonNullValueAt(row: Int, col: Int) = getValueAt(row, col) ?: throw Exception("NULL value at row $row, col $col")
+
     fun getValueAt(row: Int, col: Int): Any? = when (row) {
         TABLE_ROW_FOOTER -> tableFooter.getValueAt(0, col)
         else -> model.getValueAt(row, col)

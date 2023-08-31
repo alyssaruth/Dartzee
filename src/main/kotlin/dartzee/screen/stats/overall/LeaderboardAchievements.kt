@@ -113,15 +113,15 @@ class LeaderboardAchievements: AbstractLeaderboard()
 
     class AchievementProgressBarRenderer: AbstractProgressBarRenderer()
     {
-        override fun getColorForValue(value: Any?) = (value as AbstractAchievement).getColor(false)
+        override fun getColorForValue(value: Any?) = (value!! as AbstractAchievement).getColor(false)
 
         override fun getScoreForValue(value: Any?): Int
         {
-            val achievement = (value as AbstractAchievement)
+            val achievement = (value!! as AbstractAchievement)
 
             if (achievement.isDecreasing())
             {
-                return Math.max(achievement.redThreshold - achievement.attainedValue, 0)
+                return (achievement.redThreshold - achievement.attainedValue).coerceAtLeast(0)
             }
 
             return achievement.attainedValue
@@ -129,7 +129,7 @@ class LeaderboardAchievements: AbstractLeaderboard()
 
         override fun getScoreDescForValue(value: Any?): String
         {
-            val achievement = value as AbstractAchievement
+            val achievement = value!! as AbstractAchievement
             val attainedValueDesc = if (achievement.attainedValue == -1 || achievement.attainedValue == Integer.MAX_VALUE) "-" else "${achievement.attainedValue}"
             return "$attainedValueDesc/${achievement.maxValue}"
         }

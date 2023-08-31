@@ -80,7 +80,8 @@ class MovingAverageChartPanel(private val parentTab: AbstractStatisticsTab) : JP
 
     private fun setPlotColours(chart: JFreeChart?)
     {
-        val plot = chart!!.plot as XYPlot
+        val plot = chart?.plot as? XYPlot ?: throw Exception("No XYPlot found: ${chart?.plot}")
+
         val allSeries: List<XYSeries> = graphCollection.getXYSeries()
 
         allSeries.forEachIndexed { ix, series ->
