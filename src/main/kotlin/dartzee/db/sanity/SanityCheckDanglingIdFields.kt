@@ -4,7 +4,7 @@ import dartzee.db.AbstractEntity
 import dartzee.db.EntityName
 import dartzee.utils.DartsDatabaseUtil
 
-class SanityCheckDanglingIdFields(val entity: AbstractEntity<*>): AbstractSanityCheck()
+class SanityCheckDanglingIdFields(val entity: AbstractEntity<*>): ISanityCheck
 {
     private val sanityErrors = mutableListOf<AbstractSanityCheckResult>()
 

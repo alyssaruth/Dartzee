@@ -1,11 +1,11 @@
 package dartzee.core.helper
 
-import dartzee.core.util.AbstractMessageDialogFactory
+import dartzee.core.util.IMessageDialogFactory
 import java.awt.Component
 import java.io.File
 import javax.swing.JOptionPane
 
-class TestMessageDialogFactory: AbstractMessageDialogFactory()
+class TestMessageDialogFactory: IMessageDialogFactory
 {
     //Directory
     var directoryToSelect: File? = null

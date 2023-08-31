@@ -3,7 +3,7 @@ package dartzee.db.sanity
 import dartzee.core.util.getEndOfTimeSqlString
 import dartzee.db.ParticipantEntity
 
-class SanityCheckFinishedParticipantsNoScore: AbstractSanityCheck()
+class SanityCheckFinishedParticipantsNoScore: ISanityCheck
 {
     override fun runCheck(): List<AbstractSanityCheckResult>
     {

@@ -66,7 +66,7 @@ class TestDatabaseSanityCheck : AbstractTest()
         val mockResult = mockk<AbstractSanityCheckResult>(relaxed = true)
         every { mockResult.getDescription() } returns "Foo"
 
-        val check = mockk<AbstractSanityCheck>()
+        val check = mockk<ISanityCheck>()
         every { check.runCheck() } returns listOf(mockResult)
 
         DatabaseSanityCheck.runSanityCheck(listOf(check))
@@ -87,7 +87,7 @@ class TestDatabaseSanityCheck : AbstractTest()
         every { mockResult.getDescription() } returns "Foo"
         every { mockResult.getResultsDialog() } returns breakdownDialog
 
-        val check = mockk<AbstractSanityCheck>()
+        val check = mockk<ISanityCheck>()
         every { check.runCheck() } returns listOf(mockResult)
 
         DatabaseSanityCheck.runSanityCheck(listOf(check))
@@ -111,13 +111,13 @@ class TestDatabaseSanityCheck : AbstractTest()
     }
 }
 
-private class DummySanityCheckBadGames(private val games: List<GameEntity>) : AbstractSanityCheck()
+private class DummySanityCheckBadGames(private val games: List<GameEntity>) : ISanityCheck
 {
     override fun runCheck(): List<AbstractSanityCheckResult> =
         listOf(SanityCheckResultEntitiesSimple(games, "Games where something's wrong"))
 }
 
-private class DummySanityCheckMultipleThings(private val players: List<PlayerEntity>): AbstractSanityCheck()
+private class DummySanityCheckMultipleThings(private val players: List<PlayerEntity>): ISanityCheck
 {
     override fun runCheck(): List<AbstractSanityCheckResult> {
         return listOf(

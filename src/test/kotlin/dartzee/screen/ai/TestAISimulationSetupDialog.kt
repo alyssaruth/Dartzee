@@ -1,12 +1,12 @@
 package dartzee.screen.ai
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.AbstractDartsSimulation
-import dartzee.ai.AbstractSimulationRunner
 import dartzee.ai.DartsSimulationGolf
 import dartzee.ai.DartsSimulationX01
-import com.github.alyssaburlton.swingtest.clickOk
+import dartzee.ai.SimulationRunner
 import dartzee.core.bean.NumberField
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -29,7 +29,7 @@ class TestAISimulationSetupDialog: AbstractTest()
     fun `Should kick off an X01 simulation`()
     {
         val slot = CapturingSlot<AbstractDartsSimulation>()
-        val mockRunner = mockk<AbstractSimulationRunner>(relaxed = true)
+        val mockRunner = mockk<SimulationRunner>(relaxed = true)
         every { mockRunner.runSimulation(capture(slot), any(), any()) } just runs
 
         InjectedThings.simulationRunner = mockRunner
@@ -54,7 +54,7 @@ class TestAISimulationSetupDialog: AbstractTest()
     fun `Should kick off a Golf simulation`()
     {
         val slot = CapturingSlot<AbstractDartsSimulation>()
-        val mockRunner = mockk<AbstractSimulationRunner>(relaxed = true)
+        val mockRunner = mockk<SimulationRunner>(relaxed = true)
         every { mockRunner.runSimulation(capture(slot), any(), any()) } just runs
 
         InjectedThings.simulationRunner = mockRunner

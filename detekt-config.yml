@@ -26,8 +26,6 @@ exceptions:
     active: false
 
 naming:
-  InvalidPackageDeclaration:
-    active: true
   MatchingDeclarationName:
     active: false
 
@@ -39,8 +37,6 @@ style:
     active: true
     excludes: '**/src/test/**/*.kt'
   DoubleNegativeLambda:
-    active: true
-  ExplicitItLambdaParameter:
     active: true
   ExpressionBodySyntax:
     active: true
@@ -59,13 +55,9 @@ style:
     active: false
   ThrowsCount:
     active: false
-  UnnecessaryAbstractClass:
-    active: false
   UnnecessaryBracesAroundTrailingLambda:
     active: true
   UnusedImports:
-    active: true
-  UseAnyOrNoneInsteadOfFind:
     active: true
   UseLet:
     active: true

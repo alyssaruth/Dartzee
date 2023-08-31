@@ -2,7 +2,7 @@ package dartzee.db.sanity
 
 import dartzee.db.AbstractEntity
 
-class SanityCheckUnsetIdFields(val entity: AbstractEntity<*>): AbstractSanityCheck()
+class SanityCheckUnsetIdFields(val entity: AbstractEntity<*>): ISanityCheck
 {
     private val sanityErrors = mutableListOf<AbstractSanityCheckResult>()
 

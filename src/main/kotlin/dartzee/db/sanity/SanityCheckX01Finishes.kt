@@ -6,7 +6,7 @@ import dartzee.core.util.TableUtil
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.ResultSet
 
-class SanityCheckX01Finishes: AbstractSanityCheck()
+class SanityCheckX01Finishes: ISanityCheck
 {
     data class X01Finish(val playerId: String, val gameId: String, val finish: Int)
 

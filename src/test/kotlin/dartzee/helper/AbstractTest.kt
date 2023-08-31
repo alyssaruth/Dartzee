@@ -31,7 +31,7 @@ const val TEST_DB_DIRECTORY = "Test/Databases"
 
 @ExtendWith(BeforeAllTestsExtension::class)
 @ExtendWith(SwingTestCleanupExtension::class)
-abstract class AbstractTest
+open class AbstractTest
 {
     val dialogFactory = TestMessageDialogFactory()
 

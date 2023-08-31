@@ -6,7 +6,7 @@ import java.io.File
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 
-class MessageDialogFactory: AbstractMessageDialogFactory()
+class MessageDialogFactory: IMessageDialogFactory
 {
     private val loadingDialog = LoadingDialog()
 

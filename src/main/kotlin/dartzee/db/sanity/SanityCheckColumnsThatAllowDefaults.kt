@@ -2,7 +2,7 @@ package dartzee.db.sanity
 
 import dartzee.core.util.TableUtil
 
-class SanityCheckColumnsThatAllowDefaults: AbstractSanityCheck()
+class SanityCheckColumnsThatAllowDefaults: ISanityCheck
 {
     override fun runCheck(): List<AbstractSanityCheckResult>
     {
