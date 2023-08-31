@@ -23,14 +23,9 @@ import javax.swing.JFrame
 import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
 
-abstract class AbstractSimulationRunner
+class SimulationRunner
 {
-    abstract fun runSimulation(sim: AbstractDartsSimulation, numberOfGames: Int, modal: Boolean)
-}
-
-class SimulationRunner: AbstractSimulationRunner()
-{
-    override fun runSimulation(sim: AbstractDartsSimulation, numberOfGames: Int, modal: Boolean)
+    fun runSimulation(sim: AbstractDartsSimulation, numberOfGames: Int, modal: Boolean)
     {
         val simulationRunnable = Runnable { runSimulationThreadily(sim, numberOfGames, modal) }
 

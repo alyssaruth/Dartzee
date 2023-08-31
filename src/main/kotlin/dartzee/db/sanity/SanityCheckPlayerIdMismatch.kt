@@ -3,7 +3,7 @@ package dartzee.db.sanity
 import dartzee.core.util.TableUtil
 import dartzee.utils.InjectedThings.mainDatabase
 
-class SanityCheckPlayerIdMismatch: AbstractSanityCheck()
+class SanityCheckPlayerIdMismatch: ISanityCheck
 {
     override fun runCheck(): List<AbstractSanityCheckResult>
     {

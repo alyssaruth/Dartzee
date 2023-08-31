@@ -2,13 +2,13 @@ package dartzee.dartzee
 
 import dartzee.screen.dartzee.DartzeeRuleCreationDialog
 
-abstract class AbstractDartzeeRuleFactory
+interface IDartzeeRuleFactory
 {
-    abstract fun newRule(): DartzeeRuleDto?
-    abstract fun amendRule(rule: DartzeeRuleDto): DartzeeRuleDto
+    fun newRule(): DartzeeRuleDto?
+    fun amendRule(rule: DartzeeRuleDto): DartzeeRuleDto
 }
 
-class DartzeeRuleFactory: AbstractDartzeeRuleFactory()
+class DartzeeRuleFactory: IDartzeeRuleFactory
 {
     override fun newRule(): DartzeeRuleDto?
     {

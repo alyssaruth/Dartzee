@@ -1,10 +1,10 @@
 package dartzee.screen.ai
 
+import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.AimDart
-import com.github.alyssaburlton.swingtest.clickCancel
-import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.core.bean.ScrollTable
 import dartzee.getRows
 import dartzee.helper.AbstractTest
@@ -106,7 +106,7 @@ class TestAISetupConfigurationDialog: AbstractTest()
         map.shouldContainExactly(mapOf(48 to AimDart(16, 1)))
     }
 
-    private class MockAiSetupRuleFactory: AbstractAISetupRuleFactory()
+    private class MockAiSetupRuleFactory: IAISetupRuleFactory
     {
         override fun newSetupRule(currentRules: MutableMap<Int, AimDart>) {
             currentRules[10] = AimDart(2, 1)

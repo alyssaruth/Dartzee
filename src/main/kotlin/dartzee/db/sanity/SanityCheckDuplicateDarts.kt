@@ -2,7 +2,7 @@ package dartzee.db.sanity
 
 import dartzee.db.DartEntity
 
-class SanityCheckDuplicateDarts: AbstractSanityCheck()
+class SanityCheckDuplicateDarts: ISanityCheck
 {
     override fun runCheck(): List<AbstractSanityCheckResult>
     {

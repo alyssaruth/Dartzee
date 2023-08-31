@@ -1,18 +1,18 @@
 package dartzee.helper
 
+import dartzee.dartzee.DartzeeRuleCalculationResult
+import dartzee.dartzee.DartzeeRuleDto
+import dartzee.dartzee.IDartzeeCalculator
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.dartzee.AbstractDartzeeCalculator
-import dartzee.dartzee.DartzeeRuleCalculationResult
-import dartzee.dartzee.DartzeeRuleDto
 
 /**
  * Fast calculator for tests which assumes that the rule is always:
  *
  *  Inner single 1 -> Inner single 2 -> Inner single 3
  */
-class FakeDartzeeCalculator: AbstractDartzeeCalculator()
+class FakeDartzeeCalculator: IDartzeeCalculator
 {
     override fun getValidSegments(rule: DartzeeRuleDto, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
     {

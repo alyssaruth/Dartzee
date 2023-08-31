@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.table.DefaultTableModel
 
-private fun getAllSanityChecks(): List<AbstractSanityCheck> {
+private fun getAllSanityChecks(): List<ISanityCheck> {
     val specificChecks = listOf(
         SanityCheckFinishedParticipantsNoScore(),
         SanityCheckDuplicateDarts(),
@@ -33,7 +33,7 @@ private fun getAllSanityChecks(): List<AbstractSanityCheck> {
         SanityCheckX01Finishes()
     )
 
-    val genericChecks: List<AbstractSanityCheck> = DartsDatabaseUtil.getAllEntities().flatMap {
+    val genericChecks: List<ISanityCheck> = DartsDatabaseUtil.getAllEntities().flatMap {
         listOf(SanityCheckDanglingIdFields(it), SanityCheckUnsetIdFields(it))
     }
 
@@ -42,21 +42,21 @@ private fun getAllSanityChecks(): List<AbstractSanityCheck> {
 
 object DatabaseSanityCheck
 {
-    fun runSanityCheck(checks: List<AbstractSanityCheck> = getAllSanityChecks())
+    fun runSanityCheck(checks: List<ISanityCheck> = getAllSanityChecks())
     {
         logger.info(CODE_SANITY_CHECK_STARTED, "Running ${getAllSanityChecks().size} sanity checks...")
 
         runAllChecks(checks)
     }
 
-    private fun runAllChecks(checks: List<AbstractSanityCheck>)
+    private fun runAllChecks(checks: List<ISanityCheck>)
     {
         val r = Runnable { runChecksInOtherThread(checks) }
         val t = Thread(r, "Sanity checks")
         t.start()
     }
 
-    private fun runChecksInOtherThread(checks: List<AbstractSanityCheck>)
+    private fun runChecksInOtherThread(checks: List<ISanityCheck>)
     {
         val dlg = ProgressDialog.factory("Running Sanity Check", "checks remaining", checks.size)
         dlg.setVisibleLater()

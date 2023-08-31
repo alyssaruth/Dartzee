@@ -3,12 +3,12 @@ package dartzee.dartzee
 import dartzee.`object`.DartboardSegment
 import dartzee.screen.dartzee.DartboardSegmentSelectDialog
 
-abstract class AbstractDartzeeSegmentFactory
+interface IDartzeeSegmentFactory
 {
-    abstract fun selectSegments(segments: Set<DartboardSegment>): Set<DartboardSegment>
+    fun selectSegments(segments: Set<DartboardSegment>): Set<DartboardSegment>
 }
 
-class DartzeeSegmentFactory: AbstractDartzeeSegmentFactory()
+class DartzeeSegmentFactory: IDartzeeSegmentFactory
 {
     override fun selectSegments(segments: Set<DartboardSegment>): Set<DartboardSegment>
     {

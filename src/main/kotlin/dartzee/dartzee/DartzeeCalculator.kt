@@ -8,12 +8,12 @@ import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.utils.getAllSegmentsForDartzee
 
-abstract class AbstractDartzeeCalculator
+interface IDartzeeCalculator
 {
-    abstract fun getValidSegments(rule: DartzeeRuleDto, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
+    fun getValidSegments(rule: DartzeeRuleDto, dartsSoFar: List<Dart>): DartzeeRuleCalculationResult
 }
 
-class DartzeeCalculator: AbstractDartzeeCalculator()
+class DartzeeCalculator: IDartzeeCalculator
 {
     private val allPossibilities: List<List<DartboardSegment>> = generateAllPossibilities()
 

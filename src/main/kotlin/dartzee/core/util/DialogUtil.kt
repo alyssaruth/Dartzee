@@ -17,9 +17,9 @@ import javax.swing.SwingUtilities
 object DialogUtil
 {
     private var loadingDialog: LoadingDialog? = null
-    private var dialogFactory: AbstractMessageDialogFactory = MessageDialogFactory()
+    private var dialogFactory: IMessageDialogFactory = MessageDialogFactory()
 
-    fun init(implementation: AbstractMessageDialogFactory)
+    fun init(implementation: IMessageDialogFactory)
     {
         dialogFactory = implementation
     }

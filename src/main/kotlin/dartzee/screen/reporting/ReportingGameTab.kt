@@ -52,8 +52,8 @@ class ReportingGameTab: JPanel(), ActionListener
         add(panelGameParams, "cell 2 1")
         add(verticalStrut, "cell 0 2")
         add(cbStartDate, "cell 0 3,aligny center")
-        val fl_panelDtStart = dateFilterPanelStart.layout as FlowLayout
-        fl_panelDtStart.alignment = FlowLayout.LEFT
+        val fl = dateFilterPanelStart.layout as FlowLayout
+        fl.alignment = FlowLayout.LEFT
         add(dateFilterPanelStart, "cell 2 3,alignx left,aligny center")
         add(cbFinishDate, "cell 0 4")
         add(rdbtnUnfinished, "flowx,cell 2 5")

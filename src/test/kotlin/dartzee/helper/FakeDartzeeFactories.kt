@@ -1,17 +1,17 @@
 package dartzee.helper
 
-import dartzee.dartzee.AbstractDartzeeRuleFactory
-import dartzee.dartzee.AbstractDartzeeSegmentFactory
 import dartzee.dartzee.DartzeeRuleDto
+import dartzee.dartzee.IDartzeeRuleFactory
+import dartzee.dartzee.IDartzeeSegmentFactory
 import dartzee.`object`.DartboardSegment
 
-class FakeDartzeeRuleFactory(val ret: DartzeeRuleDto?): AbstractDartzeeRuleFactory()
+class FakeDartzeeRuleFactory(private val ret: DartzeeRuleDto?): IDartzeeRuleFactory
 {
     override fun newRule() = ret
     override fun amendRule(rule: DartzeeRuleDto) = ret ?: rule
 }
 
-class FakeDartzeeSegmentFactory(private val desiredSegments: Set<DartboardSegment>): AbstractDartzeeSegmentFactory()
+class FakeDartzeeSegmentFactory(private val desiredSegments: Set<DartboardSegment>): IDartzeeSegmentFactory
 {
     var segmentsPassedIn: Set<DartboardSegment> = emptySet()
 

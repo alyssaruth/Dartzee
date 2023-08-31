@@ -2,12 +2,12 @@ package dartzee.screen.ai
 
 import dartzee.ai.AimDart
 
-abstract class AbstractAISetupRuleFactory
+interface IAISetupRuleFactory
 {
-    abstract fun newSetupRule(currentRules: MutableMap<Int, AimDart>)
+    fun newSetupRule(currentRules: MutableMap<Int, AimDart>)
 }
 
-class AISetupRuleFactory: AbstractAISetupRuleFactory()
+class AISetupRuleFactory: IAISetupRuleFactory
 {
     override fun newSetupRule(currentRules: MutableMap<Int, AimDart>)
     {

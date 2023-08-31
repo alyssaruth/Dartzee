@@ -1,10 +1,10 @@
 package dartzee.db.sanity
 
-import dartzee.game.GameType
 import dartzee.db.ParticipantEntity
+import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 
-abstract class AbstractSanityCheckFinalScore: AbstractSanityCheck()
+abstract class AbstractSanityCheckFinalScore: ISanityCheck
 {
     abstract val gameType: GameType
 

@@ -13,13 +13,12 @@ complexity:
     active: false
 
 empty-blocks:
+  # Flags overridden functions
   EmptyFunctionBlock:
     active: false
 
 exceptions:
   SwallowedException:
-    ignoredExceptionTypes:
-      ['NumberFormatException', 'JsonPatchApplicationException', 'IllegalArgumentException', 'TimeoutException']
     excludes: '**/src/test/**/*.kt'
   TooGenericExceptionCaught:
     active: false
@@ -27,15 +26,7 @@ exceptions:
     active: false
 
 naming:
-  ConstructorParameterNaming:
-    active: false
-  InvalidPackageDeclaration:
-    active: true
   MatchingDeclarationName:
-    active: false
-  TopLevelPropertyNaming:
-    active: false
-  VariableNaming:
     active: false
 
 performance:
@@ -43,10 +34,9 @@ performance:
 
 style:
   DestructuringDeclarationWithTooManyEntries:
-    active: false
-  DoubleNegativeLambda:
     active: true
-  ExplicitItLambdaParameter:
+    excludes: '**/src/test/**/*.kt'
+  DoubleNegativeLambda:
     active: true
   ExpressionBodySyntax:
     active: true
@@ -63,17 +53,9 @@ style:
     active: false
   ReturnCount:
     active: false
-  ThrowsCount:
-    active: false
-  UnnecessaryAbstractClass:
-    active: false
   UnnecessaryBracesAroundTrailingLambda:
     active: true
-  UnnecessaryLet:
-    active: false
   UnusedImports:
-    active: true
-  UseAnyOrNoneInsteadOfFind:
     active: true
   UseLet:
     active: true

@@ -19,30 +19,30 @@ class VisualisationPanelScatter : AbstractVisualisationPanel()
         add(overlay)
         add(dartboard)
 
-        val label = JLabel("20+")
-        label.border = LineBorder(Color(0, 0, 0))
-        label.isOpaque = true
-        label.background = Color.YELLOW
-        label.horizontalAlignment = SwingConstants.CENTER
-        label.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
-        label.setBounds(16, 133, 64, 35)
-        panel.add(label)
-        val label_1 = JLabel("5 - 19")
-        label_1.isOpaque = true
-        label_1.horizontalAlignment = SwingConstants.CENTER
-        label_1.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
-        label_1.border = LineBorder(Color(0, 0, 0))
-        label_1.background = Color.ORANGE
-        label_1.setBounds(16, 233, 64, 35)
-        panel.add(label_1)
-        val label_2 = JLabel("1 - 4")
-        label_2.isOpaque = true
-        label_2.horizontalAlignment = SwingConstants.CENTER
-        label_2.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
-        label_2.border = LineBorder(Color(0, 0, 0))
-        label_2.background = Color.RED
-        label_2.setBounds(16, 333, 64, 35)
-        panel.add(label_2)
+        val lblYellow = JLabel("20+")
+        lblYellow.border = LineBorder(Color(0, 0, 0))
+        lblYellow.isOpaque = true
+        lblYellow.background = Color.YELLOW
+        lblYellow.horizontalAlignment = SwingConstants.CENTER
+        lblYellow.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
+        lblYellow.setBounds(16, 133, 64, 35)
+        panel.add(lblYellow)
+        val lblOrange = JLabel("5 - 19")
+        lblOrange.isOpaque = true
+        lblOrange.horizontalAlignment = SwingConstants.CENTER
+        lblOrange.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
+        lblOrange.border = LineBorder(Color(0, 0, 0))
+        lblOrange.background = Color.ORANGE
+        lblOrange.setBounds(16, 233, 64, 35)
+        panel.add(lblOrange)
+        val lblRed = JLabel("1 - 4")
+        lblRed.isOpaque = true
+        lblRed.horizontalAlignment = SwingConstants.CENTER
+        lblRed.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
+        lblRed.border = LineBorder(Color(0, 0, 0))
+        lblRed.background = Color.RED
+        lblRed.setBounds(16, 333, 64, 35)
+        panel.add(lblRed)
     }
 
     override fun factoryColourWrapper(): ColourWrapper

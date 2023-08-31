@@ -2,7 +2,7 @@ package dartzee.db.sanity
 
 import dartzee.db.GameEntity
 
-class SanityCheckDuplicateMatchOrdinals: AbstractSanityCheck()
+class SanityCheckDuplicateMatchOrdinals: ISanityCheck
 {
     override fun runCheck(): List<AbstractSanityCheckResult>
     {

@@ -1,6 +1,6 @@
 package dartzee.types
 
-abstract class StringMicrotype(val value: String) {
+open class StringMicrotype(val value: String) {
     override fun equals(other: Any?) =
             other is StringMicrotype
                 && this.javaClass == other.javaClass
