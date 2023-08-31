@@ -18,8 +18,6 @@ empty-blocks:
 
 exceptions:
   SwallowedException:
-    ignoredExceptionTypes:
-      ['NumberFormatException', 'JsonPatchApplicationException', 'IllegalArgumentException', 'TimeoutException']
     excludes: '**/src/test/**/*.kt'
   TooGenericExceptionCaught:
     active: false
@@ -69,8 +67,6 @@ style:
     active: false
   UnnecessaryBracesAroundTrailingLambda:
     active: true
-  UnnecessaryLet:
-    active: false
   UnusedImports:
     active: true
   UseAnyOrNoneInsteadOfFind:
