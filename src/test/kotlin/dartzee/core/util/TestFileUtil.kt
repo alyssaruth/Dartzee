@@ -16,19 +16,19 @@ import javax.swing.ImageIcon
 
 class TestFileUtil: AbstractTest()
 {
-    private val TEST_DIR = File("Test/")
+    private val testDirectory = File("Test/")
 
     @BeforeEach
     fun beforeEach()
     {
-        TEST_DIR.deleteRecursively()
-        TEST_DIR.mkdirs()
+        testDirectory.deleteRecursively()
+        testDirectory.mkdirs()
     }
 
     @AfterEach
     fun afterEach()
     {
-        TEST_DIR.deleteRecursively()
+        testDirectory.deleteRecursively()
     }
 
     @Test

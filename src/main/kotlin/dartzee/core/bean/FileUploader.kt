@@ -38,11 +38,11 @@ class FileUploader(ff: FileFilter) : JPanel(), ActionListener
         textField.isEditable = false
         panel.add(btnSelectFile, BorderLayout.EAST)
         btnSelectFile.preferredSize = Dimension(25, 20)
-        val panel_1 = JPanel()
-        panel_1.border = EmptyBorder(0, 5, 0, 5)
-        add(panel_1, BorderLayout.EAST)
-        panel_1.layout = BorderLayout(0, 0)
-        panel_1.add(btnUpload, BorderLayout.CENTER)
+        val panelEast = JPanel()
+        panelEast.border = EmptyBorder(0, 5, 0, 5)
+        add(panelEast, BorderLayout.EAST)
+        panelEast.layout = BorderLayout(0, 0)
+        panelEast.add(btnUpload, BorderLayout.CENTER)
 
         btnSelectFile.addActionListener(this)
         btnUpload.addActionListener(this)
