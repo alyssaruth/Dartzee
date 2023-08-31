@@ -121,7 +121,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         {
             logger.error(CODE_SQL_EXCEPTION,
                     "Retrieved ${entities.size} rows from ${getTableName()}. Expected 1. WhereSQL [$whereSql]",
-                    Throwable(),
                     KEY_SQL to whereSql)
         }
 
@@ -167,7 +166,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         {
             logger.error(CODE_SQL_EXCEPTION,
                     "Failed to find ${getTableName()} for ID [$rowId]",
-                    Throwable(),
                     KEY_SQL to "RowId = '$rowId'")
         }
 
@@ -285,7 +283,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
                 {
                     logger.error(CODE_SQL_EXCEPTION,
                             "0 rows updated for statement $updateQuery",
-                            Throwable(),
                             KEY_SQL to updateQuery)
                 }
             }
