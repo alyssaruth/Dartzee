@@ -1,5 +1,6 @@
+package dartzee.utils
+
 import dartzee.logging.CODE_HYPERLINK_ERROR
-import dartzee.utils.InjectedThings
 
 /**
  * N.B. will likely only work on linux

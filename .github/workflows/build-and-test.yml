@@ -14,6 +14,8 @@ jobs:
       - name: Verify tests
         run: |
           sh scripts/verify-test-files.sh
+      - name: Detekt - main
+        run: ./gradlew detektMain
       - name: Detekt - tests
         run: ./gradlew detektTest
 
