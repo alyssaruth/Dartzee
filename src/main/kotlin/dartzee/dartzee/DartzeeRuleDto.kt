@@ -39,14 +39,11 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
 
         dart1Rule ?: return sumScore(dartsAfterAggregate)
 
-        if (dart2Rule != null)
-        {
-            return sumScore(dartsAfterAggregate)
-        }
-        else
-        {
+        return if (dart2Rule != null) {
+            sumScore(dartsAfterAggregate)
+        } else {
             val validDarts = dartsAfterAggregate.filter { dart1Rule.isValidDart(it) }
-            return sumScore(validDarts)
+            sumScore(validDarts)
         }
     }
 

@@ -47,7 +47,7 @@ abstract class AbstractPlayerConfigurationDialog(protected val saveCallback: (pl
 
     private fun isValidName(name: String?): Boolean
     {
-        if (name == null || name.isEmpty())
+        if (name.isNullOrEmpty())
         {
             DialogUtil.showErrorOLD("You must enter a name for this player.")
             return false
