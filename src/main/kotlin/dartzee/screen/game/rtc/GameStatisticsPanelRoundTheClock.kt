@@ -1,11 +1,11 @@
 package dartzee.screen.game.rtc
 
-import dartzee.`object`.Dart
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.maxOrZero
-import dartzee.game.UniqueParticipantName
 import dartzee.game.RoundTheClockConfig
+import dartzee.game.UniqueParticipantName
 import dartzee.game.state.ClockPlayerState
+import dartzee.`object`.Dart
 import dartzee.screen.game.AbstractGameStatisticsPanel
 import dartzee.utils.getLongestStreak
 
@@ -48,7 +48,7 @@ open class GameStatisticsPanelRoundTheClock(gameParams: String): AbstractGameSta
             if (darts.isEmpty()) null else MathsUtil.round(darts.average(), 2)
 
     private fun getBruceys(desc: String, enforceSuccess: Boolean) = prepareRow(desc) { playerName ->
-        val rounds = hmPlayerToDarts[playerName] ?: listOf()
+        val rounds = hmPlayerToDarts[playerName].orEmpty()
         rounds.filter { it.size == 4 }.count { it.last().hitClockTarget(config.clockType) || !enforceSuccess }
     }
 

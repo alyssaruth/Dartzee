@@ -111,7 +111,7 @@ class DartzeeTemplateSetupScreen: EmbeddedScreen(), RowSelectionListener
                 val template = DartzeeTemplateEntity().factoryFromResultSet(rs)
                 val gameCount = rs.getInt("GameCount")
 
-                val rules = hmTemplateIdToRules[template.rowId] ?: listOf()
+                val rules = hmTemplateIdToRules[template.rowId].orEmpty()
 
                 addTemplateToTable(template, rules, gameCount)
             }

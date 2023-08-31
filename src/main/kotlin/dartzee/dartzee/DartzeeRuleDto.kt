@@ -79,7 +79,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
 
 
     fun getDifficulty() = calculationResult?.percentage ?: 0.0
-    fun getDifficultyDesc() = calculationResult?.getDifficultyDesc() ?: ""
+    fun getDifficultyDesc() = calculationResult?.getDifficultyDesc().orEmpty()
 
     fun getDisplayName() = ruleName ?: generateRuleDescription()
 
@@ -95,7 +95,7 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         val result = ruleParts.joinToString()
         return if (result.isEmpty()) "Anything" else result
     }
-    private fun getTotalDescription() = aggregateRule?.getDescription() ?: ""
+    private fun getTotalDescription() = aggregateRule?.getDescription().orEmpty()
     private fun getDartsDescription(): String
     {
         dart1Rule ?: return ""
@@ -132,17 +132,17 @@ data class DartzeeRuleDto(val dart1Rule: AbstractDartzeeDartRule?, val dart2Rule
         val entity = DartzeeRuleEntity(database)
         entity.assignRowId()
 
-        entity.dart1Rule = dart1Rule?.toDbString() ?: ""
-        entity.dart2Rule = dart2Rule?.toDbString() ?: ""
-        entity.dart3Rule = dart3Rule?.toDbString() ?: ""
-        entity.aggregateRule = aggregateRule?.toDbString() ?: ""
+        entity.dart1Rule = dart1Rule?.toDbString().orEmpty()
+        entity.dart2Rule = dart2Rule?.toDbString().orEmpty()
+        entity.dart3Rule = dart3Rule?.toDbString().orEmpty()
+        entity.aggregateRule = aggregateRule?.toDbString().orEmpty()
         entity.allowMisses = allowMisses
         entity.inOrder = inOrder
         entity.entityName = entityName
         entity.entityId = entityId
         entity.ordinal = ordinal
         entity.calculationResult = calculationResult!!.toDbString()
-        entity.ruleName = ruleName ?: ""
+        entity.ruleName = ruleName.orEmpty()
 
         return entity
     }

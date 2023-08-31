@@ -130,7 +130,7 @@ fun bulkInsertFromResultSet(rs: ResultSet,
         val playerId = rs.getString("PlayerId")
         val gameId = rs.getString("GameId")
         val dtAchieved = rs.getTimestamp("DtAchieved")
-        val detail = achievementDetailFn?.invoke() ?: ""
+        val detail = achievementDetailFn?.invoke().orEmpty()
         val counter = achievementCounterFn?.invoke() ?: -1
 
         if (!oneRowPerPlayer || playerIdsSeen.add(playerId))
