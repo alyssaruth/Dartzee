@@ -2,7 +2,7 @@ package dartzee.screen.stats.player.x01
 
 import dartzee.core.bean.RowSelectionListener
 import dartzee.core.bean.ScrollTable
-import dartzee.core.util.MathsUtil.Companion.getPercentage
+import dartzee.core.util.MathsUtil
 import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.core.util.containsComponent
 import dartzee.screen.stats.player.AbstractStatisticsTab
@@ -80,7 +80,7 @@ class StatisticsTabFinishBreakdown: AbstractStatisticsTab(), RowSelectionListene
 
         val rows: List<Array<Any>> = scores.distinct().map { double ->
             val count = scores.count { score -> score == double }
-            val percent = getPercentage(count, scores.size.toDouble())
+            val percent = MathsUtil.getPercentage(count, scores.size.toDouble())
             arrayOf(double, count, percent)
         }
 

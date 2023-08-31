@@ -1,7 +1,7 @@
 package dartzee.db
 
 import dartzee.ai.DartsAiModel
-import dartzee.core.util.DateStatics.Companion.END_OF_TIME
+import dartzee.core.util.DateStatics
 import dartzee.core.util.getEndOfTimeSqlString
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
@@ -12,7 +12,7 @@ open class PlayerEntity(database: Database = mainDatabase): AbstractEntity<Playe
     //DB Fields
     var name = ""
     var strategy = ""
-    var dtDeleted = END_OF_TIME
+    var dtDeleted = DateStatics.END_OF_TIME
     var playerImageId = ""
 
     override fun getTableName() = EntityName.Player

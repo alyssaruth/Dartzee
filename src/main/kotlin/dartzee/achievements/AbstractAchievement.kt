@@ -1,7 +1,7 @@
 package dartzee.achievements
 
 import dartzee.core.bean.paint
-import dartzee.core.util.DateStatics.Companion.START_OF_TIME
+import dartzee.core.util.DateStatics
 import dartzee.core.util.formatAsDate
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
@@ -40,7 +40,7 @@ abstract class AbstractAchievement
     var attainedValue = -1
     var gameIdEarned = ""
     var localGameIdEarned = -1L
-    var dtLatestUpdate = START_OF_TIME
+    var dtLatestUpdate = DateStatics.START_OF_TIME
     var player : PlayerEntity? = null
 
     var tmBreakdown : DefaultTableModel? = null

@@ -97,10 +97,10 @@ class SyncManagementPanel: JPanel(), ActionListener
 
         lblSharedDatabaseName.text = "<html><b>Shared Database:</b> $remoteName</html>"
         lblLastSynced.text = "<html><font color=\"${getColour(syncData.lastSynced)}\"><b>Last Synced:</b> ${syncData.lastSynced.formatTimestamp()}</font></html>"
-        lblPendingGames.text = "<html><font color=\"${getColour(pendingGameCount)}\"><b>Pending Games:</b> $pendingGameCount</font></html>"
+        lblPendingGames.text = "<html><font color=\"${getColourForGameCount(pendingGameCount)}\"><b>Pending Games:</b> $pendingGameCount</font></html>"
     }
 
-    private fun getColour(pendingGameCount: Int) = when {
+    private fun getColourForGameCount(pendingGameCount: Int) = when {
         pendingGameCount >= 10 -> "red"
         pendingGameCount >= 1 -> "orange"
         else -> "green"
