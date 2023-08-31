@@ -103,10 +103,9 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
 
     private fun createPlayer(human: Boolean)
     {
-        val dlg = if (human) HumanConfigurationDialog(::playerUpdated) else AIConfigurationDialog(::playerUpdated)
+        val playerUpdated = { _: PlayerEntity -> initialise() }
+        val dlg = if (human) HumanConfigurationDialog(playerUpdated) else AIConfigurationDialog(playerUpdated)
         dlg.setLocationRelativeTo(ScreenCache.mainScreen)
         dlg.isVisible = true
     }
-
-    private fun playerUpdated(player: PlayerEntity) = initialise()
 }
