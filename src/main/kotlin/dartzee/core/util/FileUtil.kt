@@ -4,7 +4,6 @@ import dartzee.logging.CODE_FILE_ERROR
 import dartzee.logging.CODE_SWITCHING_FILES
 import dartzee.utils.InjectedThings.logger
 import java.awt.Dimension
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
@@ -84,16 +83,7 @@ object FileUtil
     fun getByteArrayForResource(resourcePath: String): ByteArray? =
         try
         {
-            javaClass.getResourceAsStream(resourcePath).use { `is` ->
-                ByteArrayOutputStream().use { baos ->
-                    val b = ByteArray(4096)
-                    var n: Int
-                    while (`is`.read(b).also { n = it } != -1) {
-                        baos.write(b, 0, n)
-                    }
-                    baos.toByteArray()
-                }
-            }
+            javaClass.getResourceAsStream(resourcePath).use { stream -> stream?.readBytes() }
         }
         catch (ioe: IOException)
         {

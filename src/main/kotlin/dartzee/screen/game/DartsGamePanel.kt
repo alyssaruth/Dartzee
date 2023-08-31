@@ -31,7 +31,6 @@ import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.scorer.AbstractDartsScorer
 import dartzee.screen.game.x01.GamePanelX01
-import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
@@ -43,7 +42,6 @@ import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.sql.SQLException
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -283,47 +281,11 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
      */
     private fun loadScoresAndCurrentPlayer(gameId: String)
     {
-        var maxRounds = 0
-
         for (i in 0 until totalPlayers)
         {
             val pt = getParticipant(i)
-            val individuals = pt.individuals
-            val sql = ("SELECT drt.RoundNumber, drt.Score, drt.Multiplier, drt.SegmentType, drt.StartingScore"
-                    + " FROM Dart drt"
-                    + " WHERE drt.ParticipantId IN " + individuals.getQuotedIdStr { it.rowId }
-                    + " AND drt.PlayerId IN " + individuals.getQuotedIdStr { it.playerId }
-                    + " ORDER BY drt.RoundNumber, drt.Ordinal")
 
-            val hmRoundToDarts = HashMapList<Int, Dart>()
-            var lastRound = 0
-
-            try
-            {
-                mainDatabase.executeQuery(sql).use { rs ->
-                    while (rs.next())
-                    {
-                        val roundNumber = rs.getInt("RoundNumber")
-                        val score = rs.getInt("Score")
-                        val multiplier = rs.getInt("Multiplier")
-                        val segmentType = SegmentType.valueOf(rs.getString("SegmentType"))
-                        val startingScore = rs.getInt("StartingScore")
-
-                        val drt = Dart(score, multiplier, segmentType=segmentType)
-                        drt.startingScore = startingScore
-                        drt.roundNumber = roundNumber
-
-                        hmRoundToDarts.putInList(roundNumber, drt)
-
-                        lastRound = roundNumber
-                    }
-                }
-            }
-            catch (sqle: SQLException)
-            {
-                logger.logSqlException(sql, sql, sqle)
-                throw sqle
-            }
+            val hmRoundToDarts = loadRoundsMap(pt)
 
             val state = getPlayerState(i)
             hmRoundToDarts.getSortedValues().forEach {
@@ -331,12 +293,44 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
             }
 
             loadAdditionalEntities(state)
-
-            maxRounds = maxOf(maxRounds, lastRound)
         }
 
+        val maxRounds = getPlayerStates().maxOf { it.currentRoundNumber() - 1 }
         setCurrentPlayer(maxRounds, gameId)
     }
+    private fun loadRoundsMap(pt: IWrappedParticipant): HashMapList<Int, Dart>
+    {
+        val individuals = pt.individuals
+        val sql = """
+            SELECT drt.RoundNumber, drt.Score, drt.Multiplier, drt.SegmentType, drt.StartingScore
+            FROM Dart drt
+            WHERE drt.ParticipantId IN ${individuals.getQuotedIdStr { it.rowId } }
+            AND drt.PlayerId IN ${individuals.getQuotedIdStr { it.playerId } }
+            ORDER BY drt.RoundNumber, drt.Ordinal
+            """
+
+        val hmRoundToDarts = HashMapList<Int, Dart>()
+
+        mainDatabase.executeQuery(sql).use { rs ->
+            while (rs.next())
+            {
+                val roundNumber = rs.getInt("RoundNumber")
+                val score = rs.getInt("Score")
+                val multiplier = rs.getInt("Multiplier")
+                val segmentType = SegmentType.valueOf(rs.getString("SegmentType"))
+                val startingScore = rs.getInt("StartingScore")
+
+                val drt = Dart(score, multiplier, segmentType=segmentType)
+                drt.startingScore = startingScore
+                drt.roundNumber = roundNumber
+
+                hmRoundToDarts.putInList(roundNumber, drt)
+            }
+        }
+
+        return hmRoundToDarts
+    }
+
     protected open fun loadAdditionalEntities(state: PlayerState) {}
 
     /**
