@@ -12,10 +12,10 @@ val GREY_COLOUR_WRAPPER = makeMonochromeWrapper(Color.GRAY.brighter(), Color.LIG
 
 fun makeMonochromeWrapper(dark: Color, light: Color) = ColourWrapper(dark, light, light, light, dark, dark, dark, light)
 
-data class ColourWrapper(private val evenSingleColour : Color, private var evenDoubleColour : Color,
-                    private var evenTrebleColour : Color, private var oddSingleColour : Color,
-                    private var oddDoubleColour : Color, private var oddTrebleColour : Color,
-                    private var innerBullColour : Color, private var outerBullColour : Color,
+data class ColourWrapper(private val evenSingleColour : Color, private val evenDoubleColour : Color,
+                    private val evenTrebleColour : Color, private val oddSingleColour : Color,
+                    private val oddDoubleColour : Color, private val oddTrebleColour : Color,
+                    private val innerBullColour : Color, private val outerBullColour : Color,
                     var outerDartboardColour : Color = Color.black)
 {
     var missedBoardColour: Color = DartsColour.TRANSPARENT
