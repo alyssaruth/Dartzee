@@ -24,7 +24,7 @@ exceptions:
   TooGenericExceptionCaught:
     active: false
   TooGenericExceptionThrown:
-    excludes: '**/src/test/**/*.kt'
+    active: false
 
 naming:
   ConstructorParameterNaming:

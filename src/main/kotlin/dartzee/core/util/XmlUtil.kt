@@ -56,6 +56,7 @@ fun Document.toXmlString(): String =
         ""
     }
 
+@Suppress("SwallowedException")
 fun String.toXmlDoc() =
     try
     {
