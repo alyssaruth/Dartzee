@@ -45,6 +45,7 @@ class ElasticsearchPoster(private val credentials: AWSCredentials?,
         }
     }
 
+    @Suppress("SwallowedException")
     fun isOnline(): Boolean
     {
         val initialisedClient = client ?: return false
