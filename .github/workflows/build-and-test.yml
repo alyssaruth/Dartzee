@@ -30,12 +30,10 @@ jobs:
           java-version: 11.0.18
           cache: 'gradle'
       - name: Build & Unit Test
-        uses: GabrielBB/xvfb-action@v1.6
-        with:
-          run: |
-            ./gradlew koverReport
-            zip -rg unit-test-results.zip build/reports/tests/unitTest
-            zip -rq coverage-html.zip build/reports/kover/html
+        run: |
+          xvfb-run --auto-servernum ./gradlew koverReport
+          zip -rg unit-test-results.zip build/reports/tests/unitTest
+          zip -rq coverage-html.zip build/reports/kover/html
       - name: Export test results
         uses: actions/upload-artifact@v3
         with:
@@ -77,12 +75,10 @@ jobs:
           java-version: 11.0.18
           cache: 'gradle'
       - name: Integration & E2E
-        uses: GabrielBB/xvfb-action@v1.6
         env:
           AWS_SYNC: ${{ secrets.AWS_SYNC }}
           AWS_LOGS: ${{ secrets.AWS_LOGS }}
-        with:
-          run: ./gradlew integrationAndE2E --info
+        run: xvfb-run --auto-servernum ./gradlew integrationAndE2E --info
       - name: Export test results
         uses: actions/upload-artifact@v3
         with:
