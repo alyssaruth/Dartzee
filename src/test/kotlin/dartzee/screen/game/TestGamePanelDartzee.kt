@@ -69,8 +69,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
 class TestGamePanelDartzee : AbstractTest() {
     private val ruleResults =
