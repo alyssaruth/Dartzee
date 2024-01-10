@@ -28,8 +28,7 @@ import javax.swing.JScrollPane
 import javax.swing.ScrollPaneConstants
 import javax.swing.border.TitledBorder
 
-class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
-{
+class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen() {
     var previousScrn: EmbeddedScreen = ScreenCache.get<PlayerManagementScreen>()
 
     private var progressDesc = ""
@@ -46,8 +45,7 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
     private val lblIndividualIndicator = JLabel()
     private val lblTeamIndicator = JLabel()
 
-    init
-    {
+    init {
         add(centerPanel, BorderLayout.CENTER)
         centerPanel.layout = BorderLayout(0, 0)
         centerPanel.add(scrollPane, BorderLayout.CENTER)
@@ -88,8 +86,7 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
 
     override fun getScreenName() = "Achievements - ${player.name} - $progressDesc"
 
-    override fun initialise()
-    {
+    override fun initialise() {
         val achievementRows = AchievementEntity.retrieveAchievements(player.rowId)
         GameType.values().forEachIndexed { ix, gameType ->
             addAchievementTab(gameType, ix, achievementRows)
@@ -99,8 +96,11 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         progressDesc = "$score/${getAchievementMaximum()}"
     }
 
-    private fun addAchievementTab(gameType: GameType, index: Int, achievementRows: List<AchievementEntity>)
-    {
+    private fun addAchievementTab(
+        gameType: GameType,
+        index: Int,
+        achievementRows: List<AchievementEntity>
+    ) {
         val achievementTypes = getAchievementsForGameType(gameType).map { it.achievementType }
         val max = achievementTypes.size * MAX_ACHIEVEMENT_SCORE
         val filteredRows = achievementRows.filter { achievementTypes.contains(it.achievementType) }
@@ -129,13 +129,14 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         gridBag.setConstraints(panel, constraints)
         achievementsPanel.add(panel)
 
-        getAchievementsForGameType(gameType).forEach {
-            addAchievement(it, filteredRows, panel)
-        }
+        getAchievementsForGameType(gameType).forEach { addAchievement(it, filteredRows, panel) }
     }
 
-    private fun addAchievement(aa: AbstractAchievement, achievementRows: List<AchievementEntity>, panel: JPanel)
-    {
+    private fun addAchievement(
+        aa: AbstractAchievement,
+        achievementRows: List<AchievementEntity>,
+        panel: JPanel
+    ) {
         val type = aa.achievementType
         val achievementRowsFiltered = achievementRows.filter { a -> a.achievementType == type }
 
@@ -145,10 +146,8 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         panel.add(medal)
     }
 
-    fun toggleAchievementDesc(hovered: Boolean, achievement: AbstractAchievement)
-    {
-        if (hovered)
-        {
+    fun toggleAchievementDesc(hovered: Boolean, achievement: AbstractAchievement) {
+        if (hovered) {
             val color = achievement.getColor(false)
             setPanelColors(color, color.darker().darker())
 
@@ -156,22 +155,23 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
             lblAchievementExtraDetails.setMargins(0, -btnBack.width, 0, 0)
             panelNavigation.add(lblAchievementExtraDetails)
 
-            val singlePlayerIcon = if (achievement.allowedForIndividuals) "singlePlayerEnabled" else "singlePlayerDisabled"
+            val singlePlayerIcon =
+                if (achievement.allowedForIndividuals) "singlePlayerEnabled"
+                else "singlePlayerDisabled"
             lblIndividualIndicator.isVisible = true
-            lblIndividualIndicator.icon = ImageIcon(javaClass.getResource("/achievements/$singlePlayerIcon.png"))
+            lblIndividualIndicator.icon =
+                ImageIcon(javaClass.getResource("/achievements/$singlePlayerIcon.png"))
 
-            val teamIcon = if (achievement.allowedForTeams) "multiPlayerEnabled" else "multiPlayerDisabled"
+            val teamIcon =
+                if (achievement.allowedForTeams) "multiPlayerEnabled" else "multiPlayerDisabled"
             lblTeamIndicator.isVisible = true
             lblTeamIndicator.icon = ImageIcon(javaClass.getResource("/achievements/$teamIcon.png"))
 
-            if (!achievement.isLocked())
-            {
+            if (!achievement.isLocked()) {
                 lblAchievementDesc.text = achievement.desc
                 lblAchievementExtraDetails.text = achievement.getExtraDetails()
             }
-        }
-        else
-        {
+        } else {
             setPanelColors(null, null)
             lblIndividualIndicator.isVisible = false
             lblTeamIndicator.isVisible = false
@@ -182,8 +182,7 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen()
         }
     }
 
-    private fun setPanelColors(bgColor: Color?, fgColor: Color?)
-    {
+    private fun setPanelColors(bgColor: Color?, fgColor: Color?) {
         panelNavigation.background = bgColor
         panelAchievementDesc.background = bgColor
         panelNext.background = bgColor

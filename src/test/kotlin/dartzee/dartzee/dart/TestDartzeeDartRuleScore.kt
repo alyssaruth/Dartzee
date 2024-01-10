@@ -12,13 +12,11 @@ import io.kotest.matchers.ints.shouldNotBeInRange
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDartzeeDartRuleScore: AbstractDartzeeRuleTest<DartzeeDartRuleScore>()
-{
+class TestDartzeeDartRuleScore : AbstractDartzeeRuleTest<DartzeeDartRuleScore>() {
     override fun factory() = DartzeeDartRuleScore()
 
     @Test
-    fun `segment validation`()
-    {
+    fun `segment validation`() {
         val rule = DartzeeDartRuleScore()
         rule.score = 20
 
@@ -30,14 +28,12 @@ class TestDartzeeDartRuleScore: AbstractDartzeeRuleTest<DartzeeDartRuleScore>()
     }
 
     @Test
-    fun `Score config panel updates rule correctly`()
-    {
+    fun `Score config panel updates rule correctly`() {
         val rule = DartzeeDartRuleScore()
         rule.spinner.value shouldBe rule.score
         rule.score shouldBeGreaterThan -1
 
-        for (i in 1..25)
-        {
+        for (i in 1..25) {
             rule.spinner.value = i
 
             rule.spinner.value shouldBe rule.score
@@ -46,8 +42,7 @@ class TestDartzeeDartRuleScore: AbstractDartzeeRuleTest<DartzeeDartRuleScore>()
     }
 
     @Test
-    fun `Read and write XML`()
-    {
+    fun `Read and write XML`() {
         val rule = DartzeeDartRuleScore()
         rule.score = 18
 
@@ -59,8 +54,7 @@ class TestDartzeeDartRuleScore: AbstractDartzeeRuleTest<DartzeeDartRuleScore>()
     }
 
     @Test
-    fun `rule description`()
-    {
+    fun `rule description`() {
         val rule = DartzeeDartRuleScore()
         rule.getDescription() shouldBe "20"
 

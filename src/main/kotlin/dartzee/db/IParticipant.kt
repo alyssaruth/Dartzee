@@ -4,8 +4,7 @@ import dartzee.core.util.StringUtil
 import dartzee.core.util.isEndOfTime
 import java.sql.Timestamp
 
-interface IParticipant
-{
+interface IParticipant {
     var gameId: String
     var ordinal: Int
     var finishingPosition: Int
@@ -15,10 +14,10 @@ interface IParticipant
     fun saveToDatabase()
 
     fun isActive() = isEndOfTime(dtFinished)
+
     fun getFinishingPositionDesc(): String = StringUtil.convertOrdinalToText(finishingPosition)
 
-    fun saveFinishingPosition(game: GameEntity, position: Int)
-    {
+    fun saveFinishingPosition(game: GameEntity, position: Int) {
         this.finishingPosition = position
         this.saveToDatabase()
     }

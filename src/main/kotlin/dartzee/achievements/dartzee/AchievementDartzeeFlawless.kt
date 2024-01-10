@@ -11,8 +11,7 @@ import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 
-class AchievementDartzeeFlawless: AbstractMultiRowAchievement()
-{
+class AchievementDartzeeFlawless : AbstractMultiRowAchievement() {
     override val name = "Flawless"
     override val desc = "Games where all rules were passed (at least 5 rounds)"
     override val achievementType = AchievementType.DARTZEE_FLAWLESS
@@ -28,12 +27,13 @@ class AchievementDartzeeFlawless: AbstractMultiRowAchievement()
 
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_DARTZEE_FLAWLESS
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
         val dartzeeGames = buildQualifyingDartzeeGamesTable(database) ?: return
 
         val sb = StringBuilder()
-        sb.append(" SELECT pt.PlayerId, pt.DtFinished AS DtAchieved, zz.GameId, pt.FinalScore, zz.TemplateName")
+        sb.append(
+            " SELECT pt.PlayerId, pt.DtFinished AS DtAchieved, zz.GameId, pt.FinalScore, zz.TemplateName"
+        )
         sb.append(" FROM ${EntityName.Participant} pt, $dartzeeGames zz")
         sb.append(" WHERE pt.GameId = zz.GameId")
         sb.append(" AND pt.FinalScore > -1")
@@ -47,10 +47,18 @@ class AchievementDartzeeFlawless: AbstractMultiRowAchievement()
         sb.append(" )")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementType, achievementCounterFn = { rs.getInt("FinalScore") }, achievementDetailFn = { rs.getString("TemplateName")})
+            bulkInsertFromResultSet(
+                rs,
+                database,
+                achievementType,
+                achievementCounterFn = { rs.getInt("FinalScore") },
+                achievementDetailFn = { rs.getString("TemplateName") }
+            )
         }
     }
 
     override fun getBreakdownColumns() = listOf("Game", "Score", "Template", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.localGameIdEarned, a.achievementCounter, a.achievementDetail, a.dtAchieved)
+
+    override fun getBreakdownRow(a: AchievementEntity) =
+        arrayOf<Any>(a.localGameIdEarned, a.achievementCounter, a.achievementDetail, a.dtAchieved)
 }

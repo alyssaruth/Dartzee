@@ -5,8 +5,7 @@ import dartzee.achievements.AchievementType
 import dartzee.game.GameType
 import dartzee.utils.ResourceCache
 
-class AchievementX01BestGame : AbstractAchievementBestGame()
-{
+class AchievementX01BestGame : AbstractAchievementBestGame() {
     override val achievementType = AchievementType.X01_BEST_GAME
     override val name = "Leg-up"
     override val desc = "Best game of 501"

@@ -9,7 +9,6 @@ import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import dartzee.utils.PreferenceUtil
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -20,9 +19,10 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
+import net.miginfocom.swing.MigLayout
 
-class PreferencesPanelMisc : AbstractPreferencesPanel(), ActionListener, PropertyChangeListener, ChangeListener
-{
+class PreferencesPanelMisc :
+    AbstractPreferencesPanel(), ActionListener, PropertyChangeListener, ChangeListener {
     override val title = "Misc"
 
     private val panelCenter = JPanel()
@@ -34,8 +34,7 @@ class PreferencesPanelMisc : AbstractPreferencesPanel(), ActionListener, Propert
     val nfLeaderboardSize = NumberField(10, 200)
     val chckbxShowAnimations = JCheckBox("Play sounds/animations")
 
-    init
-    {
+    init {
         add(panelCenter, BorderLayout.CENTER)
         nfLeaderboardSize.columns = 10
         panelCenter.layout = MigLayout("", "[][grow][]", "[][][][][][]")
@@ -62,17 +61,19 @@ class PreferencesPanelMisc : AbstractPreferencesPanel(), ActionListener, Propert
         chckbxShowAnimations.addActionListener(this)
     }
 
-    override fun refreshImpl(useDefaults: Boolean)
-    {
+    override fun refreshImpl(useDefaults: Boolean) {
         slider.value = PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED, useDefaults)
-        nfLeaderboardSize.value = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE, useDefaults)
-        chckbxAiAutomaticallyFinish.isSelected = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, useDefaults)
-        chckbxCheckForUpdates.isSelected = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES, useDefaults)
-        chckbxShowAnimations.isSelected = PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, useDefaults)
+        nfLeaderboardSize.value =
+            PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE, useDefaults)
+        chckbxAiAutomaticallyFinish.isSelected =
+            PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, useDefaults)
+        chckbxCheckForUpdates.isSelected =
+            PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES, useDefaults)
+        chckbxShowAnimations.isSelected =
+            PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, useDefaults)
     }
 
-    override fun saveImpl()
-    {
+    override fun saveImpl() {
         val aiSpd = slider.value
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, aiSpd)
 
@@ -90,14 +91,19 @@ class PreferencesPanelMisc : AbstractPreferencesPanel(), ActionListener, Propert
     }
 
     override fun hasOutstandingChanges() =
-            slider.value != PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED)
-                || nfLeaderboardSize.value != PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
-                || chckbxAiAutomaticallyFinish.isSelected != PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
-                || chckbxCheckForUpdates.isSelected != PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES)
-                || chckbxShowAnimations.isSelected != PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)
-
+        slider.value != PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED) ||
+            nfLeaderboardSize.value !=
+                PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE) ||
+            chckbxAiAutomaticallyFinish.isSelected !=
+                PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE) ||
+            chckbxCheckForUpdates.isSelected !=
+                PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES) ||
+            chckbxShowAnimations.isSelected !=
+                PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)
 
     override fun stateChanged(e: ChangeEvent?) = stateChanged()
+
     override fun propertyChange(evt: PropertyChangeEvent?) = stateChanged()
+
     override fun actionPerformed(e: ActionEvent?) = stateChanged()
 }

@@ -1,10 +1,10 @@
 package dartzee.screen
 
+import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldMatch
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.bean.PlayerImageRadio
-import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.core.bean.FileUploader
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.getAllChildComponentsForType
@@ -22,16 +22,14 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Tag
-import org.junit.jupiter.api.Test
 import javax.swing.JPanel
 import javax.swing.JTabbedPane
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 
-class TestPlayerImageDialog : AbstractTest()
-{
+class TestPlayerImageDialog : AbstractTest() {
     @Test
-    fun `Should populate correctly with pre-existing images`()
-    {
+    fun `Should populate correctly with pre-existing images`() {
         PlayerImageEntity().createPresets()
         insertPlayerImage("dibble")
 
@@ -40,13 +38,13 @@ class TestPlayerImageDialog : AbstractTest()
         val presetTab = tabbedPane.getChild<JPanel>("presetTab")
         val uploadTab = tabbedPane.getChild<JPanel>("uploadTab")
 
-        presetTab.getAllChildComponentsForType<PlayerImageRadio>().size shouldBe PlayerImageEntity.avatarPresets.size
+        presetTab.getAllChildComponentsForType<PlayerImageRadio>().size shouldBe
+            PlayerImageEntity.avatarPresets.size
         uploadTab.getAllChildComponentsForType<PlayerImageRadio>().size shouldBe 1
     }
 
     @Test
-    fun `Should show an error if no selection is made`()
-    {
+    fun `Should show an error if no selection is made`() {
         val callback = makeCallback()
         val dlg = PlayerImageDialog(callback)
         dlg.clickOk()
@@ -57,8 +55,7 @@ class TestPlayerImageDialog : AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Should accept and crop a valid new avatar`()
-    {
+    fun `Should accept and crop a valid new avatar`() {
         val dlg = PlayerImageDialog(makeCallback())
         dlg.isVisible = true
         dlg.getChild<JTabbedPane>().selectTab<JPanel>("uploadTab")
@@ -76,8 +73,7 @@ class TestPlayerImageDialog : AbstractTest()
     }
 
     @Test
-    fun `Should reject uploading a non-image file`()
-    {
+    fun `Should reject uploading a non-image file`() {
         val dlg = PlayerImageDialog(makeCallback())
         dlg.getChild<JTabbedPane>().selectTab<JPanel>("uploadTab")
         dlg.uploadResource("/aiModel.json")
@@ -87,21 +83,21 @@ class TestPlayerImageDialog : AbstractTest()
     }
 
     @Test
-    fun `Should reject uploading an image that is too small`()
-    {
+    fun `Should reject uploading an image that is too small`() {
         val dlg = PlayerImageDialog(makeCallback())
         dlg.getChild<JTabbedPane>().selectTab<JPanel>("uploadTab")
         dlg.uploadResource("/stats_large.png")
 
-        dialogFactory.errorsShown.shouldContainExactly("The image is too small - it must be at least $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px.")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "The image is too small - it must be at least $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px."
+        )
 
         dlg.getAllChildComponentsForType<PlayerImageRadio>().shouldBeEmpty()
         PlayerImageEntity().retrieveEntities().shouldBeEmpty()
     }
 
     @Test
-    fun `Should invoke callback when Ok is pressed with an image selected`()
-    {
+    fun `Should invoke callback when Ok is pressed with an image selected`() {
         val img = insertPlayerImage("dibble")
         val callback = makeCallback()
         val dlg = PlayerImageDialog(callback)
@@ -111,8 +107,7 @@ class TestPlayerImageDialog : AbstractTest()
         verify { callback(img.rowId) }
     }
 
-    private fun PlayerImageDialog.uploadResource(resourceName: String)
-    {
+    private fun PlayerImageDialog.uploadResource(resourceName: String) {
         val uploader = getChild<FileUploader>()
         uploader.uploadFileFromResource(resourceName)
     }

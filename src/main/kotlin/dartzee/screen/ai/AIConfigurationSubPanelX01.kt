@@ -11,8 +11,7 @@ import javax.swing.JLabel
 import javax.swing.JSpinner
 import javax.swing.SpinnerNumberModel
 
-class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionListener
-{
+class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionListener {
     val hmScoreToDart = mutableMapOf<Int, AimDart>()
 
     val spinnerScoringDart = SpinnerSingleSelector()
@@ -21,8 +20,7 @@ class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionList
     val lblWhenScoreLess = JLabel("when score less than")
     val spinnerMercyThreshold = JSpinner()
 
-    init
-    {
+    init {
         border = null
         layout = null
         val lblScoringDart = JLabel("Scoring Dart")
@@ -40,20 +38,21 @@ class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionList
         lblWhenScoreLess.setBounds(140, 55, 118, 24)
         add(lblWhenScoreLess)
 
-        //Listeners
+        // Listeners
         btnConfigureSetupDarts.addActionListener(this)
         chckbxMercyRule.addActionListener(this)
     }
 
-    override fun populateModel(model: DartsAiModel): DartsAiModel
-    {
-        return model.copy(hmScoreToDart = hmScoreToDart,
-                scoringDart = spinnerScoringDart.value as Int,
-                mercyThreshold = if (chckbxMercyRule.isSelected) spinnerMercyThreshold.value as Int else null)
+    override fun populateModel(model: DartsAiModel): DartsAiModel {
+        return model.copy(
+            hmScoreToDart = hmScoreToDart,
+            scoringDart = spinnerScoringDart.value as Int,
+            mercyThreshold =
+                if (chckbxMercyRule.isSelected) spinnerMercyThreshold.value as Int else null
+        )
     }
 
-    override fun initialiseFromModel(model: DartsAiModel)
-    {
+    override fun initialiseFromModel(model: DartsAiModel) {
         spinnerScoringDart.value = model.scoringDart
 
         val mercyThreshold = model.mercyThreshold
@@ -68,10 +67,8 @@ class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionList
         hmScoreToDart.putAll(model.hmScoreToDart)
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnConfigureSetupDarts -> AISetupConfigurationDialog.configureSetups(hmScoreToDart)
             chckbxMercyRule -> {
                 val mercyRule = chckbxMercyRule.isSelected

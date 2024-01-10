@@ -4,11 +4,9 @@ import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestComboBoxNumberComparison: AbstractTest()
-{
+class TestComboBoxNumberComparison : AbstractTest() {
     @Test
-    fun `Should contain the default options, and support adding new ones`()
-    {
+    fun `Should contain the default options, and support adding new ones`() {
         val cb = ComboBoxNumberComparison()
         cb.itemCount shouldBe 3
 

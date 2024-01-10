@@ -11,10 +11,9 @@ import java.awt.Font
 import java.awt.FontMetrics
 import java.awt.Point
 
-/**
- * Utilities for the Dartboard object.
- */
-private val numberOrder = listOf(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20)
+/** Utilities for the Dartboard object. */
+private val numberOrder =
+    listOf(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20)
 
 val hmScoreToOrdinal = initialiseOrdinalHashMap()
 private var colourWrapperFromPrefs: ColourWrapper? = null
@@ -28,25 +27,22 @@ private const val LOWER_BOUND_DOUBLE_RATIO = 0.953
 const val UPPER_BOUND_DOUBLE_RATIO = 1.0
 const val UPPER_BOUND_OUTSIDE_BOARD_RATIO = 1.3
 
-fun getDartForSegment(segment: DartboardSegment): Dart
-{
+fun getDartForSegment(segment: DartboardSegment): Dart {
     val score = segment.score
     val multiplier = segment.getMultiplier()
     return Dart(score, multiplier, segment.type)
 }
 
-fun getNumbersWithinN(number: Int, n: Int): List<Int>
-{
+fun getNumbersWithinN(number: Int, n: Int): List<Int> {
     val ix = numberOrder.indexOf(number)
-    val range = ((ix-n)..(ix+n))
+    val range = ((ix - n)..(ix + n))
 
-    return range.map { numberOrder[(it+20) % 20] }
+    return range.map { numberOrder[(it + 20) % 20] }
 }
 
 fun getAdjacentNumbers(number: Int) = getNumbersWithinN(number, 1).filterNot { it == number }
 
-fun computePointsForSegment(segment: DartboardSegment, centre: Point, radius: Double): Set<Point>
-{
+fun computePointsForSegment(segment: DartboardSegment, centre: Point, radius: Double): Set<Point> {
     if (segment.isMiss()) {
         return emptySet()
     }
@@ -59,7 +55,14 @@ fun computePointsForSegment(segment: DartboardSegment, centre: Point, radius: Do
         val (startAngle, endAngle) = getAnglesForScore(score)
         val radii = getRadiiForSegmentType(segment.type, radius)
         val angleStep = getAngleStepForSegmentType(segment.type)
-        generateSegment(segment, centre, radius, startAngle.toDouble() - 0.1 to endAngle.toDouble() + 0.1, angleStep, radii)
+        generateSegment(
+            segment,
+            centre,
+            radius,
+            startAngle.toDouble() - 0.1 to endAngle.toDouble() + 0.1,
+            angleStep,
+            radii
+        )
     }
 }
 
@@ -70,19 +73,26 @@ private fun getAngleStepForSegmentType(segmentType: SegmentType) =
         else -> 0.1
     }
 
-private fun generateSegment(segment: DartboardSegment, centre: Point, radius: Double, angleRange: Pair<Double, Double>, angleStep: Double, radiusRange: Pair<Double, Double>): Set<Point> {
-    val allPts = angleRange.mapStepped(angleStep) { angle ->
-        radiusRange.mapStepped(0.8) { r ->
-            translatePoint(centre, r, angle)
-        }
-    }.flatten().toSet()
+private fun generateSegment(
+    segment: DartboardSegment,
+    centre: Point,
+    radius: Double,
+    angleRange: Pair<Double, Double>,
+    angleStep: Double,
+    radiusRange: Pair<Double, Double>
+): Set<Point> {
+    val allPts =
+        angleRange
+            .mapStepped(angleStep) { angle ->
+                radiusRange.mapStepped(0.8) { r -> translatePoint(centre, r, angle) }
+            }
+            .flatten()
+            .toSet()
 
     return allPts.filter { factorySegmentForPoint(it, centre, radius) == segment }.toSet()
 }
 
-
-fun computeEdgePoints(segmentPoints: Collection<Point>): Set<Point>
-{
+fun computeEdgePoints(segmentPoints: Collection<Point>): Set<Point> {
     val ptsByX = segmentPoints.groupBy { it.x }
     val ptsByY = segmentPoints.groupBy { it.y }
 
@@ -113,6 +123,7 @@ fun getRadiiForSegmentType(segmentType: SegmentType, radius: Double): Pair<Doubl
     val (lowerRatio, upperRatio) = getRatioBounds(segmentType)
     return Pair((radius * lowerRatio) - 0.5, (radius * upperRatio) + 0.5)
 }
+
 private fun getRatioBounds(segmentType: SegmentType): Pair<Double, Double> {
     return when (segmentType) {
         SegmentType.INNER_SINGLE -> Pair(RATIO_OUTER_BULL, LOWER_BOUND_TRIPLE_RATIO)
@@ -123,21 +134,17 @@ private fun getRatioBounds(segmentType: SegmentType): Pair<Double, Double> {
     }
 }
 
-fun factorySegmentForPoint(dartPt: Point, centerPt: Point, radius: Double): DartboardSegment
-{
+fun factorySegmentForPoint(dartPt: Point, centerPt: Point, radius: Double): DartboardSegment {
     val distance = dartPt.distance(centerPt)
     val ratio = distance / radius
 
-    if (ratio < RATIO_INNER_BULL)
-    {
+    if (ratio < RATIO_INNER_BULL) {
         return DartboardSegment(SegmentType.DOUBLE, 25)
-    }
-    else if (ratio < RATIO_OUTER_BULL)
-    {
+    } else if (ratio < RATIO_OUTER_BULL) {
         return DartboardSegment(SegmentType.OUTER_SINGLE, 25)
     }
 
-    //We've not hit the bullseye, so do other calculations to work out score/multiplier
+    // We've not hit the bullseye, so do other calculations to work out score/multiplier
     val angle = getAngleForPoint(dartPt, centerPt)
     val score = getScoreForAngle(angle)
     val type = calculateTypeForRatioNonBullseye(ratio)
@@ -150,8 +157,7 @@ fun factorySegmentForPoint(dartPt: Point, centerPt: Point, radius: Double): Dart
  * 2) Using the radius, work out whether this makes us a miss, single, double or treble
  */
 private fun calculateTypeForRatioNonBullseye(ratioToRadius: Double) =
-    when
-    {
+    when {
         ratioToRadius < LOWER_BOUND_TRIPLE_RATIO -> SegmentType.INNER_SINGLE
         ratioToRadius < UPPER_BOUND_TRIPLE_RATIO -> SegmentType.TREBLE
         ratioToRadius < LOWER_BOUND_DOUBLE_RATIO -> SegmentType.OUTER_SINGLE
@@ -159,12 +165,10 @@ private fun calculateTypeForRatioNonBullseye(ratioToRadius: Double) =
         else -> SegmentType.MISS
     }
 
-private fun getScoreForAngle(angle: Double): Int
-{
+private fun getScoreForAngle(angle: Double): Int {
     var checkValue = 9
     var index = 0
-    while (angle > checkValue)
-    {
+    while (angle > checkValue) {
         index++
         checkValue += 18
     }
@@ -172,29 +176,48 @@ private fun getScoreForAngle(angle: Double): Int
     return numberOrder[index]
 }
 
-data class AimPoint(val centerPoint: Point, val radius: Double, val angle: Int, val ratio: Double)
-{
+data class AimPoint(val centerPoint: Point, val radius: Double, val angle: Int, val ratio: Double) {
     val point = translatePoint(centerPoint, radius * ratio, angle.toDouble())
 }
-fun getPotentialAimPoints(centerPt: Point, radius: Double): Set<AimPoint>
-{
+
+fun getPotentialAimPoints(centerPt: Point, radius: Double): Set<AimPoint> {
     val points = mutableSetOf<AimPoint>()
-    for (angle in 0 until 360 step 9)
-    {
-        points.add(AimPoint(centerPt, radius, angle, (RATIO_OUTER_BULL + LOWER_BOUND_TRIPLE_RATIO)/2))
-        points.add(AimPoint(centerPt, radius, angle, (LOWER_BOUND_TRIPLE_RATIO + UPPER_BOUND_TRIPLE_RATIO)/2))
-        points.add(AimPoint(centerPt, radius, angle, (UPPER_BOUND_TRIPLE_RATIO + LOWER_BOUND_DOUBLE_RATIO)/2))
-        points.add(AimPoint(centerPt, radius, angle, (LOWER_BOUND_DOUBLE_RATIO + UPPER_BOUND_DOUBLE_RATIO)/2))
+    for (angle in 0 until 360 step 9) {
+        points.add(
+            AimPoint(centerPt, radius, angle, (RATIO_OUTER_BULL + LOWER_BOUND_TRIPLE_RATIO) / 2)
+        )
+        points.add(
+            AimPoint(
+                centerPt,
+                radius,
+                angle,
+                (LOWER_BOUND_TRIPLE_RATIO + UPPER_BOUND_TRIPLE_RATIO) / 2
+            )
+        )
+        points.add(
+            AimPoint(
+                centerPt,
+                radius,
+                angle,
+                (UPPER_BOUND_TRIPLE_RATIO + LOWER_BOUND_DOUBLE_RATIO) / 2
+            )
+        )
+        points.add(
+            AimPoint(
+                centerPt,
+                radius,
+                angle,
+                (LOWER_BOUND_DOUBLE_RATIO + UPPER_BOUND_DOUBLE_RATIO) / 2
+            )
+        )
     }
 
     points.add(AimPoint(centerPt, radius, 0, 0.0))
     return points.toSet()
 }
 
-fun getColourWrapperFromPrefs(): ColourWrapper
-{
-    if (colourWrapperFromPrefs != null)
-    {
+fun getColourWrapperFromPrefs(): ColourWrapper {
+    if (colourWrapperFromPrefs != null) {
         return colourWrapperFromPrefs!!
     }
 
@@ -213,18 +236,25 @@ fun getColourWrapperFromPrefs(): ColourWrapper
     val oddDouble = DartsColour.getColorFromPrefStr(oddDoubleStr)
     val oddTreble = DartsColour.getColorFromPrefStr(oddTrebleStr)
 
-    colourWrapperFromPrefs = ColourWrapper(evenSingle, evenDouble, evenTreble,
-            oddSingle, oddDouble, oddTreble, evenDouble, oddDouble)
+    colourWrapperFromPrefs =
+        ColourWrapper(
+            evenSingle,
+            evenDouble,
+            evenTreble,
+            oddSingle,
+            oddDouble,
+            oddTreble,
+            evenDouble,
+            oddDouble
+        )
 
     return colourWrapperFromPrefs!!
 }
 
-private fun initialiseOrdinalHashMap() : MutableMap<Int, Boolean>
-{
+private fun initialiseOrdinalHashMap(): MutableMap<Int, Boolean> {
     val ret = mutableMapOf<Int, Boolean>()
 
-    for (i in 0 until numberOrder.size - 1)
-    {
+    for (i in 0 until numberOrder.size - 1) {
         val even = i and 1 == 0
         ret[numberOrder[i]] = even
     }
@@ -232,16 +262,13 @@ private fun initialiseOrdinalHashMap() : MutableMap<Int, Boolean>
     return ret
 }
 
-fun resetCachedDartboardValues()
-{
+fun resetCachedDartboardValues() {
     colourWrapperFromPrefs = null
 }
 
-fun getAllPossibleSegments(): List<DartboardSegment>
-{
+fun getAllPossibleSegments(): List<DartboardSegment> {
     val segments = mutableListOf<DartboardSegment>()
-    for (i in 1..20)
-    {
+    for (i in 1..20) {
         segments.add(DartboardSegment(SegmentType.DOUBLE, i))
         segments.add(DartboardSegment(SegmentType.TREBLE, i))
         segments.add(DartboardSegment(SegmentType.OUTER_SINGLE, i))
@@ -257,27 +284,25 @@ fun getAllPossibleSegments(): List<DartboardSegment>
 
 fun getAllNonMissSegments() = getAllPossibleSegments().filterNot { it.isMiss() }
 
-fun getFontForDartboardLabels(lblHeight: Int): Font
-{
-    //Start with a fontSize of 1
+fun getFontForDartboardLabels(lblHeight: Int): Font {
+    // Start with a fontSize of 1
     var fontSize = 1f
     var font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, fontSize)
 
-    //We're going to increment our test font 1 at a time, and keep checking its height
+    // We're going to increment our test font 1 at a time, and keep checking its height
     var testFont = font
     var metrics = factoryFontMetrics(testFont)
     var fontHeight = metrics.height
 
-    while (fontHeight < lblHeight - 2)
-    {
-        //The last iteration succeeded, so set our return value to be the font we tested.
+    while (fontHeight < lblHeight - 2) {
+        // The last iteration succeeded, so set our return value to be the font we tested.
         font = testFont
 
-        //Create a new testFont, with incremented font size
+        // Create a new testFont, with incremented font size
         fontSize++
         testFont = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, fontSize)
 
-        //Get the updated font height
+        // Get the updated font height
         metrics = factoryFontMetrics(testFont)
         fontHeight = metrics.height
     }
@@ -288,11 +313,8 @@ fun getFontForDartboardLabels(lblHeight: Int): Font
 fun factoryFontMetrics(font: Font): FontMetrics = Canvas().getFontMetrics(font)
 
 fun getHighlightedColour(colour: Color): Color =
-    if (colour == DartsColour.DARTBOARD_BLACK)
-    {
+    if (colour == DartsColour.DARTBOARD_BLACK) {
         Color.DARK_GRAY
-    }
-    else
-    {
+    } else {
         DartsColour.getDarkenedColour(colour)
     }

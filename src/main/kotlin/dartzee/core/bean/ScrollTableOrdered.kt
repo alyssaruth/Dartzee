@@ -1,7 +1,6 @@
 package dartzee.core.bean
 
 import dartzee.core.util.InjectedCore
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -11,16 +10,15 @@ import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.ListSelectionModel
+import net.miginfocom.swing.MigLayout
 
-class ScrollTableOrdered(customButtons: Int = 0) : ScrollTable(), ActionListener
-{
+class ScrollTableOrdered(customButtons: Int = 0) : ScrollTable(), ActionListener {
     val panelOrdering = JPanel()
     val btnMoveUp = JButton("")
     val btnMoveDown = JButton("")
     val btnRandomize = JButton("")
 
-    init
-    {
+    init {
         add(panelOrdering, BorderLayout.EAST)
         panelOrdering.layout = MigLayout("al center center, wrap, gapy 20")
         btnMoveUp.icon = ImageIcon(javaClass.getResource("/buttons/upArrow.png"))
@@ -48,31 +46,24 @@ class ScrollTableOrdered(customButtons: Int = 0) : ScrollTable(), ActionListener
         btnRandomize.addActionListener(this)
     }
 
-    fun addButtonToOrderingPanel(btn: AbstractButton, row: Int)
-    {
+    fun addButtonToOrderingPanel(btn: AbstractButton, row: Int) {
         btn.preferredSize = Dimension(40, 40)
         panelOrdering.add(btn, "cell 0 $row")
     }
 
-    /**
-     * ActionListener
-     */
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    /** ActionListener */
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnMoveUp -> moveSelectedRowUp()
             btnMoveDown -> moveSelectedRowDown()
             btnRandomize -> scrambleOrder()
         }
     }
 
-    private fun moveSelectedRowUp()
-    {
+    private fun moveSelectedRowUp() {
         val row = selectedModelRow
-        if (row <= 0)
-        {
-            //Nothing to do
+        if (row <= 0) {
+            // Nothing to do
             return
         }
 
@@ -80,12 +71,10 @@ class ScrollTableOrdered(customButtons: Int = 0) : ScrollTable(), ActionListener
         selectRow(row - 1)
     }
 
-    private fun moveSelectedRowDown()
-    {
+    private fun moveSelectedRowDown() {
         val row = selectedModelRow
-        if (row == rowCount - 1 || row == -1)
-        {
-            //Nothing to do
+        if (row == rowCount - 1 || row == -1) {
+            // Nothing to do
             return
         }
 
@@ -93,21 +82,18 @@ class ScrollTableOrdered(customButtons: Int = 0) : ScrollTable(), ActionListener
         selectRow(row + 1)
     }
 
-    private fun scrambleOrder()
-    {
+    private fun scrambleOrder() {
         val shuffled = InjectedCore.collectionShuffler.shuffleCollection(getAllRows())
         setNewOrder(shuffled)
     }
 
-    inline fun <R : Comparable<R>> reorderRows(crossinline selector: (Array<Any?>) -> R?)
-    {
+    inline fun <R : Comparable<R>> reorderRows(crossinline selector: (Array<Any?>) -> R?) {
         val newRows = getAllRows().sortedBy(selector)
 
         setNewOrder(newRows)
     }
 
-    fun setNewOrder(orderedRows: List<Array<Any?>>)
-    {
+    fun setNewOrder(orderedRows: List<Array<Any?>>) {
         removeAllRows()
 
         orderedRows.forEach { addRow(it) }
@@ -115,8 +101,7 @@ class ScrollTableOrdered(customButtons: Int = 0) : ScrollTable(), ActionListener
 
     fun getAllRows(): List<Array<Any?>> = (0 until rowCount).map(::getRow)
 
-    private fun getRow(rowIx: Int): Array<Any?>
-    {
+    private fun getRow(rowIx: Int): Array<Any?> {
         val row = arrayOfNulls<Any>(columnCount)
         for (i in 0 until columnCount) {
             row[i] = getValueAt(rowIx, i)

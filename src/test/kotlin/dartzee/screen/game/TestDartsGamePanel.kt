@@ -21,11 +21,9 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDartsGamePanel : AbstractTest()
-{
+class TestDartsGamePanel : AbstractTest() {
     @Test
-    fun `Should insert a win achievement for both players on a team`()
-    {
+    fun `Should insert a win achievement for both players on a team`() {
         val (p1, p2) = preparePlayers(2)
         val team = makeTeam(p1, p2)
         val panel = TestGamePanel()
@@ -33,18 +31,29 @@ class TestDartsGamePanel : AbstractTest()
 
         panel.updateAchievementsForFinish(1, 50)
 
-        retrieveAchievementsForPlayer(p1.rowId).shouldContainExactly(
-            AchievementSummary(AchievementType.X01_TEAM_GAMES_WON, -1, panel.gameEntity.rowId, "50"),
-        )
+        retrieveAchievementsForPlayer(p1.rowId)
+            .shouldContainExactly(
+                AchievementSummary(
+                    AchievementType.X01_TEAM_GAMES_WON,
+                    -1,
+                    panel.gameEntity.rowId,
+                    "50"
+                ),
+            )
 
-        retrieveAchievementsForPlayer(p2.rowId).shouldContainExactlyInAnyOrder(
-            AchievementSummary(AchievementType.X01_TEAM_GAMES_WON, -1, panel.gameEntity.rowId, "50"),
-        )
+        retrieveAchievementsForPlayer(p2.rowId)
+            .shouldContainExactlyInAnyOrder(
+                AchievementSummary(
+                    AchievementType.X01_TEAM_GAMES_WON,
+                    -1,
+                    panel.gameEntity.rowId,
+                    "50"
+                ),
+            )
     }
 
     @Test
-    fun `Should not unlock team win achievement if game was not won`()
-    {
+    fun `Should not unlock team win achievement if game was not won`() {
         val (p1, p2) = preparePlayers(2)
         val team = makeTeam(p1, p2)
         val panel = TestGamePanel()
@@ -56,32 +65,32 @@ class TestDartsGamePanel : AbstractTest()
     }
 
     @Test
-    fun `Should unlock individual win achievement`()
-    {
+    fun `Should unlock individual win achievement`() {
         val panel = TestGamePanel()
         val pt = makeSingleParticipant(insertPlayer(), panel.gameEntity.rowId)
         panel.startNewGame(listOf(pt))
 
         panel.updateAchievementsForFinish(1, 50)
 
-        retrieveAchievementsForPlayer(pt.participant.playerId).shouldContainExactlyInAnyOrder(
-            AchievementSummary(AchievementType.X01_GAMES_WON, -1, panel.gameEntity.rowId, "50"),
-            AchievementSummary(AchievementType.X01_BEST_GAME, 50, panel.gameEntity.rowId),
-        )
+        retrieveAchievementsForPlayer(pt.participant.playerId)
+            .shouldContainExactlyInAnyOrder(
+                AchievementSummary(AchievementType.X01_GAMES_WON, -1, panel.gameEntity.rowId, "50"),
+                AchievementSummary(AchievementType.X01_BEST_GAME, 50, panel.gameEntity.rowId),
+            )
     }
 
     @Test
-    fun `Should not unlock individual win achievement if they did not place first`()
-    {
+    fun `Should not unlock individual win achievement if they did not place first`() {
         val panel = TestGamePanel()
         val pt = makeSingleParticipant(insertPlayer(), panel.gameEntity.rowId)
         panel.startNewGame(listOf(pt))
 
         panel.updateAchievementsForFinish(3, 50)
 
-        retrieveAchievementsForPlayer(pt.participant.playerId).shouldContainExactlyInAnyOrder(
-            AchievementSummary(AchievementType.X01_BEST_GAME, 50, panel.gameEntity.rowId),
-        )
+        retrieveAchievementsForPlayer(pt.participant.playerId)
+            .shouldContainExactlyInAnyOrder(
+                AchievementSummary(AchievementType.X01_BEST_GAME, 50, panel.gameEntity.rowId),
+            )
     }
 
     class TestGamePanel(gameParams: String = "501") :
@@ -89,12 +98,10 @@ class TestDartsGamePanel : AbstractTest()
             FakeDartsScreen(),
             insertGame(gameType = GameType.X01, gameParams = gameParams),
             1
-        )
-    {
+        ) {
         override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(501, pt)
 
-        override fun computeAiDart(model: DartsAiModel): ComputedPoint?
-        {
+        override fun computeAiDart(model: DartsAiModel): ComputedPoint? {
             val currentScore = getCurrentPlayerState().getRemainingScore()
             return model.throwX01Dart(currentScore)
         }
@@ -105,7 +112,7 @@ class TestDartsGamePanel : AbstractTest()
 
         override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelX01(gameParams)
 
-        override fun factoryScorer(participant: IWrappedParticipant) = DartsScorerX01(this, gameEntity.gameParams, participant)
+        override fun factoryScorer(participant: IWrappedParticipant) =
+            DartsScorerX01(this, gameEntity.gameParams, participant)
     }
-
 }

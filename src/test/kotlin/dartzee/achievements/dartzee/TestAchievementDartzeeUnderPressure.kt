@@ -18,19 +18,27 @@ import dartzee.utils.insertDartzeeRules
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<AchievementDartzeeUnderPressure>()
-{
+class TestAchievementDartzeeUnderPressure :
+    AbstractMultiRowAchievementTest<AchievementDartzeeUnderPressure>() {
     override fun factoryAchievement() = AchievementDartzeeUnderPressure()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
-    {
-        val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 275, database = database)
+    override fun setUpAchievementRowForPlayerAndGame(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database
+    ) {
+        val pt =
+            insertParticipant(
+                gameId = g.rowId,
+                playerId = p.rowId,
+                finalScore = 275,
+                database = database
+            )
         insertValidRoundResult(pt, testRules, database)
     }
 
     @Test
-    fun `Should include participants who were part of a team`()
-    {
+    fun `Should include participants who were part of a team`() {
         val pt = insertRelevantParticipant(finalScore = 120, team = true)
         insertValidRoundResult(pt, testRules)
 
@@ -39,8 +47,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
     }
 
     @Test
-    fun `Should ignore games with fewer than 5 rounds`()
-    {
+    fun `Should ignore games with fewer than 5 rounds`() {
         val pt = insertRelevantParticipant(finalScore = 120)
         val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_ROUNDS - 2)
         insertValidRoundResult(pt, shortList)
@@ -50,8 +57,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
     }
 
     @Test
-    fun `Should ignore unfinished games`()
-    {
+    fun `Should ignore unfinished games`() {
         val pt = insertRelevantParticipant(finalScore = -1)
         insertValidRoundResult(pt, testRules)
 
@@ -60,8 +66,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
     }
 
     @Test
-    fun `Should ignore games where the hardest rule was passed early`()
-    {
+    fun `Should ignore games where the hardest rule was passed early`() {
         val pt = insertRelevantParticipant(finalScore = 120)
         insertDartzeeRules(pt.gameId, testRules)
 
@@ -76,8 +81,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
     }
 
     @Test
-    fun `Should ignore games where the hardest rule was done last but failed`()
-    {
+    fun `Should ignore games where the hardest rule was done last but failed`() {
         val pt = insertRelevantParticipant(finalScore = 120)
         insertDartzeeRules(pt.gameId, testRules)
 
@@ -89,8 +93,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
     }
 
     @Test
-    fun `Should include the round score and description of the rule`()
-    {
+    fun `Should include the round score and description of the rule`() {
         val pt = insertRelevantParticipant(finalScore = 275)
         val drr = insertValidRoundResult(pt, testRules)
 
@@ -105,8 +108,7 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
     }
 
     @Test
-    fun `Should insert a row per game`()
-    {
+    fun `Should insert a row per game`() {
         val player = insertPlayer()
         val pt = insertRelevantParticipant(player, 100)
         val pt2 = insertRelevantParticipant(player, 150)
@@ -118,12 +120,21 @@ class TestAchievementDartzeeUnderPressure: AbstractMultiRowAchievementTest<Achie
         getAchievementCount() shouldBe 2
     }
 
-    private fun insertValidRoundResult(participant: ParticipantEntity, rules: List<DartzeeRuleDto>, database: Database = mainDatabase): DartzeeRoundResultEntity
-    {
+    private fun insertValidRoundResult(
+        participant: ParticipantEntity,
+        rules: List<DartzeeRuleDto>,
+        database: Database = mainDatabase
+    ): DartzeeRoundResultEntity {
         insertDartzeeRules(participant.gameId, rules, database)
         val roundResult = getHardestRulePass(rules)
-        return DartzeeRoundResultEntity.factoryAndSave(roundResult, participant, rules.size + 1, database)
+        return DartzeeRoundResultEntity.factoryAndSave(
+            roundResult,
+            participant,
+            rules.size + 1,
+            database
+        )
     }
 
-    private fun getHardestRulePass(rules: List<DartzeeRuleDto>) = DartzeeRoundResult(rules.size, true, 50)
+    private fun getHardestRulePass(rules: List<DartzeeRuleDto>) =
+        DartzeeRoundResult(rules.size, true, 50)
 }

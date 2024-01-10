@@ -2,14 +2,12 @@ package dartzee.screen.game.scorer
 
 import dartzee.core.util.TableUtil
 
-interface IScorerTable
-{
+interface IScorerTable {
     val model: TableUtil.DefaultModel
 
     fun getNumberOfColumns(): Int
 
-    fun addRow(row: Array<*>)
-    {
+    fun addRow(row: Array<*>) {
         model.addRow(row)
     }
 

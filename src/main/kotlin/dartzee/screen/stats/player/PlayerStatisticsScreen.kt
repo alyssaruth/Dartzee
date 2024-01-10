@@ -25,8 +25,7 @@ import javax.swing.JPanel
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
 
-class PlayerStatisticsScreen : EmbeddedScreen()
-{
+class PlayerStatisticsScreen : EmbeddedScreen() {
     private var hmLocalIdToWrapper = mapOf<Long, GameWrapper>()
     private var hmLocalIdToWrapperOther = mapOf<Long, GameWrapper>()
     private var filteredGames = listOf<GameWrapper>()
@@ -35,14 +34,14 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     var gameType: GameType = GameType.X01
     var player: PlayerEntity? = null
 
-    //Components
+    // Components
     private val filterPanels = JPanel()
     private val filterPanel = PlayerStatisticsFilterPanel()
     private val filterPanelOther = PlayerStatisticsFilterPanel()
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
     private val btnAdd = JButton("Add Comparison")
 
-    //X01 tabs
+    // X01 tabs
     private val tabFinishing = StatisticsTabFinishBreakdown()
     private val tabCheckoutPercent = StatisticsTabX01CheckoutPercent()
     private val tabTopFinishes = StatisticsTabX01TopFinishes()
@@ -50,18 +49,17 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     private val tabTotalDarts = StatisticsTabTotalScore("Total Darts", 200)
     private val tabThreeDartScores = StatisticsTabX01ThreeDartScores()
 
-    //Golf tabs
+    // Golf tabs
     private val tabHoleBreakdown = StatisticsTabGolfHoleBreakdown()
     private val tabAllScores = StatisticsTabTotalScore("Total Shots", 90)
     private val tabBestRounds = StatisticsTabGolfScorecards()
     private val tabOptimalScorecard = StatisticsTabGolfOptimalScorecard()
 
-    //Round the Clock tabs
+    // Round the Clock tabs
     private val tabTotalClockDarts = StatisticsTabTotalScore("Total Darts", 500)
     private val tabTargetBreakdown = StatisticsTabRoundTheClockHitRate()
 
-    init
-    {
+    init {
         add(filterPanels, BorderLayout.NORTH)
         add(tabbedPane, BorderLayout.CENTER)
 
@@ -74,8 +72,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
 
     override fun getScreenName() = "${gameType.getDescription()} Statistics for $player"
 
-    override fun initialise()
-    {
+    override fun initialise() {
         filterPanel.init(player!!, gameType, false)
         filterPanelOther.isVisible = false
         btnAdd.isVisible = true
@@ -88,10 +85,10 @@ class PlayerStatisticsScreen : EmbeddedScreen()
     }
 
     /**
-     * Called when popping this up in a dialog after simulating games from the player amendment dialog (for AIs)
+     * Called when popping this up in a dialog after simulating games from the player amendment
+     * dialog (for AIs)
      */
-    fun initFake(hmGameIdToWrapper: Map<Long, GameWrapper>)
-    {
+    fun initFake(hmGameIdToWrapper: Map<Long, GameWrapper>) {
         filterPanel.init(player!!, gameType, false)
         filterPanelOther.isVisible = false
         btnAdd.isVisible = false
@@ -103,36 +100,29 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         buildTabs()
     }
 
-    private fun resetTabs()
-    {
+    private fun resetTabs() {
         tabbedPane.removeAll()
 
-        if (gameType == GameType.X01)
-        {
+        if (gameType == GameType.X01) {
             tabbedPane.addTab("Finish Breakdown", null, tabFinishing, null)
             tabbedPane.addTab("Checkout %", null, tabCheckoutPercent, null)
             tabbedPane.addTab("Top Finishes", null, tabTopFinishes, null)
             tabbedPane.addTab("Dart Average", null, tabThreeDartAverage, null)
             tabbedPane.addTab("Total Darts", null, tabTotalDarts, null)
             tabbedPane.addTab("Three Dart Scores", null, tabThreeDartScores, null)
-        }
-        else if (gameType == GameType.GOLF)
-        {
+        } else if (gameType == GameType.GOLF) {
             tabbedPane.addTab("Hole Breakdown", null, tabHoleBreakdown, null)
             tabbedPane.addTab("Scorecards", null, tabBestRounds, null)
             tabbedPane.addTab("Optimal Scorecard", null, tabOptimalScorecard, null)
             tabbedPane.addTab("All Scores", null, tabAllScores, null)
-        }
-        else if (gameType == GameType.ROUND_THE_CLOCK)
-        {
+        } else if (gameType == GameType.ROUND_THE_CLOCK) {
             tabbedPane.addTab("Total Darts", null, tabTotalClockDarts, null)
             tabbedPane.addTab("Target Breakdown", null, tabTargetBreakdown, null)
         }
     }
 
-    private fun addComparison()
-    {
-        val player = PlayerSelectDialog.selectPlayer() ?: return //Cancelled
+    private fun addComparison() {
+        val player = PlayerSelectDialog.selectPlayer() ?: return // Cancelled
 
         filterPanelOther.init(player, gameType, true)
         filterPanelOther.isVisible = true
@@ -142,8 +132,7 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         buildTabs()
     }
 
-    fun removeComparison()
-    {
+    fun removeComparison() {
         filterPanelOther.isVisible = false
         btnAdd.isVisible = true
         hmLocalIdToWrapperOther = mapOf()
@@ -151,26 +140,24 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         buildTabs()
     }
 
-    fun buildTabs()
-    {
+    fun buildTabs() {
         filteredGames = populateFilteredGames(hmLocalIdToWrapper, filterPanel)
         filteredGamesOther = populateFilteredGames(hmLocalIdToWrapperOther, filterPanelOther)
 
-        //Update the tabs
+        // Update the tabs
         val tabs = getAllChildComponentsForType<AbstractStatisticsTab>()
-        for (tab in tabs)
-        {
+        for (tab in tabs) {
             tab.setFilteredGames(filteredGames, filteredGamesOther)
             tab.populateStats()
         }
     }
 
-    private fun populateFilteredGames(hmGameIdToWrapper: Map<Long, GameWrapper>,
-                                      filterPanel: PlayerStatisticsFilterPanel): List<GameWrapper>
-    {
+    private fun populateFilteredGames(
+        hmGameIdToWrapper: Map<Long, GameWrapper>,
+        filterPanel: PlayerStatisticsFilterPanel
+    ): List<GameWrapper> {
         val allGames = hmGameIdToWrapper.values
-        if (!filterPanel.isVisible)
-        {
+        if (!filterPanel.isVisible) {
             return allGames.toList()
         }
 
@@ -179,18 +166,15 @@ class PlayerStatisticsScreen : EmbeddedScreen()
         return filteredGames
     }
 
-    fun setVariables(gameType: GameType, player: PlayerEntity)
-    {
+    fun setVariables(gameType: GameType, player: PlayerEntity) {
         this.gameType = gameType
         this.player = player
     }
 
     override fun getBackTarget() = ScreenCache.get<PlayerManagementScreen>()
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnAdd -> addComparison()
             else -> super.actionPerformed(arg0)
         }

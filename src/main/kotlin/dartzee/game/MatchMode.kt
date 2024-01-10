@@ -1,7 +1,6 @@
 package dartzee.game
 
-enum class MatchMode
-{
+enum class MatchMode {
     FIRST_TO,
     POINTS
 }

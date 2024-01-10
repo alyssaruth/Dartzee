@@ -6,17 +6,14 @@ import java.awt.event.WindowEvent
 import java.awt.event.WindowFocusListener
 import javax.swing.JFrame
 
-abstract class FocusableWindow: JFrame(), WindowFocusListener
-{
+abstract class FocusableWindow : JFrame(), WindowFocusListener {
     abstract val windowName: String
 
-    init
-    {
+    init {
         addWindowFocusListener(this)
     }
 
-    override fun windowGainedFocus(e: WindowEvent?)
-    {
+    override fun windowGainedFocus(e: WindowEvent?) {
         InjectedThings.logger.addToContext(KEY_ACTIVE_WINDOW, windowName)
     }
 

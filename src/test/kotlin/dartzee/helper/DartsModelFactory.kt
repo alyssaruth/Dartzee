@@ -16,51 +16,59 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 
-fun beastDartsModel(standardDeviationDoubles: Double? = null,
-                    standardDeviationCentral: Double? = null,
-                    maxRadius: Int = 450,
-                    scoringDart: Int = 20,
-                    hmScoreToDart: Map<Int, AimDart> = emptyMap(),
-                    mercyThreshold: Int? = null,
-                    hmDartNoToSegmentType: Map<Int, SegmentType> = DartsAiModel.DEFAULT_GOLF_SEGMENT_TYPES.toMutableMap(),
-                    hmDartNoToStopThreshold: Map<Int, Int> = DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(),
-                    dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS): DartsAiModel
-{
+fun beastDartsModel(
+    standardDeviationDoubles: Double? = null,
+    standardDeviationCentral: Double? = null,
+    maxRadius: Int = 450,
+    scoringDart: Int = 20,
+    hmScoreToDart: Map<Int, AimDart> = emptyMap(),
+    mercyThreshold: Int? = null,
+    hmDartNoToSegmentType: Map<Int, SegmentType> =
+        DartsAiModel.DEFAULT_GOLF_SEGMENT_TYPES.toMutableMap(),
+    hmDartNoToStopThreshold: Map<Int, Int> =
+        DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(),
+    dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
+): DartsAiModel {
     return DartsAiModel(
-            0.1,
-            standardDeviationDoubles,
-            standardDeviationCentral,
-            maxRadius,
-            scoringDart,
-            hmScoreToDart,
-            mercyThreshold,
-            hmDartNoToSegmentType,
-            hmDartNoToStopThreshold,
-            dartzeePlayStyle)
+        0.1,
+        standardDeviationDoubles,
+        standardDeviationCentral,
+        maxRadius,
+        scoringDart,
+        hmScoreToDart,
+        mercyThreshold,
+        hmDartNoToSegmentType,
+        hmDartNoToStopThreshold,
+        dartzeePlayStyle
+    )
 }
 
-fun makeDartsModel(standardDeviation: Double = 50.0,
-                   standardDeviationDoubles: Double? = null,
-                   standardDeviationCentral: Double? = null,
-                   maxRadius: Int = 250,
-                   scoringDart: Int = 20,
-                   hmScoreToDart: Map<Int, AimDart> = emptyMap(),
-                   mercyThreshold: Int? = null,
-                   hmDartNoToSegmentType: Map<Int, SegmentType> = DartsAiModel.DEFAULT_GOLF_SEGMENT_TYPES.toMutableMap(),
-                   hmDartNoToStopThreshold: Map<Int, Int> = DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(),
-                   dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS): DartsAiModel
-{
+fun makeDartsModel(
+    standardDeviation: Double = 50.0,
+    standardDeviationDoubles: Double? = null,
+    standardDeviationCentral: Double? = null,
+    maxRadius: Int = 250,
+    scoringDart: Int = 20,
+    hmScoreToDart: Map<Int, AimDart> = emptyMap(),
+    mercyThreshold: Int? = null,
+    hmDartNoToSegmentType: Map<Int, SegmentType> =
+        DartsAiModel.DEFAULT_GOLF_SEGMENT_TYPES.toMutableMap(),
+    hmDartNoToStopThreshold: Map<Int, Int> =
+        DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(),
+    dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
+): DartsAiModel {
     return DartsAiModel(
-            standardDeviation,
-            standardDeviationDoubles,
-            standardDeviationCentral,
-            maxRadius,
-            scoringDart,
-            hmScoreToDart,
-            mercyThreshold,
-            hmDartNoToSegmentType,
-            hmDartNoToStopThreshold,
-            dartzeePlayStyle)
+        standardDeviation,
+        standardDeviationDoubles,
+        standardDeviationCentral,
+        maxRadius,
+        scoringDart,
+        hmScoreToDart,
+        mercyThreshold,
+        hmDartNoToSegmentType,
+        hmDartNoToStopThreshold,
+        dartzeePlayStyle
+    )
 }
 
 fun predictableDartsModel(
@@ -68,8 +76,7 @@ fun predictableDartsModel(
     dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE,
     mercyThreshold: Int? = null,
     golfStopThresholds: Map<Int, Int>? = null,
-): DartsAiModel
-{
+): DartsAiModel {
     val defaultModel = DartsAiModel.new()
     val hmDartNoToStopThreshold = golfStopThresholds ?: defaultModel.hmDartNoToStopThreshold
 
@@ -89,8 +96,7 @@ fun predictableDartsModel(
     return model
 }
 
-fun makeThrowDartFn(dartsToThrow: List<AimDart>): () -> ComputedPoint
-{
+fun makeThrowDartFn(dartsToThrow: List<AimDart>): () -> ComputedPoint {
     val remainingDarts = dartsToThrow.toMutableList()
     val throwDartFn = {
         val dart = remainingDarts.removeAt(0)
@@ -103,24 +109,36 @@ fun makeThrowDartFn(dartsToThrow: List<AimDart>): () -> ComputedPoint
 }
 
 private fun ComputationalDartboard.getMissPoint(score: Int): ComputedPoint {
-    val pt = translatePoint(computeCenter(), computeRadius() * (UPPER_BOUND_DOUBLE_RATIO + UPPER_BOUND_OUTSIDE_BOARD_RATIO) / 2.0, getAnglesForScore(score).let { (it.first + it.second) / 2.0 })
+    val pt =
+        translatePoint(
+            computeCenter(),
+            computeRadius() * (UPPER_BOUND_DOUBLE_RATIO + UPPER_BOUND_OUTSIDE_BOARD_RATIO) / 2.0,
+            getAnglesForScore(score).let { (it.first + it.second) / 2.0 }
+        )
     return toComputedPoint(pt)
 }
 
-
 data class ScoreAndSegmentType(val score: Int, val segmentType: SegmentType)
-fun predictableGolfModel(hmDartNoToStopThreshold: Map<Int, Int> = DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(), fn: (hole: Int, dartNo: Int) -> ScoreAndSegmentType): DartsAiModel
-{
+
+fun predictableGolfModel(
+    hmDartNoToStopThreshold: Map<Int, Int> =
+        DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(),
+    fn: (hole: Int, dartNo: Int) -> ScoreAndSegmentType
+): DartsAiModel {
     val model = mockk<DartsAiModel>(relaxed = true)
     val stopThresholdSlot = slot<Int>()
-    every { model.getStopThresholdForDartNo(capture(stopThresholdSlot)) } answers { hmDartNoToStopThreshold.getValue(stopThresholdSlot.captured) }
+    every { model.getStopThresholdForDartNo(capture(stopThresholdSlot)) } answers
+        {
+            hmDartNoToStopThreshold.getValue(stopThresholdSlot.captured)
+        }
 
     val holeSlot = slot<Int>()
     val dartNoSlot = slot<Int>()
-    every { model.throwGolfDart(capture(holeSlot), capture(dartNoSlot)) } answers {
-        val result = fn(holeSlot.captured, dartNoSlot.captured)
-        getComputedPointForScore(result.score, result.segmentType)
-    }
+    every { model.throwGolfDart(capture(holeSlot), capture(dartNoSlot)) } answers
+        {
+            val result = fn(holeSlot.captured, dartNoSlot.captured)
+            getComputedPointForScore(result.score, result.segmentType)
+        }
 
     return model
 }

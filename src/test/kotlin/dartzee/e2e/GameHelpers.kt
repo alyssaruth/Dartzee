@@ -40,18 +40,15 @@ import io.mockk.verifySequence
 import javax.swing.JButton
 import javax.swing.JToggleButton
 
-fun AbstractDartsScorerPausable<*>.shouldBePaused()
-{
+fun AbstractDartsScorerPausable<*>.shouldBePaused() {
     getChild<JButton> { it.icon == ICON_RESUME }
 }
 
-fun AbstractDartsScorerPausable<*>.resume()
-{
+fun AbstractDartsScorerPausable<*>.resume() {
     clickChild<JButton> { it.icon == ICON_RESUME }
 }
 
-fun AbstractDartsGameScreen.toggleStats()
-{
+fun AbstractDartsGameScreen.toggleStats() {
     clickChild<JToggleButton> { it.icon == dartzee.utils.ResourceCache.ICON_STATS_LARGE }
 }
 
@@ -59,8 +56,8 @@ fun AbstractDartsGameScreen.getScorer(playerName: String) =
     getChild<DartsScorerX01> { it.playerName.contains(playerName) }
 
 data class TwoPlayers(val winner: PlayerEntity, val loser: PlayerEntity)
-fun createPlayers(): TwoPlayers
-{
+
+fun createPlayers(): TwoPlayers {
     val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
     val winner = insertPlayer(model = aiModel, name = "Winner")
 
@@ -70,20 +67,16 @@ fun createPlayers(): TwoPlayers
     return TwoPlayers(winner, loser)
 }
 
-fun closeOpenGames()
-{
+fun closeOpenGames() {
     ScreenCache.getDartsGameScreens().forEach { it.dispose() }
 }
 
 data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *>, val listener: DartboardListener)
 
 fun setUpGamePanelAndStartGame(game: GameEntity, players: List<PlayerEntity>) =
-    setUpGamePanel(game).also {
-        it.gamePanel.startGame(players)
-    }
+    setUpGamePanel(game).also { it.gamePanel.startGame(players) }
 
-fun setUpGamePanel(game: GameEntity): GamePanelTestSetup
-{
+fun setUpGamePanel(game: GameEntity): GamePanelTestSetup {
     val parentWindow = DartsGameScreen(game, 1)
     parentWindow.isVisible = true
     val gamePanel = parentWindow.gamePanel
@@ -94,37 +87,38 @@ fun setUpGamePanel(game: GameEntity): GamePanelTestSetup
     return GamePanelTestSetup(gamePanel, listener)
 }
 
-fun DartsGamePanel<*, *>.startGame(players: List<PlayerEntity>)
-{
+fun DartsGamePanel<*, *>.startGame(players: List<PlayerEntity>) {
     val participants = prepareParticipants(gameEntity.rowId, players, false)
     startNewGame(participants)
 }
 
-fun awaitGameFinish(game: GameEntity)
-{
+fun awaitGameFinish(game: GameEntity) {
     waitForAssertion(timeout = 30000) { game.isFinished() shouldBe true }
 
     // Flush the EDT to ensure UI actions fired off from the AI threads are all completed
     flushEdt()
 }
 
-fun makePlayerWithModel(model: DartsAiModel, name: String = "Clive", image: String = "BaboOne"): PlayerEntity
-{
+fun makePlayerWithModel(
+    model: DartsAiModel,
+    name: String = "Clive",
+    image: String = "BaboOne"
+): PlayerEntity {
     val playerImage = insertPlayerImage(resource = image)
 
     val player = insertPlayer(playerImageId = playerImage.rowId, name = name)
     return player.toDeterministicPlayer(model)
 }
 
-fun verifyState(panel: DartsGamePanel<*, *>,
-                listener: DartboardListener,
-                dartRounds: List<List<Dart>>,
-                finalScore: Int,
-                scoreSuffix: String = "",
-                expectedScorerRows: Int = dartRounds.size,
-                pt: IParticipant = retrieveParticipant()
-)
-{
+fun verifyState(
+    panel: DartsGamePanel<*, *>,
+    listener: DartboardListener,
+    dartRounds: List<List<Dart>>,
+    finalScore: Int,
+    scoreSuffix: String = "",
+    expectedScorerRows: Int = dartRounds.size,
+    pt: IParticipant = retrieveParticipant()
+) {
     // ParticipantEntity on the database
     pt.finalScore shouldBe finalScore
     pt.dtFinished shouldNotBe DateStatics.END_OF_TIME
@@ -138,25 +132,26 @@ fun verifyState(panel: DartsGamePanel<*, *>,
 
     // Use our dartboardListener to verify that the right throws were registered
     val darts = dartRounds.flatten()
-    verifySequence {
-        darts.forEach {
-            listener.dartThrown(it)
-        }
-    }
+    verifySequence { darts.forEach { listener.dartThrown(it) } }
 
     // Check that the dart entities on the database line up
-    val dartEntities = DartEntity().retrieveEntities().sortedWith(compareBy( { it.roundNumber }, { it.ordinal }))
-    val chunkedDartEntities: List<List<DartEntity>> = dartEntities.groupBy { it.roundNumber }.getSortedValues().map { it.sortedBy { drt -> drt.ordinal } }
-    val retrievedDartRounds = chunkedDartEntities.map { rnd -> rnd.map { drt -> Dart(drt.score, drt.multiplier) } }
+    val dartEntities =
+        DartEntity().retrieveEntities().sortedWith(compareBy({ it.roundNumber }, { it.ordinal }))
+    val chunkedDartEntities: List<List<DartEntity>> =
+        dartEntities
+            .groupBy { it.roundNumber }
+            .getSortedValues()
+            .map { it.sortedBy { drt -> drt.ordinal } }
+    val retrievedDartRounds =
+        chunkedDartEntities.map { rnd -> rnd.map { drt -> Dart(drt.score, drt.multiplier) } }
     retrievedDartRounds shouldBe dartRounds
 }
 
-fun checkAchievementConversions(playerId: String)
-{
+fun checkAchievementConversions(playerId: String) {
     checkAchievementConversions(listOf(playerId))
 }
-fun checkAchievementConversions(playerIds: List<String>)
-{
+
+fun checkAchievementConversions(playerIds: List<String>) {
     val transactionalStates = playerIds.associateWith(::retrieveAchievementsForPlayer)
     wipeTable(EntityName.Achievement)
 

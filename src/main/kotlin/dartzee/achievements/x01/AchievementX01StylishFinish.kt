@@ -12,8 +12,7 @@ import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.sql.ResultSet
 
-class AchievementX01StylishFinish : AbstractMultiRowAchievement()
-{
+class AchievementX01StylishFinish : AbstractMultiRowAchievement() {
     override val name = "Stylish Finish"
     override val desc = "Finishes that involved hitting another double or treble"
     override val achievementType = AchievementType.X01_STYLISH_FINISH
@@ -28,13 +27,19 @@ class AchievementX01StylishFinish : AbstractMultiRowAchievement()
     override val allowedForTeams = true
 
     override fun getBreakdownColumns() = listOf("Finish", "Method", "Game", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.achievementCounter, a.achievementDetail, a.localGameIdEarned, a.dtAchieved)
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
-        val tmp1 = database.createTempTable("MultiDartFinishes", "PlayerId VARCHAR(36), GameId VARCHAR(36), ParticipantId VARCHAR(36), RoundNumber INT, DtAchieved TIMESTAMP") ?: return
+    override fun getBreakdownRow(a: AchievementEntity) =
+        arrayOf<Any>(a.achievementCounter, a.achievementDetail, a.localGameIdEarned, a.dtAchieved)
 
-        database.executeUpdate("""
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
+        val tmp1 =
+            database.createTempTable(
+                "MultiDartFinishes",
+                "PlayerId VARCHAR(36), GameId VARCHAR(36), ParticipantId VARCHAR(36), RoundNumber INT, DtAchieved TIMESTAMP"
+            ) ?: return
+
+        database.executeUpdate(
+            """
             INSERT INTO $tmp1
             SELECT pt.PlayerId, pt.GameId, pt.RowId, drt.RoundNumber, drt.DtCreation
             FROM ${EntityName.Dart} drt, ${EntityName.Participant} pt, ${EntityName.Game} g
@@ -46,22 +51,33 @@ class AchievementX01StylishFinish : AbstractMultiRowAchievement()
               AND drt.Multiplier = 2
               AND drt.StartingScore = (drt.Score * drt.Multiplier)
               ${getPlayerSql(playerIds)}
-        """.trimIndent())
+        """
+                .trimIndent()
+        )
 
-        val drtTmp = database.createTempTable("RelevantDarts", "StartingScore INT, Score INT, Multiplier INT, ParticipantId VARCHAR(36), RoundNumber INT, Ordinal INT") ?: return
+        val drtTmp =
+            database.createTempTable(
+                "RelevantDarts",
+                "StartingScore INT, Score INT, Multiplier INT, ParticipantId VARCHAR(36), RoundNumber INT, Ordinal INT"
+            ) ?: return
 
-        database.executeUpdate("""
+        database.executeUpdate(
+            """
             INSERT INTO $drtTmp
             SELECT StartingScore, Score, Multiplier, drt.ParticipantId, drt.RoundNumber, drt.Ordinal
             FROM ${EntityName.Dart} drt, $tmp1 zz
             WHERE zz.ParticipantId = drt.ParticipantId
             AND zz.PlayerId = drt.PlayerId
             AND zz.RoundNumber = drt.RoundNumber
-        """.trimIndent())
+        """
+                .trimIndent()
+        )
 
         database.executeUpdate("CREATE INDEX PtId_RoundNo ON $drtTmp (ParticipantId, RoundNumber)")
 
-        database.executeQuery("""
+        database
+            .executeQuery(
+                """
             SELECT zz.PlayerId, zz.GameId, zz.ParticipantId, drt.StartingScore, zz.DtAchieved,
                 drt.Score AS DartOneScore, drt.Multiplier AS DartOneMultiplier,
                 drt2.Score AS DartTwoScore, drt2.Multiplier AS DartTwoMultiplier,
@@ -76,22 +92,25 @@ class AchievementX01StylishFinish : AbstractMultiRowAchievement()
               AND zz.RoundNumber = drt2.RoundNumber
               AND drt2.Ordinal = 2
               AND (drt.Multiplier > 1 OR (drt2.Multiplier > 1 AND drt3.Multiplier IS NOT NULL))
-        """.trimIndent()).use { rs ->
-            bulkInsertFromResultSet(
-                rs,
-                database,
-                achievementType,
-                achievementCounterFn = { rs.getInt("StartingScore") },
-                achievementDetailFn = { extractMethodStr(rs) }
+        """
+                    .trimIndent()
             )
-        }
+            .use { rs ->
+                bulkInsertFromResultSet(
+                    rs,
+                    database,
+                    achievementType,
+                    achievementCounterFn = { rs.getInt("StartingScore") },
+                    achievementDetailFn = { extractMethodStr(rs) }
+                )
+            }
     }
 
     private fun extractMethodStr(rs: ResultSet) =
-        listOfNotNull(extractDart(rs, "One"), extractDart(rs, "Two"), extractDart(rs, "Three")).joinToString()
+        listOfNotNull(extractDart(rs, "One"), extractDart(rs, "Two"), extractDart(rs, "Three"))
+            .joinToString()
 
-    private fun extractDart(rs: ResultSet, numberDesc: String): Dart?
-    {
+    private fun extractDart(rs: ResultSet, numberDesc: String): Dart? {
         val score = rs.getInt("Dart${numberDesc}Score")
         if (rs.wasNull()) return null
         val multiplier = rs.getInt("Dart${numberDesc}Multiplier")

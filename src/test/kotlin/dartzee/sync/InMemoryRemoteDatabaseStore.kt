@@ -3,26 +3,24 @@ package dartzee.sync
 import dartzee.utils.Database
 import java.util.*
 
-class InMemoryRemoteDatabaseStore(vararg initialEntries: Pair<String, Database>) : IRemoteDatabaseStore
-{
+class InMemoryRemoteDatabaseStore(vararg initialEntries: Pair<String, Database>) :
+    IRemoteDatabaseStore {
     private val hmNameToDatabase = mutableMapOf<String, Database>()
 
-    init
-    {
+    init {
         hmNameToDatabase.putAll(initialEntries)
     }
 
-    fun clear()
-    {
+    fun clear() {
         hmNameToDatabase.clear()
     }
 
     override fun databaseExists(remoteName: String) = hmNameToDatabase.containsKey(remoteName)
 
-    override fun fetchDatabase(remoteName: String) = FetchDatabaseResult(hmNameToDatabase.getValue(remoteName), Date())
+    override fun fetchDatabase(remoteName: String) =
+        FetchDatabaseResult(hmNameToDatabase.getValue(remoteName), Date())
 
-    override fun pushDatabase(remoteName: String, database: Database, lastModified: Date?)
-    {
+    override fun pushDatabase(remoteName: String, database: Database, lastModified: Date?) {
         hmNameToDatabase[remoteName] = database
     }
 }

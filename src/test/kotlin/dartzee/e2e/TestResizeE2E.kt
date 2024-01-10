@@ -10,25 +10,22 @@ import dartzee.`object`.Dart
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.comparables.shouldBeLessThan
+import java.awt.Dimension
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import java.awt.Dimension
 
-class TestResizeE2E : AbstractRegistryTest()
-{
+class TestResizeE2E : AbstractRegistryTest() {
     override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
 
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
     }
 
     @Test
     @Tag("e2e")
-    fun `E2E - Small dartboard`()
-    {
+    fun `E2E - Small dartboard`() {
         val game = insertGame(gameType = GameType.X01, gameParams = "501")
 
         val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
@@ -43,11 +40,12 @@ class TestResizeE2E : AbstractRegistryTest()
 
         gamePanel.dartboard.width shouldBeLessThan 100
 
-        val expectedRounds = listOf(
-            listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
-            listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
-            listOf(Dart(20, 3), Dart(19, 3), Dart(12, 2))
-        )
+        val expectedRounds =
+            listOf(
+                listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
+                listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
+                listOf(Dart(20, 3), Dart(19, 3), Dart(12, 2))
+            )
 
         verifyState(gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 9)
     }

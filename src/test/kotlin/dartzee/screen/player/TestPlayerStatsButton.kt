@@ -11,28 +11,28 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 
-class TestPlayerStatsButton: AbstractTest()
-{
+class TestPlayerStatsButton : AbstractTest() {
     @Test
-    fun `Should have the correct text based on values passed in`()
-    {
+    fun `Should have the correct text based on values passed in`() {
         val player = insertPlayer()
 
         val button = PlayerStatsButton(player, GameType.X01, 10, 35)
-        button.text shouldBe "<html><center><h3>X01</h3> <b>Played: </b> 10<br><b>Best game: </b> 35</center></html>"
+        button.text shouldBe
+            "<html><center><h3>X01</h3> <b>Played: </b> 10<br><b>Best game: </b> 35</center></html>"
         button.isEnabled shouldBe true
 
         val golfButton = PlayerStatsButton(player, GameType.GOLF, 25, 18)
-        golfButton.text shouldBe "<html><center><h3>Golf</h3> <b>Played: </b> 25<br><b>Best game: </b> 18</center></html>"
+        golfButton.text shouldBe
+            "<html><center><h3>Golf</h3> <b>Played: </b> 25<br><b>Best game: </b> 18</center></html>"
         golfButton.isEnabled shouldBe true
     }
 
     @Test
-    fun `Should be disabled if 0 games played, and not do anything on hover`()
-    {
+    fun `Should be disabled if 0 games played, and not do anything on hover`() {
         val player = insertPlayer()
 
-        val expectedText = "<html><center><h3>X01</h3> <b>Played: </b> 0<br><b>Best game: </b> -</center></html>"
+        val expectedText =
+            "<html><center><h3>X01</h3> <b>Played: </b> 0<br><b>Best game: </b> -</center></html>"
 
         val button = PlayerStatsButton(player, GameType.X01, 0, 0)
         button.text shouldBe expectedText
@@ -43,8 +43,7 @@ class TestPlayerStatsButton: AbstractTest()
     }
 
     @Test
-    fun `Should change text on hover if enabled`()
-    {
+    fun `Should change text on hover if enabled`() {
         val player = insertPlayer()
 
         val button = PlayerStatsButton(player, GameType.X01, 10, 35)
@@ -58,8 +57,7 @@ class TestPlayerStatsButton: AbstractTest()
     }
 
     @Test
-    fun `Should switch to the players stats on click, and reset button text`()
-    {
+    fun `Should switch to the players stats on click, and reset button text`() {
         val player = insertPlayer()
         val button = PlayerStatsButton(player, GameType.X01, 10, 35)
         val text = button.text

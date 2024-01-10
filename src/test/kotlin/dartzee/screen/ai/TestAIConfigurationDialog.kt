@@ -1,11 +1,11 @@
 package dartzee.screen.ai
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 import dartzee.bean.PlayerAvatar
-import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.selectedItemTyped
 import dartzee.db.PlayerEntity
@@ -18,17 +18,15 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JRadioButton
 import javax.swing.JTextField
+import org.junit.jupiter.api.Test
 
-class TestAIConfigurationDialog: AbstractTest()
-{
+class TestAIConfigurationDialog : AbstractTest() {
     @Test
-    fun `Should populate correctly for a new player`()
-    {
+    fun `Should populate correctly for a new player`() {
         val dlg = AIConfigurationDialog(mockk())
 
         dlg.getChild<PlayerAvatar>().readOnly shouldBe false
@@ -48,13 +46,19 @@ class TestAIConfigurationDialog: AbstractTest()
     }
 
     @Test
-    fun `Should populate correctly for an existing player`()
-    {
-        val strategy = makeDartsModel(
+    fun `Should populate correctly for an existing player`() {
+        val strategy =
+            makeDartsModel(
                 standardDeviation = 75.0,
                 dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE,
                 mercyThreshold = 17,
-                hmDartNoToSegmentType = mapOf(1 to SegmentType.INNER_SINGLE, 2 to SegmentType.INNER_SINGLE, 3 to SegmentType.INNER_SINGLE))
+                hmDartNoToSegmentType =
+                    mapOf(
+                        1 to SegmentType.INNER_SINGLE,
+                        2 to SegmentType.INNER_SINGLE,
+                        3 to SegmentType.INNER_SINGLE
+                    )
+            )
 
         val player = insertPlayer(name = "Robot", strategy = strategy.toJson())
         val dlg = AIConfigurationDialog(mockk(), player)
@@ -72,12 +76,14 @@ class TestAIConfigurationDialog: AbstractTest()
         x01Panel.spinnerMercyThreshold.value shouldBe 17
 
         val golfPanel = dlg.getChild<AIConfigurationSubPanelGolf>().getPanelForDartNo(1)
-        golfPanel.getChild<JComboBox<ComboBoxItem<SegmentType>>>().selectedItemTyped().hiddenData shouldBe SegmentType.INNER_SINGLE
+        golfPanel
+            .getChild<JComboBox<ComboBoxItem<SegmentType>>>()
+            .selectedItemTyped()
+            .hiddenData shouldBe SegmentType.INNER_SINGLE
     }
 
     @Test
-    fun `Should successfully save changes to an AI player`()
-    {
+    fun `Should successfully save changes to an AI player`() {
         val player = insertPlayer(name = "Sid", strategy = DartsAiModel.new().toJson())
 
         val callback = mockCallback()
@@ -97,8 +103,7 @@ class TestAIConfigurationDialog: AbstractTest()
     }
 
     @Test
-    fun `Should enforce name and avatar for a new player`()
-    {
+    fun `Should enforce name and avatar for a new player`() {
         insertPlayer(name = "Duplicate")
 
         val dlg = AIConfigurationDialog(mockCallback())
@@ -108,7 +113,9 @@ class TestAIConfigurationDialog: AbstractTest()
         dialogFactory.errorsShown.clear()
         dlg.getChild<JTextField>("nameField").text = "Duplicate"
         dlg.clickOk()
-        dialogFactory.errorsShown.shouldContainExactly("A player with the name Duplicate already exists.")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "A player with the name Duplicate already exists."
+        )
 
         dialogFactory.errorsShown.clear()
         dlg.getChild<JTextField>("nameField").text = "Valid"
@@ -125,8 +132,7 @@ class TestAIConfigurationDialog: AbstractTest()
     }
 
     @Test
-    fun `Should calculate stats for the configured model`()
-    {
+    fun `Should calculate stats for the configured model`() {
         val dlg = AIConfigurationDialog(mockk())
 
         val normalDistPanel = dlg.getChild<AIConfigurationPanelNormalDistribution>()

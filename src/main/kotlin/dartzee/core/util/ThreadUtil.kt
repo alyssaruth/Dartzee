@@ -7,50 +7,42 @@ import dartzee.logging.extractThreadStack
 import dartzee.utils.InjectedThings.logger
 import javax.swing.SwingUtilities
 
-fun dumpThreadStacks()
-{
+fun dumpThreadStacks() {
     logger.info(CODE_THREAD_STACKS, "Dumping thread stacks")
 
     val threads = Thread.getAllStackTraces()
     val it = threads.keys.iterator()
-    while (it.hasNext())
-    {
+    while (it.hasNext()) {
         val thread = it.next()
         val stack = thread.stackTrace
         val state = thread.state
-        if (stack.isNotEmpty())
-        {
-            logger.info(CODE_THREAD_STACK, "${thread.name} ($state)", KEY_STACK to extractThreadStack(stack))
+        if (stack.isNotEmpty()) {
+            logger.info(
+                CODE_THREAD_STACK,
+                "${thread.name} ($state)",
+                KEY_STACK to extractThreadStack(stack)
+            )
         }
     }
 }
 
-fun runOnEventThread(r: (() -> Unit))
-{
-    if (SwingUtilities.isEventDispatchThread())
-    {
+fun runOnEventThread(r: (() -> Unit)) {
+    if (SwingUtilities.isEventDispatchThread()) {
         r.invoke()
-    }
-    else
-    {
+    } else {
         SwingUtilities.invokeLater(r)
     }
 }
 
-fun runOnEventThreadBlocking(r: (() -> Unit))
-{
-    if (SwingUtilities.isEventDispatchThread())
-    {
+fun runOnEventThreadBlocking(r: (() -> Unit)) {
+    if (SwingUtilities.isEventDispatchThread()) {
         r.invoke()
-    }
-    else
-    {
+    } else {
         SwingUtilities.invokeAndWait(r)
     }
 }
 
-fun runInOtherThread(r: (() -> Unit)): Thread
-{
+fun runInOtherThread(r: (() -> Unit)): Thread {
     val t = Thread(r)
     t.start()
     return t

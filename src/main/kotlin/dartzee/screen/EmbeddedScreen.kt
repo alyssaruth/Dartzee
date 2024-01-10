@@ -10,9 +10,7 @@ import java.awt.event.ActionListener
 import javax.swing.JButton
 import javax.swing.JPanel
 
-
-abstract class EmbeddedScreen : JPanel(), ActionListener
-{
+abstract class EmbeddedScreen : JPanel(), ActionListener {
     val btnBack = JButton(" < Back")
     val btnNext = JButton("Next > ")
 
@@ -20,8 +18,7 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
     protected val panelNext = JPanel()
     protected val panelBack = JPanel()
 
-    init
-    {
+    init {
         preferredSize = Dimension(800, 610)
         layout = BorderLayout(0, 0)
 
@@ -42,13 +39,11 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
     }
 
     abstract fun initialise()
-    abstract fun getScreenName() : String
 
-    /**
-     * Called after the new screen has been switched in etc
-     */
-    open fun postInit()
-    {
+    abstract fun getScreenName(): String
+
+    /** Called after the new screen has been switched in etc */
+    open fun postInit() {
         btnBack.isVisible = showBackButton()
         btnNext.isVisible = showNextButton()
 
@@ -57,11 +52,9 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
 
     open fun getBackTarget(): EmbeddedScreen = ScreenCache.get<MenuScreen>()
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
+    override fun actionPerformed(arg0: ActionEvent) {
         val src = arg0.source
-        when (arg0.source)
-        {
+        when (arg0.source) {
             btnBack -> backPressed()
             btnNext -> nextPressed()
             else -> logger.error(CODE_SWING_ERROR, "Unexpected actionPerformed: $src")
@@ -70,30 +63,24 @@ abstract class EmbeddedScreen : JPanel(), ActionListener
 
     open fun getNextText() = "Next"
 
-    open fun hideBackButton()
-    {
+    open fun hideBackButton() {
         btnBack.isVisible = false
     }
 
-
-    open fun backPressed()
-    {
+    open fun backPressed() {
         ScreenCache.switch(getBackTarget(), false)
     }
 
-    fun toggleNextVisibility(visible: Boolean)
-    {
+    fun toggleNextVisibility(visible: Boolean) {
         btnNext.isVisible = visible
     }
 
-    open fun nextPressed()
-    {
-        //default method
+    open fun nextPressed() {
+        // default method
     }
 
-    /**
-     * Default methods
-     */
+    /** Default methods */
     open fun showBackButton() = true
+
     open fun showNextButton() = false
 }

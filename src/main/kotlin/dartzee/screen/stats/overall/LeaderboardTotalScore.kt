@@ -13,8 +13,8 @@ import javax.swing.Box
 import javax.swing.JPanel
 import javax.swing.JRadioButton
 
-class LeaderboardTotalScore(private val gameType: GameType) : AbstractLeaderboard(), ActionListener
-{
+class LeaderboardTotalScore(private val gameType: GameType) :
+    AbstractLeaderboard(), ActionListener {
     private val panelGameParams = getFilterPanel(gameType)
 
     private val panelFilters = JPanel()
@@ -23,8 +23,7 @@ class LeaderboardTotalScore(private val gameType: GameType) : AbstractLeaderboar
     private val rdbtnBest = JRadioButton("Best")
     private val rdbtnWorst = JRadioButton("Worst")
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
 
         panelGameParams.addActionListener(this)
@@ -48,14 +47,12 @@ class LeaderboardTotalScore(private val gameType: GameType) : AbstractLeaderboar
 
     override fun getTabName() = gameType.getDescription()
 
-    override fun buildTable()
-    {
+    override fun buildTable() {
         val sql = getTotalScoreSql()
         buildStandardLeaderboard(scrollPane, sql, "Score")
     }
 
-    private fun getTotalScoreSql() : String
-    {
+    private fun getTotalScoreSql(): String {
         val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
         val gameParams = panelGameParams.getGameParams()
         val playerWhereSql = panelPlayerFilters.getWhereSql()
@@ -69,11 +66,9 @@ class LeaderboardTotalScore(private val gameType: GameType) : AbstractLeaderboar
         sb.append(" AND g.GameParams = '$gameParams'")
         sb.append(" AND pt.FinalScore > -1")
 
-        if (!playerWhereSql.isEmpty())
-        {
+        if (!playerWhereSql.isEmpty()) {
             sb.append(" AND p.$playerWhereSql")
         }
-
 
         val orderStr = if (doesHighestWin(gameType) == rdbtnWorst.isSelected) "ASC" else "DESC"
         sb.append(" ORDER BY pt.FinalScore $orderStr")

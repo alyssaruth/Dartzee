@@ -13,8 +13,7 @@ import javax.swing.JTextField
 import javax.swing.border.EmptyBorder
 import javax.swing.filechooser.FileFilter
 
-class FileUploader(ff: FileFilter) : JPanel(), ActionListener
-{
+class FileUploader(ff: FileFilter) : JPanel(), ActionListener {
     private var selectedFile: File? = null
     private val listeners = mutableListOf<IFileUploadListener>()
 
@@ -23,8 +22,7 @@ class FileUploader(ff: FileFilter) : JPanel(), ActionListener
     private val fc = JFileChooser()
     private val btnUpload = JButton("Upload")
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
 
         val filters = fc.choosableFileFilters
@@ -48,43 +46,35 @@ class FileUploader(ff: FileFilter) : JPanel(), ActionListener
         btnUpload.addActionListener(this)
     }
 
-    fun addFileUploadListener(listener: IFileUploadListener)
-    {
+    fun addFileUploadListener(listener: IFileUploadListener) {
         listeners.add(listener)
     }
 
-    private fun selectFile()
-    {
+    private fun selectFile() {
         val returnVal = fc.showOpenDialog(this)
         val selectedFile = fc.selectedFile
-        if (returnVal == JFileChooser.APPROVE_OPTION && selectedFile != null)
-        {
+        if (returnVal == JFileChooser.APPROVE_OPTION && selectedFile != null) {
             this.selectedFile = fc.selectedFile
             textField.text = selectedFile.path
         }
     }
 
-    private fun uploadPressed()
-    {
+    private fun uploadPressed() {
         val file = selectedFile
-        if (file == null)
-        {
+        if (file == null) {
             DialogUtil.showErrorOLD("You must select a file to upload.")
             return
         }
 
         val success = listeners.all { it.fileUploaded(file) }
-        if (success)
-        {
+        if (success) {
             this.selectedFile = null
             textField.text = ""
         }
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnSelectFile -> selectFile()
             btnUpload -> uploadPressed()
         }

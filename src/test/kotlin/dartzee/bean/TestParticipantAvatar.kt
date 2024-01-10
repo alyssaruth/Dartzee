@@ -10,12 +10,10 @@ import dartzee.screen.game.makeTeam
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestParticipantAvatar : AbstractTest()
-{
+class TestParticipantAvatar : AbstractTest() {
     @Test
     @Tag("screenshot")
-    fun `Should default to the split avatar, and update accordingly based on round number`()
-    {
+    fun `Should default to the split avatar, and update accordingly based on round number`() {
         val playerOneImage = insertPlayerImage(resource = "yoshi")
         val playerOne = insertPlayer(playerImageId = playerOneImage.rowId)
 
@@ -41,8 +39,7 @@ class TestParticipantAvatar : AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Should correct avatar for a single participant`()
-    {
+    fun `Should correct avatar for a single participant`() {
         val singlePt = SingleParticipant(insertParticipant())
         val avatar = ParticipantAvatar(singlePt)
 

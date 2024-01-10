@@ -1,8 +1,8 @@
 package dartzee.screen.ai
 
-import dartzee.ai.AimDart
 import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickOk
+import dartzee.ai.AimDart
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
@@ -11,11 +11,9 @@ import io.kotest.matchers.shouldBe
 import net.miginfocom.swing.MigLayout
 import org.junit.jupiter.api.Test
 
-class TestNewSetupRuleDialog: AbstractTest()
-{
+class TestNewSetupRuleDialog : AbstractTest() {
     @Test
-    fun `Should move the spinner to the correct cell when radio selection changes`()
-    {
+    fun `Should move the spinner to the correct cell when radio selection changes`() {
         val dlg = NewSetupRuleDialog(mutableMapOf())
 
         val layout = dlg.panel.layout as MigLayout
@@ -31,17 +29,17 @@ class TestNewSetupRuleDialog: AbstractTest()
     }
 
     @Test
-    fun `Should not allow the score field to be left blank`()
-    {
+    fun `Should not allow the score field to be left blank`() {
         val dlg = NewSetupRuleDialog(mutableMapOf())
 
         dlg.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("You must enter a score for this rule to apply to.")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "You must enter a score for this rule to apply to."
+        )
     }
 
     @Test
-    fun `Should not allow treble 25 to be entered as a target`()
-    {
+    fun `Should not allow treble 25 to be entered as a target`() {
         val dlg = NewSetupRuleDialog(mutableMapOf())
 
         dlg.nfScore.value = 50
@@ -53,8 +51,7 @@ class TestNewSetupRuleDialog: AbstractTest()
     }
 
     @Test
-    fun `Should not allow a target that would bust the player`()
-    {
+    fun `Should not allow a target that would bust the player`() {
         val dlg = NewSetupRuleDialog(mutableMapOf())
 
         dlg.nfScore.value = 50
@@ -67,8 +64,7 @@ class TestNewSetupRuleDialog: AbstractTest()
     }
 
     @Test
-    fun `Should not allow a rule that overlaps with the existing default`()
-    {
+    fun `Should not allow a rule that overlaps with the existing default`() {
         val dlg = NewSetupRuleDialog(mutableMapOf())
 
         dlg.nfScore.value = 60
@@ -76,12 +72,13 @@ class TestNewSetupRuleDialog: AbstractTest()
         dlg.rdbtnSingle.doClick()
 
         dlg.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("The selected dart is already the default for this starting score.")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "The selected dart is already the default for this starting score."
+        )
     }
 
     @Test
-    fun `Should add a valid rule to the HashMap`()
-    {
+    fun `Should add a valid rule to the HashMap`() {
         val hm = mutableMapOf<Int, AimDart>()
         val dlg = NewSetupRuleDialog(hm)
 
@@ -96,8 +93,7 @@ class TestNewSetupRuleDialog: AbstractTest()
     }
 
     @Test
-    fun `Should not add to the HashMap when cancelled`()
-    {
+    fun `Should not add to the HashMap when cancelled`() {
         val hm = mutableMapOf<Int, AimDart>()
         val dlg = NewSetupRuleDialog(hm)
 
@@ -111,14 +107,13 @@ class TestNewSetupRuleDialog: AbstractTest()
     }
 
     @Test
-    fun `Should set the correct score and multiplier on the target dart`()
-    {
+    fun `Should set the correct score and multiplier on the target dart`() {
         verifyDart("Single", 1)
         verifyDart("Double", 2)
         verifyDart("Treble", 3)
     }
-    private fun verifyDart(rdbtn: String, multiplier: Int)
-    {
+
+    private fun verifyDart(rdbtn: String, multiplier: Int) {
         val hm = mutableMapOf<Int, AimDart>()
         val dlg = NewSetupRuleDialog(hm)
 

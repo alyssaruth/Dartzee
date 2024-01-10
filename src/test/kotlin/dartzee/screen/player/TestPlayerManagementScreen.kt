@@ -18,15 +18,13 @@ import dartzee.screen.ai.AIConfigurationDialog
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JTextField
+import org.junit.jupiter.api.Test
 
-class TestPlayerManagementScreen: AbstractTest()
-{
+class TestPlayerManagementScreen : AbstractTest() {
     @Test
-    fun `Should load players from the database`()
-    {
+    fun `Should load players from the database`() {
         val p1 = insertPlayer()
         val p2 = insertPlayer()
 
@@ -38,8 +36,7 @@ class TestPlayerManagementScreen: AbstractTest()
     }
 
     @Test
-    fun `Should refresh the summary panel as rows are selected or deselected`()
-    {
+    fun `Should refresh the summary panel as rows are selected or deselected`() {
         insertPlayer(name = "Alex")
         insertPlayer(name = "Leah")
 
@@ -59,8 +56,7 @@ class TestPlayerManagementScreen: AbstractTest()
     }
 
     @Test
-    fun `Should reset the summary panel when reinitialised`()
-    {
+    fun `Should reset the summary panel when reinitialised`() {
         insertPlayer(name = "Alex")
 
         val scrn = PlayerManagementScreen()
@@ -73,8 +69,7 @@ class TestPlayerManagementScreen: AbstractTest()
     }
 
     @Test
-    fun `Should create a new human player and update the table`()
-    {
+    fun `Should create a new human player and update the table`() {
         val scrn = PlayerManagementScreen()
         scrn.initialise()
 
@@ -94,8 +89,7 @@ class TestPlayerManagementScreen: AbstractTest()
     }
 
     @Test
-    fun `Should create a new AI player and update the table`()
-    {
+    fun `Should create a new AI player and update the table`() {
         val scrn = PlayerManagementScreen()
         scrn.initialise()
 
@@ -115,8 +109,7 @@ class TestPlayerManagementScreen: AbstractTest()
     }
 
     @Test
-    fun `Should not reinitialise the table if player creation is cancelled`()
-    {
+    fun `Should not reinitialise the table if player creation is cancelled`() {
         val scrn = PlayerManagementScreen()
         scrn.initialise()
 
@@ -137,8 +130,7 @@ class TestPlayerManagementScreen: AbstractTest()
         table.rowCount shouldBe 0
     }
 
-    private fun PlayerManagementScreen.getSummaryPlayerName(): String
-    {
+    private fun PlayerManagementScreen.getSummaryPlayerName(): String {
         val summaryPanel = getChild<PlayerManagementPanel>()
         return summaryPanel.lblPlayerName.text
     }

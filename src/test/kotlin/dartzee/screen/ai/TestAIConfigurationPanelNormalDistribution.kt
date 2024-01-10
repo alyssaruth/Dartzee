@@ -8,15 +8,13 @@ import dartzee.ai.DartsAiModel
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import javax.swing.JCheckBox
 import javax.swing.JSlider
+import org.junit.jupiter.api.Test
 
-class TestAIConfigurationPanelNormalDistribution: AbstractTest()
-{
+class TestAIConfigurationPanelNormalDistribution : AbstractTest() {
     @Test
-    fun `Should enable and disable doubles spinner`()
-    {
+    fun `Should enable and disable doubles spinner`() {
         val panel = AIConfigurationPanelNormalDistribution()
         panel.initialiseFromModel(DartsAiModel.new())
         panel.nfStandardDeviationDoubles.shouldBeDisabled()
@@ -29,8 +27,7 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
     }
 
     @Test
-    fun `Should enable and disable central skew spinner`()
-    {
+    fun `Should enable and disable central skew spinner`() {
         val panel = AIConfigurationPanelNormalDistribution()
         panel.initialiseFromModel(DartsAiModel.new())
         panel.nfCentralBias.shouldBeDisabled()
@@ -43,12 +40,14 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
     }
 
     @Test
-    fun `Should populate correctly from populated model`()
-    {
-        val model = makeDartsModel(standardDeviation = 100.0,
-            standardDeviationDoubles = 17.5,
-            standardDeviationCentral = 5.2,
-            maxRadius = 270)
+    fun `Should populate correctly from populated model`() {
+        val model =
+            makeDartsModel(
+                standardDeviation = 100.0,
+                standardDeviationDoubles = 17.5,
+                standardDeviationCentral = 5.2,
+                maxRadius = 270
+            )
 
         val panel = AIConfigurationPanelNormalDistribution()
         panel.initialiseFromModel(model)
@@ -56,15 +55,22 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
         panel.nfStandardDeviation.value shouldBe 100.0
         panel.getChild<JCheckBox>(text = "Standard Deviation (Doubles)").isSelected shouldBe true
         panel.nfStandardDeviationDoubles.value shouldBe 17.5
-        panel.getChild<JCheckBox>(text = "Standard Deviation (skew towards center)").isSelected shouldBe true
+        panel
+            .getChild<JCheckBox>(text = "Standard Deviation (skew towards center)")
+            .isSelected shouldBe true
         panel.nfCentralBias.value shouldBe 5.2
         panel.getChild<JSlider>().value shouldBe 270
     }
 
     @Test
-    fun `Should populate from empty model`()
-    {
-        val model = makeDartsModel(standardDeviation = 100.0, standardDeviationDoubles = null, standardDeviationCentral = null, maxRadius = 250)
+    fun `Should populate from empty model`() {
+        val model =
+            makeDartsModel(
+                standardDeviation = 100.0,
+                standardDeviationDoubles = null,
+                standardDeviationCentral = null,
+                maxRadius = 250
+            )
 
         val panel = AIConfigurationPanelNormalDistribution()
         panel.initialiseFromModel(model)
@@ -73,15 +79,16 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
         panel.getChild<JCheckBox>(text = "Standard Deviation (Doubles)").isSelected shouldBe false
         panel.nfStandardDeviationDoubles.value shouldBe 50.0
         panel.nfStandardDeviationDoubles.shouldBeDisabled()
-        panel.getChild<JCheckBox>(text = "Standard Deviation (skew towards center)").isSelected shouldBe false
+        panel
+            .getChild<JCheckBox>(text = "Standard Deviation (skew towards center)")
+            .isSelected shouldBe false
         panel.nfCentralBias.value shouldBe 50.0
         panel.nfCentralBias.shouldBeDisabled()
         panel.getChild<JSlider>().value shouldBe 250
     }
 
     @Test
-    fun `Should create populated model`()
-    {
+    fun `Should create populated model`() {
         val panel = AIConfigurationPanelNormalDistribution()
         panel.nfStandardDeviation.value = 57.5
 
@@ -100,8 +107,7 @@ class TestAIConfigurationPanelNormalDistribution: AbstractTest()
     }
 
     @Test
-    fun `Should create a model with null fields if boxes left unchecked`()
-    {
+    fun `Should create a model with null fields if boxes left unchecked`() {
         val panel = AIConfigurationPanelNormalDistribution()
         panel.nfStandardDeviation.value = 57.5
 

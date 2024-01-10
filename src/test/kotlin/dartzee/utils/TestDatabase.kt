@@ -21,46 +21,45 @@ import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class TestDatabase: AbstractTest()
-{
+class TestDatabase : AbstractTest() {
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         mainDatabase.dropUnexpectedTables()
     }
 
     @Test
-    fun `Should create a new connection if the pool is depleted`()
-    {
+    fun `Should create a new connection if the pool is depleted`() {
         usingInMemoryDatabase { db ->
             db.initialiseConnectionPool(1)
             clearLogs()
 
-            //Should borrow from the pool when non-empty
+            // Should borrow from the pool when non-empty
             val conn = db.borrowConnection()
             verifyNoLogs(CODE_NEW_CONNECTION)
 
-            //Should create a new one now that there are none left
+            // Should create a new one now that there are none left
             val conn2 = db.borrowConnection()
             verifyLog(CODE_NEW_CONNECTION)
 
             db.returnConnection(conn2)
             db.returnConnection(conn)
 
-            //Should have returned the connection successfully
+            // Should have returned the connection successfully
             clearLogs()
             db.borrowConnection()
             verifyNoLogs(CODE_NEW_CONNECTION)
         }
-
     }
 
     @Test
-    fun `Should execute all updates and log them to the console`()
-    {
+    fun `Should execute all updates and log them to the console`() {
         clearLogs()
 
-        val updates = listOf("CREATE TABLE zzUpdateTest(str VARCHAR(50))", "INSERT INTO zzUpdateTest VALUES ('5')")
+        val updates =
+            listOf(
+                "CREATE TABLE zzUpdateTest(str VARCHAR(50))",
+                "INSERT INTO zzUpdateTest VALUES ('5')"
+            )
         mainDatabase.executeUpdates(updates) shouldBe true
 
         val records = flushAndGetLogRecords().filter { it.loggingCode == CODE_SQL }
@@ -72,8 +71,7 @@ class TestDatabase: AbstractTest()
     }
 
     @Test
-    fun `Should abort if any updates fail`()
-    {
+    fun `Should abort if any updates fail`() {
         val updates = listOf("bollocks", "CREATE TABLE zzUpdateTest(str VARCHAR(50))")
 
         mainDatabase.executeUpdates(updates) shouldBe false
@@ -83,8 +81,7 @@ class TestDatabase: AbstractTest()
     }
 
     @Test
-    fun `Should log SQLExceptions for failed updates`()
-    {
+    fun `Should log SQLExceptions for failed updates`() {
         val update = "CREATE TABLE zzUpdateTest(str INVALID(50))"
         mainDatabase.executeUpdate(update) shouldBe false
 
@@ -94,18 +91,19 @@ class TestDatabase: AbstractTest()
     }
 
     @Test
-    fun `Should execute queries and log them to the console`()
-    {
-        val updates = listOf("CREATE TABLE zzQueryTest(str VARCHAR(50))",
-            "INSERT INTO zzQueryTest VALUES ('RowOne')",
-            "INSERT INTO zzQueryTest VALUES ('RowTwo')")
+    fun `Should execute queries and log them to the console`() {
+        val updates =
+            listOf(
+                "CREATE TABLE zzQueryTest(str VARCHAR(50))",
+                "INSERT INTO zzQueryTest VALUES ('RowOne')",
+                "INSERT INTO zzQueryTest VALUES ('RowTwo')"
+            )
 
         mainDatabase.executeUpdates(updates)
 
         val retrievedValues = mutableListOf<String>()
         mainDatabase.executeQuery("SELECT * FROM zzQueryTest").use { rs ->
-            while (rs.next())
-            {
+            while (rs.next()) {
                 retrievedValues.add(rs.getString(1))
             }
         }
@@ -118,21 +116,17 @@ class TestDatabase: AbstractTest()
     }
 
     @Test
-    fun `Should throw an error for failed queries`()
-    {
+    fun `Should throw an error for failed queries`() {
         val query = "SELECT * FROM zzQueryTest"
 
-        val ex = shouldThrow<WrappedSqlException> {
-            mainDatabase.executeQuery(query)
-        }
+        val ex = shouldThrow<WrappedSqlException> { mainDatabase.executeQuery(query) }
 
         ex.sqlStatement shouldBe query
         ex.sqlException.message shouldContain "does not exist"
     }
 
     @Test
-    fun `Should be possible to connect to separate databases concurrently`()
-    {
+    fun `Should be possible to connect to separate databases concurrently`() {
         usingInMemoryDatabase { dbOne ->
             usingInMemoryDatabase { dbTwo ->
                 shouldNotThrowAny {
@@ -144,14 +138,12 @@ class TestDatabase: AbstractTest()
     }
 
     @Test
-    fun `Should return null version if version has never been set`()
-    {
+    fun `Should return null version if version has never been set`() {
         mainDatabase.getDatabaseVersion() shouldBe null
     }
 
     @Test
-    fun `Should return the right existing version and support updating it`()
-    {
+    fun `Should return the right existing version and support updating it`() {
         mainDatabase.updateDatabaseVersion(5)
 
         mainDatabase.getDatabaseVersion() shouldBe 5
@@ -162,29 +154,29 @@ class TestDatabase: AbstractTest()
     }
 
     @Test
-    fun `Should support generating local IDs`()
-    {
+    fun `Should support generating local IDs`() {
         mainDatabase.generateLocalId(EntityName.Game) shouldBe 1
         mainDatabase.generateLocalId(EntityName.Game) shouldBe 2
         mainDatabase.generateLocalId(EntityName.DartsMatch) shouldBe 1
     }
 
     @Test
-    fun `Should not drop any schema tables`()
-    {
+    fun `Should not drop any schema tables`() {
         mainDatabase.dropUnexpectedTables().shouldBeEmpty()
 
-        val expectedTableNames = DartsDatabaseUtil.getAllEntitiesIncludingVersion().map { it.getTableNameUpperCase() }
+        val expectedTableNames =
+            DartsDatabaseUtil.getAllEntitiesIncludingVersion().map { it.getTableNameUpperCase() }
         val tableNames = mainDatabase.getTableNames()
         tableNames.shouldContainExactlyInAnyOrder(expectedTableNames)
     }
 
     @Test
-    fun `Should drop unexpected tables`()
-    {
+    fun `Should drop unexpected tables`() {
         mainDatabase.createTableIfNotExists("SomeTable", "RowId INT")
         val tmpName = mainDatabase.createTempTable("TempTable", "RowId INT")
 
-        mainDatabase.dropUnexpectedTables().shouldContainExactlyInAnyOrder("SOMETABLE", tmpName?.uppercase())
+        mainDatabase
+            .dropUnexpectedTables()
+            .shouldContainExactlyInAnyOrder("SOMETABLE", tmpName?.uppercase())
     }
 }

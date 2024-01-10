@@ -9,13 +9,11 @@ import java.awt.Color
 import java.awt.GridLayout
 import javax.swing.SwingConstants
 
-class StatisticsTabX01TopFinishes : AbstractStatisticsTab()
-{
+class StatisticsTabX01TopFinishes : AbstractStatisticsTab() {
     private val tableTopFinishesMine = ScrollTableDartsGame(testId = "TopFinishesMine")
     private val tableTopFinishesOther = ScrollTableDartsGame()
 
-    init
-    {
+    init {
         layout = GridLayout(0, 2, 0, 0)
 
         add(tableTopFinishesMine)
@@ -24,33 +22,28 @@ class StatisticsTabX01TopFinishes : AbstractStatisticsTab()
         tableTopFinishesOther.tableForeground = Color.RED
     }
 
-    override fun populateStats()
-    {
+    override fun populateStats() {
         setOtherComponentVisibility(this, tableTopFinishesOther)
 
         buildTopFinishesTable(filteredGames, tableTopFinishesMine)
-        if (includeOtherComparison())
-        {
+        if (includeOtherComparison()) {
             buildTopFinishesTable(filteredGamesOther, tableTopFinishesOther)
         }
     }
 
-    private fun buildTopFinishesTable(games: List<GameWrapper>, table: ScrollTableDartsGame)
-    {
+    private fun buildTopFinishesTable(games: List<GameWrapper>, table: ScrollTableDartsGame) {
         val model = TableUtil.DefaultModel()
         model.addColumn("Finish")
         model.addColumn("Darts")
         model.addColumn("Game")
 
-        //Sort by checkout total.
+        // Sort by checkout total.
         val sortedGames = games.sortedByDescending { it.getCheckoutTotal() }
 
         val listSize = Math.min(MAX_FINISHES_TO_SHOW, games.size)
-        for (i in 0 until listSize)
-        {
+        for (i in 0 until listSize) {
             val game = sortedGames[i]
-            if (!game.isFinished())
-            {
+            if (!game.isFinished()) {
                 continue
             }
 
@@ -68,8 +61,7 @@ class StatisticsTabX01TopFinishes : AbstractStatisticsTab()
         table.sortBy(0, true)
     }
 
-    companion object
-    {
+    companion object {
         private const val MAX_FINISHES_TO_SHOW = 25
     }
 }

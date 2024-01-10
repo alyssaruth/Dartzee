@@ -29,8 +29,7 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 
-class PlayerManagementPanel : JPanel(), ActionListener
-{
+class PlayerManagementPanel : JPanel(), ActionListener {
     private var player: PlayerEntity? = null
 
     private val btnEdit = JButton("Edit")
@@ -41,8 +40,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
     private val panelCenter = JPanel()
     private val btnRunSimulation = JButton("Run Simulation")
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
 
         val panelOptions = JPanel()
@@ -84,13 +82,12 @@ class PlayerManagementPanel : JPanel(), ActionListener
         panelCenter.layout = WrapLayout()
     }
 
-    fun refresh(player: PlayerEntity?)
-    {
+    fun refresh(player: PlayerEntity?) {
         this.player = player
 
         lblPlayerName.text = player?.name.orEmpty()
 
-        //Only show this for AIs
+        // Only show this for AIs
         btnRunSimulation.isVisible = player?.isAi() == true
 
         btnEdit.isVisible = player != null
@@ -108,8 +105,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
         revalidate()
     }
 
-    private fun addSummaryPanels(player: PlayerEntity)
-    {
+    private fun addSummaryPanels(player: PlayerEntity) {
         val counts = getGameCounts(player)
         val achievements = AchievementEntity.retrieveAchievements(player.rowId)
 
@@ -119,48 +115,52 @@ class PlayerManagementPanel : JPanel(), ActionListener
         panelCenter.add(PlayerAchievementsButton(player, achievements))
     }
 
-    private fun makeStatsButton(player: PlayerEntity, gameCounts: HashMapCount<GameType>, achievements: List<AchievementEntity>, gameType: GameType): PlayerStatsButton
-    {
+    private fun makeStatsButton(
+        player: PlayerEntity,
+        gameCounts: HashMapCount<GameType>,
+        achievements: List<AchievementEntity>,
+        gameType: GameType
+    ): PlayerStatsButton {
         val gamesPlayed = gameCounts.getCount(gameType)
 
-        val achievement = achievements.find { it.achievementType == getBestGameAchievement(gameType)?.achievementType }
+        val achievement =
+            achievements.find {
+                it.achievementType == getBestGameAchievement(gameType)?.achievementType
+            }
         val bestScore: Int = achievement?.achievementCounter ?: 0
 
         return PlayerStatsButton(player, gameType, gamesPlayed, bestScore)
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
+    override fun actionPerformed(arg0: ActionEvent) {
         val selectedPlayer = player ?: return
-        when (arg0.source)
-        {
+        when (arg0.source) {
             btnEdit -> amendPlayer(selectedPlayer)
             btnDelete -> confirmAndDeletePlayer(selectedPlayer)
-            btnRunSimulation -> AISimulationSetupDialog(selectedPlayer, selectedPlayer.getModel()).isVisible = true
+            btnRunSimulation ->
+                AISimulationSetupDialog(selectedPlayer, selectedPlayer.getModel()).isVisible = true
         }
     }
 
-    private fun amendPlayer(playerEntity: PlayerEntity)
-    {
-        if (playerEntity.isAi())
-        {
+    private fun amendPlayer(playerEntity: PlayerEntity) {
+        if (playerEntity.isAi()) {
             AIConfigurationDialog.amendPlayer(::refresh, playerEntity)
-        }
-        else
-        {
+        } else {
             HumanConfigurationDialog.amendPlayer(::refresh, playerEntity)
         }
     }
 
-    private fun confirmAndDeletePlayer(selectedPlayer: PlayerEntity)
-    {
-        val option = DialogUtil.showQuestionOLD("Are you sure you want to delete ${selectedPlayer.name}?", false)
-        if (option == JOptionPane.YES_OPTION)
-        {
+    private fun confirmAndDeletePlayer(selectedPlayer: PlayerEntity) {
+        val option =
+            DialogUtil.showQuestionOLD(
+                "Are you sure you want to delete ${selectedPlayer.name}?",
+                false
+            )
+        if (option == JOptionPane.YES_OPTION) {
             selectedPlayer.dtDeleted = getSqlDateNow()
             selectedPlayer.saveToDatabase()
 
-            //Re-initialise the screen so it updates
+            // Re-initialise the screen so it updates
             ScreenCache.get<PlayerManagementScreen>().initialise()
         }
     }

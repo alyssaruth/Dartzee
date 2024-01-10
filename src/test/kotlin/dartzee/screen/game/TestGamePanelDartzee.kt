@@ -69,28 +69,26 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
-class TestGamePanelDartzee: AbstractTest()
-{
-    private val ruleResults = listOf(
-        DartzeeRoundResult(2, true, 50),
-        DartzeeRoundResult(1, false, -115),
-        DartzeeRoundResult(3, true, 18),
-        DartzeeRoundResult(4, true, -66),
-    )
+class TestGamePanelDartzee : AbstractTest() {
+    private val ruleResults =
+        listOf(
+            DartzeeRoundResult(2, true, 50),
+            DartzeeRoundResult(1, false, -115),
+            DartzeeRoundResult(3, true, 18),
+            DartzeeRoundResult(4, true, -66),
+        )
 
     @Test
-    fun `Should initialise totalRounds based on the number of rules`()
-    {
+    fun `Should initialise totalRounds based on the number of rules`() {
         makeGamePanel(listOf(makeDartzeeRuleDto())).totalRounds shouldBe 2
         makeGamePanel(listOf(makeDartzeeRuleDto(), makeDartzeeRuleDto())).totalRounds shouldBe 3
     }
 
     @Test
-    fun `Should register itself as a listener on the carousel`()
-    {
+    fun `Should register itself as a listener on the carousel`() {
         val carousel = DartzeeRuleCarousel(testRules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
 
@@ -99,8 +97,7 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should not show the convert to template button if game is already part of a template`()
-    {
+    fun `Should not show the convert to template button if game is already part of a template`() {
         val template = insertDartzeeTemplate()
         val g = insertGame(gameType = GameType.DARTZEE, gameParams = template.rowId)
         val panel = makeGamePanel(testRules, game = g)
@@ -108,8 +105,7 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should convert to a template, hiding the button and updating the window title`()
-    {
+    fun `Should convert to a template, hiding the button and updating the window title`() {
         val g = insertGame(gameType = GameType.DARTZEE, gameParams = "")
         val parentWindow = FakeDartsScreen()
 
@@ -128,8 +124,7 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should not hide the button or update window title if template generation is cancelled`()
-    {
+    fun `Should not hide the button or update window title if template generation is cancelled`() {
         val g = insertGame(gameType = GameType.DARTZEE, gameParams = "")
         val parentWindow = FakeDartsScreen()
 
@@ -146,8 +141,7 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should tell the summaryPanel to finish and select the first player when loading a finished game`()
-    {
+    fun `Should tell the summaryPanel to finish and select the first player when loading a finished game`() {
         val game = setUpDartzeeGameOnDatabase(5)
 
         val summaryPanel = mockk<DartzeeRuleSummaryPanel>(relaxed = true)
@@ -160,8 +154,7 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should load scores and results correctly`()
-    {
+    fun `Should load scores and results correctly`() {
         val game = setUpDartzeeGameOnDatabase(5)
         val carousel = DartzeeRuleCarousel(testRules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
@@ -190,8 +183,7 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should not update best game achievement for too few rules`()
-    {
+    fun `Should not update best game achievement for too few rules`() {
         val shorterRules = testRules.subList(0, 2)
 
         val player = insertPlayer()
@@ -208,12 +200,12 @@ class TestGamePanelDartzee: AbstractTest()
         gamePanel.dartThrown(makeDart(20, 0, SegmentType.MISS))
         carousel.getDisplayedTiles().first().doClick()
 
-        retrieveAchievementForDetail(AchievementType.DARTZEE_BEST_GAME, player.rowId, "") shouldBe null
+        retrieveAchievementForDetail(AchievementType.DARTZEE_BEST_GAME, player.rowId, "") shouldBe
+            null
     }
 
     @Test
-    fun `Should update best game achievement if there are 5 or more rules`()
-    {
+    fun `Should update best game achievement if there are 5 or more rules`() {
         val player = insertPlayer()
         val game = setUpDartzeeGameOnDatabase(4, player)
         val carousel = DartzeeRuleCarousel(testRules)
@@ -228,20 +220,21 @@ class TestGamePanelDartzee: AbstractTest()
         gamePanel.dartThrown(makeDart(20, 0, SegmentType.MISS))
         carousel.getDisplayedTiles().first().doClick()
 
-        val achievement = retrieveAchievementForDetail(AchievementType.DARTZEE_BEST_GAME, player.rowId, "")!!
+        val achievement =
+            retrieveAchievementForDetail(AchievementType.DARTZEE_BEST_GAME, player.rowId, "")!!
         achievement.achievementCounter shouldBe 13
         achievement.gameIdEarned shouldBe game.rowId
     }
 
     @Test
-    fun `Should update flawless achievement if all rules passed`()
-    {
-        val allPassed = listOf(
-            DartzeeRoundResult(2, true, 50),
-            DartzeeRoundResult(1, true, 35),
-            DartzeeRoundResult(3, true, 18),
-            DartzeeRoundResult(4, true, 40),
-        )
+    fun `Should update flawless achievement if all rules passed`() {
+        val allPassed =
+            listOf(
+                DartzeeRoundResult(2, true, 50),
+                DartzeeRoundResult(1, true, 35),
+                DartzeeRoundResult(3, true, 18),
+                DartzeeRoundResult(4, true, 40),
+            )
 
         val player = insertPlayer()
         val game = setUpDartzeeGameOnDatabase(5, player, allPassed)
@@ -252,15 +245,15 @@ class TestGamePanelDartzee: AbstractTest()
         gamePanel.loadGame(loadParticipants(game.rowId))
         gamePanel.updateAchievementsForFinish(-1, 180)
 
-        val achievement = retrieveAchievementForDetail(AchievementType.DARTZEE_FLAWLESS, player.rowId, "")!!
+        val achievement =
+            retrieveAchievementForDetail(AchievementType.DARTZEE_FLAWLESS, player.rowId, "")!!
         achievement.achievementCounter shouldBe 180
         achievement.achievementDetail shouldBe ""
         achievement.gameIdEarned shouldBe game.rowId
     }
 
     @Test
-    fun `Should not update flawless achievement if a rule was failed`()
-    {
+    fun `Should not update flawless achievement if a rule was failed`() {
         val player = insertPlayer()
         val game = setUpDartzeeGameOnDatabase(5, player)
         val carousel = DartzeeRuleCarousel(testRules)
@@ -274,14 +267,14 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should update under pressure achievement if hardest rule passed last`()
-    {
-        val hardestPassedLast = listOf(
-            DartzeeRoundResult(2, true, 50),
-            DartzeeRoundResult(1, true, 35),
-            DartzeeRoundResult(3, true, 18),
-            DartzeeRoundResult(4, true, 50),
-        )
+    fun `Should update under pressure achievement if hardest rule passed last`() {
+        val hardestPassedLast =
+            listOf(
+                DartzeeRoundResult(2, true, 50),
+                DartzeeRoundResult(1, true, 35),
+                DartzeeRoundResult(3, true, 18),
+                DartzeeRoundResult(4, true, 50),
+            )
 
         val player = insertPlayer()
         val game = setUpDartzeeGameOnDatabase(5, player, hardestPassedLast)
@@ -292,21 +285,26 @@ class TestGamePanelDartzee: AbstractTest()
         gamePanel.loadGame(loadParticipants(game.rowId))
         gamePanel.updateAchievementsForFinish(-1, 180)
 
-        val achievement = retrieveAchievementForDetail(AchievementType.DARTZEE_UNDER_PRESSURE, player.rowId, totalIsFifty.getDisplayName())!!
+        val achievement =
+            retrieveAchievementForDetail(
+                AchievementType.DARTZEE_UNDER_PRESSURE,
+                player.rowId,
+                totalIsFifty.getDisplayName()
+            )!!
         achievement.achievementCounter shouldBe 50
         achievement.achievementDetail shouldBe totalIsFifty.getDisplayName()
         achievement.gameIdEarned shouldBe game.rowId
     }
 
     @Test
-    fun `Should not update under pressure achievement if last round was a fail`()
-    {
-        val hardestPassedLast = listOf(
-            DartzeeRoundResult(2, true, 50),
-            DartzeeRoundResult(1, true, 35),
-            DartzeeRoundResult(3, true, 18),
-            DartzeeRoundResult(4, false, -100),
-        )
+    fun `Should not update under pressure achievement if last round was a fail`() {
+        val hardestPassedLast =
+            listOf(
+                DartzeeRoundResult(2, true, 50),
+                DartzeeRoundResult(1, true, 35),
+                DartzeeRoundResult(3, true, 18),
+                DartzeeRoundResult(4, false, -100),
+            )
 
         val player = insertPlayer()
         val game = setUpDartzeeGameOnDatabase(5, player, hardestPassedLast)
@@ -321,14 +319,14 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should not update under pressure achievement if last round was not the hardest rule`()
-    {
-        val hardestPassedLast = listOf(
-            DartzeeRoundResult(2, true, 50),
-            DartzeeRoundResult(1, true, 35),
-            DartzeeRoundResult(4, true, 50),
-            DartzeeRoundResult(3, true, 18),
-        )
+    fun `Should not update under pressure achievement if last round was not the hardest rule`() {
+        val hardestPassedLast =
+            listOf(
+                DartzeeRoundResult(2, true, 50),
+                DartzeeRoundResult(1, true, 35),
+                DartzeeRoundResult(4, true, 50),
+                DartzeeRoundResult(3, true, 18),
+            )
 
         val player = insertPlayer()
         val game = setUpDartzeeGameOnDatabase(5, player, hardestPassedLast)
@@ -343,8 +341,7 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should insert a row for bingo, calculating the score correctly and not adding duplicates`()
-    {
+    fun `Should insert a row for bingo, calculating the score correctly and not adding duplicates`() {
         val player = insertPlayer()
         val game = setUpDartzeeGameOnDatabase(5, player)
         val carousel = DartzeeRuleCarousel(testRules)
@@ -364,8 +361,7 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should update the carousel and dartboard on readyForThrow and each time a dart is thrown`()
-    {
+    fun `Should update the carousel and dartboard on readyForThrow and each time a dart is thrown`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val reducedRules = testRules.subList(0, 2)
@@ -379,24 +375,33 @@ class TestGamePanelDartzee: AbstractTest()
         carousel.pendingTiles.size shouldBe reducedRules.size
 
         val expectedSegments = getAllNonMissSegments().filter { !it.isDoubleExcludingBull() }
-        panel.dartboard.segmentStatuses()!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
+        panel.dartboard
+            .segmentStatuses()!!
+            .scoringSegments
+            .shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
 
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
 
-        val twoBlackOneWhiteSegments = twoBlackOneWhite.calculationResult!!.scoringSegments.toTypedArray()
-        panel.dartboard.segmentStatuses()!!.scoringSegments.shouldContainExactlyInAnyOrder(*twoBlackOneWhiteSegments)
+        val twoBlackOneWhiteSegments =
+            twoBlackOneWhite.calculationResult!!.scoringSegments.toTypedArray()
+        panel.dartboard
+            .segmentStatuses()!!
+            .scoringSegments
+            .shouldContainExactlyInAnyOrder(*twoBlackOneWhiteSegments)
 
         panel.dartThrown(makeDart(20, 0, SegmentType.MISS))
         panel.dartboard.segmentStatuses()!!.scoringSegments.shouldBeEmpty()
 
         panel.btnReset.isEnabled = true
         panel.btnReset.doClick()
-        panel.dartboard.segmentStatuses()!!.scoringSegments.shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
+        panel.dartboard
+            .segmentStatuses()!!
+            .scoringSegments
+            .shouldContainExactlyInAnyOrder(*expectedSegments.toTypedArray())
     }
 
     @Test
-    fun `Should save darts on confirm pressed, then hide it after the first round`()
-    {
+    fun `Should save darts on confirm pressed, then hide it after the first round`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val game = insertGame(gameType = GameType.DARTZEE)
@@ -436,31 +441,33 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should update valid segments on hover changed if fewer than 3 darts thrown`()
-    {
+    fun `Should update valid segments on hover changed if fewer than 3 darts thrown`() {
         val carousel = DartzeeRuleCarousel(testRules)
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
         val panel = makeGamePanel(testRules, summaryPanel)
         panel.startNewGame(listOf(makeSingleParticipant()))
 
         panel.hoverChanged(SegmentStatuses(listOf(doubleNineteen), listOf(doubleNineteen)))
-        panel.dartboard.segmentStatuses() shouldBe SegmentStatuses(listOf(doubleNineteen), listOf(doubleNineteen))
+        panel.dartboard.segmentStatuses() shouldBe
+            SegmentStatuses(listOf(doubleNineteen), listOf(doubleNineteen))
 
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
 
         panel.hoverChanged(SegmentStatuses(listOf(doubleTwenty), listOf(doubleTwenty)))
-        panel.dartboard.segmentStatuses() shouldBe SegmentStatuses(listOf(doubleTwenty), listOf(doubleTwenty))
+        panel.dartboard.segmentStatuses() shouldBe
+            SegmentStatuses(listOf(doubleTwenty), listOf(doubleTwenty))
 
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
-        panel.dartboard.segmentStatuses() shouldBe SegmentStatuses(getAllPossibleSegments(), getAllPossibleSegments())
+        panel.dartboard.segmentStatuses() shouldBe
+            SegmentStatuses(getAllPossibleSegments(), getAllPossibleSegments())
         panel.hoverChanged(SegmentStatuses(listOf(bullseye), listOf(bullseye)))
-        panel.dartboard.segmentStatuses() shouldBe SegmentStatuses(getAllPossibleSegments(), getAllPossibleSegments())
+        panel.dartboard.segmentStatuses() shouldBe
+            SegmentStatuses(getAllPossibleSegments(), getAllPossibleSegments())
     }
 
     @Test
-    fun `Should select the right player when a scorer is selected`()
-    {
+    fun `Should select the right player when a scorer is selected`() {
         val summaryPanel = mockk<DartzeeRuleSummaryPanel>(relaxed = true)
         val panel = makeGamePanel(testRules, summaryPanel, totalPlayers = 2)
         panel.startNewGame(listOf(makeSingleParticipant(), makeSingleParticipant()))
@@ -481,8 +488,7 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `AI should throw scoring darts during the scoring round`()
-    {
+    fun `AI should throw scoring darts during the scoring round`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val game = insertGame(gameType = GameType.DARTZEE)
@@ -502,14 +508,14 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `AI should throw based on segment status, and adjust correctly for number of darts thrown`()
-    {
+    fun `AI should throw based on segment status, and adjust correctly for number of darts thrown`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val game = setUpDartzeeGameOnDatabase(1)
 
         val carousel = mockk<DartzeeRuleCarousel>(relaxed = true)
-        every { carousel.getSegmentStatus() } returns SegmentStatuses(listOf(singleTwenty), getAllNonMissSegments())
+        every { carousel.getSegmentStatus() } returns
+            SegmentStatuses(listOf(singleTwenty), getAllNonMissSegments())
         every { carousel.initialised } returns true
 
         val summaryPanel = DartzeeRuleSummaryPanel(carousel)
@@ -532,8 +538,7 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `AI turn should complete normally, and the highest passed rule should be selected`()
-    {
+    fun `AI turn should complete normally, and the highest passed rule should be selected`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val model = beastDartsModel(dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS)
@@ -565,8 +570,7 @@ class TestGamePanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should update achievements correctly for a team game`()
-    {
+    fun `Should update achievements correctly for a team game`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val (p1, p2) = preparePlayers(2)
@@ -613,18 +617,24 @@ class TestGamePanelDartzee: AbstractTest()
         carousel.getDisplayedTiles().first().doClick()
         panel.getPlayerState().getScoreSoFar() shouldBe 94
 
-        retrieveAchievementsForPlayer(p1.rowId).shouldContainExactly(
-            AchievementSummary(AchievementType.DARTZEE_UNDER_PRESSURE, 50, game.rowId, totalIsFifty.getDisplayName())
-        )
+        retrieveAchievementsForPlayer(p1.rowId)
+            .shouldContainExactly(
+                AchievementSummary(
+                    AchievementType.DARTZEE_UNDER_PRESSURE,
+                    50,
+                    game.rowId,
+                    totalIsFifty.getDisplayName()
+                )
+            )
 
-        retrieveAchievementsForPlayer(p2.rowId).shouldContainExactly(
-            AchievementSummary(AchievementType.DARTZEE_HALVED, 44, game.rowId)
-        )
+        retrieveAchievementsForPlayer(p2.rowId)
+            .shouldContainExactly(
+                AchievementSummary(AchievementType.DARTZEE_HALVED, 44, game.rowId)
+            )
     }
 
     @Test
-    fun `Should not unlock flawless achievement for a team game`()
-    {
+    fun `Should not unlock flawless achievement for a team game`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val (p1, p2) = preparePlayers(2)
@@ -671,75 +681,131 @@ class TestGamePanelDartzee: AbstractTest()
         carousel.getDisplayedTiles().first().doClick()
         panel.getPlayerState().getScoreSoFar() shouldBe 181
 
-        AchievementEntity().countWhere("AchievementType = '${AchievementType.DARTZEE_FLAWLESS}'") shouldBe 0
+        AchievementEntity()
+            .countWhere("AchievementType = '${AchievementType.DARTZEE_FLAWLESS}'") shouldBe 0
     }
 
     private fun GamePanelDartzee.getPlayerState() = getPlayerStates().first()
 
-    private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
+    private fun DartzeeRuleCarousel.getDisplayedTiles() =
+        tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
 
-    private fun setUpDartzeeGameOnDatabase(rounds: Int, player: PlayerEntity = insertPlayer(), results: List<DartzeeRoundResult> = ruleResults): GameEntity
-    {
+    private fun setUpDartzeeGameOnDatabase(
+        rounds: Int,
+        player: PlayerEntity = insertPlayer(),
+        results: List<DartzeeRoundResult> = ruleResults
+    ): GameEntity {
         val dtFinish = if (rounds > 4) getSqlDateNow() else DateStatics.END_OF_TIME
         val game = insertGame(gameType = GameType.DARTZEE, dtFinish = dtFinish)
 
         insertDartzeeRules(game.rowId, testRules)
 
-        val participant = insertParticipant(gameId = game.rowId, ordinal = 0, playerId = player.rowId)
+        val participant =
+            insertParticipant(gameId = game.rowId, ordinal = 0, playerId = player.rowId)
 
-        if (rounds > 0)
-        {
+        if (rounds > 0) {
             insertDart(participant = participant, roundNumber = 1, ordinal = 1)
             insertDart(participant = participant, roundNumber = 1, ordinal = 2)
             insertDart(participant = participant, roundNumber = 1, ordinal = 3)
         }
 
-        if (rounds > 1)
-        {
-            insertDart(participant = participant, roundNumber = 2, ordinal = 1, score = 18, multiplier = 1)
-            insertDart(participant = participant, roundNumber = 2, ordinal = 2, score = 12, multiplier = 1)
-            insertDart(participant = participant, roundNumber = 2, ordinal = 3, score = 20, multiplier = 1)
+        if (rounds > 1) {
+            insertDart(
+                participant = participant,
+                roundNumber = 2,
+                ordinal = 1,
+                score = 18,
+                multiplier = 1
+            )
+            insertDart(
+                participant = participant,
+                roundNumber = 2,
+                ordinal = 2,
+                score = 12,
+                multiplier = 1
+            )
+            insertDart(
+                participant = participant,
+                roundNumber = 2,
+                ordinal = 3,
+                score = 20,
+                multiplier = 1
+            )
 
             DartzeeRoundResultEntity.factoryAndSave(results[0], participant, 2)
         }
 
-        if (rounds > 2)
-        {
-            insertDart(participant = participant, roundNumber = 3, ordinal = 1, score = 20, multiplier = 0)
+        if (rounds > 2) {
+            insertDart(
+                participant = participant,
+                roundNumber = 3,
+                ordinal = 1,
+                score = 20,
+                multiplier = 0
+            )
             DartzeeRoundResultEntity.factoryAndSave(results[1], participant, 3)
         }
 
-        if (rounds > 3)
-        {
-            insertDart(participant = participant, roundNumber = 4, ordinal = 1, score = 18, multiplier = 1)
-            insertDart(participant = participant, roundNumber = 4, ordinal = 2, score = 4, multiplier = 1)
-            insertDart(participant = participant, roundNumber = 4, ordinal = 3, score = 13, multiplier = 1)
+        if (rounds > 3) {
+            insertDart(
+                participant = participant,
+                roundNumber = 4,
+                ordinal = 1,
+                score = 18,
+                multiplier = 1
+            )
+            insertDart(
+                participant = participant,
+                roundNumber = 4,
+                ordinal = 2,
+                score = 4,
+                multiplier = 1
+            )
+            insertDart(
+                participant = participant,
+                roundNumber = 4,
+                ordinal = 3,
+                score = 13,
+                multiplier = 1
+            )
             DartzeeRoundResultEntity.factoryAndSave(results[2], participant, 4)
         }
 
-        if (rounds > 4)
-        {
-            insertDart(participant = participant, roundNumber = 5, ordinal = 1, score = 20, multiplier = 1)
-            insertDart(participant = participant, roundNumber = 5, ordinal = 2, score = 20, multiplier = 0)
-            insertDart(participant = participant, roundNumber = 5, ordinal = 3, score = 15, multiplier = 0)
+        if (rounds > 4) {
+            insertDart(
+                participant = participant,
+                roundNumber = 5,
+                ordinal = 1,
+                score = 20,
+                multiplier = 1
+            )
+            insertDart(
+                participant = participant,
+                roundNumber = 5,
+                ordinal = 2,
+                score = 20,
+                multiplier = 0
+            )
+            insertDart(
+                participant = participant,
+                roundNumber = 5,
+                ordinal = 3,
+                score = 15,
+                multiplier = 0
+            )
             DartzeeRoundResultEntity.factoryAndSave(results[3], participant, 5)
         }
 
         return game
     }
 
-    private fun makeGamePanel(dtos: List<DartzeeRuleDto>,
-                              summaryPanel: DartzeeRuleSummaryPanel = mockk(relaxed = true),
-                              game: GameEntity = insertGame(),
-                              totalPlayers: Int = 1,
-                              parentWindow: AbstractDartsGameScreen = mockk(relaxed = true)): GamePanelDartzee
-    {
-        return GamePanelDartzee(
-            parentWindow,
-            game,
-            totalPlayers,
-            dtos,
-            summaryPanel
-        )
+    private fun makeGamePanel(
+        dtos: List<DartzeeRuleDto>,
+        summaryPanel: DartzeeRuleSummaryPanel = mockk(relaxed = true),
+        game: GameEntity = insertGame(),
+        totalPlayers: Int = 1,
+        parentWindow: AbstractDartsGameScreen = mockk(relaxed = true)
+    ): GamePanelDartzee {
+        return GamePanelDartzee(parentWindow, game, totalPlayers, dtos, summaryPanel)
     }
 }

@@ -13,14 +13,12 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import org.junit.jupiter.api.Test
 import javax.swing.JCheckBox
+import org.junit.jupiter.api.Test
 
-class TestReportingSetupScreen: AbstractTest()
-{
+class TestReportingSetupScreen : AbstractTest() {
     @Test
-    fun `Should not progress if game tab is invalid`()
-    {
+    fun `Should not progress if game tab is invalid`() {
         val scrn = ReportingSetupScreen()
         ScreenCache.switch(scrn)
 
@@ -35,8 +33,7 @@ class TestReportingSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should not progress if players tab is invalid`()
-    {
+    fun `Should not progress if players tab is invalid`() {
         val scrn = ReportingSetupScreen()
         ScreenCache.switch(scrn)
 
@@ -48,12 +45,13 @@ class TestReportingSetupScreen: AbstractTest()
 
         scrn.btnNext.doClick()
         ScreenCache.currentScreen() shouldBe scrn
-        dialogFactory.errorsShown.shouldContainExactly("You must select at least one finishing position for player Alice")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "You must select at least one finishing position for player Alice"
+        )
     }
 
     @Test
-    fun `Should populate report parameters from both tabs and progress to results screen`()
-    {
+    fun `Should populate report parameters from both tabs and progress to results screen`() {
         val scrn = ReportingSetupScreen()
 
         val gameTab = scrn.getChild<ReportingGameTab>()
@@ -71,5 +69,6 @@ class TestReportingSetupScreen: AbstractTest()
         rp.excludeOnlyAi shouldBe true
     }
 
-    private fun ReportingGameTab.getStartDateFilterPanel() = getAllChildComponentsForType<DateFilterPanel>().first()
+    private fun ReportingGameTab.getStartDateFilterPanel() =
+        getAllChildComponentsForType<DateFilterPanel>().first()
 }

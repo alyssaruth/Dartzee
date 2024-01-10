@@ -8,11 +8,9 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestSanityCheckPlayerIdMismatch: AbstractTest()
-{
+class TestSanityCheckPlayerIdMismatch : AbstractTest() {
     @Test
-    fun `Should not flag up matching rows`()
-    {
+    fun `Should not flag up matching rows`() {
         val pt = insertParticipant()
         insertDart(pt)
 
@@ -21,8 +19,7 @@ class TestSanityCheckPlayerIdMismatch: AbstractTest()
     }
 
     @Test
-    fun `Should flag up mismatching rows`()
-    {
+    fun `Should flag up mismatching rows`() {
         val pt = insertParticipant()
 
         val ptPlayerId = pt.playerId

@@ -6,9 +6,7 @@ import java.awt.Color
 import java.awt.Component
 import java.lang.Float.max
 
-
-object DartsColour
-{
+object DartsColour {
     val TRANSPARENT = Color(0, 0, 0, 0)
 
     val DARTBOARD_RED: Color = Color.red
@@ -33,8 +31,9 @@ object DartsColour
 
     val COLOUR_ACHIEVEMENT_ORANGE: Color = Color.getHSBColor(0.1f, 1f, 1f)
 
-    val COLOUR_PASTEL_BLUE: Color = Color.getHSBColor(242.toFloat() / 360, 0.48.toFloat(), 0.8.toFloat())
-    val PURPLE = Color(138,43,226)
+    val COLOUR_PASTEL_BLUE: Color =
+        Color.getHSBColor(242.toFloat() / 360, 0.48.toFloat(), 0.8.toFloat())
+    val PURPLE = Color(138, 43, 226)
     val ORANGE = Color(255, 140, 0)
 
     val FIRST_COLOURS = Pair(Color.YELLOW, COLOUR_GOLD_TEXT)
@@ -44,8 +43,7 @@ object DartsColour
 
     fun getDarkenedColour(colour: Color): Color = colour.darker().darker()
 
-    fun getBrightenedColour(colour: Color): Color
-    {
+    fun getBrightenedColour(colour: Color): Color {
         var hsbValues = FloatArray(3)
         hsbValues = Color.RGBtoHSB(colour.red, colour.green, colour.blue, hsbValues)
 
@@ -63,22 +61,16 @@ object DartsColour
     }
 
     fun getColorFromPrefStr(prefStr: String): Color =
-        try
-        {
-            val colours = prefStr.split(";").map{ it.toInt() }
+        try {
+            val colours = prefStr.split(";").map { it.toInt() }
             Color(colours[0], colours[1], colours[2], colours[3])
-        }
-        catch (t: Throwable)
-        {
+        } catch (t: Throwable) {
             logger.error(CODE_PARSE_ERROR, "Failed to reconstruct colour from string: $prefStr", t)
             Color.BLACK
         }
 
-
-    fun setFgAndBgColoursForPosition(c: Component, finishPos: Int, defaultBg: Color? = null)
-    {
-        when (finishPos)
-        {
+    fun setFgAndBgColoursForPosition(c: Component, finishPos: Int, defaultBg: Color? = null) {
+        when (finishPos) {
             -1 -> setColors(c, defaultBg, null)
             1 -> setColors(c, Color.YELLOW, COLOUR_GOLD_TEXT)
             2 -> setColors(c, Color.GRAY, COLOUR_SILVER_TEXT)
@@ -88,22 +80,19 @@ object DartsColour
 
         c.repaint()
     }
-    private fun setColors(c: Component, background: Color?, foreground: Color?)
-    {
+
+    private fun setColors(c: Component, background: Color?, foreground: Color?) {
         c.background = background
         c.foreground = foreground
     }
 
-
-    fun getScorerForegroundColour(totalScore: Double): Color
-    {
+    fun getScorerForegroundColour(totalScore: Double): Color {
         val hueFactor = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_HUE_FACTOR)
         val fgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_FG_BRIGHTNESS)
         return getScorerColour(totalScore, hueFactor, fgBrightness)
     }
 
-    fun getScorerBackgroundColour(totalScore: Double): Color
-    {
+    fun getScorerBackgroundColour(totalScore: Double): Color {
         val hueFactor = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_HUE_FACTOR)
         val bgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS)
         return getScorerColour(totalScore, hueFactor, bgBrightness)
@@ -112,13 +101,18 @@ object DartsColour
     fun getScorerColour(totalScore: Double, multiplier: Double, brightness: Double) =
         getProportionalColour(totalScore, 180, multiplier, brightness)
 
-    private fun getProportionalColour(value: Double, total: Int, multiplier: Double, brightness: Double): Color
-    {
+    private fun getProportionalColour(
+        value: Double,
+        total: Int,
+        multiplier: Double,
+        brightness: Double
+    ): Color {
         val hue = (value * multiplier).toFloat() / total
         return Color.getHSBColor(hue, 1f, brightness.toFloat())
     }
 
-    fun getProportionalColourRedToGreen(value: Double, total: Int, brightness: Double) = getProportionalColour(value, total, 0.4, brightness)
+    fun getProportionalColourRedToGreen(value: Double, total: Int, brightness: Double) =
+        getProportionalColour(value, total, 0.4, brightness)
 }
 
 fun Color.translucent() = Color(this.red, this.green, this.blue, 120)

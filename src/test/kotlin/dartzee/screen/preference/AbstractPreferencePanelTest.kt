@@ -5,20 +5,22 @@ import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeDisabled
 import com.github.alyssaburlton.swingtest.shouldBeEnabled
 import dartzee.helper.AbstractRegistryTest
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
-abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: AbstractRegistryTest()
-{
+abstract class AbstractPreferencePanelTest<T : AbstractPreferencesPanel> : AbstractRegistryTest() {
     abstract fun checkUiFieldValuesAreDefaults(panel: T)
+
     abstract fun checkUiFieldValuesAreNonDefaults(panel: T)
+
     abstract fun setUiFieldValuesToNonDefaults(panel: T)
+
     abstract fun checkPreferencesAreSetToNonDefaults()
+
     abstract fun factory(): T
 
     @Test
-    fun `should restore defaults appropriately`()
-    {
+    fun `should restore defaults appropriately`() {
         val panel = factory()
 
         setUiFieldValuesToNonDefaults(panel)
@@ -29,8 +31,7 @@ abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: Abstrac
     }
 
     @Test
-    fun `should set fields to their defaults when first loaded`()
-    {
+    fun `should set fields to their defaults when first loaded`() {
         clearPreferences()
 
         val panel = factory()
@@ -40,8 +41,7 @@ abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: Abstrac
     }
 
     @Test
-    fun `should save preferences appropriately`()
-    {
+    fun `should save preferences appropriately`() {
         clearPreferences()
 
         val panel = factory()
@@ -52,8 +52,7 @@ abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: Abstrac
     }
 
     @Test
-    fun `should display stored preferences correctly`()
-    {
+    fun `should display stored preferences correctly`() {
         val panel = factory()
         setUiFieldValuesToNonDefaults(panel)
         panel.clickChild<JButton>(text = "Apply")
@@ -65,8 +64,7 @@ abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: Abstrac
     }
 
     @Test
-    fun `apply button should be disabled by default`()
-    {
+    fun `apply button should be disabled by default`() {
         val panel = factory()
         panel.refresh(false)
 
@@ -74,8 +72,7 @@ abstract class AbstractPreferencePanelTest<T: AbstractPreferencesPanel>: Abstrac
     }
 
     @Test
-    fun `apply button should respond to UI changes correctly`()
-    {
+    fun `apply button should respond to UI changes correctly`() {
         clearPreferences()
 
         val panel = factory()

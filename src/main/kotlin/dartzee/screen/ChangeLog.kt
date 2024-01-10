@@ -11,8 +11,7 @@ class ChangeLog : JFrame() {
     private val scrollPane = JScrollPane()
     private val textArea = JTextArea()
 
-    init
-    {
+    init {
         title = "Change Log"
         setSize(500, 570)
         setLocationRelativeTo(null)
@@ -25,8 +24,7 @@ class ChangeLog : JFrame() {
         scrollPane.setViewportView(textArea)
     }
 
-    private fun appendChangeLog()
-    {
+    private fun appendChangeLog() {
         textArea.text = ""
 
         val text = javaClass.getResource("/ChangeLog").readText()

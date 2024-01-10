@@ -29,17 +29,15 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 import javax.swing.JButton
 import javax.swing.JOptionPane
 import javax.swing.JTextField
+import org.junit.jupiter.api.Test
 
-class TestDartzeeTemplateSetupScreen: AbstractTest()
-{
+class TestDartzeeTemplateSetupScreen : AbstractTest() {
     @Test
-    fun `Should pull through a game count of 0 for templates where no games have been played`()
-    {
+    fun `Should pull through a game count of 0 for templates where no games have been played`() {
         insertTemplateAndRule()
 
         val scrn = DartzeeTemplateSetupScreen()
@@ -49,8 +47,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should pull through the right game count for templates where games have been played`()
-    {
+    fun `Should pull through the right game count for templates where games have been played`() {
         val templateId = insertTemplateAndRule().rowId
 
         insertGame(gameType = GameType.DARTZEE, gameParams = templateId)
@@ -63,8 +60,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should toggle copy, remove and rename buttons based on whether a row is selected`()
-    {
+    fun `Should toggle copy, remove and rename buttons based on whether a row is selected`() {
         insertTemplateAndRule()
 
         val scrn = DartzeeTemplateSetupScreen()
@@ -86,8 +82,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should leave template alone if delete is cancelled`()
-    {
+    fun `Should leave template alone if delete is cancelled`() {
         insertTemplateAndRule(name = "ABC")
         dialogFactory.questionOption = JOptionPane.NO_OPTION
 
@@ -97,14 +92,15 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         scrn.getChild<ScrollTable>().selectRow(0)
         scrn.clickChild<JButton>("delete")
 
-        dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete the ABC Template?")
+        dialogFactory.questionsShown.shouldContainExactly(
+            "Are you sure you want to delete the ABC Template?"
+        )
         scrn.getChild<ScrollTable>().rowCount shouldBe 1
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 1
     }
 
     @Test
-    fun `Should delete a template and associated rules on confirmation`()
-    {
+    fun `Should delete a template and associated rules on confirmation`() {
         insertTemplateAndRule(name = "ABC")
         dialogFactory.questionOption = JOptionPane.YES_OPTION
 
@@ -114,7 +110,9 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         scrn.getChild<ScrollTable>().selectRow(0)
         scrn.clickChild<JButton>("delete")
 
-        dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete the ABC Template?")
+        dialogFactory.questionsShown.shouldContainExactly(
+            "Are you sure you want to delete the ABC Template?"
+        )
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 0
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
@@ -122,8 +120,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should support deleting by using the keyboard shortcut`()
-    {
+    fun `Should support deleting by using the keyboard shortcut`() {
         insertTemplateAndRule(name = "ABC")
         dialogFactory.questionOption = JOptionPane.YES_OPTION
 
@@ -133,7 +130,9 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         scrn.getChild<ScrollTable>().selectRow(0)
         scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE)
 
-        dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete the ABC Template?")
+        dialogFactory.questionsShown.shouldContainExactly(
+            "Are you sure you want to delete the ABC Template?"
+        )
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 0
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
@@ -141,8 +140,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Pressing delete with no row selected should do nothing`()
-    {
+    fun `Pressing delete with no row selected should do nothing`() {
         insertTemplateAndRule(name = "ABC")
         dialogFactory.questionOption = JOptionPane.YES_OPTION
 
@@ -158,8 +156,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should revert games to Custom on deletion and show a different confirmation message`()
-    {
+    fun `Should revert games to Custom on deletion and show a different confirmation message`() {
         dialogFactory.questionOption = JOptionPane.YES_OPTION
 
         val templateId = insertTemplateAndRule(name = "ABC").rowId
@@ -173,15 +170,16 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         scrn.getChild<ScrollTable>().selectRow(0)
         scrn.clickChild<JButton>("delete")
 
-        dialogFactory.questionsShown.shouldContainExactly("You have played 2 games using the ABC Template." +
-                "\n\nThese will become custom games if you delete it. Are you sure you want to continue?")
+        dialogFactory.questionsShown.shouldContainExactly(
+            "You have played 2 games using the ABC Template." +
+                "\n\nThese will become custom games if you delete it. Are you sure you want to continue?"
+        )
 
         GameEntity().retrieveEntities().forEach { it.gameParams shouldBe "" }
     }
 
     @Test
-    fun `Should not add a template if cancelled`()
-    {
+    fun `Should not add a template if cancelled`() {
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
         scrn.clickChild<JButton>("add")
@@ -193,8 +191,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should add a template to the table upon creation`()
-    {
+    fun `Should add a template to the table upon creation`() {
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
@@ -211,8 +208,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should do nothing if template copying is cancelled`()
-    {
+    fun `Should do nothing if template copying is cancelled`() {
         insertTemplateAndRule(name = "ABC")
 
         val scrn = DartzeeTemplateSetupScreen()
@@ -228,8 +224,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should copy a template and add it to the table`()
-    {
+    fun `Should copy a template and add it to the table`() {
         insertTemplateAndRule(name = "ABC")
 
         val scrn = DartzeeTemplateSetupScreen()
@@ -248,8 +243,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should support renaming a template`()
-    {
+    fun `Should support renaming a template`() {
         val id = insertTemplateAndRule(name = "Old").rowId
 
         dialogFactory.inputSelection = "New"
@@ -268,8 +262,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should do nothing if rename is cancelled`()
-    {
+    fun `Should do nothing if rename is cancelled`() {
         insertTemplateAndRule(name = "ABC")
         dialogFactory.inputSelection = null
 
@@ -284,8 +277,7 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should render the rules associated to the template`()
-    {
+    fun `Should render the rules associated to the template`() {
         val template = insertDartzeeTemplate()
 
         val ruleOne = makeDartzeeRuleDto(DartzeeDartRuleEven())
@@ -298,7 +290,12 @@ class TestDartzeeTemplateSetupScreen: AbstractTest()
         scrn.initialise()
 
         val rules = scrn.getChild<ScrollTable>().getValueAt(0, 1) as List<*>
-        rules.map { (it as DartzeeRuleDto).generateRuleDescription() }.shouldContainExactly(ruleOne.generateRuleDescription(), ruleTwo.generateRuleDescription())
+        rules
+            .map { (it as DartzeeRuleDto).generateRuleDescription() }
+            .shouldContainExactly(
+                ruleOne.generateRuleDescription(),
+                ruleTwo.generateRuleDescription()
+            )
     }
 
     private fun DartzeeTemplateSetupScreen.getTemplate(row: Int) =

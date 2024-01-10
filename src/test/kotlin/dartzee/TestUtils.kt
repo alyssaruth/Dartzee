@@ -74,31 +74,31 @@ val singleFive = DartboardSegment(SegmentType.INNER_SINGLE, 5)
 
 val PAST_TIME: Instant = Instant.parse("2020-04-12T11:04:00.00Z")
 val CURRENT_TIME: Instant = Instant.parse("2020-04-13T11:04:00.00Z")
-val CURRENT_TIME_STRING: String = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+val CURRENT_TIME_STRING: String =
+    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         .withLocale(Locale.UK)
         .withZone(ZoneId.systemDefault())
         .format(CURRENT_TIME)
 
-fun makeLogRecord(timestamp: Instant = CURRENT_TIME,
-                  severity: Severity = Severity.INFO,
-                  loggingCode: LoggingCode = LoggingCode("log"),
-                  message: String = "A thing happened",
-                  errorObject: Throwable? = null,
-                  keyValuePairs: Map<String, Any?> = mapOf()) =
-    LogRecord(timestamp, severity, loggingCode, message, errorObject, keyValuePairs)
+fun makeLogRecord(
+    timestamp: Instant = CURRENT_TIME,
+    severity: Severity = Severity.INFO,
+    loggingCode: LoggingCode = LoggingCode("log"),
+    message: String = "A thing happened",
+    errorObject: Throwable? = null,
+    keyValuePairs: Map<String, Any?> = mapOf()
+) = LogRecord(timestamp, severity, loggingCode, message, errorObject, keyValuePairs)
 
 fun Float.shouldBeBetween(a: Double, b: Double) {
     toDouble().shouldBeBetween(a, b, 0.0)
 }
 
-fun Component.shouldHaveColours(colours: Pair<Color?, Color?>)
-{
+fun Component.shouldHaveColours(colours: Pair<Color?, Color?>) {
     background shouldBe colours.first
     foreground shouldBe colours.second
 }
 
-fun JComponent.shouldHaveBorderThickness(left: Int, right: Int, top: Int, bottom: Int)
-{
+fun JComponent.shouldHaveBorderThickness(left: Int, right: Int, top: Int, bottom: Int) {
     val insets = border.getBorderInsets(this)
     insets.left shouldBe left
     insets.right shouldBe right
@@ -106,26 +106,25 @@ fun JComponent.shouldHaveBorderThickness(left: Int, right: Int, top: Int, bottom
     insets.bottom shouldBe bottom
 }
 
-fun MockKMatcherScope.launchParamsEqual(expected: GameLaunchParams) = match<GameLaunchParams> { actual ->
-    val expectedNoDartzee = expected.copy(dartzeeDtos = emptyList())
-    val actualNoDartzee = actual.copy(dartzeeDtos = emptyList())
+fun MockKMatcherScope.launchParamsEqual(expected: GameLaunchParams) =
+    match<GameLaunchParams> { actual ->
+        val expectedNoDartzee = expected.copy(dartzeeDtos = emptyList())
+        val actualNoDartzee = actual.copy(dartzeeDtos = emptyList())
 
-    expectedNoDartzee == actualNoDartzee &&
-            expected.dartzeeDtos?.map { it.generateRuleDescription() } == actual.dartzeeDtos?.map { it.generateRuleDescription() }
-}
+        expectedNoDartzee == actualNoDartzee &&
+            expected.dartzeeDtos?.map { it.generateRuleDescription() } ==
+                actual.dartzeeDtos?.map { it.generateRuleDescription() }
+    }
 
-fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>)
-{
+fun LogRecord.shouldContainKeyValues(vararg values: Pair<String, Any?>) {
     keyValuePairs.shouldContainExactly(mapOf(*values))
 }
 
-fun ComboBoxGameType.updateSelection(type: GameType)
-{
+fun ComboBoxGameType.updateSelection(type: GameType) {
     selectedItem = items().find { it.hiddenData == type }
 }
 
-fun DateFilterPanel.makeInvalid()
-{
+fun DateFilterPanel.makeInvalid() {
     cbDateFrom.date = LocalDate.ofYearDay(2020, 30)
     cbDateTo.date = LocalDate.ofYearDay(2020, 20)
 }
@@ -134,12 +133,11 @@ fun ScrollTable.getColumnNames() = (0 until columnCount).map { getColumnName(it)
 
 fun ScrollTable.getDisplayValueAt(row: Int, col: Int): Any = table.getValueAt(row, col)
 
-fun ScrollTable.getRows(): List<List<Any?>> =
-    model.getRows(columnCount)
+fun ScrollTable.getRows(): List<List<Any?>> = model.getRows(columnCount)
 
 fun ScrollTable.getRenderedRows(): List<List<Any?>> =
-    (0 until rowCount).map { row -> (0 until columnCount)
-        .map { col ->
+    (0 until rowCount).map { row ->
+        (0 until columnCount).map { col ->
             val value = getValueAt(row, col)
             val r = table.getCellRenderer(row, col)
             val component = r?.getTableCellRendererComponent(table, value, false, false, row, col)
@@ -158,12 +156,11 @@ fun ScrollTable.clickTableButton(row: Int, col: Int) {
 }
 
 fun ScrollTable.getFooterRow(): List<Any?> =
-    (0 until columnCount).map { getValueAt(ScrollTable.TABLE_ROW_FOOTER, it)}
+    (0 until columnCount).map { getValueAt(ScrollTable.TABLE_ROW_FOOTER, it) }
 
 fun ScrollTable.getFirstRow() = getRows().first()
 
-fun DefaultTableModel.getRows(columns: Int = columnCount): List<List<Any?>>
-{
+fun DefaultTableModel.getRows(columns: Int = columnCount): List<List<Any?>> {
     val result = mutableListOf<List<Any?>>()
     for (rowIx in 0 until rowCount) {
         val row = (0 until columns).map { getValueAt(rowIx, it) }
@@ -182,15 +179,17 @@ fun List<List<Dart>>.zipDartRounds(other: List<List<Dart>>): List<List<Dart>> {
     return result + extraRows
 }
 
-fun PresentationDartboard.getPointForSegment(segment: DartboardSegment) = getAverage(getPointsForSegment(segment))
+fun PresentationDartboard.getPointForSegment(segment: DartboardSegment) =
+    getAverage(getPointsForSegment(segment))
 
 fun PresentationDartboard.doClick(pt: Point) {
     doClick(pt.x, pt.y)
     flushEdt()
 }
 
-fun GameplayDartboard.throwDartByClick(segment: DartboardSegment = DartboardSegment(SegmentType.OUTER_SINGLE, 20))
-{
+fun GameplayDartboard.throwDartByClick(
+    segment: DartboardSegment = DartboardSegment(SegmentType.OUTER_SINGLE, 20)
+) {
     val interactiveDartboard = getChild<InteractiveDartboard>()
     val pt = interactiveDartboard.getPointForSegment(segment)
     interactiveDartboard.doClick(pt.x, pt.y)
@@ -205,8 +204,7 @@ fun <T> List<T>.only(): T {
     return first()
 }
 
-fun PlayerImageDialog.selectImage(playerImageId: String)
-{
+fun PlayerImageDialog.selectImage(playerImageId: String) {
     getChild<JTabbedPane>().selectTab<JPanel>("uploadTab")
 
     val radio = getChild<PlayerImageRadio> { it.playerImageId == playerImageId }
@@ -215,8 +213,7 @@ fun PlayerImageDialog.selectImage(playerImageId: String)
     flushEdt()
 }
 
-fun FileUploader.uploadFileFromResource(resourceName: String)
-{
+fun FileUploader.uploadFileFromResource(resourceName: String) {
     clickChild<JButton>(text = "...", async = true)
 
     val chooserDialog = getFileChooser()
@@ -231,7 +228,9 @@ fun FileUploader.uploadFileFromResource(resourceName: String)
 }
 
 fun getInfoDialog() = findWindow<JDialog> { it.title == "Information" }!!
+
 fun getQuestionDialog() = findWindow<JDialog> { it.title == "Question" }!!
+
 fun getErrorDialog() = findWindow<JDialog> { it.title == "Error" }!!
 
 fun JDialog.getDialogMessage(): String {
@@ -241,9 +240,7 @@ fun JDialog.getDialogMessage(): String {
 
 fun <T> runAsync(block: () -> T?): T? {
     var result: T? = null
-    SwingUtilities.invokeLater {
-        result = block()
-    }
+    SwingUtilities.invokeLater { result = block() }
 
     flushEdt()
     return result
@@ -269,12 +266,10 @@ fun confirmGameDeletion(localId: Long): String {
     return questionText
 }
 
-/**
- * TODO - Add to swing-test
- */
-inline fun <reified T: Component> JTabbedPane.selectTab(name: String, noinline filterFn: ((T) -> Boolean)? = null)
-{
-    runOnEventThreadBlocking {
-        selectedComponent = getChild<T>(name, filterFn = filterFn)
-    }
+/** TODO - Add to swing-test */
+inline fun <reified T : Component> JTabbedPane.selectTab(
+    name: String,
+    noinline filterFn: ((T) -> Boolean)? = null
+) {
+    runOnEventThreadBlocking { selectedComponent = getChild<T>(name, filterFn = filterFn) }
 }

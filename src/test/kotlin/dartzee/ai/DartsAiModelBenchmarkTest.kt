@@ -6,22 +6,48 @@ import dartzee.helper.insertPlayer
 import dartzee.`object`.SegmentType
 import dartzee.screen.stats.median
 import io.kotest.matchers.doubles.shouldBeBetween
+import java.awt.Dimension
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import java.awt.Dimension
 
 private const val SIMPLE_SIMULATION_TOLERANCE = 1.0
 
-class DartsAiModelBenchmarkTest : AbstractTest()
-{
-    private val alanPartridge = DartsAiModel(170.0, 160.0, 80.0, 129, 20, emptyMap(), 18, mapOf(1 to SegmentType.DOUBLE, 2 to SegmentType.DOUBLE, 3 to SegmentType.DOUBLE), mapOf(1 to 3, 2 to 4), DartzeePlayStyle.CAUTIOUS)
+class DartsAiModelBenchmarkTest : AbstractTest() {
+    private val alanPartridge =
+        DartsAiModel(
+            170.0,
+            160.0,
+            80.0,
+            129,
+            20,
+            emptyMap(),
+            18,
+            mapOf(1 to SegmentType.DOUBLE, 2 to SegmentType.DOUBLE, 3 to SegmentType.DOUBLE),
+            mapOf(1 to 3, 2 to 4),
+            DartzeePlayStyle.CAUTIOUS
+        )
 
-    private val bruceForsyth = DartsAiModel(90.0, 180.0, 90.0, 101, 20, emptyMap(), null, mapOf(1 to SegmentType.INNER_SINGLE, 2 to SegmentType.INNER_SINGLE, 3 to SegmentType.OUTER_SINGLE), mapOf(1 to 3, 2 to 4), DartzeePlayStyle.CAUTIOUS)
+    private val bruceForsyth =
+        DartsAiModel(
+            90.0,
+            180.0,
+            90.0,
+            101,
+            20,
+            emptyMap(),
+            null,
+            mapOf(
+                1 to SegmentType.INNER_SINGLE,
+                2 to SegmentType.INNER_SINGLE,
+                3 to SegmentType.OUTER_SINGLE
+            ),
+            mapOf(1 to 3, 2 to 4),
+            DartzeePlayStyle.CAUTIOUS
+        )
 
     @Test
     @Tag("integration")
-    fun `Alan Partridge - Simple simulation`()
-    {
+    fun `Alan Partridge - Simple simulation`() {
         val dartboard = PresentationDartboard().also { it.size = Dimension(400, 400) }
 
         repeat(5) {
@@ -35,8 +61,7 @@ class DartsAiModelBenchmarkTest : AbstractTest()
 
     @Test
     @Tag("integration")
-    fun `Alan Partridge - Full games`()
-    {
+    fun `Alan Partridge - Full games`() {
         val simulation = DartsSimulationX01(insertPlayer(), alanPartridge)
 
         val results = (1..5000).map { simulation.simulateGame(-it.toLong()).finalScore }
@@ -46,8 +71,7 @@ class DartsAiModelBenchmarkTest : AbstractTest()
 
     @Test
     @Tag("integration")
-    fun `Bruce Forsyth - Simple simulation`()
-    {
+    fun `Bruce Forsyth - Simple simulation`() {
         val dartboard = PresentationDartboard().also { it.size = Dimension(400, 400) }
 
         repeat(5) {
@@ -61,8 +85,7 @@ class DartsAiModelBenchmarkTest : AbstractTest()
 
     @Test
     @Tag("integration")
-    fun `Bruce Forsyth - Full games`()
-    {
+    fun `Bruce Forsyth - Full games`() {
         val simulation = DartsSimulationX01(insertPlayer(), bruceForsyth)
 
         val results = (1..5000).map { simulation.simulateGame(-it.toLong()).finalScore }

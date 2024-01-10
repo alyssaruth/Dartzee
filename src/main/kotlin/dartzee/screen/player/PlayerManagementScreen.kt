@@ -22,22 +22,21 @@ import javax.swing.border.TitledBorder
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
 
-class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
-{
+class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener {
     private val tablePlayers = ScrollTable()
     private val panel = PlayerManagementPanel()
     private val btnNewPlayer = JButton("")
     private val panelNorth = JPanel()
     private val btnNewAi = JButton("")
 
-    init
-    {
+    init {
         val sideBar = JPanel()
         sideBar.layout = BorderLayout(0, 0)
 
         val panelPlayers = JPanel()
         panelPlayers.preferredSize = Dimension(200, 300)
-        panelPlayers.border = TitledBorder(null, "Players", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+        panelPlayers.border =
+            TitledBorder(null, "Players", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         sideBar.add(panelPlayers, BorderLayout.CENTER)
 
         add(sideBar, BorderLayout.WEST)
@@ -48,13 +47,15 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
 
         sideBar.add(panelNorth, BorderLayout.NORTH)
         panelNorth.layout = FlowLayout(FlowLayout.LEFT, 5, 5)
-        btnNewPlayer.icon = ImageIcon(PlayerManagementScreen::class.java.getResource("/buttons/addHuman.png"))
+        btnNewPlayer.icon =
+            ImageIcon(PlayerManagementScreen::class.java.getResource("/buttons/addHuman.png"))
         btnNewPlayer.preferredSize = Dimension(30, 30)
         btnNewPlayer.toolTipText = "Add player"
         btnNewPlayer.name = "AddPlayer"
         panelNorth.add(btnNewPlayer)
         btnNewPlayer.border = EmptyBorder(5, 0, 5, 0)
-        btnNewAi.icon = ImageIcon(PlayerManagementScreen::class.java.getResource("/buttons/addAi.png"))
+        btnNewAi.icon =
+            ImageIcon(PlayerManagementScreen::class.java.getResource("/buttons/addAi.png"))
         btnNewAi.toolTipText = "Add computer"
         btnNewAi.name = "AddAi"
         btnNewAi.preferredSize = Dimension(30, 30)
@@ -66,13 +67,12 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
         model.selectionMode = ListSelectionModel.SINGLE_SELECTION
         model.addListSelectionListener(this)
 
-        //Listeners
+        // Listeners
         btnNewPlayer.addActionListener(this)
         btnNewAi.addActionListener(this)
     }
 
-    override fun initialise()
-    {
+    override fun initialise() {
         val players = PlayerEntity.retrievePlayers("")
         tablePlayers.initPlayerTableModel(players)
         refreshSummaryPanel()
@@ -80,31 +80,28 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener
 
     override fun getScreenName() = "Player Management"
 
-    override fun valueChanged(arg0: ListSelectionEvent)
-    {
+    override fun valueChanged(arg0: ListSelectionEvent) {
         refreshSummaryPanel()
     }
 
-    private fun refreshSummaryPanel()
-    {
+    private fun refreshSummaryPanel() {
         val player = tablePlayers.getSelectedPlayer()
         panel.refresh(player)
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnNewPlayer -> createPlayer(true)
             btnNewAi -> createPlayer(false)
             else -> super.actionPerformed(arg0)
         }
     }
 
-    private fun createPlayer(human: Boolean)
-    {
+    private fun createPlayer(human: Boolean) {
         val playerUpdated = { _: PlayerEntity -> initialise() }
-        val dlg = if (human) HumanConfigurationDialog(playerUpdated) else AIConfigurationDialog(playerUpdated)
+        val dlg =
+            if (human) HumanConfigurationDialog(playerUpdated)
+            else AIConfigurationDialog(playerUpdated)
         dlg.setLocationRelativeTo(ScreenCache.mainScreen)
         dlg.isVisible = true
     }

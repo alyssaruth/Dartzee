@@ -6,36 +6,31 @@ import dartzee.logging.Severity
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
-class TestResourceCache : AbstractTest()
-{
+class TestResourceCache : AbstractTest() {
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         ResourceCache.resetCache()
     }
 
     @AfterEach
-    fun afterEach()
-    {
+    fun afterEach() {
         ResourceCache.resetCache()
     }
 
     @Test
-    fun `Should pre-load all the WAVs in the appropriate resource directory`()
-    {
+    fun `Should pre-load all the WAVs in the appropriate resource directory`() {
         val resources = mutableListOf<String>()
 
         javaClass.getResourceAsStream("/wav").use { stream ->
             BufferedReader(InputStreamReader(stream)).use { br ->
                 var resource = br.readLine()
-                while (resource != null)
-                {
+                while (resource != null) {
                     resources.add(resource)
                     resource = br.readLine()
                 }
@@ -51,8 +46,7 @@ class TestResourceCache : AbstractTest()
     }
 
     @Test
-    fun `Should pre-load 3 instances of each WAV`()
-    {
+    fun `Should pre-load 3 instances of each WAV`() {
         ResourceCache.initialiseResources()
 
         ResourceCache.borrowInputStream("100") shouldNotBe null
@@ -66,15 +60,14 @@ class TestResourceCache : AbstractTest()
     }
 
     @Test
-    fun `Should re-use WAVs that are returned to the pool`()
-    {
+    fun `Should re-use WAVs that are returned to the pool`() {
         ResourceCache.initialiseResources()
 
         val wav1 = ResourceCache.borrowInputStream("100")!!
         ResourceCache.borrowInputStream("100")
         ResourceCache.borrowInputStream("100")
 
-        //Return one and borrow again, check we get the same instance
+        // Return one and borrow again, check we get the same instance
         ResourceCache.returnInputStream("100", wav1)
         val newWav = ResourceCache.borrowInputStream("100")
         newWav shouldBe wav1
@@ -83,19 +76,16 @@ class TestResourceCache : AbstractTest()
     }
 
     @Test
-    fun `Should show a loading dialog whilst initialising`()
-    {
+    fun `Should show a loading dialog whilst initialising`() {
         ResourceCache.initialiseResources()
 
         dialogFactory.loadingsShown.shouldContainExactly("Loading resources...")
     }
 
     @Test
-    fun `Should return null for a resource that isn't in the cache`()
-    {
+    fun `Should return null for a resource that isn't in the cache`() {
         ResourceCache.initialiseResources()
 
         ResourceCache.borrowInputStream("50") shouldBe null
     }
-
 }

@@ -1,7 +1,7 @@
 package dartzee.screen
 
-import dartzee.bean.getAllPlayers
 import com.github.alyssaburlton.swingtest.clickOk
+import dartzee.bean.getAllPlayers
 import dartzee.core.helper.doubleClick
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -9,14 +9,12 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import javax.swing.ListSelectionModel
+import org.junit.jupiter.api.Test
 
-class TestPlayerSelectDialog: AbstractTest()
-{
+class TestPlayerSelectDialog : AbstractTest() {
     @Test
-    fun `Should not display excluded players`()
-    {
+    fun `Should not display excluded players`() {
         val bob = insertPlayer(name = "Bob")
         insertPlayer(name = "Alice")
 
@@ -29,8 +27,7 @@ class TestPlayerSelectDialog: AbstractTest()
     }
 
     @Test
-    fun `Should respond to radio button selection`()
-    {
+    fun `Should respond to radio button selection`() {
         insertPlayer(name = "AI", strategy = "foo")
         insertPlayer(name = "Bob", strategy = "")
 
@@ -47,8 +44,7 @@ class TestPlayerSelectDialog: AbstractTest()
     }
 
     @Test
-    fun `Should show an error if okayed with no selection`()
-    {
+    fun `Should show an error if okayed with no selection`() {
         val dlg = PlayerSelectDialog(ListSelectionModel.SINGLE_SELECTION)
         dlg.buildTable()
 
@@ -57,8 +53,7 @@ class TestPlayerSelectDialog: AbstractTest()
     }
 
     @Test
-    fun `Should not show an error and update selectedPlayers when okayed with a selection`()
-    {
+    fun `Should not show an error and update selectedPlayers when okayed with a selection`() {
         insertPlayer(name = "Bob")
 
         val dlg = PlayerSelectDialog(ListSelectionModel.SINGLE_SELECTION)
@@ -72,8 +67,7 @@ class TestPlayerSelectDialog: AbstractTest()
     }
 
     @Test
-    fun `Should respond to double-click`()
-    {
+    fun `Should respond to double-click`() {
         insertPlayer(name = "Bob")
 
         val dlg = PlayerSelectDialog(ListSelectionModel.SINGLE_SELECTION)
@@ -86,11 +80,9 @@ class TestPlayerSelectDialog: AbstractTest()
         dlg.selectedPlayers.size shouldBe 1
     }
 
-    private fun getAvailablePlayerNames(dlg: PlayerSelectDialog): List<String>
-    {
+    private fun getAvailablePlayerNames(dlg: PlayerSelectDialog): List<String> {
         val players = dlg.tablePlayers.getAllPlayers()
 
-        return players.map{ it.name }
+        return players.map { it.name }
     }
-
 }

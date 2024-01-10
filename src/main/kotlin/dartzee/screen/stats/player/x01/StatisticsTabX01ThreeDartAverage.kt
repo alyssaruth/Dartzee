@@ -7,8 +7,6 @@ import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.screen.stats.player.AbstractStatisticsTab
 import dartzee.screen.stats.player.MovingAverageChartPanel
 import dartzee.stats.GameWrapper
-import net.miginfocom.swing.MigLayout
-import org.jfree.data.xy.XYSeries
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
@@ -16,9 +14,10 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
 import javax.swing.border.TitledBorder
+import net.miginfocom.swing.MigLayout
+import org.jfree.data.xy.XYSeries
 
-class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
-{
+class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab() {
     private val nfScoringThreshold = NumberField(62, 501, testId = "setupThreshold")
     private val lblMovingAverageInterval = JLabel("Moving Average Interval")
     private val nfAverageThreshold = NumberField(1, 200)
@@ -33,8 +32,7 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
     private val nfMissPercent = NumberField(testId = "missPercent")
     private val nfOtherMissPercent = NumberField(testId = "missPercentOther")
 
-    init
-    {
+    init {
         nfAverageThreshold.preferredSize = Dimension(40, 20)
         layout = BorderLayout(0, 0)
         val panel = JPanel()
@@ -56,7 +54,8 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
         nfMissPercent.preferredSize = Dimension(40, 20)
         nfMissPercent.isEditable = false
         panel.add(nfMissPercent, "flowx,cell 1 4")
-        panelTable.border = TitledBorder(null, "Raw Data", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+        panelTable.border =
+            TitledBorder(null, "Raw Data", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         panel.add(panelTable, "cell 0 6 2 1")
         panelTable.layout = BorderLayout(0, 0)
         panelTable.add(tableBestAverages)
@@ -77,14 +76,13 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
         nfAverageThreshold.addPropertyChangeListener(this)
     }
 
-    override fun populateStats()
-    {
+    override fun populateStats() {
         chartPanel.reset("3 Dart Average", "Average")
 
         nfOtherThreeDartAvg.isVisible = includeOtherComparison()
         nfOtherMissPercent.isVisible = includeOtherComparison()
 
-        //Construct the table model
+        // Construct the table model
         val model = DefaultModel()
         model.addColumn("Ordinal")
         model.addColumn("Average")
@@ -92,30 +90,40 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
         model.addColumn("Game")
 
         populateStats(filteredGames, model, nfThreeDartAverage, nfMissPercent, "")
-        if (includeOtherComparison())
-        {
-            populateStats(filteredGamesOther, null, nfOtherThreeDartAvg, nfOtherMissPercent, " (Other)")
+        if (includeOtherComparison()) {
+            populateStats(
+                filteredGamesOther,
+                null,
+                nfOtherThreeDartAvg,
+                nfOtherMissPercent,
+                " (Other)"
+            )
         }
 
         chartPanel.finalise()
 
-        //Finish off the table model
+        // Finish off the table model
         tableBestAverages.model = model
         tableBestAverages.sortBy(0, false)
     }
 
-    private fun populateStats(filteredGames: List<GameWrapper>, model: DefaultModel?, nfThreeDartAverage: JTextField,
-                              nfMissPercent: JTextField, graphSuffix: String)
-    {
-        //Filter out unfinished games, then sort by start date
-        val sortedGames = filteredGames.sortedBy{ it.dtStart }
+    private fun populateStats(
+        filteredGames: List<GameWrapper>,
+        model: DefaultModel?,
+        nfThreeDartAverage: JTextField,
+        nfMissPercent: JTextField,
+        graphSuffix: String
+    ) {
+        // Filter out unfinished games, then sort by start date
+        val sortedGames = filteredGames.sortedBy { it.dtStart }
         val scoreThreshold = nfScoringThreshold.getNumber()
 
         val allScoringDarts = sortedGames.flatMap { it.getScoringDarts(scoreThreshold) }
 
         val totalScoringDarts = allScoringDarts.size.toDouble()
         val misses = allScoringDarts.count { it.multiplier == 0 }.toDouble()
-        val overallThreeDartAvg = 3 * allScoringDarts.sumOf { it.getTotal() } / allScoringDarts.size.toDouble()
+        val overallThreeDartAvg =
+            3 * allScoringDarts.sumOf { it.getTotal() } / allScoringDarts.size.toDouble()
 
         val rawAverages = XYSeries("Avg$graphSuffix")
         sortedGames.forEachIndexed { i, game ->
@@ -124,23 +132,22 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab()
             val startValue = game.getGameStartValueX01()
             val gameId = game.localId
 
-            //Table row - only show the raw data for the actual player, not the comparison
-            if (model != null)
-            {
+            // Table row - only show the raw data for the actual player, not the comparison
+            if (model != null) {
                 val row = arrayOf(ordinal, avg, startValue, gameId)
                 model.addRow(row)
             }
 
-            //Graph point
+            // Graph point
             rawAverages.add(ordinal, avg)
         }
 
         chartPanel.addSeries(rawAverages, nfAverageThreshold.getNumber())
 
-        //Overall avg, to 1 d.p
+        // Overall avg, to 1 d.p
         nfThreeDartAverage.text = "" + MathsUtil.round(overallThreeDartAvg, 1)
 
-        //Miss percent, to 1 d.p
+        // Miss percent, to 1 d.p
         nfMissPercent.text = "" + MathsUtil.round(100 * misses / totalScoringDarts, 1)
     }
 }

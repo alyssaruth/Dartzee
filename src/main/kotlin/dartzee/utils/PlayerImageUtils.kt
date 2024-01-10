@@ -11,7 +11,6 @@ import javax.swing.ImageIcon
 import kotlin.math.abs
 import kotlin.math.pow
 
-
 const val PLAYER_IMAGE_WIDTH = 150
 const val PLAYER_IMAGE_HEIGHT = 150
 
@@ -19,21 +18,25 @@ fun splitAvatar(
     playerOne: PlayerEntity,
     playerTwo: PlayerEntity,
     selectedPlayer: PlayerEntity?,
-    gameFinished: Boolean): ImageIcon
-{
+    gameFinished: Boolean
+): ImageIcon {
     val firstImg = playerOne.getAvatarImage()
     val secondImg = playerTwo.getAvatarImage()
 
-    val diagonalOffset = if (gameFinished) 1.0 else when (selectedPlayer) {
-        playerOne -> 1.4
-        playerTwo -> 0.6
-        else -> 1.0
-    }
+    val diagonalOffset =
+        if (gameFinished) 1.0
+        else
+            when (selectedPlayer) {
+                playerOne -> 1.4
+                playerTwo -> 0.6
+                else -> 1.0
+            }
 
     val diagonalCenter = (PLAYER_IMAGE_WIDTH * diagonalOffset).toInt()
     val diagonalThickness = if (selectedPlayer != null) 1 else 0
 
-    val newImage = BufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB)
+    val newImage =
+        BufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB)
     newImage.paint { pt ->
         val manhattan = pt.x + pt.y
         if (abs(manhattan - diagonalCenter) <= diagonalThickness) {
@@ -42,7 +45,8 @@ fun splitAvatar(
             val playerForSection = if (manhattan < diagonalCenter) playerOne else playerTwo
             val originalImg = if (playerForSection == playerOne) firstImg else secondImg
             val rgb = originalImg.getRGB(pt.x, pt.y)
-            val rgbToUse = if (selectedPlayer == playerForSection || gameFinished) rgb else greyscale(rgb)
+            val rgbToUse =
+                if (selectedPlayer == playerForSection || gameFinished) rgb else greyscale(rgb)
             Color(rgbToUse)
         }
     }
@@ -53,11 +57,11 @@ fun splitAvatar(
 private fun PlayerEntity.getAvatarImage() =
     getAvatar().image.toBufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
 
-fun ImageIcon.greyscale(): ImageIcon
-{
+fun ImageIcon.greyscale(): ImageIcon {
     val original = image.toBufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
 
-    val newImage = BufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB)
+    val newImage =
+        BufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB)
     newImage.paint { pt ->
         val rgb = original.getRGB(pt.x, pt.y)
         Color(greyscale(rgb))
@@ -66,9 +70,7 @@ fun ImageIcon.greyscale(): ImageIcon
     return ImageIcon(newImage)
 }
 
-
-private fun greyscale(rgb: Int): Int
-{
+private fun greyscale(rgb: Int): Int {
     val r = rgb shr 16 and 0xFF
     val g = rgb shr 8 and 0xFF
     val b = rgb and 0xFF
@@ -86,8 +88,7 @@ private fun greyscale(rgb: Int): Int
     return (grayLevel shl 16) + (grayLevel shl 8) + grayLevel
 }
 
-fun convertImageToAvatarDimensions(imageBytes: ByteArray): ByteArray
-{
+fun convertImageToAvatarDimensions(imageBytes: ByteArray): ByteArray {
     val icon = ImageIcon(imageBytes)
     val image = icon.image.toBufferedImage(icon.iconWidth, icon.iconHeight)
     val minDimension = minOf(icon.iconWidth, icon.iconHeight)
@@ -96,9 +97,10 @@ fun convertImageToAvatarDimensions(imageBytes: ByteArray): ByteArray
     val yc = (image.height - minDimension) / 2
 
     val croppedImage = image.getSubimage(xc, yc, minDimension, minDimension)
-    val resizedImage = croppedImage
-        .getScaledInstance(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT, BufferedImage.SCALE_SMOOTH)
-        .toBufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
+    val resizedImage =
+        croppedImage
+            .getScaledInstance(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT, BufferedImage.SCALE_SMOOTH)
+            .toBufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
 
     val baos = ByteArrayOutputStream()
     ImageIO.write(resizedImage, "jpg", baos)

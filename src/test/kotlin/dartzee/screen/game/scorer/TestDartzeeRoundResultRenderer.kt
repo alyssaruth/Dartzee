@@ -3,14 +3,12 @@ package dartzee.screen.game.scorer
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.Color
+import org.junit.jupiter.api.Test
 
-class TestDartzeeRoundResultRenderer: AbstractTest()
-{
+class TestDartzeeRoundResultRenderer : AbstractTest() {
     @Test
-    fun `Should allow nulls`()
-    {
+    fun `Should allow nulls`() {
         val renderer = DartzeeRoundResultRenderer()
         renderer.allowNulls() shouldBe true
 
@@ -20,16 +18,14 @@ class TestDartzeeRoundResultRenderer: AbstractTest()
     }
 
     @Test
-    fun `Should display a hyphen if ruleNumber is not set`()
-    {
+    fun `Should display a hyphen if ruleNumber is not set`() {
         val result = DartzeeRoundResult(-1, true)
         val renderer = DartzeeRoundResultRenderer()
         renderer.getReplacementValue(result) shouldBe "-"
     }
 
     @Test
-    fun `Should render the rule number in green for success`()
-    {
+    fun `Should render the rule number in green for success`() {
         val result = DartzeeRoundResult(5, true)
 
         val renderer = DartzeeRoundResultRenderer()
@@ -40,8 +36,7 @@ class TestDartzeeRoundResultRenderer: AbstractTest()
     }
 
     @Test
-    fun `Should render the rule number in red for failure`()
-    {
+    fun `Should render the rule number in red for failure`() {
         val result = DartzeeRoundResult(7, false)
 
         val renderer = DartzeeRoundResultRenderer()

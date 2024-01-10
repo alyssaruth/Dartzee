@@ -23,9 +23,10 @@ import javax.swing.border.EmptyBorder
 import javax.swing.border.SoftBevelBorder
 import javax.swing.border.TitledBorder
 
-class AIConfigurationDialog(saveCallback: (PlayerEntity) -> Unit, player: PlayerEntity = PlayerEntity.factoryCreate()) :
-    AbstractPlayerConfigurationDialog(saveCallback, player)
-{
+class AIConfigurationDialog(
+    saveCallback: (PlayerEntity) -> Unit,
+    player: PlayerEntity = PlayerEntity.factoryCreate()
+) : AbstractPlayerConfigurationDialog(saveCallback, player) {
     private val panelScreen = JPanel()
     private val panelNorth = JPanel()
     private val panelName = JPanel()
@@ -49,8 +50,7 @@ class AIConfigurationDialog(saveCallback: (PlayerEntity) -> Unit, player: Player
     private val lblTreble = JLabel("Treble %")
     val textFieldTreblePercent = JTextField()
 
-    init
-    {
+    init {
         title = "Configure AI"
         setSize(1100, 720)
         isResizable = false
@@ -58,7 +58,8 @@ class AIConfigurationDialog(saveCallback: (PlayerEntity) -> Unit, player: Player
         contentPane.add(panelSouth, BorderLayout.EAST)
         panelSouth.border = null
         panelSouth.layout = BorderLayout(0, 0)
-        panelCalculateStats.border = TitledBorder(null, "Statistics", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+        panelCalculateStats.border =
+            TitledBorder(null, "Statistics", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         panelSouth.add(panelCalculateStats, BorderLayout.NORTH)
         panelCalculateStats.layout = BorderLayout(0, 0)
 
@@ -113,14 +114,15 @@ class AIConfigurationDialog(saveCallback: (PlayerEntity) -> Unit, player: Player
         panelNorth.add(panelAvatar, BorderLayout.WEST)
         panelAvatar.layout = BorderLayout(0, 0)
         panelAvatar.add(avatar, BorderLayout.NORTH)
-        tabbedPaneGameSpecifics.border = TitledBorder(null, "Strategy", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+        tabbedPaneGameSpecifics.border =
+            TitledBorder(null, "Strategy", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         panelScreen.add(tabbedPaneGameSpecifics, BorderLayout.CENTER)
 
         tabbedPaneGameSpecifics.addTab("X01", panelX01Config)
         tabbedPaneGameSpecifics.addTab("Golf", panelGolfConfig)
         tabbedPaneGameSpecifics.addTab("Dartzee", panelDartzeeConfig)
 
-        //Listeners
+        // Listeners
         btnCalculate.addActionListener(this)
         btnRunSimulation.addActionListener(this)
 
@@ -129,21 +131,17 @@ class AIConfigurationDialog(saveCallback: (PlayerEntity) -> Unit, player: Player
         tabbedPane.isEnabled = false
     }
 
-    private fun initFields()
-    {
+    private fun initFields() {
         avatar.init(player, false)
 
-        if (!player.retrievedFromDb)
-        {
+        if (!player.retrievedFromDb) {
             avatar.readOnly = false
 
             panelX01Config.reset()
             panelGolfConfig.reset()
             panelDartzeeConfig.reset()
             panelAIConfig.reset()
-        }
-        else
-        {
+        } else {
             avatar.readOnly = true
 
             val name = player.name
@@ -158,8 +156,7 @@ class AIConfigurationDialog(saveCallback: (PlayerEntity) -> Unit, player: Player
         }
     }
 
-    private fun factoryModelFromPanels(): DartsAiModel
-    {
+    private fun factoryModelFromPanels(): DartsAiModel {
         var model = panelAIConfig.initialiseModel()
         model = panelX01Config.populateModel(model)
         model = panelGolfConfig.populateModel(model)
@@ -168,41 +165,37 @@ class AIConfigurationDialog(saveCallback: (PlayerEntity) -> Unit, player: Player
         return model
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnCalculate -> calculateStats()
             btnRunSimulation -> runSimulation()
             else -> super.actionPerformed(arg0)
         }
     }
 
-    private fun runSimulation()
-    {
+    private fun runSimulation() {
         val model = factoryModelFromPanels()
 
-        //If the player hasn't actually been created yet, then we need to instantiate a PlayerEntity just to hold stuff like the name
+        // If the player hasn't actually been created yet, then we need to instantiate a
+        // PlayerEntity just to hold stuff like the name
         player.name = textFieldName.text
 
         val dlg = AISimulationSetupDialog(player, model, true)
         dlg.isVisible = true
     }
 
-    override fun savePlayer()
-    {
+    override fun savePlayer() {
         val name = textFieldName.text
         player.name = name
         player.strategy = factoryModelFromPanels().toJson()
         player.playerImageId = avatar.avatarId
         player.saveToDatabase()
 
-        //Now dispose the window
+        // Now dispose the window
         dispose()
     }
 
-    private fun calculateStats()
-    {
+    private fun calculateStats() {
         val model = factoryModelFromPanels()
 
         val dartboard = scatterTab.dartboard
@@ -227,10 +220,8 @@ class AIConfigurationDialog(saveCallback: (PlayerEntity) -> Unit, player: Player
         densityTab.populate(simulationWrapper.hmPointToCount, model)
     }
 
-    companion object
-    {
-        fun amendPlayer(saveCallback: (PlayerEntity) -> Unit, player: PlayerEntity)
-        {
+    companion object {
+        fun amendPlayer(saveCallback: (PlayerEntity) -> Unit, player: PlayerEntity) {
             val dialog = AIConfigurationDialog(saveCallback, player)
             dialog.setLocationRelativeTo(ScreenCache.mainScreen)
             dialog.isVisible = true

@@ -13,11 +13,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class TestMatchSummaryPanel : AbstractTest()
-{
+class TestMatchSummaryPanel : AbstractTest() {
     @Test
-    fun `Should correctly assign scorers and then reuse for existing participants`()
-    {
+    fun `Should correctly assign scorers and then reuse for existing participants`() {
         val panel = makeMatchSummaryPanel()
 
         val p1 = insertPlayer(name = "Alyssa")
@@ -48,14 +46,16 @@ class TestMatchSummaryPanel : AbstractTest()
         otherRows[0] shouldBe listOf(1L, qwiAndNatalie, qwiAndNatalie, qwiAndNatalie)
         otherRows[1] shouldBe listOf(2L, natalieAndQwi, natalieAndQwi, natalieAndQwi)
     }
-    private fun MatchSummaryPanel<X01PlayerState>.addParticipant(localId: Long, participant: IWrappedParticipant)
-    {
+
+    private fun MatchSummaryPanel<X01PlayerState>.addParticipant(
+        localId: Long,
+        participant: IWrappedParticipant
+    ) {
         addParticipant(localId, X01PlayerState(501, participant))
     }
 
     @Test
-    fun `Should add listeners to player states, and update stats using all of them`()
-    {
+    fun `Should add listeners to player states, and update stats using all of them`() {
         val statsPanel = mockk<GameStatisticsPanelX01>(relaxed = true)
         val matchPanel = makeMatchSummaryPanel(statsPanel = statsPanel)
 
@@ -63,11 +63,15 @@ class TestMatchSummaryPanel : AbstractTest()
         val gameTwo = makeX01GamePanel()
 
         matchPanel.addGameTab(gameOne)
-        gameOne.getPlayerStates().forEach { matchPanel.addParticipant(gameOne.gameEntity.localId, it) }
+        gameOne.getPlayerStates().forEach {
+            matchPanel.addParticipant(gameOne.gameEntity.localId, it)
+        }
         matchPanel.finaliseScorers(mockk(relaxed = true))
 
         matchPanel.addGameTab(gameTwo)
-        gameTwo.getPlayerStates().forEach { matchPanel.addParticipant(gameTwo.gameEntity.localId, it) }
+        gameTwo.getPlayerStates().forEach {
+            matchPanel.addParticipant(gameTwo.gameEntity.localId, it)
+        }
 
         // Now trigger a state change for one of the player states
         val state = gameOne.getPlayerStates().first()
@@ -78,8 +82,7 @@ class TestMatchSummaryPanel : AbstractTest()
     }
 
     @Test
-    fun `Should return all participants as a flat list`()
-    {
+    fun `Should return all participants as a flat list`() {
         val gamePanelOne = makeX01GamePanel()
         val gamePanelTwo = makeX01GamePanel()
 

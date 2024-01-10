@@ -1,12 +1,11 @@
 package dartzee.achievements.rtc
 
-import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractAchievementGamesWon
+import dartzee.achievements.AchievementType
 import dartzee.game.GameType
 import dartzee.utils.ResourceCache
 
-class AchievementClockGamesWon : AbstractAchievementGamesWon()
-{
+class AchievementClockGamesWon : AbstractAchievementGamesWon() {
     override val achievementType = AchievementType.CLOCK_GAMES_WON
     override val gameType = GameType.ROUND_THE_CLOCK
     override val name = "Clock Winner"

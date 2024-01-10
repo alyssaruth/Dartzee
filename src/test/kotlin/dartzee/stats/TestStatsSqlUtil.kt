@@ -13,11 +13,9 @@ import dartzee.`object`.Dart
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestStatsSqlUtil : AbstractTest()
-{
+class TestStatsSqlUtil : AbstractTest() {
     @Test
-    fun `Should return the counts by game type for a particular player`()
-    {
+    fun `Should return the counts by game type for a particular player`() {
         val playerA = insertPlayer()
         val playerB = insertPlayer()
 
@@ -40,17 +38,17 @@ class TestStatsSqlUtil : AbstractTest()
     }
 
     @Test
-    fun `Should retrieve a single game wrapper successfully`()
-    {
+    fun `Should retrieve a single game wrapper successfully`() {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "9")
         val player = insertPlayer()
         val pt = insertParticipant(playerId = player.rowId, gameId = game.rowId)
 
-        val rounds = listOf(
-            listOf(Dart(1, 0), Dart(1, 3)),
-            listOf(Dart(17, 1), Dart(15, 1), Dart(15, 2)),
-            listOf(Dart(3, 2))
-        )
+        val rounds =
+            listOf(
+                listOf(Dart(1, 0), Dart(1, 3)),
+                listOf(Dart(17, 1), Dart(15, 1), Dart(15, 2)),
+                listOf(Dart(3, 2))
+            )
         rounds.insertIntoDatabase(player, pt)
 
         retrieveGameData(player.rowId, GameType.X01).size shouldBe 0
@@ -67,17 +65,18 @@ class TestStatsSqlUtil : AbstractTest()
     }
 
     @Test
-    fun `Should identify a team game`()
-    {
+    fun `Should identify a team game`() {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "9")
         val player = insertPlayer()
-        val pt = insertParticipant(playerId = player.rowId, gameId = game.rowId, teamId = randomGuid())
+        val pt =
+            insertParticipant(playerId = player.rowId, gameId = game.rowId, teamId = randomGuid())
 
-        val rounds = listOf(
-            listOf(Dart(1, 0), Dart(1, 3)),
-            listOf(Dart(17, 1), Dart(15, 1), Dart(15, 2)),
-            listOf(Dart(3, 2))
-        )
+        val rounds =
+            listOf(
+                listOf(Dart(1, 0), Dart(1, 3)),
+                listOf(Dart(17, 1), Dart(15, 1), Dart(15, 2)),
+                listOf(Dart(3, 2))
+            )
         rounds.insertIntoDatabase(player, pt)
 
         val wrapper = retrieveGameData(player.rowId, game.gameType).getValue(game.localId)

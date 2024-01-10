@@ -1,7 +1,6 @@
 package dartzee.dartzee.aggregate
 
-class DartzeeTotalRuleMultipleOf: AbstractDartzeeRuleTotalSize()
-{
+class DartzeeTotalRuleMultipleOf : AbstractDartzeeRuleTotalSize() {
     override fun getRuleIdentifier() = "MultipleOf"
 
     override fun isValidTotal(total: Int) = total % target == 0

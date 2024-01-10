@@ -12,27 +12,35 @@ import dartzee.helper.insertTeam
 import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: AbstractAchievementTest<E>()
-{
-    override fun insertRelevantGame(dtLastUpdate: Timestamp, database: Database): GameEntity
-    {
-        return insertGame(gameType = factoryAchievement().gameType!!,
+abstract class TestAbstractAchievementBestGame<E : AbstractAchievementBestGame> :
+    AbstractAchievementTest<E>() {
+    override fun insertRelevantGame(dtLastUpdate: Timestamp, database: Database): GameEntity {
+        return insertGame(
+            gameType = factoryAchievement().gameType!!,
             gameParams = factoryAchievement().gameParams,
             dtLastUpdate = dtLastUpdate,
-            database = database)
+            database = database
+        )
     }
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
-    {
-        insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 30, database = database)
+    override fun setUpAchievementRowForPlayerAndGame(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database
+    ) {
+        insertParticipant(
+            gameId = g.rowId,
+            playerId = p.rowId,
+            finalScore = 30,
+            database = database
+        )
     }
 
     @Test
-    fun `Should ignore games that are the wrong type`()
-    {
+    fun `Should ignore games that are the wrong type`() {
         val otherType = GameType.values().find { it != factoryAchievement().gameType }!!
         val alice = insertPlayer(name = "Alice")
         val game = insertGame(gameType = otherType, gameParams = factoryAchievement().gameParams)
@@ -45,13 +53,17 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
     }
 
     @Test
-    fun `Should ignore games that were completed as a team`()
-    {
+    fun `Should ignore games that were completed as a team`() {
         val alice = insertPlayer(name = "Alice")
         val game = insertRelevantGame()
         val team = insertTeam(gameId = game.rowId)
 
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 20, teamId = team.rowId)
+        insertParticipant(
+            gameId = game.rowId,
+            playerId = alice.rowId,
+            finalScore = 20,
+            teamId = team.rowId
+        )
 
         runConversion()
 
@@ -59,8 +71,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
     }
 
     @Test
-    fun `Should ignore games that are the wrong params`()
-    {
+    fun `Should ignore games that are the wrong params`() {
         val alice = insertPlayer(name = "Alice")
         val game = insertGame(gameType = factoryAchievement().gameType!!, gameParams = "blah")
 
@@ -72,8 +83,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
     }
 
     @Test
-    fun `Should ignore games of the wrong params with better scores`()
-    {
+    fun `Should ignore games of the wrong params with better scores`() {
         val alice = insertPlayer(name = "Alice")
         val badGame = insertGame(gameType = factoryAchievement().gameType!!, gameParams = "blah")
         val goodGame = insertRelevantGame()
@@ -87,8 +97,7 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
     }
 
     @Test
-    fun `Should ignore games where the finalScore is unset`()
-    {
+    fun `Should ignore games where the finalScore is unset`() {
         val alice = insertPlayer(name = "Alice")
         val game = insertRelevantGame()
 
@@ -107,14 +116,23 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
     }
 
     @Test
-    fun `Should return the lowest scoring game`()
-    {
+    fun `Should return the lowest scoring game`() {
         val alice = insertPlayer(name = "Alice")
 
         val game = insertRelevantGame()
 
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 15, dtFinished = Timestamp(1000))
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1500))
+        insertParticipant(
+            gameId = game.rowId,
+            playerId = alice.rowId,
+            finalScore = 15,
+            dtFinished = Timestamp(1000)
+        )
+        insertParticipant(
+            gameId = game.rowId,
+            playerId = alice.rowId,
+            finalScore = 12,
+            dtFinished = Timestamp(1500)
+        )
 
         runConversion()
 
@@ -124,15 +142,29 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
     }
 
     @Test
-    fun `Should return the earliest game if there is a tie for best score`()
-    {
+    fun `Should return the earliest game if there is a tie for best score`() {
         val alice = insertPlayer(name = "Alice")
 
         val game = insertRelevantGame()
 
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1000))
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(800))
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1500))
+        insertParticipant(
+            gameId = game.rowId,
+            playerId = alice.rowId,
+            finalScore = 12,
+            dtFinished = Timestamp(1000)
+        )
+        insertParticipant(
+            gameId = game.rowId,
+            playerId = alice.rowId,
+            finalScore = 12,
+            dtFinished = Timestamp(800)
+        )
+        insertParticipant(
+            gameId = game.rowId,
+            playerId = alice.rowId,
+            finalScore = 12,
+            dtFinished = Timestamp(1500)
+        )
 
         runConversion()
 
@@ -143,13 +175,17 @@ abstract class TestAbstractAchievementBestGame<E: AbstractAchievementBestGame>: 
     }
 
     @Test
-    fun `Should set the correct values on the generated achievement row`()
-    {
+    fun `Should set the correct values on the generated achievement row`() {
         val alice = insertPlayer(name = "Alice")
 
         val game = insertRelevantGame()
 
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finalScore = 12, dtFinished = Timestamp(1000))
+        insertParticipant(
+            gameId = game.rowId,
+            playerId = alice.rowId,
+            finalScore = 12,
+            dtFinished = Timestamp(1000)
+        )
 
         runConversion()
 

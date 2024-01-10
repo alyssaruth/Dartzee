@@ -8,7 +8,6 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import org.junit.jupiter.api.Test
 import java.awt.BorderLayout
 import java.awt.Point
 import java.awt.event.ActionEvent
@@ -16,12 +15,11 @@ import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import javax.swing.JComboBox
 import javax.swing.JTextField
+import org.junit.jupiter.api.Test
 
-class TestSwingExtensions: AbstractTest()
-{
+class TestSwingExtensions : AbstractTest() {
     @Test
-    fun `Should return the typed items of a combo box`()
-    {
+    fun `Should return the typed items of a combo box`() {
         val comboBox = JComboBox<String>()
         comboBox.items().shouldBeEmpty()
         comboBox.items().shouldBeInstanceOf<List<String>>()
@@ -35,8 +33,7 @@ class TestSwingExtensions: AbstractTest()
     }
 
     @Test
-    fun `Should return a typed selected item`()
-    {
+    fun `Should return a typed selected item`() {
         val comboBox = JComboBox<String>()
         comboBox.addItem("Foo")
         comboBox.addItem("Bar")
@@ -51,8 +48,7 @@ class TestSwingExtensions: AbstractTest()
     }
 
     @Test
-    fun `Should find items by class`()
-    {
+    fun `Should find items by class`() {
         val comboBox = JComboBox<Number>()
         comboBox.addItem(20)
         comboBox.addItem(30.0)
@@ -68,8 +64,7 @@ class TestSwingExtensions: AbstractTest()
     }
 
     @Test
-    fun `Should select by class`()
-    {
+    fun `Should select by class`() {
         val comboBox = JComboBox<Number>()
         comboBox.addItem(20)
         comboBox.addItem(30.0)
@@ -82,8 +77,7 @@ class TestSwingExtensions: AbstractTest()
     }
 
     @Test
-    fun `Should add a listener for when focus is lost`()
-    {
+    fun `Should add a listener for when focus is lost`() {
         val actionListener = CapturingActionListener()
         val tf = JTextField()
 
@@ -94,8 +88,7 @@ class TestSwingExtensions: AbstractTest()
     }
 
     @Test
-    fun `Should add an action for the specified key, and only process if a row is selected`()
-    {
+    fun `Should add an action for the specified key, and only process if a row is selected`() {
         val scrollTable = ScrollTable()
 
         var keyPressed = false
@@ -107,7 +100,7 @@ class TestSwingExtensions: AbstractTest()
         scrollTable.processKeyPress(KeyEvent.VK_DELETE)
         keyPressed shouldBe false
 
-        //Now select a row
+        // Now select a row
         scrollTable.addColumn("Test")
         scrollTable.addRow(arrayOf("Foo"))
         scrollTable.selectFirstRow()
@@ -117,8 +110,7 @@ class TestSwingExtensions: AbstractTest()
     }
 
     @Test
-    fun `Should add ghost text to a text component`()
-    {
+    fun `Should add ghost text to a text component`() {
         val tf = JTextField()
         tf.addGhostText("Hello")
 
@@ -128,20 +120,24 @@ class TestSwingExtensions: AbstractTest()
         ghostText.text shouldBe "Hello"
     }
 
-    private class CapturingActionListener: ActionListener
-    {
+    private class CapturingActionListener : ActionListener {
         var eventSource: Any? = null
 
-        override fun actionPerformed(e: ActionEvent?)
-        {
+        override fun actionPerformed(e: ActionEvent?) {
             eventSource = e?.source
         }
     }
 
     @Test
-    fun `Should return all of the points for a given width and height in the correct order`()
-    {
+    fun `Should return all of the points for a given width and height in the correct order`() {
         val points = getPointList(2, 3)
-        points.shouldContainExactly(Point(0, 0), Point(1, 0), Point(0, 1), Point(1, 1), Point(0, 2), Point(1, 2))
+        points.shouldContainExactly(
+            Point(0, 0),
+            Point(1, 0),
+            Point(0, 1),
+            Point(1, 1),
+            Point(0, 2),
+            Point(1, 2)
+        )
     }
 }

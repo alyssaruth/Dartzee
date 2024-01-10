@@ -6,13 +6,13 @@ import java.awt.BorderLayout
 import java.awt.FlowLayout
 import javax.swing.JPanel
 
-class HumanConfigurationDialog(saveCallback: (player: PlayerEntity) -> Unit, player: PlayerEntity = PlayerEntity.factoryCreate()) :
-    AbstractPlayerConfigurationDialog(saveCallback, player)
-{
+class HumanConfigurationDialog(
+    saveCallback: (player: PlayerEntity) -> Unit,
+    player: PlayerEntity = PlayerEntity.factoryCreate()
+) : AbstractPlayerConfigurationDialog(saveCallback, player) {
     private val panel = JPanel()
 
-    init
-    {
+    init {
         setSize(350, 225)
         isResizable = false
         isModal = InjectedThings.allowModalDialogs
@@ -28,16 +28,14 @@ class HumanConfigurationDialog(saveCallback: (player: PlayerEntity) -> Unit, pla
         initFields()
     }
 
-    private fun initFields()
-    {
+    private fun initFields() {
         textFieldName.text = player.name
         avatar.init(player, false)
         avatar.readOnly = player.retrievedFromDb
         title = if (player.retrievedFromDb) "Amend Player" else "New Player"
     }
 
-    override fun savePlayer()
-    {
+    override fun savePlayer() {
         val name = textFieldName.text
         val avatarId = avatar.avatarId
 
@@ -45,14 +43,12 @@ class HumanConfigurationDialog(saveCallback: (player: PlayerEntity) -> Unit, pla
         player.playerImageId = avatarId
         player.saveToDatabase()
 
-        //Now dispose the window
+        // Now dispose the window
         dispose()
     }
 
-    companion object
-    {
-        fun amendPlayer(saveCallback: (PlayerEntity) -> Unit, player: PlayerEntity)
-        {
+    companion object {
+        fun amendPlayer(saveCallback: (PlayerEntity) -> Unit, player: PlayerEntity) {
             val dlg = HumanConfigurationDialog(saveCallback, player)
             dlg.setLocationRelativeTo(ScreenCache.mainScreen)
             dlg.isVisible = true

@@ -5,14 +5,11 @@ import java.awt.Color
 import java.awt.Font
 import javax.swing.SwingConstants
 
-class DartzeeScoreRenderer(val maxScore: Int): AbstractTableRenderer<Int>()
-{
+class DartzeeScoreRenderer(val maxScore: Int) : AbstractTableRenderer<Int>() {
     override fun getReplacementValue(value: Int) = value
 
-    override fun setCellColours(typedValue: Int?, isSelected: Boolean)
-    {
-        if (typedValue == null)
-        {
+    override fun setCellColours(typedValue: Int?, isSelected: Boolean) {
+        if (typedValue == null) {
             background = null
             foreground = null
             return
@@ -22,8 +19,7 @@ class DartzeeScoreRenderer(val maxScore: Int): AbstractTableRenderer<Int>()
         background = Color.getHSBColor(0.5.toFloat(), percent, 1f)
     }
 
-    override fun setFontsAndAlignment()
-    {
+    override fun setFontsAndAlignment() {
         horizontalAlignment = SwingConstants.CENTER
         font = Font(font.name, Font.BOLD, 12)
     }

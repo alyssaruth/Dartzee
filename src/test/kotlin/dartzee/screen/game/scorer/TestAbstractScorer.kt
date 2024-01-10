@@ -11,11 +11,9 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
-class TestAbstractScorer: AbstractTest()
-{
+class TestAbstractScorer : AbstractTest() {
     @Test
-    fun `Should initialise correctly with a single participant`()
-    {
+    fun `Should initialise correctly with a single participant`() {
         val player = insertPlayer(name = "Bob")
         val participant = makeSingleParticipant(player)
         val scorer = TestScorer(participant)
@@ -28,9 +26,8 @@ class TestAbstractScorer: AbstractTest()
     }
 
     @Test
-    fun `Should initialise with the right number of columns`()
-    {
-        val twoCols = TestScorer(columnCount =  2)
+    fun `Should initialise with the right number of columns`() {
+        val twoCols = TestScorer(columnCount = 2)
         twoCols.init()
         twoCols.tableScores.model.columnCount shouldBe 2
 
@@ -40,24 +37,23 @@ class TestAbstractScorer: AbstractTest()
     }
 
     @Test
-    fun `Should call init implementation`()
-    {
+    fun `Should call init implementation`() {
         val scorer = TestScorer()
         scorer.initted shouldBe false
         scorer.init()
         scorer.initted shouldBe true
     }
 
-    private class TestScorer(participant: IWrappedParticipant = makeSingleParticipant(), val columnCount: Int = 4): AbstractScorer(participant)
-    {
+    private class TestScorer(
+        participant: IWrappedParticipant = makeSingleParticipant(),
+        val columnCount: Int = 4
+    ) : AbstractScorer(participant) {
         var initted = false
 
         override fun getNumberOfColumns() = columnCount
 
-        override fun initImpl()
-        {
+        override fun initImpl() {
             initted = true
         }
-
     }
 }

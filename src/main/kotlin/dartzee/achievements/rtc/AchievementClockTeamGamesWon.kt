@@ -5,8 +5,7 @@ import dartzee.achievements.AchievementType
 import dartzee.game.GameType
 import dartzee.utils.ResourceCache
 
-class AchievementClockTeamGamesWon : AbstractAchievementTeamGamesWon()
-{
+class AchievementClockTeamGamesWon : AbstractAchievementTeamGamesWon() {
     override val name = "Clock Winners"
     override val desc = "Total number of team wins in Round the Clock"
     override val achievementType = AchievementType.CLOCK_TEAM_GAMES_WON

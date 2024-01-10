@@ -8,41 +8,32 @@ import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import javax.swing.KeyStroke
 
-abstract class AbstractDevScreen(private val commandBar: CheatBar) : FocusableWindow()
-{
-    init
-    {
+abstract class AbstractDevScreen(private val commandBar: CheatBar) : FocusableWindow() {
+    init {
         commandBar.setCheatListener(this)
     }
 
-    /**
-     * Abstract methods
-     */
+    /** Abstract methods */
     abstract fun commandsEnabled(): Boolean
+
     abstract fun processCommand(cmd: String): String
 
-    /**
-     * Regular methods
-     */
-    fun enableCheatBar(enable: Boolean)
-    {
+    /** Regular methods */
+    fun enableCheatBar(enable: Boolean) {
         commandBar.isVisible = enable
         repaint()
         revalidate()
     }
-    
-    fun getKeyStrokeForCommandBar(): KeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_SEMICOLON, InputEvent.CTRL_DOWN_MASK)
 
-    fun processCommandWithTry(cmd: String): String
-    {
+    fun getKeyStrokeForCommandBar(): KeyStroke =
+        KeyStroke.getKeyStroke(KeyEvent.VK_SEMICOLON, InputEvent.CTRL_DOWN_MASK)
+
+    fun processCommandWithTry(cmd: String): String {
         logger.info(CODE_COMMAND_ENTERED, "Command entered: [$cmd]")
 
-        return try
-        {
+        return try {
             processCommand(cmd)
-        }
-        catch (t: Throwable)
-        {
+        } catch (t: Throwable) {
             logger.error(CODE_COMMAND_ERROR, "Error running command $cmd", t)
             ""
         }

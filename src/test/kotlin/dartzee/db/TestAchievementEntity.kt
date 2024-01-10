@@ -16,7 +16,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
+class TestAchievementEntity : AbstractEntityTest<AchievementEntity>() {
     override fun factoryDao() = AchievementEntity()
 
     @Test
@@ -47,7 +47,6 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
         achievements.size shouldBe 1
         achievements.first().playerId shouldBe p1.rowId
         achievements.first().rowId shouldBe a1.rowId
-
     }
 
     @Test
@@ -127,7 +126,12 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
         val gameScreen = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(newGameId, gameScreen)
 
-        insertAchievement(type = ref, playerId = playerId, gameIdEarned = oldGameId, achievementCounter = 100)
+        insertAchievement(
+            type = ref,
+            playerId = playerId,
+            gameIdEarned = oldGameId,
+            achievementCounter = 100
+        )
 
         AchievementEntity.updateAchievement(ref, playerId, newGameId, 99)
         AchievementEntity.updateAchievement(ref, playerId, newGameId, 100)
@@ -151,7 +155,12 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
         val gameScreen = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(newGameId, gameScreen)
 
-        insertAchievement(type = ref, playerId = playerId, gameIdEarned = oldGameId, achievementCounter = oldValue)
+        insertAchievement(
+            type = ref,
+            playerId = playerId,
+            gameIdEarned = oldGameId,
+            achievementCounter = oldValue
+        )
 
         AchievementEntity.updateAchievement(ref, playerId, newGameId, newValue)
 
@@ -160,7 +169,6 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
         a.achievementCounter shouldBe newValue
         gameScreen.attainedValue shouldBe newValue
     }
-
 
     @Test
     fun `updateAchievement - should preserve a decreasing achievement for values that are not strictly less`() {
@@ -172,7 +180,12 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
         val gameScreen = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(newGameId, gameScreen)
 
-        insertAchievement(type = ref, playerId = playerId, gameIdEarned = oldGameId, achievementCounter = 100)
+        insertAchievement(
+            type = ref,
+            playerId = playerId,
+            gameIdEarned = oldGameId,
+            achievementCounter = 100
+        )
 
         AchievementEntity.updateAchievement(ref, playerId, newGameId, 101)
         AchievementEntity.updateAchievement(ref, playerId, newGameId, 100)
@@ -196,7 +209,12 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
         val gameScreen = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(newGameId, gameScreen)
 
-        insertAchievement(type = ref, playerId = playerId, gameIdEarned = oldGameId, achievementCounter = oldValue)
+        insertAchievement(
+            type = ref,
+            playerId = playerId,
+            gameIdEarned = oldGameId,
+            achievementCounter = oldValue
+        )
 
         AchievementEntity.updateAchievement(ref, playerId, newGameId, newValue)
 
@@ -245,7 +263,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
         val playerId = randomGuid()
         val gameId = randomGuid()
 
-        //Start with 1 row
+        // Start with 1 row
         insertAchievement(type = ref, playerId = playerId)
 
         val scrn = FakeDartsScreen()
@@ -281,8 +299,13 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
         val playerId = randomGuid()
         val gameId = randomGuid()
 
-        //Start with 1 row for 6 points
-        insertAchievement(type = ref, playerId = playerId, achievementCounter = 6, achievementDetail = "2")
+        // Start with 1 row for 6 points
+        insertAchievement(
+            type = ref,
+            playerId = playerId,
+            achievementCounter = 6,
+            achievementDetail = "2"
+        )
 
         val scrn = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(gameId, scrn)
@@ -296,8 +319,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
     }
 
     @Test
-    fun `insertForUniqueCounter - should insert unique values`()
-    {
+    fun `insertForUniqueCounter - should insert unique values`() {
         val ref = AchievementType.DARTZEE_BINGO
         val playerId = randomGuid()
         val gameId = randomGuid()
@@ -313,14 +335,15 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
     }
 
     @Test
-    fun `insertForUniqueCounter - should call into triggerAchievementUnlock`()
-    {
+    fun `insertForUniqueCounter - should call into triggerAchievementUnlock`() {
         val ref = AchievementType.DARTZEE_BINGO
         val playerId = randomGuid()
         val gameId = randomGuid()
 
-        //Start with 9 / 10 rows
-        (1..9).forEach { insertAchievement(type = ref, playerId = playerId, achievementCounter = it) }
+        // Start with 9 / 10 rows
+        (1..9).forEach {
+            insertAchievement(type = ref, playerId = playerId, achievementCounter = it)
+        }
 
         val scrn = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(gameId, scrn)
@@ -334,8 +357,7 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
     }
 
     @Test
-    fun `triggerAchievementUnlock - should do nothing if achievement has not moved over a grade boundary`()
-    {
+    fun `triggerAchievementUnlock - should do nothing if achievement has not moved over a grade boundary`() {
         val achievement = AchievementX01BestFinish()
 
         val oldValue = achievement.orangeThreshold
@@ -345,14 +367,19 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
         val scrn = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(gameId, scrn)
 
-        AchievementEntity.triggerAchievementUnlock(oldValue, newValue, achievement, randomGuid(), gameId)
+        AchievementEntity.triggerAchievementUnlock(
+            oldValue,
+            newValue,
+            achievement,
+            randomGuid(),
+            gameId
+        )
 
         scrn.achievementType shouldBe null
     }
 
     @Test
-    fun `triggerAchievementUnlock - should trigger if achievement has moved over a grade boundary`()
-    {
+    fun `triggerAchievementUnlock - should trigger if achievement has moved over a grade boundary`() {
         val achievement = AchievementX01BestFinish()
 
         val oldValue = achievement.orangeThreshold
@@ -362,7 +389,13 @@ class TestAchievementEntity: AbstractEntityTest<AchievementEntity>() {
         val scrn = FakeDartsScreen()
         ScreenCache.addDartsGameScreen(gameId, scrn)
 
-        AchievementEntity.triggerAchievementUnlock(oldValue, newValue, achievement, randomGuid(), gameId)
+        AchievementEntity.triggerAchievementUnlock(
+            oldValue,
+            newValue,
+            achievement,
+            randomGuid(),
+            gameId
+        )
 
         scrn.achievementType shouldBe achievement.achievementType
         scrn.attainedValue shouldBe achievement.yellowThreshold

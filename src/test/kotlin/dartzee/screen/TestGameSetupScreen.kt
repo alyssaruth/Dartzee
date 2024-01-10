@@ -39,19 +39,16 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class TestGameSetupScreen: AbstractTest()
-{
+class TestGameSetupScreen : AbstractTest() {
     private val gameLauncher = mockk<GameLauncher>(relaxed = true)
 
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         InjectedThings.gameLauncher = gameLauncher
     }
 
     @Test
-    fun `Should respond to changing game type`()
-    {
+    fun `Should respond to changing game type`() {
         val screen = GameSetupScreen()
         screen.gameParamFilterPanel.shouldBeInstanceOf<GameParamFilterPanelX01>()
 
@@ -60,8 +57,7 @@ class TestGameSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should perform player selector validation when attempting to launch a game`()
-    {
+    fun `Should perform player selector validation when attempting to launch a game`() {
         val screen = GameSetupScreen()
         screen.btnLaunch.doClick()
 
@@ -69,8 +65,7 @@ class TestGameSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should initialise the player selector with players from the DB`()
-    {
+    fun `Should initialise the player selector with players from the DB`() {
         insertPlayer(name = "Alice")
         insertPlayer(name = "Bob")
         insertPlayer(name = "Clive")
@@ -83,8 +78,7 @@ class TestGameSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should launch a single game with the selected players and game params`()
-    {
+    fun `Should launch a single game with the selected players and game params`() {
         val alice = insertPlayer(name = "Alice")
         insertPlayer(name = "Bob")
         val clive = insertPlayer(name = "Clive")
@@ -98,17 +92,17 @@ class TestGameSetupScreen: AbstractTest()
 
         screen.btnLaunch.doClick()
 
-        val expectedParams = GameLaunchParams(listOf(alice, clive), GameType.X01, "701", false, null)
+        val expectedParams =
+            GameLaunchParams(listOf(alice, clive), GameType.X01, "701", false, null)
         verify { gameLauncher.launchNewGame(expectedParams) }
     }
 
     @Test
-    fun `Should toggle the right components when switching between match types`()
-    {
+    fun `Should toggle the right components when switching between match types`() {
         val screen = GameSetupScreen()
         screen.initialise()
 
-        //Default - single game
+        // Default - single game
         screen.lblWins.isVisible shouldBe false
         screen.spinnerWins.isVisible shouldBe false
         screen.lblGames.isVisible shouldBe false
@@ -116,7 +110,7 @@ class TestGameSetupScreen: AbstractTest()
         screen.matchConfigPanel.components.toList() shouldNotContain screen.panelPointBreakdown
         screen.btnLaunch.text shouldBe "Launch Game"
 
-        //First to
+        // First to
         screen.rdbtnFirstTo.doClick()
         screen.lblWins.isVisible shouldBe true
         screen.spinnerWins.isVisible shouldBe true
@@ -125,7 +119,7 @@ class TestGameSetupScreen: AbstractTest()
         screen.matchConfigPanel.components.toList() shouldNotContain screen.panelPointBreakdown
         screen.btnLaunch.text shouldBe "Launch Match"
 
-        //Points-based
+        // Points-based
         screen.rdbtnPoints.doClick()
         screen.lblWins.isVisible shouldBe false
         screen.spinnerWins.isVisible shouldBe false
@@ -134,7 +128,7 @@ class TestGameSetupScreen: AbstractTest()
         screen.matchConfigPanel.components.toList() shouldContain screen.panelPointBreakdown
         screen.btnLaunch.text shouldBe "Launch Match"
 
-        //Back to single game
+        // Back to single game
         screen.rdbtnSingleGame.doClick()
         screen.lblWins.isVisible shouldBe false
         screen.spinnerWins.isVisible shouldBe false
@@ -145,8 +139,7 @@ class TestGameSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should update based on whether a Dartzee template is selected`()
-    {
+    fun `Should update based on whether a Dartzee template is selected`() {
         insertDartzeeTemplate(name = "Template")
 
         val screen = GameSetupScreen()
@@ -163,11 +156,11 @@ class TestGameSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should retrieve Dartzee rules when launching a Dartzee game from a template`()
-    {
+    fun `Should retrieve Dartzee rules when launching a Dartzee game from a template`() {
         val templateId = insertDartzeeTemplate().rowId
 
-        val ruleOne = makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleEven())
+        val ruleOne =
+            makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleEven())
         val ruleTwo = makeDartzeeRuleDto(aggregateRule = DartzeeTotalRulePrime())
 
         ruleOne.toEntity(1, EntityName.DartzeeTemplate, templateId).saveToDatabase()
@@ -181,13 +174,13 @@ class TestGameSetupScreen: AbstractTest()
 
         screen.btnLaunch.doClick()
 
-        val expectedParams = GameLaunchParams(players, GameType.DARTZEE, templateId, false, listOf(ruleOne, ruleTwo))
+        val expectedParams =
+            GameLaunchParams(players, GameType.DARTZEE, templateId, false, listOf(ruleOne, ruleTwo))
         verify { gameLauncher.launchNewGame(launchParamsEqual(expectedParams)) }
     }
 
     @Test
-    fun `Should launch a first-to match with the right parameters`()
-    {
+    fun `Should launch a first-to match with the right parameters`() {
         val slot = slot<DartsMatchEntity>()
         every { gameLauncher.launchNewMatch(capture(slot), any()) } just runs
 
@@ -199,7 +192,7 @@ class TestGameSetupScreen: AbstractTest()
         scrn.btnLaunch.doClick()
 
         val launchParams = GameLaunchParams(players, GameType.X01, "501", false)
-        verify { gameLauncher.launchNewMatch(any(), launchParams)}
+        verify { gameLauncher.launchNewMatch(any(), launchParams) }
 
         val match = slot.captured
         match.mode shouldBe MatchMode.FIRST_TO
@@ -208,8 +201,7 @@ class TestGameSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should launch a points based match with the right parameters`()
-    {
+    fun `Should launch a points based match with the right parameters`() {
         val slot = slot<DartsMatchEntity>()
         every { gameLauncher.launchNewMatch(capture(slot), any()) } just runs
 
@@ -227,7 +219,7 @@ class TestGameSetupScreen: AbstractTest()
 
         scrn.btnLaunch.doClick()
 
-        verify { gameLauncher.launchNewMatch(any(), any())}
+        verify { gameLauncher.launchNewMatch(any(), any()) }
 
         val match = slot.captured
         match.mode shouldBe MatchMode.POINTS
@@ -236,8 +228,7 @@ class TestGameSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should perform validation on Dartzee mode when trying to hit Next`()
-    {
+    fun `Should perform validation on Dartzee mode when trying to hit Next`() {
         val setupScreen = GameSetupScreen()
         setupScreen.initialise()
         setupScreen.playerSelector.init(listOf())
@@ -249,8 +240,7 @@ class TestGameSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should switch to the DartzeeRuleSetupScreen on Next, passing through the right parameters`()
-    {
+    fun `Should switch to the DartzeeRuleSetupScreen on Next, passing through the right parameters`() {
         val p1 = insertPlayer(strategy = "")
         val p2 = insertPlayer(strategy = "")
 
@@ -268,13 +258,13 @@ class TestGameSetupScreen: AbstractTest()
         currentScreen.btnNext.text shouldBe "Launch Game >"
         currentScreen.nextPressed()
 
-        val expectedParams = GameLaunchParams(listOf(p1, p2), GameType.DARTZEE, "", false, emptyList())
+        val expectedParams =
+            GameLaunchParams(listOf(p1, p2), GameType.DARTZEE, "", false, emptyList())
         verify { gameLauncher.launchNewGame(expectedParams) }
     }
 
     @Test
-    fun `Should switch to the DartzeeRuleSetupScreen for a match`()
-    {
+    fun `Should switch to the DartzeeRuleSetupScreen for a match`() {
         val slot = slot<DartsMatchEntity>()
         every { gameLauncher.launchNewMatch(capture(slot), any()) } just runs
 
@@ -296,7 +286,8 @@ class TestGameSetupScreen: AbstractTest()
         currentScreen.btnNext.text shouldBe "Launch Match >"
         currentScreen.nextPressed()
 
-        val expectedParams = GameLaunchParams(listOf(p1, p2), GameType.DARTZEE, "", false, emptyList())
+        val expectedParams =
+            GameLaunchParams(listOf(p1, p2), GameType.DARTZEE, "", false, emptyList())
         verify { gameLauncher.launchNewMatch(any(), expectedParams) }
 
         val match = slot.captured
@@ -305,8 +296,7 @@ class TestGameSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should update the game parameters panel on initialise`()
-    {
+    fun `Should update the game parameters panel on initialise`() {
         val setupScreen = GameSetupScreen()
         setupScreen.initialise()
         setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
@@ -320,8 +310,7 @@ class TestGameSetupScreen: AbstractTest()
         newFilterPanel.comboBox.items().mapNotNull { it.hiddenData }.shouldHaveSize(1)
     }
 
-    private fun makeGameSetupScreenReadyToLaunch(): Pair<GameSetupScreen, List<PlayerEntity>>
-    {
+    private fun makeGameSetupScreenReadyToLaunch(): Pair<GameSetupScreen, List<PlayerEntity>> {
         val p1 = insertPlayer(strategy = "")
         val p2 = insertPlayer(strategy = "")
 

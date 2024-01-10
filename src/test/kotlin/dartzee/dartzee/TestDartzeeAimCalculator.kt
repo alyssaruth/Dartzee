@@ -21,20 +21,17 @@ import org.junit.jupiter.api.Test
 private val allNonMisses = getAllNonMissSegments()
 private val calculator = DartzeeAimCalculator()
 
-class TestDartzeeAimCalculator: AbstractTest()
-{
+class TestDartzeeAimCalculator : AbstractTest() {
     @Test
     @Tag("screenshot")
-    fun `Should aim at the bullseye for a fully valid dartboard`()
-    {
+    fun `Should aim at the bullseye for a fully valid dartboard`() {
         val segmentStatuses = SegmentStatuses(allNonMisses, allNonMisses)
         verifyAim(segmentStatuses, "All valid")
     }
 
     @Test
     @Tag("screenshot")
-    fun `Should aim at the right place for all odd`()
-    {
+    fun `Should aim at the right place for all odd`() {
         val odd = allNonMisses.filter { DartzeeDartRuleOdd().isValidSegment(it) }
         val segmentStatuses = SegmentStatuses(odd, odd)
         verifyAim(segmentStatuses, "Odd")
@@ -42,8 +39,7 @@ class TestDartzeeAimCalculator: AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Should aim based on valid segments for if cautious`()
-    {
+    fun `Should aim based on valid segments for if cautious`() {
         val twenties = allNonMisses.filter { it.score == 20 }
         val segmentStatuses = SegmentStatuses(twenties, allNonMisses)
         verifyAim(segmentStatuses, "Score 20s - cautious", false)
@@ -51,8 +47,7 @@ class TestDartzeeAimCalculator: AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Should aim based on scoring segments if aggressive`()
-    {
+    fun `Should aim based on scoring segments if aggressive`() {
         val twenties = allNonMisses.filter { it.score == 20 }
         val segmentStatuses = SegmentStatuses(twenties, allNonMisses)
         verifyAim(segmentStatuses, "Score 20s - aggressive", true)
@@ -60,8 +55,7 @@ class TestDartzeeAimCalculator: AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Should go on score for tie breakers`()
-    {
+    fun `Should go on score for tie breakers`() {
         val trebles = allNonMisses.filter { it.getMultiplier() == 3 }
         val segmentStatuses = SegmentStatuses(trebles, trebles)
         verifyAim(segmentStatuses, "Trebles")
@@ -72,8 +66,7 @@ class TestDartzeeAimCalculator: AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Should aim correctly if bullseye is missing`()
-    {
+    fun `Should aim correctly if bullseye is missing`() {
         val nonBull = allNonMisses.filter { it.getTotal() != 50 }
         val segmentStatuses = SegmentStatuses(nonBull, nonBull)
         verifyAim(segmentStatuses, "No bullseye")
@@ -81,25 +74,23 @@ class TestDartzeeAimCalculator: AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Should aim correctly for some missing trebles`()
-    {
-        val segments = allNonMisses.filterNot { it.getMultiplier() == 3 && (it.score == 20 || it.score == 3) }
+    fun `Should aim correctly for some missing trebles`() {
+        val segments =
+            allNonMisses.filterNot { it.getMultiplier() == 3 && (it.score == 20 || it.score == 3) }
         val segmentStatuses = SegmentStatuses(segments, segments)
         verifyAim(segmentStatuses, "Missing trebles")
     }
 
     @Test
     @Tag("screenshot")
-    fun `Should revert to aiming at valid segments if there are no scoring segments`()
-    {
+    fun `Should revert to aiming at valid segments if there are no scoring segments`() {
         val validSegments = allNonMisses.filter { it.score == 1 }
         val segmentStatuses = SegmentStatuses(emptyList(), validSegments)
         verifyAim(segmentStatuses, "No scoring segments", true)
     }
 
     @Test
-    fun `Should deliberately miss if no valid segments`()
-    {
+    fun `Should deliberately miss if no valid segments`() {
         val segmentStatuses = SegmentStatuses(emptyList(), emptyList())
 
         val pt = calculator.getPointToAimFor(AI_DARTBOARD, segmentStatuses, true)
@@ -107,8 +98,7 @@ class TestDartzeeAimCalculator: AbstractTest()
     }
 
     @Test
-    fun `Should deliberately miss if only valid segments are misses`()
-    {
+    fun `Should deliberately miss if only valid segments are misses`() {
         val segmentStatuses = SegmentStatuses(listOf(missTwenty), listOf(missTwenty))
 
         val pt = calculator.getPointToAimFor(AI_DARTBOARD, segmentStatuses, true)
@@ -117,24 +107,24 @@ class TestDartzeeAimCalculator: AbstractTest()
 
     @Test
     @Tag("integration")
-    fun `Should be performant`()
-    {
+    fun `Should be performant`() {
         val awkward = allNonMisses.filter { it.score != 25 }
         val segmentStatuses = SegmentStatuses(awkward, awkward)
 
         val dartboard = ComputationalDartboard(400, 400)
 
         val timer = DurationTimer()
-        repeat(10) {
-            calculator.getPointToAimFor(dartboard, segmentStatuses, true)
-        }
+        repeat(10) { calculator.getPointToAimFor(dartboard, segmentStatuses, true) }
 
         val timeElapsed = timer.getDuration()
         timeElapsed shouldBeLessThan 5000
     }
 
-    private fun verifyAim(segmentStatuses: SegmentStatuses, screenshotName: String, aggressive: Boolean = false)
-    {
+    private fun verifyAim(
+        segmentStatuses: SegmentStatuses,
+        screenshotName: String,
+        aggressive: Boolean = false
+    ) {
         val dartboard = ComputationalDartboard(400, 400)
         val pt = calculator.getPointToAimFor(dartboard, segmentStatuses, aggressive)
 

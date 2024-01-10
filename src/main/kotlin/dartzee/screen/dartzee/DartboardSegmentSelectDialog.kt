@@ -16,9 +16,8 @@ import java.awt.event.MouseEvent
 import javax.swing.JButton
 import javax.swing.JPanel
 
-class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSegment>):
-    SimpleDialog(), IMouseListener
-{
+class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSegment>) :
+    SimpleDialog(), IMouseListener {
     private val selectedSegments = mutableSetOf<DartboardSegment>()
     private var lastDraggedSegment: DartboardSegment? = null
 
@@ -26,8 +25,7 @@ class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSeg
     private val btnSelectAll = JButton("Select All")
     private val btnSelectNone = JButton("Select None")
 
-    init
-    {
+    init {
         title = "Select Segments"
         setSize(550, 650)
         setLocationRelativeTo(ScreenCache.mainScreen)
@@ -61,10 +59,8 @@ class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSeg
 
     fun getSelection() = selectedSegments.toSet()
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnSelectAll -> selectAll()
             btnSelectNone -> selectNone()
             else -> super.actionPerformed(arg0)
@@ -72,56 +68,48 @@ class DartboardSegmentSelectDialog(private val initialSegments: Set<DartboardSeg
     }
 
     private fun selectAll() = toggleAll(getAllNonMissSegments() - selectedSegments)
+
     private fun selectNone() = toggleAll(selectedSegments)
 
-    private fun toggleAll(segments: Collection<DartboardSegment>) = segments.toList().forEach(::toggleSegment)
+    private fun toggleAll(segments: Collection<DartboardSegment>) =
+        segments.toList().forEach(::toggleSegment)
 
-    private fun toggleSegment(segment: DartboardSegment)
-    {
+    private fun toggleSegment(segment: DartboardSegment) {
         lastDraggedSegment = segment
-        if (segment.isMiss())
-        {
+        if (segment.isMiss()) {
             return
         }
 
-        if (selectedSegments.contains(segment))
-        {
+        if (selectedSegments.contains(segment)) {
             selectedSegments.remove(segment)
             dartboard.revertOverriddenSegmentColour(segment)
-        }
-        else
-        {
+        } else {
             selectedSegments.add(segment)
             val col = DEFAULT_COLOUR_WRAPPER.getColour(segment)
             dartboard.overrideSegmentColour(segment, col)
         }
     }
 
-    override fun okPressed()
-    {
+    override fun okPressed() {
         dispose()
     }
 
-    override fun cancelPressed()
-    {
+    override fun cancelPressed() {
         selectedSegments.clear()
         selectedSegments.addAll(initialSegments)
         dispose()
     }
 
-    override fun mouseDragged(e: MouseEvent)
-    {
+    override fun mouseDragged(e: MouseEvent) {
         val segment = dartboard.getSegmentForPoint(e.point)
-        if (segment == lastDraggedSegment)
-        {
+        if (segment == lastDraggedSegment) {
             return
         }
 
         toggleSegment(segment)
     }
 
-    override fun mouseReleased(e: MouseEvent)
-    {
+    override fun mouseReleased(e: MouseEvent) {
         val segment = dartboard.getSegmentForPoint(e.point)
         toggleSegment(segment)
     }

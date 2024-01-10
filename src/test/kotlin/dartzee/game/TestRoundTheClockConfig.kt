@@ -4,11 +4,9 @@ import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestRoundTheClockConfig: AbstractTest()
-{
+class TestRoundTheClockConfig : AbstractTest() {
     @Test
-    fun `Should serialize and deserialize correctly`()
-    {
+    fun `Should serialize and deserialize correctly`() {
         val config = RoundTheClockConfig(ClockType.Doubles, true)
         val json = config.toJson()
 
@@ -17,8 +15,7 @@ class TestRoundTheClockConfig: AbstractTest()
     }
 
     @Test
-    fun `Should deserialize correctly`()
-    {
+    fun `Should deserialize correctly`() {
         val json = """{ "clockType": "Trebles", "inOrder": false }"""
         val config = RoundTheClockConfig.fromJson(json)
         config.inOrder shouldBe false

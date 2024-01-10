@@ -8,20 +8,24 @@ import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 
-abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement()
-{
+abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement() {
     abstract val targetScore: Int
 
     override val gameType = GameType.X01
     override val allowedForTeams = true
 
     override fun getBreakdownColumns() = listOf("Method", "Game", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.achievementDetail, a.localGameIdEarned, a.dtAchieved)
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
+    override fun getBreakdownRow(a: AchievementEntity) =
+        arrayOf<Any>(a.achievementDetail, a.localGameIdEarned, a.dtAchieved)
+
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
         ensureX01RoundsTableExists(playerIds, database)
-        val roundWithTargetScore = database.createTempTable("RoundsScored$targetScore", "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), RoundNumber INT")
+        val roundWithTargetScore =
+            database.createTempTable(
+                "RoundsScored$targetScore",
+                "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), RoundNumber INT"
+            )
 
         var sb = StringBuilder()
         sb.append(" INSERT INTO $roundWithTargetScore")
@@ -33,13 +37,21 @@ abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement
 
         if (!database.executeUpdate(sb)) return
 
-        val tempTable = database.createTempTable("RoundsScored${targetScore}NoMisses", "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundNumber INT, DtCreation TIMESTAMP")
+        val tempTable =
+            database.createTempTable(
+                "RoundsScored${targetScore}NoMisses",
+                "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundNumber INT, DtCreation TIMESTAMP"
+            )
         tempTable ?: return
 
         sb = StringBuilder()
         sb.append(" INSERT INTO $tempTable")
-        sb.append(" SELECT zz.PlayerId, zz.ParticipantId, zz.GameId, d.Ordinal, d.Score, d.Multiplier, d.RoundNumber, d.DtCreation")
-        sb.append(" FROM Dart d, Dart drtFirst, Dart drtSecond, Dart drtLast, $roundWithTargetScore zz")
+        sb.append(
+            " SELECT zz.PlayerId, zz.ParticipantId, zz.GameId, d.Ordinal, d.Score, d.Multiplier, d.RoundNumber, d.DtCreation"
+        )
+        sb.append(
+            " FROM Dart d, Dart drtFirst, Dart drtSecond, Dart drtLast, $roundWithTargetScore zz"
+        )
         sb.append(" WHERE drtFirst.ParticipantId = zz.ParticipantId")
         sb.append(" AND drtFirst.PlayerId = zz.PlayerId")
         sb.append(" AND drtFirst.RoundNumber = zz.RoundNumber")
@@ -61,12 +73,20 @@ abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement
 
         if (!database.executeUpdate(sb)) return
 
-        database.executeUpdate("CREATE INDEX ${tempTable}_PlayerId_ParticipantId_RoundNumber ON $tempTable(PlayerId, ParticipantId, RoundNumber)")
-        val tempTableTwo = database.createTempTable("RoundsScored${targetScore}Flat", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Method VARCHAR(100)")
+        database.executeUpdate(
+            "CREATE INDEX ${tempTable}_PlayerId_ParticipantId_RoundNumber ON $tempTable(PlayerId, ParticipantId, RoundNumber)"
+        )
+        val tempTableTwo =
+            database.createTempTable(
+                "RoundsScored${targetScore}Flat",
+                "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Method VARCHAR(100)"
+            )
 
         sb = StringBuilder()
         sb.append(" INSERT INTO $tempTableTwo")
-        sb.append(" SELECT highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()} AS Method")
+        sb.append(
+            " SELECT highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()} AS Method"
+        )
         sb.append(" FROM $tempTable highestDart, $tempTable mediumDart, $tempTable lowestDart")
         sb.append(" WHERE highestDart.ParticipantId = mediumDart.ParticipantId")
         sb.append(" AND highestDart.PlayerId = mediumDart.PlayerId")
@@ -76,7 +96,9 @@ abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement
         sb.append(" AND mediumDart.RoundNumber = lowestDart.RoundNumber")
         sb.append(" AND (${getDartHigherThanSql("highestDart", "mediumDart")})")
         sb.append(" AND (${getDartHigherThanSql("mediumDart", "lowestDart")})")
-        sb.append(" GROUP BY highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()}")
+        sb.append(
+            " GROUP BY highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()}"
+        )
 
         if (!database.executeUpdate(sb)) return
 
@@ -93,17 +115,27 @@ abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement
         sb.append(" )")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementType, achievementDetailFn = { rs.getString("Method") } )
+            bulkInsertFromResultSet(
+                rs,
+                database,
+                achievementType,
+                achievementDetailFn = { rs.getString("Method") }
+            )
         }
     }
 
-    private fun getDartHigherThanSql(hAlias: String, lAlias: String): String
-    {
+    private fun getDartHigherThanSql(hAlias: String, lAlias: String): String {
         val sb = StringBuilder()
 
-        sb.append("($hAlias.Score * $hAlias.Multiplier) > ($lAlias.Score * $lAlias.Multiplier)") //Higher score outright
-        sb.append(" OR (($hAlias.Score * $hAlias.Multiplier) = ($lAlias.Score * $lAlias.Multiplier) AND $hAlias.Multiplier > $lAlias.Multiplier)")
-        sb.append(" OR ($hAlias.Score = $lAlias.Score AND $hAlias.Multiplier = $lAlias.Multiplier AND $hAlias.Ordinal > $lAlias.Ordinal)")
+        sb.append(
+            "($hAlias.Score * $hAlias.Multiplier) > ($lAlias.Score * $lAlias.Multiplier)"
+        ) // Higher score outright
+        sb.append(
+            " OR (($hAlias.Score * $hAlias.Multiplier) = ($lAlias.Score * $lAlias.Multiplier) AND $hAlias.Multiplier > $lAlias.Multiplier)"
+        )
+        sb.append(
+            " OR ($hAlias.Score = $lAlias.Score AND $hAlias.Multiplier = $lAlias.Multiplier AND $hAlias.Ordinal > $lAlias.Ordinal)"
+        )
 
         return sb.toString()
     }

@@ -31,30 +31,24 @@ import javax.swing.SwingUtilities
 
 val SYNC_DIR = "${System.getProperty("user.dir")}/Sync"
 
-class SyncManager(private val dbStore: IRemoteDatabaseStore)
-{
+class SyncManager(private val dbStore: IRemoteDatabaseStore) {
     fun databaseExists(remoteName: String) = dbStore.databaseExists(remoteName)
 
     fun doPush(remoteName: String) = runInOtherThread { doPushOnOtherThread(remoteName) }
-    private fun doPushOnOtherThread(remoteName: String)
-    {
+
+    private fun doPushOnOtherThread(remoteName: String) {
         var auditEntry: SyncAuditEntity? = null
 
-        try
-        {
+        try {
             SwingUtilities.invokeLater { DialogUtil.showLoadingDialogOLD("Pushing $remoteName...") }
             setUpSyncDir()
 
             auditEntry = SyncAuditEntity.insertSyncAudit(mainDatabase, remoteName)
             dbStore.pushDatabase(remoteName, mainDatabase)
-        }
-        catch (e: Exception)
-        {
+        } catch (e: Exception) {
             auditEntry?.deleteFromDatabase()
             handleSyncError(e, CODE_PUSH_ERROR)
-        }
-        finally
-        {
+        } finally {
             tidyUpAllSyncDirs()
             SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialogOLD() }
             ScreenCache.get<SyncManagementScreen>().initialise()
@@ -62,72 +56,56 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
     }
 
     fun doPull(remoteName: String) = runInOtherThread { doPullOnOtherThread(remoteName) }
-    private fun doPullOnOtherThread(remoteName: String)
-    {
-        try
-        {
+
+    private fun doPullOnOtherThread(remoteName: String) {
+        try {
             SwingUtilities.invokeLater { DialogUtil.showLoadingDialogOLD("Pulling $remoteName...") }
             setUpSyncDir()
 
             val remote = dbStore.fetchDatabase(remoteName).database
-            if (!validateForeignDatabase(remote))
-            {
+            if (!validateForeignDatabase(remote)) {
                 return
             }
 
             DartsDatabaseUtil.swapInDatabase(remote)
-        }
-        catch (e: Exception)
-        {
+        } catch (e: Exception) {
             handleSyncError(e, CODE_PULL_ERROR)
-        }
-        finally
-        {
+        } finally {
             tidyUpAllSyncDirs()
             SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialogOLD() }
             ScreenCache.get<SyncManagementScreen>().initialise()
         }
     }
 
-    fun doSyncIfNecessary(remoteName: String): Thread
-    {
-        if (needsSync())
-        {
+    fun doSyncIfNecessary(remoteName: String): Thread {
+        if (needsSync()) {
             return doSync(remoteName)
-        }
-        else
-        {
+        } else {
             logger.info(CODE_REVERT_TO_PULL, "Reverting to a pull as there are no local changes.")
             return doPull(remoteName)
         }
     }
 
     fun doSync(remoteName: String) = runInOtherThread { doSyncOnOtherThread(remoteName) }
-    private fun doSyncOnOtherThread(remoteName: String)
-    {
-        try
-        {
+
+    private fun doSyncOnOtherThread(remoteName: String) {
+        try {
             val result = performSyncSteps(remoteName)
-            if (result != null)
-            {
-                val summary = "\n\nGames pushed: ${result.gamesPushed}\nGames pulled: ${result.gamesPulled}"
+            if (result != null) {
+                val summary =
+                    "\n\nGames pushed: ${result.gamesPushed}\nGames pulled: ${result.gamesPulled}"
                 DialogUtil.showInfoOLD("Sync completed successfully!$summary")
             }
-        }
-        catch (e: Exception)
-        {
+        } catch (e: Exception) {
             handleSyncError(e, CODE_SYNC_ERROR)
-        }
-        finally
-        {
+        } finally {
             tidyUpAllSyncDirs()
             SyncProgressDialog.dispose()
             ScreenCache.get<SyncManagementScreen>().initialise()
         }
     }
 
-    private fun performSyncSteps(remoteName: String): SyncResult?
-    {
+    private fun performSyncSteps(remoteName: String): SyncResult? {
         setUpSyncDir()
 
         SyncProgressDialog.syncStarted()
@@ -136,8 +114,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
 
         SyncProgressDialog.progressToStage(SyncStage.VALIDATE_REMOTE)
 
-        if (!validateForeignDatabase(fetchResult.database))
-        {
+        if (!validateForeignDatabase(fetchResult.database)) {
             return null
         }
 
@@ -159,8 +136,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         val success = DartsDatabaseUtil.swapInDatabase(resultingDatabase)
         SyncProgressDialog.dispose()
 
-        if (!success)
-        {
+        if (!success) {
             return null
         }
 
@@ -168,41 +144,52 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         return SyncResult(localGamesToPush, gamesPulled)
     }
 
-    private fun validateForeignDatabase(db: Database): Boolean
-    {
-        val validator = ForeignDatabaseValidator(DatabaseMigrator(DatabaseMigrations.getConversionsMap()))
+    private fun validateForeignDatabase(db: Database): Boolean {
+        val validator =
+            ForeignDatabaseValidator(DatabaseMigrator(DatabaseMigrations.getConversionsMap()))
         return validator.validateAndMigrateForeignDatabase(db, "remote")
     }
 
-    private fun getGameIds(database: Database) = GameEntity(database).retrieveModifiedSince(null).map { it.rowId }.toSet()
+    private fun getGameIds(database: Database) =
+        GameEntity(database).retrieveModifiedSince(null).map { it.rowId }.toSet()
 
     private fun getDeletedGameIds(database: Database) =
-        DeletionAuditEntity(database).retrieveEntities("EntityName = 'Game'").map { it.entityId }.toSet()
+        DeletionAuditEntity(database)
+            .retrieveEntities("EntityName = 'Game'")
+            .map { it.entityId }
+            .toSet()
 
-    private fun checkAllGamesStillExist(startingGameIds: Set<String>, resultingGameIds: Set<String>, deletedGameIds: Set<String>)
-    {
+    private fun checkAllGamesStillExist(
+        startingGameIds: Set<String>,
+        resultingGameIds: Set<String>,
+        deletedGameIds: Set<String>
+    ) {
         val missingGames = startingGameIds - resultingGameIds - deletedGameIds
-        if (missingGames.isNotEmpty())
-        {
+        if (missingGames.isNotEmpty()) {
             throw SyncDataLossError(missingGames)
         }
     }
 
-    private fun handleSyncError(e: Exception, code: LoggingCode)
-    {
-        when (e)
-        {
-            is SocketException, is InterruptedIOException -> {
+    private fun handleSyncError(e: Exception, code: LoggingCode) {
+        when (e) {
+            is SocketException,
+            is InterruptedIOException -> {
                 logger.warn(code, "Caught network error during sync: $e")
-                DialogUtil.showErrorOLD("A connection error occurred. Check your internet connection and try again.")
+                DialogUtil.showErrorOLD(
+                    "A connection error occurred. Check your internet connection and try again."
+                )
             }
             is ConcurrentModificationException -> {
                 logger.warn(code, "$e")
-                DialogUtil.showErrorOLD("Another sync has been performed since this one started. \n\nResults have been discarded.")
+                DialogUtil.showErrorOLD(
+                    "Another sync has been performed since this one started. \n\nResults have been discarded."
+                )
             }
             is SyncDataLossError -> {
                 logger.error(code, "$e", e, KEY_GAME_IDS to e.missingGameIds)
-                DialogUtil.showErrorOLD("Sync resulted in missing data. \n\nResults have been discarded.")
+                DialogUtil.showErrorOLD(
+                    "Sync resulted in missing data. \n\nResults have been discarded."
+                )
             }
             is WrappedSqlException -> {
                 logger.logSqlException(e.sqlStatement, e.genericStatement, e.sqlException)
@@ -215,14 +202,12 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore)
         }
     }
 
-    private fun setUpSyncDir()
-    {
+    private fun setUpSyncDir() {
         tidyUpAllSyncDirs()
         File(SYNC_DIR).mkdirs()
     }
 
-    private fun tidyUpAllSyncDirs()
-    {
+    private fun tidyUpAllSyncDirs() {
         File(SYNC_DIR).deleteRecursively()
         File("$databaseDirectory/${DartsDatabaseUtil.OTHER_DATABASE_NAME}").deleteRecursively()
     }

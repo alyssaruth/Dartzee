@@ -12,17 +12,13 @@ import javax.swing.JLabel
 
 private const val MEDAL_SIZE = 164
 
-class AchievementUnlockedMedal(val achievement : AbstractAchievement): JComponent()
-{
-    init
-    {
+class AchievementUnlockedMedal(val achievement: AbstractAchievement) : JComponent() {
+    init {
         preferredSize = Dimension(MEDAL_SIZE, MEDAL_SIZE)
     }
 
-    override fun paint(g: Graphics?)
-    {
-        if (g is Graphics2D)
-        {
+    override fun paint(g: Graphics?) {
+        if (g is Graphics2D) {
             paintMedalCommon(g, achievement, MEDAL_SIZE, false)
 
             val icon = achievement.getIcon()

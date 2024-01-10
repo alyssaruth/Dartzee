@@ -8,14 +8,6 @@ import dartzee.core.obj.HashMapCount
 import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.screen.stats.median
 import dartzee.stats.GameWrapper
-import net.miginfocom.swing.MigLayout
-import org.jfree.chart.ChartFactory
-import org.jfree.chart.ChartPanel
-import org.jfree.chart.plot.PlotOrientation
-import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer
-import org.jfree.data.category.DefaultCategoryDataset
-import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset
-import org.jfree.data.xy.XYSeries
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component
@@ -34,14 +26,22 @@ import javax.swing.JTable
 import javax.swing.SwingConstants
 import javax.swing.border.TitledBorder
 import javax.swing.table.DefaultTableCellRenderer
+import net.miginfocom.swing.MigLayout
+import org.jfree.chart.ChartFactory
+import org.jfree.chart.ChartPanel
+import org.jfree.chart.plot.PlotOrientation
+import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer
+import org.jfree.data.category.DefaultCategoryDataset
+import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset
+import org.jfree.data.xy.XYSeries
 
 /**
- * A tab to show bar a line representations for the 'FinalScore' column on Participant.
- * Configurable title so it can show "Total Darts" for X01, etc. Also displays mean and median values for FinalScore.
- *
+ * A tab to show bar a line representations for the 'FinalScore' column on Participant. Configurable
+ * title so it can show "Total Darts" for X01, etc. Also displays mean and median values for
+ * FinalScore.
  */
-class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) : AbstractStatisticsTab(), ActionListener
-{
+class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
+    AbstractStatisticsTab(), ActionListener {
     private var graphMin = Integer.MAX_VALUE
     private var graphMax = -1
 
@@ -74,13 +74,17 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
     private val boxAndWhiskerChartPanel = ChartPanel(null)
     private val chckbxIncludeUnfinishedGames = JCheckBox("Include unfinished")
 
-    init
-    {
+    init {
         nfMedianOther.preferredSize = Dimension(50, 20)
         nfMeanOther.preferredSize = Dimension(50, 20)
         layout = BorderLayout(0, 0)
         add(tabbedPane, BorderLayout.CENTER)
-        tabbedPane.addTab("", ImageIcon(javaClass.getResource("/icons/bar chart.png")), panelBar, null)
+        tabbedPane.addTab(
+            "",
+            ImageIcon(javaClass.getResource("/icons/bar chart.png")),
+            panelBar,
+            null
+        )
         panelBar.layout = BorderLayout(0, 0)
         panelBar.add(panel, BorderLayout.CENTER)
         panelBar.add(panelBarConfiguration, BorderLayout.EAST)
@@ -95,7 +99,12 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         panelBarConfiguration.add(nfGroups, "cell 1 1")
         nfGroups.value = 3
         nfGroups.preferredSize = Dimension(50, 20)
-        tabbedPane.addTab("", ImageIcon(javaClass.getResource("/icons/line chart.png")), panelLine, null)
+        tabbedPane.addTab(
+            "",
+            ImageIcon(javaClass.getResource("/icons/line chart.png")),
+            panelLine,
+            null
+        )
         panelLine.layout = BorderLayout(0, 0)
         panelLine.add(lineChartPanel, BorderLayout.CENTER)
         panelLine.add(panelLineConfiguration, BorderLayout.EAST)
@@ -104,7 +113,12 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         nfAverageThreshold.value = 5
         nfAverageThreshold.preferredSize = Dimension(40, 20)
         panelLineConfiguration.add(nfAverageThreshold, "cell 1 0")
-        tabbedPane.addTab("", ImageIcon(javaClass.getResource("/icons/boxAndWhisker.png")), panelBoxAndWhisker, null)
+        tabbedPane.addTab(
+            "",
+            ImageIcon(javaClass.getResource("/icons/boxAndWhisker.png")),
+            panelBoxAndWhisker,
+            null
+        )
         panelBoxAndWhisker.layout = BorderLayout(0, 0)
         panelBoxAndWhisker.add(boxAndWhiskerChartPanel, BorderLayout.CENTER)
         nfGroups.addPropertyChangeListener(this)
@@ -125,7 +139,8 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         nfMedian.preferredSize = Dimension(50, 20)
         panelRawData.add(nfMedian, "flowx,cell 1 3")
         nfMedian.isEditable = false
-        panelRawDataTable.border = TitledBorder(null, "Raw Data", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+        panelRawDataTable.border =
+            TitledBorder(null, "Raw Data", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         panelRawData.add(panelRawDataTable, "cell 0 5 2 3,grow")
         panelRawDataTable.layout = BorderLayout(0, 0)
         panelRawDataTable.add(table)
@@ -140,36 +155,36 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         comboBox.addActionListener(this)
     }
 
-    override fun populateStats()
-    {
+    override fun populateStats() {
         val gameParams = initialiseFields()
 
         populateStatsWithoutChangingFields(gameParams)
     }
 
-    private fun populateStatsWithoutChangingFields(selectedParams: ComboBoxItem<String>)
-    {
+    private fun populateStatsWithoutChangingFields(selectedParams: ComboBoxItem<String>) {
         val paramDesc = "$selectedParams"
         lineChartPanel.reset("$graphTitle ($paramDesc)", graphTitle)
 
-        //Filter out unfinished games and games with the wrong params
-        val filter = { g: GameWrapper -> g.gameParams == selectedParams.hiddenData && (g.isFinished() || chckbxIncludeUnfinishedGames.isSelected) }
-        val gamesToGraph = filteredGames.filter(filter).sortedBy{ it.dtStart }
-        val otherGamesToGraph = filteredGamesOther.filter(filter).sortedBy{ it.dtStart }
+        // Filter out unfinished games and games with the wrong params
+        val filter = { g: GameWrapper ->
+            g.gameParams == selectedParams.hiddenData &&
+                (g.isFinished() || chckbxIncludeUnfinishedGames.isSelected)
+        }
+        val gamesToGraph = filteredGames.filter(filter).sortedBy { it.dtStart }
+        val otherGamesToGraph = filteredGamesOther.filter(filter).sortedBy { it.dtStart }
         val includeOther = !otherGamesToGraph.isEmpty()
 
-        //Sort out what the min and max displayed on the graph will be
+        // Sort out what the min and max displayed on the graph will be
         adjustGraphMinAndMax(gamesToGraph, otherGamesToGraph)
 
-        //Sort the games and populate the raw data table
+        // Sort the games and populate the raw data table
         populateTable(gamesToGraph)
 
         dataset = DefaultCategoryDataset()
         boxDataset = DefaultBoxAndWhiskerCategoryDataset()
 
         addValuesToDataset(gamesToGraph, "Me", nfMedian, nfMean)
-        if (includeOther)
-        {
+        if (includeOther) {
             addValuesToDataset(otherGamesToGraph, "Other", nfMedianOther, nfMeanOther)
         }
 
@@ -182,8 +197,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         lineChartPanel.finalise()
     }
 
-    private fun initialiseFields(): ComboBoxItem<String>
-    {
+    private fun initialiseFields(): ComboBoxItem<String> {
         val gameParams = initialiseGameTypeComboBox()
 
         initialiseOutlierCutOffAndGrouping(gameParams.hiddenData)
@@ -191,16 +205,14 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         return gameParams
     }
 
-    private fun initialiseOutlierCutOffAndGrouping(gameParams: String)
-    {
+    private fun initialiseOutlierCutOffAndGrouping(gameParams: String) {
         val filter = { g: GameWrapper -> g.gameParams == gameParams && g.isFinished() }
         val gamesToGraph = filteredGames.filter(filter)
-        if (gamesToGraph.isEmpty())
-        {
+        if (gamesToGraph.isEmpty()) {
             return
         }
 
-        val scores = gamesToGraph.map{ it.finalScore }.sorted()
+        val scores = gamesToGraph.map { it.finalScore }.sorted()
 
         val lqIndex = scores.size / 4
         val uqIndex = 3 * lqIndex
@@ -213,42 +225,48 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         val min = scores.first()
         val max = scores.last()
 
-        //Go for 10 bars, whatever that works out to be
+        // Go for 10 bars, whatever that works out to be
         var grouping = (max - min) / 10
         grouping = Math.max(1, grouping)
         nfGroups.value = grouping
     }
 
-    private fun finaliseBarChart(gameParams: String)
-    {
-        val barChart = ChartFactory.createBarChart(
+    private fun finaliseBarChart(gameParams: String) {
+        val barChart =
+            ChartFactory.createBarChart(
                 "$graphTitle ($gameParams)",
                 graphTitle,
                 "Count",
                 dataset,
                 PlotOrientation.VERTICAL,
-                true, true, false)
+                true,
+                true,
+                false
+            )
 
         val plot = barChart.categoryPlot
         plot.renderer.setSeriesPaint(0, Color.BLUE)
-        if (includeOtherComparison())
-        {
+        if (includeOtherComparison()) {
             plot.renderer.setSeriesPaint(1, Color.RED)
         }
 
         panel.chart = barChart
     }
 
-    private fun finaliseBoxPlot(gameParams: String)
-    {
-        val boxChart = ChartFactory.createBoxAndWhiskerChart("$graphTitle ($gameParams)",
-                "", "", boxDataset, true)
+    private fun finaliseBoxPlot(gameParams: String) {
+        val boxChart =
+            ChartFactory.createBoxAndWhiskerChart(
+                "$graphTitle ($gameParams)",
+                "",
+                "",
+                boxDataset,
+                true
+            )
 
         val renderer = BoxAndWhiskerRenderer()
         renderer.isMeanVisible = false
         renderer.setSeriesPaint(0, Color.BLUE)
-        if (includeOtherComparison())
-        {
+        if (includeOtherComparison()) {
             renderer.setSeriesPaint(1, Color.RED)
         }
 
@@ -260,21 +278,18 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         boxAndWhiskerChartPanel.chart = boxChart
     }
 
-    private fun populateTable(gamesToGraph: List<GameWrapper>)
-    {
+    private fun populateTable(gamesToGraph: List<GameWrapper>) {
         val model = DefaultModel()
         model.addColumn("Ordinal")
         model.addColumn("Score")
         model.addColumn("Game")
         model.addColumn("!Unfinished")
 
-        for (i in gamesToGraph.indices)
-        {
+        for (i in gamesToGraph.indices) {
             val g = gamesToGraph[i]
 
             var finalScore = g.finalScore
-            if (finalScore == -1)
-            {
+            if (finalScore == -1) {
                 finalScore = g.getAllDarts().size
             }
 
@@ -288,30 +303,30 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
     }
 
     /**
-     * No more mentalness with radio buttons (though it was fun...)
-     * Now just have a combo box that we populate. Still try to preserve the previous selection if we can.
+     * No more mentalness with radio buttons (though it was fun...) Now just have a combo box that
+     * we populate. Still try to preserve the previous selection if we can.
      */
-    private fun initialiseGameTypeComboBox(): ComboBoxItem<String>
-    {
-        //Remember what was selected previously.
+    private fun initialiseGameTypeComboBox(): ComboBoxItem<String> {
+        // Remember what was selected previously.
         val selectedItem = comboBox.selectedItem
 
-        //Now get what scores should now show
+        // Now get what scores should now show
         val startingScores = getDistinctGameParams().sorted().toMutableList()
 
-        //Handle 0 games
-        if (startingScores.isEmpty())
-        {
+        // Handle 0 games
+        if (startingScores.isEmpty()) {
             startingScores.add("N/A")
         }
 
-        val comboOptions = startingScores.map { ComboBoxItem(it, getGameType().getParamsDescription(it)) }.toTypedArray()
+        val comboOptions =
+            startingScores
+                .map { ComboBoxItem(it, getGameType().getParamsDescription(it)) }
+                .toTypedArray()
         comboBox.model = DefaultComboBoxModel(comboOptions)
         comboBox.selectedItem = selectedItem
 
         var ix = comboBox.selectedIndex
-        if (ix == -1)
-        {
+        if (ix == -1) {
             ix = 0
             comboBox.selectedIndex = 0
         }
@@ -319,33 +334,32 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         return comboBox.getItemAt(ix)
     }
 
-
-    /**
-     * Get the minimum and maximum number of darts for the graph
-     */
-    private fun adjustGraphMinAndMax(gamesToGraph: List<GameWrapper>, gamesToGraphOther: List<GameWrapper>)
-    {
+    /** Get the minimum and maximum number of darts for the graph */
+    private fun adjustGraphMinAndMax(
+        gamesToGraph: List<GameWrapper>,
+        gamesToGraphOther: List<GameWrapper>
+    ) {
         val combined = (gamesToGraph + gamesToGraphOther).filter { it.isFinished() }
 
-        graphMax = combined.map{ it.finalScore }.maxOrNull() ?: Integer.MAX_VALUE
-        graphMin = combined.map{ it.finalScore }.minOrNull() ?: 0
+        graphMax = combined.map { it.finalScore }.maxOrNull() ?: Integer.MAX_VALUE
+        graphMin = combined.map { it.finalScore }.minOrNull() ?: 0
     }
 
-    /**
-     * Deal with populating the dataset used by the bar chart
-     */
-    private fun addValuesToDataset(gamesToGraph: List<GameWrapper>, legendKey: String, nfMedian: NumberField, nfMean: NumberField)
-    {
-        //Build up counts for each game finish value
+    /** Deal with populating the dataset used by the bar chart */
+    private fun addValuesToDataset(
+        gamesToGraph: List<GameWrapper>,
+        legendKey: String,
+        nfMedian: NumberField,
+        nfMean: NumberField
+    ) {
+        // Build up counts for each game finish value
         val suffix = " ($legendKey)"
         val series = XYSeries(graphTitle + suffix)
         val hmNoDartsToCount = HashMapCount<Int>()
-        for (i in gamesToGraph.indices)
-        {
+        for (i in gamesToGraph.indices) {
             val game = gamesToGraph[i]
             val score = game.finalScore
-            if (score > -1)
-            {
+            if (score > -1) {
                 series.add((i + 1).toDouble(), score.toDouble())
                 hmNoDartsToCount.incrementCount(score)
             }
@@ -362,30 +376,27 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         nfMean.value = avg
     }
 
-    private fun appendToDataset(legendKey: String, hmNoDartsToCount: HashMapCount<Int>)
-    {
+    private fun appendToDataset(legendKey: String, hmNoDartsToCount: HashMapCount<Int>) {
         val outlierLimit = nfOutlier.getNumber()
         val groups = nfGroups.getNumber()
 
         var groupCount = 0
         var rangeStart = graphMin
-        for (i in graphMin..Math.min(outlierLimit, graphMax))
-        {
+        for (i in graphMin..Math.min(outlierLimit, graphMax)) {
             groupCount += hmNoDartsToCount.getCount(i)
 
-            //If we're a multiple of the group #...
-            if (i % groups == 0 || i == Math.min(outlierLimit, graphMax))
-            {
+            // If we're a multiple of the group #...
+            if (i % groups == 0 || i == Math.min(outlierLimit, graphMax)) {
                 val rangeDesc = getRangeDesc(rangeStart, i)
                 dataset!!.addValue(groupCount.toDouble(), legendKey, rangeDesc)
 
-                //Set up for the next block
+                // Set up for the next block
                 groupCount = 0
                 rangeStart = i + 1
             }
         }
 
-        val hmOutliers = hmNoDartsToCount.filterKeys{it > outlierLimit}
+        val hmOutliers = hmNoDartsToCount.filterKeys { it > outlierLimit }
         val outlierCount = hmOutliers.map { it.value }.sum()
 
         dataset!!.addValue(outlierCount.toDouble(), legendKey, (outlierLimit + 1).toString() + "+")
@@ -395,49 +406,44 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         boxDataset!!.add(allValues, legendKey, "")
     }
 
-    private fun getRangeDesc(start: Int, finish: Int) = if (start == finish) "$start" else "$start - $finish"
+    private fun getRangeDesc(start: Int, finish: Int) =
+        if (start == finish) "$start" else "$start - $finish"
 
-    /**
-     * GameParams combo box
-     */
-    override fun actionPerformed(arg0: ActionEvent)
-    {
+    /** GameParams combo box */
+    override fun actionPerformed(arg0: ActionEvent) {
         populateStats()
     }
 
-    /**
-     * The number fields
-     */
-    override fun propertyChange(arg0: PropertyChangeEvent)
-    {
+    /** The number fields */
+    override fun propertyChange(arg0: PropertyChangeEvent) {
         val propertyName = arg0.propertyName
-        if (propertyName == "value")
-        {
+        if (propertyName == "value") {
             val selectedGameParams = comboBox.selectedItemTyped()
             populateStatsWithoutChangingFields(selectedGameParams)
         }
     }
 
-    private class TotalScoreRenderer : DefaultTableCellRenderer()
-    {
-        override fun getTableCellRendererComponent(table: JTable?,
-                                                   value: Any, isSelected: Boolean, hasFocus: Boolean, row: Int,
-                                                   column: Int): Component
-        {
+    private class TotalScoreRenderer : DefaultTableCellRenderer() {
+        override fun getTableCellRendererComponent(
+            table: JTable?,
+            value: Any,
+            isSelected: Boolean,
+            hasFocus: Boolean,
+            row: Int,
+            column: Int
+        ): Component {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
 
             val modelRow = table!!.rowSorter.convertRowIndexToModel(row)
 
             val model = table.model as DefaultModel
             val unfinished = model.getValueAt(modelRow, 3) as Boolean
-            foreground = if (unfinished)
-            {
-                if (isSelected) Color.CYAN else Color.RED
-            }
-            else
-            {
-                if (isSelected) Color.WHITE else Color.BLACK
-            }
+            foreground =
+                if (unfinished) {
+                    if (isSelected) Color.CYAN else Color.RED
+                } else {
+                    if (isSelected) Color.WHITE else Color.BLACK
+                }
 
             return this
         }

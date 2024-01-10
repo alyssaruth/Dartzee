@@ -38,22 +38,21 @@ import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Tag
-import org.junit.jupiter.api.Test
 import java.io.File
 import java.util.*
 import javax.swing.JButton
 import javax.swing.JOptionPane
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 
-class SyncE2E: AbstractRegistryTest()
-{
-    override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED, PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
+class SyncE2E : AbstractRegistryTest() {
+    override fun getPreferencesAffected() =
+        listOf(PREFERENCES_INT_AI_SPEED, PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
 
     @BeforeEach
-    fun before()
-    {
+    fun before() {
         InjectedThings.databaseDirectory = TEST_DB_DIRECTORY
         InjectedThings.mainDatabase = Database(dbName = UUID.randomUUID().toString())
         DartsDatabaseUtil.initialiseDatabase(InjectedThings.mainDatabase)
@@ -69,16 +68,14 @@ class SyncE2E: AbstractRegistryTest()
     }
 
     @AfterEach
-    fun after()
-    {
+    fun after() {
         InjectedThings.mainDatabase = Database(inMemory = true)
         File(TEST_ROOT).deleteRecursively()
     }
 
     @Tag("e2e")
     @Test
-    fun `Syncing two games with same local ID`()
-    {
+    fun `Syncing two games with same local ID`() {
         val (winner, loser) = createPlayers()
 
         val gameId = runGame(winner, loser)
@@ -99,16 +96,20 @@ class SyncE2E: AbstractRegistryTest()
         GameEntity().retrieveForId(secondGameId)!!.localId shouldBe 2
         retrieveParticipant(gameId, loser.rowId).finalScore shouldBe losingPtScore
 
-        dialogFactory.infosShown.last() shouldBe "Sync completed successfully!\n\nGames pushed: 1\nGames pulled: 1"
+        dialogFactory.infosShown.last() shouldBe
+            "Sync completed successfully!\n\nGames pushed: 1\nGames pulled: 1"
 
-        val x01Wins = AchievementEntity().retrieveEntities("PlayerId = '${winner.rowId}' AND AchievementType = '${AchievementType.X01_GAMES_WON}'")
+        val x01Wins =
+            AchievementEntity()
+                .retrieveEntities(
+                    "PlayerId = '${winner.rowId}' AND AchievementType = '${AchievementType.X01_GAMES_WON}'"
+                )
         x01Wins.size shouldBe 2
     }
 
     @Tag("e2e")
     @Test
-    fun `Syncing deleted data`()
-    {
+    fun `Syncing deleted data`() {
         val (winner, loser) = createPlayers()
 
         runGame(winner, loser)
@@ -126,15 +127,17 @@ class SyncE2E: AbstractRegistryTest()
         waitForAssertion { SyncProgressDialog.isVisible() shouldBe true }
         waitForAssertion { SyncProgressDialog.isVisible() shouldBe false }
 
-        waitForAssertion { dialogFactory.infosShown.lastOrNull() shouldBe "Sync completed successfully!\n\nGames pushed: 0\nGames pulled: 0" }
+        waitForAssertion {
+            dialogFactory.infosShown.lastOrNull() shouldBe
+                "Sync completed successfully!\n\nGames pushed: 0\nGames pulled: 0"
+        }
         getCountFromTable(EntityName.Game) shouldBe 0
         getCountFromTable(EntityName.Dart) shouldBe 0
         getCountFromTable(EntityName.Participant) shouldBe 0
         getCountFromTable(EntityName.X01Finish) shouldBe 0
     }
 
-    private fun deleteGame(mainScreen: DartsApp)
-    {
+    private fun deleteGame(mainScreen: DartsApp) {
         ScreenCache.switch<UtilitiesScreen>()
         dialogFactory.inputSelection = 1L
         dialogFactory.questionOption = JOptionPane.YES_OPTION
@@ -142,19 +145,19 @@ class SyncE2E: AbstractRegistryTest()
         confirmGameDeletion(1)
     }
 
-    private fun runGame(winner: PlayerEntity, loser: PlayerEntity): String
-    {
+    private fun runGame(winner: PlayerEntity, loser: PlayerEntity): String {
         val params = GameLaunchParams(listOf(winner, loser), GameType.X01, "501", false)
         GameLauncher().launchNewGame(params)
 
         val gameId = retrieveGame().rowId
-        waitForAssertion(15000) { retrieveParticipant(gameId, loser.rowId).isActive() shouldBe false }
+        waitForAssertion(15000) {
+            retrieveParticipant(gameId, loser.rowId).isActive() shouldBe false
+        }
         closeOpenGames()
         return gameId
     }
 
-    private fun performPush(mainScreen: DartsApp): String
-    {
+    private fun performPush(mainScreen: DartsApp): String {
         val remoteName = UUID.randomUUID().toString()
         dialogFactory.inputSelection = remoteName
         dialogFactory.optionSequence.add("Create '$remoteName'")
@@ -165,15 +168,13 @@ class SyncE2E: AbstractRegistryTest()
         return remoteName
     }
 
-    private fun performSync(mainScreen: DartsApp)
-    {
+    private fun performSync(mainScreen: DartsApp) {
         dialogFactory.optionSequence.add("Sync with local data")
         mainScreen.clickChild<JButton>(text = "Get Started > ")
         waitForAssertion { mainScreen.findChild<SyncManagementPanel>() shouldNotBe null }
     }
 
-    private fun wipeGamesAndResetRemote(mainScreen: DartsApp)
-    {
+    private fun wipeGamesAndResetRemote(mainScreen: DartsApp) {
         purgeGameAndConfirm(1)
         wipeTable(EntityName.DeletionAudit)
         wipeTable(EntityName.Achievement)

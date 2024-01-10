@@ -10,8 +10,7 @@ import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 
-class AchievementGolfInBounds : AbstractMultiRowAchievement()
-{
+class AchievementGolfInBounds : AbstractMultiRowAchievement() {
     override val name = "In Bounds"
     override val desc = "Games of 18 holes where no hole scored a 5"
     override val achievementType = AchievementType.GOLF_IN_BOUNDS
@@ -26,13 +25,19 @@ class AchievementGolfInBounds : AbstractMultiRowAchievement()
     override val allowedForTeams = false
 
     override fun getBreakdownColumns() = listOf("Game", "Score", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.localGameIdEarned, a.achievementDetail.toInt(), a.dtAchieved)
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
-        val relevantParticipants = database.createTempTable("GolfParticipants", "ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36), DtFinished TIMESTAMP, FinalScore INT") ?: return
+    override fun getBreakdownRow(a: AchievementEntity) =
+        arrayOf<Any>(a.localGameIdEarned, a.achievementDetail.toInt(), a.dtAchieved)
 
-        database.executeUpdate("""
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
+        val relevantParticipants =
+            database.createTempTable(
+                "GolfParticipants",
+                "ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36), DtFinished TIMESTAMP, FinalScore INT"
+            ) ?: return
+
+        database.executeUpdate(
+            """
             INSERT INTO $relevantParticipants
             SELECT pt.RowId, pt.PlayerId, pt.GameId, pt.DtFinished, pt.FinalScore
             FROM ${EntityName.Participant} pt, ${EntityName.Game} g
@@ -42,11 +47,18 @@ class AchievementGolfInBounds : AbstractMultiRowAchievement()
             AND pt.FinalScore > -1
             AND pt.TeamId = ''
             ${getPlayerSql(playerIds)}
-        """.trimIndent())
+        """
+                .trimIndent()
+        )
 
-        val rounds = database.createTempTable("GolfRounds", "ParticipantId VARCHAR(36), RoundNumber INT, LastDartOrdinal INT") ?: return
+        val rounds =
+            database.createTempTable(
+                "GolfRounds",
+                "ParticipantId VARCHAR(36), RoundNumber INT, LastDartOrdinal INT"
+            ) ?: return
 
-        database.executeUpdate("""
+        database.executeUpdate(
+            """
             INSERT INTO $rounds
             SELECT zz.ParticipantId, drtFirst.RoundNumber, MAX(drt.Ordinal)
             FROM $relevantParticipants zz, ${EntityName.Dart} drtFirst, ${EntityName.Dart} drt
@@ -57,11 +69,18 @@ class AchievementGolfInBounds : AbstractMultiRowAchievement()
             AND drtFirst.PlayerId = drt.PlayerId
             AND drtFirst.RoundNumber = drt.RoundNumber
             GROUP BY zz.ParticipantId, drtFirst.RoundNumber
-        """.trimIndent())
+        """
+                .trimIndent()
+        )
 
-        val roundScores = database.createTempTable("GolfRoundScores", "ParticipantId VARCHAR(36), RoundNumber INT, Hit BOOLEAN") ?: return
+        val roundScores =
+            database.createTempTable(
+                "GolfRoundScores",
+                "ParticipantId VARCHAR(36), RoundNumber INT, Hit BOOLEAN"
+            ) ?: return
 
-        database.executeUpdate("""
+        database.executeUpdate(
+            """
             INSERT INTO $roundScores
             SELECT zz.ParticipantId, zz.RoundNumber, 
                 CASE WHEN drt.Multiplier = 0 THEN FALSE
@@ -71,9 +90,13 @@ class AchievementGolfInBounds : AbstractMultiRowAchievement()
             WHERE zz.ParticipantId = drt.ParticipantId
             AND zz.RoundNumber = drt.RoundNumber
             AND zz.LastDartOrdinal = drt.Ordinal
-        """.trimIndent())
+        """
+                .trimIndent()
+        )
 
-        database.executeQuery("""
+        database
+            .executeQuery(
+                """
             SELECT pt.PlayerId, pt.GameId, pt.DtFinished AS DtAchieved, pt.FinalScore
             FROM $relevantParticipants pt
             WHERE NOT EXISTS (
@@ -81,9 +104,17 @@ class AchievementGolfInBounds : AbstractMultiRowAchievement()
                 WHERE pt.ParticipantId = rs.ParticipantId
                 AND rs.Hit = FALSE
             )
-        """.trimIndent()).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementType, achievementDetailFn = { rs.getInt("FinalScore").toString() })
-        }
+        """
+                    .trimIndent()
+            )
+            .use { rs ->
+                bulkInsertFromResultSet(
+                    rs,
+                    database,
+                    achievementType,
+                    achievementDetailFn = { rs.getInt("FinalScore").toString() }
+                )
+            }
     }
 
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_GOLF_IN_BOUNDS

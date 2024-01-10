@@ -12,8 +12,7 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldNotBe
 import java.awt.Window
 
-fun AbstractTest.awaitStatisticsScreen(): PlayerStatisticsScreen
-{
+fun AbstractTest.awaitStatisticsScreen(): PlayerStatisticsScreen {
     waitForAssertion {
         getLogRecordsSoFar().map { it.loggingCode }.shouldContain(CODE_SIMULATION_FINISHED)
         findWindow<Window> { it.findChild<PlayerStatisticsScreen>() != null } shouldNotBe null

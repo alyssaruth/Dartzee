@@ -3,12 +3,10 @@ package dartzee.db.sanity
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 
-class SanityCheckFinalScoreRtc: AbstractSanityCheckFinalScore()
-{
+class SanityCheckFinalScoreRtc : AbstractSanityCheckFinalScore() {
     override val gameType = GameType.ROUND_THE_CLOCK
 
-    override fun populateParticipantToFinalScoreTable(tempTable: String)
-    {
+    override fun populateParticipantToFinalScoreTable(tempTable: String) {
         val sb = StringBuilder()
         sb.append("INSERT INTO $tempTable")
         sb.append(" SELECT pt.RowId, COUNT(1)")

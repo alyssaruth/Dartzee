@@ -5,11 +5,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
 
 plugins {
-    kotlin("jvm") version "1.8.21"
+    kotlin("jvm") version "1.9.22"
     id("java-library")
     id("com.github.ben-manes.versions") version "0.44.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.0"
     id("org.jetbrains.kotlinx.kover") version "0.6.1"
+    id("com.ncorti.ktfmt.gradle") version "0.15.1"
 }
 
 repositories {
@@ -24,6 +25,10 @@ detekt {
     buildUponDefaultConfig = true
     allRules = false
     config.setFrom("$projectDir/detekt-config.yml")
+}
+
+ktfmt {
+    kotlinLangStyle()
 }
 
 dependencies {

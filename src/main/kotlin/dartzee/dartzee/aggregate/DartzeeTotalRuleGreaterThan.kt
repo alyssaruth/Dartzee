@@ -1,7 +1,6 @@
 package dartzee.dartzee.aggregate
 
-class DartzeeTotalRuleGreaterThan: AbstractDartzeeRuleTotalSize()
-{
+class DartzeeTotalRuleGreaterThan : AbstractDartzeeRuleTotalSize() {
     override fun getRuleIdentifier() = "GreaterThan"
 
     override fun isValidTotal(total: Int) = total > target

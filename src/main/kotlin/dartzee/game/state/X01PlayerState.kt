@@ -6,39 +6,38 @@ import dartzee.utils.isFinishRound
 import dartzee.utils.isNearMissDouble
 import dartzee.utils.sumScore
 
-data class X01PlayerState(private val startingScore: Int,
-                          override val wrappedParticipant: IWrappedParticipant,
-                          override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
-                          override val currentRound: MutableList<Dart> = mutableListOf(),
-                          override var isActive: Boolean = false): AbstractPlayerState<X01PlayerState>()
-{
-    override fun getScoreSoFar(): Int
-    {
+data class X01PlayerState(
+    private val startingScore: Int,
+    override val wrappedParticipant: IWrappedParticipant,
+    override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
+    override val currentRound: MutableList<Dart> = mutableListOf(),
+    override var isActive: Boolean = false
+) : AbstractPlayerState<X01PlayerState>() {
+    override fun getScoreSoFar(): Int {
         val hasFinished = completedRounds.isNotEmpty() && isFinishRound(completedRounds.last())
-        if (!hasFinished)
-        {
+        if (!hasFinished) {
             return (completedRounds.size * 3) + currentRound.size
-        }
-        else
-        {
+        } else {
             val lastRound = completedRounds.last()
             val earlierRounds = completedRounds.subList(0, completedRounds.size - 1)
             return (earlierRounds.size * 3) + lastRound.size
         }
     }
 
-    fun getRemainingScoreForRound(roundNumber: Int): Int
-    {
-        val lastCompleted = if (roundNumber == currentRoundNumber()) roundNumber - 1 else roundNumber
+    fun getRemainingScoreForRound(roundNumber: Int): Int {
+        val lastCompleted =
+            if (roundNumber == currentRoundNumber()) roundNumber - 1 else roundNumber
         val roundSubSet = completedRounds.subList(0, lastCompleted)
 
-        val nonBustRounds = roundSubSet.filterNot { round ->
-            val lastDart = round.lastOrNull()
-            lastDart?.let(::isBust) ?: false
-        }.toMutableList()
+        val nonBustRounds =
+            roundSubSet
+                .filterNot { round ->
+                    val lastDart = round.lastOrNull()
+                    lastDart?.let(::isBust) ?: false
+                }
+                .toMutableList()
 
-        if (roundNumber == currentRoundNumber())
-        {
+        if (roundNumber == currentRoundNumber()) {
             nonBustRounds.add(currentRound.toList())
         }
 
@@ -47,8 +46,7 @@ data class X01PlayerState(private val startingScore: Int,
 
     fun getRemainingScore() = getRemainingScoreForRound(currentRoundNumber())
 
-    fun getBadLuckCount(): Int
-    {
+    fun getBadLuckCount(): Int {
         val rounds = getRoundsForIndividual(currentIndividual())
         return rounds.flatten().count { isNearMissDouble(it) }
     }
@@ -57,8 +55,7 @@ data class X01PlayerState(private val startingScore: Int,
 
     fun isCurrentRoundComplete() = currentRound.size == 3 || getRemainingScore() <= 1
 
-    override fun dartThrown(dart: Dart)
-    {
+    override fun dartThrown(dart: Dart) {
         dart.startingScore = getRemainingScore()
         super.dartThrown(dart)
     }

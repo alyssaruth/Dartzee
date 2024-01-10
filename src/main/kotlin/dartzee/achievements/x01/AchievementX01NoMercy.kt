@@ -11,8 +11,7 @@ import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 
-class AchievementX01NoMercy: AbstractMultiRowAchievement()
-{
+class AchievementX01NoMercy : AbstractMultiRowAchievement() {
     override val name = "No Mercy"
     override val desc = "Finishes from 3, 5, 7 or 9 in X01"
     override val achievementType = AchievementType.X01_NO_MERCY
@@ -27,8 +26,7 @@ class AchievementX01NoMercy: AbstractMultiRowAchievement()
     override val pinkThreshold = 10
     override val maxValue = 10
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
         val sb = StringBuilder()
         sb.append(" SELECT drt.StartingScore, pt.PlayerId, pt.GameId, drt.DtCreation AS DtAchieved")
         sb.append(" FROM Game g, Dart drt, Participant pt")
@@ -36,7 +34,9 @@ class AchievementX01NoMercy: AbstractMultiRowAchievement()
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND g.GameType = '${GameType.X01}'")
         sb.append(" AND (pt.FinalScore > -1 OR t.FinalScore > -1)")
-        sb.append(" AND ($LAST_ROUND_FROM_PARTICIPANT = drt.RoundNumber OR $LAST_ROUND_FROM_TEAM = drt.RoundNumber)")
+        sb.append(
+            " AND ($LAST_ROUND_FROM_PARTICIPANT = drt.RoundNumber OR $LAST_ROUND_FROM_TEAM = drt.RoundNumber)"
+        )
         sb.append(" AND pt.RowId = drt.ParticipantId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
         sb.append(" AND drt.Ordinal = 1")
@@ -44,12 +44,19 @@ class AchievementX01NoMercy: AbstractMultiRowAchievement()
         appendPlayerSql(sb, playerIds)
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementType, achievementDetailFn = { rs.getInt("StartingScore").toString() })
+            bulkInsertFromResultSet(
+                rs,
+                database,
+                achievementType,
+                achievementDetailFn = { rs.getInt("StartingScore").toString() }
+            )
         }
     }
 
     override fun getBreakdownColumns() = listOf("Checkout", "Game", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.achievementDetail, a.localGameIdEarned, a.dtAchieved)
+
+    override fun getBreakdownRow(a: AchievementEntity) =
+        arrayOf<Any>(a.achievementDetail, a.localGameIdEarned, a.dtAchieved)
 
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_X01_NO_MERCY
 }

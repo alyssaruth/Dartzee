@@ -22,8 +22,7 @@ import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
 import java.time.Clock
 
-object InjectedThings
-{
+object InjectedThings {
     var allowModalDialogs = true
     var connectionPoolSize = 5
     var databaseDirectory = DATABASE_FILE_PATH
@@ -39,7 +38,8 @@ object InjectedThings
     var dartzeeAimCalculator: DartzeeAimCalculator = DartzeeAimCalculator()
     var aiSetupRuleFactory: IAISetupRuleFactory = AISetupRuleFactory()
     var simulationRunner: SimulationRunner = SimulationRunner()
-    private val remoteDatabaseStore: IRemoteDatabaseStore = AmazonS3RemoteDatabaseStore(SYNC_BUCKET_NAME)
+    private val remoteDatabaseStore: IRemoteDatabaseStore =
+        AmazonS3RemoteDatabaseStore(SYNC_BUCKET_NAME)
     var syncConfigurer: SyncConfigurer = SyncConfigurer(remoteDatabaseStore)
     var syncManager: SyncManager = SyncManager(remoteDatabaseStore)
 }

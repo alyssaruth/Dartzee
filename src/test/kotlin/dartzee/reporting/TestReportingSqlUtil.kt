@@ -12,11 +12,9 @@ import dartzee.helper.insertPlayerForGame
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestReportingSqlUtil: AbstractTest()
-{
+class TestReportingSqlUtil : AbstractTest() {
     @Test
-    fun `Should parse participants and finishing positions correctly`()
-    {
+    fun `Should parse participants and finishing positions correctly`() {
         val alice = insertPlayer(name = "Alice")
         val bob = insertPlayer(name = "Bob")
         val clive = insertPlayer(name = "Clive")
@@ -32,12 +30,19 @@ class TestReportingSqlUtil: AbstractTest()
         val wrapper = results.first()
 
         val row = wrapper.getTableRow()
-        row shouldBe arrayOf(g1.localId, "501", "Alice (1), Clive (2), Bob (3)", g1.dtCreation, g1.dtFinish, "#7 (Game 1)")
+        row shouldBe
+            arrayOf(
+                g1.localId,
+                "501",
+                "Alice (1), Clive (2), Bob (3)",
+                g1.dtCreation,
+                g1.dtFinish,
+                "#7 (Game 1)"
+            )
     }
 
     @Test
-    fun `Should return a game not part of a match`()
-    {
+    fun `Should return a game not part of a match`() {
         val alice = insertPlayer(name = "Alice")
 
         val g = insertGame(dartsMatchId = "", gameType = GameType.GOLF, gameParams = "18")
@@ -48,12 +53,12 @@ class TestReportingSqlUtil: AbstractTest()
         val wrapper = results.first()
 
         val row = wrapper.getTableRow()
-        row shouldBe arrayOf(g.localId, "Golf - 18 holes", "Alice (-)", g.dtCreation, g.dtFinish, "")
+        row shouldBe
+            arrayOf(g.localId, "Golf - 18 holes", "Alice (-)", g.dtCreation, g.dtFinish, "")
     }
 
     @Test
-    fun `Should separate participants into the correct rows`()
-    {
+    fun `Should separate participants into the correct rows`() {
         val gAlice = insertGame()
         insertPlayerForGame("Alice", gAlice.rowId)
 
@@ -64,15 +69,16 @@ class TestReportingSqlUtil: AbstractTest()
         results.size shouldBe 2
 
         val rows = ReportResultWrapper.getTableRowsFromWrappers(results)
-        rows[0] shouldBe arrayOf(gAlice.localId, "501", "Alice (-)", gAlice.dtCreation, gAlice.dtFinish, "")
+        rows[0] shouldBe
+            arrayOf(gAlice.localId, "501", "Alice (-)", gAlice.dtCreation, gAlice.dtFinish, "")
         rows[1] shouldBe arrayOf(gBob.localId, "501", "Bob (-)", gBob.dtCreation, gBob.dtFinish, "")
     }
 
     @Test
-    fun `Should retrieve Dartzee template names when appropriate`()
-    {
+    fun `Should retrieve Dartzee template names when appropriate`() {
         val template = insertDartzeeTemplate(name = "BTBF's House Party")
-        val dartzeeGameWithTemplate = insertGame(gameType = GameType.DARTZEE, gameParams = template.rowId)
+        val dartzeeGameWithTemplate =
+            insertGame(gameType = GameType.DARTZEE, gameParams = template.rowId)
         val dartzeeGameStandalone = insertGame(gameType = GameType.DARTZEE, gameParams = "")
         val x01Game = insertGame(gameType = GameType.X01, gameParams = "501")
 
@@ -86,8 +92,25 @@ class TestReportingSqlUtil: AbstractTest()
         results.first { it.localId == 3L }.templateName shouldBe null
 
         val rows = ReportResultWrapper.getTableRowsFromWrappers(results)
-        rows[0] shouldBe arrayOf(dartzeeGameWithTemplate.localId, "Dartzee - BTBF's House Party", "Alice (-)", dartzeeGameWithTemplate.dtCreation, dartzeeGameWithTemplate.dtFinish, "")
-        rows[1] shouldBe arrayOf(dartzeeGameStandalone.localId, "Dartzee", "Bob (-)", dartzeeGameStandalone.dtCreation, dartzeeGameStandalone.dtFinish, "")
-        rows[2] shouldBe arrayOf(x01Game.localId, "501", "Clive (-)", x01Game.dtCreation, x01Game.dtFinish, "")
+        rows[0] shouldBe
+            arrayOf(
+                dartzeeGameWithTemplate.localId,
+                "Dartzee - BTBF's House Party",
+                "Alice (-)",
+                dartzeeGameWithTemplate.dtCreation,
+                dartzeeGameWithTemplate.dtFinish,
+                ""
+            )
+        rows[1] shouldBe
+            arrayOf(
+                dartzeeGameStandalone.localId,
+                "Dartzee",
+                "Bob (-)",
+                dartzeeGameStandalone.dtCreation,
+                dartzeeGameStandalone.dtFinish,
+                ""
+            )
+        rows[2] shouldBe
+            arrayOf(x01Game.localId, "501", "Clive (-)", x01Game.dtCreation, x01Game.dtFinish, "")
     }
 }

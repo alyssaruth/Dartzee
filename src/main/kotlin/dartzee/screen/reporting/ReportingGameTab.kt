@@ -10,7 +10,6 @@ import dartzee.core.util.createButtonGroup
 import dartzee.core.util.enableChildren
 import dartzee.reporting.ReportParameters
 import dartzee.utils.getFilterPanel
-import net.miginfocom.swing.MigLayout
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -18,9 +17,9 @@ import javax.swing.Box
 import javax.swing.JCheckBox
 import javax.swing.JPanel
 import javax.swing.JRadioButton
+import net.miginfocom.swing.MigLayout
 
-class ReportingGameTab: JPanel(), ActionListener
-{
+class ReportingGameTab : JPanel(), ActionListener {
     private val checkBoxGameType = JCheckBox("Game")
     private val verticalStrut = Box.createVerticalStrut(20)
     private val horizontalStrut = Box.createHorizontalStrut(20)
@@ -42,8 +41,7 @@ class ReportingGameTab: JPanel(), ActionListener
     private val rdbtnSynced = JRadioButton("Synced")
     private val rdbtnPendingChanges = JRadioButton("Pending changes")
 
-    init
-    {
+    init {
         layout = MigLayout("hidemode 3", "[][][grow][]", "[][][][][][][][][][][][]")
 
         add(checkBoxGameType, "flowx,cell 0 0")
@@ -73,21 +71,18 @@ class ReportingGameTab: JPanel(), ActionListener
         addListeners()
     }
 
-    private fun createButtonGroupsAndSelectDefaults()
-    {
+    private fun createButtonGroupsAndSelectDefaults() {
         createButtonGroup(rdbtnDtFinish, rdbtnUnfinished)
         createButtonGroup(rdbtnYes, rdbtnNo)
         createButtonGroup(rdbtnPendingChanges, rdbtnSynced)
     }
 
-    private fun addListeners()
-    {
+    private fun addListeners() {
         addActionListenerToAllChildren(this)
         toggleComponents()
     }
 
-    private fun toggleComponents()
-    {
+    private fun toggleComponents() {
         comboBox.isEnabled = checkBoxGameType.isSelected
         panelGameParams.isEnabled = cbType.isSelected
         dateFilterPanelStart.enableChildren(cbStartDate.isSelected)
@@ -102,12 +97,9 @@ class ReportingGameTab: JPanel(), ActionListener
         rdbtnSynced.isEnabled = cbSyncStatus.isSelected
     }
 
-    override fun actionPerformed(e: ActionEvent?)
-    {
-        when (e?.source)
-        {
-            comboBox ->
-            {
+    override fun actionPerformed(e: ActionEvent?) {
+        when (e?.source) {
+            comboBox -> {
                 remove(panelGameParams)
                 panelGameParams = getFilterPanel(comboBox.getGameType())
                 panelGameParams.isEnabled = cbType.isSelected
@@ -120,42 +112,32 @@ class ReportingGameTab: JPanel(), ActionListener
 
     fun valid() = dateFilterPanelStart.valid() && dateFilterPanelFinish.valid()
 
-    fun populateReportParameters(rp: ReportParameters)
-    {
-        if (checkBoxGameType.isSelected)
-        {
+    fun populateReportParameters(rp: ReportParameters) {
+        if (checkBoxGameType.isSelected) {
             rp.gameType = comboBox.getGameType()
         }
 
-        if (cbType.isSelected)
-        {
+        if (cbType.isSelected) {
             rp.gameParams = panelGameParams.getGameParams()
         }
 
-        if (cbPartOfMatch.isSelected)
-        {
+        if (cbPartOfMatch.isSelected) {
             rp.setEnforceMatch(rdbtnYes.isSelected)
         }
 
-        if (cbSyncStatus.isSelected)
-        {
+        if (cbSyncStatus.isSelected) {
             rp.pendingChanges = rdbtnPendingChanges.isSelected
         }
 
-        if (cbStartDate.isSelected)
-        {
+        if (cbStartDate.isSelected) {
             rp.dtStartFrom = dateFilterPanelStart.getSqlDtFrom()
             rp.dtStartTo = dateFilterPanelStart.getSqlDtTo()
         }
 
-        if (cbFinishDate.isSelected)
-        {
-            if (rdbtnUnfinished.isSelected)
-            {
+        if (cbFinishDate.isSelected) {
+            if (rdbtnUnfinished.isSelected) {
                 rp.unfinishedOnly = true
-            }
-            else
-            {
+            } else {
                 rp.dtFinishFrom = dateFilterPanelFinish.getSqlDtFrom()
                 rp.dtFinishTo = dateFilterPanelFinish.getSqlDtTo()
             }

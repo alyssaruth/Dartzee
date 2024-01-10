@@ -17,20 +17,18 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 
-class TestGameUtil: AbstractTest()
-{
+class TestGameUtil : AbstractTest() {
     @Test
-    fun `Filter panel mappings`()
-    {
+    fun `Filter panel mappings`() {
         getFilterPanel(GameType.X01).shouldBeInstanceOf<GameParamFilterPanelX01>()
         getFilterPanel(GameType.GOLF).shouldBeInstanceOf<GameParamFilterPanelGolf>()
-        getFilterPanel(GameType.ROUND_THE_CLOCK).shouldBeInstanceOf<GameParamFilterPanelRoundTheClock>()
+        getFilterPanel(GameType.ROUND_THE_CLOCK)
+            .shouldBeInstanceOf<GameParamFilterPanelRoundTheClock>()
         getFilterPanel(GameType.DARTZEE).shouldBeInstanceOf<GameParamFilterPanelDartzee>()
     }
 
     @Test
-    fun `Does highest win`()
-    {
+    fun `Does highest win`() {
         doesHighestWin(GameType.X01) shouldBe false
         doesHighestWin(GameType.GOLF) shouldBe false
         doesHighestWin(GameType.ROUND_THE_CLOCK) shouldBe false
@@ -38,8 +36,7 @@ class TestGameUtil: AbstractTest()
     }
 
     @Test
-    fun `Should save a finishing position of -1 if there is only one participant`()
-    {
+    fun `Should save a finishing position of -1 if there is only one participant`() {
         val pt = insertParticipant()
 
         setFinishingPositions(listOf(pt), insertGame())
@@ -48,8 +45,7 @@ class TestGameUtil: AbstractTest()
     }
 
     @Test
-    fun `Should correctly assign finishing positions when lowest wins`()
-    {
+    fun `Should correctly assign finishing positions when lowest wins`() {
         val pt = insertParticipant(finalScore = 25)
         val pt2 = insertParticipant(finalScore = 40)
         val pt3 = insertParticipant(finalScore = 55)
@@ -62,8 +58,7 @@ class TestGameUtil: AbstractTest()
     }
 
     @Test
-    fun `Should correctly handle ties when lowest wins`()
-    {
+    fun `Should correctly handle ties when lowest wins`() {
         val pt = insertParticipant(finalScore = 25)
         val pt2 = insertParticipant(finalScore = 40)
         val pt3 = insertParticipant(finalScore = 55)
@@ -78,8 +73,7 @@ class TestGameUtil: AbstractTest()
     }
 
     @Test
-    fun `Should correctly assign finishing positions when highest wins`()
-    {
+    fun `Should correctly assign finishing positions when highest wins`() {
         val pt = insertParticipant(finalScore = 25)
         val pt2 = insertParticipant(finalScore = 40)
         val pt3 = insertParticipant(finalScore = 55)
@@ -92,8 +86,7 @@ class TestGameUtil: AbstractTest()
     }
 
     @Test
-    fun `Should correctly handle ties when highest wins`()
-    {
+    fun `Should correctly handle ties when highest wins`() {
         val pt = insertParticipant(finalScore = 25)
         val pt2 = insertParticipant(finalScore = 40)
         val pt3 = insertParticipant(finalScore = 55)
@@ -108,8 +101,7 @@ class TestGameUtil: AbstractTest()
     }
 
     @Test
-    fun `Should save the finish positions to the database`()
-    {
+    fun `Should save the finish positions to the database`() {
         val pt = insertParticipant(finalScore = 25)
         val pt2 = insertParticipant(finalScore = 40)
 
@@ -123,8 +115,7 @@ class TestGameUtil: AbstractTest()
     }
 
     @Test
-    fun `Should update the relevant total wins achievement for all winners`()
-    {
+    fun `Should update the relevant total wins achievement for all winners`() {
         val pt = insertParticipant(finalScore = 29)
         val pt2 = insertParticipant(finalScore = 29)
         val pt3 = insertParticipant(finalScore = 50)
@@ -142,6 +133,7 @@ class TestGameUtil: AbstractTest()
         a2.gameIdEarned shouldBe game.rowId
         a2.achievementDetail shouldBe "29"
 
-        AchievementEntity.retrieveAchievement(AchievementType.GOLF_GAMES_WON, pt3.playerId) shouldBe null
+        AchievementEntity.retrieveAchievement(AchievementType.GOLF_GAMES_WON, pt3.playerId) shouldBe
+            null
     }
 }

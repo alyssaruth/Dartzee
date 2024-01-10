@@ -15,11 +15,9 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestStatisticsTabX01ThreeDartScores: AbstractTest()
-{
+class TestStatisticsTabX01ThreeDartScores : AbstractTest() {
     @Test
-    fun `Should show correct screen state for individual stats`()
-    {
+    fun `Should show correct screen state for individual stats`() {
         val tab = StatisticsTabX01ThreeDartScores()
         tab.setFilteredGames(listOf(GAME_WRAPPER_301_1), emptyList())
         tab.populateStats()
@@ -29,8 +27,7 @@ class TestStatisticsTabX01ThreeDartScores: AbstractTest()
     }
 
     @Test
-    fun `Should show correct screen state when a comparison is included`()
-    {
+    fun `Should show correct screen state when a comparison is included`() {
         val tab = StatisticsTabX01ThreeDartScores()
         tab.setFilteredGames(listOf(GAME_WRAPPER_301_1), listOf(GAME_WRAPPER_301_2))
         tab.populateStats()
@@ -40,8 +37,7 @@ class TestStatisticsTabX01ThreeDartScores: AbstractTest()
     }
 
     @Test
-    fun `Should respond correctly when threshold is updated`()
-    {
+    fun `Should respond correctly when threshold is updated`() {
         val tab = StatisticsTabX01ThreeDartScores()
         tab.setFilteredGames(listOf(GAME_WRAPPER_301_1, GAME_WRAPPER_301_2), emptyList())
         tab.populateStats()
@@ -55,8 +51,7 @@ class TestStatisticsTabX01ThreeDartScores: AbstractTest()
     }
 
     @Test
-    fun `Breakdown table should update correctly when rows are selected from the summary`()
-    {
+    fun `Breakdown table should update correctly when rows are selected from the summary`() {
         val tab = StatisticsTabX01ThreeDartScores()
         tab.getChild<NumberField>().value = 62
         tab.setFilteredGames(listOf(GAME_WRAPPER_301_1, GAME_WRAPPER_301_2), emptyList())
@@ -69,13 +64,17 @@ class TestStatisticsTabX01ThreeDartScores: AbstractTest()
         breakdownTable.getRows() shouldBe listOf(listOf("20, 20, 5", 2, 1L))
 
         scoresTable.selectRow(4)
-        breakdownTable.getRows().shouldContainExactly(
-            listOf("20, 20, 20", 1, 1L),
-            listOf("T12, 20, 4", 1, 2L)
-        )
+        breakdownTable
+            .getRows()
+            .shouldContainExactly(listOf("20, 20, 20", 1, 1L), listOf("T12, 20, 4", 1, 2L))
     }
 
-    private fun StatisticsTabX01ThreeDartScores.myScores() = findChild<ScrollTable> { it.testId == "PlayerScores" }
-    private fun StatisticsTabX01ThreeDartScores.myBreakdown() = findChild<ScrollTable> { it.testId == "PlayerBreakdown" }
-    private fun StatisticsTabX01ThreeDartScores.otherScores() = findChild<ScrollTable> { it.testId == "OtherScores" }
+    private fun StatisticsTabX01ThreeDartScores.myScores() =
+        findChild<ScrollTable> { it.testId == "PlayerScores" }
+
+    private fun StatisticsTabX01ThreeDartScores.myBreakdown() =
+        findChild<ScrollTable> { it.testId == "PlayerBreakdown" }
+
+    private fun StatisticsTabX01ThreeDartScores.otherScores() =
+        findChild<ScrollTable> { it.testId == "OtherScores" }
 }

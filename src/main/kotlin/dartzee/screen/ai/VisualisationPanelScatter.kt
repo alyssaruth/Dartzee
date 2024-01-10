@@ -12,10 +12,8 @@ import javax.swing.JLabel
 import javax.swing.SwingConstants
 import javax.swing.border.LineBorder
 
-class VisualisationPanelScatter : AbstractVisualisationPanel()
-{
-    init
-    {
+class VisualisationPanelScatter : AbstractVisualisationPanel() {
+    init {
         add(overlay)
         add(dartboard)
 
@@ -45,38 +43,41 @@ class VisualisationPanelScatter : AbstractVisualisationPanel()
         panel.add(lblRed)
     }
 
-    override fun factoryColourWrapper(): ColourWrapper
-    {
+    override fun factoryColourWrapper(): ColourWrapper {
         val evenSingle = DartsColour.DARTBOARD_LIGHT_GREY
         val evenDouble = DartsColour.DARTBOARD_LIGHTER_GREY
         val evenTreble = DartsColour.DARTBOARD_LIGHTER_GREY
         val oddSingle = DartsColour.DARTBOARD_WHITE
         val oddDouble = DartsColour.DARTBOARD_LIGHTEST_GREY
         val oddTreble = DartsColour.DARTBOARD_LIGHTEST_GREY
-        val wrapper = ColourWrapper(
-            evenSingle, evenDouble, evenTreble,
-            oddSingle, oddDouble, oddTreble, evenDouble, oddDouble
-        )
+        val wrapper =
+            ColourWrapper(
+                evenSingle,
+                evenDouble,
+                evenTreble,
+                oddSingle,
+                oddDouble,
+                oddTreble,
+                evenDouble,
+                oddDouble
+            )
         wrapper.missedBoardColour = Color.WHITE
         wrapper.outerDartboardColour = Color.WHITE
         return wrapper
     }
 
-    override fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModel)
-    {
+    override fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModel) {
         overlayImg.paint { getColorForPoint(it, hmPointToCount) }
         repaint()
     }
-    private fun getColorForPoint(pt: Point, hmPointToCount: Map<Point, Int>): Color
-    {
+
+    private fun getColorForPoint(pt: Point, hmPointToCount: Map<Point, Int>): Color {
         val count = hmPointToCount[pt] ?: return DartsColour.TRANSPARENT
         return getColourForNoOfHits(count)
     }
 
-    private fun getColourForNoOfHits(count: Int): Color
-    {
-        return when
-        {
+    private fun getColourForNoOfHits(count: Int): Color {
+        return when {
             count >= 20 -> Color.yellow
             count >= 5 -> Color.orange
             else -> Color.red

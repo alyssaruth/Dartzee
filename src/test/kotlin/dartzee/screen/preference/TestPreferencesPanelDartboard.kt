@@ -15,17 +15,15 @@ import dartzee.utils.PREFERENCES_STRING_ODD_TREBLE_COLOUR
 import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
 import javax.swing.JFrame
+import org.junit.jupiter.api.Test
 
-class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPanelDartboard>()
-{
+class TestPreferencesPanelDartboard : AbstractPreferencePanelTest<PreferencesPanelDartboard>() {
     @Test
-    fun `Dartboard should refresh when settings are changed`()
-    {
+    fun `Dartboard should refresh when settings are changed`() {
         val frame = JFrame()
         val panel = PreferencesPanelDartboard()
 
@@ -59,18 +57,18 @@ class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPane
 
     override fun factory() = PreferencesPanelDartboard()
 
-    override fun getPreferencesAffected(): MutableList<String>
-    {
-        return mutableListOf(PREFERENCES_STRING_EVEN_SINGLE_COLOUR,
-                PREFERENCES_STRING_EVEN_DOUBLE_COLOUR,
-                PREFERENCES_STRING_EVEN_TREBLE_COLOUR,
-                PREFERENCES_STRING_ODD_SINGLE_COLOUR,
-                PREFERENCES_STRING_ODD_DOUBLE_COLOUR,
-                PREFERENCES_STRING_ODD_TREBLE_COLOUR)
+    override fun getPreferencesAffected(): MutableList<String> {
+        return mutableListOf(
+            PREFERENCES_STRING_EVEN_SINGLE_COLOUR,
+            PREFERENCES_STRING_EVEN_DOUBLE_COLOUR,
+            PREFERENCES_STRING_EVEN_TREBLE_COLOUR,
+            PREFERENCES_STRING_ODD_SINGLE_COLOUR,
+            PREFERENCES_STRING_ODD_DOUBLE_COLOUR,
+            PREFERENCES_STRING_ODD_TREBLE_COLOUR
+        )
     }
 
-    override fun checkUiFieldValuesAreDefaults(panel: PreferencesPanelDartboard)
-    {
+    override fun checkUiFieldValuesAreDefaults(panel: PreferencesPanelDartboard) {
         panel.cpOddSingle.selectedColour shouldBe DartsColour.DARTBOARD_WHITE
         panel.cpOddDouble.selectedColour shouldBe DartsColour.DARTBOARD_GREEN
         panel.cpOddTreble.selectedColour shouldBe DartsColour.DARTBOARD_GREEN
@@ -80,8 +78,7 @@ class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPane
         panel.cpEvenTreble.selectedColour shouldBe DartsColour.DARTBOARD_RED
     }
 
-    override fun setUiFieldValuesToNonDefaults(panel: PreferencesPanelDartboard)
-    {
+    override fun setUiFieldValuesToNonDefaults(panel: PreferencesPanelDartboard) {
         panel.cpOddSingle.updateSelectedColor(Color.BLUE)
         panel.cpOddDouble.updateSelectedColor(Color(200, 50, 128))
         panel.cpOddTreble.updateSelectedColor(Color.getHSBColor(0.9f, 0.8f, 1.0f))
@@ -91,8 +88,7 @@ class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPane
         panel.cpEvenTreble.updateSelectedColor(Color.CYAN)
     }
 
-    override fun checkUiFieldValuesAreNonDefaults(panel: PreferencesPanelDartboard)
-    {
+    override fun checkUiFieldValuesAreNonDefaults(panel: PreferencesPanelDartboard) {
         panel.cpOddSingle.selectedColour shouldBe Color.BLUE
         panel.cpOddDouble.selectedColour shouldBe Color(200, 50, 128)
         panel.cpOddTreble.selectedColour shouldBe Color.getHSBColor(0.9f, 0.8f, 1.0f)
@@ -102,8 +98,7 @@ class TestPreferencesPanelDartboard: AbstractPreferencePanelTest<PreferencesPane
         panel.cpEvenTreble.selectedColour shouldBe Color.CYAN
     }
 
-    override fun checkPreferencesAreSetToNonDefaults()
-    {
+    override fun checkPreferencesAreSetToNonDefaults() {
         val evenSingleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_SINGLE_COLOUR)
         val evenDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_DOUBLE_COLOUR)
         val evenTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_TREBLE_COLOUR)

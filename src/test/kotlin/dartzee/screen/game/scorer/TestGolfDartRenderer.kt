@@ -9,23 +9,21 @@ import dartzee.drtTrebleOne
 import dartzee.helper.AbstractTest
 import dartzee.`object`.Dart
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import javax.swing.JLabel
 import javax.swing.JTable
+import org.junit.jupiter.api.Test
 
-class TestGolfDartRenderer : AbstractTest()
-{
+class TestGolfDartRenderer : AbstractTest() {
     @Test
-    fun `Should replace dart values with their golf score`()
-    {
+    fun `Should replace dart values with their golf score`() {
         checkDartConversion(drtDoubleOne(), 1)
         checkDartConversion(drtOuterOne(), 4)
         checkDartConversion(drtTrebleOne(), 2)
         checkDartConversion(drtInnerOne(), 3)
         checkDartConversion(drtOuterEighteen(), 5)
     }
-    private fun checkDartConversion(dart: Dart, expectedValue: Int)
-    {
+
+    private fun checkDartConversion(dart: Dart, expectedValue: Int) {
         val model = TableUtil.DefaultModel()
         model.addColumn("")
         model.addColumn("Dart")

@@ -14,8 +14,7 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 
-abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), IScorerTable
-{
+abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), IScorerTable {
     val playerIds = participant.individuals.map { it.playerId }
 
     override val model = DefaultModel()
@@ -32,8 +31,7 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), 
     val playerName: String
         get() = lblName.text
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
         preferredSize = Dimension(180, 600)
 
@@ -69,23 +67,18 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), 
 
     fun getTableOnly() = panelCenter
 
-    fun init()
-    {
+    fun init() {
         lblResult.text = ""
 
-        //TableModel
+        // TableModel
         tableScores.setRowHeight(25)
-        repeat(getNumberOfColumns())
-        {
-            model.addColumn("")
-        }
+        repeat(getNumberOfColumns()) { model.addColumn("") }
         tableScores.model = model
 
         initImpl()
     }
 
-    protected fun updateResultColourForPosition(pos: Int)
-    {
+    protected fun updateResultColourForPosition(pos: Int) {
         DartsColour.setFgAndBgColoursForPosition(lblResult, pos)
     }
 }

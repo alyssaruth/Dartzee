@@ -13,15 +13,13 @@ import javax.swing.JPanel
  * Cherry-picks your best performance ever for each hole and assembles it into an 'ideal' scorecard.
  * Just for fun!
  */
-class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
-{
+class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab() {
     private val panelMine = JPanel()
     private val panelMyScorecard = JPanel()
     private val panelOther = JPanel()
     private val panelOtherScorecard = JPanel()
 
-    init
-    {
+    init {
         layout = GridLayout(0, 2, 0, 0)
         add(panelMine)
         panelMine.layout = BorderLayout(0, 0)
@@ -34,31 +32,26 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
         panelOtherScorecard.layout = BorderLayout(0, 0)
     }
 
-    override fun populateStats()
-    {
+    override fun populateStats() {
         setOtherComponentVisibility(this, panelOther)
 
         populateStats(filteredGames, panelMyScorecard, false)
-        if (includeOtherComparison())
-        {
+        if (includeOtherComparison()) {
             populateStats(filteredGamesOther, panelOtherScorecard, true)
         }
     }
 
-    private fun populateStats(filteredGames: List<GameWrapper>, panel: JPanel, other: Boolean)
-    {
+    private fun populateStats(filteredGames: List<GameWrapper>, panel: JPanel, other: Boolean) {
         val hmHoleToOptimalScorecard = makeOptimalScorecardStartingMap()
 
         val sortedGames = filteredGames.sortedBy { it.dtStart }
-        for (game in sortedGames)
-        {
+        for (game in sortedGames) {
             game.populateOptimalScorecardMaps(hmHoleToOptimalScorecard)
         }
 
         val testId = if (other) "scorecardOther" else "scorecardMine"
         val scoreSheet = GolfStatsScorecard(0, true, testId)
-        if (other)
-        {
+        if (other) {
             scoreSheet.setTableForeground(Color.RED)
         }
 
@@ -75,13 +68,11 @@ class StatisticsTabGolfOptimalScorecard : AbstractStatisticsTab()
 
 data class OptimalHoleStat(val darts: List<Dart>, val localGameId: Long)
 
-fun makeOptimalScorecardStartingMap(): MutableMap<Int, OptimalHoleStat>
-{
+fun makeOptimalScorecardStartingMap(): MutableMap<Int, OptimalHoleStat> {
     val hm = mutableMapOf<Int, OptimalHoleStat>()
 
     // Add fudge data so we always display something, even if there are no games
-    for (i in 1..18)
-    {
+    for (i in 1..18) {
         hm[i] = OptimalHoleStat(listOf(Dart(20, 0), Dart(20, 0), Dart(20, 0)), -1)
     }
 

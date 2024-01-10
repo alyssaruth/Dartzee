@@ -13,15 +13,14 @@ import javax.swing.SwingUtilities
 import javax.swing.WindowConstants
 import javax.swing.border.EmptyBorder
 
-class ProgressDialog(private var workToDo: Int, private var message: String) : JDialog(), ActionListener
-{
+class ProgressDialog(private var workToDo: Int, private var message: String) :
+    JDialog(), ActionListener {
     private var cancelPressed = false
 
     private val progressBar = JProgressBar()
     private val btnCancel = JButton("Cancel")
 
-    init
-    {
+    init {
         val panel = JPanel()
         panel.border = EmptyBorder(10, 0, 0, 0)
         contentPane.add(panel, BorderLayout.CENTER)
@@ -39,13 +38,11 @@ class ProgressDialog(private var workToDo: Int, private var message: String) : J
         btnCancel.isVisible = false
     }
 
-    fun setVisibleLater()
-    {
+    fun setVisibleLater() {
         SwingUtilities.invokeLater { isVisible = true }
     }
 
-    fun resetProgress()
-    {
+    fun resetProgress() {
         SwingUtilities.invokeLater {
             progressBar.minimum = 0
             progressBar.maximum = workToDo
@@ -54,8 +51,7 @@ class ProgressDialog(private var workToDo: Int, private var message: String) : J
         }
     }
 
-    fun incrementProgressLater(increment: Int = 1)
-    {
+    fun incrementProgressLater(increment: Int = 1) {
         SwingUtilities.invokeLater {
             val newValue = progressBar.value + increment
             progressBar.value = newValue
@@ -64,31 +60,25 @@ class ProgressDialog(private var workToDo: Int, private var message: String) : J
         }
     }
 
-
     fun cancelPressed() = cancelPressed
 
-    fun disposeLater()
-    {
+    fun disposeLater() {
         SwingUtilities.invokeLater { dispose() }
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
+    override fun actionPerformed(arg0: ActionEvent) {
         cancelPressed = true
     }
 
-    fun showCancel(showCancel: Boolean)
-    {
+    fun showCancel(showCancel: Boolean) {
         btnCancel.isVisible = showCancel
 
         val height = if (showCancel) 120 else 90
         setSize(300, height)
     }
 
-    companion object
-    {
-        fun factory(title: String, message: String, workToDo: Int): ProgressDialog
-        {
+    companion object {
+        fun factory(title: String, message: String, workToDo: Int): ProgressDialog {
             val dialog = ProgressDialog(workToDo, message)
             dialog.resetProgress()
             dialog.title = title

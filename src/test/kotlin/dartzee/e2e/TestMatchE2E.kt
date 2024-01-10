@@ -24,26 +24,24 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import javax.swing.JTabbedPane
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import javax.swing.JTabbedPane
 
-class TestMatchE2E: AbstractRegistryTest()
-{
-    override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED, PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
+class TestMatchE2E : AbstractRegistryTest() {
+    override fun getPreferencesAffected() =
+        listOf(PREFERENCES_INT_AI_SPEED, PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
 
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 0)
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, false)
     }
 
     @Test
     @Tag("e2e")
-    fun `E2E - Two game match`()
-    {
+    fun `E2E - Two game match`() {
         val match = insertDartsMatch(games = 2, matchParams = "", mode = MatchMode.FIRST_TO)
         match.gameType = GameType.X01
         match.gameParams = "501"
@@ -58,8 +56,7 @@ class TestMatchE2E: AbstractRegistryTest()
         verifyUi()
     }
 
-    private fun verifyDatabase(matchId: String, winner: PlayerEntity, loser: PlayerEntity)
-    {
+    private fun verifyDatabase(matchId: String, winner: PlayerEntity, loser: PlayerEntity) {
         val games = GameEntity().retrieveEntities()
         games.size shouldBe 2
         games.forEach {
@@ -91,8 +88,7 @@ class TestMatchE2E: AbstractRegistryTest()
         }
     }
 
-    private fun verifyUi()
-    {
+    private fun verifyUi() {
         val matchScreen = ScreenCache.getDartsGameScreens().first() as X01MatchScreen
         matchScreen.title shouldBe "Match #1 (First to 2 - 501)"
 

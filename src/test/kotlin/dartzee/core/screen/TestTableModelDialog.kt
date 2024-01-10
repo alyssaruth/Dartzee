@@ -10,11 +10,9 @@ import io.mockk.spyk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class TestTableModelDialog: AbstractTest()
-{
+class TestTableModelDialog : AbstractTest() {
     @Test
-    fun `Should display with the correct title and dialog properties`()
-    {
+    fun `Should display with the correct title and dialog properties`() {
         val table = ScrollTable()
         val tmd = TableModelDialog("Bah", table)
 
@@ -25,25 +23,23 @@ class TestTableModelDialog: AbstractTest()
     }
 
     @Test
-    fun `Should pass through column widths to the ScrollTable`()
-    {
+    fun `Should pass through column widths to the ScrollTable`() {
         val st = mockk<ScrollTable>(relaxed = true)
 
         val tmd = TableModelDialog("Test", st)
 
         tmd.setColumnWidths("foo")
 
-        verify{ st.setColumnWidths("foo") }
+        verify { st.setColumnWidths("foo") }
     }
 
     @Test
-    fun `Should dispose when Ok is pressed`()
-    {
+    fun `Should dispose when Ok is pressed`() {
         val tmd = TableModelDialog("Test", ScrollTable())
 
         val spy = spyk(tmd)
         spy.okPressed()
 
-        verify{ spy.dispose() }
+        verify { spy.dispose() }
     }
 }

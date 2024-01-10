@@ -17,24 +17,26 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 
-class TestDartzeePlayerState: AbstractTest()
-{
+class TestDartzeePlayerState : AbstractTest() {
     @Test
-    fun `Should report a score of 0 when no darts have been thrown`()
-    {
+    fun `Should report a score of 0 when no darts have been thrown`() {
         val state = makeDartzeePlayerState(completedRounds = emptyList())
         state.getScoreSoFar() shouldBe 0
     }
 
     @Test
-    fun `Should correctly calculate the cumulative score for a given round`()
-    {
+    fun `Should correctly calculate the cumulative score for a given round`() {
         val scoringRound = listOf(Dart(20, 1), Dart(7, 3), Dart(19, 1))
         val resultTwo = DartzeeRoundResult(1, false, -30)
         val resultThree = DartzeeRoundResult(7, true, 75)
         val resultFour = DartzeeRoundResult(2, false, -52)
         val resultFive = DartzeeRoundResult(3, true, 50)
-        val state = makeDartzeePlayerState(completedRounds = listOf(scoringRound, emptyList(), emptyList(), emptyList(), emptyList()), roundResults = listOf(resultTwo, resultThree, resultFour, resultFive))
+        val state =
+            makeDartzeePlayerState(
+                completedRounds =
+                    listOf(scoringRound, emptyList(), emptyList(), emptyList(), emptyList()),
+                roundResults = listOf(resultTwo, resultThree, resultFour, resultFive)
+            )
 
         state.getCumulativeScore(1) shouldBe 60
         state.getCumulativeScore(2) shouldBe 30
@@ -46,16 +48,14 @@ class TestDartzeePlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should fire state changed`()
-    {
+    fun `Should fire state changed`() {
         val state = makeDartzeePlayerState()
         state.shouldFireStateChange { it.addRoundResult(DartzeeRoundResultEntity()) }
         state.shouldFireStateChange { it.saveRoundResult(DartzeeRoundResult(1, true, 100)) }
     }
 
     @Test
-    fun `Should save a round result`()
-    {
+    fun `Should save a round result`() {
         val roundOne = listOf(Dart(20, 1), Dart(20, 1), Dart(1, 1))
         val roundTwo = listOf(Dart(20, 1), Dart(20, 1), Dart(1, 1))
         val state = makeDartzeePlayerState(completedRounds = listOf(roundOne, roundTwo))
@@ -73,10 +73,14 @@ class TestDartzeePlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should update Halved achievement`()
-    {
+    fun `Should update Halved achievement`() {
         val p = insertPlayer()
-        insertAchievement(playerId = p.rowId, type = AchievementType.DARTZEE_HALVED, gameIdEarned = randomGuid(), achievementCounter = 50)
+        insertAchievement(
+            playerId = p.rowId,
+            type = AchievementType.DARTZEE_HALVED,
+            gameIdEarned = randomGuid(),
+            achievementCounter = 50
+        )
 
         val pt = insertParticipant(playerId = p.rowId)
         val state = makeDartzeePlayerState(pt)
@@ -89,10 +93,14 @@ class TestDartzeePlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should not update Halved achievement if point loss is not higher than existing row`()
-    {
+    fun `Should not update Halved achievement if point loss is not higher than existing row`() {
         val p = insertPlayer()
-        insertAchievement(playerId = p.rowId, type = AchievementType.DARTZEE_HALVED, gameIdEarned = randomGuid(), achievementCounter = 50)
+        insertAchievement(
+            playerId = p.rowId,
+            type = AchievementType.DARTZEE_HALVED,
+            gameIdEarned = randomGuid(),
+            achievementCounter = 50
+        )
 
         val pt = insertParticipant(playerId = p.rowId)
         val state = makeDartzeePlayerState(pt)
@@ -105,8 +113,7 @@ class TestDartzeePlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should not update Halved achievement if round was a success`()
-    {
+    fun `Should not update Halved achievement if round was a success`() {
         val p = insertPlayer()
         val pt = insertParticipant(playerId = p.rowId)
         val state = makeDartzeePlayerState(pt)
@@ -117,8 +124,7 @@ class TestDartzeePlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should add loaded round results`()
-    {
+    fun `Should add loaded round results`() {
         val result = DartzeeRoundResult(2, true, 50)
         val entity = DartzeeRoundResultEntity.factoryAndSave(result, insertParticipant(), 2)
 

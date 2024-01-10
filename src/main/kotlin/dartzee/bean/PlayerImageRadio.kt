@@ -18,14 +18,13 @@ import javax.swing.event.ChangeListener
 /**
  * Wrap up a PlayerImage so we can render the icon, and store its ID to point a PlayerEntity at it
  */
-class PlayerImageRadio(pi: PlayerImageEntity) :  JPanel(), ChangeListener, IMouseListener, FocusListener
-{
+class PlayerImageRadio(pi: PlayerImageEntity) :
+    JPanel(), ChangeListener, IMouseListener, FocusListener {
     var playerImageId = ""
     val rdbtn = JRadioButton()
     val lblImg = JLabel()
 
-    init
-    {
+    init {
         setMargins(1)
         lblImg.icon = pi.asImageIcon()
         playerImageId = pi.rowId
@@ -40,32 +39,27 @@ class PlayerImageRadio(pi: PlayerImageEntity) :  JPanel(), ChangeListener, IMous
 
     fun isSelected() = rdbtn.isSelected
 
-    fun addToButtonGroup(bg: ButtonGroup)
-    {
+    fun addToButtonGroup(bg: ButtonGroup) {
         bg.add(rdbtn)
     }
 
     override fun stateChanged(arg0: ChangeEvent) = updateBorder()
+
     override fun focusLost(e: FocusEvent?) = updateBorder()
+
     override fun focusGained(e: FocusEvent?) = updateBorder()
-    private fun updateBorder()
-    {
-        if (rdbtn.isSelected)
-        {
+
+    private fun updateBorder() {
+        if (rdbtn.isSelected) {
             border = LineBorder(Color.BLACK)
-        }
-        else if (rdbtn.hasFocus())
-        {
+        } else if (rdbtn.hasFocus()) {
             border = BorderFactory.createDashedBorder(Color.GRAY)
-        }
-        else
-        {
+        } else {
             setMargins(1)
         }
     }
 
-    override fun mouseClicked(e: MouseEvent)
-    {
+    override fun mouseClicked(e: MouseEvent) {
         rdbtn.isSelected = true
     }
 }

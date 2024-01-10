@@ -6,15 +6,13 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartzeeRuleCalculationResult
 import dartzee.helper.makeDartzeeRuleDto
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.Color
 import javax.swing.JLabel
+import org.junit.jupiter.api.Test
 
-class TestDartzeeTemplateRuleRenderer: AbstractTest()
-{
+class TestDartzeeTemplateRuleRenderer : AbstractTest() {
     @Test
-    fun `Should render squares of the right colour based on rule difficulty`()
-    {
+    fun `Should render squares of the right colour based on rule difficulty`() {
         val renderer = DartzeeTemplateRuleRenderer()
 
         val ruleOne = makeDartzeeRuleDto(calculationResult = makeDartzeeRuleCalculationResult(20))
@@ -34,8 +32,7 @@ class TestDartzeeTemplateRuleRenderer: AbstractTest()
     }
 
     @Test
-    fun `Should supply a tooltip for the number of rules`()
-    {
+    fun `Should supply a tooltip for the number of rules`() {
         val renderer = DartzeeTemplateRuleRenderer()
 
         val lbl = renderer.getLabel(listOf(makeDartzeeRuleDto()))
@@ -45,6 +42,6 @@ class TestDartzeeTemplateRuleRenderer: AbstractTest()
         lbl2.toolTipText shouldBe "2 rules"
     }
 
-    fun DartzeeTemplateRuleRenderer.getLabel(rules: List<DartzeeRuleDto>) = getReplacementValue(rules) as JLabel
-
+    fun DartzeeTemplateRuleRenderer.getLabel(rules: List<DartzeeRuleDto>) =
+        getReplacementValue(rules) as JLabel
 }

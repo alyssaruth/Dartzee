@@ -3,7 +3,6 @@ package dartzee.screen.game.scorer
 import dartzee.achievements.AbstractAchievement
 import dartzee.bean.AchievementUnlockedMedal
 import dartzee.bean.IMouseListener
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
@@ -16,16 +15,18 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.border.BevelBorder
 import javax.swing.border.LineBorder
+import net.miginfocom.swing.MigLayout
 
-class AchievementOverlay(private val parent: AbstractDartsScorer<*>, achievement: AbstractAchievement, playerName: String?) :
-    JPanel(), ActionListener, IMouseListener
-{
+class AchievementOverlay(
+    private val parent: AbstractDartsScorer<*>,
+    achievement: AbstractAchievement,
+    playerName: String?
+) : JPanel(), ActionListener, IMouseListener {
     private val btnClose = JButton("X")
     private val fillColor = achievement.getColor(false).brighter()
     private val borderColor = fillColor.darker()
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
         border = LineBorder(borderColor, 6)
 
@@ -64,8 +65,7 @@ class AchievementOverlay(private val parent: AbstractDartsScorer<*>, achievement
         lblUnlocked.verticalAlignment = JLabel.TOP
         panelCenter.add(lblUnlocked, "cell 0 1")
 
-        if (playerName != null)
-        {
+        if (playerName != null) {
             val lblPlayerName = factoryTextLabel(playerName, 20, "playerName")
             panelCenter.add(lblPlayerName, "cell 0 3")
         }
@@ -77,8 +77,7 @@ class AchievementOverlay(private val parent: AbstractDartsScorer<*>, achievement
         btnClose.addActionListener(this)
     }
 
-    private fun factoryTextLabel(text: String, fontSize: Int = 24, testId: String = "") : JLabel
-    {
+    private fun factoryTextLabel(text: String, fontSize: Int = 24, testId: String = ""): JLabel {
         val lbl = JLabel(text)
         lbl.name = testId
         lbl.background = fillColor
@@ -89,23 +88,21 @@ class AchievementOverlay(private val parent: AbstractDartsScorer<*>, achievement
         return lbl
     }
 
-    override fun actionPerformed(e: ActionEvent)
-    {
+    override fun actionPerformed(e: ActionEvent) {
         parent.achievementClosed(this)
         revalidate()
         repaint()
     }
 
-    override fun mousePressed(e: MouseEvent)
-    {
+    override fun mousePressed(e: MouseEvent) {
         btnClose.foreground = borderColor.darker().darker()
         btnClose.background = fillColor.darker()
-        btnClose.border = BevelBorder(BevelBorder.LOWERED, borderColor.darker(), borderColor.darker().darker())
+        btnClose.border =
+            BevelBorder(BevelBorder.LOWERED, borderColor.darker(), borderColor.darker().darker())
         btnClose.repaint()
     }
 
-    override fun mouseReleased(e: MouseEvent)
-    {
+    override fun mouseReleased(e: MouseEvent) {
         btnClose.background = fillColor
         btnClose.foreground = borderColor.darker()
         btnClose.border = BevelBorder(BevelBorder.RAISED, borderColor, borderColor.darker())

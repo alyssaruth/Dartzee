@@ -4,28 +4,26 @@ import dartzee.helper.AbstractTest
 import dartzee.shouldHaveBorderThickness
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.junit.jupiter.api.Test
 import java.awt.Color
 import javax.swing.JComponent
 import javax.swing.JTable
 import javax.swing.table.DefaultTableModel
+import org.junit.jupiter.api.Test
 
-class TestGameStatisticsHeaderRenderer: AbstractTest()
-{
-    private fun GameStatisticsHeaderRenderer.apply(column: Int): JComponent
-    {
+class TestGameStatisticsHeaderRenderer : AbstractTest() {
+    private fun GameStatisticsHeaderRenderer.apply(column: Int): JComponent {
         val tm = DefaultTableModel()
         tm.addColumn("")
         tm.addColumn("Player 1")
         tm.addColumn("Player 2")
         tm.addColumn("Player 3")
 
-        return getTableCellRendererComponent(JTable(tm), "Foo", false, false, -1, column) as JComponent
+        return getTableCellRendererComponent(JTable(tm), "Foo", false, false, -1, column)
+            as JComponent
     }
 
     @Test
-    fun `Should set correct borders`()
-    {
+    fun `Should set correct borders`() {
         val renderer = GameStatisticsHeaderRenderer()
 
         renderer.apply(0).shouldHaveBorderThickness(0, 1, 0, 2)
@@ -35,8 +33,7 @@ class TestGameStatisticsHeaderRenderer: AbstractTest()
     }
 
     @Test
-    fun `Should make first header column transparent, leaving the rest white`()
-    {
+    fun `Should make first header column transparent, leaving the rest white`() {
         val firstHeader = GameStatisticsHeaderRenderer().apply(0)
 
         firstHeader.isOpaque shouldBe false
@@ -46,5 +43,4 @@ class TestGameStatisticsHeaderRenderer: AbstractTest()
         otherHeader.isOpaque shouldBe true
         otherHeader.background.alpha shouldNotBe 0
     }
-
 }

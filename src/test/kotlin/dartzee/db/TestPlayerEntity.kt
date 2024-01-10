@@ -10,24 +10,21 @@ import dartzee.helper.makeDartsModel
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import org.junit.jupiter.api.Test
 import javax.swing.ImageIcon
+import org.junit.jupiter.api.Test
 
-class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
-{
+class TestPlayerEntity : AbstractEntityTest<PlayerEntity>() {
     override fun factoryDao() = PlayerEntity()
 
     @Test
-    fun `Should have sensible string representation`()
-    {
+    fun `Should have sensible string representation`() {
         val player = PlayerEntity()
         player.name = "BTBF"
         "$player" shouldBe "BTBF"
     }
 
     @Test
-    fun `Should correctly identify human vs AI`()
-    {
+    fun `Should correctly identify human vs AI`() {
         val human = PlayerEntity()
         human.strategy = ""
 
@@ -44,8 +41,7 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
     }
 
     @Test
-    fun `Should correctly construct the AI model`()
-    {
+    fun `Should correctly construct the AI model`() {
         val model = makeDartsModel(scoringDart = 15)
 
         val player = PlayerEntity()
@@ -57,8 +53,7 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
     }
 
     @Test
-    fun `Should retrieve a player avatar`()
-    {
+    fun `Should retrieve a player avatar`() {
         val image = insertPlayerImage()
         val player = insertPlayer(playerImageId = image.rowId)
 
@@ -69,8 +64,7 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
     }
 
     @Test
-    fun `Should automatically exclude deleted players for custom queries`()
-    {
+    fun `Should automatically exclude deleted players for custom queries`() {
         insertPlayer(name = "Bob", dtDeleted = getSqlDateNow())
         val p2 = insertPlayer(name = "Bob", dtDeleted = DateStatics.END_OF_TIME)
         val p3 = insertPlayer(name = "Clive", dtDeleted = DateStatics.END_OF_TIME)
@@ -80,8 +74,7 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
     }
 
     @Test
-    fun `Should automatically exclude deleted players when retrieving by name`()
-    {
+    fun `Should automatically exclude deleted players when retrieving by name`() {
         insertPlayer(name = "Bob", dtDeleted = getSqlDateNow())
         val p2 = insertPlayer(name = "Bob", dtDeleted = DateStatics.END_OF_TIME)
         insertPlayer(name = "Clive", dtDeleted = getSqlDateNow())

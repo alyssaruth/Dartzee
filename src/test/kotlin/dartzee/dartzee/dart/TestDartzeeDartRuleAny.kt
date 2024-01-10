@@ -5,17 +5,13 @@ import dartzee.utils.getAllSegmentsForDartzee
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDartzeeDartRuleAny: AbstractDartzeeRuleTest<DartzeeDartRuleAny>()
-{
+class TestDartzeeDartRuleAny : AbstractDartzeeRuleTest<DartzeeDartRuleAny>() {
     override fun factory() = DartzeeDartRuleAny()
 
     @Test
-    fun `segment validation`()
-    {
+    fun `segment validation`() {
         val rule = DartzeeDartRuleAny()
 
-        getAllSegmentsForDartzee().forEach {
-            rule.isValidSegment(it) shouldBe true
-        }
+        getAllSegmentsForDartzee().forEach { rule.isValidSegment(it) shouldBe true }
     }
 }

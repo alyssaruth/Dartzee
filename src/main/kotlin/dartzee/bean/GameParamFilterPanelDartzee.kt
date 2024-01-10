@@ -9,21 +9,18 @@ import java.awt.event.ActionListener
 import javax.swing.JComboBox
 import javax.swing.JPanel
 
-class GameParamFilterPanelDartzee: GameParamFilterPanel()
-{
+class GameParamFilterPanelDartzee : GameParamFilterPanel() {
     private val panel = JPanel()
     val comboBox = JComboBox<ComboBoxItem<DartzeeTemplateEntity?>>()
 
-    init
-    {
+    init {
         add(panel, BorderLayout.CENTER)
         panel.add(comboBox)
 
         populateComboBox()
     }
 
-    private fun populateComboBox()
-    {
+    private fun populateComboBox() {
         val templates = DartzeeTemplateEntity().retrieveEntities()
 
         val divider = ComboBoxItem<DartzeeTemplateEntity?>(null, "-----", false)
@@ -32,15 +29,14 @@ class GameParamFilterPanelDartzee: GameParamFilterPanel()
         comboBox.addItem(divider)
         templates.forEach { comboBox.addItem(ComboBoxItem(it, it.name)) }
 
-        if (templates.isEmpty())
-        {
-            val noTemplates = ComboBoxItem<DartzeeTemplateEntity?>(null, "No templates configured", false)
+        if (templates.isEmpty()) {
+            val noTemplates =
+                ComboBoxItem<DartzeeTemplateEntity?>(null, "No templates configured", false)
             comboBox.addItem(noTemplates)
         }
     }
 
-    override fun setGameParams(gameParams: String)
-    {
+    override fun setGameParams(gameParams: String) {
         val item = comboBox.items().find { it.hiddenData?.rowId == gameParams }
         comboBox.selectedItem = item
     }
@@ -49,33 +45,25 @@ class GameParamFilterPanelDartzee: GameParamFilterPanel()
 
     fun getSelectedTemplate() = comboBox.selectedItemTyped().hiddenData
 
-    override fun getFilterDesc(): String
-    {
+    override fun getFilterDesc(): String {
         val template = getSelectedTemplate()
 
-        return if (template != null)
-        {
+        return if (template != null) {
             "games for template '${template.name}'"
-        }
-        else
-        {
+        } else {
             "custom games"
         }
     }
 
-    override fun enableChildren(enabled: Boolean)
-    {
+    override fun enableChildren(enabled: Boolean) {
         comboBox.isEnabled = enabled
     }
 
-    override fun addActionListener(listener: ActionListener)
-    {
+    override fun addActionListener(listener: ActionListener) {
         comboBox.addActionListener(listener)
     }
 
-    override fun removeActionListener(listener: ActionListener)
-    {
+    override fun removeActionListener(listener: ActionListener) {
         comboBox.removeActionListener(listener)
     }
-
 }

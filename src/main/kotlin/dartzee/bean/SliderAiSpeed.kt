@@ -7,20 +7,20 @@ import javax.swing.JSlider
 import javax.swing.border.EmptyBorder
 import javax.swing.event.ChangeListener
 
-const val AI_SPEED_MINIMUM = 0 //0s
-const val AI_SPEED_MAXIMUM = 2000 //2s
+const val AI_SPEED_MINIMUM = 0 // 0s
+const val AI_SPEED_MAXIMUM = 2000 // 2s
 
-class SliderAiSpeed : JPanel()
-{
+class SliderAiSpeed : JPanel() {
     private val labelMin = JLabel("Slow")
     private val labelMax = JLabel("Fast")
     private val slider = JSlider()
     var value
         get() = slider.value
-        set(value) { slider.value = value }
+        set(value) {
+            slider.value = value
+        }
 
-    init
-    {
+    init {
         layout = BorderLayout()
         add(slider, BorderLayout.CENTER)
         add(labelMin, BorderLayout.WEST)
@@ -36,8 +36,7 @@ class SliderAiSpeed : JPanel()
         slider.inverted = true
     }
 
-    fun addChangeListener(listener: ChangeListener)
-    {
+    fun addChangeListener(listener: ChangeListener) {
         slider.addChangeListener(listener)
     }
 }

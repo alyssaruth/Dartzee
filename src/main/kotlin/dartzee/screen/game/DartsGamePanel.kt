@@ -47,27 +47,27 @@ import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JToggleButton
 
-
-abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState: AbstractPlayerState<PlayerState>>(
-        protected val parentWindow: AbstractDartsGameScreen,
-        val gameEntity: GameEntity,
-        protected val totalPlayers: Int) : PanelWithScorers<S>(), DartboardListener, ActionListener
-{
+abstract class DartsGamePanel<
+    S : AbstractDartsScorer<PlayerState>,
+    PlayerState : AbstractPlayerState<PlayerState>
+>(
+    protected val parentWindow: AbstractDartsGameScreen,
+    val gameEntity: GameEntity,
+    protected val totalPlayers: Int
+) : PanelWithScorers<S>(), DartboardListener, ActionListener {
     private val hmPlayerNumberToState = mutableMapOf<Int, PlayerState>()
     private val hmPlayerNumberToScorer = mutableMapOf<Int, S>()
 
     val gameTitle = makeGameTitle()
 
-    //Transitive things
+    // Transitive things
     var currentPlayerNumber = 0
     protected var currentRoundNumber = -1
 
-    //For AI turns
+    // For AI turns
     protected var cpuThread: Thread? = null
 
-    /**
-     * Screen stuff
-     */
+    /** Screen stuff */
     val dartboard = GameplayDartboard(colourWrapper())
     private val statsPanel = factoryStatsPanel(gameEntity.gameParams)
 
@@ -80,40 +80,46 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
     private val btnStats = JToggleButton("")
     private val btnSlider = JToggleButton("")
 
-    private fun getPlayersDesc() = if (totalPlayers == 1) "practice game" else "$totalPlayers players"
+    private fun getPlayersDesc() =
+        if (totalPlayers == 1) "practice game" else "$totalPlayers players"
+
     protected fun getActiveCount() = getParticipants().count { it.participant.isActive() }
 
     fun getGameId() = gameEntity.rowId
 
     open fun colourWrapper() = getColourWrapperFromPrefs()
 
-    open fun getFinishingPositionFromPlayersRemaining(): Int
-    {
-        if (totalPlayers == 1)
-        {
+    open fun getFinishingPositionFromPlayersRemaining(): Int {
+        if (totalPlayers == 1) {
             return -1
         }
 
         return totalPlayers - getActiveCount() + 1
     }
 
-    protected fun getCurrentPlayerStrategy(): DartsAiModel
-    {
+    protected fun getCurrentPlayerStrategy(): DartsAiModel {
         val participant = getCurrentIndividual()
         return participant.getModel()
     }
 
-    /**
-     * Stuff that will ultimately get refactored off into a GameState thingy
-     */
+    /** Stuff that will ultimately get refactored off into a GameState thingy */
     fun getPlayerStates() = hmPlayerNumberToState.getSortedValues()
-    protected fun getParticipants() = hmPlayerNumberToState.entries.sortedBy { it.key }.map { it.value.wrappedParticipant }
+
+    protected fun getParticipants() =
+        hmPlayerNumberToState.entries.sortedBy { it.key }.map { it.value.wrappedParticipant }
+
     protected fun getCurrentPlayerId() = getCurrentIndividual().playerId
+
     protected fun getCurrentPlayerState() = getPlayerState(currentPlayerNumber)
+
     private fun getPlayerState(playerNumber: Int) = hmPlayerNumberToState[playerNumber]!!
+
     private fun getParticipant(playerNumber: Int) = getPlayerState(playerNumber).wrappedParticipant
+
     private fun getCurrentIndividual() = getCurrentPlayerState().currentIndividual()
+
     fun getDartsThrown() = getCurrentPlayerState().currentRound
+
     fun dartsThrownCount() = getDartsThrown().size
 
     private fun addState(playerNumber: Int, state: PlayerState, scorer: S) {
@@ -122,10 +128,10 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
     }
 
     protected fun getCurrentScorer() = hmPlayerNumberToScorer.getValue(currentPlayerNumber)
+
     protected fun getPlayerNumberForScorer(scorer: S): Int = scorersOrdered.indexOf(scorer)
 
-    init
-    {
+    init {
         panelCenter.add(dartboard, BorderLayout.CENTER)
         dartboard.addDartboardListener(this)
         panelCenter.add(panelSouth, BorderLayout.SOUTH)
@@ -162,24 +168,23 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         btnSlider.addActionListener(this)
     }
 
-    /**
-     * Abstract methods
-     */
+    /** Abstract methods */
     abstract fun factoryState(pt: IWrappedParticipant): PlayerState
+
     abstract fun computeAiDart(model: DartsAiModel): ComputedPoint?
 
     abstract fun shouldStopAfterDartThrown(): Boolean
+
     abstract fun shouldAIStop(): Boolean
+
     abstract fun saveDartsAndProceed()
+
     abstract fun factoryStatsPanel(gameParams: String): AbstractGameStatisticsPanel<PlayerState>
 
     open fun updateVariablesForDartThrown(dart: Dart) {}
 
-    /**
-     * Regular methods
-     */
-    fun startNewGame(participants: List<IWrappedParticipant>)
-    {
+    /** Regular methods */
+    fun startNewGame(participants: List<IWrappedParticipant>) {
         participants.forEachIndexed(::addParticipant)
 
         finaliseParticipants()
@@ -187,11 +192,10 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         nextTurn()
     }
 
-    protected fun nextTurn()
-    {
+    protected fun nextTurn() {
         updateActivePlayer()
 
-        //Create a new round for this player
+        // Create a new round for this player
         currentRoundNumber = getCurrentPlayerState().currentRoundNumber()
 
         btnReset.isEnabled = false
@@ -202,30 +206,24 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         readyForThrow()
     }
 
-    protected fun updateActivePlayer()
-    {
-        hmPlayerNumberToState.values.forEach {
-            it.updateActive(it == getCurrentPlayerState())
-        }
+    protected fun updateActivePlayer() {
+        hmPlayerNumberToState.values.forEach { it.updateActive(it == getCurrentPlayerState()) }
     }
 
-    private fun initForAi(hasAi: Boolean)
-    {
+    private fun initForAi(hasAi: Boolean) {
         btnSlider.isVisible = hasAi
 
         val defaultSpd = PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED)
         slider.value = defaultSpd
     }
 
-    protected fun makeGameTitle(): String
-    {
+    protected fun makeGameTitle(): String {
         val gameNo = gameEntity.localId
         val gameDesc = gameEntity.getTypeDesc()
         return "Game #$gameNo ($gameDesc - ${getPlayersDesc()})"
     }
 
-    fun loadGame(participants: List<IWrappedParticipant>)
-    {
+    fun loadGame(participants: List<IWrappedParticipant>) {
         val gameId = gameEntity.rowId
 
         participants.forEachIndexed(::addParticipant)
@@ -233,40 +231,30 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
 
         loadScoresAndCurrentPlayer(gameId)
 
-        //If the game is over, do some extra stuff to sort the screen out
+        // If the game is over, do some extra stuff to sort the screen out
         val dtFinish = gameEntity.dtFinish
-        if (!isEndOfTime(dtFinish))
-        {
+        if (!isEndOfTime(dtFinish)) {
             setGameReadOnly()
-        }
-        else
-        {
+        } else {
             nextTurn()
         }
     }
 
-    protected open fun setGameReadOnly()
-    {
+    protected open fun setGameReadOnly() {
         dartboard.stopListening()
-        scorersOrdered.forEach {
-            it.gameFinished()
-        }
+        scorersOrdered.forEach { it.gameFinished() }
 
-        if (getActiveCount() == 0)
-        {
+        if (getActiveCount() == 0) {
             btnSlider.isVisible = false
             btnConfirm.isVisible = false
             btnReset.isVisible = false
-        }
-        else
-        {
+        } else {
             btnConfirm.isEnabled = false
             btnReset.isEnabled = false
         }
 
-        //Default to showing the stats panel for completed games, if applicable
-        if (btnStats.isVisible)
-        {
+        // Default to showing the stats panel for completed games, if applicable
+        if (btnStats.isVisible) {
             btnStats.isSelected = true
             viewStats()
         }
@@ -274,23 +262,18 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
 
     /**
      * Populate the scorers and populate the current player by:
-     *
      * - Finding the Max(RoundNumber) for this game
      * - Finding how many players have already completed this round, X.
      * - CurrentPlayerNumber = X % totalPlayers
      */
-    private fun loadScoresAndCurrentPlayer(gameId: String)
-    {
-        for (i in 0 until totalPlayers)
-        {
+    private fun loadScoresAndCurrentPlayer(gameId: String) {
+        for (i in 0 until totalPlayers) {
             val pt = getParticipant(i)
 
             val hmRoundToDarts = loadRoundsMap(pt)
 
             val state = getPlayerState(i)
-            hmRoundToDarts.getSortedValues().forEach {
-                state.addLoadedRound(it)
-            }
+            hmRoundToDarts.getSortedValues().forEach { state.addLoadedRound(it) }
 
             loadAdditionalEntities(state)
         }
@@ -298,10 +281,11 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         val maxRounds = getPlayerStates().maxOf { it.currentRoundNumber() - 1 }
         setCurrentPlayer(maxRounds, gameId)
     }
-    private fun loadRoundsMap(pt: IWrappedParticipant): HashMapList<Int, Dart>
-    {
+
+    private fun loadRoundsMap(pt: IWrappedParticipant): HashMapList<Int, Dart> {
         val individuals = pt.individuals
-        val sql = """
+        val sql =
+            """
             SELECT drt.RoundNumber, drt.Score, drt.Multiplier, drt.SegmentType, drt.StartingScore
             FROM Dart drt
             WHERE drt.ParticipantId IN ${individuals.getQuotedIdStr { it.rowId } }
@@ -312,15 +296,14 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         val hmRoundToDarts = HashMapList<Int, Dart>()
 
         mainDatabase.executeQuery(sql).use { rs ->
-            while (rs.next())
-            {
+            while (rs.next()) {
                 val roundNumber = rs.getInt("RoundNumber")
                 val score = rs.getInt("Score")
                 val multiplier = rs.getInt("Multiplier")
                 val segmentType = SegmentType.valueOf(rs.getString("SegmentType"))
                 val startingScore = rs.getInt("StartingScore")
 
-                val drt = Dart(score, multiplier, segmentType=segmentType)
+                val drt = Dart(score, multiplier, segmentType = segmentType)
                 drt.startingScore = startingScore
                 drt.roundNumber = roundNumber
 
@@ -334,14 +317,13 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
     protected open fun loadAdditionalEntities(state: PlayerState) {}
 
     /**
-     * 1) Get the MAX(Ordinal) of the person who's played the maxRounds, i.e. the last player to have a turn.
+     * 1) Get the MAX(Ordinal) of the person who's played the maxRounds, i.e. the last player to
+     *    have a turn.
      * 2) Call into getNextPlayer(), which takes into account inactive players.
      */
-    private fun setCurrentPlayer(maxRounds: Int, gameId: String)
-    {
-        if (maxRounds == 0)
-        {
-            //The game literally hasn't started yet. No one has completed a round.
+    private fun setCurrentPlayer(maxRounds: Int, gameId: String) {
+        if (maxRounds == 0) {
+            // The game literally hasn't started yet. No one has completed a round.
             currentPlayerNumber = 0
             return
         }
@@ -362,10 +344,8 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         currentPlayerNumber = getNextPlayerNumber(lastPlayerNumber)
     }
 
-    protected fun allPlayersFinished()
-    {
-        if (!gameEntity.isFinished())
-        {
+    protected fun allPlayersFinished() {
+        if (!gameEntity.isFinished()) {
             gameEntity.dtFinish = getSqlDateNow()
             gameEntity.saveToDatabase()
         }
@@ -373,32 +353,27 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         setGameReadOnly()
     }
 
-
     /**
      * Should I stop throwing?
      *
-     * Default behaviour for if window has been closed, with extensible hook (e.g. in X01 where an AI can be paused).
+     * Default behaviour for if window has been closed, with extensible hook (e.g. in X01 where an
+     * AI can be paused).
      */
-    private fun shouldAiStopThrowing(): Boolean
-    {
-        if (!parentWindow.isVisible)
-        {
+    private fun shouldAiStopThrowing(): Boolean {
+        if (!parentWindow.isVisible) {
             return true
         }
 
         return shouldAIStop()
     }
 
-    protected fun getNextPlayerNumber(currentPlayerNumber: Int): Int
-    {
-        if (getActiveCount() == 0)
-        {
+    protected fun getNextPlayerNumber(currentPlayerNumber: Int): Int {
+        if (getActiveCount() == 0) {
             return currentPlayerNumber
         }
 
         var candidate = (currentPlayerNumber + 1) % totalPlayers
-        while (!isActive(candidate))
-        {
+        while (!isActive(candidate)) {
             candidate = (candidate + 1) % totalPlayers
         }
 
@@ -409,16 +384,13 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
 
     private fun isActive(playerNumber: Int) = getParticipant(playerNumber).participant.isActive()
 
-    fun fireAppearancePreferencesChanged()
-    {
-        for (scorer in scorersOrdered)
-        {
+    fun fireAppearancePreferencesChanged() {
+        for (scorer in scorersOrdered) {
             scorer.repaint()
         }
     }
 
-    protected fun handlePlayerFinish(): Int
-    {
+    protected fun handlePlayerFinish(): Int {
         val state = getCurrentPlayerState()
         val finishingPosition = getFinishingPositionFromPlayersRemaining()
         val numberOfDarts = state.getScoreSoFar()
@@ -429,105 +401,91 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         return finishingPosition
     }
 
-    open fun updateAchievementsForFinish(playerState: PlayerState, finishingPosition: Int, score: Int)
-    {
-        if (playerState.hasMultiplePlayers())
-        {
-            if (finishingPosition == 1)
-            {
+    open fun updateAchievementsForFinish(
+        playerState: PlayerState,
+        finishingPosition: Int,
+        score: Int
+    ) {
+        if (playerState.hasMultiplePlayers()) {
+            if (finishingPosition == 1) {
                 val type = getTeamWinAchievementType(gameEntity.gameType)
                 playerState.getPlayerIds().forEach { playerId ->
                     AchievementEntity.insertAchievement(type, playerId, gameEntity.rowId, "$score")
                 }
             }
-        }
-        else
-        {
+        } else {
             val playerId = playerState.lastIndividual().playerId
-            if (finishingPosition == 1)
-            {
+            if (finishingPosition == 1) {
                 val type = getWinAchievementType(gameEntity.gameType)
                 AchievementEntity.insertAchievement(type, playerId, gameEntity.rowId, "$score")
             }
 
-            //Update the 'best game' achievement
+            // Update the 'best game' achievement
             val aa = getBestGameAchievement(gameEntity.gameType) ?: return
             val gameParams = aa.gameParams
-            if (gameParams == gameEntity.gameParams)
-            {
-                AchievementEntity.updateAchievement(aa.achievementType, playerId, gameEntity.rowId, score)
+            if (gameParams == gameEntity.gameParams) {
+                AchievementEntity.updateAchievement(
+                    aa.achievementType,
+                    playerId,
+                    gameEntity.rowId,
+                    score
+                )
             }
         }
     }
 
-    override fun dartThrown(dart: Dart)
-    {
+    override fun dartThrown(dart: Dart) {
         getCurrentPlayerState().dartThrown(dart)
 
-        //If there are any specific variables we need to update (e.g. current score for X01), do it now
+        // If there are any specific variables we need to update (e.g. current score for X01), do it
+        // now
         updateVariablesForDartThrown(dart)
 
         doAnimations(dart)
 
-        //Enable both of these
+        // Enable both of these
         btnReset.isEnabled = getCurrentPlayerState().isHuman()
-        if (!mustContinueThrowing())
-        {
+        if (!mustContinueThrowing()) {
             btnConfirm.isEnabled = getCurrentPlayerState().isHuman()
         }
 
-        //If we've thrown three or should stop for other reasons (bust in X01), then stop throwing
-        if (shouldStopAfterDartThrown())
-        {
+        // If we've thrown three or should stop for other reasons (bust in X01), then stop throwing
+        if (shouldStopAfterDartThrown()) {
             stopThrowing()
-        }
-        else
-        {
-            //Fine, just carry on
+        } else {
+            // Fine, just carry on
             readyForThrow()
         }
     }
 
-    private fun doAnimations(dart: Dart)
-    {
-        if (dart.multiplier == 0 && shouldAnimateMiss(dart))
-        {
+    private fun doAnimations(dart: Dart) {
+        if (dart.multiplier == 0 && shouldAnimateMiss(dart)) {
             doMissAnimation()
-        }
-        else if (dart.getTotal() == 50)
-        {
+        } else if (dart.getTotal() == 50) {
             dartboard.doBull()
         }
     }
 
     protected open fun shouldAnimateMiss(dart: Dart) = true
 
-
-    protected open fun doMissAnimation()
-    {
+    protected open fun doMissAnimation() {
         dartboard.doBadMiss()
     }
 
-    protected fun stopThrowing()
-    {
-        if (getCurrentPlayerState().isHuman())
-        {
+    protected fun stopThrowing() {
+        if (getCurrentPlayerState().isHuman()) {
             dartboard.stopListening()
-        }
-        else
-        {
+        } else {
             Thread.sleep(slider.value.toLong())
 
             // If we've been told to pause then we're going to do a reset and not save anything
-            if (!shouldAiStopThrowing())
-            {
+            if (!shouldAiStopThrowing()) {
                 runOnEventThread { confirmRound() }
             }
         }
     }
 
-    private fun confirmRound()
-    {
+    private fun confirmRound() {
         btnConfirm.isEnabled = false
         btnReset.isEnabled = false
 
@@ -536,40 +494,31 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         saveDartsAndProceed()
     }
 
-    protected fun resetRound()
-    {
+    protected fun resetRound() {
         dartboard.clearDarts()
         getCurrentPlayerState().resetRound()
 
-        //If we're resetting, disable the buttons
+        // If we're resetting, disable the buttons
         btnConfirm.isEnabled = false
         btnReset.isEnabled = false
 
-        //Might need to re-enable the dartboard for listening if we're a human player
-        if (getCurrentPlayerState().isHuman())
-        {
+        // Might need to re-enable the dartboard for listening if we're a human player
+        if (getCurrentPlayerState().isHuman()) {
             dartboard.ensureListening()
         }
     }
 
-    /**
-     * Commit round to current player state and the database
-     */
-    protected fun commitRound()
-    {
+    /** Commit round to current player state and the database */
+    protected fun commitRound() {
         getCurrentPlayerState().commitRound()
     }
 
-    open fun readyForThrow()
-    {
-        if (getCurrentPlayerState().isHuman())
-        {
-            //Human player
+    open fun readyForThrow() {
+        if (getCurrentPlayerState().isHuman()) {
+            // Human player
             dartboard.ensureListening()
-        }
-        else
-        {
-            //AI
+        } else {
+            // AI
             dartboard.stopListening()
 
             cpuThread = Thread(DelayedOpponentTurn(), "Cpu-Thread-" + gameEntity.localId)
@@ -579,10 +528,8 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
 
     protected open fun mustContinueThrowing() = false
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnReset -> {
                 resetRound()
                 readyForThrow()
@@ -593,22 +540,17 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         }
     }
 
-    private fun toggleSlider()
-    {
+    private fun toggleSlider() {
         slider.isVisible = btnSlider.isSelected
     }
 
-    private fun viewStats()
-    {
-        if (btnStats.isSelected)
-        {
+    private fun viewStats() {
+        if (btnStats.isSelected) {
             panelCenter.remove(dartboard)
             panelCenter.add(statsPanel, BorderLayout.CENTER)
 
             statsPanel.showStats(getPlayerStates())
-        }
-        else
-        {
+        } else {
             panelCenter.remove(statsPanel)
             panelCenter.add(dartboard, BorderLayout.CENTER)
         }
@@ -617,8 +559,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         panelCenter.repaint()
     }
 
-    private fun addParticipant(ordinal: Int, wrappedPt: IWrappedParticipant)
-    {
+    private fun addParticipant(ordinal: Int, wrappedPt: IWrappedParticipant) {
         val scorer = assignScorer(wrappedPt)
         val state = factoryState(wrappedPt)
         state.addListener(scorer)
@@ -627,8 +568,7 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         runForMatch { it.addParticipant(gameEntity.localId, state) }
     }
 
-    private fun finaliseParticipants()
-    {
+    private fun finaliseParticipants() {
         finaliseScorers(parentWindow)
         initForAi(hasAi())
 
@@ -637,59 +577,52 @@ abstract class DartsGamePanel<S : AbstractDartsScorer<PlayerState>, PlayerState:
         }
     }
 
-    private fun runForMatch(fn: (matchScreen: DartsMatchScreen<PlayerState>) -> Unit)
-    {
-        if (parentWindow is DartsMatchScreen<*>)
-        {
-            @Suppress("UNCHECKED_CAST")
-            fn(parentWindow as DartsMatchScreen<PlayerState>)
+    private fun runForMatch(fn: (matchScreen: DartsMatchScreen<PlayerState>) -> Unit) {
+        if (parentWindow is DartsMatchScreen<*>) {
+            @Suppress("UNCHECKED_CAST") fn(parentWindow as DartsMatchScreen<PlayerState>)
         }
     }
 
-    fun achievementUnlocked(playerId: String, achievement: AbstractAchievement)
-    {
-        scorersOrdered.find { it.playerIds.contains(playerId) }?.achievementUnlocked(achievement, playerId)
+    fun achievementUnlocked(playerId: String, achievement: AbstractAchievement) {
+        scorersOrdered
+            .find { it.playerIds.contains(playerId) }
+            ?.achievementUnlocked(achievement, playerId)
     }
 
-    fun disableInputButtons()
-    {
+    fun disableInputButtons() {
         btnConfirm.isEnabled = false
         btnReset.isEnabled = false
     }
 
-    internal inner class DelayedOpponentTurn : Runnable
-    {
-        override fun run()
-        {
+    internal inner class DelayedOpponentTurn : Runnable {
+        override fun run() {
             Thread.sleep(slider.value.toLong())
 
-            if (shouldAiStopThrowing())
-            {
+            if (shouldAiStopThrowing()) {
                 return
             }
 
             val model = getCurrentPlayerStrategy()
             val pt = computeAiDart(model)
 
-            pt?.let {
-                dartboard.dartThrown(pt)
-            }
+            pt?.let { dartboard.dartThrown(pt) }
         }
     }
 
-    companion object
-    {
+    companion object {
         fun factory(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) =
-            when (game.gameType)
-            {
+            when (game.gameType) {
                 GameType.X01 -> GamePanelX01(parent, game, totalPlayers)
                 GameType.GOLF -> GamePanelGolf(parent, game, totalPlayers)
                 GameType.ROUND_THE_CLOCK -> GamePanelRoundTheClock(parent, game, totalPlayers)
                 GameType.DARTZEE -> constructGamePanelDartzee(parent, game, totalPlayers)
             }
 
-        fun constructGamePanelDartzee(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int): GamePanelDartzee
-        {
+        fun constructGamePanelDartzee(
+            parent: AbstractDartsGameScreen,
+            game: GameEntity,
+            totalPlayers: Int
+        ): GamePanelDartzee {
             val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
             val summaryPanel = DartzeeRuleSummaryPanel(DartzeeRuleCarousel(dtos))
 

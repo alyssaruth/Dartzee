@@ -4,11 +4,9 @@ import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestSpinnerSingleSelector: AbstractTest()
-{
+class TestSpinnerSingleSelector : AbstractTest() {
     @Test
-    fun `Should not be able to select 21-24`()
-    {
+    fun `Should not be able to select 21-24`() {
         val spinner = SpinnerSingleSelector()
 
         spinner.value = 21

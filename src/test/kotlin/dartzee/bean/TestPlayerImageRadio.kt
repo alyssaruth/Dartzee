@@ -7,16 +7,14 @@ import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import org.junit.jupiter.api.Test
 import javax.swing.ButtonGroup
 import javax.swing.border.EmptyBorder
 import javax.swing.border.LineBorder
+import org.junit.jupiter.api.Test
 
-class TestPlayerImageRadio: AbstractTest()
-{
+class TestPlayerImageRadio : AbstractTest() {
     @Test
-    fun `Should pull through the image and ID from the PlayerImageEntity`()
-    {
+    fun `Should pull through the image and ID from the PlayerImageEntity`() {
         val entity = PlayerImageEntity()
         entity.assignRowId()
         entity.blobData = getBlobValue("Dennis")
@@ -29,8 +27,7 @@ class TestPlayerImageRadio: AbstractTest()
     }
 
     @Test
-    fun `Should update selection status when image is clicked`()
-    {
+    fun `Should update selection status when image is clicked`() {
         val radio = makePlayerImageRadio()
 
         radio.isSelected() shouldBe false
@@ -39,8 +36,7 @@ class TestPlayerImageRadio: AbstractTest()
     }
 
     @Test
-    fun `Should update selection when radio button is clicked`()
-    {
+    fun `Should update selection when radio button is clicked`() {
         val radio = makePlayerImageRadio()
 
         radio.isSelected() shouldBe false
@@ -49,8 +45,7 @@ class TestPlayerImageRadio: AbstractTest()
     }
 
     @Test
-    fun `Should function as part of a button group`()
-    {
+    fun `Should function as part of a button group`() {
         val r1 = makePlayerImageRadio()
         val r2 = makePlayerImageRadio()
 
@@ -70,8 +65,7 @@ class TestPlayerImageRadio: AbstractTest()
     }
 
     @Test
-    fun `Should have the right border based on state`()
-    {
+    fun `Should have the right border based on state`() {
         val r = makePlayerImageRadio()
 
         r.border.shouldBeInstanceOf<EmptyBorder>()
@@ -80,8 +74,7 @@ class TestPlayerImageRadio: AbstractTest()
         r.border.shouldBeInstanceOf<LineBorder>()
     }
 
-    private fun makePlayerImageRadio(): PlayerImageRadio
-    {
+    private fun makePlayerImageRadio(): PlayerImageRadio {
         val entity = PlayerImageEntity()
         entity.assignRowId()
         entity.blobData = getBlobValue("Dennis")

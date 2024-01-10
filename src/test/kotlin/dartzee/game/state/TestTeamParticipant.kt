@@ -7,11 +7,9 @@ import dartzee.helper.insertTeam
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestTeamParticipant: AbstractTest()
-{
+class TestTeamParticipant : AbstractTest() {
     @Test
-    fun `Should return a deterministic team name regardless of player order`()
-    {
+    fun `Should return a deterministic team name regardless of player order`() {
         val p1 = insertPlayer(name = "Alyssa")
         val p2 = insertPlayer(name = "Leah")
 
@@ -26,8 +24,7 @@ class TestTeamParticipant: AbstractTest()
     }
 
     @Test
-    fun `Should return team name in throw order`()
-    {
+    fun `Should return team name in throw order`() {
         val p1 = insertPlayer(name = "Alyssa")
         val p2 = insertPlayer(name = "Leah")
 
@@ -42,8 +39,7 @@ class TestTeamParticipant: AbstractTest()
     }
 
     @Test
-    fun `Should bold the right player when active`()
-    {
+    fun `Should bold the right player when active`() {
         val p1 = insertPlayer(name = "Alyssa")
         val p2 = insertPlayer(name = "Leah")
 
@@ -58,8 +54,7 @@ class TestTeamParticipant: AbstractTest()
     }
 
     @Test
-    fun `Should return the correct participant based on round number`()
-    {
+    fun `Should return the correct participant based on round number`() {
         val pt1 = insertParticipant()
         val pt2 = insertParticipant()
 

@@ -1,8 +1,8 @@
 package dartzee.screen
 
+import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.PlayerAvatar
-import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -11,14 +11,12 @@ import dartzee.helper.randomGuid
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import javax.swing.JTextField
+import org.junit.jupiter.api.Test
 
-class TestHumanConfigurationDialog: AbstractTest()
-{
+class TestHumanConfigurationDialog : AbstractTest() {
     @Test
-    fun `Should start with correct state for new player`()
-    {
+    fun `Should start with correct state for new player`() {
         val dlg = HumanConfigurationDialog(mockk())
         dlg.getChild<JTextField>("nameField").text shouldBe ""
         dlg.getChild<PlayerAvatar>().avatarId shouldBe ""
@@ -27,8 +25,7 @@ class TestHumanConfigurationDialog: AbstractTest()
     }
 
     @Test
-    fun `Should start with correct state for amending a player`()
-    {
+    fun `Should start with correct state for amending a player`() {
         val avatar = insertPlayerImage()
         val player = insertPlayer(name = "Bongo", playerImageId = avatar.rowId)
 
@@ -40,8 +37,7 @@ class TestHumanConfigurationDialog: AbstractTest()
     }
 
     @Test
-    fun `Should save a new player`()
-    {
+    fun `Should save a new player`() {
         val avatarId = randomGuid()
 
         val dlg = HumanConfigurationDialog(mockCallback())
@@ -55,8 +51,7 @@ class TestHumanConfigurationDialog: AbstractTest()
     }
 
     @Test
-    fun `Should save changes to an existing player`()
-    {
+    fun `Should save changes to an existing player`() {
         val oldAvatar = insertPlayerImage()
         val newAvatar = insertPlayerImage()
         val player = insertPlayer(name = "Alex", playerImageId = oldAvatar.rowId)

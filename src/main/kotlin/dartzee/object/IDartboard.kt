@@ -6,18 +6,22 @@ import dartzee.utils.factorySegmentForPoint
 import dartzee.utils.getAngleForPoint
 import java.awt.Point
 
-interface IDartboard
-{
+interface IDartboard {
     fun computeRadius(): Double
+
     fun computeCenter(): Point
 
     fun computeRadius(width: Int, height: Int) = 0.7 * minOf(width, height) / 2.0
-    fun getPointsForSegment(segment: DartboardSegment) = computePointsForSegment(segment, computeCenter(), computeRadius())
+
+    fun getPointsForSegment(segment: DartboardSegment) =
+        computePointsForSegment(segment, computeCenter(), computeRadius())
 
     fun isDouble(pt: Point) = getSegmentForPoint(pt).isDoubleExcludingBull()
+
     fun getSegmentForPoint(pt: Point) = factorySegmentForPoint(pt, computeCenter(), computeRadius())
 
-    fun translateAimPoint(aimPoint: AimPoint) = AimPoint(computeCenter(), computeRadius(), aimPoint.angle, aimPoint.ratio).point
+    fun translateAimPoint(aimPoint: AimPoint) =
+        AimPoint(computeCenter(), computeRadius(), aimPoint.angle, aimPoint.ratio).point
 
     fun toComputedPoint(pt: Point): ComputedPoint {
         val segment = getSegmentForPoint(pt)

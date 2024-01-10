@@ -6,11 +6,9 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestHashMapList: AbstractTest()
-{
+class TestHashMapList : AbstractTest() {
     @Test
-    fun `Should create a new list for a new key`()
-    {
+    fun `Should create a new list for a new key`() {
         val hm = HashMapList<Int, String>()
 
         hm.putInList(1, "foo")
@@ -19,8 +17,7 @@ class TestHashMapList: AbstractTest()
     }
 
     @Test
-    fun `Should add to existing list for an existing key`()
-    {
+    fun `Should add to existing list for an existing key`() {
         val hm = HashMapList<Int, String>()
 
         hm.putInList(1, "foo")
@@ -30,8 +27,7 @@ class TestHashMapList: AbstractTest()
     }
 
     @Test
-    fun `Should return all values across different keys`()
-    {
+    fun `Should return all values across different keys`() {
         val hm = HashMapList<Int, String>()
 
         hm.putInList(1, "foo")

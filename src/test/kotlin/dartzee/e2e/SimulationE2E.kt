@@ -26,18 +26,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class SimulationE2E: AbstractTest()
-{
+class SimulationE2E : AbstractTest() {
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         InjectedThings.simulationRunner = SimulationRunner()
     }
 
     @Test
     @Tag("e2e")
-    fun `Should be able to run a simulation of 500 games`()
-    {
+    fun `Should be able to run a simulation of 500 games`() {
         val model = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
         val player = insertPlayer(model = model)
 
@@ -68,7 +65,8 @@ class SimulationE2E: AbstractTest()
         tableDoubles.getRows().shouldContainExactly(listOf(listOf(12, 500, 100.0)))
 
         val topFinishesPanel = statsScrn.getChild<StatisticsTabX01TopFinishes>()
-        val tableTopFinishes = topFinishesPanel.getChild<ScrollTable> { it.testId == "TopFinishesMine" }
+        val tableTopFinishes =
+            topFinishesPanel.getChild<ScrollTable> { it.testId == "TopFinishesMine" }
         val rows = tableTopFinishes.getRows()
         rows.first().shouldContainExactly(141, "T20, T19, D12", -1L)
 
@@ -76,7 +74,8 @@ class SimulationE2E: AbstractTest()
         val tableScores = threeDartScoresPanel.getChild<ScrollTable> { it.testId == "PlayerScores" }
         tableScores.rowCount shouldBe 1
         tableScores.getRows().first().shouldContainExactly(180, 1000)
-        val tableBreakdown = threeDartScoresPanel.getChild<ScrollTable> { it.testId == "PlayerBreakdown" }
+        val tableBreakdown =
+            threeDartScoresPanel.getChild<ScrollTable> { it.testId == "PlayerBreakdown" }
         tableBreakdown.rowCount shouldBe 1
         tableBreakdown.getRows().first().shouldContainExactly("T20, T20, T20", 1000, -1L)
     }

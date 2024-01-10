@@ -3,8 +3,7 @@ package dartzee.achievements.x01
 import dartzee.achievements.AchievementType
 import dartzee.utils.ResourceCache
 
-class AchievementX01Chucklevision : AbstractAchievementX01ScoreVariants()
-{
+class AchievementX01Chucklevision : AbstractAchievementX01ScoreVariants() {
     override val targetScore = 69
     override val name = "Chucklevision"
     override val desc = "Number of distinct ways the player has scored 69 (\"Chucklevision\")"

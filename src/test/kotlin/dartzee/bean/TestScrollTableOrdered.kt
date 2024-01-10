@@ -10,22 +10,19 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.spyk
 import io.mockk.verify
+import javax.swing.JButton
 import net.miginfocom.swing.MigLayout
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import javax.swing.JButton
 
-class TestScrollTableOrdered: AbstractTest()
-{
+class TestScrollTableOrdered : AbstractTest() {
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         InjectedCore.collectionShuffler = CollectionShuffler()
     }
 
     @Test
-    fun `should move rows up`()
-    {
+    fun `should move rows up`() {
         val scrollTable = setupTable()
 
         scrollTable.selectRow(2)
@@ -38,8 +35,7 @@ class TestScrollTableOrdered: AbstractTest()
     }
 
     @Test
-    fun `Should do nothing if trying to move the first row up`()
-    {
+    fun `Should do nothing if trying to move the first row up`() {
         val scrollTable = setupTable()
 
         scrollTable.selectRow(0)
@@ -49,8 +45,7 @@ class TestScrollTableOrdered: AbstractTest()
     }
 
     @Test
-    fun `should move rows down`()
-    {
+    fun `should move rows down`() {
         val scrollTable = setupTable()
 
         scrollTable.selectRow(0)
@@ -63,8 +58,7 @@ class TestScrollTableOrdered: AbstractTest()
     }
 
     @Test
-    fun `Should do nothing if trying to move last row down`()
-    {
+    fun `Should do nothing if trying to move last row down`() {
         val scrollTable = setupTable()
 
         scrollTable.selectRow(2)
@@ -74,8 +68,7 @@ class TestScrollTableOrdered: AbstractTest()
     }
 
     @Test
-    fun `Should do nothing if trying to move a row with no selection`()
-    {
+    fun `Should do nothing if trying to move a row with no selection`() {
         val scrollTable = setupTable()
 
         scrollTable.btnMoveUp.doClick()
@@ -86,8 +79,7 @@ class TestScrollTableOrdered: AbstractTest()
     }
 
     @Test
-    fun `Should support programatically sorting the rows by something`()
-    {
+    fun `Should support programatically sorting the rows by something`() {
         val table = ScrollTableOrdered()
         val tm = TableUtil.DefaultModel()
         tm.addColumn("Value")
@@ -99,7 +91,6 @@ class TestScrollTableOrdered: AbstractTest()
         val b2 = TestRow("B", 2)
         val c3 = TestRow("C", 3)
         val d1 = TestRow("D", 1)
-
 
         table.addRow(arrayOf(a4))
         table.addRow(arrayOf(c3))
@@ -114,15 +105,13 @@ class TestScrollTableOrdered: AbstractTest()
     }
 
     @Test
-    fun `Should grab all the rows`()
-    {
+    fun `Should grab all the rows`() {
         val table = setupTable()
         table.getRowValues().shouldContainExactly("A", "B", "C")
     }
 
     @Test
-    fun `Should scramble the row order`()
-    {
+    fun `Should scramble the row order`() {
         val mockShuffler = spyk<DeterministicCollectionShuffler>()
 
         InjectedCore.collectionShuffler = mockShuffler
@@ -135,8 +124,7 @@ class TestScrollTableOrdered: AbstractTest()
     }
 
     @Test
-    fun `Should not offset the standard buttons by default`()
-    {
+    fun `Should not offset the standard buttons by default`() {
         val table = ScrollTableOrdered()
         table.getButtonConstraints(table.btnMoveUp) shouldBe "cell 0 0"
         table.getButtonConstraints(table.btnMoveDown) shouldBe "cell 0 1"
@@ -144,8 +132,7 @@ class TestScrollTableOrdered: AbstractTest()
     }
 
     @Test
-    fun `Should offset standard buttons and support adding custom ones`()
-    {
+    fun `Should offset standard buttons and support adding custom ones`() {
         val table = ScrollTableOrdered(1)
         table.getButtonConstraints(table.btnMoveUp) shouldBe "cell 0 1"
         table.getButtonConstraints(table.btnMoveDown) shouldBe "cell 0 2"
@@ -156,16 +143,14 @@ class TestScrollTableOrdered: AbstractTest()
         table.getButtonConstraints(newBtn) shouldBe "cell 0 0"
     }
 
-    private fun ScrollTableOrdered.getButtonConstraints(btn: JButton): Any
-    {
+    private fun ScrollTableOrdered.getButtonConstraints(btn: JButton): Any {
         val layoutManager = panelOrdering.layout as MigLayout
         return layoutManager.getComponentConstraints(btn)
     }
 
     private fun ScrollTableOrdered.getRowValues(): List<Any?> = getAllRows().map { it[0] }
 
-    private fun setupTable(): ScrollTableOrdered
-    {
+    private fun setupTable(): ScrollTableOrdered {
         val table = ScrollTableOrdered()
         val tm = TableUtil.DefaultModel()
         tm.addColumn("Value")

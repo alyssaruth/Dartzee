@@ -14,11 +14,9 @@ import javax.swing.JPanel
 import javax.swing.UIManager
 import javax.swing.border.EmptyBorder
 
-/**
- * Shows statistics for each player in a particular game, based on the PlayerStates
- */
-abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<PlayerState>>: JPanel()
-{
+/** Shows statistics for each player in a particular game, based on the PlayerStates */
+abstract class AbstractGameStatisticsPanel<PlayerState : AbstractPlayerState<PlayerState>> :
+    JPanel() {
     protected val uniqueParticipantNamesOrdered = mutableListOf<UniqueParticipantName>()
     protected var participants: List<IWrappedParticipant> = emptyList()
     protected val hmPlayerToDarts = mutableMapOf<UniqueParticipantName, List<List<Dart>>>()
@@ -29,13 +27,16 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
     val table = ScrollTable()
 
     abstract fun getRankedRowsHighestWins(): List<String>
+
     abstract fun getRankedRowsLowestWins(): List<String>
+
     abstract fun getHistogramRows(): List<String>
+
     protected abstract fun getStartOfSectionRows(): List<String>
+
     protected abstract fun addRowsToTable()
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
         add(table, BorderLayout.CENTER)
 
@@ -51,8 +52,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
         table.model = tm
     }
 
-    fun showStats(playerStates: List<PlayerState>)
-    {
+    fun showStats(playerStates: List<PlayerState>) {
         this.participants = playerStates.map { it.wrappedParticipant }
 
         hmPlayerToDarts.clear()
@@ -61,85 +61,87 @@ abstract class AbstractGameStatisticsPanel<PlayerState: AbstractPlayerState<Play
         val hm = playerStates.groupBy { it.wrappedParticipant.getUniqueParticipantName() }
         hmPlayerToStates.putAll(hm)
 
-        hmPlayerToDarts.putAll(hm.mapValues { it.value.flatMap { state -> state.completedRounds }})
+        hmPlayerToDarts.putAll(hm.mapValues { it.value.flatMap { state -> state.completedRounds } })
 
-        if (isSufficientData())
-        {
+        if (isSufficientData()) {
             buildTableModel()
         }
     }
 
-    private fun isSufficientData(): Boolean
-    {
+    private fun isSufficientData(): Boolean {
         val names = hmPlayerToDarts.keys
         return names.all { p -> getFlattenedDarts(p).isNotEmpty() }
     }
 
-    protected fun buildTableModel()
-    {
+    protected fun buildTableModel() {
         tm.clear()
 
-        for (pt in participants)
-        {
+        for (pt in participants) {
             val participantName = pt.getUniqueParticipantName()
             uniqueParticipantNamesOrdered.addUnique(participantName)
         }
 
         val requiredColumns = listOf("") + uniqueParticipantNamesOrdered.map { it.value }
-        (tm.columnCount until requiredColumns.size).forEach {
-            table.addColumn(requiredColumns[it])
-        }
+        (tm.columnCount until requiredColumns.size).forEach { table.addColumn(requiredColumns[it]) }
 
         addRowsToTable()
 
-        //Rendering
-        for (i in 0 until tm.columnCount)
-        {
+        // Rendering
+        for (i in 0 until tm.columnCount) {
             table.getColumn(i).cellRenderer = factoryStatsCellRenderer()
             table.getColumn(i).headerRenderer = GameStatisticsHeaderRenderer()
         }
     }
 
     private fun factoryStatsCellRenderer() =
-        GameStatisticsCellRenderer(getStartOfSectionRows(), getRankedRowsHighestWins(), getRankedRowsLowestWins(), getHistogramRows())
+        GameStatisticsCellRenderer(
+            getStartOfSectionRows(),
+            getRankedRowsHighestWins(),
+            getRankedRowsLowestWins(),
+            getHistogramRows()
+        )
 
-    protected fun addRow(row: Array<Any?>)
-    {
+    protected fun addRow(row: Array<Any?>) {
         tm.addRow(row)
     }
 
-    protected fun getFlattenedDarts(uniqueParticipantName: UniqueParticipantName): List<Dart>
-    {
+    protected fun getFlattenedDarts(uniqueParticipantName: UniqueParticipantName): List<Dart> {
         val rounds = hmPlayerToDarts[uniqueParticipantName]
         return rounds?.flatten().orEmpty()
     }
 
-    protected fun factoryRow(rowName: String): Array<Any?>
-    {
+    protected fun factoryRow(rowName: String): Array<Any?> {
         val row = arrayOfNulls<Any>(tm.columnCount)
         row[0] = rowName
         return row
     }
 
-    protected fun getBestGameRow(fn: (s: List<Int>) -> Int) = prepareRow("Best Game") { participantName ->
-        val playerPts = getFinishedParticipants(participantName)
-        val scores = playerPts.map { it.participant.finalScore }
-        if (scores.isEmpty()) null else fn(scores)
-    }
-    protected fun getAverageGameRow() = prepareRow("Avg Game") { participantName ->
-        val playerPts = getFinishedParticipants(participantName)
-        val scores = playerPts.map { it.participant.finalScore }
-        if (scores.isEmpty()) null else MathsUtil.round(scores.average(), 2)
-    }
+    protected fun getBestGameRow(fn: (s: List<Int>) -> Int) =
+        prepareRow("Best Game") { participantName ->
+            val playerPts = getFinishedParticipants(participantName)
+            val scores = playerPts.map { it.participant.finalScore }
+            if (scores.isEmpty()) null else fn(scores)
+        }
 
-    private fun getFinishedParticipants(uniqueParticipantName: UniqueParticipantName) = participants.filter { it.getUniqueParticipantName() == uniqueParticipantName && it.participant.finalScore > -1 }
+    protected fun getAverageGameRow() =
+        prepareRow("Avg Game") { participantName ->
+            val playerPts = getFinishedParticipants(participantName)
+            val scores = playerPts.map { it.participant.finalScore }
+            if (scores.isEmpty()) null else MathsUtil.round(scores.average(), 2)
+        }
 
-    protected fun prepareRow(name: String, fn: (uniqueParticipantName: UniqueParticipantName) -> Any?): Array<Any?>
-    {
+    private fun getFinishedParticipants(uniqueParticipantName: UniqueParticipantName) =
+        participants.filter {
+            it.getUniqueParticipantName() == uniqueParticipantName && it.participant.finalScore > -1
+        }
+
+    protected fun prepareRow(
+        name: String,
+        fn: (uniqueParticipantName: UniqueParticipantName) -> Any?
+    ): Array<Any?> {
         val row = factoryRow(name)
 
-        for (i in uniqueParticipantNamesOrdered.indices)
-        {
+        for (i in uniqueParticipantNamesOrdered.indices) {
             val playerName = uniqueParticipantNamesOrdered[i]
             val result = fn(playerName)
 

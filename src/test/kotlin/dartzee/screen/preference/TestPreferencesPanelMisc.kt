@@ -9,21 +9,20 @@ import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.shouldBe
 
-class TestPreferencesPanelMisc: AbstractPreferencePanelTest<PreferencesPanelMisc>()
-{
-    override fun getPreferencesAffected(): MutableList<String>
-    {
-        return mutableListOf(PREFERENCES_INT_AI_SPEED,
-                PREFERENCES_INT_LEADERBOARD_SIZE,
-                PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE,
-                PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES,
-                PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)
+class TestPreferencesPanelMisc : AbstractPreferencePanelTest<PreferencesPanelMisc>() {
+    override fun getPreferencesAffected(): MutableList<String> {
+        return mutableListOf(
+            PREFERENCES_INT_AI_SPEED,
+            PREFERENCES_INT_LEADERBOARD_SIZE,
+            PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE,
+            PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES,
+            PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
+        )
     }
 
     override fun factory() = PreferencesPanelMisc()
 
-    override fun setUiFieldValuesToNonDefaults(panel: PreferencesPanelMisc)
-    {
+    override fun setUiFieldValuesToNonDefaults(panel: PreferencesPanelMisc) {
         panel.slider.value = 20
         panel.nfLeaderboardSize.value = 100
 
@@ -32,8 +31,7 @@ class TestPreferencesPanelMisc: AbstractPreferencePanelTest<PreferencesPanelMisc
         panel.chckbxShowAnimations.uncheck()
     }
 
-    override fun checkUiFieldValuesAreNonDefaults(panel: PreferencesPanelMisc)
-    {
+    override fun checkUiFieldValuesAreNonDefaults(panel: PreferencesPanelMisc) {
         panel.slider.value shouldBe 20
         panel.nfLeaderboardSize.value shouldBe 100
         panel.chckbxAiAutomaticallyFinish.isSelected shouldBe false
@@ -41,8 +39,7 @@ class TestPreferencesPanelMisc: AbstractPreferencePanelTest<PreferencesPanelMisc
         panel.chckbxShowAnimations.isSelected shouldBe false
     }
 
-    override fun checkPreferencesAreSetToNonDefaults()
-    {
+    override fun checkPreferencesAreSetToNonDefaults() {
         PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED) shouldBe 20
         PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE) shouldBe 100
         PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE) shouldBe false
@@ -50,8 +47,7 @@ class TestPreferencesPanelMisc: AbstractPreferencePanelTest<PreferencesPanelMisc
         PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS) shouldBe false
     }
 
-    override fun checkUiFieldValuesAreDefaults(panel: PreferencesPanelMisc)
-    {
+    override fun checkUiFieldValuesAreDefaults(panel: PreferencesPanelMisc) {
         panel.slider.value shouldBe 1000
         panel.nfLeaderboardSize.value shouldBe 50
         panel.chckbxAiAutomaticallyFinish.isSelected shouldBe true

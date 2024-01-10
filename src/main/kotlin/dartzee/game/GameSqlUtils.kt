@@ -11,64 +11,71 @@ import dartzee.game.state.SingleParticipant
 import dartzee.game.state.TeamParticipant
 import dartzee.utils.insertDartzeeRules
 
-/**
- * New Game
- */
-fun prepareParticipants(gameId: String, players: List<PlayerEntity>, pairMode: Boolean): List<IWrappedParticipant>
-{
-    return if (pairMode)
-    {
+/** New Game */
+fun prepareParticipants(
+    gameId: String,
+    players: List<PlayerEntity>,
+    pairMode: Boolean
+): List<IWrappedParticipant> {
+    return if (pairMode) {
         val groups = players.chunked(2)
         groups.mapIndexed { ordinal, group ->
-            if (group.size == 1) addSinglePlayer(gameId, group.first(), ordinal) else addTeam(gameId, group, ordinal)
+            if (group.size == 1) addSinglePlayer(gameId, group.first(), ordinal)
+            else addTeam(gameId, group, ordinal)
         }
-    }
-    else
-    {
+    } else {
         players.mapIndexed { ordinal, player -> addSinglePlayer(gameId, player, ordinal) }
     }
 }
-private fun addTeam(gameId: String, players: List<PlayerEntity>, ordinal: Int): IWrappedParticipant
-{
+
+private fun addTeam(
+    gameId: String,
+    players: List<PlayerEntity>,
+    ordinal: Int
+): IWrappedParticipant {
     val team = TeamEntity.factoryAndSave(gameId, ordinal)
-    val pts = players.mapIndexed { playerIx, player ->
-        ParticipantEntity.factoryAndSave(gameId, player, playerIx, team.rowId)
-    }
+    val pts =
+        players.mapIndexed { playerIx, player ->
+            ParticipantEntity.factoryAndSave(gameId, player, playerIx, team.rowId)
+        }
 
     return TeamParticipant(team, pts)
 }
-private fun addSinglePlayer(gameId: String, player: PlayerEntity, ordinal: Int): IWrappedParticipant
-{
+
+private fun addSinglePlayer(
+    gameId: String,
+    player: PlayerEntity,
+    ordinal: Int
+): IWrappedParticipant {
     val participant = ParticipantEntity.factoryAndSave(gameId, player, ordinal)
     return SingleParticipant(participant)
 }
 
-/**
- * Load Game
- */
-fun loadParticipants(gameId: String): List<IWrappedParticipant>
-{
+/** Load Game */
+fun loadParticipants(gameId: String): List<IWrappedParticipant> {
     val teams = TeamEntity().retrieveEntities("GameId = '$gameId'")
 
     val teamParticipants = teams.map(::loadTeam)
-    val soloParticipants = ParticipantEntity().retrieveEntities("GameId = '$gameId' AND TeamId = ''").map(::SingleParticipant)
+    val soloParticipants =
+        ParticipantEntity()
+            .retrieveEntities("GameId = '$gameId' AND TeamId = ''")
+            .map(::SingleParticipant)
 
     return (teamParticipants + soloParticipants).sortedBy { it.ordinal() }
 }
-private fun loadTeam(team: TeamEntity): TeamParticipant
-{
-    val participants = ParticipantEntity().retrieveEntities("TeamId = '${team.rowId}'").sortedBy { it.ordinal }
+
+private fun loadTeam(team: TeamEntity): TeamParticipant {
+    val participants =
+        ParticipantEntity().retrieveEntities("TeamId = '${team.rowId}'").sortedBy { it.ordinal }
     return TeamParticipant(team, participants)
 }
 
-/**
- * Follow-on game (in a match)
- */
+/** Follow-on game (in a match) */
 fun prepareNextEntities(
     firstGame: GameEntity,
     firstGameParticipants: List<IWrappedParticipant>,
-    matchOrdinal: Int): Pair<GameEntity, List<IWrappedParticipant>>
-{
+    matchOrdinal: Int
+): Pair<GameEntity, List<IWrappedParticipant>> {
     val nextGame = GameEntity.factory(firstGame.gameType, firstGame.gameParams)
     nextGame.dartsMatchId = firstGame.dartsMatchId
     nextGame.matchOrdinal = matchOrdinal
@@ -80,27 +87,32 @@ fun prepareNextEntities(
     val participants = prepareNextParticipants(firstGameParticipants, nextGame)
     return nextGame to participants
 }
-private fun prepareNextParticipants(firstGameParticipants: List<IWrappedParticipant>, newGame: GameEntity): List<IWrappedParticipant>
-{
+
+private fun prepareNextParticipants(
+    firstGameParticipants: List<IWrappedParticipant>,
+    newGame: GameEntity
+): List<IWrappedParticipant> {
     val templateParticipants = shuffleForNewGame(firstGameParticipants, newGame.matchOrdinal)
-    return templateParticipants.mapIndexed { ordinal, pt ->
-        copyForNewGame(ordinal, pt, newGame)
-    }
+    return templateParticipants.mapIndexed { ordinal, pt -> copyForNewGame(ordinal, pt, newGame) }
 }
-private fun copyForNewGame(participantOrdinal: Int, template: IWrappedParticipant, newGame: GameEntity) =
-    when (template)
-    {
-        is SingleParticipant -> addSinglePlayer(newGame.rowId, template.participant.getPlayer(), participantOrdinal)
+
+private fun copyForNewGame(
+    participantOrdinal: Int,
+    template: IWrappedParticipant,
+    newGame: GameEntity
+) =
+    when (template) {
+        is SingleParticipant ->
+            addSinglePlayer(newGame.rowId, template.participant.getPlayer(), participantOrdinal)
         is TeamParticipant -> {
             val players = template.individuals.map { it.getPlayer() }
             val newPlayerOrder = shuffleForNewGame(players, newGame.matchOrdinal)
             addTeam(newGame.rowId, newPlayerOrder, participantOrdinal)
         }
     }
-private fun <T: Any> shuffleForNewGame(things: List<T>, gameOrdinal: Int): List<T>
-{
-    if (things.size > 2)
-    {
+
+private fun <T : Any> shuffleForNewGame(things: List<T>, gameOrdinal: Int): List<T> {
+    if (things.size > 2) {
         return collectionShuffler.shuffleCollection(things)
     }
 

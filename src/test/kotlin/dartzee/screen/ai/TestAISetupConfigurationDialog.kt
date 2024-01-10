@@ -13,14 +13,12 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.maps.shouldContainExactly
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
-class TestAISetupConfigurationDialog: AbstractTest()
-{
+class TestAISetupConfigurationDialog : AbstractTest() {
     @Test
-    fun `Should populate the table with rows from existing hashmap`()
-    {
+    fun `Should populate the table with rows from existing hashmap`() {
         val map = mutableMapOf(48 to AimDart(16, 1), 100 to AimDart(25, 2))
 
         val dlg = AISetupConfigurationDialog(map)
@@ -31,14 +29,13 @@ class TestAISetupConfigurationDialog: AbstractTest()
         val rows = table.getRows()
 
         rows.shouldContainExactlyInAnyOrder(
-                listOf(48, AimDart(16, 1), 32),
-                listOf(100, AimDart(25, 2), 50)
+            listOf(48, AimDart(16, 1), 32),
+            listOf(100, AimDart(25, 2), 50)
         )
     }
 
     @Test
-    fun `Should support removing setup rules`()
-    {
+    fun `Should support removing setup rules`() {
         val dlg = AISetupConfigurationDialog(mutableMapOf(48 to AimDart(16, 1)))
 
         val table = dlg.getChild<ScrollTable>()
@@ -51,8 +48,7 @@ class TestAISetupConfigurationDialog: AbstractTest()
     }
 
     @Test
-    fun `Should show an error if removing rules with no selection`()
-    {
+    fun `Should show an error if removing rules with no selection`() {
         val dlg = AISetupConfigurationDialog(mutableMapOf(48 to AimDart(16, 1)))
 
         dlg.clickChild<JButton>(text = "Remove")
@@ -62,13 +58,11 @@ class TestAISetupConfigurationDialog: AbstractTest()
     }
 
     @Test
-    fun `Should support adding a new rule to the table`()
-    {
+    fun `Should support adding a new rule to the table`() {
         InjectedThings.aiSetupRuleFactory = MockAiSetupRuleFactory()
         val dlg = AISetupConfigurationDialog(mutableMapOf(48 to AimDart(16, 1)))
 
         dlg.clickChild<JButton>(text = "Add Rule...")
-
 
         val table = dlg.getChild<ScrollTable>()
         table.rowCount shouldBe 2
@@ -81,8 +75,7 @@ class TestAISetupConfigurationDialog: AbstractTest()
     }
 
     @Test
-    fun `Should commit modifications to the hash map when Ok is pressed`()
-    {
+    fun `Should commit modifications to the hash map when Ok is pressed`() {
         InjectedThings.aiSetupRuleFactory = MockAiSetupRuleFactory()
         val map = mutableMapOf(48 to AimDart(16, 1))
         val dlg = AISetupConfigurationDialog(map)
@@ -94,8 +87,7 @@ class TestAISetupConfigurationDialog: AbstractTest()
     }
 
     @Test
-    fun `Should discard modifications when cancelled`()
-    {
+    fun `Should discard modifications when cancelled`() {
         InjectedThings.aiSetupRuleFactory = MockAiSetupRuleFactory()
         val map = mutableMapOf(48 to AimDart(16, 1))
         val dlg = AISetupConfigurationDialog(map)
@@ -106,8 +98,7 @@ class TestAISetupConfigurationDialog: AbstractTest()
         map.shouldContainExactly(mapOf(48 to AimDart(16, 1)))
     }
 
-    private class MockAiSetupRuleFactory: IAISetupRuleFactory
-    {
+    private class MockAiSetupRuleFactory : IAISetupRuleFactory {
         override fun newSetupRule(currentRules: MutableMap<Int, AimDart>) {
             currentRules[10] = AimDart(2, 1)
         }

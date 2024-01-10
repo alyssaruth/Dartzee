@@ -9,8 +9,7 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.SwingConstants
 
-class DateFilterPanel : JPanel()
-{
+class DateFilterPanel : JPanel() {
     private val dtFormat = SimpleDateFormat("dd/MM/yyyy")
 
     val cbDateFrom = DatePicker(makeDatePickerSettings())
@@ -18,8 +17,7 @@ class DateFilterPanel : JPanel()
     private val lblFrom = JLabel("from")
     private val lblTo = JLabel("to")
 
-    init
-    {
+    init {
         add(lblFrom)
         lblFrom.horizontalAlignment = SwingConstants.LEFT
         add(cbDateFrom)
@@ -28,15 +26,12 @@ class DateFilterPanel : JPanel()
         add(cbDateTo)
     }
 
-    fun valid(): Boolean
-    {
-        if (!cbDateFrom.isEnabled)
-        {
+    fun valid(): Boolean {
+        if (!cbDateFrom.isEnabled) {
             return true
         }
 
-        if (getDtFrom().isAfter(getDtTo()))
-        {
+        if (getDtFrom().isAfter(getDtTo())) {
             showErrorOLD("The 'date from' cannot be after the 'date to'")
             return false
         }
@@ -44,17 +39,20 @@ class DateFilterPanel : JPanel()
         return true
     }
 
-    fun filterSqlDate(sqlDt: Timestamp) = !sqlDt.before(getSqlDtFrom()) && !sqlDt.after(getSqlDtTo())
+    fun filterSqlDate(sqlDt: Timestamp) =
+        !sqlDt.before(getSqlDtFrom()) && !sqlDt.after(getSqlDtTo())
+
     fun getSqlDtFrom(): Timestamp = Timestamp.valueOf(getDtFrom())
+
     fun getSqlDtTo(): Timestamp = Timestamp.valueOf(getDtTo())
 
     fun getFilterDesc() = "${dtFormat.format(getSqlDtFrom())} - ${dtFormat.format(getSqlDtTo())}"
 
     private fun getDtFrom() = cbDateFrom.date.atTime(0, 0)
+
     private fun getDtTo() = cbDateTo.date.atTime(0, 0)
 
-    private fun makeDatePickerSettings(): DatePickerSettings
-    {
+    private fun makeDatePickerSettings(): DatePickerSettings {
         val settings = DatePickerSettings()
 
         settings.allowEmptyDates = false

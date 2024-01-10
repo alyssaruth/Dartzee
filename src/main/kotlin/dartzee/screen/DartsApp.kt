@@ -43,13 +43,11 @@ private const val CMD_TEST = "test"
 
 val APP_SIZE = Dimension(1000, 700)
 
-class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener
-{
+class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener {
     override val windowName = "Main Window"
     var currentScreen: EmbeddedScreen = ScreenCache.get<MenuScreen>()
 
-    init
-    {
+    init {
         title = "Darts"
         size = APP_SIZE
         minimumSize = APP_SIZE
@@ -62,8 +60,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         addWindowListener(this)
     }
 
-    fun init()
-    {
+    fun init() {
         setIcon()
 
         ResourceCache.initialiseResources()
@@ -75,9 +72,8 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         addConsoleShortcut()
         switchScreen(ScreenCache.get<MenuScreen>())
 
-        //Pop up the change log if we've just updated
-        if (DartsClient.justUpdated)
-        {
+        // Pop up the change log if we've just updated
+        if (DartsClient.justUpdated) {
             convertEmptyAchievements()
 
             val dialog = ChangeLog()
@@ -85,15 +81,13 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         }
     }
 
-    private fun setIcon()
-    {
+    private fun setIcon() {
         val imageStr = "dartzee"
 
-        //Load the four images corresponding to 16px, 32px, 64px and 128px
+        // Load the four images corresponding to 16px, 32px, 64px and 128px
         val images = ArrayList<Image>()
         var i = 16
-        while (i < 256)
-        {
+        while (i < 256) {
             val ico = ImageIcon(javaClass.getResource("/icons/$imageStr$i.png")).image
             images.add(ico)
             i *= 2
@@ -102,8 +96,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         iconImages = images
     }
 
-    private fun addConsoleShortcut()
-    {
+    private fun addConsoleShortcut() {
         val triggerStroke = KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK)
         val content = contentPane as JPanel
 
@@ -111,28 +104,24 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         inputMap.put(triggerStroke, "showConsole")
 
         val actionMap = content.actionMap
-        actionMap.put("showConsole", object : AbstractAction()
-        {
-            override fun actionPerformed(e: ActionEvent)
-            {
-                val loggingDialog = InjectedThings.loggingConsole
-                loggingDialog.isVisible = true
-                loggingDialog.toFront()
+        actionMap.put(
+            "showConsole",
+            object : AbstractAction() {
+                override fun actionPerformed(e: ActionEvent) {
+                    val loggingDialog = InjectedThings.loggingConsole
+                    loggingDialog.isVisible = true
+                    loggingDialog.toFront()
+                }
             }
-        })
+        )
     }
 
-    fun switchScreen(scrn: EmbeddedScreen, reInit: Boolean = true)
-    {
-        try
-        {
-            if (reInit)
-            {
+    fun switchScreen(scrn: EmbeddedScreen, reInit: Boolean = true) {
+        try {
+            if (reInit) {
                 scrn.initialise()
             }
-        }
-        catch (t: Throwable)
-        {
+        } catch (t: Throwable) {
             logger.error(CODE_SCREEN_LOAD_ERROR, "Failed to load screen ${scrn.getScreenName()}", t)
             DialogUtil.showErrorOLD("Error loading screen - " + scrn.getScreenName())
             return
@@ -150,56 +139,38 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
         logger.addToContext(KEY_CURRENT_SCREEN, scrn.getScreenName())
 
-        //Need repaint() in case we don't resize.
+        // Need repaint() in case we don't resize.
         pack()
         repaint()
 
         scrn.postInit()
     }
 
-    /**
-     * CheatListener
-     */
+    /** CheatListener */
     override fun commandsEnabled() = DartsClient.devMode
 
-    override fun processCommand(cmd: String): String
-    {
+    override fun processCommand(cmd: String): String {
         var textToShow = ""
-        if (cmd.startsWith(CMD_PURGE_GAME))
-        {
+        if (cmd.startsWith(CMD_PURGE_GAME)) {
             val gameIdentifier = cmd.substring(CMD_PURGE_GAME.length)
             val gameId = Integer.parseInt(gameIdentifier)
             DevUtilities.purgeGame(gameId.toLong())
-        }
-        else if (cmd.startsWith(CMD_LOAD_GAME))
-        {
+        } else if (cmd.startsWith(CMD_LOAD_GAME)) {
             val gameIdentifier = cmd.substring(CMD_LOAD_GAME.length)
             val localId = gameIdentifier.toLong()
             val gameId = GameEntity.getGameId(localId)
             gameId?.let { gameLauncher.loadAndDisplayGame(gameId) }
-        }
-        else if (cmd == CMD_CLEAR_CONSOLE)
-        {
+        } else if (cmd == CMD_CLEAR_CONSOLE) {
             InjectedThings.loggingConsole.clear()
-        }
-        else if (cmd == "dim")
-        {
+        } else if (cmd == "dim") {
             println("Current screen size: $size")
-        }
-        else if (cmd == CMD_EMPTY_SCREEN_CACHE)
-        {
+        } else if (cmd == CMD_EMPTY_SCREEN_CACHE) {
             ScreenCache.emptyCache()
-        }
-        else if (cmd == CMD_GUID)
-        {
+        } else if (cmd == CMD_GUID) {
             textToShow = UUID.randomUUID().toString()
-        }
-        else if (cmd == "stacktrace")
-        {
+        } else if (cmd == "stacktrace") {
             logger.error(LoggingCode("test"), "Testing stack trace")
-        }
-        else if (cmd == CMD_TEST)
-        {
+        } else if (cmd == CMD_TEST) {
             val window = TestWindow()
             window.isVisible = true
         }
@@ -208,14 +179,18 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
     }
 
     override fun windowActivated(arg0: WindowEvent) {}
+
     override fun windowClosed(arg0: WindowEvent) {}
+
     override fun windowDeactivated(arg0: WindowEvent) {}
+
     override fun windowDeiconified(arg0: WindowEvent) {}
+
     override fun windowIconified(arg0: WindowEvent) {}
+
     override fun windowOpened(arg0: WindowEvent) {}
 
-    override fun windowClosing(arg0: WindowEvent)
-    {
+    override fun windowClosing(arg0: WindowEvent) {
         exitApplication()
     }
 }

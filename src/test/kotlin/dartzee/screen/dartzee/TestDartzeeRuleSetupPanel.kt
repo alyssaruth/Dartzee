@@ -13,21 +13,18 @@ import dartzee.utils.InjectedThings
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import java.awt.event.KeyEvent
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
-import java.awt.event.KeyEvent
 
-class TestDartzeeRuleSetupPanel: AbstractTest()
-{
+class TestDartzeeRuleSetupPanel : AbstractTest() {
     @AfterEach
-    fun afterEach()
-    {
+    fun afterEach() {
         InjectedThings.dartzeeRuleFactory = DartzeeRuleFactory()
     }
 
     @Test
-    fun `should allow pre-populated rules to be added`()
-    {
+    fun `should allow pre-populated rules to be added`() {
         val rule = makeDartzeeRuleDto(DartzeeDartRuleEven())
         val ruleTwo = makeDartzeeRuleDto(DartzeeDartRuleOdd())
 
@@ -39,11 +36,22 @@ class TestDartzeeRuleSetupPanel: AbstractTest()
     }
 
     @Test
-    fun `should sort rules into difficulty order`()
-    {
-        val tenPercentRule = makeDartzeeRuleDto(DartzeeDartRuleEven(), calculationResult = makeDartzeeRuleCalculationResult(10))
-        val twentyPercentRule = makeDartzeeRuleDto(DartzeeDartRuleOdd(), calculationResult = makeDartzeeRuleCalculationResult(20))
-        val thirtyPercentRule = makeDartzeeRuleDto(DartzeeDartRuleOuter(), calculationResult = makeDartzeeRuleCalculationResult(30))
+    fun `should sort rules into difficulty order`() {
+        val tenPercentRule =
+            makeDartzeeRuleDto(
+                DartzeeDartRuleEven(),
+                calculationResult = makeDartzeeRuleCalculationResult(10)
+            )
+        val twentyPercentRule =
+            makeDartzeeRuleDto(
+                DartzeeDartRuleOdd(),
+                calculationResult = makeDartzeeRuleCalculationResult(20)
+            )
+        val thirtyPercentRule =
+            makeDartzeeRuleDto(
+                DartzeeDartRuleOuter(),
+                calculationResult = makeDartzeeRuleCalculationResult(30)
+            )
 
         val panel = DartzeeRuleSetupPanel()
         panel.addRulesToTable(listOf(tenPercentRule, thirtyPercentRule, twentyPercentRule))
@@ -54,8 +62,7 @@ class TestDartzeeRuleSetupPanel: AbstractTest()
     }
 
     @Test
-    fun `Should toggle amend & remove buttons based on whether a row is selected`()
-    {
+    fun `Should toggle amend & remove buttons based on whether a row is selected`() {
         val rule = makeDartzeeRuleDto()
 
         val panel = DartzeeRuleSetupPanel()
@@ -74,8 +81,7 @@ class TestDartzeeRuleSetupPanel: AbstractTest()
     }
 
     @Test
-    fun `Should remove the selected rule from the table`()
-    {
+    fun `Should remove the selected rule from the table`() {
         val rule = makeDartzeeRuleDto(DartzeeDartRuleEven())
         val ruleTwo = makeDartzeeRuleDto(DartzeeDartRuleOdd())
 
@@ -89,8 +95,7 @@ class TestDartzeeRuleSetupPanel: AbstractTest()
     }
 
     @Test
-    fun `Should remove the selected rule when delete key pressed`()
-    {
+    fun `Should remove the selected rule when delete key pressed`() {
         val rule = makeDartzeeRuleDto(DartzeeDartRuleEven())
         val ruleTwo = makeDartzeeRuleDto(DartzeeDartRuleOdd())
 
@@ -104,8 +109,7 @@ class TestDartzeeRuleSetupPanel: AbstractTest()
     }
 
     @Test
-    fun `Should do nothing if delete is pressed with no row selected`()
-    {
+    fun `Should do nothing if delete is pressed with no row selected`() {
         val rule = makeDartzeeRuleDto(DartzeeDartRuleEven())
         val ruleTwo = makeDartzeeRuleDto(DartzeeDartRuleOdd())
 
@@ -118,8 +122,7 @@ class TestDartzeeRuleSetupPanel: AbstractTest()
     }
 
     @Test
-    fun `Should support creation of rules`()
-    {
+    fun `Should support creation of rules`() {
         val newRule = makeDartzeeRuleDto()
         InjectedThings.dartzeeRuleFactory = FakeDartzeeRuleFactory(newRule)
 
@@ -131,8 +134,7 @@ class TestDartzeeRuleSetupPanel: AbstractTest()
     }
 
     @Test
-    fun `Should handle cancelling a new rule`()
-    {
+    fun `Should handle cancelling a new rule`() {
         InjectedThings.dartzeeRuleFactory = FakeDartzeeRuleFactory(null)
 
         val panel = DartzeeRuleSetupPanel()
@@ -143,8 +145,7 @@ class TestDartzeeRuleSetupPanel: AbstractTest()
     }
 
     @Test
-    fun `Should handle amending a rule`()
-    {
+    fun `Should handle amending a rule`() {
         val originalRule = makeDartzeeRuleDto(DartzeeDartRuleEven())
         val newRule = makeDartzeeRuleDto(DartzeeDartRuleOdd())
 
@@ -160,8 +161,7 @@ class TestDartzeeRuleSetupPanel: AbstractTest()
     }
 
     @Test
-    fun `Should amend a rule when Enter pressed`()
-    {
+    fun `Should amend a rule when Enter pressed`() {
         val originalRule = makeDartzeeRuleDto(DartzeeDartRuleEven())
         val newRule = makeDartzeeRuleDto(DartzeeDartRuleOdd())
 
@@ -177,8 +177,7 @@ class TestDartzeeRuleSetupPanel: AbstractTest()
     }
 
     @Test
-    fun `Should do nothing if Enter pressed with no row selected`()
-    {
+    fun `Should do nothing if Enter pressed with no row selected`() {
         val originalRule = makeDartzeeRuleDto(DartzeeDartRuleEven())
         val newRule = makeDartzeeRuleDto(DartzeeDartRuleOdd())
 
@@ -191,5 +190,4 @@ class TestDartzeeRuleSetupPanel: AbstractTest()
         panel.tableRules.rowCount shouldBe 1
         panel.getRules() shouldBe listOf(originalRule)
     }
-
 }

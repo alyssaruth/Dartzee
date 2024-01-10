@@ -1,7 +1,6 @@
 package dartzee.achievements
 
-enum class AchievementType
-{
+enum class AchievementType {
     X01_BEST_FINISH,
     X01_BEST_THREE_DART_SCORE,
     X01_CHECKOUT_COMPLETENESS,

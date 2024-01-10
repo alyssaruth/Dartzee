@@ -6,34 +6,30 @@ import dartzee.logging.Severity
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import java.awt.Dimension
 import java.io.File
 import java.nio.file.DirectoryNotEmptyException
 import javax.swing.ImageIcon
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-class TestFileUtil: AbstractTest()
-{
+class TestFileUtil : AbstractTest() {
     private val testDirectory = File("Test/")
 
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         testDirectory.deleteRecursively()
         testDirectory.mkdirs()
     }
 
     @AfterEach
-    fun afterEach()
-    {
+    fun afterEach() {
         testDirectory.deleteRecursively()
     }
 
     @Test
-    fun `Should successfully delete a file`()
-    {
+    fun `Should successfully delete a file`() {
         val f = File("Test/Test.txt")
         f.createNewFile()
         f.exists() shouldBe true
@@ -44,15 +40,13 @@ class TestFileUtil: AbstractTest()
     }
 
     @Test
-    fun `Should handle a non-existent file`()
-    {
+    fun `Should handle a non-existent file`() {
         val result = FileUtil.deleteFileIfExists("DoesNotExist.txt")
         result shouldBe false
     }
 
     @Test
-    fun `Should stack trace and return false if the deletion fails`()
-    {
+    fun `Should stack trace and return false if the deletion fails`() {
         val f = File("Test/File.txt")
         f.createNewFile()
 
@@ -64,8 +58,7 @@ class TestFileUtil: AbstractTest()
     }
 
     @Test
-    fun `Should swap in a file successfully`()
-    {
+    fun `Should swap in a file successfully`() {
         val current = File("Test/Current.txt")
         current.createNewFile()
         current.writeText("Current")
@@ -82,8 +75,7 @@ class TestFileUtil: AbstractTest()
     }
 
     @Test
-    fun `Should swap in a directory successfully`()
-    {
+    fun `Should swap in a directory successfully`() {
         File("Test/Current").mkdir()
         File("Test/New").mkdir()
 
@@ -103,8 +95,7 @@ class TestFileUtil: AbstractTest()
     }
 
     @Test
-    fun `Should read image dimensions correctly`()
-    {
+    fun `Should read image dimensions correctly`() {
         val bean = javaClass.getResource("/Bean.png")!!.toURI()
         val statsIcon = javaClass.getResource("/stats_large.png")!!.toURI()
 
@@ -113,8 +104,7 @@ class TestFileUtil: AbstractTest()
     }
 
     @Test
-    fun `Should extract correct bytes`()
-    {
+    fun `Should extract correct bytes`() {
         val bytes = FileUtil.getByteArrayForResource("/Bean.png")
 
         val ii = ImageIcon(bytes)

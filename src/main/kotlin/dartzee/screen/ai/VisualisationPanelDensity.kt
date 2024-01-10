@@ -14,13 +14,11 @@ import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 
-class VisualisationPanelDensity: AbstractVisualisationPanel()
-{
+class VisualisationPanelDensity : AbstractVisualisationPanel() {
     private val keyImg = BufferedImage(100, 500, BufferedImage.TYPE_INT_ARGB)
     val panelKey = JLabel()
 
-    init
-    {
+    init {
         add(dartboard)
         add(overlay)
 
@@ -31,8 +29,7 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
 
     override fun factoryColourWrapper() = WIREFRAME_COLOUR_WRAPPER
 
-    override fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModel)
-    {
+    override fun showVisualisation(hmPointToCount: Map<Point, Int>, model: DartsAiModel) {
         val modelPt = model.calculateScoringPoint()
         val centerPt = dartboard.interpretPoint(modelPt)
 
@@ -47,16 +44,15 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
         repaint()
     }
 
-    override fun paintKey()
-    {
+    override fun paintKey() {
         keyImg.paint {
             val probability: Double = it.y.toDouble() / height.toDouble()
             getColorForProbability(probability)
         }
 
-        //Add labels at 10% increments
+        // Add labels at 10% increments
         val lblXPosition = panel.width / 2 - LABEL_WIDTH / 2
-        val yPositions = (1 until 500).filter { it % (500/10) == 0 }
+        val yPositions = (1 until 500).filter { it % (500 / 10) == 0 }
         yPositions.forEach { y ->
             val probInt = 10 * y / 50
             val label = JLabel("-   $probInt%   -")
@@ -73,16 +69,14 @@ class VisualisationPanelDensity: AbstractVisualisationPanel()
         repaint()
     }
 
-    private fun getColorForProbability(probability: Double?): Color
-    {
+    private fun getColorForProbability(probability: Double?): Color {
         probability ?: return Color.BLACK
 
         val hue = (probability / 1.2).toFloat()
         return Color.getHSBColor(hue, 1f, 1f)
     }
 
-    companion object
-    {
+    companion object {
         private const val LABEL_WIDTH = 60
         private const val LABEL_HEIGHT = 40
     }

@@ -6,23 +6,18 @@ import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.mainDatabase
 import java.awt.BorderLayout
 
-class SyncManagementScreen: EmbeddedScreen()
-{
+class SyncManagementScreen : EmbeddedScreen() {
     private val setupPanel = SyncSetupPanel()
     private val managementPanel = SyncManagementPanel()
 
-    override fun initialise()
-    {
+    override fun initialise() {
         remove(setupPanel)
         remove(managementPanel)
 
         val lastSyncData = SyncAuditEntity.getLastSyncData(mainDatabase)
-        if (lastSyncData == null)
-        {
+        if (lastSyncData == null) {
             add(setupPanel, BorderLayout.CENTER)
-        }
-        else
-        {
+        } else {
             managementPanel.updateStatus(lastSyncData)
             add(managementPanel, BorderLayout.CENTER)
         }

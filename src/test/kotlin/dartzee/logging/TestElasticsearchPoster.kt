@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestElasticsearchPoster: AbstractTest() {
+class TestElasticsearchPoster : AbstractTest() {
     @Test
     @Tag("integration")
     fun `Should report as online`() {
@@ -87,11 +87,11 @@ class TestElasticsearchPoster: AbstractTest() {
     fun `Should log an error if we fail to construct the RestClient, and not attempt to post any logs`() {
         val poster = makePoster(credentials = null)
 
-        //lazy initialisation means we won't hit the error yet
+        // lazy initialisation means we won't hit the error yet
         errorLogged() shouldBe false
         poster.postLog("foo")
 
-        //We've attempted to post a log, so we'll hit the RestClient error now
+        // We've attempted to post a log, so we'll hit the RestClient error now
         val log = verifyLog(CODE_ELASTICSEARCH_ERROR, Severity.ERROR)
         log.message shouldBe "Failed to set up RestClient - won't post logs to ES"
         log.errorObject.shouldBeInstanceOf<IllegalArgumentException>()
@@ -166,6 +166,5 @@ class TestElasticsearchPoster: AbstractTest() {
         url: String = ELASTICSEARCH_URL,
         index: String = "unittest",
         client: RestClient? = null
-    ) =
-        ElasticsearchPoster(credentials, url, index, client)
+    ) = ElasticsearchPoster(credentials, url, index, client)
 }

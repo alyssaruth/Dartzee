@@ -7,14 +7,12 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.io.IOException
+import org.junit.jupiter.api.Test
 
-class TestUrlUtil: AbstractTest()
-{
+class TestUrlUtil : AbstractTest() {
     @Test
-    fun `Should execute the expected command`()
-    {
+    fun `Should execute the expected command`() {
         val runtime = mockk<Runtime>(relaxed = true)
         launchUrl("foo.bar", runtime)
 
@@ -22,8 +20,7 @@ class TestUrlUtil: AbstractTest()
     }
 
     @Test
-    fun `Should log an appropriate error if launching the URL fails`()
-    {
+    fun `Should log an appropriate error if launching the URL fails`() {
         val error = IOException("Oops")
 
         val runtime = mockk<Runtime>()

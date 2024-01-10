@@ -6,13 +6,11 @@ import dartzee.utils.PreferenceUtil
 import java.awt.BorderLayout
 import javax.swing.JPanel
 
-class LeaderboardTopX01Finishes: AbstractLeaderboard()
-{
+class LeaderboardTopX01Finishes : AbstractLeaderboard() {
     val tableTopFinishes = ScrollTableDartsGame()
     private val panelTopFinishesFilters = JPanel()
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
 
         add(tableTopFinishes)
@@ -25,8 +23,7 @@ class LeaderboardTopX01Finishes: AbstractLeaderboard()
 
     override fun getTabName() = "X01 Finishes"
 
-    override fun buildTable()
-    {
+    override fun buildTable() {
         val extraWhereSql = panelPlayerFilters.getWhereSql()
 
         val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
@@ -36,8 +33,7 @@ class LeaderboardTopX01Finishes: AbstractLeaderboard()
         sb.append(" FROM X01Finish xf, Player p, Game g")
         sb.append(" WHERE xf.PlayerId = p.RowId")
         sb.append(" AND xf.GameId = g.RowId")
-        if (!extraWhereSql.isEmpty())
-        {
+        if (!extraWhereSql.isEmpty()) {
             sb.append(" AND p.$extraWhereSql")
         }
         sb.append(" ORDER BY Finish DESC, xf.DtCreation ASC")

@@ -25,25 +25,24 @@ import dartzee.logging.KEY_PLAYER_IDS
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JOptionPane
 import javax.swing.JRadioButton
+import org.junit.jupiter.api.Test
 
-class TestAchievementConversionDialog : AbstractTest()
-{
+class TestAchievementConversionDialog : AbstractTest() {
     @Test
-    fun `Should populate the player selector from the db`()
-    {
+    fun `Should populate the player selector from the db`() {
         val players = preparePlayers(5).map { it.name }
         val dlg = AchievementConversionDialog()
-        dlg.getChild<PlayerSelector>().tablePlayersToSelectFrom.getAllPlayers().map { it.name } shouldBe players
+        dlg.getChild<PlayerSelector>().tablePlayersToSelectFrom.getAllPlayers().map {
+            it.name
+        } shouldBe players
     }
 
     @Test
-    fun `Achievement dropdown should enable based on radio selection`()
-    {
+    fun `Achievement dropdown should enable based on radio selection`() {
         val dlg = AchievementConversionDialog()
         val comboBox = dlg.getChild<JComboBox<AbstractAchievement>>()
         comboBox.shouldBeDisabled()
@@ -56,8 +55,7 @@ class TestAchievementConversionDialog : AbstractTest()
     }
 
     @Test
-    fun `Should validate and not dispose if cancelling running on all players`()
-    {
+    fun `Should validate and not dispose if cancelling running on all players`() {
         preparePlayers(2)
         dialogFactory.questionOption = JOptionPane.NO_OPTION
 
@@ -66,12 +64,13 @@ class TestAchievementConversionDialog : AbstractTest()
         dlg.clickOk()
 
         dlg.shouldBeVisible()
-        dialogFactory.questionsShown.shouldContainExactly("This will run the conversion(s) for ALL players. Proceed?")
+        dialogFactory.questionsShown.shouldContainExactly(
+            "This will run the conversion(s) for ALL players. Proceed?"
+        )
     }
 
     @Test
-    fun `Should run for all achievements and players`()
-    {
+    fun `Should run for all achievements and players`() {
         preparePlayers(3)
         dialogFactory.questionOption = JOptionPane.YES_OPTION
 
@@ -85,14 +84,15 @@ class TestAchievementConversionDialog : AbstractTest()
         findWindow<ProgressDialog>()!!.shouldNotBeVisible()
 
         val log = findLog(CODE_ACHIEVEMENT_CONVERSION_STARTED)!!
-        log.message shouldBe "Regenerating ${getAllAchievements().size} achievements for all players"
-        log.keyValuePairs[KEY_ACHIEVEMENT_TYPES] shouldBe getAllAchievements().map { it.achievementType }
+        log.message shouldBe
+            "Regenerating ${getAllAchievements().size} achievements for all players"
+        log.keyValuePairs[KEY_ACHIEVEMENT_TYPES] shouldBe
+            getAllAchievements().map { it.achievementType }
         log.keyValuePairs[KEY_PLAYER_IDS] shouldBe emptyList<String>()
     }
 
     @Test
-    fun `Should run for a subset of players and achievements`()
-    {
+    fun `Should run for a subset of players and achievements`() {
         preparePlayers(4)
 
         val dlg = AchievementConversionDialog()
@@ -114,13 +114,12 @@ class TestAchievementConversionDialog : AbstractTest()
 
         val log = findLog(CODE_ACHIEVEMENT_CONVERSION_STARTED)!!
         log.message shouldBe "Regenerating 1 achievements for 2 players"
-        log.keyValuePairs[KEY_ACHIEVEMENT_TYPES] shouldBe listOf(selectedAchievement.achievementType)
+        log.keyValuePairs[KEY_ACHIEVEMENT_TYPES] shouldBe
+            listOf(selectedAchievement.achievementType)
         log.keyValuePairs[KEY_PLAYER_IDS] shouldBe players.map { it.rowId }
-
     }
 
-    private fun waitForConversionToFinish()
-    {
+    private fun waitForConversionToFinish() {
         waitForAssertion { findLog(CODE_ACHIEVEMENT_CONVERSION_FINISHED) shouldNotBe null }
         flushEdt()
     }

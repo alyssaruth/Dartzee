@@ -1,11 +1,9 @@
 package dartzee.core.util
 
-interface IShuffler
-{
+interface IShuffler {
     fun <T> shuffleCollection(collection: List<T>): List<T>
 }
 
-class CollectionShuffler: IShuffler
-{
+class CollectionShuffler : IShuffler {
     override fun <T> shuffleCollection(collection: List<T>) = collection.shuffled()
 }

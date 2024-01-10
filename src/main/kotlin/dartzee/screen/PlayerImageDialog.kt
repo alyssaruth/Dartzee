@@ -29,8 +29,7 @@ import javax.swing.border.TitledBorder
 import javax.swing.filechooser.FileNameExtensionFilter
 
 class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
-    SimpleDialog(), IFileUploadListener
-{
+    SimpleDialog(), IFileUploadListener {
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
     private val panelPreset = JPanel()
     private val panelUpload = JPanel()
@@ -41,8 +40,7 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
     private val bgUploaded = ButtonGroup()
     private val scrollPaneUploaded = JScrollPane()
 
-    init
-    {
+    init {
         setSize(650, 400)
         setLocationRelativeTo(null)
         isModal = InjectedThings.allowModalDialogs
@@ -63,7 +61,15 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
         val panelUploadOptions = JPanel()
         panelUpload.add(panelUploadOptions, BorderLayout.NORTH)
         scrollPaneUploaded.verticalScrollBar.unitIncrement = 16
-        scrollPaneUploaded.border = TitledBorder(UIManager.getBorder("TitledBorder.border"), "Previously Uploaded", TitledBorder.LEADING, TitledBorder.TOP, null, Color(0, 0, 0))
+        scrollPaneUploaded.border =
+            TitledBorder(
+                UIManager.getBorder("TitledBorder.border"),
+                "Previously Uploaded",
+                TitledBorder.LEADING,
+                TitledBorder.TOP,
+                null,
+                Color(0, 0, 0)
+            )
         panelUpload.add(scrollPaneUploaded, BorderLayout.CENTER)
         scrollPaneUploaded.setViewportView(panelPreviouslyUploaded)
         panelPreviouslyUploaded.layout = WrapLayout()
@@ -74,15 +80,13 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
         init()
     }
 
-    private fun init()
-    {
+    private fun init() {
         val entities = PlayerImageEntity().retrieveEntities()
         populatePanel(panelPresets, entities.filter { it.preset }, ButtonGroup())
-        populatePanel(panelPreviouslyUploaded, entities.filter{ !it.preset }, bgUploaded)
+        populatePanel(panelPreviouslyUploaded, entities.filter { !it.preset }, bgUploaded)
     }
 
-    private fun populatePanel(panel: JPanel, entities: List<PlayerImageEntity>, bg: ButtonGroup)
-    {
+    private fun populatePanel(panel: JPanel, entities: List<PlayerImageEntity>, bg: ButtonGroup) {
         entities.forEach { img ->
             val radio = PlayerImageRadio(img)
             panel.add(radio)
@@ -90,19 +94,16 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
         }
     }
 
-    private fun getPlayerImageIdFromSelection(): String?
-    {
+    private fun getPlayerImageIdFromSelection(): String? {
         val panel = tabbedPane.selectedComponent as JPanel
 
         val radios = panel.getAllChildComponentsForType<PlayerImageRadio>()
-        return radios.find { it.isSelected() } ?.playerImageId
+        return radios.find { it.isSelected() }?.playerImageId
     }
 
-    override fun okPressed()
-    {
+    override fun okPressed() {
         val playerImageId = getPlayerImageIdFromSelection()
-        if (playerImageId == null)
-        {
+        if (playerImageId == null) {
             DialogUtil.showErrorOLD("You must select an image.")
             return
         }
@@ -111,29 +112,26 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
         dispose()
     }
 
-    private fun validateFile(file: File): Boolean
-    {
+    private fun validateFile(file: File): Boolean {
         val imageReaders = ImageIO.getImageReadersBySuffix(file.extension)
-        if (!imageReaders.hasNext())
-        {
+        if (!imageReaders.hasNext()) {
             DialogUtil.showErrorOLD("You must select a valid image file.")
             return false
         }
 
         val imgDim = FileUtil.getImageDim(file) ?: Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
-        if (imgDim.getWidth() < PLAYER_IMAGE_WIDTH || imgDim.getHeight() < PLAYER_IMAGE_HEIGHT)
-        {
-            DialogUtil.showErrorOLD("The image is too small - it must be at least $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px.")
+        if (imgDim.getWidth() < PLAYER_IMAGE_WIDTH || imgDim.getHeight() < PLAYER_IMAGE_HEIGHT) {
+            DialogUtil.showErrorOLD(
+                "The image is too small - it must be at least $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px."
+            )
             return false
         }
 
         return true
     }
 
-    override fun fileUploaded(file: File): Boolean
-    {
-        if (!validateFile(file))
-        {
+    override fun fileUploaded(file: File): Boolean {
+        if (!validateFile(file)) {
             return false
         }
 

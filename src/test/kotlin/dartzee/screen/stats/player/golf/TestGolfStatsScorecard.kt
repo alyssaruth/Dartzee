@@ -9,23 +9,27 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestGolfStatsScorecard : AbstractTest()
-{
+class TestGolfStatsScorecard : AbstractTest() {
     @Test
-    fun `Should show the right number of columns`()
-    {
+    fun `Should show the right number of columns`() {
         factoryScorecard(showGameIds = false).getNumberOfColumns() shouldBe 5
         factoryScorecard(showGameIds = true).getNumberOfColumns() shouldBe 6
     }
 
     @Test
-    fun `Should render an extra column with gameIds`()
-    {
+    fun `Should render an extra column with gameIds`() {
         val scorer = factoryScorecard(showGameIds = true)
         scorer.getNumberOfColumns() shouldBe 6
 
         val roundOne = makeGolfRound(1, listOf(Dart(1, 3, segmentType = SegmentType.TREBLE)))
-        val roundTwo = makeGolfRound(2, listOf(Dart(2, 0, segmentType = SegmentType.MISS), Dart(2, 1, segmentType = SegmentType.OUTER_SINGLE)))
+        val roundTwo =
+            makeGolfRound(
+                2,
+                listOf(
+                    Dart(2, 0, segmentType = SegmentType.MISS),
+                    Dart(2, 1, segmentType = SegmentType.OUTER_SINGLE)
+                )
+            )
 
         val gameIds = listOf(50L, 350L)
         scorer.populateTable(listOf(roundOne, roundTwo))
@@ -39,8 +43,7 @@ class TestGolfStatsScorecard : AbstractTest()
     }
 
     @Test
-    fun `Should split gameIds if more than 9 rounds`()
-    {
+    fun `Should split gameIds if more than 9 rounds`() {
         val scorer = factoryScorecard(showGameIds = true)
 
         val rounds = (1..10).map { makeGolfRound(it, listOf(Dart(it, 2))) }
@@ -54,10 +57,11 @@ class TestGolfStatsScorecard : AbstractTest()
     }
 
     @Test
-    fun `Should render a back 9`()
-    {
-        val roundOne = makeGolfRound(10, listOf(Dart(15, 1), Dart(10, 2, segmentType = SegmentType.DOUBLE)))
-        val roundTwo = makeGolfRound(11, listOf(Dart(11, 1), Dart(11, 3, segmentType = SegmentType.TREBLE)))
+    fun `Should render a back 9`() {
+        val roundOne =
+            makeGolfRound(10, listOf(Dart(15, 1), Dart(10, 2, segmentType = SegmentType.DOUBLE)))
+        val roundTwo =
+            makeGolfRound(11, listOf(Dart(11, 1), Dart(11, 3, segmentType = SegmentType.TREBLE)))
         val scorer = factoryScorecard(9)
         scorer.populateTable(listOf(roundOne, roundTwo))
 
@@ -68,5 +72,6 @@ class TestGolfStatsScorecard : AbstractTest()
         )
     }
 
-    private fun factoryScorecard(fudgeFactor: Int = 0, showGameIds: Boolean = false) = GolfStatsScorecard(fudgeFactor, showGameIds)
+    private fun factoryScorecard(fudgeFactor: Int = 0, showGameIds: Boolean = false) =
+        GolfStatsScorecard(fudgeFactor, showGameIds)
 }

@@ -6,18 +6,16 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
-import org.junit.jupiter.api.Tag
-import org.junit.jupiter.api.Test
 import java.awt.Dimension
 import javax.swing.ImageIcon
 import javax.swing.JLabel
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 
-class TestPlayerImageUtils : AbstractTest()
-{
+class TestPlayerImageUtils : AbstractTest() {
     @Test
     @Tag("screenshot")
-    fun `Should match screenshot - 50-50 split, inactive`()
-    {
+    fun `Should match screenshot - 50-50 split, inactive`() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, null, false)
@@ -29,8 +27,7 @@ class TestPlayerImageUtils : AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Should match screenshot - game over`()
-    {
+    fun `Should match screenshot - game over`() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, null, true)
@@ -42,8 +39,7 @@ class TestPlayerImageUtils : AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Should match screenshot - game over with player selected`()
-    {
+    fun `Should match screenshot - game over with player selected`() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, p1, true)
@@ -55,8 +51,7 @@ class TestPlayerImageUtils : AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Should match screenshot - player one selected`()
-    {
+    fun `Should match screenshot - player one selected`() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, p1, false)
@@ -68,8 +63,7 @@ class TestPlayerImageUtils : AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Should match screenshot - player two selected`()
-    {
+    fun `Should match screenshot - player two selected`() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, p2, false)
@@ -81,8 +75,7 @@ class TestPlayerImageUtils : AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Should crop and scale an image to avatar dimensions`()
-    {
+    fun `Should crop and scale an image to avatar dimensions`() {
         val bytes = FileUtil.getByteArrayForResource("/outer-wilds.jpeg")!!
         val result = convertImageToAvatarDimensions(bytes)
 
@@ -92,8 +85,7 @@ class TestPlayerImageUtils : AbstractTest()
         label.shouldMatchImage("outer-wilds-avatar")
     }
 
-    private fun setUpPlayers(): Pair<PlayerEntity, PlayerEntity>
-    {
+    private fun setUpPlayers(): Pair<PlayerEntity, PlayerEntity> {
         val imgOne = insertPlayerImage(resource = "Sid")
         val imgTwo = insertPlayerImage(resource = "Minion")
         val playerOne = insertPlayer(playerImageId = imgOne.rowId)

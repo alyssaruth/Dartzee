@@ -18,40 +18,37 @@ import dartzee.`object`.Dart
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestX01PlayerState: AbstractTest()
-{
+class TestX01PlayerState : AbstractTest() {
     @Test
-    fun `should report correct score if no darts thrown`()
-    {
+    fun `should report correct score if no darts thrown`() {
         val state = makeX01PlayerStateWithRounds(completedRounds = listOf())
         state.getScoreSoFar() shouldBe 0
     }
 
     @Test
-    fun `should count completed rounds as 3 darts, regardless of how many were actually thrown`()
-    {
+    fun `should count completed rounds as 3 darts, regardless of how many were actually thrown`() {
         val roundOne = listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1))
         val roundTwo = listOf(Dart(20, 3))
         val roundThree = listOf(Dart(20, 1), Dart(20, 2))
 
-        val state = makeX01PlayerStateWithRounds(completedRounds = listOf(roundOne, roundTwo, roundThree))
+        val state =
+            makeX01PlayerStateWithRounds(completedRounds = listOf(roundOne, roundTwo, roundThree))
         state.getScoreSoFar() shouldBe 9
     }
 
     @Test
-    fun `Should not count the finishing round as 3 darts if it contains less`()
-    {
+    fun `Should not count the finishing round as 3 darts if it contains less`() {
         val roundOne = listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1))
         val roundTwo = listOf(Dart(20, 3))
         val roundThree = listOf(Dart(20, 1), makeDart(20, 2, startingScore = 40))
 
-        val state = makeX01PlayerStateWithRounds(completedRounds = listOf(roundOne, roundTwo, roundThree))
+        val state =
+            makeX01PlayerStateWithRounds(completedRounds = listOf(roundOne, roundTwo, roundThree))
         state.getScoreSoFar() shouldBe 8
     }
 
     @Test
-    fun `should add on darts from the in progress round`()
-    {
+    fun `should add on darts from the in progress round`() {
         val roundOne = listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1))
         val roundTwo = listOf(Dart(20, 3))
 
@@ -69,8 +66,7 @@ class TestX01PlayerState: AbstractTest()
     }
 
     @Test
-    fun `The remaining score should be the starting score if no darts have been thrown`()
-    {
+    fun `The remaining score should be the starting score if no darts have been thrown`() {
         val state = makeX01PlayerStateWithRounds(501, completedRounds = listOf())
         state.getRemainingScore() shouldBe 501
 
@@ -79,16 +75,16 @@ class TestX01PlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should correctly compute the current remaining score, taking into account busts`()
-    {
-        val roundOne = listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)) //121
-        val roundTwo = listOf(Dart(20, 3), Dart(20, 3)) //bust, 121
-        val roundThree = listOf(Dart(20, 3), Dart(20, 1), Dart(1, 1)) //40
-        val roundFour = listOf(Dart(20, 1), Dart(10, 1), Dart(5, 1)) //5
-        val roundFive = listOf(Dart(20, 1)) //bust, 5
-        val roundSix = listOf(Dart(1, 1)) //4, mercied
+    fun `Should correctly compute the current remaining score, taking into account busts`() {
+        val roundOne = listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)) // 121
+        val roundTwo = listOf(Dart(20, 3), Dart(20, 3)) // bust, 121
+        val roundThree = listOf(Dart(20, 3), Dart(20, 1), Dart(1, 1)) // 40
+        val roundFour = listOf(Dart(20, 1), Dart(10, 1), Dart(5, 1)) // 5
+        val roundFive = listOf(Dart(20, 1)) // bust, 5
+        val roundSix = listOf(Dart(1, 1)) // 4, mercied
 
-        val rounds = makeX01Rounds(301, roundOne, roundTwo, roundThree, roundFour, roundFive, roundSix)
+        val rounds =
+            makeX01Rounds(301, roundOne, roundTwo, roundThree, roundFour, roundFive, roundSix)
 
         val state = makeX01PlayerStateWithRounds(301, completedRounds = rounds)
         state.getRemainingScoreForRound(1) shouldBe 121
@@ -102,8 +98,7 @@ class TestX01PlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should take into account current round when computing the remaining score`()
-    {
+    fun `Should take into account current round when computing the remaining score`() {
         val state = X01PlayerState(301, SingleParticipant(insertParticipant()))
         state.dartThrown(makeDart(20, 3))
         state.dartThrown(makeDart(20, 3))
@@ -123,30 +118,29 @@ class TestX01PlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should return a bad luck count of 0 if no darts thrown`()
-    {
+    fun `Should return a bad luck count of 0 if no darts thrown`() {
         val state = makeX01PlayerStateWithRounds(completedRounds = emptyList())
         state.getBadLuckCount() shouldBe 0
     }
 
     @Test
-    fun `Should compute bad luck count correctly based on all thrown darts`()
-    {
-        val roundOne = listOf(
-            makeDart(startingScore = 40, score = 5, multiplier = 2), //bad luck
-            makeDart(startingScore = 30, score = 10, multiplier = 1),
-            makeDart(startingScore = 20, score = 15, multiplier = 0)
-        )
+    fun `Should compute bad luck count correctly based on all thrown darts`() {
+        val roundOne =
+            listOf(
+                makeDart(startingScore = 40, score = 5, multiplier = 2), // bad luck
+                makeDart(startingScore = 30, score = 10, multiplier = 1),
+                makeDart(startingScore = 20, score = 15, multiplier = 0)
+            )
 
-        val roundTwo = listOf(
-            makeDart(startingScore = 20, score = 17, multiplier = 2)
-        )
+        val roundTwo = listOf(makeDart(startingScore = 20, score = 17, multiplier = 2))
 
-        val roundThree = listOf(
-            makeDart(startingScore = 20, score = 15, multiplier = 2) //bad luck
-        )
+        val roundThree =
+            listOf(
+                makeDart(startingScore = 20, score = 15, multiplier = 2) // bad luck
+            )
 
-        val state = makeX01PlayerStateWithRounds(completedRounds = listOf(roundOne, roundTwo, roundThree))
+        val state =
+            makeX01PlayerStateWithRounds(completedRounds = listOf(roundOne, roundTwo, roundThree))
         state.getBadLuckCount() shouldBe 2
 
         val dart = makeDart(score = 6, multiplier = 2)
@@ -159,8 +153,7 @@ class TestX01PlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should compute bad luck count for the current player`()
-    {
+    fun `Should compute bad luck count for the current player`() {
         val team = insertTeam()
         val pt1 = insertParticipant(teamId = team.rowId)
         val pt2 = insertParticipant(teamId = team.rowId)
@@ -168,19 +161,16 @@ class TestX01PlayerState: AbstractTest()
 
         val roundOne = listOf(drtTrebleTwenty(), drtOuterOne(), drtMissTwenty()) // Get down to 40
 
-        val roundTwo = listOf(
-            drtDoubleFive(), //bad luck
-            drtOuterTen(),
-            drtMissFifteen()
-        )
+        val roundTwo =
+            listOf(
+                drtDoubleFive(), // bad luck
+                drtOuterTen(),
+                drtMissFifteen()
+            )
 
-        val roundThree = listOf(
-            drtDoubleSeventeen()
-        )
+        val roundThree = listOf(drtDoubleSeventeen())
 
-        val roundFour = listOf(
-            drtDoubleFifteen()
-        )
+        val roundFour = listOf(drtDoubleFifteen())
 
         roundOne.forEach(state::dartThrown)
         state.commitRound()
@@ -200,19 +190,18 @@ class TestX01PlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should return the last committed round`()
-    {
+    fun `Should return the last committed round`() {
         val roundOne = listOf(Dart(20, 1))
         val roundTwo = listOf(Dart(5, 1), Dart(1, 1))
         val roundThree = listOf(Dart(20, 1), Dart(20, 1), Dart(5, 1))
 
-        val state = makeX01PlayerStateWithRounds(completedRounds = listOf(roundOne, roundTwo, roundThree))
+        val state =
+            makeX01PlayerStateWithRounds(completedRounds = listOf(roundOne, roundTwo, roundThree))
         state.getLastRound() shouldBe roundThree
     }
 
     @Test
-    fun `Should set startingScore on darts as they are added`()
-    {
+    fun `Should set startingScore on darts as they are added`() {
         val state = X01PlayerState(301, SingleParticipant(insertParticipant()))
 
         val dartOne = makeDart(20, 1)
@@ -229,8 +218,7 @@ class TestX01PlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should correctly determine whether the current round is completed`()
-    {
+    fun `Should correctly determine whether the current round is completed`() {
         val threeDartRound = listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1))
         val bustRound = listOf(Dart(20, 3), Dart(20, 3))
         val finishedRound = listOf(Dart(17, 3), Dart(25, 2))
@@ -242,8 +230,8 @@ class TestX01PlayerState: AbstractTest()
         stateWithCurrentRound(incompleteRound).isCurrentRoundComplete() shouldBe false
         stateWithCurrentRound(emptyList()).isCurrentRoundComplete() shouldBe false
     }
-    private fun stateWithCurrentRound(darts: List<Dart>): X01PlayerState
-    {
+
+    private fun stateWithCurrentRound(darts: List<Dart>): X01PlayerState {
         val state = X01PlayerState(101, SingleParticipant(insertParticipant()))
         darts.forEach { state.dartThrown(it) }
         return state

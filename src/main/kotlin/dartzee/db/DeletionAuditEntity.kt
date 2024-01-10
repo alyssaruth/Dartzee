@@ -3,15 +3,10 @@ package dartzee.db
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 
-/**
- * Represents a row that's been deleted.
- * Used by the sync to ensure deleted rows stay deleted
- */
-class DeletionAuditEntity(database: Database = mainDatabase): AbstractEntity<DeletionAuditEntity>(database)
-{
-    /**
-     * DB fields
-     */
+/** Represents a row that's been deleted. Used by the sync to ensure deleted rows stay deleted */
+class DeletionAuditEntity(database: Database = mainDatabase) :
+    AbstractEntity<DeletionAuditEntity>(database) {
+    /** DB fields */
     var entityName: EntityName = EntityName.DeletionAudit
     var entityId = ""
 
@@ -19,21 +14,19 @@ class DeletionAuditEntity(database: Database = mainDatabase): AbstractEntity<Del
 
     override fun includeInSync() = false
 
-    override fun getCreateTableSqlSpecific(): String
-    {
-        return ("EntityName VARCHAR(255) NOT NULL, "
-                + "EntityId VARCHAR(36) NOT NULL")
+    override fun getCreateTableSqlSpecific(): String {
+        return ("EntityName VARCHAR(255) NOT NULL, " + "EntityId VARCHAR(36) NOT NULL")
     }
 
-    override fun mergeImpl(otherDatabase: Database)
-    {
+    override fun mergeImpl(otherDatabase: Database) {
         otherDatabase.executeUpdate("DELETE FROM $entityName WHERE RowId = '$entityId'")
     }
 
-    companion object
-    {
-        fun factory(entity: AbstractEntity<*>, database: Database = mainDatabase): DeletionAuditEntity
-        {
+    companion object {
+        fun factory(
+            entity: AbstractEntity<*>,
+            database: Database = mainDatabase
+        ): DeletionAuditEntity {
             val result = DeletionAuditEntity(database)
             result.assignRowId()
             result.entityName = entity.getTableName()
