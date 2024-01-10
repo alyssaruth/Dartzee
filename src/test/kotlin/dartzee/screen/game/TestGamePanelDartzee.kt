@@ -69,8 +69,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
-import javax.swing.JButton
 import org.junit.jupiter.api.Test
+import javax.swing.JButton
 
 class TestGamePanelDartzee : AbstractTest() {
     private val ruleResults =
@@ -805,7 +805,5 @@ class TestGamePanelDartzee : AbstractTest() {
         game: GameEntity = insertGame(),
         totalPlayers: Int = 1,
         parentWindow: AbstractDartsGameScreen = mockk(relaxed = true)
-    ): GamePanelDartzee {
-        return GamePanelDartzee(parentWindow, game, totalPlayers, dtos, summaryPanel)
-    }
+    ) = GamePanelDartzee(parentWindow, game, totalPlayers, dtos, summaryPanel)
 }

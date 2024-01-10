@@ -159,9 +159,7 @@ abstract class AbstractAchievement {
         }
     }
 
-    fun isClickable(): Boolean {
-        return !gameIdEarned.isEmpty() || tmBreakdown != null
-    }
+    fun isClickable() = gameIdEarned.isNotEmpty() || tmBreakdown != null
 
     fun getIcon(): BufferedImage? {
         var iconURL = getIconURL()

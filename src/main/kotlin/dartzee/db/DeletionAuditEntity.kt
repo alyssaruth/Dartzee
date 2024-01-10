@@ -14,9 +14,8 @@ class DeletionAuditEntity(database: Database = mainDatabase) :
 
     override fun includeInSync() = false
 
-    override fun getCreateTableSqlSpecific(): String {
-        return ("EntityName VARCHAR(255) NOT NULL, " + "EntityId VARCHAR(36) NOT NULL")
-    }
+    override fun getCreateTableSqlSpecific() =
+        "EntityName VARCHAR(255) NOT NULL, " + "EntityId VARCHAR(36) NOT NULL"
 
     override fun mergeImpl(otherDatabase: Database) {
         otherDatabase.executeUpdate("DELETE FROM $entityName WHERE RowId = '$entityId'")
