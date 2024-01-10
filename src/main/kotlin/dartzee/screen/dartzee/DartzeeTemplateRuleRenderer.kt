@@ -8,10 +8,8 @@ import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
 import javax.swing.SwingConstants
 
-class DartzeeTemplateRuleRenderer : AbstractTableRenderer<List<DartzeeRuleDto>>()
-{
-    override fun getReplacementValue(value: List<DartzeeRuleDto>): Any
-    {
+class DartzeeTemplateRuleRenderer : AbstractTableRenderer<List<DartzeeRuleDto>>() {
+    override fun getReplacementValue(value: List<DartzeeRuleDto>): Any {
         val width = (20 * value.size) + (5 * (value.size))
 
         val bi = BufferedImage(width + 2, 22, BufferedImage.TYPE_INT_ARGB)
@@ -20,11 +18,11 @@ class DartzeeTemplateRuleRenderer : AbstractTableRenderer<List<DartzeeRuleDto>>(
         value.forEachIndexed { ix, dto ->
             val x = (ix * 25) + 5
 
-            //Fill
+            // Fill
             g.color = dto.calculationResult!!.getForeground()
             g.fill(Rectangle(x, 0, 20, 20))
 
-            //Border
+            // Border
             g.color = Color.BLACK
             g.drawRect(x, 0, 20, 20)
         }

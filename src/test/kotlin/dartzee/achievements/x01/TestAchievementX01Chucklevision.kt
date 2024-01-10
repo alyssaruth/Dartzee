@@ -18,15 +18,14 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<AchievementX01Chucklevision>()
-{
+class TestAchievementX01Chucklevision :
+    AbstractMultiRowAchievementTest<AchievementX01Chucklevision>() {
     override fun factoryAchievement() = AchievementX01Chucklevision()
 
     private fun makeChucklevisionDarts() = listOf(Dart(20, 3), Dart(5, 1), Dart(4, 1))
 
     @Test
-    fun `Should include rounds that were completed as part of a team`()
-    {
+    fun `Should include rounds that were completed as part of a team`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
         val team = insertTeam(gameId = g.rowId)
@@ -40,8 +39,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
     }
 
     @Test
-    fun `Should ignore rounds that contain any misses`()
-    {
+    fun `Should ignore rounds that contain any misses`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -55,8 +53,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
     }
 
     @Test
-    fun `Should ignore rounds that bust the player`()
-    {
+    fun `Should ignore rounds that bust the player`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -69,8 +66,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
     }
 
     @Test
-    fun `Should ignore rounds that do not add up to 69`()
-    {
+    fun `Should ignore rounds that do not add up to 69`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -82,17 +78,20 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
     }
 
     @Test
-    fun `Should ignore rounds that do not add up to 69, in a game where another round does add up to 69`()
-    {
+    fun `Should ignore rounds that do not add up to 69, in a game where another round does add up to 69`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDartsForPlayer(g, p, listOf(Dart(20, 3), Dart(3, 3), Dart(1, 1)),
-            participant = pt, roundNumber = 1)
+        insertDartsForPlayer(
+            g,
+            p,
+            listOf(Dart(20, 3), Dart(3, 3), Dart(1, 1)),
+            participant = pt,
+            roundNumber = 1
+        )
 
-        insertDartsForPlayer(g, p, makeChucklevisionDarts(),
-            participant = pt, roundNumber = 2)
+        insertDartsForPlayer(g, p, makeChucklevisionDarts(), participant = pt, roundNumber = 2)
 
         runConversion()
 
@@ -100,8 +99,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
     }
 
     @Test
-    fun `Should ignore rounds that contain fewer than 3 darts`()
-    {
+    fun `Should ignore rounds that contain fewer than 3 darts`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -113,8 +111,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
     }
 
     @Test
-    fun `Should ignore permutations of the same method, and track the earliest one`()
-    {
+    fun `Should ignore permutations of the same method, and track the earliest one`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -137,8 +134,7 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
     }
 
     @Test
-    fun `Should insert a row for each valid permutation, and should match front end format`()
-    {
+    fun `Should insert a row for each valid permutation, and should match front end format`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -153,36 +149,55 @@ class TestAchievementX01Chucklevision: AbstractMultiRowAchievementTest<Achieveme
         getAchievementCount() shouldBe 2
 
         val achievements = AchievementEntity().retrieveEntities("PlayerId = '${p.rowId}'")
-        val methods = achievements.map{ it.achievementDetail }
+        val methods = achievements.map { it.achievementDetail }
 
-        methods.shouldContainExactlyInAnyOrder(getSortedDartStr(validOne), getSortedDartStr(validTwo))
+        methods.shouldContainExactlyInAnyOrder(
+            getSortedDartStr(validOne),
+            getSortedDartStr(validTwo)
+        )
     }
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
-    {
+    override fun setUpAchievementRowForPlayerAndGame(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database
+    ) {
         insertStandardChucklevision(p, g, database)
     }
 
-    private fun insertStandardChucklevision(p: PlayerEntity, g: GameEntity, database: Database = mainDatabase)
-    {
+    private fun insertStandardChucklevision(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database = mainDatabase
+    ) {
         insertDartsForPlayer(g, p, makeChucklevisionDarts(), database = database)
     }
 
-    private fun insertDartsForPlayer(g: GameEntity,
-                                     p: PlayerEntity,
-                                     darts: List<Dart>,
-                                     startingScore: Int = 501,
-                                     database: Database = mainDatabase,
-                                     participant: ParticipantEntity? = null,
-                                     roundNumber: Int = 1)
-    {
-        val pt = participant ?: insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
+    private fun insertDartsForPlayer(
+        g: GameEntity,
+        p: PlayerEntity,
+        darts: List<Dart>,
+        startingScore: Int = 501,
+        database: Database = mainDatabase,
+        participant: ParticipantEntity? = null,
+        roundNumber: Int = 1
+    ) {
+        val pt =
+            participant
+                ?: insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
         var currentScore = startingScore
         darts.forEachIndexed { ix, drt ->
-            insertDart(pt, score = drt.score, multiplier = drt.multiplier, ordinal = ix+1, startingScore = currentScore, roundNumber = roundNumber, database = database)
+            insertDart(
+                pt,
+                score = drt.score,
+                multiplier = drt.multiplier,
+                ordinal = ix + 1,
+                startingScore = currentScore,
+                roundNumber = roundNumber,
+                database = database
+            )
             currentScore -= drt.getTotal()
         }
-
     }
 }

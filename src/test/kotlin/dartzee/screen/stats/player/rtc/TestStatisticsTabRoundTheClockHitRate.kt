@@ -12,17 +12,21 @@ import dartzee.screen.stats.player.AbstractStatsPieBreakdownTest
 import io.kotest.matchers.collections.shouldContainExactly
 import org.junit.jupiter.api.Test
 
-class TestStatisticsTabRoundTheClockHitRate: AbstractStatsPieBreakdownTest<StatisticsTabRoundTheClockHitRate>()
-{
+class TestStatisticsTabRoundTheClockHitRate :
+    AbstractStatsPieBreakdownTest<StatisticsTabRoundTheClockHitRate>() {
     override fun factoryTab() = StatisticsTabRoundTheClockHitRate()
+
     override fun getAllPossibilitiesForScores() = 1..1000
+
     override fun factoryGameWrapper() = makeClockGameWrapper()
 
     @Test
-    fun `Should exclude games that were not in order`()
-    {
+    fun `Should exclude games that were not in order`() {
         val tab = factoryTab()
-        tab.setFilteredGames(listOf(GAME_WRAPPER_RTC_IN_ORDER, GAME_WRAPPER_RTC_OUT_OF_ORDER), emptyList())
+        tab.setFilteredGames(
+            listOf(GAME_WRAPPER_RTC_IN_ORDER, GAME_WRAPPER_RTC_OUT_OF_ORDER),
+            emptyList()
+        )
         tab.populateStats()
 
         val breakdownTable = tab.getChild<ScrollTable> { it.testId == "BreakdownMine" }
@@ -31,10 +35,12 @@ class TestStatisticsTabRoundTheClockHitRate: AbstractStatsPieBreakdownTest<Stati
     }
 
     @Test
-    fun `Should populate with correct data`()
-    {
+    fun `Should populate with correct data`() {
         val tab = factoryTab()
-        tab.setFilteredGames(listOf(GAME_WRAPPER_RTC_IN_ORDER, GAME_WRAPPER_RTC_IN_ORDER_2), emptyList())
+        tab.setFilteredGames(
+            listOf(GAME_WRAPPER_RTC_IN_ORDER, GAME_WRAPPER_RTC_IN_ORDER_2),
+            emptyList()
+        )
         tab.populateStats()
 
         val breakdownTable = tab.getChild<ScrollTable> { it.testId == "BreakdownMine" }

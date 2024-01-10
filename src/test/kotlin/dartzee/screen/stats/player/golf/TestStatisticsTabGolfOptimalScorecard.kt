@@ -17,22 +17,19 @@ import dartzee.stats.GolfMode
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-class TestStatisticsTabGolfOptimalScorecard : AbstractTest()
-{
+class TestStatisticsTabGolfOptimalScorecard : AbstractTest() {
     @Test
-    fun `Should cope with 0 games`()
-    {
+    fun `Should cope with 0 games`() {
         val tab = StatisticsTabGolfOptimalScorecard()
         tab.populateStats()
         tab.scorecardShouldMatch(golfAllMisses(), emptyList())
     }
 
     @Test
-    fun `Should show appropriate screen state for individual stats`()
-    {
+    fun `Should show appropriate screen state for individual stats`() {
         val game = golfFull28_29()
         val tab = StatisticsTabGolfOptimalScorecard()
         tab.setFilteredGames(listOf(game), emptyList())
@@ -43,8 +40,7 @@ class TestStatisticsTabGolfOptimalScorecard : AbstractTest()
     }
 
     @Test
-    fun `Should show appropriate screen state when a comparison is included`()
-    {
+    fun `Should show appropriate screen state when a comparison is included`() {
         val myGame = golfFull28_29(1L)
         val otherGame = golfFull31_22(2L)
         val mine = listOf(myGame)
@@ -61,8 +57,7 @@ class TestStatisticsTabGolfOptimalScorecard : AbstractTest()
     }
 
     @Test
-    fun `Should optimise across games`()
-    {
+    fun `Should optimise across games`() {
         val gameOne = golfFrontNine22(1L, Timestamp(500))
         val gameTwo = golfFrontNine29(2L, Timestamp(1000))
         val gameThree = golfFull31_22(3L, Timestamp(1500))
@@ -77,8 +72,7 @@ class TestStatisticsTabGolfOptimalScorecard : AbstractTest()
     }
 
     @Test
-    fun `Should cope with team games that have partial rounds`()
-    {
+    fun `Should cope with team games that have partial rounds`() {
         val game = golfFrontNine22EvenRounds()
 
         val tab = StatisticsTabGolfOptimalScorecard()
@@ -93,10 +87,21 @@ class TestStatisticsTabGolfOptimalScorecard : AbstractTest()
         scorecardRows[3][5] shouldBe 1 // game
     }
 
-    private fun StatisticsTabGolfOptimalScorecard.scorecardMine() = getChild<GolfStatsScorecard> { it.testId == "scorecardMine" }
-    private fun StatisticsTabGolfOptimalScorecard.scorecardOther() = findChild<GolfStatsScorecard> { it.testId == "scorecardOther" }
-    private fun StatisticsTabGolfOptimalScorecard.scorecardShouldMatch(game: GameWrapper, gameIds: List<Long>, testId: String = "scorecardMine") {
-        val expected = GolfStatsScorecard(0, true).also { it.populateTable(game.getGolfRounds(GolfMode.FULL_18)) }
+    private fun StatisticsTabGolfOptimalScorecard.scorecardMine() =
+        getChild<GolfStatsScorecard> { it.testId == "scorecardMine" }
+
+    private fun StatisticsTabGolfOptimalScorecard.scorecardOther() =
+        findChild<GolfStatsScorecard> { it.testId == "scorecardOther" }
+
+    private fun StatisticsTabGolfOptimalScorecard.scorecardShouldMatch(
+        game: GameWrapper,
+        gameIds: List<Long>,
+        testId: String = "scorecardMine"
+    ) {
+        val expected =
+            GolfStatsScorecard(0, true).also {
+                it.populateTable(game.getGolfRounds(GolfMode.FULL_18))
+            }
         expected.addGameIds(gameIds)
 
         val scorecard = getChild<GolfStatsScorecard> { it.testId == testId }

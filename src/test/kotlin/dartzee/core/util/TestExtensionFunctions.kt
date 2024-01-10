@@ -11,19 +11,16 @@ import io.mockk.spyk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class TestExtensionFunctions: AbstractTest()
-{
+class TestExtensionFunctions : AbstractTest() {
     @Test
-    fun `IntRange descriptions`()
-    {
+    fun `IntRange descriptions`() {
         (1..1).getDescription() shouldBe "1"
         (1..3).getDescription() shouldBe "1 - 3"
         (1..Int.MAX_VALUE).getDescription() shouldBe "1+"
     }
 
     @Test
-    fun `Should only add unique elements`()
-    {
+    fun `Should only add unique elements`() {
         val list = mutableListOf<String>()
 
         list.addUnique("foo")
@@ -37,36 +34,43 @@ class TestExtensionFunctions: AbstractTest()
     }
 
     @Test
-    fun `Should return empty when permuting an empty list`()
-    {
+    fun `Should return empty when permuting an empty list`() {
         val list = listOf<Any>()
         list.getAllPermutations().size shouldBe 1
         list.getAllPermutations()[0] shouldBe listOf()
     }
 
     @Test
-    fun `Should generate all permutations of a list`()
-    {
+    fun `Should generate all permutations of a list`() {
         val list = listOf(1, 2, 3)
 
-        list.getAllPermutations().shouldContainExactlyInAnyOrder(listOf(1, 2, 3), listOf(1, 3, 2), listOf(2, 1, 3), listOf(2, 3, 1), listOf(3, 1, 2), listOf(3, 2, 1))
+        list
+            .getAllPermutations()
+            .shouldContainExactlyInAnyOrder(
+                listOf(1, 2, 3),
+                listOf(1, 3, 2),
+                listOf(2, 1, 3),
+                listOf(2, 3, 1),
+                listOf(3, 1, 2),
+                listOf(3, 2, 1)
+            )
     }
 
     @Test
-    fun `Should not return duplicate permutations`()
-    {
+    fun `Should not return duplicate permutations`() {
         val list = listOf(1, 1, 2)
 
-        list.getAllPermutations().shouldContainExactlyInAnyOrder(listOf(1, 1, 2), listOf(1, 2, 1), listOf(2, 1, 1))
+        list
+            .getAllPermutations()
+            .shouldContainExactlyInAnyOrder(listOf(1, 1, 2), listOf(1, 2, 1), listOf(2, 1, 1))
     }
 
-    interface Validator
-    {
+    interface Validator {
         fun isValid(text: String, index: Int): Boolean
     }
+
     @Test
-    fun `Should pass the element & index to the predicate correctly`()
-    {
+    fun `Should pass the element & index to the predicate correctly`() {
         val mockValidator = mockk<Validator>()
         every { mockValidator.isValid(any(), any()) } returns true
 
@@ -79,14 +83,12 @@ class TestExtensionFunctions: AbstractTest()
         verify { mockValidator.isValid("three", 2) }
     }
 
-    class ElementValidator
-    {
+    class ElementValidator {
         fun isValid(text: String, index: Int) = text == index.toString()
     }
 
     @Test
-    fun `Should stop as soon as an element is found to be invalid`()
-    {
+    fun `Should stop as soon as an element is found to be invalid`() {
         val validator = spyk<ElementValidator>()
 
         val list = listOf("foo", "bar", "baz")
@@ -100,8 +102,7 @@ class TestExtensionFunctions: AbstractTest()
     }
 
     @Test
-    fun `Should return the correct result based on whether the contents were all valid`()
-    {
+    fun `Should return the correct result based on whether the contents were all valid`() {
         val validator = ElementValidator()
 
         val invalidList = listOf("0", "1", "2", "4")
@@ -112,8 +113,7 @@ class TestExtensionFunctions: AbstractTest()
     }
 
     @Test
-    fun `Should sort in the correct order`()
-    {
+    fun `Should sort in the correct order`() {
         val list = listOf(1, 3, 2, 5, 4)
 
         val ascending = list.sortedBy(false) { it }
@@ -124,8 +124,7 @@ class TestExtensionFunctions: AbstractTest()
     }
 
     @Test
-    fun `Should return hash map values sorted by key`()
-    {
+    fun `Should return hash map values sorted by key`() {
         val map = mutableMapOf<Int, String>()
         map[1] = "First"
         map[3] = "Third"
@@ -136,8 +135,7 @@ class TestExtensionFunctions: AbstractTest()
     }
 
     @Test
-    fun `Should return 0 for an empty list, or minmax otherwise`()
-    {
+    fun `Should return 0 for an empty list, or minmax otherwise`() {
         val list = mutableListOf<Int>()
 
         list.minOrZero() shouldBe 0
@@ -152,8 +150,7 @@ class TestExtensionFunctions: AbstractTest()
     }
 
     @Test
-    fun `Should correctly report the longest streak`()
-    {
+    fun `Should correctly report the longest streak`() {
         val list: List<Any> = listOf(1, 2, "a", "b", "c", 4, "d", 6, 7, 8, 9, "e", "f", 1)
 
         list.getLongestStreak { it is String } shouldBe listOf("a", "b", "c")

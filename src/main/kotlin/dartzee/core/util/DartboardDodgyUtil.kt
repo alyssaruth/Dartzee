@@ -17,76 +17,68 @@ import javax.sound.sampled.LineEvent
 import javax.swing.ImageIcon
 import javax.swing.JLabel
 
-fun GameplayDartboard.doChucklevision()
-{
+fun GameplayDartboard.doChucklevision() {
     val rand = Random()
     val chuckleSound = rand.nextInt(3) + 1
 
     doDodgy(ResourceCache.IMG_CHUCKLE, 266, 279, "chucklevision$chuckleSound")
 }
 
-fun GameplayDartboard.doFawlty()
-{
+fun GameplayDartboard.doFawlty() {
     val rand = Random()
     val brucey = rand.nextInt(4) + 1
 
     doDodgy(ResourceCache.IMG_BASIL, 576, 419, "basil$brucey")
 }
 
-fun GameplayDartboard.doForsyth()
-{
+fun GameplayDartboard.doForsyth() {
     val rand = Random()
     val brucey = rand.nextInt(4) + 1
 
     doDodgy(ResourceCache.IMG_BRUCE, 300, 478, "forsyth$brucey")
 }
 
-fun GameplayDartboard.doBadLuck()
-{
+fun GameplayDartboard.doBadLuck() {
     val rand = Random()
     val ix = rand.nextInt(2) + 1
 
     doDodgy(ResourceCache.IMG_BRUCE, 300, 478, "badLuck$ix")
 }
 
-fun GameplayDartboard.doBull()
-{
+fun GameplayDartboard.doBull() {
     doDodgy(ResourceCache.IMG_DEV, 400, 476, "bull")
 }
 
-fun GameplayDartboard.doBadMiss()
-{
+fun GameplayDartboard.doBadMiss() {
     val rand = Random()
     val miss = rand.nextInt(5) + 1
 
-    //4-1 ratio because mitchell > spencer!
-    if (miss <= 4)
-    {
+    // 4-1 ratio because mitchell > spencer!
+    if (miss <= 4) {
         doDodgy(ResourceCache.IMG_MITCHELL, 300, 250, "badmiss$miss")
-    }
-    else
-    {
+    } else {
         doDodgy(ResourceCache.IMG_SPENCER, 460, 490, "damage")
     }
 }
 
-fun GameplayDartboard.doGolfMiss()
-{
+fun GameplayDartboard.doGolfMiss() {
     doDodgy(ResourceCache.IMG_DEV, 400, 476, "fourTrimmed")
 }
 
-private fun GameplayDartboard.doDodgy(ii: ImageIcon, width: Int, height: Int, soundName: String)
-{
-    if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS))
-    {
+private fun GameplayDartboard.doDodgy(ii: ImageIcon, width: Int, height: Int, soundName: String) {
+    if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)) {
         return
     }
 
     runOnEventThread { doDodgyOnEdt(ii, width, height, soundName) }
 }
 
-private fun GameplayDartboard.doDodgyOnEdt(ii: ImageIcon, width: Int, height: Int, soundName: String)
-{
+private fun GameplayDartboard.doDodgyOnEdt(
+    ii: ImageIcon,
+    width: Int,
+    height: Int,
+    soundName: String
+) {
     removeDodgyLabels()
 
     val dodgyLabel = JLabel("")
@@ -107,33 +99,27 @@ private fun GameplayDartboard.doDodgyOnEdt(ii: ImageIcon, width: Int, height: In
     playDodgySound(soundName)
 }
 
-fun GameplayDartboard.playDodgySound(soundName: String)
-{
-    if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS))
-    {
+fun GameplayDartboard.playDodgySound(soundName: String) {
+    if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)) {
         return
     }
 
-    try
-    {
-        if (ResourceCache.isInitialised)
-        {
+    try {
+        if (ResourceCache.isInitialised) {
             playDodgySoundCached(soundName)
+        } else {
+            logger.warn(
+                CODE_RESOURCE_CACHE_NOT_INITIALISED,
+                "Not playing [$soundName] - ResourceCache not initialised"
+            )
         }
-        else
-        {
-            logger.warn(CODE_RESOURCE_CACHE_NOT_INITIALISED, "Not playing [$soundName] - ResourceCache not initialised")
-        }
-    }
-    catch (e: Throwable)
-    {
+    } catch (e: Throwable) {
         logger.error(CODE_AUDIO_ERROR, "Caught error playing sound [$soundName]", e)
         resetDodgy()
     }
 }
 
-private fun GameplayDartboard.playDodgySoundCached(soundName: String)
-{
+private fun GameplayDartboard.playDodgySoundCached(soundName: String) {
     val stream = ResourceCache.borrowInputStream(soundName) ?: return
 
     val clip = initialiseAudioClip(stream, soundName)
@@ -141,18 +127,20 @@ private fun GameplayDartboard.playDodgySoundCached(soundName: String)
     clip.start()
 }
 
-private fun GameplayDartboard.initialiseAudioClip(stream: AudioInputStream, soundName: String): Clip
-{
+private fun GameplayDartboard.initialiseAudioClip(
+    stream: AudioInputStream,
+    soundName: String
+): Clip {
     val myClip = AudioSystem.getLine(Line.Info(Clip::class.java)) as Clip
 
-    //Overwrite the 'latestClip' variable so this always stores the latest sound.
-    //Allows us to not dismiss the label until the final sound has finished, in the case of overlapping sounds.
+    // Overwrite the 'latestClip' variable so this always stores the latest sound.
+    // Allows us to not dismiss the label until the final sound has finished, in the case of
+    // overlapping sounds.
     latestClip = myClip
 
     myClip.addLineListener { event ->
-        if (event.type === LineEvent.Type.STOP)
-        {
-            //Always close or return our one
+        if (event.type === LineEvent.Type.STOP) {
+            // Always close or return our one
             myClip.stop()
             myClip.close()
 

@@ -3,17 +3,14 @@ package dartzee.core.util
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
-
 fun getSqlDateNow() = Timestamp(System.currentTimeMillis())
 
 fun getEndOfTimeSqlString() = DateStatics.END_OF_TIME.getSqlString()
 
 fun isEndOfTime(dt: Timestamp?) = dt?.equals(DateStatics.END_OF_TIME) ?: false
 
-fun Timestamp.formatTimestamp(): String
-{
-    if (isEndOfTime(this))
-    {
+fun Timestamp.formatTimestamp(): String {
+    if (isEndOfTime(this)) {
         return ""
     }
 
@@ -21,10 +18,8 @@ fun Timestamp.formatTimestamp(): String
     return dateFormat.format(this)
 }
 
-fun Timestamp.formatAsDate() : String
-{
-    if (isEndOfTime(this))
-    {
+fun Timestamp.formatAsDate(): String {
+    if (isEndOfTime(this)) {
         return ""
     }
 
@@ -32,15 +27,13 @@ fun Timestamp.formatAsDate() : String
     return dateFormat.format(this)
 }
 
-fun Timestamp.getSqlString(): String
-{
+fun Timestamp.getSqlString(): String {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
     val formatted = dateFormat.format(this)
     return "'$formatted'"
 }
 
-fun getFileTimeString(): String
-{
+fun getFileTimeString(): String {
     val dt = getSqlDateNow()
     val dateFormat = SimpleDateFormat("yyyyMMdd_HHmm")
     return dateFormat.format(dt)

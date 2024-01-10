@@ -18,14 +18,16 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestAbstractDartsScorer: AbstractTest()
-{
+class TestAbstractDartsScorer : AbstractTest() {
     @Test
-    fun `Should clear the data model on stateChanged, and call child implementation`()
-    {
+    fun `Should clear the data model on stateChanged, and call child implementation`() {
         val roundOne = listOf(Dart(1, 1), Dart(1, 1), Dart(2, 1))
         val roundTwo = listOf(Dart(2, 3), Dart(2, 2), Dart(2, 3))
-        val state = TestPlayerState(insertParticipant(), completedRounds = mutableListOf(roundOne, roundTwo))
+        val state =
+            TestPlayerState(
+                insertParticipant(),
+                completedRounds = mutableListOf(roundOne, roundTwo)
+            )
 
         val scorer = TestDartsScorer()
         scorer.init()
@@ -33,15 +35,13 @@ class TestAbstractDartsScorer: AbstractTest()
 
         scorer.stateChanged(state)
 
-        scorer.tableScores.getRows().shouldContainExactly(
-                roundOne + listOf(null, null),
-                roundTwo + listOf(null, null)
-        )
+        scorer.tableScores
+            .getRows()
+            .shouldContainExactly(roundOne + listOf(null, null), roundTwo + listOf(null, null))
     }
 
     @Test
-    fun `Should set score and finishing position if it is set`()
-    {
+    fun `Should set score and finishing position if it is set`() {
         val state = TestPlayerState(insertParticipant(finishingPosition = 3), scoreSoFar = 30)
 
         val scorer = TestDartsScorer()
@@ -53,8 +53,7 @@ class TestAbstractDartsScorer: AbstractTest()
     }
 
     @Test
-    fun `Should correctly update bold text when selected and deselected`()
-    {
+    fun `Should correctly update bold text when selected and deselected`() {
         val scorer = TestDartsScorer()
         scorer.init()
 
@@ -71,8 +70,7 @@ class TestAbstractDartsScorer: AbstractTest()
     }
 
     @Test
-    fun `Should not set score if it is unset`()
-    {
+    fun `Should not set score if it is unset`() {
         val state = TestPlayerState(insertParticipant(finishingPosition = -1), scoreSoFar = -1)
 
         val scorer = TestDartsScorer(state.wrappedParticipant)
@@ -83,10 +81,9 @@ class TestAbstractDartsScorer: AbstractTest()
         scorer.lblResult.shouldHaveColours(startingColours)
         scorer.lblResult.text shouldBe ""
     }
-    
+
     @Test
-    fun `Should layer achievements, and show them in sequence as they are closed`()
-    {
+    fun `Should layer achievements, and show them in sequence as they are closed`() {
         val scorer = TestDartsScorer()
         scorer.init()
 
@@ -114,8 +111,7 @@ class TestAbstractDartsScorer: AbstractTest()
     }
 
     @Test
-    fun `Should pass player name when achievement unlocked for a team`()
-    {
+    fun `Should pass player name when achievement unlocked for a team`() {
         val (alice, bob) = preparePlayers(2)
         val team = makeTeam(alice, bob)
 
@@ -132,18 +128,15 @@ class TestAbstractDartsScorer: AbstractTest()
         scorer.getAchievementOverlay().getPlayerName() shouldBe "Bob"
     }
 
-    private class TestDartsScorer(participant: IWrappedParticipant = makeSingleParticipant()) : AbstractDartsScorer<TestPlayerState>(participant)
-    {
+    private class TestDartsScorer(participant: IWrappedParticipant = makeSingleParticipant()) :
+        AbstractDartsScorer<TestPlayerState>(participant) {
         override fun getNumberOfColumns() = 5
+
         override fun getNumberOfColumnsForAddingNewDart() = 3
 
-        override fun initImpl()
-        {
+        override fun initImpl() {}
 
-        }
-
-        override fun stateChangedImpl(state: TestPlayerState)
-        {
+        override fun stateChangedImpl(state: TestPlayerState) {
             setScoreAndFinishingPosition(state)
             state.completedRounds.forEach(::addDartRound)
         }

@@ -6,21 +6,20 @@ import dartzee.core.util.DialogUtil
 import java.awt.event.KeyEvent
 import javax.swing.table.DefaultTableModel
 
-abstract class AbstractSanityCheckResult
-{
+abstract class AbstractSanityCheckResult {
     abstract fun getResultsModel(): DefaultTableModel
+
     abstract fun getDescription(): String
+
     abstract fun getCount(): Int
 
-    fun getResultsDialog(): TableModelDialog
-    {
+    fun getResultsDialog(): TableModelDialog {
         val t = getScrollTable()
         t.model = getResultsModel()
 
         val deleteAction = getDeleteAction(t)
 
-        if (deleteAction != null)
-        {
+        if (deleteAction != null) {
             t.addKeyAction(KeyEvent.VK_DELETE, deleteAction)
         }
 
@@ -31,8 +30,7 @@ abstract class AbstractSanityCheckResult
 
     open fun getScrollTable() = ScrollTable()
 
-    open fun autoFix()
-    {
+    open fun autoFix() {
         DialogUtil.showErrorOLD("No auto-fix available.")
     }
 

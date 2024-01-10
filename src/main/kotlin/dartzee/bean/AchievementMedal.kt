@@ -19,35 +19,28 @@ import javax.swing.JLabel
 
 private const val SIZE = 132
 
-class AchievementMedal(val achievement : AbstractAchievement): JComponent(), IMouseListener
-{
+class AchievementMedal(val achievement: AbstractAchievement) : JComponent(), IMouseListener {
     private var highlighted = false
 
-    init
-    {
+    init {
         preferredSize = Dimension(SIZE, SIZE)
 
         addMouseListener(this)
         addMouseMotionListener(this)
     }
 
-    override fun paint(g: Graphics?)
-    {
-        if (g is Graphics2D)
-        {
+    override fun paint(g: Graphics?) {
+        if (g is Graphics2D) {
             paintMedalCommon(g, achievement, SIZE, highlighted)
 
-            if (!highlighted || achievement.isLocked())
-            {
+            if (!highlighted || achievement.isLocked()) {
                 val y = (SIZE - 72) / 2
                 val icon = achievement.getIcon()
                 icon?.let {
                     val x = (SIZE / 2) - (icon.width / 2)
                     g.drawImage(icon, null, x, y)
                 }
-            }
-            else
-            {
+            } else {
                 val y = (SIZE - 24) / 2
                 val label = JLabel(achievement.getProgressDesc())
                 label.setSize(SIZE, 24)
@@ -61,56 +54,45 @@ class AchievementMedal(val achievement : AbstractAchievement): JComponent(), IMo
         }
     }
 
-    private fun updateForMouseOver(e : MouseEvent)
-    {
+    private fun updateForMouseOver(e: MouseEvent) {
         val pt = e.point
-        highlighted = pt.distance(Point(SIZE/2, SIZE/2)) < SIZE/2
+        highlighted = pt.distance(Point(SIZE / 2, SIZE / 2)) < SIZE / 2
 
         val currentScreen = ScreenCache.currentScreen()
-        if (currentScreen is PlayerAchievementsScreen)
-        {
+        if (currentScreen is PlayerAchievementsScreen) {
             currentScreen.toggleAchievementDesc(highlighted, achievement)
         }
 
-        cursor = if (highlighted && achievement.isClickable())
-        {
-            Cursor(Cursor.HAND_CURSOR)
-        }
-        else
-        {
-            Cursor(Cursor.DEFAULT_CURSOR)
-        }
+        cursor =
+            if (highlighted && achievement.isClickable()) {
+                Cursor(Cursor.HAND_CURSOR)
+            } else {
+                Cursor(Cursor.DEFAULT_CURSOR)
+            }
 
         repaint()
     }
 
-    override fun mouseReleased(e: MouseEvent)
-    {
-        if (achievement.tmBreakdown != null)
-        {
+    override fun mouseReleased(e: MouseEvent) {
+        if (achievement.tmBreakdown != null) {
             val scrn = ScreenCache.get<PlayerAchievementBreakdown>()
             scrn.setState(achievement)
 
             ScreenCache.switch(scrn)
-        }
-        else if (achievement.gameIdEarned.isNotEmpty())
-        {
+        } else if (achievement.gameIdEarned.isNotEmpty()) {
             gameLauncher.loadAndDisplayGame(achievement.gameIdEarned)
         }
     }
 
-    override fun mouseEntered(e: MouseEvent)
-    {
+    override fun mouseEntered(e: MouseEvent) {
         updateForMouseOver(e)
     }
 
-    override fun mouseExited(e: MouseEvent)
-    {
+    override fun mouseExited(e: MouseEvent) {
         updateForMouseOver(e)
     }
 
-    override fun mouseMoved(e: MouseEvent)
-    {
+    override fun mouseMoved(e: MouseEvent) {
         updateForMouseOver(e)
     }
 }

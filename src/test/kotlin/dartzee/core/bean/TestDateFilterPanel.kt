@@ -4,18 +4,16 @@ import dartzee.core.util.enableChildren
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import org.junit.jupiter.api.Test
 
-class TestDateFilterPanel: AbstractTest()
-{
+class TestDateFilterPanel : AbstractTest() {
     private val fmt = SimpleDateFormat("dd/MM/yyyy")
 
     @Test
-    fun `Should always be valid if disabled`()
-    {
+    fun `Should always be valid if disabled`() {
         val filterPanel = DateFilterPanel()
         filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-04")
         filterPanel.cbDateTo.date = LocalDate.parse("2020-01-01")
@@ -25,19 +23,19 @@ class TestDateFilterPanel: AbstractTest()
     }
 
     @Test
-    fun `Should not be valid if start date is after end date`()
-    {
+    fun `Should not be valid if start date is after end date`() {
         val filterPanel = DateFilterPanel()
         filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-04")
         filterPanel.cbDateTo.date = LocalDate.parse("2020-01-01")
 
         filterPanel.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("The 'date from' cannot be after the 'date to'")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "The 'date from' cannot be after the 'date to'"
+        )
     }
 
     @Test
-    fun `Should be valid if the end date is on or after the start date`()
-    {
+    fun `Should be valid if the end date is on or after the start date`() {
         val filterPanel = DateFilterPanel()
         filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-01")
         filterPanel.cbDateTo.date = LocalDate.parse("2020-01-01")
@@ -48,8 +46,7 @@ class TestDateFilterPanel: AbstractTest()
     }
 
     @Test
-    fun `Should provide a sensible filter description`()
-    {
+    fun `Should provide a sensible filter description`() {
         val filterPanel = DateFilterPanel()
 
         filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-01")
@@ -59,8 +56,7 @@ class TestDateFilterPanel: AbstractTest()
     }
 
     @Test
-    fun `Should provide converted SQL timestamps`()
-    {
+    fun `Should provide converted SQL timestamps`() {
         val filterPanel = DateFilterPanel()
 
         filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-01")
@@ -74,8 +70,7 @@ class TestDateFilterPanel: AbstractTest()
     }
 
     @Test
-    fun `Should correctly filter SQL dates`()
-    {
+    fun `Should correctly filter SQL dates`() {
         val filterPanel = DateFilterPanel()
         filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-02")
         filterPanel.cbDateTo.date = LocalDate.parse("2020-01-04")

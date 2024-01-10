@@ -16,24 +16,24 @@ import java.awt.Color
 import java.awt.Component
 import javax.swing.JOptionPane
 
-fun Component.setColoursForDartzeeResult(success: Boolean)
-{
-    if (success)
-    {
+fun Component.setColoursForDartzeeResult(success: Boolean) {
+    if (success) {
         background = Color.GREEN
         foreground = DartsColour.getProportionalColourRedToGreen(1.0, 1, 0.5)
-    }
-    else
-    {
+    } else {
         background = Color.RED
         foreground = DartsColour.getProportionalColourRedToGreen(0.0, 1, 0.5)
     }
 }
 
-fun factoryHighScoreResult(darts: List<Dart>) = DartzeeRoundResult(-1, success = true, score = sumScore(darts))
+fun factoryHighScoreResult(darts: List<Dart>) =
+    DartzeeRoundResult(-1, success = true, score = sumScore(darts))
 
-fun insertDartzeeRules(gameId: String, dartzeeDtos: List<DartzeeRuleDto>? = null, database: Database = mainDatabase)
-{
+fun insertDartzeeRules(
+    gameId: String,
+    dartzeeDtos: List<DartzeeRuleDto>? = null,
+    database: Database = mainDatabase
+) {
     dartzeeDtos ?: return
 
     dartzeeDtos.forEachIndexed { ix, dto ->
@@ -42,14 +42,12 @@ fun insertDartzeeRules(gameId: String, dartzeeDtos: List<DartzeeRuleDto>? = null
     }
 }
 
-fun getAllSegmentsForDartzee(): List<DartboardSegment>
-{
+fun getAllSegmentsForDartzee(): List<DartboardSegment> {
     val segments = getAllNonMissSegments()
     return segments + DartboardSegment(SegmentType.MISS, 20)
 }
 
-fun saveDartzeeTemplate(name: String, dtos: List<DartzeeRuleDto>): DartzeeTemplateEntity
-{
+fun saveDartzeeTemplate(name: String, dtos: List<DartzeeRuleDto>): DartzeeTemplateEntity {
     val template = DartzeeTemplateEntity.factoryAndSave(name)
     dtos.forEachIndexed { ix, rule ->
         val entity = rule.toEntity(ix + 1, EntityName.DartzeeTemplate, template.rowId)
@@ -59,10 +57,13 @@ fun saveDartzeeTemplate(name: String, dtos: List<DartzeeRuleDto>): DartzeeTempla
     return template
 }
 
-fun generateDartzeeTemplateFromGame(game: GameEntity, dtos: List<DartzeeRuleDto>): DartzeeTemplateEntity?
-{
-    val templateName = DialogUtil.showInput<String>("Template Name", "Please enter a name for the template")
-        ?: return null
+fun generateDartzeeTemplateFromGame(
+    game: GameEntity,
+    dtos: List<DartzeeRuleDto>
+): DartzeeTemplateEntity? {
+    val templateName =
+        DialogUtil.showInput<String>("Template Name", "Please enter a name for the template")
+            ?: return null
 
     val template = saveDartzeeTemplate(templateName, dtos)
     game.gameParams = template.rowId
@@ -73,25 +74,25 @@ fun generateDartzeeTemplateFromGame(game: GameEntity, dtos: List<DartzeeRuleDto>
     return template
 }
 
-fun deleteDartzeeTemplate(template: DartzeeTemplateEntity, gameCount: Int): Boolean
-{
-    val message = when (gameCount)
-    {
-        0 -> "Are you sure you want to delete the ${template.name} Template?"
-        else -> "You have played $gameCount games using the ${template.name} Template." +
-                "\n\nThese will become custom games if you delete it. Are you sure you want to continue?"
-    }
+fun deleteDartzeeTemplate(template: DartzeeTemplateEntity, gameCount: Int): Boolean {
+    val message =
+        when (gameCount) {
+            0 -> "Are you sure you want to delete the ${template.name} Template?"
+            else ->
+                "You have played $gameCount games using the ${template.name} Template." +
+                    "\n\nThese will become custom games if you delete it. Are you sure you want to continue?"
+        }
 
     val ans = DialogUtil.showQuestionOLD(message)
-    if (ans != JOptionPane.YES_OPTION)
-    {
+    if (ans != JOptionPane.YES_OPTION) {
         return false
     }
 
     template.deleteFromDatabase()
     DartzeeRuleEntity().deleteForTemplate(template.rowId)
 
-    val gameSql = "UPDATE Game SET GameParams = '' WHERE GameType = '${GameType.DARTZEE}' AND GameParams = '${template.rowId}'"
+    val gameSql =
+        "UPDATE Game SET GameParams = '' WHERE GameType = '${GameType.DARTZEE}' AND GameParams = '${template.rowId}'"
     mainDatabase.executeUpdate(gameSql)
     return true
 }

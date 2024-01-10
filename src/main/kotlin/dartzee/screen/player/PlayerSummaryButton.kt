@@ -7,36 +7,30 @@ import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
 import javax.swing.JButton
 
-abstract class PlayerSummaryButton: JButton(), ActionListener, IMouseListener
-{
+abstract class PlayerSummaryButton : JButton(), ActionListener, IMouseListener {
     abstract val defaultText: String
     abstract val hoverText: String
 
-    init
-    {
+    init {
         preferredSize = Dimension(275, 100)
         iconTextGap = 10
     }
 
     abstract fun buttonPressed()
 
-    override fun actionPerformed(e: ActionEvent?)
-    {
+    override fun actionPerformed(e: ActionEvent?) {
         buttonPressed()
 
         text = defaultText
     }
 
-    override fun mouseEntered(e: MouseEvent)
-    {
-        if (isEnabled)
-        {
+    override fun mouseEntered(e: MouseEvent) {
+        if (isEnabled) {
             text = hoverText
         }
     }
 
-    override fun mouseExited(e: MouseEvent)
-    {
+    override fun mouseExited(e: MouseEvent) {
         text = defaultText
     }
 }

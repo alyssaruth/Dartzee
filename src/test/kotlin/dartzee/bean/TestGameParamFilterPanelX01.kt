@@ -6,14 +6,12 @@ import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.awt.event.ActionListener
+import org.junit.jupiter.api.Test
 
-class TestGameParamFilterPanelX01: AbstractTest()
-{
+class TestGameParamFilterPanelX01 : AbstractTest() {
     @Test
-    fun `Should return game params based on the spinner selection`()
-    {
+    fun `Should return game params based on the spinner selection`() {
         val panel = GameParamFilterPanelX01()
 
         panel.spinner.value = 701
@@ -26,8 +24,7 @@ class TestGameParamFilterPanelX01: AbstractTest()
     }
 
     @Test
-    fun `Should support setting the selection by gameParams`()
-    {
+    fun `Should support setting the selection by gameParams`() {
         val panel = GameParamFilterPanelX01()
         panel.setGameParams("701")
 
@@ -35,8 +32,7 @@ class TestGameParamFilterPanelX01: AbstractTest()
     }
 
     @Test
-    fun `Should enable and disable its spinner correctly`()
-    {
+    fun `Should enable and disable its spinner correctly`() {
         val panel = GameParamFilterPanelX01()
 
         panel.enableChildren(false)
@@ -47,8 +43,7 @@ class TestGameParamFilterPanelX01: AbstractTest()
     }
 
     @Test
-    fun `Should add and remove action listeners on the combo box`()
-    {
+    fun `Should add and remove action listeners on the combo box`() {
         val panel = GameParamFilterPanelX01()
 
         val listener = mockk<ActionListener>(relaxed = true)

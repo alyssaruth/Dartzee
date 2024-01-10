@@ -12,16 +12,14 @@ import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.awt.event.ActionListener
 import javax.swing.JCheckBox
 import javax.swing.JRadioButton
+import org.junit.jupiter.api.Test
 
-class TestGameParamFilterPanelRoundTheClock: AbstractTest()
-{
+class TestGameParamFilterPanelRoundTheClock : AbstractTest() {
     @Test
-    fun `Should select the correct defaults`()
-    {
+    fun `Should select the correct defaults`() {
         val panel = GameParamFilterPanelRoundTheClock()
 
         panel.getChild<JRadioButton>(text = "Standard").isSelected shouldBe true
@@ -29,8 +27,7 @@ class TestGameParamFilterPanelRoundTheClock: AbstractTest()
     }
 
     @Test
-    fun `Should return game params based on the radio & checkbox selection`()
-    {
+    fun `Should return game params based on the radio & checkbox selection`() {
         val panel = GameParamFilterPanelRoundTheClock()
 
         panel.clickChild<JRadioButton>(text = "Standard")
@@ -48,8 +45,7 @@ class TestGameParamFilterPanelRoundTheClock: AbstractTest()
     }
 
     @Test
-    fun `Should support setting the selection by gameParams`()
-    {
+    fun `Should support setting the selection by gameParams`() {
         val panel = GameParamFilterPanelRoundTheClock()
 
         val doublesInOrder = RoundTheClockConfig(ClockType.Doubles, true)
@@ -69,8 +65,7 @@ class TestGameParamFilterPanelRoundTheClock: AbstractTest()
     }
 
     @Test
-    fun `Should enable and disable its children correctly`()
-    {
+    fun `Should enable and disable its children correctly`() {
         val panel = GameParamFilterPanelRoundTheClock()
 
         panel.enableChildren(false)
@@ -87,8 +82,7 @@ class TestGameParamFilterPanelRoundTheClock: AbstractTest()
     }
 
     @Test
-    fun `Should add and remove action listeners on the radio button panel`()
-    {
+    fun `Should add and remove action listeners on the radio button panel`() {
         val panel = GameParamFilterPanelRoundTheClock()
 
         val listener = mockk<ActionListener>(relaxed = true)
@@ -107,8 +101,7 @@ class TestGameParamFilterPanelRoundTheClock: AbstractTest()
     }
 
     @Test
-    fun `Should add and remove action listeners on the checkbox`()
-    {
+    fun `Should add and remove action listeners on the checkbox`() {
         val panel = GameParamFilterPanelRoundTheClock()
 
         val listener = mockk<ActionListener>(relaxed = true)
@@ -126,5 +119,6 @@ class TestGameParamFilterPanelRoundTheClock: AbstractTest()
         verifyNotCalled { listener.actionPerformed(any()) }
     }
 
-    private fun GameParamFilterPanelRoundTheClock.getConfig() = RoundTheClockConfig.fromJson(getGameParams())
+    private fun GameParamFilterPanelRoundTheClock.getConfig() =
+        RoundTheClockConfig.fromJson(getGameParams())
 }

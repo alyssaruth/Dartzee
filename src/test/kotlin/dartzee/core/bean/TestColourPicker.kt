@@ -11,15 +11,13 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Cursor
+import org.junit.jupiter.api.Test
 
-class TestColourPicker: AbstractTest()
-{
+class TestColourPicker : AbstractTest() {
     @Test
-    fun `Should change the cursor to a hand on hover`()
-    {
+    fun `Should change the cursor to a hand on hover`() {
         val cp = ColourPicker()
         cp.doHover()
         cp.cursor.type shouldBe Cursor.HAND_CURSOR
@@ -29,8 +27,7 @@ class TestColourPicker: AbstractTest()
     }
 
     @Test
-    fun `Should support updating the current colour`()
-    {
+    fun `Should support updating the current colour`() {
         val cp = ColourPicker()
         cp.updateSelectedColor(Color.RED)
 
@@ -40,8 +37,7 @@ class TestColourPicker: AbstractTest()
     }
 
     @Test
-    fun `Should update the colour on mouse click to whatever was selected in the dialog`()
-    {
+    fun `Should update the colour on mouse click to whatever was selected in the dialog`() {
         val mockSelector = mockk<IColourSelector>(relaxed = true)
         every { mockSelector.selectColour(any()) } returns Color.BLUE
 
@@ -59,8 +55,7 @@ class TestColourPicker: AbstractTest()
     }
 
     @Test
-    fun `Should notify its listener if a new colour is selected`()
-    {
+    fun `Should notify its listener if a new colour is selected`() {
         val mockSelector = mockk<IColourSelector>(relaxed = true)
         every { mockSelector.selectColour(any()) } returns Color.BLUE
         InjectedDesktopCore.colourSelector = mockSelector
@@ -75,8 +70,7 @@ class TestColourPicker: AbstractTest()
     }
 
     @Test
-    fun `Should not notify its listener if told not to`()
-    {
+    fun `Should not notify its listener if told not to`() {
         val listener = mockk<ColourSelectionListener>(relaxed = true)
 
         val cp = ColourPicker()

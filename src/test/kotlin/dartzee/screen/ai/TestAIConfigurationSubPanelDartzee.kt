@@ -6,14 +6,12 @@ import dartzee.ai.DartzeePlayStyle
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import javax.swing.JRadioButton
+import org.junit.jupiter.api.Test
 
-class TestAIConfigurationSubPanelDartzee: AbstractTest()
-{
+class TestAIConfigurationSubPanelDartzee : AbstractTest() {
     @Test
-    fun `Should initialise from model correctly`()
-    {
+    fun `Should initialise from model correctly`() {
         val model = makeDartsModel(dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE)
 
         val panel = AIConfigurationSubPanelDartzee()
@@ -28,8 +26,7 @@ class TestAIConfigurationSubPanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should populate model correctly`()
-    {
+    fun `Should populate model correctly`() {
         val model = makeDartsModel()
         val panel = AIConfigurationSubPanelDartzee()
 

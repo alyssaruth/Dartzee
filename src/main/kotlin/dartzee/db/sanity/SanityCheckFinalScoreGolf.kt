@@ -4,12 +4,10 @@ import dartzee.achievements.getGolfSegmentCases
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 
-class SanityCheckFinalScoreGolf: AbstractSanityCheckFinalScore()
-{
+class SanityCheckFinalScoreGolf : AbstractSanityCheckFinalScore() {
     override val gameType = GameType.GOLF
 
-    override fun populateParticipantToFinalScoreTable(tempTable: String)
-    {
+    override fun populateParticipantToFinalScoreTable(tempTable: String) {
         val sb = StringBuilder()
         sb.append(" INSERT INTO $tempTable")
         sb.append(" SELECT pt.RowId, SUM(")

@@ -19,26 +19,24 @@ import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import javax.swing.SwingUtilities
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import javax.swing.SwingUtilities
 
-class TestGameLoadE2E: AbstractRegistryTest()
-{
-    override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED, PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
+class TestGameLoadE2E : AbstractRegistryTest() {
+    override fun getPreferencesAffected() =
+        listOf(PREFERENCES_INT_AI_SPEED, PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
 
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 0)
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, false)
     }
 
     @Test
     @Tag("e2e")
-    fun `E2E - Game load and AI resume`()
-    {
+    fun `E2E - Game load and AI resume`() {
         val (winner, loser) = createPlayers()
 
         val params = GameLaunchParams(listOf(winner, loser), GameType.X01, "501", false)
@@ -69,8 +67,7 @@ class TestGameLoadE2E: AbstractRegistryTest()
         waitForAssertion { retrieveParticipant().dtFinished shouldNotBe DateStatics.END_OF_TIME }
     }
 
-    private fun verifyGameLoadedCorrectly(gameScreen: AbstractDartsGameScreen)
-    {
+    private fun verifyGameLoadedCorrectly(gameScreen: AbstractDartsGameScreen) {
         val winnerScorer = gameScreen.getScorer("Winner")
         winnerScorer.lblResult.text shouldBe "9 Darts"
         val rows = winnerScorer.tableScores.getRows()

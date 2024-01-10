@@ -15,14 +15,12 @@ import javax.swing.JPanel
 import javax.swing.JTextField
 import javax.swing.border.EmptyBorder
 
-class DartzeeTemplateDialog(private val confirmedCallback: () -> Unit) : SimpleDialog()
-{
+class DartzeeTemplateDialog(private val confirmedCallback: () -> Unit) : SimpleDialog() {
     private val namePanel = JPanel()
     private val tfName = JTextField()
     val rulePanel = DartzeeRuleSetupPanel()
 
-    init
-    {
+    init {
         title = "New Dartzee Template"
         size = Dimension(800, 600)
         isModal = InjectedThings.allowModalDialogs
@@ -38,10 +36,8 @@ class DartzeeTemplateDialog(private val confirmedCallback: () -> Unit) : SimpleD
         namePanel.add(tfName)
     }
 
-    override fun okPressed()
-    {
-        if (!valid())
-        {
+    override fun okPressed() {
+        if (!valid()) {
             return
         }
 
@@ -50,17 +46,14 @@ class DartzeeTemplateDialog(private val confirmedCallback: () -> Unit) : SimpleD
         dispose()
     }
 
-    private fun valid(): Boolean
-    {
-        if (tfName.text.isEmpty())
-        {
+    private fun valid(): Boolean {
+        if (tfName.text.isEmpty()) {
             DialogUtil.showErrorOLD("You must enter a name.")
             tfName.requestFocus()
             return false
         }
 
-        if (rulePanel.getRules().size < 2)
-        {
+        if (rulePanel.getRules().size < 2) {
             DialogUtil.showErrorOLD("You must create at least 2 rules.")
             return false
         }
@@ -68,9 +61,7 @@ class DartzeeTemplateDialog(private val confirmedCallback: () -> Unit) : SimpleD
         return true
     }
 
-
-    fun copy(templateToCopy: DartzeeTemplateEntity)
-    {
+    fun copy(templateToCopy: DartzeeTemplateEntity) {
         tfName.text = "${templateToCopy.name} - Copy"
 
         val rules = DartzeeRuleEntity().retrieveForTemplate(templateToCopy.rowId)
@@ -79,10 +70,8 @@ class DartzeeTemplateDialog(private val confirmedCallback: () -> Unit) : SimpleD
         rulePanel.addRulesToTable(dtos)
     }
 
-    companion object
-    {
-        fun createTemplate(callback: () -> Unit, templateToCopy: DartzeeTemplateEntity? = null)
-        {
+    companion object {
+        fun createTemplate(callback: () -> Unit, templateToCopy: DartzeeTemplateEntity? = null) {
             val dlg = DartzeeTemplateDialog(callback)
             templateToCopy?.let { dlg.copy(it) }
             dlg.setLocationRelativeTo(ScreenCache.mainScreen)

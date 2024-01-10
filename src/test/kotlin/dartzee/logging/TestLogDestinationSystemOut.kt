@@ -4,36 +4,37 @@ import dartzee.CURRENT_TIME_STRING
 import dartzee.helper.AbstractTest
 import dartzee.makeLogRecord
 import io.kotest.matchers.string.shouldContain
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
 
-class TestLogDestinationSystemOut: AbstractTest()
-{
+class TestLogDestinationSystemOut : AbstractTest() {
     private val originalOut = System.out
 
     private val newOut = ByteArrayOutputStream()
 
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         System.setOut(PrintStream(newOut))
     }
 
     @AfterEach
-    fun afterEach()
-    {
+    fun afterEach() {
         System.setOut(originalOut)
     }
 
     @Test
-    fun `Should log the record to system out`()
-    {
+    fun `Should log the record to system out`() {
         val dest = LogDestinationSystemOut()
 
-        val record = makeLogRecord(severity = Severity.INFO, loggingCode = LoggingCode("some.event"), message = "blah")
+        val record =
+            makeLogRecord(
+                severity = Severity.INFO,
+                loggingCode = LoggingCode("some.event"),
+                message = "blah"
+            )
         dest.log(record)
 
         val output = newOut.toString()
@@ -41,12 +42,17 @@ class TestLogDestinationSystemOut: AbstractTest()
     }
 
     @Test
-    fun `Should print the stack trace for errors`()
-    {
+    fun `Should print the stack trace for errors`() {
         val dest = LogDestinationSystemOut()
 
         val error = Throwable("oh no")
-        val record = makeLogRecord(severity = Severity.ERROR, loggingCode = LoggingCode("some.event"), message = "blah", errorObject = error)
+        val record =
+            makeLogRecord(
+                severity = Severity.ERROR,
+                loggingCode = LoggingCode("some.event"),
+                message = "blah",
+                errorObject = error
+            )
         dest.log(record)
 
         val output = newOut.toString()
@@ -55,14 +61,16 @@ class TestLogDestinationSystemOut: AbstractTest()
     }
 
     @Test
-    fun `Should print the stack for a thread dump`()
-    {
+    fun `Should print the stack for a thread dump`() {
         val dest = LogDestinationSystemOut()
 
-        val record = makeLogRecord(severity = Severity.INFO,
+        val record =
+            makeLogRecord(
+                severity = Severity.INFO,
                 loggingCode = LoggingCode("some.event"),
                 message = "blah",
-                keyValuePairs = mapOf(KEY_STACK to "at Something.blah"))
+                keyValuePairs = mapOf(KEY_STACK to "at Something.blah")
+            )
         dest.log(record)
 
         val output = newOut.toString()

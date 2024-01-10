@@ -17,14 +17,12 @@ import dartzee.utils.InjectedThings.mainDatabase
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-class TestReportParameters: AbstractTest()
-{
+class TestReportParameters : AbstractTest() {
     @Test
-    fun `Should be able to filter by game type`()
-    {
+    fun `Should be able to filter by game type`() {
         val gameOne = insertGameForReport(gameType = GameType.X01)
         val gameTwo = insertGameForReport(gameType = GameType.GOLF)
 
@@ -40,8 +38,7 @@ class TestReportParameters: AbstractTest()
     }
 
     @Test
-    fun `Should be able to filter by game params`()
-    {
+    fun `Should be able to filter by game params`() {
         val gameOne = insertGameForReport(gameParams = "foo")
         val gameTwo = insertGameForReport(gameParams = "bar")
 
@@ -57,8 +54,7 @@ class TestReportParameters: AbstractTest()
     }
 
     @Test
-    fun `Should be able to report on only unfinished games`()
-    {
+    fun `Should be able to report on only unfinished games`() {
         val gameOne = insertGameForReport(dtFinish = DateStatics.END_OF_TIME)
         val gameTwo = insertGameForReport(dtFinish = getSqlDateNow())
 
@@ -74,15 +70,18 @@ class TestReportParameters: AbstractTest()
     }
 
     @Test
-    fun `Should be able to report on creation date`()
-    {
+    fun `Should be able to report on creation date`() {
         val gameOne = insertGameForReport(dtCreation = Timestamp(999))
         val gameTwo = insertGameForReport(dtCreation = Timestamp(1000))
         val gameThree = insertGameForReport(dtCreation = Timestamp(1001))
 
         val rpAll = ReportParameters()
         val resultsAll = runReportForTest(rpAll)
-        resultsAll.shouldContainExactlyInAnyOrder(gameOne.localId, gameTwo.localId, gameThree.localId)
+        resultsAll.shouldContainExactlyInAnyOrder(
+            gameOne.localId,
+            gameTwo.localId,
+            gameThree.localId
+        )
 
         val rpAfter = ReportParameters()
         rpAfter.dtStartFrom = Timestamp(1000)
@@ -98,15 +97,18 @@ class TestReportParameters: AbstractTest()
     }
 
     @Test
-    fun `Should be able to report on finish date`()
-    {
+    fun `Should be able to report on finish date`() {
         val gameOne = insertGameForReport(dtFinish = Timestamp(999))
         val gameTwo = insertGameForReport(dtFinish = Timestamp(1000))
         val gameThree = insertGameForReport(dtFinish = Timestamp(1001))
 
         val rpAll = ReportParameters()
         val resultsAll = runReportForTest(rpAll)
-        resultsAll.shouldContainExactlyInAnyOrder(gameOne.localId, gameTwo.localId, gameThree.localId)
+        resultsAll.shouldContainExactlyInAnyOrder(
+            gameOne.localId,
+            gameTwo.localId,
+            gameThree.localId
+        )
 
         val rpAfter = ReportParameters()
         rpAfter.dtFinishFrom = Timestamp(1000)
@@ -122,8 +124,7 @@ class TestReportParameters: AbstractTest()
     }
 
     @Test
-    fun `Should be able to report on whether a game was part of a match`()
-    {
+    fun `Should be able to report on whether a game was part of a match`() {
         val singleGame = insertGameForReport(dartsMatchId = "")
         val matchGame = insertGameForReport(dartsMatchId = randomGuid())
 
@@ -143,8 +144,7 @@ class TestReportParameters: AbstractTest()
     }
 
     @Test
-    fun `Should be able to report on sync status`()
-    {
+    fun `Should be able to report on sync status`() {
         val lastSynced = SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME).dtLastUpdate
 
         val syncedGame = insertGameForReport(dtLastUpdate = getPastTime(lastSynced))
@@ -164,8 +164,7 @@ class TestReportParameters: AbstractTest()
     }
 
     @Test
-    fun `Should cope with reporting on sync status when never synced`()
-    {
+    fun `Should cope with reporting on sync status when never synced`() {
         val now = getSqlDateNow()
         val gameOne = insertGameForReport(dtLastUpdate = getPastTime(now))
         val gameTwo = insertGameForReport(dtLastUpdate = getFutureTime(now))
@@ -180,8 +179,7 @@ class TestReportParameters: AbstractTest()
     }
 
     @Test
-    fun `Should be able to exclude games with certain players`()
-    {
+    fun `Should be able to exclude games with certain players`() {
         val gAllPlayers = insertGame()
         val alice = insertPlayerForGame("Alice", gAllPlayers.rowId)
         val bob = insertPlayerForGame("Bob", gAllPlayers.rowId)
@@ -207,7 +205,13 @@ class TestReportParameters: AbstractTest()
 
         val rpAll = ReportParameters()
         val resultsAll = runReportForTest(rpAll)
-        resultsAll.shouldContainExactlyInAnyOrder(gAllPlayers.localId, gAliceAndBob.localId, gAliceCliveDaisy.localId, gBobAndDaisy.localId, gCliveDaisy.localId)
+        resultsAll.shouldContainExactlyInAnyOrder(
+            gAllPlayers.localId,
+            gAliceAndBob.localId,
+            gAliceCliveDaisy.localId,
+            gBobAndDaisy.localId,
+            gCliveDaisy.localId
+        )
 
         val rpExcludeAlice = ReportParameters()
         rpExcludeAlice.excludedPlayers = listOf(alice)
@@ -221,8 +225,7 @@ class TestReportParameters: AbstractTest()
     }
 
     @Test
-    fun `Should be able to only include games with the specified players`()
-    {
+    fun `Should be able to only include games with the specified players`() {
         val gAllPlayers = insertGame()
         val alice = insertPlayerForGame("Alice", gAllPlayers.rowId)
         val bob = insertPlayerForGame("Bob", gAllPlayers.rowId)
@@ -249,17 +252,21 @@ class TestReportParameters: AbstractTest()
         val rpIncludeAlice = ReportParameters()
         rpIncludeAlice.hmIncludedPlayerToParms = mapOf(alice to IncludedPlayerParameters())
         val resultsAlice = runReportForTest(rpIncludeAlice)
-        resultsAlice.shouldContainExactlyInAnyOrder(gAllPlayers.localId, gAliceAndBob.localId, gAliceCliveDaisy.localId)
+        resultsAlice.shouldContainExactlyInAnyOrder(
+            gAllPlayers.localId,
+            gAliceAndBob.localId,
+            gAliceCliveDaisy.localId
+        )
 
         val rpIncludeAliceAndBob = ReportParameters()
-        rpIncludeAliceAndBob.hmIncludedPlayerToParms = mapOf(alice to IncludedPlayerParameters(), bob to IncludedPlayerParameters())
+        rpIncludeAliceAndBob.hmIncludedPlayerToParms =
+            mapOf(alice to IncludedPlayerParameters(), bob to IncludedPlayerParameters())
         val resultsAliceAndBob = runReportForTest(rpIncludeAliceAndBob)
         resultsAliceAndBob.shouldContainExactly(gAllPlayers.localId, gAliceAndBob.localId)
     }
 
     @Test
-    fun `Should only include games with at least one human player if specified`()
-    {
+    fun `Should only include games with at least one human player if specified`() {
         val gAllPlayers = insertGame()
         val ai = insertPlayerForGame("AI", gAllPlayers.rowId, strategy = "foo")
         val aiTwo = insertPlayerForGame("AI2", gAllPlayers.rowId, strategy = "foo")
@@ -284,11 +291,12 @@ class TestReportParameters: AbstractTest()
         rp.excludeOnlyAi = true
 
         val results = runReportForTest(rp)
-        results.shouldContainExactlyInAnyOrder(listOf(gAllPlayers.localId, gHumanAndBothAI.localId, gSingleHuman.localId))
+        results.shouldContainExactlyInAnyOrder(
+            listOf(gAllPlayers.localId, gHumanAndBothAI.localId, gSingleHuman.localId)
+        )
     }
 
-    private fun runReportForTest(rp: ReportParameters): List<Long>
-    {
+    private fun runReportForTest(rp: ReportParameters): List<Long> {
         val wrappers = runReport(rp)
         return wrappers.map { it.localId }.toList()
     }

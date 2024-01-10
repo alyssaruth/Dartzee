@@ -57,49 +57,62 @@ const val MAX_ACHIEVEMENT_SCORE = 6
 
 fun getAchievementMaximum() = getAllAchievements().size * MAX_ACHIEVEMENT_SCORE
 
-fun getPlayerAchievementScore(allAchievementRows: List<AchievementEntity>, player: PlayerEntity): Int
-{
-    val myAchievementRows = allAchievementRows.filter{ it.playerId == player.rowId }
+fun getPlayerAchievementScore(
+    allAchievementRows: List<AchievementEntity>,
+    player: PlayerEntity
+): Int {
+    val myAchievementRows = allAchievementRows.filter { it.playerId == player.rowId }
 
     return getAllAchievements().sumOf { achievement ->
-        val myRelevantRows = myAchievementRows.filter { it.achievementType == achievement.achievementType }
+        val myRelevantRows =
+            myAchievementRows.filter { it.achievementType == achievement.achievementType }
         achievement.initialiseFromDb(myRelevantRows, player)
         achievement.getScore()
     }
 }
 
-fun convertEmptyAchievements()
-{
-    val emptyAchievements = getAllAchievements().filter{ !rowsExistForAchievement(it) }
-    if (emptyAchievements.isNotEmpty())
-    {
+fun convertEmptyAchievements() {
+    val emptyAchievements = getAllAchievements().filter { !rowsExistForAchievement(it) }
+    if (emptyAchievements.isNotEmpty()) {
         runConversionsWithProgressBar(emptyAchievements, mutableListOf())
     }
 }
 
-fun runConversionsWithProgressBar(achievements: List<AbstractAchievement>,
-                                  playerIds: List<String>,
-                                  database: Database = mainDatabase): Thread
-{
+fun runConversionsWithProgressBar(
+    achievements: List<AbstractAchievement>,
+    playerIds: List<String>,
+    database: Database = mainDatabase
+): Thread {
     val r = Runnable { runConversionsInOtherThread(achievements, playerIds, database) }
     val t = Thread(r, "Conversion thread")
     t.start()
     return t
 }
 
-private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>, playerIds: List<String>, database: Database)
-{
-    val dlg = ProgressDialog.factory("Populating Achievements", "achievements remaining", achievements.size)
+private fun runConversionsInOtherThread(
+    achievements: List<AbstractAchievement>,
+    playerIds: List<String>,
+    database: Database
+) {
+    val dlg =
+        ProgressDialog.factory(
+            "Populating Achievements",
+            "achievements remaining",
+            achievements.size
+        )
     dlg.setVisibleLater()
 
     val playerCount = if (playerIds.isEmpty()) "all" else "${playerIds.size}"
-    logger.info(CODE_ACHIEVEMENT_CONVERSION_STARTED, "Regenerating ${achievements.size} achievements for $playerCount players",
-        KEY_PLAYER_IDS to playerIds, KEY_ACHIEVEMENT_TYPES to achievements.map { it.achievementType })
+    logger.info(
+        CODE_ACHIEVEMENT_CONVERSION_STARTED,
+        "Regenerating ${achievements.size} achievements for $playerCount players",
+        KEY_PLAYER_IDS to playerIds,
+        KEY_ACHIEVEMENT_TYPES to achievements.map { it.achievementType }
+    )
 
     val timings = mutableMapOf<String, Long>()
 
-    try
-    {
+    try {
         database.dropUnexpectedTables()
 
         achievements.forEach { achievement ->
@@ -111,27 +124,30 @@ private fun runConversionsInOtherThread(achievements: List<AbstractAchievement>,
 
             dlg.incrementProgressLater()
         }
-    }
-    finally
-    {
+    } finally {
         database.dropUnexpectedTables()
     }
 
     val totalTime = timings.values.sum()
-    logger.info(CODE_ACHIEVEMENT_CONVERSION_FINISHED, "Done in $totalTime", KEY_ACHIEVEMENT_TIMINGS to timings)
+    logger.info(
+        CODE_ACHIEVEMENT_CONVERSION_FINISHED,
+        "Done in $totalTime",
+        KEY_ACHIEVEMENT_TIMINGS to timings
+    )
 
     dlg.disposeLater()
 }
 
-private fun rowsExistForAchievement(achievement: AbstractAchievement) : Boolean
-{
-    val sql = "SELECT COUNT(1) FROM Achievement WHERE AchievementType = '${achievement.achievementType}'"
+private fun rowsExistForAchievement(achievement: AbstractAchievement): Boolean {
+    val sql =
+        "SELECT COUNT(1) FROM Achievement WHERE AchievementType = '${achievement.achievementType}'"
     val count = mainDatabase.executeQueryAggregate(sql)
 
     return count > 0
 }
 
-fun getAchievementsForGameType(gameType: GameType) = getAllAchievements().filter { it.gameType == gameType }
+fun getAchievementsForGameType(gameType: GameType) =
+    getAllAchievements().filter { it.gameType == gameType }
 
 fun getAllAchievements() =
     listOf(
@@ -173,13 +189,13 @@ fun getAllAchievements() =
 fun getAchievementForType(achievementType: AchievementType) =
     getAllAchievements().find { it.achievementType == achievementType }
 
-fun getBestGameAchievement(gameType : GameType) : AbstractAchievementBestGame?
-{
-    val ref = getAllAchievements().find { it is AbstractAchievementBestGame && it.gameType == gameType }
+fun getBestGameAchievement(gameType: GameType): AbstractAchievementBestGame? {
+    val ref =
+        getAllAchievements().find { it is AbstractAchievementBestGame && it.gameType == gameType }
     return ref as AbstractAchievementBestGame?
 }
 
-fun getWinAchievementType(gameType : GameType) =
+fun getWinAchievementType(gameType: GameType) =
     getAllAchievements()
         .first { it is AbstractAchievementGamesWon && it.gameType == gameType }
         .achievementType
@@ -189,13 +205,20 @@ fun getTeamWinAchievementType(gameType: GameType) =
         .first { it is AbstractAchievementTeamGamesWon && it.gameType == gameType }
         .achievementType
 
-fun unlockThreeDartAchievement(playerIds: List<String>, x01RoundWhereSql: String,
-                               achievementScoreSql : String, achievementType: AchievementType, database: Database)
-{
+fun unlockThreeDartAchievement(
+    playerIds: List<String>,
+    x01RoundWhereSql: String,
+    achievementScoreSql: String,
+    achievementType: AchievementType,
+    database: Database
+) {
     ensureX01RoundsTableExists(playerIds, database)
 
-    val tempTable = database.createTempTable("PlayerResults",
-        "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT")
+    val tempTable =
+        database.createTempTable(
+            "PlayerResults",
+            "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT"
+        )
 
     var sb = StringBuilder()
     sb.append(" INSERT INTO $tempTable")
@@ -205,7 +228,8 @@ fun unlockThreeDartAchievement(playerIds: List<String>, x01RoundWhereSql: String
 
     if (!database.executeUpdate(sb)) return
 
-    val zzPlayerToScore = database.createTempTable("PlayerToThreeDartScore", "PlayerId VARCHAR(36), Score INT")
+    val zzPlayerToScore =
+        database.createTempTable("PlayerToThreeDartScore", "PlayerId VARCHAR(36), Score INT")
 
     sb = StringBuilder()
     sb.append(" INSERT INTO $zzPlayerToScore")
@@ -223,52 +247,77 @@ fun unlockThreeDartAchievement(playerIds: List<String>, x01RoundWhereSql: String
     sb.append(" ORDER BY DtAchieved")
 
     database.executeQuery(sb).use { rs ->
-        bulkInsertFromResultSet(rs, database, achievementType, oneRowPerPlayer = true, achievementCounterFn = { rs.getInt("Score") })
+        bulkInsertFromResultSet(
+            rs,
+            database,
+            achievementType,
+            oneRowPerPlayer = true,
+            achievementCounterFn = { rs.getInt("Score") }
+        )
     }
 }
 
-fun retrieveAchievementForDetail(achievementType: AchievementType, playerId: String, achievementDetail: String): AchievementEntity?
-{
-    val whereSql = "AchievementType = '$achievementType' AND PlayerId = '$playerId' AND AchievementDetail = '$achievementDetail'"
+fun retrieveAchievementForDetail(
+    achievementType: AchievementType,
+    playerId: String,
+    achievementDetail: String
+): AchievementEntity? {
+    val whereSql =
+        "AchievementType = '$achievementType' AND PlayerId = '$playerId' AND AchievementDetail = '$achievementDetail'"
     return AchievementEntity().retrieveEntity(whereSql)
 }
 
 fun getGamesWonIcon(gameType: GameType): URL? =
-    when (gameType)
-    {
+    when (gameType) {
         GameType.X01 -> ResourceCache.URL_ACHIEVEMENT_X01_GAMES_WON
         GameType.GOLF -> ResourceCache.URL_ACHIEVEMENT_GOLF_GAMES_WON
         GameType.ROUND_THE_CLOCK -> ResourceCache.URL_ACHIEVEMENT_CLOCK_GAMES_WON
         GameType.DARTZEE -> ResourceCache.URL_ACHIEVEMENT_DARTZEE_GAMES_WON
     }
 
-fun paintMedalCommon(g: Graphics2D, achievement: AbstractAchievement, size: Int, highlighted: Boolean)
-{
+fun paintMedalCommon(
+    g: Graphics2D,
+    achievement: AbstractAchievement,
+    size: Int,
+    highlighted: Boolean
+) {
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
-    //Draw the track
+    // Draw the track
     g.color = Color.DARK_GRAY.brighter()
     g.fillArc(0, 0, size, size, 0, 360)
 
-    //Mark the levels
+    // Mark the levels
     markThreshold(g, achievement, size, Color.MAGENTA, achievement.pinkThreshold)
     markThreshold(g, achievement, size, Color.CYAN, achievement.blueThreshold)
     markThreshold(g, achievement, size, Color.GREEN, achievement.greenThreshold)
     markThreshold(g, achievement, size, Color.YELLOW, achievement.yellowThreshold)
-    markThreshold(g, achievement, size, DartsColour.COLOUR_ACHIEVEMENT_ORANGE, achievement.orangeThreshold)
+    markThreshold(
+        g,
+        achievement,
+        size,
+        DartsColour.COLOUR_ACHIEVEMENT_ORANGE,
+        achievement.orangeThreshold
+    )
     markThreshold(g, achievement, size, Color.RED, achievement.redThreshold)
 
-    //Draw the actual progress
+    // Draw the actual progress
     val angle = achievement.getAngle()
     g.color = achievement.getColor(highlighted).darker()
     g.fillArc(0, 0, size, size, 90, -angle.toInt())
 
-    //Inner circle
+    // Inner circle
     g.color = achievement.getColor(highlighted)
-    g.fillArc(15, 15, size -30, size -30, 0, 360)
+    g.fillArc(15, 15, size - 30, size - 30, 0, 360)
 }
-private fun markThreshold(g: Graphics2D, achievement: AbstractAchievement, size: Int, color: Color, threshold: Int)
-{
+
+private fun markThreshold(
+    g: Graphics2D,
+    achievement: AbstractAchievement,
+    size: Int,
+    color: Color,
+    threshold: Int
+) {
     g.color = color
     val thresholdAngle = achievement.getAngle(threshold)
     g.fillArc(0, 0, size, size, 90 - thresholdAngle.toInt(), 3)

@@ -5,8 +5,7 @@ import dartzee.achievements.AchievementType
 import dartzee.game.GameType
 import dartzee.utils.ResourceCache
 
-class AchievementDartzeeGamesWon : AbstractAchievementGamesWon()
-{
+class AchievementDartzeeGamesWon : AbstractAchievementGamesWon() {
     override val achievementType = AchievementType.DARTZEE_GAMES_WON
     override val gameType = GameType.DARTZEE
     override val name = "Dartzee Winner"

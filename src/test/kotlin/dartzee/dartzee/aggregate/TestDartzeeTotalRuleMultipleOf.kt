@@ -4,13 +4,11 @@ import dartzee.dartzee.AbstractDartzeeRuleTest
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDartzeeTotalRuleMultipleOf: AbstractDartzeeRuleTest<DartzeeTotalRuleMultipleOf>()
-{
+class TestDartzeeTotalRuleMultipleOf : AbstractDartzeeRuleTest<DartzeeTotalRuleMultipleOf>() {
     override fun factory() = DartzeeTotalRuleMultipleOf()
 
     @Test
-    fun `Total validation`()
-    {
+    fun `Total validation`() {
         val rule = factory()
         rule.target = 7
 
@@ -20,8 +18,7 @@ class TestDartzeeTotalRuleMultipleOf: AbstractDartzeeRuleTest<DartzeeTotalRuleMu
     }
 
     @Test
-    fun `Rule description`()
-    {
+    fun `Rule description`() {
         val rule = factory()
         rule.target = 9
 

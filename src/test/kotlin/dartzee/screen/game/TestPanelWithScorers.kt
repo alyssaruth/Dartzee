@@ -10,11 +10,9 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
-class TestPanelWithScorers: AbstractTest()
-{
+class TestPanelWithScorers : AbstractTest() {
     @Test
-    fun `Assigning a scorer should initialise it`()
-    {
+    fun `Assigning a scorer should initialise it`() {
         val scrn = FakePanelWithScorers()
 
         val singleParticipant = makeSingleParticipant()
@@ -25,21 +23,21 @@ class TestPanelWithScorers: AbstractTest()
     }
 
     @Test
-    fun `Should split 5 scorers correctly`()
-    {
+    fun `Should split 5 scorers correctly`() {
         val scrn = FakePanelWithScorers()
 
         scrn.assignScorers(5)
         scrn.finaliseScorers(FakeDartsScreen())
 
         scrn.scorerCount() shouldBe 5
-        scrn.getWestScorers().shouldContainExactly(scrn.getScorer(0), scrn.getScorer(1), scrn.getScorer(2))
+        scrn
+            .getWestScorers()
+            .shouldContainExactly(scrn.getScorer(0), scrn.getScorer(1), scrn.getScorer(2))
         scrn.getEastScorers().shouldContainExactly(scrn.getScorer(3), scrn.getScorer(4))
     }
 
     @Test
-    fun `Should split 4 scorers correctly`()
-    {
+    fun `Should split 4 scorers correctly`() {
         val scrn = FakePanelWithScorers()
 
         scrn.assignScorers(4)
@@ -51,8 +49,7 @@ class TestPanelWithScorers: AbstractTest()
     }
 
     @Test
-    fun `Should handle just a single scorer`()
-    {
+    fun `Should handle just a single scorer`() {
         val scrn = FakePanelWithScorers()
 
         scrn.assignScorer(makeSingleParticipant())
@@ -64,8 +61,7 @@ class TestPanelWithScorers: AbstractTest()
     }
 
     @Test
-    fun `Should assign scorers in order`()
-    {
+    fun `Should assign scorers in order`() {
         val scrn = FakePanelWithScorers()
 
         scrn.assignScorer(makeSingleParticipant(insertPlayer(name = "Player One")))
@@ -77,18 +73,17 @@ class TestPanelWithScorers: AbstractTest()
         scrn.getScorer(2).lblName.text shouldContain "Player Three"
     }
 
-    inner class FakeScorer(participant: IWrappedParticipant) : AbstractScorer(participant)
-    {
+    inner class FakeScorer(participant: IWrappedParticipant) : AbstractScorer(participant) {
         var initted = false
 
         override fun getNumberOfColumns() = 4
+
         override fun initImpl() {
             initted = true
         }
     }
 
-    inner class FakePanelWithScorers : PanelWithScorers<FakeScorer>()
-    {
+    inner class FakePanelWithScorers : PanelWithScorers<FakeScorer>() {
         override fun factoryScorer(participant: IWrappedParticipant) = FakeScorer(participant)
 
         fun assignScorers(scorerCount: Int) {
@@ -96,9 +91,11 @@ class TestPanelWithScorers: AbstractTest()
         }
 
         fun scorerCount() = scorersOrdered.size
+
         fun getScorer(i: Int) = scorersOrdered[i]
 
         fun getEastScorers() = panelEast.components.toList()
+
         fun getWestScorers() = panelWest.components.toList()
     }
 }

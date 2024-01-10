@@ -9,22 +9,23 @@ import dartzee.helper.insertParticipant
 import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-class TestAchievementDartzeeHalved: AbstractAchievementTest<AchievementDartzeeHalved>()
-{
+class TestAchievementDartzeeHalved : AbstractAchievementTest<AchievementDartzeeHalved>() {
     override fun factoryAchievement() = AchievementDartzeeHalved()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
-    {
+    override fun setUpAchievementRowForPlayerAndGame(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database
+    ) {
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, database = database)
         insertDartzeeRoundResult(pt, success = false, score = -100, database = database)
     }
 
     @Test
-    fun `Should include participants who were part of a team`()
-    {
+    fun `Should include participants who were part of a team`() {
         val pt = insertRelevantParticipant(team = true)
         insertDartzeeRoundResult(pt, success = false, score = -100)
 
@@ -33,8 +34,7 @@ class TestAchievementDartzeeHalved: AbstractAchievementTest<AchievementDartzeeHa
     }
 
     @Test
-    fun `Should not include successful rounds`()
-    {
+    fun `Should not include successful rounds`() {
         val pt = insertRelevantParticipant()
         insertDartzeeRoundResult(pt, success = true, score = 50)
 
@@ -44,8 +44,7 @@ class TestAchievementDartzeeHalved: AbstractAchievementTest<AchievementDartzeeHa
     }
 
     @Test
-    fun `Should insert a single row for the worst score`()
-    {
+    fun `Should insert a single row for the worst score`() {
         val pt = insertRelevantParticipant()
         insertDartzeeRoundResult(pt, success = false, score = -75)
         insertDartzeeRoundResult(pt, success = false, score = -100)
@@ -63,8 +62,7 @@ class TestAchievementDartzeeHalved: AbstractAchievementTest<AchievementDartzeeHa
     }
 
     @Test
-    fun `Should tiebreak on the date of the round result`()
-    {
+    fun `Should tiebreak on the date of the round result`() {
         val pt = insertRelevantParticipant()
         insertDartzeeRoundResult(pt, success = false, score = -100, dtCreation = Timestamp(1000))
         insertDartzeeRoundResult(pt, success = false, score = -100, dtCreation = Timestamp(500))

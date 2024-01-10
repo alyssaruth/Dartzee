@@ -22,8 +22,8 @@ import javax.swing.JScrollPane
 import javax.swing.JToggleButton
 import javax.swing.ScrollPaneConstants
 
-class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), ActionListener, IMouseListener
-{
+class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>) :
+    JPanel(), ActionListener, IMouseListener {
     val tilePanel = JPanel()
     private val tileScroller = JScrollPane()
     val toggleButtonPanel = JPanel()
@@ -40,8 +40,7 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
 
     private var hoveredTile: DartzeeRuleTilePending? = null
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
         add(tileScroller, BorderLayout.CENTER)
         add(toggleButtonPanel, BorderLayout.EAST)
@@ -72,8 +71,7 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
         toggleButtonPanel.add(toggleButtonComplete, BorderLayout.SOUTH)
     }
 
-    fun update(results: List<DartzeeRoundResultEntity>, darts: List<Dart>, currentScore: Int)
-    {
+    fun update(results: List<DartzeeRoundResultEntity>, darts: List<Dart>, currentScore: Int) {
         initialised = false
 
         hoveredTile = null
@@ -82,16 +80,15 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
 
         initialiseTiles(results, currentScore)
 
-        when
-        {
+        when {
             toggleButtonComplete.isSelected -> displayTiles(completeTiles)
             else -> displayTiles(pendingTiles)
         }
 
         initialised = true
     }
-    private fun initialiseTiles(results: List<DartzeeRoundResultEntity>, currentScore: Int)
-    {
+
+    private fun initialiseTiles(results: List<DartzeeRoundResultEntity>, currentScore: Int) {
         completeTiles.clear()
         pendingTiles.clear()
 
@@ -101,30 +98,24 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
         updateIncompleteTilesBasedOnDarts(currentScore)
     }
 
-    private fun populateCompleteTiles(results: List<DartzeeRoundResultEntity>)
-    {
-        results.sortedBy { it.roundNumber }.forEach { result ->
-            val dto = dtos[result.ruleNumber - 1]
-            val completeRule = DartzeeRuleTileComplete(
-                dto,
-                getRuleNumber(dto),
-                result.success,
-                result.score
-            )
-            completeTiles.add(completeRule)
-        }
+    private fun populateCompleteTiles(results: List<DartzeeRoundResultEntity>) {
+        results
+            .sortedBy { it.roundNumber }
+            .forEach { result ->
+                val dto = dtos[result.ruleNumber - 1]
+                val completeRule =
+                    DartzeeRuleTileComplete(dto, getRuleNumber(dto), result.success, result.score)
+                completeTiles.add(completeRule)
+            }
         toggleButtonComplete.isEnabled = completeTiles.isNotEmpty()
     }
 
-    private fun populateIncompleteTiles(results: List<DartzeeRoundResultEntity>)
-    {
-        val incompleteRules = dtos.filterIndexed { ix, _ -> results.none { it.ruleNumber == ix + 1 }}
-        pendingTiles.addAll(incompleteRules.map { rule ->
-            DartzeeRuleTilePending(
-                rule,
-                getRuleNumber(rule)
-            )
-        })
+    private fun populateIncompleteTiles(results: List<DartzeeRoundResultEntity>) {
+        val incompleteRules =
+            dtos.filterIndexed { ix, _ -> results.none { it.ruleNumber == ix + 1 } }
+        pendingTiles.addAll(
+            incompleteRules.map { rule -> DartzeeRuleTilePending(rule, getRuleNumber(rule)) }
+        )
         pendingTiles.forEach { tile ->
             tile.addActionListener(this)
             tile.addMouseListener(this)
@@ -132,19 +123,17 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
         }
     }
 
-    private fun updateIncompleteTilesBasedOnDarts(currentScore: Int)
-    {
-        if (dartsThrown.size == 3)
-        {
+    private fun updateIncompleteTilesBasedOnDarts(currentScore: Int) {
+        if (dartsThrown.size == 3) {
             val successfulRules = pendingTiles.filter { it.isVisible }
-            successfulRules.forEach { it.setPendingResult(true, it.dto.getSuccessTotal(dartsThrown)) }
+            successfulRules.forEach {
+                it.setPendingResult(true, it.dto.getSuccessTotal(dartsThrown))
+            }
         }
 
-        if (pendingTiles.none { it.isVisible })
-        {
+        if (pendingTiles.none { it.isVisible }) {
             val ruleToFail = getFirstIncompleteRule()
-            if (ruleToFail != null)
-            {
+            if (ruleToFail != null) {
                 val score = currentScore.ceilDiv(2) - currentScore
                 ruleToFail.isVisible = true
                 ruleToFail.setPendingResult(false, score)
@@ -156,34 +145,33 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
 
     private fun getFirstIncompleteRule(): DartzeeRuleTilePending? = pendingTiles.firstOrNull()
 
-    fun getSegmentStatus(): SegmentStatuses
-    {
+    fun getSegmentStatus(): SegmentStatuses {
         val statuses = pendingTiles.map { it.getSegmentStatus(dartsThrown) }
-        return SegmentStatuses(statuses.flatMap { it.scoringSegments }, statuses.flatMap { it.validSegments })
+        return SegmentStatuses(
+            statuses.flatMap { it.scoringSegments },
+            statuses.flatMap { it.validSegments }
+        )
     }
 
     fun getAvailableRuleTiles() = pendingTiles.filter { it.isVisible }
 
-    fun selectRule(model: DartsAiModel)
-    {
+    fun selectRule(model: DartsAiModel) {
         val aggressive = model.dartzeePlayStyle == DartzeePlayStyle.AGGRESSIVE
 
         val availableTiles = getAvailableRuleTiles()
-        val selectedTile = if (aggressive)
-        {
-            val sortedTiles = availableTiles.sortedWith(compareBy( { it.pendingScore }, { it.ruleNumber }))
-            sortedTiles.last()
-        }
-        else
-        {
-            availableTiles.maxByOrNull { it.ruleNumber }
-        }
+        val selectedTile =
+            if (aggressive) {
+                val sortedTiles =
+                    availableTiles.sortedWith(compareBy({ it.pendingScore }, { it.ruleNumber }))
+                sortedTiles.last()
+            } else {
+                availableTiles.maxByOrNull { it.ruleNumber }
+            }
 
         selectedTile!!.doClick()
     }
 
-    private fun displayTiles(tiles: List<DartzeeRuleTile>)
-    {
+    private fun displayTiles(tiles: List<DartzeeRuleTile>) {
         tilePanel.removeAll()
         tiles.forEach { tilePanel.add(it) }
         tilePanel.validate()
@@ -192,43 +180,37 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>): JPanel(), Act
         tileScroller.repaint()
     }
 
-    fun gameFinished()
-    {
+    fun gameFinished() {
         toggleButtonComplete.isSelected = true
         displayTiles(completeTiles)
         toggleButtonPanel.isVisible = false
     }
 
-    override fun actionPerformed(e: ActionEvent?)
-    {
-        when (val src = e?.source)
-        {
+    override fun actionPerformed(e: ActionEvent?) {
+        when (val src = e?.source) {
             toggleButtonPending -> displayTiles(pendingTiles)
             toggleButtonComplete -> displayTiles(completeTiles)
             is DartzeeRuleTilePending -> tilePressed(src)
         }
     }
 
-    private fun tilePressed(tile: DartzeeRuleTilePending)
-    {
+    private fun tilePressed(tile: DartzeeRuleTilePending) {
         if (tile.pendingResult != null) {
-            val result = DartzeeRoundResult(tile.ruleNumber, tile.pendingResult!!, tile.pendingScore!!)
+            val result =
+                DartzeeRoundResult(tile.ruleNumber, tile.pendingResult!!, tile.pendingScore!!)
             listener?.tilePressed(result)
         }
     }
 
-    override fun mouseEntered(e: MouseEvent)
-    {
+    override fun mouseEntered(e: MouseEvent) {
         val src = e.source
-        if (src is DartzeeRuleTilePending)
-        {
+        if (src is DartzeeRuleTilePending) {
             hoveredTile = src
             listener?.hoverChanged(src.getSegmentStatus(dartsThrown))
         }
     }
 
-    override fun mouseExited(e: MouseEvent)
-    {
+    override fun mouseExited(e: MouseEvent) {
         hoveredTile = null
 
         listener?.hoverChanged(getSegmentStatus())

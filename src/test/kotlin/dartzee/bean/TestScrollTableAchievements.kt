@@ -9,11 +9,9 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 
-class TestScrollTableAchievements: AbstractTest()
-{
+class TestScrollTableAchievements : AbstractTest() {
     @Test
-    fun `Should switch to the player achievements screen on click`()
-    {
+    fun `Should switch to the player achievements screen on click`() {
         val startingScreen = LeaderboardsScreen()
         ScreenCache.switch(startingScreen)
 

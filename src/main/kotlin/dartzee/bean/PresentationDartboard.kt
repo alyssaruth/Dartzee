@@ -39,30 +39,24 @@ import kotlin.math.roundToInt
 open class PresentationDartboard(
     private val colourWrapper: ColourWrapper = getColourWrapperFromPrefs(),
     private val renderScoreLabels: Boolean = false
-) : JComponent(), IDartboard
-{
+) : JComponent(), IDartboard {
     var segmentStatuses: SegmentStatuses? = null
     private val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
     private val dirtySegments = mutableSetOf<DartboardSegment>()
     private var lastPaintImage: BufferedImage? = null
 
     override fun computeRadius() = computeRadius(width, height)
+
     override fun computeCenter() = Point(width / 2, height / 2)
 
-    fun interpretPoint(pt: ComputedPoint): Point
-    {
-        val newPoint = translatePoint(
-            computeCenter(),
-            pt.radius * computeRadius(),
-            pt.angle
-        )
+    fun interpretPoint(pt: ComputedPoint): Point {
+        val newPoint = translatePoint(computeCenter(), pt.radius * computeRadius(), pt.angle)
 
         rationalisePoint(newPoint)
 
         val desiredSegment = pt.segment
         val candidatePoints = mutableSetOf(newPoint)
-        while (candidatePoints.none { getSegmentForPoint(it) == desiredSegment })
-        {
+        while (candidatePoints.none { getSegmentForPoint(it) == desiredSegment }) {
             val neighbours = candidatePoints.flatMap(::getNeighbours)
             candidatePoints.addAll(neighbours)
         }
@@ -70,53 +64,48 @@ open class PresentationDartboard(
         return candidatePoints.first { getSegmentForPoint(it) == desiredSegment }
     }
 
-    private fun rationalisePoint(pt: Point)
-    {
+    private fun rationalisePoint(pt: Point) {
         val x = pt.x.coerceIn(0, width - 1)
         val y = pt.y.coerceIn(0, height - 1)
 
         pt.setLocation(x, y)
     }
 
-    fun overrideSegmentColour(segment: DartboardSegment, colour: Color)
-    {
+    fun overrideSegmentColour(segment: DartboardSegment, colour: Color) {
         overriddenSegmentColours[segment] = colour
         dirtySegments.add(segment)
 
         repaint()
     }
 
-    fun revertOverriddenSegmentColour(segment: DartboardSegment)
-    {
+    fun revertOverriddenSegmentColour(segment: DartboardSegment) {
         overriddenSegmentColours.remove(segment)
         dirtySegments.add(segment)
 
         repaint()
     }
 
-    fun updateSegmentStatus(segmentStatuses: SegmentStatuses?)
-    {
+    fun updateSegmentStatus(segmentStatuses: SegmentStatuses?) {
         val oldSegmentStatus = this.segmentStatuses
         this.segmentStatuses = segmentStatuses
 
-        val changed = getAllSegmentsForDartzee().filter { oldSegmentStatus.getSegmentStatus(it) != segmentStatuses.getSegmentStatus(it) }
+        val changed =
+            getAllSegmentsForDartzee().filter {
+                oldSegmentStatus.getSegmentStatus(it) != segmentStatuses.getSegmentStatus(it)
+            }
         dirtySegments.addAll(changed)
 
         repaint()
     }
 
-    override fun paintComponent(g: Graphics)
-    {
+    override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
 
         val cachedImage = lastPaintImage
-        if (cachedImage != null && cachedImage.width == width && cachedImage.height == height)
-        {
+        if (cachedImage != null && cachedImage.width == width && cachedImage.height == height) {
             repaintDirtySegments(cachedImage)
             g.drawImage(cachedImage, 0, 0, this)
-        }
-        else
-        {
+        } else {
             val timer = DurationTimer()
             val bi = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
             paintOuterBoard(bi.createGraphics())
@@ -126,38 +115,34 @@ open class PresentationDartboard(
             lastPaintImage = bi
 
             val duration = timer.getDuration()
-            if (duration > 500)
-            {
+            if (duration > 500) {
                 logger.warn(
-                    CODE_SLOW_DARTBOARD_RENDER, "Rendered dartboard[$width, $height] in ${duration}ms",
-                    KEY_DURATION to duration)
+                    CODE_SLOW_DARTBOARD_RENDER,
+                    "Rendered dartboard[$width, $height] in ${duration}ms",
+                    KEY_DURATION to duration
+                )
             }
         }
     }
 
-    private fun repaintDirtySegments(cachedImage: BufferedImage)
-    {
+    private fun repaintDirtySegments(cachedImage: BufferedImage) {
         val dirtySegmentsCopy = dirtySegments.toList()
-        if (dirtySegmentsCopy.isNotEmpty())
-        {
+        if (dirtySegmentsCopy.isNotEmpty()) {
             dirtySegmentsCopy.paintAll(cachedImage)
             dirtySegments.clear()
         }
     }
 
-    private fun List<DartboardSegment>.paintAll(image: BufferedImage)
-    {
+    private fun List<DartboardSegment>.paintAll(image: BufferedImage) {
         sortedBy { it.type }.forEach { paintSegment(it, image) }
     }
 
-    private fun paintSegment(segment: DartboardSegment, bi: BufferedImage)
-    {
+    private fun paintSegment(segment: DartboardSegment, bi: BufferedImage) {
         val colour = overriddenSegmentColours[segment] ?: defaultColourForSegment(segment)
         colourSegment(segment, colour, bi)
     }
 
-    protected fun defaultColourForSegment(segment: DartboardSegment): Color
-    {
+    protected fun defaultColourForSegment(segment: DartboardSegment): Color {
         val default = colourWrapper.getColour(segment)
         val status = segmentStatuses ?: return default
         return when {
@@ -168,10 +153,8 @@ open class PresentationDartboard(
         }
     }
 
-    private fun colourSegment(segment: DartboardSegment, color: Color, bi: BufferedImage)
-    {
-        if (segment.isMiss())
-        {
+    private fun colourSegment(segment: DartboardSegment, color: Color, bi: BufferedImage) {
+        if (segment.isMiss()) {
             paintOuterRing(bi.createGraphics(), color)
             return
         }
@@ -186,15 +169,13 @@ open class PresentationDartboard(
         }
     }
 
-    private fun getEdgeColourForSegment(segment: DartboardSegment): Color?
-    {
+    private fun getEdgeColourForSegment(segment: DartboardSegment): Color? {
         val default = colourWrapper.edgeColour
         val status = segmentStatuses ?: return default
         return if (status.scoringSegments.contains(segment)) Color.GRAY else null
     }
 
-    private fun paintOuterBoard(g: Graphics2D)
-    {
+    private fun paintOuterBoard(g: Graphics2D) {
         g.paint = colourWrapper.missedBoardColour
         g.fillRect(0, 0, width, height)
 
@@ -204,8 +185,7 @@ open class PresentationDartboard(
         g.fillOval(center.x - borderSize, center.y - borderSize, borderSize * 2, borderSize * 2)
     }
 
-    private fun paintOuterRing(g: Graphics2D, color: Color)
-    {
+    private fun paintOuterRing(g: Graphics2D, color: Color) {
         g.paint = color
         val ring = createOuterRing()
         g.fill(ring)
@@ -213,31 +193,31 @@ open class PresentationDartboard(
         paintScoreLabels(g)
     }
 
-    private fun createOuterRing(): Shape
-    {
+    private fun createOuterRing(): Shape {
         val center = computeCenter()
         val outerRadius = computeRadius() * UPPER_BOUND_OUTSIDE_BOARD_RATIO
         val innerRadius = computeRadius() * UPPER_BOUND_DOUBLE_RATIO
         val thickness = outerRadius - innerRadius
-        val outer: Ellipse2D = Ellipse2D.Double(
-            center.x - outerRadius,
-            center.y - outerRadius,
-            outerRadius + outerRadius,
-            outerRadius + outerRadius
-        )
-        val inner: Ellipse2D = Ellipse2D.Double(
-            center.x - outerRadius + thickness,
-            center.y - outerRadius + thickness,
-            outerRadius + outerRadius - (2 * thickness),
-            outerRadius + outerRadius - (2 * thickness)
-        )
+        val outer: Ellipse2D =
+            Ellipse2D.Double(
+                center.x - outerRadius,
+                center.y - outerRadius,
+                outerRadius + outerRadius,
+                outerRadius + outerRadius
+            )
+        val inner: Ellipse2D =
+            Ellipse2D.Double(
+                center.x - outerRadius + thickness,
+                center.y - outerRadius + thickness,
+                outerRadius + outerRadius - (2 * thickness),
+                outerRadius + outerRadius - (2 * thickness)
+            )
         val area = Area(outer)
         area.subtract(Area(inner))
         return area
     }
 
-    private fun paintScoreLabels(g: Graphics2D)
-    {
+    private fun paintScoreLabels(g: Graphics2D) {
         if (!renderScoreLabels) return
 
         val radius = computeRadius()
@@ -245,23 +225,22 @@ open class PresentationDartboard(
         val lblHeight = ((outerRadius - radius) / 2).roundToInt()
 
         val fontToUse = getFontForDartboardLabels(lblHeight)
-        (1..20).forEach { paintScoreLabel(it, g, fontToUse, lblHeight)}
+        (1..20).forEach { paintScoreLabel(it, g, fontToUse, lblHeight) }
     }
 
-    private fun paintScoreLabel(score: Int, g: Graphics2D, fontToUse: Font, lblHeight: Int)
-    {
-        //Create a label with standard properties
+    private fun paintScoreLabel(score: Int, g: Graphics2D, fontToUse: Font, lblHeight: Int) {
+        // Create a label with standard properties
         val lbl = JLabel(score.toString())
         lbl.foreground = Color.WHITE
         lbl.horizontalAlignment = SwingConstants.CENTER
         lbl.font = fontToUse
 
-        //Work out the width for this label, based on the text
+        // Work out the width for this label, based on the text
         val metrics = factoryFontMetrics(fontToUse)
         val lblWidth = metrics.stringWidth(score.toString()) + 5
         lbl.setSize(lblWidth, lblHeight)
 
-        //Work out where to place the label
+        // Work out where to place the label
         val angle = getAnglesForScore(score).toList().average()
         val radiusForLabel = computeRadius() + lblHeight
         val avgPoint = translatePoint(computeCenter(), radiusForLabel, angle)

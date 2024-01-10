@@ -7,16 +7,12 @@ import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
 import javax.swing.JLabel
 
-/**
- * Test methods
- */
-fun ScrollTable.processKeyPress(key: Int)
-{
+/** Test methods */
+fun ScrollTable.processKeyPress(key: Int) {
     this.table.processKeyPress(key)
 }
 
-fun ScrollTable.doubleClick()
-{
+fun ScrollTable.doubleClick() {
     this.table.doubleClick()
 }
 

@@ -14,18 +14,16 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.io.File
 import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JTextField
 import javax.swing.filechooser.FileNameExtensionFilter
+import org.junit.jupiter.api.Test
 
-class TestFileUploader : AbstractTest()
-{
+class TestFileUploader : AbstractTest() {
     @Test
-    fun `Should error if upload is pressed with no file`()
-    {
+    fun `Should error if upload is pressed with no file`() {
         val uploader = FileUploader(FileNameExtensionFilter("all", "*"))
         val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
@@ -36,8 +34,7 @@ class TestFileUploader : AbstractTest()
     }
 
     @Test
-    fun `Should not pick a file if cancelled`()
-    {
+    fun `Should not pick a file if cancelled`() {
         val uploader = FileUploader(FileNameExtensionFilter("all", "*"))
         val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
@@ -52,8 +49,7 @@ class TestFileUploader : AbstractTest()
     }
 
     @Test
-    fun `Should be able to upload a file`()
-    {
+    fun `Should be able to upload a file`() {
         val rsrc = javaClass.getResource("/outer-wilds.jpeg")!!
         val path = rsrc.path
 
@@ -67,8 +63,7 @@ class TestFileUploader : AbstractTest()
     }
 
     @Test
-    fun `Should not clear text if file listener reports failure`()
-    {
+    fun `Should not clear text if file listener reports failure`() {
         val rsrc = javaClass.getResource("/outer-wilds.jpeg")!!
         val path = rsrc.path
 
@@ -82,8 +77,7 @@ class TestFileUploader : AbstractTest()
     }
 
     @Test
-    fun `Should respect the file filter passed in`()
-    {
+    fun `Should respect the file filter passed in`() {
         val filter = FileNameExtensionFilter("all", "*")
         val uploader = FileUploader(filter)
         val listener = makeFileListener(false)
@@ -92,7 +86,10 @@ class TestFileUploader : AbstractTest()
         uploader.clickChild<JButton>(text = "...", async = true)
 
         val chooserDialog = getFileChooser()
-        val combo = chooserDialog.getChild<JComboBox<FileNameExtensionFilter>> { it.selectedItem is FileNameExtensionFilter }
+        val combo =
+            chooserDialog.getChild<JComboBox<FileNameExtensionFilter>> {
+                it.selectedItem is FileNameExtensionFilter
+            }
         combo.selectedItem.shouldBe(filter)
         combo.itemCount shouldBe 1
     }

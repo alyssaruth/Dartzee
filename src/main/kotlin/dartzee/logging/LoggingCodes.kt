@@ -1,6 +1,6 @@
 package dartzee.logging
 
-//Info
+// Info
 val CODE_SQL = LoggingCode("sql")
 val CODE_BULK_SQL = LoggingCode("bulkSql")
 val CODE_JUST_UPDATED = LoggingCode("justUpdated")
@@ -51,14 +51,14 @@ val CODE_GAME_LAUNCHED = LoggingCode("gameLaunched")
 val CODE_MATCH_LAUNCHED = LoggingCode("matchLaunched")
 val CODE_MATCH_FINISHED = LoggingCode("matchFinished")
 
-//Warn
+// Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpectedArgument")
 val CODE_DATABASE_TOO_OLD = LoggingCode("databaseTooOld")
 val CODE_RESOURCE_CACHE_NOT_INITIALISED = LoggingCode("resourceCacheNotInitialised")
 val CODE_DATABASE_IN_USE = LoggingCode("databaseInUse")
 val CODE_NO_STREAMS = LoggingCode("noStreams")
 
-//Error
+// Error
 val CODE_LOOK_AND_FEEL_ERROR = LoggingCode("lafError")
 val CODE_SQL_EXCEPTION = LoggingCode("sqlException")
 val CODE_UNCAUGHT_EXCEPTION = LoggingCode("uncaughtException")

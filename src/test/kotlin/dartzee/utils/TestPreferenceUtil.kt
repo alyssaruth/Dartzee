@@ -10,11 +10,9 @@ private const val INT_PREF = "FAKE_INT;20"
 private const val DOUBLE_PREF = "FAKE_DOUBLE;2.7"
 private const val BOOLEAN_PREF = "FAKE_BOOLEAN;false"
 
-class TestPreferenceUtil: AbstractTest()
-{
+class TestPreferenceUtil : AbstractTest() {
     @AfterEach
-    fun afterEach()
-    {
+    fun afterEach() {
         PreferenceUtil.deleteSetting(STRING_PREF)
         PreferenceUtil.deleteSetting(INT_PREF)
         PreferenceUtil.deleteSetting(DOUBLE_PREF)
@@ -22,8 +20,7 @@ class TestPreferenceUtil: AbstractTest()
     }
 
     @Test
-    fun `Getting and setting Strings`()
-    {
+    fun `Getting and setting Strings`() {
         PreferenceUtil.getStringValue(STRING_PREF) shouldBe "foo"
 
         PreferenceUtil.saveString(STRING_PREF, "newValue")
@@ -33,8 +30,7 @@ class TestPreferenceUtil: AbstractTest()
     }
 
     @Test
-    fun `Getting and setting Ints`()
-    {
+    fun `Getting and setting Ints`() {
         PreferenceUtil.getIntValue(INT_PREF) shouldBe 20
 
         PreferenceUtil.saveInt(INT_PREF, 50)
@@ -44,8 +40,7 @@ class TestPreferenceUtil: AbstractTest()
     }
 
     @Test
-    fun `Getting and setting Doubles`()
-    {
+    fun `Getting and setting Doubles`() {
         PreferenceUtil.getDoubleValue(DOUBLE_PREF) shouldBe 2.7
 
         PreferenceUtil.saveDouble(DOUBLE_PREF, 5.4)
@@ -55,8 +50,7 @@ class TestPreferenceUtil: AbstractTest()
     }
 
     @Test
-    fun `Getting and setting Booleans`()
-    {
+    fun `Getting and setting Booleans`() {
         PreferenceUtil.getBooleanValue(BOOLEAN_PREF) shouldBe false
 
         PreferenceUtil.saveBoolean(BOOLEAN_PREF, true)

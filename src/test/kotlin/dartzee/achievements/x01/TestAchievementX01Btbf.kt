@@ -11,18 +11,19 @@ import dartzee.utils.InjectedThings.mainDatabase
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf>()
-{
+class TestAchievementX01Btbf : AbstractMultiRowAchievementTest<AchievementX01Btbf>() {
     override fun factoryAchievement() = AchievementX01Btbf()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
-    {
+    override fun setUpAchievementRowForPlayerAndGame(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database
+    ) {
         insertSuccessfulParticipant(g, p, database)
     }
 
     @Test
-    fun `Should include games that were won as part of a team`()
-    {
+    fun `Should include games that were won as part of a team`() {
         val pt = insertRelevantParticipant(team = true)
         insertDart(pt, roundNumber = 1, startingScore = 2, score = 1, multiplier = 2)
 
@@ -32,8 +33,7 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
     }
 
     @Test
-    fun `Should ignore games that were won on a different double`()
-    {
+    fun `Should ignore games that were won on a different double`() {
         val g = insertRelevantGame()
         val p = insertPlayer()
 
@@ -46,8 +46,7 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
     }
 
     @Test
-    fun `Should ignore D1s that did not finish the game`()
-    {
+    fun `Should ignore D1s that did not finish the game`() {
         val g = insertRelevantGame()
         val p = insertPlayer()
 
@@ -60,8 +59,7 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
     }
 
     @Test
-    fun `Should insert a row for each double 1 achieved`()
-    {
+    fun `Should insert a row for each double 1 achieved`() {
         val alice = insertPlayer(name = "Alice")
 
         val game = insertRelevantGame()
@@ -75,9 +73,25 @@ class TestAchievementX01Btbf: AbstractMultiRowAchievementTest<AchievementX01Btbf
         getAchievementCount() shouldBe 3
     }
 
-    private fun insertSuccessfulParticipant(game: GameEntity, player: PlayerEntity, database: Database = mainDatabase)
-    {
-        val pt = insertParticipant(gameId = game.rowId, playerId = player.rowId, finalScore = 3, database = database)
-        insertDart(pt, roundNumber = 1, startingScore = 2, score = 1, multiplier = 2, database = database)
+    private fun insertSuccessfulParticipant(
+        game: GameEntity,
+        player: PlayerEntity,
+        database: Database = mainDatabase
+    ) {
+        val pt =
+            insertParticipant(
+                gameId = game.rowId,
+                playerId = player.rowId,
+                finalScore = 3,
+                database = database
+            )
+        insertDart(
+            pt,
+            roundNumber = 1,
+            startingScore = 2,
+            score = 1,
+            multiplier = 2,
+            database = database
+        )
     }
 }

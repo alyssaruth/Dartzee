@@ -10,8 +10,7 @@ import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 
-class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
-{
+class AchievementClockBruceyBonuses : AbstractMultiRowAchievement() {
     override val name = "Didn't he do well!?"
     override val desc = "Total number of 'Brucey Bonuses' executed in Round the Clock"
     override val achievementType = AchievementType.CLOCK_BRUCEY_BONUSES
@@ -29,10 +28,11 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
     override fun isUnbounded() = true
 
     override fun getBreakdownColumns() = listOf("Game", "Round", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.localGameIdEarned, a.achievementDetail.toInt(), a.dtAchieved)
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
+    override fun getBreakdownRow(a: AchievementEntity) =
+        arrayOf<Any>(a.localGameIdEarned, a.achievementDetail.toInt(), a.dtAchieved)
+
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
         val sb = StringBuilder()
         sb.append(" SELECT pt.PlayerId, pt.GameId, drt.RoundNumber, drt.DtCreation AS DtAchieved")
         sb.append(" FROM Dart drt, Participant pt, Game g")
@@ -50,7 +50,12 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement()
         appendPlayerSql(sb, playerIds)
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementType, achievementDetailFn = { rs.getInt("RoundNumber").toString() })
+            bulkInsertFromResultSet(
+                rs,
+                database,
+                achievementType,
+                achievementDetailFn = { rs.getInt("RoundNumber").toString() }
+            )
         }
     }
 

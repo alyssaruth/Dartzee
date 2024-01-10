@@ -11,8 +11,7 @@ import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 import dartzee.utils.getLongestStreak
 
-class AchievementClockBestStreak: AbstractAchievement()
-{
+class AchievementClockBestStreak : AbstractAchievement() {
     override val achievementType = AchievementType.CLOCK_BEST_STREAK
     override val name = "Like Clockwork"
     override val desc = "Longest streak of hits in Round the Clock"
@@ -29,10 +28,11 @@ class AchievementClockBestStreak: AbstractAchievement()
 
     override fun getIconURL() = URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
         val sb = StringBuilder()
-        sb.append(" SELECT pt.PlayerId, g.RowId AS GameId, pt.RowId AS ParticipantId, drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.DtLastUpdate")
+        sb.append(
+            " SELECT pt.PlayerId, g.RowId AS GameId, pt.RowId AS ParticipantId, drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.DtLastUpdate"
+        )
         sb.append(" FROM Game g, Participant pt, Dart drt")
         sb.append(" WHERE g.GameType = '${GameType.ROUND_THE_CLOCK}'")
         sb.append(" AND pt.GameId = g.RowId")
@@ -44,8 +44,7 @@ class AchievementClockBestStreak: AbstractAchievement()
 
         val hmPlayerIdToDarts = HashMapList<String, Dart>()
         database.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
+            while (rs.next()) {
                 val playerId = rs.getString("PlayerId")
                 val gameId = rs.getString("GameId")
                 val participantId = rs.getString("ParticipantId")
@@ -66,11 +65,19 @@ class AchievementClockBestStreak: AbstractAchievement()
             }
         }
 
-        hmPlayerIdToDarts.forEach{ playerId, darts ->
+        hmPlayerIdToDarts.forEach { playerId, darts ->
             val streak = getLongestStreak(darts)
             val lastDart = streak.last()
 
-            AchievementEntity.factoryAndSave(achievementType, playerId, lastDart.gameId, streak.size, "", lastDart.dtThrown, database)
+            AchievementEntity.factoryAndSave(
+                achievementType,
+                playerId,
+                lastDart.gameId,
+                streak.size,
+                "",
+                lastDart.dtThrown,
+                database
+            )
         }
     }
 }

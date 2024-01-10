@@ -31,14 +31,12 @@ import dartzee.dartzee.dart.DartzeeDartRuleScore
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 
-abstract class AbstractDartzeeRule
-{
+abstract class AbstractDartzeeRule {
     abstract fun getRuleIdentifier(): String
 
     open fun writeXmlAttributes(doc: Document, rootElement: Element) {}
 
-    fun populate(xmlStr: String)
-    {
+    fun populate(xmlStr: String) {
         val xmlDoc = xmlStr.toXmlDoc()
         xmlDoc ?: return
 
@@ -55,8 +53,7 @@ abstract class AbstractDartzeeRule
 
     open fun randomise() {}
 
-    fun toDbString(): String
-    {
+    fun toDbString(): String {
         val xmlDoc = XmlUtil.factoryNewDocument()
 
         val rootElement = xmlDoc.createRootElement(getRuleIdentifier())
@@ -66,20 +63,21 @@ abstract class AbstractDartzeeRule
     }
 }
 
-fun getAllDartRules(): List<AbstractDartzeeDartRule>
-{
-    return listOf(DartzeeDartRuleAny(),
-            DartzeeDartRuleEven(),
-            DartzeeDartRuleOdd(),
-            DartzeeDartRuleInner(),
-            DartzeeDartRuleOuter(),
-            DartzeeDartRuleColour(),
-            DartzeeDartRuleScore(),
-            DartzeeDartRuleCustom(),
-            DartzeeDartRuleMiss())
+fun getAllDartRules(): List<AbstractDartzeeDartRule> {
+    return listOf(
+        DartzeeDartRuleAny(),
+        DartzeeDartRuleEven(),
+        DartzeeDartRuleOdd(),
+        DartzeeDartRuleInner(),
+        DartzeeDartRuleOuter(),
+        DartzeeDartRuleColour(),
+        DartzeeDartRuleScore(),
+        DartzeeDartRuleCustom(),
+        DartzeeDartRuleMiss()
+    )
 }
-fun getAllAggregateRules(): List<AbstractDartzeeAggregateRule>
-{
+
+fun getAllAggregateRules(): List<AbstractDartzeeAggregateRule> {
     return listOf(
         DartzeeTotalRuleLessThan(),
         DartzeeTotalRuleGreaterThan(),
@@ -93,14 +91,16 @@ fun getAllAggregateRules(): List<AbstractDartzeeAggregateRule>
         DartzeeAggregateRuleSpread(),
         DartzeeAggregateRuleCluster(),
         DartzeeAggregateRuleDistinctScores(),
-        DartzeeAggregateRuleRepeats())
+        DartzeeAggregateRuleRepeats()
+    )
 }
+
 fun parseDartRule(xmlStr: String) = parseRule(xmlStr, getAllDartRules())
+
 fun parseAggregateRule(xmlStr: String) = parseRule(xmlStr, getAllAggregateRules())
-fun <K: AbstractDartzeeRule> parseRule(xmlStr: String, ruleTemplates: List<K>): K?
-{
-    if (xmlStr.isEmpty())
-    {
+
+fun <K : AbstractDartzeeRule> parseRule(xmlStr: String, ruleTemplates: List<K>): K? {
+    if (xmlStr.isEmpty()) {
         return null
     }
 
@@ -109,7 +109,7 @@ fun <K: AbstractDartzeeRule> parseRule(xmlStr: String, ruleTemplates: List<K>): 
 
     val rootElement = xmlDoc.documentElement
 
-    val rule = ruleTemplates.find{ it.getRuleIdentifier() == rootElement.tagName }
+    val rule = ruleTemplates.find { it.getRuleIdentifier() == rootElement.tagName }
     rule ?: return null
 
     rule.populate(rootElement)

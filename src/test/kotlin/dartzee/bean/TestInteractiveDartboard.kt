@@ -8,16 +8,14 @@ import dartzee.`object`.SegmentType
 import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAllSegmentsForDartzee
+import java.awt.Point
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import java.awt.Point
 
-class TestInteractiveDartboard : AbstractTest()
-{
+class TestInteractiveDartboard : AbstractTest() {
     @Test
     @Tag("screenshot")
-    fun `Should match snapshot - hovered`()
-    {
+    fun `Should match snapshot - hovered`() {
         val dartboard = InteractiveDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.setBounds(0, 0, 400, 400)
 
@@ -30,12 +28,12 @@ class TestInteractiveDartboard : AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Should support disabling and reenabling interaction`()
-    {
+    fun `Should support disabling and reenabling interaction`() {
         val dartboard = InteractiveDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.setBounds(0, 0, 400, 400)
 
-        val pt = dartboard.getPointsForSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 1)).first()
+        val pt =
+            dartboard.getPointsForSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 1)).first()
         dartboard.highlightDartboard(pt)
         dartboard.stopInteraction()
         dartboard.highlightDartboard(pt)
@@ -48,8 +46,7 @@ class TestInteractiveDartboard : AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Hovering should interact correctly with segment statuses`()
-    {
+    fun `Hovering should interact correctly with segment statuses`() {
         val scoringSegments = getAllNonMissSegments().filter { it.getTotal() >= 20 }
         val validSegments = getAllNonMissSegments().filter { it.getTotal() >= 10 }
         val segmentStatuses = SegmentStatuses(scoringSegments, validSegments)
@@ -77,8 +74,7 @@ class TestInteractiveDartboard : AbstractTest()
 
     @Test
     @Tag("screenshot")
-    fun `Hovering should toggle the outer dartboard if it is a valid segment`()
-    {
+    fun `Hovering should toggle the outer dartboard if it is a valid segment`() {
         val scoringSegments = getAllNonMissSegments().filter { it.score % 2 == 1 }
         val validSegments = getAllSegmentsForDartzee()
         val segmentStatuses = SegmentStatuses(scoringSegments, validSegments)
@@ -94,8 +90,7 @@ class TestInteractiveDartboard : AbstractTest()
         dartboard.shouldMatchImage("hover-nothing")
     }
 
-    private fun InteractiveDartboard.hoverSegment(segment: DartboardSegment)
-    {
+    private fun InteractiveDartboard.hoverSegment(segment: DartboardSegment) {
         val pt = getPointsForSegment(segment).first()
         highlightDartboard(pt)
     }

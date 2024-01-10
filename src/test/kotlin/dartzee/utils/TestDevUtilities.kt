@@ -40,11 +40,9 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
-class TestDevUtilities: AbstractTest()
-{
+class TestDevUtilities : AbstractTest() {
     @Test
-    fun `Should show an error and return out if there are no games in the DB`()
-    {
+    fun `Should show an error and return out if there are no games in the DB`() {
         DevUtilities.purgeGame()
 
         dialogFactory.errorsShown.shouldContainExactly("No games to delete.")
@@ -52,8 +50,7 @@ class TestDevUtilities: AbstractTest()
     }
 
     @Test
-    fun `Should not delete any games if info dialog is cancelled`()
-    {
+    fun `Should not delete any games if info dialog is cancelled`() {
         dialogFactory.inputSelection = null
         insertGame(localId = 1)
 
@@ -66,8 +63,7 @@ class TestDevUtilities: AbstractTest()
     }
 
     @Test
-    fun `Should purge the game that was selected on the input dialog`()
-    {
+    fun `Should purge the game that was selected on the input dialog`() {
         insertGame(localId = 1)
         insertGame(localId = 2)
 
@@ -86,8 +82,7 @@ class TestDevUtilities: AbstractTest()
     }
 
     @Test
-    fun `Should show an error for trying to delete a game that doesnt exist`()
-    {
+    fun `Should show an error for trying to delete a game that doesnt exist`() {
         insertGame(localId = 5)
 
         runAsync { DevUtilities.purgeGame(10) }
@@ -99,8 +94,7 @@ class TestDevUtilities: AbstractTest()
     }
 
     @Test
-    fun `Should not delete a game which is open`()
-    {
+    fun `Should not delete a game which is open`() {
         val game = insertGame(localId = 5)
 
         ScreenCache.addDartsGameScreen(game.rowId, FakeDartsScreen())
@@ -114,8 +108,7 @@ class TestDevUtilities: AbstractTest()
     }
 
     @Test
-    fun `Should not delete a game if cancelled`()
-    {
+    fun `Should not delete a game if cancelled`() {
         insertGame(localId = 5)
 
         runAsync { DevUtilities.purgeGame(5) }
@@ -128,8 +121,7 @@ class TestDevUtilities: AbstractTest()
     }
 
     @Test
-    fun `Should delete from X01Finish`()
-    {
+    fun `Should delete from X01Finish`() {
         val player = insertPlayer()
         val gameOne = insertFinishForPlayer(player, 25)
         val gameTwo = insertFinishForPlayer(player, 80)
@@ -142,8 +134,7 @@ class TestDevUtilities: AbstractTest()
     }
 
     @Test
-    fun `Should delete the specified game, along with associated Participants and Darts`()
-    {
+    fun `Should delete the specified game, along with associated Participants and Darts`() {
         val g1 = insertGame(localId = 1)
         val g2 = insertGame(localId = 2)
 
@@ -172,8 +163,7 @@ class TestDevUtilities: AbstractTest()
     }
 
     @Test
-    fun `Should delete teams associated with a game`()
-    {
+    fun `Should delete teams associated with a game`() {
         val players = preparePlayers(5)
 
         val gameA = insertGame()
@@ -194,8 +184,7 @@ class TestDevUtilities: AbstractTest()
     }
 
     @Test
-    fun `Should purge Dartzee gubbins`()
-    {
+    fun `Should purge Dartzee gubbins`() {
         val player = insertPlayer()
         val g1 = insertGame()
         val g2 = insertGame()

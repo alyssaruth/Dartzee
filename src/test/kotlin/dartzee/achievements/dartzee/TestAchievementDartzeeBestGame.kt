@@ -10,23 +10,29 @@ import dartzee.helper.testRules
 import dartzee.utils.Database
 import dartzee.utils.insertDartzeeRules
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzeeBestGame>()
-{
+class TestAchievementDartzeeBestGame : AbstractAchievementTest<AchievementDartzeeBestGame>() {
     override fun factoryAchievement() = AchievementDartzeeBestGame()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
-    {
-        insertParticipant(gameId = g.rowId, playerId = p.rowId, finalScore = 127, database = database)
+    override fun setUpAchievementRowForPlayerAndGame(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database
+    ) {
+        insertParticipant(
+            gameId = g.rowId,
+            playerId = p.rowId,
+            finalScore = 127,
+            database = database
+        )
 
         insertDartzeeRules(g.rowId, testRules, database)
     }
 
     @Test
-    fun `should ignore participants who were part of a team`()
-    {
+    fun `should ignore participants who were part of a team`() {
         val pt = insertRelevantParticipant(finalScore = 120, team = true)
         insertDartzeeRules(pt.gameId, testRules)
 
@@ -35,8 +41,7 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
     }
 
     @Test
-    fun `should ignore games with fewer than 5 rounds`()
-    {
+    fun `should ignore games with fewer than 5 rounds`() {
         val pt = insertRelevantParticipant(finalScore = 120)
 
         val shortList = testRules.subList(0, DARTZEE_ACHIEVEMENT_MIN_ROUNDS - 2)
@@ -47,8 +52,7 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
     }
 
     @Test
-    fun `should ignore unfinished participants`()
-    {
+    fun `should ignore unfinished participants`() {
         val pt = insertRelevantParticipant(finalScore = -1)
         insertDartzeeRules(pt.gameId, testRules)
 
@@ -57,8 +61,7 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
     }
 
     @Test
-    fun `Should compute score as average per round, rounded down`()
-    {
+    fun `Should compute score as average per round, rounded down`() {
         setUpAchievementRowForPlayer(insertPlayer())
 
         runConversion()
@@ -66,8 +69,7 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
     }
 
     @Test
-    fun `Should arrive at the correct average for longer games`()
-    {
+    fun `Should arrive at the correct average for longer games`() {
         val pt = insertRelevantParticipant(finalScore = 120)
         val rules = testRules + testRules
         insertDartzeeRules(pt.gameId, rules)
@@ -77,8 +79,7 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
     }
 
     @Test
-    fun `Should take the earliest game with the best computed score`()
-    {
+    fun `Should take the earliest game with the best computed score`() {
         val player = insertPlayer()
         setUpGame(player, 100, Timestamp(100))
         val expectedGameId = setUpGame(player, 120, Timestamp(150))
@@ -94,10 +95,14 @@ class TestAchievementDartzeeBestGame: AbstractAchievementTest<AchievementDartzee
         achievement.playerId shouldBe player.rowId
     }
 
-    private fun setUpGame(player: PlayerEntity, finalScore: Int, dtFinished: Timestamp): String
-    {
+    private fun setUpGame(player: PlayerEntity, finalScore: Int, dtFinished: Timestamp): String {
         val g = insertRelevantGame()
-        insertParticipant(playerId = player.rowId, gameId = g.rowId, finalScore = finalScore, dtFinished = dtFinished)
+        insertParticipant(
+            playerId = player.rowId,
+            gameId = g.rowId,
+            finalScore = finalScore,
+            dtFinished = dtFinished
+        )
         insertDartzeeRules(g.rowId, testRules)
 
         return g.rowId

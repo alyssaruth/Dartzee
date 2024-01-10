@@ -18,14 +18,12 @@ import dartzee.stats.GolfMode
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import javax.swing.JComboBox
+import org.junit.jupiter.api.Test
 
-class TestStatisticsTabGolfScorecards : AbstractTest()
-{
+class TestStatisticsTabGolfScorecards : AbstractTest() {
     @Test
-    fun `Should cope with 0 games`()
-    {
+    fun `Should cope with 0 games`() {
         val tab = StatisticsTabGolfScorecards()
         tab.populateStats()
 
@@ -34,8 +32,7 @@ class TestStatisticsTabGolfScorecards : AbstractTest()
     }
 
     @Test
-    fun `Should ignore team games`()
-    {
+    fun `Should ignore team games`() {
         val tab = StatisticsTabGolfScorecards()
         tab.setFilteredGames(listOf(golfFrontNine22EvenRounds()), emptyList())
         tab.populateStats()
@@ -45,8 +42,7 @@ class TestStatisticsTabGolfScorecards : AbstractTest()
     }
 
     @Test
-    fun `Should populate combo box based on game types that are available`()
-    {
+    fun `Should populate combo box based on game types that are available`() {
         val tab = StatisticsTabGolfScorecards()
         tab.setFilteredGames(listOf(golfFrontNine22()), emptyList())
         tab.populateStats()
@@ -57,16 +53,17 @@ class TestStatisticsTabGolfScorecards : AbstractTest()
         tab.setFilteredGames(listOf(golfFull31_22()), emptyList())
         tab.populateStats()
 
-        comboBox.items().shouldContainExactly(
-            ComboBoxItem(GolfMode.FRONT_9, "Front 9"),
-            ComboBoxItem(GolfMode.BACK_9, "Back 9"),
-            ComboBoxItem(GolfMode.FULL_18, "Full 18")
-        )
+        comboBox
+            .items()
+            .shouldContainExactly(
+                ComboBoxItem(GolfMode.FRONT_9, "Front 9"),
+                ComboBoxItem(GolfMode.BACK_9, "Back 9"),
+                ComboBoxItem(GolfMode.FULL_18, "Full 18")
+            )
     }
 
     @Test
-    fun `Should show appropriate screen state for individual stats`()
-    {
+    fun `Should show appropriate screen state for individual stats`() {
         val game = golfFrontNine22()
         val tab = StatisticsTabGolfScorecards()
         tab.setFilteredGames(listOf(game), emptyList())
@@ -77,8 +74,7 @@ class TestStatisticsTabGolfScorecards : AbstractTest()
     }
 
     @Test
-    fun `Should show appropriate screen state when a comparison is included`()
-    {
+    fun `Should show appropriate screen state when a comparison is included`() {
         val myGame = golfFrontNine29()
         val otherGame = golfFrontNine22()
         val mine = listOf(myGame)
@@ -96,8 +92,7 @@ class TestStatisticsTabGolfScorecards : AbstractTest()
     }
 
     @Test
-    fun `Mode combo box should work as expected`()
-    {
+    fun `Mode combo box should work as expected`() {
         val gameOne = golfFrontNine22(1L)
         val gameThree = golfFull31_22(3L)
         val games = listOf(gameOne, golfFrontNine29(2L), gameThree, golfFull28_29(4L))
@@ -107,32 +102,31 @@ class TestStatisticsTabGolfScorecards : AbstractTest()
         tab.populateStats()
 
         tab.comboBoxMode().selectedIndex = 0
-        tab.scorecardsMine().getRows().shouldContainExactly(
-            listOf<Any>(1L, 22),
-            listOf<Any>(2L, 29),
-            listOf<Any>(3L, 31),
-            listOf<Any>(4L, 28)
-        )
+        tab.scorecardsMine()
+            .getRows()
+            .shouldContainExactly(
+                listOf<Any>(1L, 22),
+                listOf<Any>(2L, 29),
+                listOf<Any>(3L, 31),
+                listOf<Any>(4L, 28)
+            )
         tab.scorecardShouldMatch(0, GolfMode.FRONT_9, gameOne)
 
         tab.comboBoxMode().selectedIndex = 1 // Back 9
-        tab.scorecardsMine().getRows().shouldContainExactly(
-            listOf<Any>(3L, 22),
-            listOf<Any>(4L, 29)
-        )
+        tab.scorecardsMine()
+            .getRows()
+            .shouldContainExactly(listOf<Any>(3L, 22), listOf<Any>(4L, 29))
         tab.scorecardShouldMatch(9, GolfMode.BACK_9, gameThree)
 
         tab.comboBoxMode().selectedIndex = 2 // Full 18
-        tab.scorecardsMine().getRows().shouldContainExactly(
-            listOf<Any>(3L, 53),
-            listOf<Any>(4L, 57)
-        )
+        tab.scorecardsMine()
+            .getRows()
+            .shouldContainExactly(listOf<Any>(3L, 53), listOf<Any>(4L, 57))
         tab.scorecardShouldMatch(0, GolfMode.FULL_18, gameThree)
     }
 
     @Test
-    fun `Selecting a row should populate the scorecard`()
-    {
+    fun `Selecting a row should populate the scorecard`() {
         val gameOne = golfFull31_22(1L)
         val gameTwo = golfFull28_29(2L)
         val games = listOf(gameOne, gameTwo)
@@ -141,23 +135,38 @@ class TestStatisticsTabGolfScorecards : AbstractTest()
         tab.populateStats()
         tab.comboBoxMode().selectedIndex = 2 // Full 18
 
-        tab.scorecardsMine().getRows().shouldContainExactly(
-            listOf<Any>(1L, 53),
-            listOf<Any>(2L, 57)
-        )
+        tab.scorecardsMine()
+            .getRows()
+            .shouldContainExactly(listOf<Any>(1L, 53), listOf<Any>(2L, 57))
         tab.scorecardShouldMatch(0, GolfMode.FULL_18, gameOne)
 
         tab.scorecardsMine().selectRow(1)
         tab.scorecardShouldMatch(0, GolfMode.FULL_18, gameTwo)
     }
 
-    private fun StatisticsTabGolfScorecards.comboBoxMode() = getChild<JComboBox<ComboBoxItem<GolfMode>>>()
-    private fun StatisticsTabGolfScorecards.scorecardsMine() = getChild<ScrollTableDartsGame> { it.testId == "ScorecardsMine" }
-    private fun StatisticsTabGolfScorecards.scorecardsOther() = findChild<ScrollTableDartsGame> { it.testId == "ScorecardsOther" }
-    private fun StatisticsTabGolfScorecards.displayedScorecard(testId: String) = getChild<GolfStatsScorecard> { it.testId == testId }
-    private fun StatisticsTabGolfScorecards.scorecardShouldMatch(fudgeFactor: Int, golfMode: GolfMode, game: GameWrapper, testId: String = "scorecardMine") {
+    private fun StatisticsTabGolfScorecards.comboBoxMode() =
+        getChild<JComboBox<ComboBoxItem<GolfMode>>>()
+
+    private fun StatisticsTabGolfScorecards.scorecardsMine() =
+        getChild<ScrollTableDartsGame> { it.testId == "ScorecardsMine" }
+
+    private fun StatisticsTabGolfScorecards.scorecardsOther() =
+        findChild<ScrollTableDartsGame> { it.testId == "ScorecardsOther" }
+
+    private fun StatisticsTabGolfScorecards.displayedScorecard(testId: String) =
+        getChild<GolfStatsScorecard> { it.testId == testId }
+
+    private fun StatisticsTabGolfScorecards.scorecardShouldMatch(
+        fudgeFactor: Int,
+        golfMode: GolfMode,
+        game: GameWrapper,
+        testId: String = "scorecardMine"
+    ) {
         val displayed = displayedScorecard(testId)
-        val expected = GolfStatsScorecard(fudgeFactor, false).also { it.populateTable(game.getGolfRounds(golfMode)) }
+        val expected =
+            GolfStatsScorecard(fudgeFactor, false).also {
+                it.populateTable(game.getGolfRounds(golfMode))
+            }
         displayed.tableScores.getRows() shouldBe expected.tableScores.getRows()
     }
 }

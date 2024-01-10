@@ -3,23 +3,22 @@ package dartzee.screen.game
 import dartzee.core.util.ceilDiv
 import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.game.scorer.AbstractScorer
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import javax.swing.JPanel
+import net.miginfocom.swing.MigLayout
 
 /**
- * Represents a panel that has scorers on it, centralising the logic for laying them out and assigning players to them etc.
+ * Represents a panel that has scorers on it, centralising the logic for laying them out and
+ * assigning players to them etc.
  */
-abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
-{
+abstract class PanelWithScorers<S : AbstractScorer> : JPanel() {
     val panelEast = JPanel()
     val panelWest = JPanel()
     protected val panelCenter = JPanel()
 
     val scorersOrdered = mutableListOf<S>()
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
         panelCenter.layout = BorderLayout(0, 0)
 
@@ -28,13 +27,10 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
         add(panelWest, BorderLayout.WEST)
     }
 
-    /**
-     * Abstract methods
-     */
+    /** Abstract methods */
     protected abstract fun factoryScorer(participant: IWrappedParticipant): S
 
-    fun finaliseScorers(parentWindow: AbstractDartsGameScreen)
-    {
+    fun finaliseScorers(parentWindow: AbstractDartsGameScreen) {
         panelEast.removeAll()
         panelWest.removeAll()
 
@@ -54,8 +50,7 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
         parentWindow.packIfNecessary()
     }
 
-    fun assignScorer(participant: IWrappedParticipant): S
-    {
+    fun assignScorer(participant: IWrappedParticipant): S {
         val scorer = factoryScorer(participant)
         scorer.init()
         scorersOrdered.add(scorer)

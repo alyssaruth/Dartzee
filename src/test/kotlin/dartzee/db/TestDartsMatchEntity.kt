@@ -10,26 +10,22 @@ import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.InjectedThings
-import io.kotest.matchers.string.shouldContain
-import io.kotest.matchers.string.shouldNotBeEmpty
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotBeEmpty
 import org.junit.jupiter.api.Test
 
-class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
-{
+class TestDartsMatchEntity : AbstractEntityTest<DartsMatchEntity>() {
     override fun factoryDao() = DartsMatchEntity()
 
     @Test
-    fun `LocalId field should be unique`()
-    {
+    fun `LocalId field should be unique`() {
         insertDartsMatch(localId = 5)
         verifyNoLogs(CODE_SQL_EXCEPTION)
 
-        val ex = shouldThrow<WrappedSqlException> {
-            insertDartsMatch(localId = 5)
-        }
+        val ex = shouldThrow<WrappedSqlException> { insertDartsMatch(localId = 5) }
 
         val sqle = ex.sqlException
         sqle.message shouldContain "duplicate key"
@@ -38,8 +34,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `LocalIds should be assigned along with RowId`()
-    {
+    fun `LocalIds should be assigned along with RowId`() {
         val entity = DartsMatchEntity()
         entity.assignRowId()
 
@@ -48,8 +43,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `Should reassign localId when merging into another database`()
-    {
+    fun `Should reassign localId when merging into another database`() {
         usingInMemoryDatabase(withSchema = true) { otherDatabase ->
             insertDartsMatch(database = otherDatabase)
             insertDartsMatch(database = otherDatabase)
@@ -66,8 +60,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `FIRST_TO descriptions`()
-    {
+    fun `FIRST_TO descriptions`() {
         val dm = DartsMatchEntity()
         dm.localId = 1
         dm.games = 3
@@ -79,8 +72,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `POINTS descriptions`()
-    {
+    fun `POINTS descriptions`() {
         val dm = DartsMatchEntity()
         dm.localId = 1
         dm.games = 3
@@ -92,8 +84,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `Should only return 1 point for 1st place in FIRST_TO`()
-    {
+    fun `Should only return 1 point for 1st place in FIRST_TO`() {
         val dm = DartsMatchEntity.factoryFirstTo(3)
 
         dm.getScoreForFinishingPosition(1) shouldBe 1
@@ -104,8 +95,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `Should return the correct points per position in POINTS mode`()
-    {
+    fun `Should return the correct points per position in POINTS mode`() {
         val matchParams = constructPointsJson(15, 9, 6, 3, 2, 1)
         val dm = DartsMatchEntity.factoryPoints(3, matchParams)
 
@@ -119,8 +109,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `Should cache metadata from a game correctly`()
-    {
+    fun `Should cache metadata from a game correctly`() {
         val game501 = insertGame(gameType = GameType.X01, gameParams = "301")
         val gameGolf = insertGame(gameType = GameType.GOLF, gameParams = "18")
 
@@ -136,8 +125,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `Should save a first-to match correctly`()
-    {
+    fun `Should save a first-to match correctly`() {
         val dm = DartsMatchEntity.factoryFirstTo(3)
 
         val retrievedDm = dm.retrieveForId(dm.rowId)!!
@@ -148,8 +136,7 @@ class TestDartsMatchEntity: AbstractEntityTest<DartsMatchEntity>()
     }
 
     @Test
-    fun `Should save a points match correctly`()
-    {
+    fun `Should save a points match correctly`() {
         val dm = DartsMatchEntity.factoryPoints(3, "foo")
 
         val retrievedDm = dm.retrieveForId(dm.rowId)!!

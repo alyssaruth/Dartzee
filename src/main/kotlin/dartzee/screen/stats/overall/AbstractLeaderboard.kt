@@ -9,31 +9,33 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JPanel
 
-abstract class AbstractLeaderboard: JPanel(), ActionListener
-{
+abstract class AbstractLeaderboard : JPanel(), ActionListener {
     val panelPlayerFilters = PlayerTypeFilterPanel()
 
     private var builtTable = false
 
     abstract fun buildTable()
+
     abstract fun getTabName(): String
 
     override fun actionPerformed(e: ActionEvent?) = buildTable()
 
-    fun buildTableFirstTime()
-    {
-        if (!builtTable)
-        {
+    fun buildTableFirstTime() {
+        if (!builtTable) {
             buildTable()
             builtTable = true
         }
     }
 
     /**
-     * Build a standard leaderboard table, which contains the flag, name, Game ID and a custom 'score' column.
+     * Build a standard leaderboard table, which contains the flag, name, Game ID and a custom
+     * 'score' column.
      */
-    protected fun buildStandardLeaderboard(table: ScrollTableDartsGame, sql: String, scoreColumnName: String)
-    {
+    protected fun buildStandardLeaderboard(
+        table: ScrollTableDartsGame,
+        sql: String,
+        scoreColumnName: String
+    ) {
         val model = TableUtil.DefaultModel()
         model.addColumn("#")
         model.addColumn("")
@@ -49,13 +51,11 @@ abstract class AbstractLeaderboard: JPanel(), ActionListener
         table.sortBy(0, false)
     }
 
-    private fun retrieveDatabaseRowsForLeaderboard(sqlStr: String): List<Array<Any>>
-    {
+    private fun retrieveDatabaseRowsForLeaderboard(sqlStr: String): List<Array<Any>> {
         val rows = mutableListOf<LeaderboardEntry>()
 
         mainDatabase.executeQuery(sqlStr).use { rs ->
-            while (rs.next())
-            {
+            while (rs.next()) {
                 val strategy = rs.getString("Strategy")
                 val playerName = rs.getString("Name")
                 val localId = rs.getLong("LocalId")

@@ -10,8 +10,7 @@ import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 
-class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
-{
+class AchievementGolfPointsRisked : AbstractMultiRowAchievement() {
     override val name = "Gambler"
     override val desc = "Total number of points risked (by continuing to throw) in Golf"
     override val gameType = GameType.GOLF
@@ -27,14 +26,22 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
     override val allowedForTeams = true
 
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_POINTS_RISKED
+
     override fun isUnbounded() = true
 
     override fun getBreakdownColumns() = listOf("Game", "Round", "Points risked", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.localGameIdEarned, a.achievementDetail.toInt(), a.achievementCounter, a.dtAchieved)
+
+    override fun getBreakdownRow(a: AchievementEntity) =
+        arrayOf<Any>(
+            a.localGameIdEarned,
+            a.achievementDetail.toInt(),
+            a.achievementCounter,
+            a.dtAchieved
+        )
+
     override fun useCounter() = true
 
-    private fun buildPointsRiskedSql(): String
-    {
+    private fun buildPointsRiskedSql(): String {
         val sb = StringBuilder()
         sb.append("5 - CASE")
         sb.append(getGolfSegmentCases())
@@ -43,11 +50,12 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
         return sb.toString()
     }
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
         val sb = StringBuilder()
 
-        sb.append(" SELECT pt.PlayerId, pt.GameId, drt.RoundNumber, SUM(${buildPointsRiskedSql()}) AS PointsRisked, MAX(drt.DtCreation) AS DtAchieved")
+        sb.append(
+            " SELECT pt.PlayerId, pt.GameId, drt.RoundNumber, SUM(${buildPointsRiskedSql()}) AS PointsRisked, MAX(drt.DtCreation) AS DtAchieved"
+        )
         sb.append(" FROM Dart drt, Participant pt, Game g")
         sb.append(" WHERE drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
@@ -66,7 +74,8 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement()
         sb.append(" GROUP BY pt.PlayerId, pt.GameId, drt.RoundNumber")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs,
+            bulkInsertFromResultSet(
+                rs,
                 database,
                 achievementType,
                 achievementCounterFn = { rs.getInt("PointsRisked") },

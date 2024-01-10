@@ -16,19 +16,16 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 
-class TestAbstractDartzeeRuleSelector: AbstractTest()
-{
+class TestAbstractDartzeeRuleSelector : AbstractTest() {
     @Test
-    fun `Should render the description passed to it`()
-    {
+    fun `Should render the description passed to it`() {
         val selector = FakeDartzeeRuleSelector("foo")
         selector.lblDesc.text shouldBe "foo"
         selector.cbDesc.text shouldBe "foo"
     }
 
     @Test
-    fun `Should initialise with the options specified`()
-    {
+    fun `Should initialise with the options specified`() {
         val selector = FakeDartzeeRuleSelector("foo")
 
         val items = selector.comboBoxRuleType.items()
@@ -39,8 +36,7 @@ class TestAbstractDartzeeRuleSelector: AbstractTest()
     }
 
     @Test
-    fun `Should show an error if the rule is invalid`()
-    {
+    fun `Should show an error if the rule is invalid`() {
         val selector = FakeDartzeeRuleSelector("foo")
         selector.populate(DartzeeDartRuleColour())
 
@@ -49,8 +45,7 @@ class TestAbstractDartzeeRuleSelector: AbstractTest()
     }
 
     @Test
-    fun `Should pass validation if the rule is valid`()
-    {
+    fun `Should pass validation if the rule is valid`() {
         val selector = FakeDartzeeRuleSelector("foo")
         selector.populate(DartzeeDartRuleEven())
 
@@ -59,16 +54,14 @@ class TestAbstractDartzeeRuleSelector: AbstractTest()
     }
 
     @Test
-    fun `Should populate from an existing rule successfully`()
-    {
+    fun `Should populate from an existing rule successfully`() {
         val selector = DartzeeDartRuleSelector("foo")
         selector.populate(DartzeeDartRuleInner())
         selector.getSelection().shouldBeInstanceOf<DartzeeDartRuleInner>()
     }
 
     @Test
-    fun `Should populate a rule's configPanel successfully`()
-    {
+    fun `Should populate a rule's configPanel successfully`() {
         val selector = DartzeeDartRuleSelector("foo")
         val rule = DartzeeDartRuleColour()
         rule.black = true
@@ -84,8 +77,7 @@ class TestAbstractDartzeeRuleSelector: AbstractTest()
     }
 
     @Test
-    fun `Should swap in and out the configPanel based on the selected rule`()
-    {
+    fun `Should swap in and out the configPanel based on the selected rule`() {
         val selector = FakeDartzeeRuleSelector("foo")
         val comboBox = selector.comboBoxRuleType
 
@@ -100,9 +92,8 @@ class TestAbstractDartzeeRuleSelector: AbstractTest()
         configPanel.parent shouldBe null
     }
 
-    private class FakeDartzeeRuleSelector(desc: String): AbstractDartzeeRuleSelector<AbstractDartzeeDartRule>(desc)
-    {
+    private class FakeDartzeeRuleSelector(desc: String) :
+        AbstractDartzeeRuleSelector<AbstractDartzeeDartRule>(desc) {
         override fun getRules() = getAllDartRules()
-
     }
 }

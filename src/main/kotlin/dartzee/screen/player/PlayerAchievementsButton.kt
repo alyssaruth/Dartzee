@@ -7,14 +7,14 @@ import dartzee.db.PlayerEntity
 import dartzee.screen.ScreenCache
 import javax.swing.ImageIcon
 
-class PlayerAchievementsButton(private val player: PlayerEntity,
-                               private val achievementRows: List<AchievementEntity>): PlayerSummaryButton()
-{
+class PlayerAchievementsButton(
+    private val player: PlayerEntity,
+    private val achievementRows: List<AchievementEntity>
+) : PlayerSummaryButton() {
     override val defaultText = makeDefaultText()
     override val hoverText = "<html><h3>Achievements &gt;</h3></html>"
 
-    init
-    {
+    init {
         icon = ImageIcon(javaClass.getResource("/achievements/trophy.png"))
         text = defaultText
 
@@ -25,16 +25,14 @@ class PlayerAchievementsButton(private val player: PlayerEntity,
         addMouseListener(this)
     }
 
-    private fun makeDefaultText(): String
-    {
+    private fun makeDefaultText(): String {
         val score = getPlayerAchievementScore(achievementRows, player)
         val lineOne = "<h3>Achievements</h3>"
         val lineTwo = "$score / ${getAchievementMaximum()}"
         return "<html><center>$lineOne $lineTwo</center></html>"
     }
 
-    override fun buttonPressed()
-    {
+    override fun buttonPressed() {
         ScreenCache.switchToAchievementsScreen(player)
     }
 }

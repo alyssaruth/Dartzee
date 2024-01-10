@@ -5,18 +5,15 @@ import dartzee.helper.insertParticipant
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestSqlUtil: AbstractTest()
-{
+class TestSqlUtil : AbstractTest() {
     @Test
-    fun `Should get quoted ID strings`()
-    {
+    fun `Should get quoted ID strings`() {
         val list = listOf("foo", "bar")
         list.getQuotedIdStr() shouldBe "('foo', 'bar')"
     }
 
     @Test
-    fun `Should get correct quoted ID strings of objects`()
-    {
+    fun `Should get correct quoted ID strings of objects`() {
         val ptOne = insertParticipant(uuid = "foo", playerId = "playerA")
         val ptTwo = insertParticipant(uuid = "bar", playerId = "playerB")
 

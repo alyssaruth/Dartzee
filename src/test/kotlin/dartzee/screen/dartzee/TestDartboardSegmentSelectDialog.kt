@@ -20,18 +20,16 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.Component
 import java.awt.Point
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
-class TestDartboardSegmentSelectDialog : AbstractTest()
-{
+class TestDartboardSegmentSelectDialog : AbstractTest() {
     private val segment = DartboardSegment(SegmentType.OUTER_SINGLE, 20)
 
     @Test
-    fun `clicking the same segment should toggle it on and off`()
-    {
+    fun `clicking the same segment should toggle it on and off`() {
         val (dlg, dartboard) = setup()
 
         val pt = dartboard.getPointForSegment(segment)
@@ -44,8 +42,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
     }
 
     @Test
-    fun `should be able to select all`()
-    {
+    fun `should be able to select all`() {
         val allSegments = getAllNonMissSegments()
         val (dlg, dartboard) = setup()
 
@@ -59,8 +56,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
     }
 
     @Test
-    fun `should be able to select none`()
-    {
+    fun `should be able to select none`() {
         val (dlg, dartboard) = setup()
 
         dlg.clickChild<JButton>(text = "Select None")
@@ -73,16 +69,14 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
     }
 
     @Test
-    fun `clicking outside the board should do nothing`()
-    {
+    fun `clicking outside the board should do nothing`() {
         val (dlg, dartboard) = setup()
         dartboard.doClick(Point(1, 1))
         dlg.getSelection().shouldBeEmpty()
     }
 
     @Test
-    fun `dragging on the same segment should not toggle it again`()
-    {
+    fun `dragging on the same segment should not toggle it again`() {
         val (dlg, dartboard) = setup()
 
         val pt = dartboard.getPointForSegment(segment)
@@ -93,8 +87,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
     }
 
     @Test
-    fun `dragging on a new segment should toggle it`()
-    {
+    fun `dragging on a new segment should toggle it`() {
         val (dlg, dartboard) = setup()
 
         val pt = dartboard.getPointForSegment(segment)
@@ -103,12 +96,12 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
         val newPt = dartboard.getPointForSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 1))
         dartboard.doDrag(newPt.x, newPt.y)
 
-        dlg.getSelection().shouldContainExactly(segment, DartboardSegment(SegmentType.OUTER_SINGLE, 1))
+        dlg.getSelection()
+            .shouldContainExactly(segment, DartboardSegment(SegmentType.OUTER_SINGLE, 1))
     }
 
     @Test
-    fun `initial state should work correctly`()
-    {
+    fun `initial state should work correctly`() {
         val (dlg, dartboard) = setup(setOf(segment))
         dlg.getSelection().shouldContainExactlyInAnyOrder(segment)
 
@@ -117,8 +110,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
     }
 
     @Test
-    fun `initial state should respond to drags`()
-    {
+    fun `initial state should respond to drags`() {
         val (dlg, dartboard) = setup(setOf(segment))
 
         dlg.getSelection().shouldContainExactlyInAnyOrder(segment)
@@ -130,8 +122,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
     }
 
     @Test
-    fun `selecting segments should update their colour`()
-    {
+    fun `selecting segments should update their colour`() {
         val (_, dartboard) = setup()
         waitForAssertion { dartboard.width shouldBeGreaterThan 0 }
 
@@ -141,8 +132,7 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
     }
 
     @Test
-    fun `cancelling should revert back to initial selection`()
-    {
+    fun `cancelling should revert back to initial selection`() {
         val (dlg, dartboard) = setup(setOf(segment))
 
         val pt = dartboard.getPointForSegment(segment)
@@ -153,8 +143,9 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
         dlg.getSelection().shouldContainExactlyInAnyOrder(segment)
     }
 
-    private fun setup(initialSelection: Set<DartboardSegment> = emptySet()): Pair<DartboardSegmentSelectDialog, PresentationDartboard>
-    {
+    private fun setup(
+        initialSelection: Set<DartboardSegment> = emptySet()
+    ): Pair<DartboardSegmentSelectDialog, PresentationDartboard> {
         val dlg = DartboardSegmentSelectDialog(initialSelection)
         dlg.isModal = false
         dlg.isVisible = true
@@ -163,15 +154,11 @@ class TestDartboardSegmentSelectDialog : AbstractTest()
         return dlg to dartboard
     }
 
-    /**
-     * TODO - Bake into swingtest
-     */
+    /** TODO - Bake into swingtest */
     private fun Component.doDrag(x: Int = 0, y: Int = 0) {
         runOnEventThreadBlocking {
             val me = makeMouseEvent(this, x = x, y = y)
-            mouseMotionListeners.forEach {
-                it.mouseDragged(me)
-            }
+            mouseMotionListeners.forEach { it.mouseDragged(me) }
         }
     }
 }

@@ -10,13 +10,20 @@ import javax.swing.border.MatteBorder
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableModel
 
-class GameStatisticsCellRenderer(private val sectionStarts: List<String>,
-                                 private val highestWins: List<String>,
-                                 private val lowestWins: List<String>,
-                                 private val histogramRows: List<String>): DefaultTableCellRenderer()
-{
-    override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
-    {
+class GameStatisticsCellRenderer(
+    private val sectionStarts: List<String>,
+    private val highestWins: List<String>,
+    private val lowestWins: List<String>,
+    private val histogramRows: List<String>
+) : DefaultTableCellRenderer() {
+    override fun getTableCellRendererComponent(
+        table: JTable?,
+        value: Any?,
+        isSelected: Boolean,
+        hasFocus: Boolean,
+        row: Int,
+        column: Int
+    ): Component {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
         table ?: return this
 
@@ -31,8 +38,7 @@ class GameStatisticsCellRenderer(private val sectionStarts: List<String>,
         return this
     }
 
-    private fun getBorder(table: JTable, row: Int, column: Int): MatteBorder
-    {
+    private fun getBorder(table: JTable, row: Int, column: Int): MatteBorder {
         val left = if (column == 0) 2 else 1
         val right = if (column == table.model.columnCount - 1) 2 else 1
         val bottom = if (row == table.rowCount - 1) 2 else 0
@@ -43,11 +49,9 @@ class GameStatisticsCellRenderer(private val sectionStarts: List<String>,
         return MatteBorder(top, left, bottom, right, Color.BLACK)
     }
 
-    private fun setColours(table: JTable, row: Int, column: Int)
-    {
-        if (column == 0)
-        {
-            //Do nothing
+    private fun setColours(table: JTable, row: Int, column: Int) {
+        if (column == 0) {
+            // Do nothing
             foreground = null
             background = Color.WHITE
             return
@@ -56,18 +60,13 @@ class GameStatisticsCellRenderer(private val sectionStarts: List<String>,
         val tm = table.model
 
         val rowName = table.getValueAt(row, 0)
-        if (highestWins.contains(rowName))
-        {
+        if (highestWins.contains(rowName)) {
             val pos = getPositionForColour(tm, row, column, true)
             DartsColour.setFgAndBgColoursForPosition(this, pos, Color.WHITE)
-        }
-        else if (lowestWins.contains(rowName))
-        {
+        } else if (lowestWins.contains(rowName)) {
             val pos = getPositionForColour(tm, row, column, false)
             DartsColour.setFgAndBgColoursForPosition(this, pos, Color.WHITE)
-        }
-        else if (histogramRows.contains(rowName))
-        {
+        } else if (histogramRows.contains(rowName)) {
             val sum = getHistogramSum(tm, column)
 
             val thisValue = getDoubleAt(tm, row, column)
@@ -77,49 +76,45 @@ class GameStatisticsCellRenderer(private val sectionStarts: List<String>,
 
             foreground = null
             background = bg
-        }
-        else
-        {
+        } else {
             foreground = null
             background = Color.WHITE
         }
     }
 
-    private fun getDoubleAt(tm: TableModel, row: Int, col: Int): Double
-    {
+    private fun getDoubleAt(tm: TableModel, row: Int, col: Int): Double {
         val thisValue = tm.getValueAt(row, col)
 
-        if (thisValue == null)
-        {
+        if (thisValue == null) {
             return -1.0
         }
 
         return (thisValue as Number).toDouble()
     }
 
-    private fun getPositionForColour(tm: TableModel, row: Int, col: Int, highestWins: Boolean): Int
-    {
-        if (tm.getValueAt(row, col) is String || tm.columnCount == 2)
-        {
+    private fun getPositionForColour(
+        tm: TableModel,
+        row: Int,
+        col: Int,
+        highestWins: Boolean
+    ): Int {
+        if (tm.getValueAt(row, col) is String || tm.columnCount == 2) {
             return -1
         }
 
         val myScore = getDoubleAt(tm, row, col)
 
         var myPosition = 1
-        for (i in 1 until tm.columnCount)
-        {
-            if (i == col || tm.getValueAt(row, i) is String)
-            {
+        for (i in 1 until tm.columnCount) {
+            if (i == col || tm.getValueAt(row, i) is String) {
                 continue
             }
 
             val theirScore = getDoubleAt(tm, row, i)
 
-            //Compare positivity to the boolean
+            // Compare positivity to the boolean
             val result = theirScore.compareTo(myScore)
-            if (result > 0 == highestWins && result != 0)
-            {
+            if (result > 0 == highestWins && result != 0) {
                 myPosition++
             }
         }

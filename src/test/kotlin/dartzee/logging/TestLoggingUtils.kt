@@ -1,16 +1,14 @@
 package dartzee.logging
 
 import dartzee.helper.AbstractTest
-import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.string.shouldContain
 import java.sql.SQLException
+import org.junit.jupiter.api.Test
 
-class TestLoggingUtils: AbstractTest()
-{
+class TestLoggingUtils : AbstractTest() {
     @Test
-    fun `Should extract stack trace`()
-    {
+    fun `Should extract stack trace`() {
         var stackTrace = ""
         val runnable = {
             val t = Throwable("Boom.")
@@ -22,12 +20,12 @@ class TestLoggingUtils: AbstractTest()
         thread.join()
 
         stackTrace shouldContain "java.lang.Throwable: Boom."
-        stackTrace shouldContain "\tat dartzee.logging.TestLoggingUtils\$Should extract stack trace\$runnable\$1.invoke"
+        stackTrace shouldContain
+            "\tat dartzee.logging.TestLoggingUtils\$Should extract stack trace\$runnable\$1.invoke"
     }
 
     @Test
-    fun `Extracted stack should include cause`()
-    {
+    fun `Extracted stack should include cause`() {
         val cause = KotlinNullPointerException("Oh dear")
         val t = Throwable("boom", cause)
 
@@ -37,8 +35,7 @@ class TestLoggingUtils: AbstractTest()
     }
 
     @Test
-    fun `Should include nested SQLExceptions`()
-    {
+    fun `Should include nested SQLExceptions`() {
         val innermostSqle = SQLException("Hard Disk Error")
         val innerSqle = SQLException("Permission Denied")
         innerSqle.nextException = innermostSqle
@@ -50,11 +47,14 @@ class TestLoggingUtils: AbstractTest()
         stackTrace.shouldContain("Child: java.sql.SQLException: Permission Denied")
         stackTrace.shouldContain("Child: java.sql.SQLException: Hard Disk Error")
     }
-    
+
     @Test
-    fun `Should extract a string from a stack trace array`()
-    {
-        val stackTrace = arrayOf(StackTraceElement("SomeClass", "doStuff", "SomeClass.kt", 58), StackTraceElement("SomeClass", "maybeDoStuff", "SomeClass.kt", 40))
+    fun `Should extract a string from a stack trace array`() {
+        val stackTrace =
+            arrayOf(
+                StackTraceElement("SomeClass", "doStuff", "SomeClass.kt", 58),
+                StackTraceElement("SomeClass", "maybeDoStuff", "SomeClass.kt", 40)
+            )
 
         val result = extractThreadStack(stackTrace)
         val lines = result.lines()

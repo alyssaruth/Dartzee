@@ -9,29 +9,27 @@ import java.awt.Font
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 
-class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String, participant: IWrappedParticipant) :
-    AbstractDartsScorerPausable<X01PlayerState>(parent, participant)
-{
+class DartsScorerX01(
+    parent: GamePanelPausable<*, *>,
+    gameParams: String,
+    participant: IWrappedParticipant
+) : AbstractDartsScorerPausable<X01PlayerState>(parent, participant) {
     private val lblStartingScore = JLabel(gameParams)
 
-    init
-    {
+    init {
         lblStartingScore.horizontalAlignment = SwingConstants.CENTER
         lblStartingScore.font = Font("Trebuchet MS", Font.PLAIN, 16)
         panelNorth.add(lblStartingScore, BorderLayout.SOUTH)
     }
 
-    override fun initImpl()
-    {
+    override fun initImpl() {
         tableScores.getColumn(SCORE_COLUMN).cellRenderer = X01ScoreRenderer()
-        for (i in 0 until SCORE_COLUMN)
-        {
+        for (i in 0 until SCORE_COLUMN) {
             tableScores.getColumn(i).cellRenderer = DartRenderer()
         }
     }
 
-    override fun stateChangedImpl(state: X01PlayerState)
-    {
+    override fun stateChangedImpl(state: X01PlayerState) {
         state.completedRounds.forEachIndexed { ix, round ->
             addDartRound(round)
 
@@ -41,8 +39,7 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String, partic
             model.setValueAt(scoreRemaining, ix, SCORE_COLUMN)
         }
 
-        if (state.currentRound.isNotEmpty())
-        {
+        if (state.currentRound.isNotEmpty()) {
             addDartRound(state.currentRound)
         }
 
@@ -51,10 +48,8 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String, partic
         addCheckoutSuggestion(state)
     }
 
-    private fun addCheckoutSuggestion(state: X01PlayerState)
-    {
-        if (getPaused() || !state.isActive)
-        {
+    private fun addCheckoutSuggestion(state: X01PlayerState) {
+        if (getPaused() || !state.isActive) {
             return
         }
 
@@ -62,8 +57,7 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String, partic
         val currentScore = state.getRemainingScore()
         val checkout = CheckoutSuggester.suggestCheckout(currentScore, dartsRemaining) ?: return
 
-        if (state.currentRound.isEmpty())
-        {
+        if (state.currentRound.isEmpty()) {
             addRow(makeEmptyRow())
         }
 
@@ -72,8 +66,7 @@ class DartsScorerX01(parent: GamePanelPausable<*, *>, gameParams: String, partic
 
     override fun getNumberOfColumns() = SCORE_COLUMN + 1
 
-    companion object
-    {
+    companion object {
         const val SCORE_COLUMN = 3
     }
 }

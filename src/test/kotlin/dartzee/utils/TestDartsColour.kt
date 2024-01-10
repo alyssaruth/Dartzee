@@ -2,15 +2,13 @@ package dartzee.utils
 
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.Color
 import javax.swing.JLabel
+import org.junit.jupiter.api.Test
 
-class TestDartsColour: AbstractTest()
-{
+class TestDartsColour : AbstractTest() {
     @Test
-    fun `Should return a darker version of the supplied colour`()
-    {
+    fun `Should return a darker version of the supplied colour`() {
         val c1 = Color(100, 100, 100)
 
         val c1Result = DartsColour.getDarkenedColour(c1)
@@ -20,8 +18,7 @@ class TestDartsColour: AbstractTest()
     }
 
     @Test
-    fun `Should set the right fg and bg colours based on finishing position`()
-    {
+    fun `Should set the right fg and bg colours based on finishing position`() {
         val component = JLabel()
 
         DartsColour.setFgAndBgColoursForPosition(component, 1)
@@ -49,4 +46,3 @@ class TestDartsColour: AbstractTest()
         component.background shouldBe null
     }
 }
-

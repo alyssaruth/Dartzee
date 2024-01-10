@@ -20,14 +20,12 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import javax.swing.JRadioButton
+import org.junit.jupiter.api.Test
 
-class TestAISimulationSetupDialog: AbstractTest()
-{
+class TestAISimulationSetupDialog : AbstractTest() {
     @Test
-    fun `Should kick off an X01 simulation`()
-    {
+    fun `Should kick off an X01 simulation`() {
         val slot = CapturingSlot<AbstractDartsSimulation>()
         val mockRunner = mockk<SimulationRunner>(relaxed = true)
         every { mockRunner.runSimulation(capture(slot), any(), any()) } just runs
@@ -51,8 +49,7 @@ class TestAISimulationSetupDialog: AbstractTest()
     }
 
     @Test
-    fun `Should kick off a Golf simulation`()
-    {
+    fun `Should kick off a Golf simulation`() {
         val slot = CapturingSlot<AbstractDartsSimulation>()
         val mockRunner = mockk<SimulationRunner>(relaxed = true)
         every { mockRunner.runSimulation(capture(slot), any(), any()) } just runs

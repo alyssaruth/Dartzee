@@ -2,7 +2,6 @@ package dartzee.dartzee
 
 import javax.swing.JPanel
 
-interface IDartzeeRuleConfigurable
-{
+interface IDartzeeRuleConfigurable {
     val configPanel: JPanel
 }

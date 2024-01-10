@@ -9,8 +9,7 @@ import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 
-class AchievementDartzeeHalved: AbstractAchievement()
-{
+class AchievementDartzeeHalved : AbstractAchievement() {
     override val name = "Halved"
     override val desc = "Biggest loss of points in a single round of Dartzee"
     override val achievementType = AchievementType.DARTZEE_HALVED
@@ -24,11 +23,14 @@ class AchievementDartzeeHalved: AbstractAchievement()
     override val gameType = GameType.DARTZEE
     override val allowedForTeams = true
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
         val sb = StringBuilder()
-        sb.append(" SELECT drr.DtCreation as DtAchieved, drr.Score * -1 AS Score, pt.PlayerId, pt.GameId")
-        sb.append(" FROM ${EntityName.DartzeeRoundResult} drr, ${EntityName.Participant} pt, ${EntityName.Game} g")
+        sb.append(
+            " SELECT drr.DtCreation as DtAchieved, drr.Score * -1 AS Score, pt.PlayerId, pt.GameId"
+        )
+        sb.append(
+            " FROM ${EntityName.DartzeeRoundResult} drr, ${EntityName.Participant} pt, ${EntityName.Game} g"
+        )
         sb.append(" WHERE drr.Success = false")
         sb.append(" AND drr.ParticipantId = pt.RowId")
         sb.append(" AND pt.GameId = g.RowId")
@@ -37,10 +39,17 @@ class AchievementDartzeeHalved: AbstractAchievement()
         sb.append(" ORDER BY drr.Score, drr.DtCreation")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementType, oneRowPerPlayer = true, achievementCounterFn = { rs.getInt("Score") })
+            bulkInsertFromResultSet(
+                rs,
+                database,
+                achievementType,
+                oneRowPerPlayer = true,
+                achievementCounterFn = { rs.getInt("Score") }
+            )
         }
     }
 
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_DARTZEE_HALVED
+
     override fun isUnbounded() = true
 }

@@ -6,21 +6,18 @@ import dartzee.screen.EmbeddedScreen
 import dartzee.screen.ScreenCache
 import java.awt.BorderLayout
 
-class PlayerAchievementBreakdown : EmbeddedScreen()
-{
+class PlayerAchievementBreakdown : EmbeddedScreen() {
     var achievement: AbstractAchievement? = null
 
     private val tableBreakdown = ScrollTableDartsGame()
 
-    override fun initialise()
-    {
+    override fun initialise() {
         add(tableBreakdown, BorderLayout.CENTER)
     }
 
     override fun getScreenName() = "${achievement?.name} Breakdown - ${achievement?.player?.name}"
 
-    fun setState(achievement: AbstractAchievement)
-    {
+    fun setState(achievement: AbstractAchievement) {
         this.achievement = achievement
 
         tableBreakdown.model = achievement.tmBreakdown!!
@@ -28,4 +25,3 @@ class PlayerAchievementBreakdown : EmbeddedScreen()
 
     override fun getBackTarget() = ScreenCache.get<PlayerAchievementsScreen>()
 }
-

@@ -9,25 +9,21 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestLocalIdGenerator: AbstractTest()
-{
+class TestLocalIdGenerator : AbstractTest() {
     @Test
-    fun `It should generate an ID of 1 for an empty table`()
-    {
+    fun `It should generate an ID of 1 for an empty table`() {
         LocalIdGenerator(mainDatabase).generateLocalId(EntityName.Game) shouldBe 1
     }
 
     @Test
-    fun `It should generate the next ID for a non-empty table`()
-    {
+    fun `It should generate the next ID for a non-empty table`() {
         insertGame(localId = 5)
 
         LocalIdGenerator(mainDatabase).generateLocalId(EntityName.Game) shouldBe 6
     }
 
     @Test
-    fun `It should generate sequential IDs`()
-    {
+    fun `It should generate sequential IDs`() {
         val generator = LocalIdGenerator(mainDatabase)
         insertGame(localId = 25)
 
@@ -41,8 +37,7 @@ class TestLocalIdGenerator: AbstractTest()
     }
 
     @Test
-    fun `It should keep track of different entities`()
-    {
+    fun `It should keep track of different entities`() {
         val generator = LocalIdGenerator(mainDatabase)
         insertGame(localId = 5)
         insertDartsMatch(localId = 25)
@@ -54,41 +49,32 @@ class TestLocalIdGenerator: AbstractTest()
     }
 
     @Test
-    fun `It should be thread-safe`()
-    {
+    fun `It should be thread-safe`() {
         val generator = LocalIdGenerator(mainDatabase)
         generator.generateLocalId(EntityName.Game)
 
         val threads = mutableListOf<Thread>()
         val runnables = mutableListOf<IdGeneratorRunnable>()
-        repeat(10)
-        {
+        repeat(10) {
             val runnable = IdGeneratorRunnable(generator, mutableListOf())
             runnables.add(runnable)
 
             threads.add(Thread(runnable))
         }
 
-        threads.forEach{
-            it.start()
-        }
+        threads.forEach { it.start() }
 
-        threads.forEach{
-            it.join()
-        }
+        threads.forEach { it.join() }
 
         val allIds = mutableListOf<Long>()
-        runnables.forEach{
-            allIds.addAll(it.list)
-        }
+        runnables.forEach { allIds.addAll(it.list) }
 
         allIds.shouldHaveSize(200)
         allIds.shouldBeUnique()
     }
 
     @Test
-    fun `Should clear the cache, generating correct local IDs afterwards`()
-    {
+    fun `Should clear the cache, generating correct local IDs afterwards`() {
         val generator = LocalIdGenerator(mainDatabase)
         generator.generateLocalId(EntityName.Game) shouldBe 1L
 
@@ -99,12 +85,12 @@ class TestLocalIdGenerator: AbstractTest()
         generator.generateLocalId(EntityName.Game) shouldBe 4L
     }
 
-    private class IdGeneratorRunnable(val generator: LocalIdGenerator, val list: MutableList<Long>): Runnable
-    {
-        override fun run()
-        {
-            repeat(20)
-            {
+    private class IdGeneratorRunnable(
+        val generator: LocalIdGenerator,
+        val list: MutableList<Long>
+    ) : Runnable {
+        override fun run() {
+            repeat(20) {
                 val id = generator.generateLocalId(EntityName.Game)
                 list.add(id)
             }

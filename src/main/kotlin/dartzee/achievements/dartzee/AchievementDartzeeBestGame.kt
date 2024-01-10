@@ -12,11 +12,8 @@ import dartzee.utils.ResourceCache
 
 const val DARTZEE_ACHIEVEMENT_MIN_ROUNDS = 5
 
-/**
- * Measured as average-per-round, to prevent "gaming" it by having a massive set of easy rules
- */
-class AchievementDartzeeBestGame: AbstractAchievement()
-{
+/** Measured as average-per-round, to prevent "gaming" it by having a massive set of easy rules */
+class AchievementDartzeeBestGame : AbstractAchievement() {
     override val name = "Yahtzee!"
     override val desc = "Best round average in Dartzee (at least 5 rounds)"
     override val achievementType = AchievementType.DARTZEE_BEST_GAME
@@ -30,11 +27,14 @@ class AchievementDartzeeBestGame: AbstractAchievement()
     override val gameType = GameType.DARTZEE
     override val allowedForTeams = false
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
         val dartzeeGames = buildQualifyingDartzeeGamesTable(database) ?: return
 
-        val allScores = database.createTempTable("DartzeeScores", "PlayerId VARCHAR(36), DtAchieved TIMESTAMP, GameId VARCHAR(36), ComputedScore INT")
+        val allScores =
+            database.createTempTable(
+                "DartzeeScores",
+                "PlayerId VARCHAR(36), DtAchieved TIMESTAMP, GameId VARCHAR(36), ComputedScore INT"
+            )
 
         var sb = StringBuilder()
         sb.append(" INSERT INTO $allScores")
@@ -53,7 +53,13 @@ class AchievementDartzeeBestGame: AbstractAchievement()
         sb.append(" ORDER BY ComputedScore DESC, DtAchieved")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementType, oneRowPerPlayer = true, achievementCounterFn = { rs.getInt("ComputedScore") })
+            bulkInsertFromResultSet(
+                rs,
+                database,
+                achievementType,
+                oneRowPerPlayer = true,
+                achievementCounterFn = { rs.getInt("ComputedScore") }
+            )
         }
     }
 

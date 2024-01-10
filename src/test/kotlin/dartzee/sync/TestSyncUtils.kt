@@ -24,14 +24,12 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-class TestSyncUtils: AbstractTest()
-{
+class TestSyncUtils : AbstractTest() {
     @Test
-    fun `Should return the count of games modified since last sync`()
-    {
+    fun `Should return the count of games modified since last sync`() {
         makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(2000))
 
         insertGame(dtLastUpdate = Timestamp(1500))
@@ -42,8 +40,7 @@ class TestSyncUtils: AbstractTest()
     }
 
     @Test
-    fun `Should return all games if never synced before`()
-    {
+    fun `Should return all games if never synced before`() {
         insertGame(dtLastUpdate = Timestamp(150))
         insertGame(dtLastUpdate = Timestamp(250))
         insertGame(dtLastUpdate = Timestamp(500))
@@ -52,8 +49,7 @@ class TestSyncUtils: AbstractTest()
     }
 
     @Test
-    fun `Should delete all sync audits and refresh sync screen`()
-    {
+    fun `Should delete all sync audits and refresh sync screen`() {
         shouldUpdateSyncScreen {
             mainDatabase.updateDatabaseVersion(16)
             makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(200))
@@ -66,24 +62,23 @@ class TestSyncUtils: AbstractTest()
     }
 
     @Test
-    fun `Should allow sync action when no open games`()
-    {
+    fun `Should allow sync action when no open games`() {
         validateSyncAction() shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
     }
 
     @Test
-    fun `Should not allow sync action if there are open games`()
-    {
+    fun `Should not allow sync action if there are open games`() {
         ScreenCache.addDartsGameScreen("foo", mockk(relaxed = true))
 
         validateSyncAction() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("You must close all open games before performing this action.")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "You must close all open games before performing this action."
+        )
     }
 
     @Test
-    fun `Should consider all relevant entities when checking whether a full sync is required`()
-    {
+    fun `Should consider all relevant entities when checking whether a full sync is required`() {
         validateSyncIsNecessary { insertPlayer() }
         validateSyncIsNecessary { insertAchievement() }
         validateSyncIsNecessary { insertGame() }
@@ -95,16 +90,15 @@ class TestSyncUtils: AbstractTest()
         validateSyncIsNecessary { insertDart(ParticipantEntity()) }
         validateSyncIsNecessary { insertGame().also { it.deleteFromDatabase() } }
     }
-    private fun validateSyncIsNecessary(setupFn: () -> Unit)
-    {
+
+    private fun validateSyncIsNecessary(setupFn: () -> Unit) {
         wipeDatabase()
         setupFn()
         needsSync() shouldBe true
     }
 
     @Test
-    fun `Should not perform a sync if there are no local changes`()
-    {
+    fun `Should not perform a sync if there are no local changes`() {
         needsSync() shouldBe false
 
         SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME)
@@ -113,8 +107,7 @@ class TestSyncUtils: AbstractTest()
     }
 
     @Test
-    fun `Should perform a sync if changes since last sync date`()
-    {
+    fun `Should perform a sync if changes since last sync date`() {
         val syncAuditEntity = SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME)
         insertGame(dtLastUpdate = getFutureTime(syncAuditEntity.dtLastUpdate))
         needsSync() shouldBe true

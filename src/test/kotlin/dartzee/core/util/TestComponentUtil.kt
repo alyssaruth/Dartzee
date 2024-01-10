@@ -9,7 +9,6 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
-import org.junit.jupiter.api.Test
 import java.awt.event.ActionListener
 import javax.swing.AbstractButton
 import javax.swing.JButton
@@ -21,12 +20,11 @@ import javax.swing.JRadioButton
 import javax.swing.JSpinner
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
+import org.junit.jupiter.api.Test
 
-class TestComponentUtil: AbstractTest()
-{
+class TestComponentUtil : AbstractTest() {
     @Test
-    fun `Should return children of the appropriate type`()
-    {
+    fun `Should return children of the appropriate type`() {
         val panel = JPanel()
         val btn = JButton()
         val rdbtn = JRadioButton()
@@ -41,8 +39,7 @@ class TestComponentUtil: AbstractTest()
     }
 
     @Test
-    fun `should return nested components`()
-    {
+    fun `should return nested components`() {
         val panel = JPanel()
         val panel2 = JPanel()
         val panel3 = JPanel()
@@ -61,8 +58,7 @@ class TestComponentUtil: AbstractTest()
     }
 
     @Test
-    fun `Should identify whether a component is contained`()
-    {
+    fun `Should identify whether a component is contained`() {
         val panel = JPanel()
         val panel2 = JPanel()
         val btnOne = JButton()
@@ -77,16 +73,12 @@ class TestComponentUtil: AbstractTest()
     }
 
     @Test
-    fun `Should not create an empty ButtonGroup`()
-    {
-        shouldThrow<Exception> {
-            createButtonGroup()
-        }
+    fun `Should not create an empty ButtonGroup`() {
+        shouldThrow<Exception> { createButtonGroup() }
     }
 
     @Test
-    fun `Should create a working button group and select the first radiobutton passed in`()
-    {
+    fun `Should create a working button group and select the first radiobutton passed in`() {
         val rdbtnOne = JRadioButton()
         val rdbtnTwo = JRadioButton()
 
@@ -101,15 +93,13 @@ class TestComponentUtil: AbstractTest()
     }
 
     @Test
-    fun `Should return null if no parent window`()
-    {
+    fun `Should return null if no parent window`() {
         val panel = JPanel()
         panel.getParentWindow() shouldBe null
     }
 
     @Test
-    fun `Should recurse up the tree to find the parent window`()
-    {
+    fun `Should recurse up the tree to find the parent window`() {
         val window = JFrame()
         val panel = JPanel()
         val btn = JButton()
@@ -121,8 +111,7 @@ class TestComponentUtil: AbstractTest()
     }
 
     @Test
-    fun `Should enable and disable all nested components`()
-    {
+    fun `Should enable and disable all nested components`() {
         val window = JFrame()
         val panel = JPanel()
         val btn = JButton()
@@ -144,8 +133,7 @@ class TestComponentUtil: AbstractTest()
     }
 
     @Test
-    fun `Should add actionListeners to all applicable children`()
-    {
+    fun `Should add actionListeners to all applicable children`() {
         val window = JFrame()
         val panel = JPanel()
         val btn = JButton()
@@ -168,8 +156,7 @@ class TestComponentUtil: AbstractTest()
     }
 
     @Test
-    fun `Should not add the same actionListener twice`()
-    {
+    fun `Should not add the same actionListener twice`() {
         val panel = JPanel()
         val btn = JButton()
 
@@ -189,8 +176,7 @@ class TestComponentUtil: AbstractTest()
     }
 
     @Test
-    fun `Should add changeListeners to all applicable children`()
-    {
+    fun `Should add changeListeners to all applicable children`() {
         val window = JFrame()
         val panel = JPanel()
         val spinner = JSpinner()
@@ -205,13 +191,16 @@ class TestComponentUtil: AbstractTest()
         val changeListener = ListenerOne()
         window.addChangeListenerToAllChildren(changeListener)
 
-        spinner.changeListeners.toList().shouldContainExactlyInAnyOrder(changeListener, spinner.editor)
-        subSpinner.changeListeners.toList().shouldContainExactlyInAnyOrder(changeListener, subSpinner.editor)
+        spinner.changeListeners
+            .toList()
+            .shouldContainExactlyInAnyOrder(changeListener, spinner.editor)
+        subSpinner.changeListeners
+            .toList()
+            .shouldContainExactlyInAnyOrder(changeListener, subSpinner.editor)
     }
 
     @Test
-    fun `Should not add the same changeListener twice`()
-    {
+    fun `Should not add the same changeListener twice`() {
         val panel = JPanel()
         val spinner = JSpinner()
 
@@ -227,16 +216,16 @@ class TestComponentUtil: AbstractTest()
         spinner.changeListeners.toList().shouldContainExactlyInAnyOrder(listenerOne, spinner.editor)
 
         panel.addChangeListenerToAllChildren(listenerTwo)
-        spinner.changeListeners.toList().shouldContainExactlyInAnyOrder(listenerOne, listenerTwo, spinner.editor)
+        spinner.changeListeners
+            .toList()
+            .shouldContainExactlyInAnyOrder(listenerOne, listenerTwo, spinner.editor)
     }
 
-    private class ListenerOne: ChangeListener
-    {
+    private class ListenerOne : ChangeListener {
         override fun stateChanged(e: ChangeEvent?) {}
     }
 
-    private class ListenerTwo: ChangeListener
-    {
+    private class ListenerTwo : ChangeListener {
         override fun stateChanged(e: ChangeEvent?) {}
     }
 }

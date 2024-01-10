@@ -18,11 +18,9 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDatabaseMigrator: AbstractTest()
-{
+class TestDatabaseMigrator : AbstractTest() {
     @Test
-    fun `Should initialise a fresh database if no version is found`()
-    {
+    fun `Should initialise a fresh database if no version is found`() {
         clearLogs()
 
         usingInMemoryDatabase { db ->
@@ -35,15 +33,17 @@ class TestDatabaseMigrator: AbstractTest()
 
             db.getDatabaseVersion() shouldBe DATABASE_VERSION
 
-            val expectedTableNames = DartsDatabaseUtil.getAllEntitiesIncludingVersion().map { it.getTableNameUpperCase() }
+            val expectedTableNames =
+                DartsDatabaseUtil.getAllEntitiesIncludingVersion().map {
+                    it.getTableNameUpperCase()
+                }
             val tableNames = db.getTableNames()
             tableNames.shouldContainExactlyInAnyOrder(expectedTableNames)
         }
     }
 
     @Test
-    fun `Should not carry out a migration if database is already on the latest version`()
-    {
+    fun `Should not carry out a migration if database is already on the latest version`() {
         clearLogs()
 
         usingInMemoryDatabase { db ->
@@ -60,11 +60,11 @@ class TestDatabaseMigrator: AbstractTest()
     }
 
     @Test
-    fun `Should not carry out a migration if database version is too old based on migrations passed in`()
-    {
+    fun `Should not carry out a migration if database version is too old based on migrations passed in`() {
         clearLogs()
 
-        val migrations = mapOf(13 to listOf { _: Database -> true }, 14 to listOf { _: Database -> true })
+        val migrations =
+            mapOf(13 to listOf { _: Database -> true }, 14 to listOf { _: Database -> true })
 
         usingInMemoryDatabase { database ->
             val oldVersion = 12
@@ -77,10 +77,13 @@ class TestDatabaseMigrator: AbstractTest()
             verifyLog(CODE_DATABASE_TOO_OLD, Severity.WARN)
             database.getTableNames().shouldContainExactly("VERSION")
 
-            val dbDetails = "Test version: $oldVersion, min supported: 13, current: $DATABASE_VERSION"
+            val dbDetails =
+                "Test version: $oldVersion, min supported: 13, current: $DATABASE_VERSION"
 
-            dialogFactory.errorsShown.shouldContainExactly("Test database is too out-of-date to be upgraded by this version of Dartzee. " +
-                    "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails")
+            dialogFactory.errorsShown.shouldContainExactly(
+                "Test database is too out-of-date to be upgraded by this version of Dartzee. " +
+                    "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails"
+            )
         }
     }
 
@@ -89,31 +92,39 @@ class TestDatabaseMigrator: AbstractTest()
         usingInMemoryDatabase { database ->
             database.updateDatabaseVersion(DATABASE_VERSION - 2)
 
-            val migration1a = { db: Database -> db.executeUpdate("CREATE TABLE Test(RowId VARCHAR(36) PRIMARY KEY)") }
-            val migration1b = { db: Database -> db.executeUpdate("ALTER TABLE Test ADD TestCol2 INT") }
-            val migration2 = { db: Database -> db.executeUpdate("RENAME COLUMN Test.TestCol2 TO IntCol2") }
+            val migration1a = { db: Database ->
+                db.executeUpdate("CREATE TABLE Test(RowId VARCHAR(36) PRIMARY KEY)")
+            }
+            val migration1b = { db: Database ->
+                db.executeUpdate("ALTER TABLE Test ADD TestCol2 INT")
+            }
+            val migration2 = { db: Database ->
+                db.executeUpdate("RENAME COLUMN Test.TestCol2 TO IntCol2")
+            }
 
-            val map = mapOf(
-                DATABASE_VERSION - 2 to listOf(migration1a, migration1b),
-                DATABASE_VERSION - 1 to listOf(migration2)
-            )
+            val map =
+                mapOf(
+                    DATABASE_VERSION - 2 to listOf(migration1a, migration1b),
+                    DATABASE_VERSION - 1 to listOf(migration2)
+                )
 
             val migrator = DatabaseMigrator(map)
             val result = migrator.migrateToLatest(database, "Test")
             result shouldBe MigrationResult.SUCCESS
 
             // Logging
-            val logs = flushAndGetLogRecords().filter { it.loggingCode == CODE_DATABASE_NEEDS_UPDATE }
-            logs.map { it.message }.shouldContainExactly(
-                "Upgrading Test database to V${DATABASE_VERSION - 1} (2 migrations)",
-                "Upgrading Test database to V${DATABASE_VERSION} (1 migrations)"
-            )
+            val logs =
+                flushAndGetLogRecords().filter { it.loggingCode == CODE_DATABASE_NEEDS_UPDATE }
+            logs
+                .map { it.message }
+                .shouldContainExactly(
+                    "Upgrading Test database to V${DATABASE_VERSION - 1} (2 migrations)",
+                    "Upgrading Test database to V${DATABASE_VERSION} (1 migrations)"
+                )
 
             // Should be on latest version and have expected metadata
             database.getDatabaseVersion() shouldBe DATABASE_VERSION
-            shouldNotThrowAny {
-                database.executeQuery("SELECT RowId, IntCol2 FROM Test")
-            }
+            shouldNotThrowAny { database.executeQuery("SELECT RowId, IntCol2 FROM Test") }
         }
     }
 }

@@ -32,17 +32,16 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.util.concurrent.locks.ReentrantLock
+import org.junit.jupiter.api.Test
 
-class TestDartzeeRuleCarousel: AbstractTest()
-{
-    private val dtos = listOf(twoBlackOneWhite, scoreEighteens, innerOuterInner, totalIsFifty, allTwenties)
+class TestDartzeeRuleCarousel : AbstractTest() {
+    private val dtos =
+        listOf(twoBlackOneWhite, scoreEighteens, innerOuterInner, totalIsFifty, allTwenties)
 
     @Test
-    fun `Should display the correct initial state`()
-    {
+    fun `Should display the correct initial state`() {
         val carousel = makeCarousel()
         carousel.update(emptyList(), emptyList(), 20)
 
@@ -56,8 +55,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
     }
 
     @Test
-    fun `Should remove pending rules that are invalid based on darts thrown`()
-    {
+    fun `Should remove pending rules that are invalid based on darts thrown`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val carousel = makeCarousel()
@@ -66,17 +64,22 @@ class TestDartzeeRuleCarousel: AbstractTest()
 
         carousel.dartsThrown.shouldContainExactly(dart)
         carousel.completeTiles.shouldBeEmpty()
-        carousel.getPendingRules().shouldContainExactly(twoBlackOneWhite, scoreEighteens, totalIsFifty)
+        carousel
+            .getPendingRules()
+            .shouldContainExactly(twoBlackOneWhite, scoreEighteens, totalIsFifty)
     }
 
     @Test
-    fun `Should use round results to separate pending and completed rules`()
-    {
+    fun `Should use round results to separate pending and completed rules`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val carousel = makeCarousel()
 
-        val results = makeRoundResultEntities(DartzeeRoundResult(3, true, 36), DartzeeRoundResult(1, false, -38))
+        val results =
+            makeRoundResultEntities(
+                DartzeeRoundResult(3, true, 36),
+                DartzeeRoundResult(1, false, -38)
+            )
         carousel.update(results, emptyList(), 38)
 
         carousel.getPendingRules().shouldContainExactly(scoreEighteens, totalIsFifty, allTwenties)
@@ -95,18 +98,22 @@ class TestDartzeeRuleCarousel: AbstractTest()
     }
 
     @Test
-    fun `If three darts have been thrown, any remaining rules should get a pending result of success`()
-    {
+    fun `If three darts have been thrown, any remaining rules should get a pending result of success`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val carousel = makeCarousel()
-        val darts = listOf(makeDart(18, 1, SegmentType.INNER_SINGLE),
+        val darts =
+            listOf(
+                makeDart(18, 1, SegmentType.INNER_SINGLE),
                 makeDart(20, 1, SegmentType.OUTER_SINGLE),
-                makeDart(1, 1, SegmentType.INNER_SINGLE))
+                makeDart(1, 1, SegmentType.INNER_SINGLE)
+            )
 
         carousel.update(emptyList(), darts, 50)
 
-        carousel.getPendingRules().shouldContainExactly(twoBlackOneWhite, scoreEighteens, innerOuterInner)
+        carousel
+            .getPendingRules()
+            .shouldContainExactly(twoBlackOneWhite, scoreEighteens, innerOuterInner)
         val pendingTiles = carousel.pendingTiles.filter { it.isVisible }
         pendingTiles.forEach {
             it.pendingResult shouldBe true
@@ -115,8 +122,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
     }
 
     @Test
-    fun `If no remaining rules are valid, then the first should be shown with a pending result of false`()
-    {
+    fun `If no remaining rules are valid, then the first should be shown with a pending result of false`() {
         val carousel = makeCarousel()
         carousel.update(emptyList(), listOf(makeDart(20, 0, SegmentType.MISS)), 20)
 
@@ -130,8 +136,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
     }
 
     @Test
-    fun `Should round up when calculating a failure score`()
-    {
+    fun `Should round up when calculating a failure score`() {
         val carousel = makeCarousel()
         carousel.update(emptyList(), listOf(makeDart(20, 0, SegmentType.MISS)), 41)
 
@@ -143,8 +148,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
     }
 
     @Test
-    fun `Should return the union of valid segments based on pending rules`()
-    {
+    fun `Should return the union of valid segments based on pending rules`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val dartOne = makeDart(19, 1, SegmentType.OUTER_SINGLE)
@@ -163,13 +167,16 @@ class TestDartzeeRuleCarousel: AbstractTest()
     }
 
     @Test
-    fun `Should toggle between pending and complete tiles`()
-    {
+    fun `Should toggle between pending and complete tiles`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val carousel = makeCarousel()
 
-        val results = makeRoundResultEntities(DartzeeRoundResult(3, true, 36), DartzeeRoundResult(1, false, -38))
+        val results =
+            makeRoundResultEntities(
+                DartzeeRoundResult(3, true, 36),
+                DartzeeRoundResult(1, false, -38)
+            )
         carousel.update(results, emptyList(), 38)
 
         carousel.getDisplayedRules().shouldContainExactly(scoreEighteens, totalIsFifty, allTwenties)
@@ -182,13 +189,16 @@ class TestDartzeeRuleCarousel: AbstractTest()
     }
 
     @Test
-    fun `Should hide pending tiles and toggle buttons on gameFinished`()
-    {
+    fun `Should hide pending tiles and toggle buttons on gameFinished`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val carousel = makeCarousel()
 
-        val results = makeRoundResultEntities(DartzeeRoundResult(3, true, 36), DartzeeRoundResult(1, false, -38))
+        val results =
+            makeRoundResultEntities(
+                DartzeeRoundResult(3, true, 36),
+                DartzeeRoundResult(1, false, -38)
+            )
         carousel.update(results, emptyList(), 38)
 
         carousel.gameFinished()
@@ -199,23 +209,19 @@ class TestDartzeeRuleCarousel: AbstractTest()
     }
 
     @Test
-    fun `Clicking a tile with no pending result should have no effect`()
-    {
+    fun `Clicking a tile with no pending result should have no effect`() {
         val listener = mockk<IDartzeeCarouselListener>(relaxed = true)
         val carousel = makeCarousel(listener)
 
         carousel.update(emptyList(), emptyList(), 50)
 
-        carousel.pendingTiles.forEach {
-            it.doClick()
-        }
+        carousel.pendingTiles.forEach { it.doClick() }
 
         verifyNotCalled { listener.tilePressed(any()) }
     }
 
     @Test
-    fun `Clicking a tile with a pendingResult should notify the listener`()
-    {
+    fun `Clicking a tile with a pendingResult should notify the listener`() {
         val listener = mockk<IDartzeeCarouselListener>(relaxed = true)
         val carousel = makeCarousel(listener)
         carousel.update(emptyList(), listOf(makeDart(20, 0, SegmentType.MISS)), 20)
@@ -230,8 +236,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
     }
 
     @Test
-    fun `Hovering over a pending tile should notify the listener of that rule's valid segments`()
-    {
+    fun `Hovering over a pending tile should notify the listener of that rule's valid segments`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val dartOne = makeDart(19, 1, SegmentType.OUTER_SINGLE)
@@ -258,20 +263,22 @@ class TestDartzeeRuleCarousel: AbstractTest()
         listener.segmentStatuses.validSegments.shouldContainExactlyInAnyOrder(allTwelves)
 
         carousel.mouseExited(makeMouseEvent(totalFiftyTile))
-        listener.segmentStatuses.validSegments.shouldContainExactlyInAnyOrder(eighteens + allTwelves)
+        listener.segmentStatuses.validSegments.shouldContainExactlyInAnyOrder(
+            eighteens + allTwelves
+        )
     }
 
     @Test
-    fun `Should correctly report whether or not it is initialised`()
-    {
+    fun `Should correctly report whether or not it is initialised`() {
         val lock = ReentrantLock()
 
         // Mock up a result which will block until we release our hold on the lock
         val result = mockk<DartzeeRoundResultEntity>(relaxed = true)
-        every { result.ruleNumber } answers {
-            lock.lock()
-            1
-        }
+        every { result.ruleNumber } answers
+            {
+                lock.lock()
+                1
+            }
 
         // Initial value should be false
         val carousel = makeCarousel()
@@ -288,15 +295,15 @@ class TestDartzeeRuleCarousel: AbstractTest()
         Thread.sleep(1000)
         carousel.initialised shouldBe false
 
-        // Let the other thread go and wait for it to complete. We should see initialised update immediately.
+        // Let the other thread go and wait for it to complete. We should see initialised update
+        // immediately.
         lock.unlock()
         updateThread.join()
         carousel.initialised shouldBe true
     }
 
     @Test
-    fun `Should select the 'hardest' rule for a cautious AI`()
-    {
+    fun `Should select the 'hardest' rule for a cautious AI`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val dtos = listOf(twoBlackOneWhite, innerOuterInner, scoreEighteens)
@@ -304,12 +311,17 @@ class TestDartzeeRuleCarousel: AbstractTest()
         val listener = TrackingCarouselListener()
 
         val carousel = makeCarousel(listener, dtos)
-        val darts = listOf(makeDart(18, 1, SegmentType.INNER_SINGLE),
+        val darts =
+            listOf(
+                makeDart(18, 1, SegmentType.INNER_SINGLE),
                 makeDart(20, 1, SegmentType.OUTER_SINGLE),
-                makeDart(1, 1, SegmentType.INNER_SINGLE))
+                makeDart(1, 1, SegmentType.INNER_SINGLE)
+            )
 
         carousel.update(emptyList(), darts, 50)
-        carousel.getPendingRules().shouldContainExactly(twoBlackOneWhite, innerOuterInner, scoreEighteens)
+        carousel
+            .getPendingRules()
+            .shouldContainExactly(twoBlackOneWhite, innerOuterInner, scoreEighteens)
 
         val ai = makeDartsModel(dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS)
         carousel.selectRule(ai)
@@ -321,8 +333,7 @@ class TestDartzeeRuleCarousel: AbstractTest()
     }
 
     @Test
-    fun `Should select the highest scoring hardest rule for an aggressive AI`()
-    {
+    fun `Should select the highest scoring hardest rule for an aggressive AI`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val dtos = listOf(twoBlackOneWhite, innerOuterInner, scoreEighteens)
@@ -330,12 +341,17 @@ class TestDartzeeRuleCarousel: AbstractTest()
         val listener = TrackingCarouselListener()
 
         val carousel = makeCarousel(listener, dtos)
-        val darts = listOf(makeDart(18, 1, SegmentType.INNER_SINGLE),
+        val darts =
+            listOf(
+                makeDart(18, 1, SegmentType.INNER_SINGLE),
                 makeDart(20, 1, SegmentType.OUTER_SINGLE),
-                makeDart(1, 1, SegmentType.INNER_SINGLE))
+                makeDart(1, 1, SegmentType.INNER_SINGLE)
+            )
 
         carousel.update(emptyList(), darts, 50)
-        carousel.getPendingRules().shouldContainExactly(twoBlackOneWhite, innerOuterInner, scoreEighteens)
+        carousel
+            .getPendingRules()
+            .shouldContainExactly(twoBlackOneWhite, innerOuterInner, scoreEighteens)
 
         val ai = makeDartsModel(dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE)
         carousel.selectRule(ai)
@@ -346,26 +362,28 @@ class TestDartzeeRuleCarousel: AbstractTest()
         result.success shouldBe true
     }
 
-    private class TrackingCarouselListener: IDartzeeCarouselListener
-    {
+    private class TrackingCarouselListener : IDartzeeCarouselListener {
         var segmentStatuses: SegmentStatuses = SegmentStatuses(emptySet(), emptySet())
         var roundResult: DartzeeRoundResult? = null
 
-        override fun hoverChanged(segmentStatuses: SegmentStatuses)
-        {
+        override fun hoverChanged(segmentStatuses: SegmentStatuses) {
             this.segmentStatuses = segmentStatuses
         }
 
-        override fun tilePressed(dartzeeRoundResult: DartzeeRoundResult)
-        {
+        override fun tilePressed(dartzeeRoundResult: DartzeeRoundResult) {
             this.roundResult = dartzeeRoundResult
         }
     }
 
-    private fun DartzeeRuleCarousel.getDisplayedTiles() = tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
+    private fun DartzeeRuleCarousel.getDisplayedTiles() =
+        tilePanel.getAllChildComponentsForType<DartzeeRuleTile>().filter { it.isVisible }
+
     private fun DartzeeRuleCarousel.getDisplayedRules() = getDisplayedTiles().map { it.dto }
-    private fun makeCarousel(listener: IDartzeeCarouselListener = mockk(relaxed = true), dtos: List<DartzeeRuleDto> = this.dtos) = DartzeeRuleCarousel(
-        dtos
-    ).also { it.listener = listener }
+
+    private fun makeCarousel(
+        listener: IDartzeeCarouselListener = mockk(relaxed = true),
+        dtos: List<DartzeeRuleDto> = this.dtos
+    ) = DartzeeRuleCarousel(dtos).also { it.listener = listener }
+
     private fun DartzeeRuleCarousel.getPendingRules() = getAvailableRuleTiles().map { it.dto }
 }

@@ -11,29 +11,25 @@ import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.border.LineBorder
 
-class ColourPicker : JLabel(), IMouseListener
-{
+class ColourPicker : JLabel(), IMouseListener {
     var selectedColour: Color = Color.BLACK
         private set
 
     private var listener: ColourSelectionListener? = null
     private val img: BufferedImage = BufferedImage(45, 30, BufferedImage.TYPE_INT_ARGB)
 
-    init
-    {
+    init {
         border = LineBorder(Color(0, 0, 0))
         setSize(45, 30)
         isOpaque = true
         addMouseListener(this)
     }
 
-    fun addColourSelectionListener(listener: ColourSelectionListener?)
-    {
+    fun addColourSelectionListener(listener: ColourSelectionListener?) {
         this.listener = listener
     }
 
-    fun updateSelectedColor(newColor: Color?, notify: Boolean = true)
-    {
+    fun updateSelectedColor(newColor: Color?, notify: Boolean = true) {
         newColor ?: return
 
         this.selectedColour = newColor
@@ -49,19 +45,16 @@ class ColourPicker : JLabel(), IMouseListener
 
     fun getPrefString() = DartsColour.toPrefStr(selectedColour)
 
-    override fun mouseReleased(e: MouseEvent)
-    {
+    override fun mouseReleased(e: MouseEvent) {
         val newColour = InjectedDesktopCore.colourSelector.selectColour(selectedColour)
         updateSelectedColor(newColour)
     }
 
-    override fun mouseEntered(e: MouseEvent)
-    {
+    override fun mouseEntered(e: MouseEvent) {
         cursor = Cursor(Cursor.HAND_CURSOR)
     }
 
-    override fun mouseExited(e: MouseEvent)
-    {
+    override fun mouseExited(e: MouseEvent) {
         cursor = Cursor(Cursor.DEFAULT_CURSOR)
     }
 }

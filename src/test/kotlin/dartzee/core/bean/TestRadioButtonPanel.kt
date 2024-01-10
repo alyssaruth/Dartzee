@@ -4,16 +4,14 @@ import dartzee.helper.AbstractTest
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JRadioButton
+import org.junit.jupiter.api.Test
 
-class TestRadioButtonPanel: AbstractTest()
-{
+class TestRadioButtonPanel : AbstractTest() {
     @Test
-    fun `Should select the first radio button passed in by default`()
-    {
+    fun `Should select the first radio button passed in by default`() {
         val rdbtnPanel = RadioButtonPanel()
 
         val rdbtn1 = JRadioButton()
@@ -27,8 +25,7 @@ class TestRadioButtonPanel: AbstractTest()
     }
 
     @Test
-    fun `Should only allow one radio selection at a time`()
-    {
+    fun `Should only allow one radio selection at a time`() {
         val rdbtnPanel = RadioButtonPanel()
 
         val rdbtn1 = JRadioButton()
@@ -44,8 +41,7 @@ class TestRadioButtonPanel: AbstractTest()
     }
 
     @Test
-    fun `Should return the selected radio button string`()
-    {
+    fun `Should return the selected radio button string`() {
         val rdbtnPanel = RadioButtonPanel()
 
         rdbtnPanel.getSelectionStr() shouldBe ""
@@ -62,8 +58,7 @@ class TestRadioButtonPanel: AbstractTest()
     }
 
     @Test
-    fun `Should support setting the selection by string`()
-    {
+    fun `Should support setting the selection by string`() {
         val rdbtnPanel = RadioButtonPanel()
 
         val rdbtn1 = JRadioButton("foo")
@@ -84,8 +79,7 @@ class TestRadioButtonPanel: AbstractTest()
     }
 
     @Test
-    fun `Should report whether it was the event source`()
-    {
+    fun `Should report whether it was the event source`() {
         val rdbtnPanel = RadioButtonPanel()
 
         val rdbtn1 = JRadioButton("foo")
@@ -108,8 +102,7 @@ class TestRadioButtonPanel: AbstractTest()
     }
 
     @Test
-    fun `Should add action listeners to all radio buttons`()
-    {
+    fun `Should add action listeners to all radio buttons`() {
         val panel = RadioButtonPanel()
 
         val rdbtn1 = JRadioButton()
@@ -127,8 +120,7 @@ class TestRadioButtonPanel: AbstractTest()
     }
 
     @Test
-    fun `Should remove action listeners from all radio buttons`()
-    {
+    fun `Should remove action listeners from all radio buttons`() {
         val panel = RadioButtonPanel()
 
         val rdbtn1 = JRadioButton()
@@ -146,12 +138,10 @@ class TestRadioButtonPanel: AbstractTest()
         listener.sources.shouldBeEmpty()
     }
 
-    class SourceActionListener: ActionListener
-    {
+    class SourceActionListener : ActionListener {
         val sources = mutableListOf<Any>()
 
-        override fun actionPerformed(e: ActionEvent)
-        {
+        override fun actionPerformed(e: ActionEvent) {
             sources.add(e.source)
         }
     }

@@ -17,16 +17,15 @@ import javax.swing.JComboBox
 import javax.swing.JLabel
 import javax.swing.JPanel
 
-abstract class AbstractDartzeeRuleSelector<BaseRuleType: AbstractDartzeeRule>(val desc: String): JPanel(), ActionListener
-{
+abstract class AbstractDartzeeRuleSelector<BaseRuleType : AbstractDartzeeRule>(val desc: String) :
+    JPanel(), ActionListener {
     val lblDesc = JLabel(desc)
     val cbDesc = JCheckBox(desc)
 
     val comboBoxRuleType = JComboBox<BaseRuleType>()
     var listener: DartzeeRuleCreationDialog? = null
 
-    init
-    {
+    init {
         layout = FlowLayout()
 
         populateComboBox()
@@ -38,32 +37,27 @@ abstract class AbstractDartzeeRuleSelector<BaseRuleType: AbstractDartzeeRule>(va
     }
 
     abstract fun getRules(): List<BaseRuleType>
+
     open fun isOptional() = false
 
-    private fun populateComboBox()
-    {
+    private fun populateComboBox() {
         val rules = getRules()
 
         val model = DefaultComboBoxModel<BaseRuleType>()
 
-        rules.forEach{
-            model.addElement(it)
-        }
+        rules.forEach { model.addElement(it) }
 
         comboBoxRuleType.model = model
     }
 
     fun getSelection() = comboBoxRuleType.selectedItemTyped()
 
-    fun setSelected(selected: Boolean)
-    {
+    fun setSelected(selected: Boolean) {
         cbDesc.isSelected = selected
     }
 
-    open fun populate(rule: BaseRuleType?)
-    {
-        if (rule != null)
-        {
+    open fun populate(rule: BaseRuleType?) {
+        if (rule != null) {
             val item = comboBoxRuleType.findByConcreteClass(rule.javaClass)!!
             item.populate(rule.toDbString())
 
@@ -75,11 +69,9 @@ abstract class AbstractDartzeeRuleSelector<BaseRuleType: AbstractDartzeeRule>(va
         updateComponents()
     }
 
-    fun valid(): Boolean
-    {
+    fun valid(): Boolean {
         val errorStr = getSelection().validate()
-        if (errorStr.isNotEmpty())
-        {
+        if (errorStr.isNotEmpty()) {
             DialogUtil.showErrorOLD("$desc: $errorStr")
             return false
         }
@@ -87,13 +79,11 @@ abstract class AbstractDartzeeRuleSelector<BaseRuleType: AbstractDartzeeRule>(va
         return true
     }
 
-    override fun actionPerformed(e: ActionEvent?)
-    {
+    override fun actionPerformed(e: ActionEvent?) {
         updateComponents()
     }
 
-    fun addActionListener(listener: DartzeeRuleCreationDialog)
-    {
+    fun addActionListener(listener: DartzeeRuleCreationDialog) {
         this.listener = listener
         addActionListenerToAllChildren(listener)
         addChangeListenerToAllChildren(listener)
@@ -101,8 +91,7 @@ abstract class AbstractDartzeeRuleSelector<BaseRuleType: AbstractDartzeeRule>(va
 
     open fun shouldBeEnabled() = true
 
-    private fun updateComponents()
-    {
+    private fun updateComponents() {
         val rule = getSelection()
 
         removeAll()
@@ -111,8 +100,7 @@ abstract class AbstractDartzeeRuleSelector<BaseRuleType: AbstractDartzeeRule>(va
 
         add(comboBoxRuleType)
 
-        if (rule is IDartzeeRuleConfigurable)
-        {
+        if (rule is IDartzeeRuleConfigurable) {
             add(rule.configPanel)
         }
 

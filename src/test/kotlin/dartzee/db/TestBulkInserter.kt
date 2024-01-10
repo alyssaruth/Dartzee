@@ -15,32 +15,29 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
-class TestBulkInserter: AbstractTest()
-{
+class TestBulkInserter : AbstractTest() {
     @Test
-    fun `Should do nothing if passed no entities to insert`()
-    {
+    fun `Should do nothing if passed no entities to insert`() {
         clearLogs()
         BulkInserter.insert()
         flushAndGetLogRecords().shouldBeEmpty()
     }
 
     @Test
-    fun `Should stack trace and do nothing if any entities are retrievedFromDb`()
-    {
+    fun `Should stack trace and do nothing if any entities are retrievedFromDb`() {
         val playerOne = PlayerEntity()
         val playerTwo = insertPlayer()
 
         BulkInserter.insert(playerOne, playerTwo)
 
         val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
-        log.message shouldBe "Attempting to bulk insert Player entities, but some are already in the database"
+        log.message shouldBe
+            "Attempting to bulk insert Player entities, but some are already in the database"
         getCountFromTable("Player") shouldBe 1
     }
 
     @Test
-    fun `Should log SQLExceptions if something goes wrong inserting entities`()
-    {
+    fun `Should log SQLExceptions if something goes wrong inserting entities`() {
         val playerOne = factoryPlayer("Pete")
         val playerTwo = factoryPlayer("Leah")
 
@@ -55,26 +52,28 @@ class TestBulkInserter: AbstractTest()
     }
 
     @Test
-    fun `Should insert the right number of rows per INSERT statement`()
-    {
+    fun `Should insert the right number of rows per INSERT statement`() {
         checkInsertBatching(prepareRows(80), 1, 80)
         checkInsertBatching(prepareRows(80), 20, 4)
         checkInsertBatching(prepareRows(80), 21, 4)
     }
-    private fun checkInsertBatching(rows: List<GameEntity>, rowsPerInsert: Int, expectedNumberOfBatches: Int)
-    {
+
+    private fun checkInsertBatching(
+        rows: List<GameEntity>,
+        rowsPerInsert: Int,
+        expectedNumberOfBatches: Int
+    ) {
         wipeTable(EntityName.Game)
         clearLogs()
 
         BulkInserter.insert(rows, 1000, rowsPerInsert)
 
-        flushAndGetLogRecords() shouldHaveSize(expectedNumberOfBatches)
+        flushAndGetLogRecords() shouldHaveSize (expectedNumberOfBatches)
         getCountFromTable(EntityName.Game) shouldBe rows.size
     }
 
     @Test
-    fun `Should only run single-threaded successfully for a small number of rows`()
-    {
+    fun `Should only run single-threaded successfully for a small number of rows`() {
         val rows = prepareRows(50)
 
         BulkInserter.insert(rows, 50, 5)
@@ -82,8 +81,7 @@ class TestBulkInserter: AbstractTest()
     }
 
     @Test
-    fun `Should run multi-threaded successfully`()
-    {
+    fun `Should run multi-threaded successfully`() {
         val rows = prepareRows(50)
 
         BulkInserter.insert(rows, 5, 5)
@@ -91,8 +89,7 @@ class TestBulkInserter: AbstractTest()
     }
 
     @Test
-    fun `Should temporarily suppress logging for a large number of rows`()
-    {
+    fun `Should temporarily suppress logging for a large number of rows`() {
         val rows = prepareRows(501)
         clearLogs()
 
@@ -112,7 +109,6 @@ class TestBulkInserter: AbstractTest()
         newLog.message shouldContain "INSERT INTO Game VALUES"
     }
 
-    private fun prepareRows(numberToGenerate: Int) = (1..numberToGenerate).map {
-        GameEntity().also { g -> g.assignRowId() }
-    }
+    private fun prepareRows(numberToGenerate: Int) =
+        (1..numberToGenerate).map { GameEntity().also { g -> g.assignRowId() } }
 }

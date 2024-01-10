@@ -13,16 +13,17 @@ import java.sql.Timestamp
 import javax.swing.JButton
 import javax.swing.JPanel
 
-class ReportingResultsScreen(private val configureColumnsDialog: ConfigureReportColumnsDialog = ConfigureReportColumnsDialog()) : EmbeddedScreen()
-{
+class ReportingResultsScreen(
+    private val configureColumnsDialog: ConfigureReportColumnsDialog =
+        ConfigureReportColumnsDialog()
+) : EmbeddedScreen() {
     var rp: ReportParameters? = null
     private var cachedRows = emptyList<Array<Any>>()
 
     private val btnConfigureColumns = JButton("Configure Columns...")
     private val tableResults = ScrollTableDartsGame()
 
-    init
-    {
+    init {
         add(tableResults, BorderLayout.CENTER)
 
         val panel = JPanel()
@@ -34,13 +35,11 @@ class ReportingResultsScreen(private val configureColumnsDialog: ConfigureReport
 
     override fun getScreenName() = "Game Report"
 
-    override fun initialise()
-    {
+    override fun initialise() {
         buildTable(true)
     }
 
-    private fun buildTable(runSql: Boolean)
-    {
+    private fun buildTable(runSql: Boolean) {
         val model = TableUtil.DefaultModel()
         model.addColumn("Game")
         model.addColumn("Type")
@@ -49,8 +48,7 @@ class ReportingResultsScreen(private val configureColumnsDialog: ConfigureReport
         model.addColumn("Finish Date")
         model.addColumn("Match")
 
-        if (runSql)
-        {
+        if (runSql) {
             val wrappers = runReport(rp)
             cachedRows = ReportResultWrapper.getTableRowsFromWrappers(wrappers)
         }
@@ -66,8 +64,7 @@ class ReportingResultsScreen(private val configureColumnsDialog: ConfigureReport
         stripOutRemovedColumns()
     }
 
-    private fun setRenderersAndComparators()
-    {
+    private fun setRenderersAndComparators() {
         tableResults.setRenderer(3, TableUtil.TimestampRenderer())
         tableResults.setRenderer(4, TableUtil.TimestampRenderer())
 
@@ -75,14 +72,11 @@ class ReportingResultsScreen(private val configureColumnsDialog: ConfigureReport
         tableResults.setComparator(4, compareBy<Timestamp> { it })
     }
 
-    private fun stripOutRemovedColumns()
-    {
+    private fun stripOutRemovedColumns() {
         val columns = tableResults.columnCount
-        for (i in columns - 1 downTo 0)
-        {
+        for (i in columns - 1 downTo 0) {
             val columnName = tableResults.getColumnName(i)
-            if (configureColumnsDialog.excludedColumns().contains(columnName))
-            {
+            if (configureColumnsDialog.excludedColumns().contains(columnName)) {
                 tableResults.removeColumn(i)
             }
         }
@@ -90,10 +84,8 @@ class ReportingResultsScreen(private val configureColumnsDialog: ConfigureReport
 
     override fun getBackTarget() = ScreenCache.get<ReportingSetupScreen>()
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnConfigureColumns -> {
                 configureColumnsDialog.setLocationRelativeTo(this)
                 configureColumnsDialog.isVisible = true

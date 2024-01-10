@@ -24,8 +24,8 @@ import javax.swing.SwingUtilities
 const val LAYER_DARTS = 2
 const val LAYER_DODGY = 3
 
-class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs()) : JLayeredPane(), IMouseListener
-{
+class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs()) :
+    JLayeredPane(), IMouseListener {
     var latestClip: Clip? = null
 
     private val dartboard = InteractiveDartboard(colourWrapper)
@@ -33,22 +33,22 @@ class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs
     private val listeners: MutableList<DartboardListener> = mutableListOf()
     private var allowInteraction = true
 
-    init
-    {
+    init {
         preferredSize = Dimension(500, 500)
         add(dartboard, Integer.valueOf(-1))
 
         dartboard.addMouseListener(this)
 
-        addComponentListener(object : ComponentAdapter() {
-            override fun componentResized(evt: ComponentEvent) = resized()
-        })
+        addComponentListener(
+            object : ComponentAdapter() {
+                override fun componentResized(evt: ComponentEvent) = resized()
+            }
+        )
 
         SwingUtilities.invokeLater { resized() }
     }
 
-    private fun resized()
-    {
+    private fun resized() {
         dartboard.setBounds(0, 0, width, height)
 
         clearDartLabels()
@@ -56,8 +56,7 @@ class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs
         dartsThrown.forEach(::addDartLabel)
     }
 
-    fun clearDarts()
-    {
+    fun clearDarts() {
         dartsThrown.clear()
         clearDartLabels()
         repaint()
@@ -65,13 +64,11 @@ class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs
 
     private fun clearDartLabels() = getAllChildComponentsForType<DartLabel>().forEach { remove(it) }
 
-    fun addDartboardListener(listener: DartboardListener)
-    {
+    fun addDartboardListener(listener: DartboardListener) {
         listeners.add(listener)
     }
 
-    fun dartThrown(pt: ComputedPoint)
-    {
+    fun dartThrown(pt: ComputedPoint) {
         runOnEventThreadBlocking {
             dartsThrown.add(pt)
             addDartLabel(pt)
@@ -80,8 +77,7 @@ class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs
         listeners.forEach { it.dartThrown(getDartForSegment(pt.segment)) }
     }
 
-    private fun addDartLabel(computedPt: ComputedPoint)
-    {
+    private fun addDartLabel(computedPt: ComputedPoint) {
         if (dartboard.isVisible && dartboard.width > 80 && dartboard.height > 80) {
             val lbl = DartLabel()
             lbl.location = dartboard.interpretPoint(computedPt)
@@ -90,36 +86,30 @@ class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs
         }
     }
 
-    fun refreshValidSegments(segmentStatuses: SegmentStatuses?)
-    {
+    fun refreshValidSegments(segmentStatuses: SegmentStatuses?) {
         dartboard.updateSegmentStatus(segmentStatuses)
     }
 
-    fun stopListening()
-    {
+    fun stopListening() {
         allowInteraction = false
         dartboard.stopInteraction()
     }
 
-    fun ensureListening()
-    {
+    fun ensureListening() {
         allowInteraction = true
         dartboard.allowInteraction()
     }
 
-    override fun mouseReleased(e: MouseEvent)
-    {
-        if (!suppressClickForGameWindow() && allowInteraction)
-        {
+    override fun mouseReleased(e: MouseEvent) {
+        if (!suppressClickForGameWindow() && allowInteraction) {
             dartboard.clearHover()
             dartThrown(dartboard.toComputedPoint(e.point))
         }
     }
-    private fun suppressClickForGameWindow(): Boolean
-    {
+
+    private fun suppressClickForGameWindow(): Boolean {
         val scrn = getParentWindow() as? AbstractDartsGameScreen ?: return false
-        if (scrn.haveLostFocus)
-        {
+        if (scrn.haveLostFocus) {
             scrn.haveLostFocus = false
             return true
         }

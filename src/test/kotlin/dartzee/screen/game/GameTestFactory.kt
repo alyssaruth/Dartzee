@@ -26,11 +26,13 @@ import dartzee.screen.game.x01.GamePanelX01
 import dartzee.screen.game.x01.GameStatisticsPanelX01
 
 fun makeSingleParticipant(player: PlayerEntity, gameId: String? = null) =
-    makeSingleParticipant(insertParticipant(playerId = player.rowId, gameId = gameId ?: insertGame().rowId))
+    makeSingleParticipant(
+        insertParticipant(playerId = player.rowId, gameId = gameId ?: insertGame().rowId)
+    )
+
 fun makeSingleParticipant(pt: ParticipantEntity = insertParticipant()) = SingleParticipant(pt)
 
-fun makeTeam(vararg players: PlayerEntity, gameId: String = randomGuid()): TeamParticipant
-{
+fun makeTeam(vararg players: PlayerEntity, gameId: String = randomGuid()): TeamParticipant {
     val team = insertTeam(gameId = gameId)
     val pts = players.map { insertParticipant(playerId = it.rowId, gameId = gameId) }
     return TeamParticipant(team, pts)
@@ -38,70 +40,76 @@ fun makeTeam(vararg players: PlayerEntity, gameId: String = randomGuid()): TeamP
 
 fun makeGolfGamePanel(currentPlayerId: String = randomGuid(), gameParams: String = "18") =
     GamePanelGolf(
-        FakeDartsScreen(),
-        insertGame(gameType = GameType.GOLF, gameParams = gameParams),
-        1).apply { testInit(currentPlayerId) }
+            FakeDartsScreen(),
+            insertGame(gameType = GameType.GOLF, gameParams = gameParams),
+            1
+        )
+        .apply { testInit(currentPlayerId) }
 
 fun makeGolfGamePanel(pt: IWrappedParticipant) =
-    GamePanelGolf(
-        FakeDartsScreen(),
-        insertGame(gameType = GameType.GOLF, gameParams = "18"),
-        1).apply { testInit(pt) }
+    GamePanelGolf(FakeDartsScreen(), insertGame(gameType = GameType.GOLF, gameParams = "18"), 1)
+        .apply { testInit(pt) }
 
 fun makeX01GamePanel(currentPlayerId: String = randomGuid(), gameParams: String = "501") =
-    GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = gameParams), 1).apply { testInit(currentPlayerId) }
+    GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = gameParams), 1)
+        .apply { testInit(currentPlayerId) }
 
 fun makeX01GamePanel(pt: IWrappedParticipant, gameParams: String = "501") =
-    GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = gameParams), 1).apply { testInit(pt) }
+    GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = gameParams), 1)
+        .apply { testInit(pt) }
 
 fun makeRoundTheClockGamePanel(playerId: String = randomGuid()) =
     GamePanelRoundTheClock(
-        FakeDartsScreen(),
-        insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson()),
-        1).apply { testInit(playerId) }
+            FakeDartsScreen(),
+            insertGame(
+                gameType = GameType.ROUND_THE_CLOCK,
+                gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson()
+            ),
+            1
+        )
+        .apply { testInit(playerId) }
 
 fun makeRoundTheClockGamePanel(pt: IWrappedParticipant) =
     GamePanelRoundTheClock(
-        FakeDartsScreen(),
-        insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson()),
-        1).apply { testInit(pt) }
+            FakeDartsScreen(),
+            insertGame(
+                gameType = GameType.ROUND_THE_CLOCK,
+                gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson()
+            ),
+            1
+        )
+        .apply { testInit(pt) }
 
-fun DartsGamePanel<*, *>.testInit(playerId: String)
-{
+fun DartsGamePanel<*, *>.testInit(playerId: String) {
     val player = insertPlayer(playerId)
     val pt = makeSingleParticipant(player)
     startNewGame(listOf(pt))
 }
 
-fun DartsGamePanel<*, *>.testInit(pt: IWrappedParticipant)
-{
+fun DartsGamePanel<*, *>.testInit(pt: IWrappedParticipant) {
     startNewGame(listOf(pt))
 }
 
-fun DartsGamePanel<*, *>.setDartsThrown(dartsThrown: List<Dart>)
-{
+fun DartsGamePanel<*, *>.setDartsThrown(dartsThrown: List<Dart>) {
     btnReset.doClick()
     dartsThrown.forEach(::dartThrown)
 }
 
-fun DartsGamePanel<*, *>.addCompletedRound(vararg dartsThrown: Dart)
-{
+fun DartsGamePanel<*, *>.addCompletedRound(vararg dartsThrown: Dart) {
     addCompletedRound(dartsThrown.toList())
 }
 
-fun DartsGamePanel<*, *>.addCompletedRound(dartsThrown: List<Dart>)
-{
+fun DartsGamePanel<*, *>.addCompletedRound(dartsThrown: List<Dart>) {
     setDartsThrown(dartsThrown)
     btnConfirm.doClick()
 }
 
-fun <PlayerState: AbstractPlayerState<PlayerState>> DartsGamePanel<*, PlayerState>.updateAchievementsForFinish(finishingPosition: Int, score: Int)
-{
+fun <PlayerState : AbstractPlayerState<PlayerState>> DartsGamePanel<*, PlayerState>
+    .updateAchievementsForFinish(finishingPosition: Int, score: Int) {
     updateAchievementsForFinish(getPlayerStates().first(), finishingPosition, score)
 }
 
-fun DartsGamePanel<*, *>.doAiTurn(model: DartsAiModel)
-{
+fun DartsGamePanel<*, *>.doAiTurn(model: DartsAiModel) {
     val pt = computeAiDart(model) ?: return
     dartboard.dartThrown(pt)
 }
@@ -111,8 +119,7 @@ fun makeMatchSummaryPanel(
     statsPanel: GameStatisticsPanelX01 = GameStatisticsPanelX01("501")
 ) = MatchSummaryPanel(match, statsPanel)
 
-class FakeDartsScreen : AbstractDartsGameScreen()
-{
+class FakeDartsScreen : AbstractDartsGameScreen() {
     override val windowName = "Fake"
 
     var gameId: String? = null
@@ -120,16 +127,16 @@ class FakeDartsScreen : AbstractDartsGameScreen()
     var achievementType: AchievementType? = null
     var attainedValue: Int? = null
 
-    override fun achievementUnlocked(gameId: String, playerId: String, achievement: AbstractAchievement)
-    {
+    override fun achievementUnlocked(
+        gameId: String,
+        playerId: String,
+        achievement: AbstractAchievement
+    ) {
         this.gameId = gameId
         this.playerId = playerId
         this.achievementType = achievement.achievementType
         this.attainedValue = achievement.attainedValue
     }
 
-    override fun fireAppearancePreferencesChanged()
-    {
-
-    }
+    override fun fireAppearancePreferencesChanged() {}
 }

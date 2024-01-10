@@ -10,8 +10,7 @@ import dartzee.`object`.SegmentType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 
-class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
-{
+class AchievementGolfCourseMaster : AbstractMultiRowAchievement() {
     override val name = "Course Master"
     override val desc = "Unique holes where a hole-in-one has been achieved"
     override val achievementType = AchievementType.GOLF_COURSE_MASTER
@@ -28,13 +27,18 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_GOLF_COURSE_MASTER
 
     override fun getBreakdownColumns() = listOf("Hole", "Game", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.achievementDetail.toInt(), a.localGameIdEarned, a.dtAchieved)
+
+    override fun getBreakdownRow(a: AchievementEntity) =
+        arrayOf<Any>(a.achievementDetail.toInt(), a.localGameIdEarned, a.dtAchieved)
+
     override fun isUnbounded() = false
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
-        val tempTable = database.createTempTable("PlayerHolesInOne", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
-                ?: return
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
+        val tempTable =
+            database.createTempTable(
+                "PlayerHolesInOne",
+                "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP"
+            ) ?: return
 
         var sb = StringBuilder()
 
@@ -63,7 +67,12 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement()
         sb.append(")")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementType, achievementDetailFn = { rs.getInt("Score").toString() })
+            bulkInsertFromResultSet(
+                rs,
+                database,
+                achievementType,
+                achievementDetailFn = { rs.getInt("Score").toString() }
+            )
         }
     }
 }

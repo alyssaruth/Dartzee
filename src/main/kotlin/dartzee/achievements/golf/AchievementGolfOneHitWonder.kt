@@ -10,8 +10,7 @@ import dartzee.`object`.SegmentType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 
-class AchievementGolfOneHitWonder : AbstractAchievement()
-{
+class AchievementGolfOneHitWonder : AbstractAchievement() {
     override val name = "One Hit Wonder"
     override val desc = "Most holes-in-one in a single game of Golf"
     override val achievementType = AchievementType.GOLF_ONE_HIT_WONDER
@@ -25,10 +24,12 @@ class AchievementGolfOneHitWonder : AbstractAchievement()
     override val gameType = GameType.GOLF
     override val allowedForTeams = true
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
-        val tempTable = database.createTempTable("GameHolesInOne", "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, HoleInOneCount INT")
-            ?: return
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
+        val tempTable =
+            database.createTempTable(
+                "GameHolesInOne",
+                "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, HoleInOneCount INT"
+            ) ?: return
 
         var sb = StringBuilder()
         sb.append(" INSERT INTO $tempTable")
@@ -52,11 +53,18 @@ class AchievementGolfOneHitWonder : AbstractAchievement()
         sb.append("     SELECT 1")
         sb.append("     FROM $tempTable zz2")
         sb.append("     WHERE zz1.PlayerId = zz2.PlayerId")
-        sb.append("     AND (zz2.HoleInOneCount > zz1.HoleInOneCount OR (zz2.HoleInOneCount = zz1.HoleInOneCount AND zz2.DtAchieved < zz1.DtAchieved))")
+        sb.append(
+            "     AND (zz2.HoleInOneCount > zz1.HoleInOneCount OR (zz2.HoleInOneCount = zz1.HoleInOneCount AND zz2.DtAchieved < zz1.DtAchieved))"
+        )
         sb.append(")")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementType, achievementCounterFn = { rs.getInt("HoleInOneCount") })
+            bulkInsertFromResultSet(
+                rs,
+                database,
+                achievementType,
+                achievementCounterFn = { rs.getInt("HoleInOneCount") }
+            )
         }
     }
 

@@ -3,23 +3,19 @@ package dartzee.bean
 import dartzee.core.bean.RadioButtonPanel
 import javax.swing.JRadioButton
 
-class PlayerTypeFilterPanel : RadioButtonPanel()
-{
+class PlayerTypeFilterPanel : RadioButtonPanel() {
     val rdbtnAll = JRadioButton("All")
     val rdbtnHuman = JRadioButton("Human")
     val rdbtnAi = JRadioButton("AI")
 
-    init
-    {
+    init {
         add(rdbtnAll)
         add(rdbtnHuman)
         add(rdbtnAi)
     }
 
-    fun getWhereSql(): String
-    {
-        return when
-        {
+    fun getWhereSql(): String {
+        return when {
             rdbtnHuman.isSelected -> "Strategy = ''"
             rdbtnAi.isSelected -> "Strategy <> ''"
             else -> ""

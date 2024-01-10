@@ -13,8 +13,7 @@ import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.sql.ResultSet
 
-class AchievementDartzeeUnderPressure: AbstractMultiRowAchievement()
-{
+class AchievementDartzeeUnderPressure : AbstractMultiRowAchievement() {
     override val name = "Under Pressure"
     override val desc = "Games finished by passing the hardest rule (at least 5 rounds)"
     override val achievementType = AchievementType.DARTZEE_UNDER_PRESSURE
@@ -28,14 +27,14 @@ class AchievementDartzeeUnderPressure: AbstractMultiRowAchievement()
     override val gameType = GameType.DARTZEE
     override val allowedForTeams = true
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
         val dartzeeGames = buildQualifyingDartzeeGamesTable(database) ?: return
 
-        val dartzeeGamesHardestRule = database.createTempTable(
-            "DartzeeGamesHardestRule",
-            "GameId VARCHAR(36), RuleId VARCHAR(36), RuleNumber INT"
-        )
+        val dartzeeGamesHardestRule =
+            database.createTempTable(
+                "DartzeeGamesHardestRule",
+                "GameId VARCHAR(36), RuleId VARCHAR(36), RuleNumber INT"
+            )
 
         var sb = StringBuilder()
         sb.append(" INSERT INTO $dartzeeGamesHardestRule")
@@ -54,8 +53,12 @@ class AchievementDartzeeUnderPressure: AbstractMultiRowAchievement()
         if (!database.executeUpdate(sb)) return
 
         sb = StringBuilder()
-        sb.append(" SELECT pt.PlayerId, drr.DtCreation AS DtAchieved, zz.GameId, zz.RuleId, drr.Score")
-        sb.append(" FROM $dartzeeGamesHardestRule zz, ${EntityName.DartzeeRoundResult} drr, ${EntityName.Participant} pt")
+        sb.append(
+            " SELECT pt.PlayerId, drr.DtCreation AS DtAchieved, zz.GameId, zz.RuleId, drr.Score"
+        )
+        sb.append(
+            " FROM $dartzeeGamesHardestRule zz, ${EntityName.DartzeeRoundResult} drr, ${EntityName.Participant} pt"
+        )
         sb.append(" LEFT OUTER JOIN ${EntityName.Team} t ON (pt.TeamId = t.RowId)")
         sb.append(" WHERE pt.GameId = zz.GameId")
         sb.append(" AND (pt.FinalScore > -1 OR t.FinalScore > -1)")
@@ -67,15 +70,17 @@ class AchievementDartzeeUnderPressure: AbstractMultiRowAchievement()
         sb.append(" AND drr.RoundNumber = zz.RuleNumber + 1")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementType,
+            bulkInsertFromResultSet(
+                rs,
+                database,
+                achievementType,
                 achievementCounterFn = { rs.getInt("Score") },
                 achievementDetailFn = { extractAchievementDetail(database, rs) }
             )
         }
     }
 
-    private fun extractAchievementDetail(database: Database, rs: ResultSet): String
-    {
+    private fun extractAchievementDetail(database: Database, rs: ResultSet): String {
         val ruleId = rs.getString("RuleId")
         val rule = DartzeeRuleEntity(database).retrieveForId(ruleId) ?: return ""
 
@@ -86,5 +91,7 @@ class AchievementDartzeeUnderPressure: AbstractMultiRowAchievement()
     override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_DARTZEE_UNDER_PRESSURE
 
     override fun getBreakdownColumns() = listOf("Game", "Score", "Rule", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf<Any>(a.localGameIdEarned, a.achievementCounter, a.achievementDetail, a.dtAchieved)
+
+    override fun getBreakdownRow(a: AchievementEntity) =
+        arrayOf<Any>(a.localGameIdEarned, a.achievementCounter, a.achievementDetail, a.dtAchieved)
 }

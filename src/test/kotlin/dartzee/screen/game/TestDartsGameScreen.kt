@@ -9,11 +9,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class TestDartsGameScreen: AbstractTest()
-{
+class TestDartsGameScreen : AbstractTest() {
     @Test
-    fun `Should initialise correctly`()
-    {
+    fun `Should initialise correctly`() {
         val game = insertGame()
         val scrn = DartsGameScreen(game, 4)
 
@@ -22,8 +20,7 @@ class TestDartsGameScreen: AbstractTest()
     }
 
     @Test
-    fun `Should pass through to its gamePanel`()
-    {
+    fun `Should pass through to its gamePanel`() {
         val game = insertGame()
         val scrn = DartsGameScreen(game, 4)
 

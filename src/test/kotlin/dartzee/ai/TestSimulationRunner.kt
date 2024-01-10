@@ -31,18 +31,16 @@ import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.util.concurrent.locks.ReentrantLock
 import javax.swing.JDialog
 import javax.swing.JFrame
 import javax.swing.JOptionPane
 import javax.swing.JProgressBar
+import org.junit.jupiter.api.Test
 
-class TestSimulationRunner : AbstractTest()
-{
+class TestSimulationRunner : AbstractTest() {
     @Test
-    fun `Should handle an error being thrown from the simulation`()
-    {
+    fun `Should handle an error being thrown from the simulation`() {
         val simulation = mockk<AbstractDartsSimulation>(relaxed = true)
         every { simulation.simulateGame(any()) } throws Exception("Something went wrong")
 
@@ -51,24 +49,26 @@ class TestSimulationRunner : AbstractTest()
         waitForSimulation()
 
         verifyLog(CODE_SIMULATION_ERROR, Severity.ERROR)
-        dialogFactory.errorsShown.shouldContainExactly("A serious problem has occurred with the simulation.")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "A serious problem has occurred with the simulation."
+        )
         findResultsWindow() shouldBe null
         findWindow<ProgressDialog>()!!.shouldNotBeVisible()
     }
 
     @Test
-    fun `Should show a progress dialog and allow cancelling`()
-    {
+    fun `Should show a progress dialog and allow cancelling`() {
         val lock = ReentrantLock(true)
         val blockingSimulation = mockk<AbstractDartsSimulation>(relaxed = true)
-        every { blockingSimulation.simulateGame(any()) } answers {
-            try {
-                lock.lock()
-                makeGameWrapper()
-            } finally {
-                lock.unlock()
+        every { blockingSimulation.simulateGame(any()) } answers
+            {
+                try {
+                    lock.lock()
+                    makeGameWrapper()
+                } finally {
+                    lock.unlock()
+                }
             }
-        }
 
         lock.lock()
 
@@ -91,8 +91,7 @@ class TestSimulationRunner : AbstractTest()
     }
 
     @Test
-    fun `Should complete simulation and show results in a frame`()
-    {
+    fun `Should complete simulation and show results in a frame`() {
         val model = makeDartsModel()
         val player = insertPlayer(model = model, name = "Alyssa")
         val simulation = DartsSimulationX01(player, model)
@@ -118,8 +117,7 @@ class TestSimulationRunner : AbstractTest()
     }
 
     @Test
-    fun `Should show results in a JDialog if told to be modal`()
-    {
+    fun `Should show results in a JDialog if told to be modal`() {
         val model = makeDartsModel()
         val player = insertPlayer(model = model, name = "Alyssa")
         val simulation = DartsSimulationX01(player, model)
@@ -135,8 +133,7 @@ class TestSimulationRunner : AbstractTest()
     }
 
     @Test
-    fun `Should not prompt to save real entities in non-dev mode`()
-    {
+    fun `Should not prompt to save real entities in non-dev mode`() {
         val model = makeDartsModel()
         val player = insertPlayer(model = model, name = "Alyssa")
         val simulation = DartsSimulationX01(player, model)
@@ -149,8 +146,7 @@ class TestSimulationRunner : AbstractTest()
     }
 
     @Test
-    fun `Should not save real entities if response is No`()
-    {
+    fun `Should not save real entities if response is No`() {
         DartsClient.devMode = true
         dialogFactory.questionOption = JOptionPane.NO_OPTION
 
@@ -167,8 +163,7 @@ class TestSimulationRunner : AbstractTest()
     }
 
     @Test
-    fun `Should save real entities if response is Yes`()
-    {
+    fun `Should save real entities if response is Yes`() {
         DartsClient.devMode = true
         dialogFactory.questionOption = JOptionPane.YES_OPTION
 
@@ -186,7 +181,9 @@ class TestSimulationRunner : AbstractTest()
     }
 
     private fun findResultsWindow() = findWindow<JFrame> { it.title.contains("Simulation Results") }
-    private fun findResultsDialog() = findWindow<JDialog> { it.title.contains("Simulation Results") }
+
+    private fun findResultsDialog() =
+        findWindow<JDialog> { it.title.contains("Simulation Results") }
 
     private fun waitForSimulation(loggingCode: LoggingCode = CODE_SIMULATION_FINISHED) {
         waitForAssertion { findLog(loggingCode) shouldNotBe null }

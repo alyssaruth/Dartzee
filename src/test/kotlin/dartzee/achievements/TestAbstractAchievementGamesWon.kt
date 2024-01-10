@@ -10,19 +10,26 @@ import dartzee.helper.insertTeam
 import dartzee.utils.Database
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: AbstractMultiRowAchievementTest<E>()
-{
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
-    {
-        insertParticipant(gameId = g.rowId, playerId = p.rowId, finishingPosition = 1, database = database)
+abstract class TestAbstractAchievementGamesWon<E : AbstractAchievementGamesWon> :
+    AbstractMultiRowAchievementTest<E>() {
+    override fun setUpAchievementRowForPlayerAndGame(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database
+    ) {
+        insertParticipant(
+            gameId = g.rowId,
+            playerId = p.rowId,
+            finishingPosition = 1,
+            database = database
+        )
     }
 
     @Test
-    fun `Should ignore participants who did not come 1st`()
-    {
+    fun `Should ignore participants who did not come 1st`() {
         val alice = insertPlayer(name = "Alice")
         val game = insertRelevantGame()
         insertParticipant(gameId = game.rowId, playerId = alice.rowId, finishingPosition = 2)
@@ -33,12 +40,16 @@ abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: 
     }
 
     @Test
-    fun `Should ignore participants who were part of a team`()
-    {
+    fun `Should ignore participants who were part of a team`() {
         val alice = insertPlayer(name = "Alice")
         val game = insertRelevantGame()
         val team = insertTeam(gameId = game.rowId)
-        insertParticipant(gameId = game.rowId, playerId = alice.rowId, finishingPosition = 1, teamId = team.rowId)
+        insertParticipant(
+            gameId = game.rowId,
+            playerId = alice.rowId,
+            finishingPosition = 1,
+            teamId = team.rowId
+        )
 
         runConversion()
 
@@ -46,17 +57,47 @@ abstract class TestAbstractAchievementGamesWon<E: AbstractAchievementGamesWon>: 
     }
 
     @Test
-    fun `Should insert a row per player and game, and take their latest finish date as DtLastUpdate`()
-    {
+    fun `Should insert a row per player and game, and take their latest finish date as DtLastUpdate`() {
         val alice = insertPlayer(name = "Alice")
         val bob = insertPlayer(name = "Bob")
 
-        val pt1 = insertParticipant(gameId = insertRelevantGame().rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(500), finalScore = 20)
-        val pt2 = insertParticipant(gameId = insertRelevantGame().rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(1500), finalScore = 45)
-        val pt3 = insertParticipant(gameId = insertRelevantGame().rowId, playerId = alice.rowId, finishingPosition = 1, dtFinished = Timestamp(1000), finalScore = 26)
+        val pt1 =
+            insertParticipant(
+                gameId = insertRelevantGame().rowId,
+                playerId = alice.rowId,
+                finishingPosition = 1,
+                dtFinished = Timestamp(500),
+                finalScore = 20
+            )
+        val pt2 =
+            insertParticipant(
+                gameId = insertRelevantGame().rowId,
+                playerId = alice.rowId,
+                finishingPosition = 1,
+                dtFinished = Timestamp(1500),
+                finalScore = 45
+            )
+        val pt3 =
+            insertParticipant(
+                gameId = insertRelevantGame().rowId,
+                playerId = alice.rowId,
+                finishingPosition = 1,
+                dtFinished = Timestamp(1000),
+                finalScore = 26
+            )
 
-        insertParticipant(gameId = insertRelevantGame().rowId, playerId = bob.rowId, finishingPosition = 1, dtFinished = Timestamp(2000))
-        insertParticipant(gameId = insertRelevantGame().rowId, playerId = bob.rowId, finishingPosition = 1, dtFinished = Timestamp(1000))
+        insertParticipant(
+            gameId = insertRelevantGame().rowId,
+            playerId = bob.rowId,
+            finishingPosition = 1,
+            dtFinished = Timestamp(2000)
+        )
+        insertParticipant(
+            gameId = insertRelevantGame().rowId,
+            playerId = bob.rowId,
+            finishingPosition = 1,
+            dtFinished = Timestamp(1000)
+        )
 
         runConversion()
 

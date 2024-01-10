@@ -17,10 +17,6 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioInputStream
 import javax.sound.sampled.AudioSystem
@@ -30,20 +26,21 @@ import javax.sound.sampled.Line
 import javax.sound.sampled.LineEvent
 import javax.sound.sampled.LineListener
 import javax.swing.JLabel
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-class TestDartboardDodgyUtil : AbstractRegistryTest()
-{
+class TestDartboardDodgyUtil : AbstractRegistryTest() {
     override fun getPreferencesAffected() = listOf(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)
 
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, true)
     }
 
     @Test
-    fun `should not play a sound if preference is disabled`()
-    {
+    fun `should not play a sound if preference is disabled`() {
         mockkStatic(AudioSystem::class)
 
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, false)
@@ -54,8 +51,7 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     }
 
     @Test
-    fun `should do nothing if invalid sound is requested`()
-    {
+    fun `should do nothing if invalid sound is requested`() {
         mockkStatic(AudioSystem::class)
 
         val dartboard = GameplayDartboard()
@@ -65,8 +61,7 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     }
 
     @Test
-    fun `should log an error and hide the image if there is an error playing the audio`()
-    {
+    fun `should log an error and hide the image if there is an error playing the audio`() {
         val dartboard = GameplayDartboard()
         captureClip(true)
 
@@ -78,8 +73,7 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     }
 
     @Test
-    fun `should show image until sound clip has finished playing`()
-    {
+    fun `should show image until sound clip has finished playing`() {
         val dartboard = GameplayDartboard()
         val clip = captureClip()
 
@@ -93,8 +87,7 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     }
 
     @Test
-    fun `should continue to show image until the final sound clip has finished playing`()
-    {
+    fun `should continue to show image until the final sound clip has finished playing`() {
         val dartboard = GameplayDartboard()
         val clip1 = captureClip()
 
@@ -114,8 +107,7 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
         dartboard.dodgyLabelShouldNotExist()
     }
 
-    private fun captureClip(throwError: Boolean = false): HackedClip
-    {
+    private fun captureClip(throwError: Boolean = false): HackedClip {
         val clip = HackedClip(throwError)
         mockkStatic(AudioSystem::class)
         every { AudioSystem.getLine(any()) } returns clip
@@ -133,22 +125,19 @@ class TestDartboardDodgyUtil : AbstractRegistryTest()
     companion object {
         @JvmStatic
         @BeforeAll
-        fun beforeAll()
-        {
+        fun beforeAll() {
             ResourceCache.initialiseResources()
         }
 
         @JvmStatic
         @AfterAll
-        fun afterAll()
-        {
+        fun afterAll() {
             ResourceCache.resetCache()
         }
     }
 }
 
-class HackedClip(private val throwError: Boolean) : Clip
-{
+class HackedClip(private val throwError: Boolean) : Clip {
     private var lineListener: LineListener? = null
     private var running: Boolean = true
 
@@ -165,35 +154,62 @@ class HackedClip(private val throwError: Boolean) : Clip
     }
 
     override fun close() {}
+
     override fun getLineInfo() = mockk<Line.Info>()
+
     override fun open(p0: AudioFormat?, p1: ByteArray?, p2: Int, p3: Int) {}
+
     override fun open(p0: AudioInputStream?) {
         if (throwError) {
             throw Exception("Oh dear oh dear")
         }
     }
+
     override fun open() {}
+
     override fun isOpen() = false
+
     override fun getControls(): Array<Control> = arrayOf()
+
     override fun isControlSupported(p0: Control.Type?) = false
+
     override fun getControl(p0: Control.Type?) = mockk<Control>()
+
     override fun removeLineListener(p0: LineListener?) {}
+
     override fun drain() {}
+
     override fun flush() {}
+
     override fun start() {}
+
     override fun stop() {}
+
     override fun isActive() = false
+
     override fun getFormat() = mockk<AudioFormat>()
+
     override fun getBufferSize() = 0
+
     override fun available() = 0
+
     override fun getFramePosition() = 0
+
     override fun getLongFramePosition() = 0L
+
     override fun getMicrosecondPosition() = 0L
+
     override fun getLevel() = 0f
+
     override fun getFrameLength() = 0
+
     override fun getMicrosecondLength() = 0L
+
     override fun setFramePosition(p0: Int) {}
+
     override fun setMicrosecondPosition(p0: Long) {}
+
     override fun setLoopPoints(p0: Int, p1: Int) {}
+
     override fun loop(p0: Int) {}
 }

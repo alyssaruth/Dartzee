@@ -17,12 +17,16 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
-class TestDartzeeRuleConversion: AbstractTest()
-{
+class TestDartzeeRuleConversion : AbstractTest() {
     @Test
-    fun `Should take all dartzee rules on the database and rerun their calculations`()
-    {
-        val dartzeeRule = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(19), makeScoreRule(18), inOrder = true)
+    fun `Should take all dartzee rules on the database and rerun their calculations`() {
+        val dartzeeRule =
+            makeDartzeeRuleDto(
+                makeScoreRule(20),
+                makeScoreRule(19),
+                makeScoreRule(18),
+                inOrder = true
+            )
         dartzeeRule.calculationResult!!.validSegments.shouldBeEmpty()
 
         val entity = dartzeeRule.toEntity(1, EntityName.Game, randomGuid())
@@ -37,14 +41,19 @@ class TestDartzeeRuleConversion: AbstractTest()
     }
 
     @Test
-    fun `Should dismiss the loading dialog even if an exception is thrown`()
-    {
+    fun `Should dismiss the loading dialog even if an exception is thrown`() {
         val mockCalculator = mockk<DartzeeCalculator>()
         every { mockCalculator.getValidSegments(any(), any()) } throws Exception("Boom")
 
         InjectedThings.dartzeeCalculator = mockCalculator
 
-        val dartzeeRule = makeDartzeeRuleDto(makeScoreRule(20), makeScoreRule(19), makeScoreRule(18), inOrder = true)
+        val dartzeeRule =
+            makeDartzeeRuleDto(
+                makeScoreRule(20),
+                makeScoreRule(19),
+                makeScoreRule(18),
+                inOrder = true
+            )
         dartzeeRule.calculationResult!!.validSegments.shouldBeEmpty()
 
         val entity = dartzeeRule.toEntity(1, EntityName.Game, randomGuid())

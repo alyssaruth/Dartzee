@@ -50,21 +50,22 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestRoundTheClockE2E: AbstractRegistryTest()
-{
+class TestRoundTheClockE2E : AbstractRegistryTest() {
     override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
 
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
     }
 
     @Test
     @Tag("e2e")
-    fun `E2E - RTC - perfect game`()
-    {
-        val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson())
+    fun `E2E - RTC - perfect game`() {
+        val game =
+            insertGame(
+                gameType = GameType.ROUND_THE_CLOCK,
+                gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson()
+            )
 
         val model = beastDartsModel()
         val player = insertPlayer(model = model)
@@ -75,7 +76,8 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
         val expectedDarts = (1..20).map { Dart(it, 1) }.chunked(4)
         verifyState(panel, listener, expectedDarts, 20, scoreSuffix = " Darts")
 
-        retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
+        retrieveAchievementsForPlayer(player.rowId)
+            .shouldContainExactlyInAnyOrder(
                 AchievementSummary(AchievementType.CLOCK_BEST_GAME, 20, game.rowId),
                 AchievementSummary(AchievementType.CLOCK_BEST_STREAK, 20, game.rowId),
                 AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "1"),
@@ -83,29 +85,54 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
                 AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "3"),
                 AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "4"),
                 AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "5")
-        )
+            )
 
         checkAchievementConversions(player.rowId)
     }
 
     @Test
     @Tag("e2e")
-    fun `E2E - RTC - unordered`()
-    {
-        val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, false).toJson())
+    fun `E2E - RTC - unordered`() {
+        val game =
+            insertGame(
+                gameType = GameType.ROUND_THE_CLOCK,
+                gameParams = RoundTheClockConfig(ClockType.Standard, false).toJson()
+            )
 
         val (gamePanel, listener) = setUpGamePanel(game)
 
-        val expectedRounds = listOf(
-                listOf(Dart(1, 1), Dart(5, 3), Dart(20, 1)),               // 2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-                listOf(Dart(3, 2), Dart(4, 0), Dart(7, 1)),                // 2,4,6,8,9,10,11,12,13,14,15,16,17,18,19
-                listOf(Dart(8, 1), Dart(5, 1), Dart(20, 1)),               // 2,4,6,9,10,11,12,13,14,15,16,17,18,19
-                listOf(Dart(2, 1), Dart(4, 1), Dart(6, 1), Dart(9, 1)),    // 10,11,12,13,14,15,16,17,18,19 (streak of 4)
-                listOf(Dart(10, 1), Dart(12, 1), Dart(13, 2)),             // 11,14,15,16,17,18,19 (broken streak of 5)
-                listOf(Dart(14, 1), Dart(16, 1), Dart(15, 2)),             // 11,17,18,19
+        val expectedRounds =
+            listOf(
+                listOf(
+                    Dart(1, 1),
+                    Dart(5, 3),
+                    Dart(20, 1)
+                ), // 2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19
+                listOf(
+                    Dart(3, 2),
+                    Dart(4, 0),
+                    Dart(7, 1)
+                ), // 2,4,6,8,9,10,11,12,13,14,15,16,17,18,19
+                listOf(
+                    Dart(8, 1),
+                    Dart(5, 1),
+                    Dart(20, 1)
+                ), // 2,4,6,9,10,11,12,13,14,15,16,17,18,19
+                listOf(
+                    Dart(2, 1),
+                    Dart(4, 1),
+                    Dart(6, 1),
+                    Dart(9, 1)
+                ), // 10,11,12,13,14,15,16,17,18,19 (streak of 4)
+                listOf(
+                    Dart(10, 1),
+                    Dart(12, 1),
+                    Dart(13, 2)
+                ), // 11,14,15,16,17,18,19 (broken streak of 5)
+                listOf(Dart(14, 1), Dart(16, 1), Dart(15, 2)), // 11,17,18,19
                 listOf(Dart(11, 1), Dart(17, 1), Dart(18, 1), Dart(3, 0)), // 19
-                listOf(Dart(19, 1))                                        // done.
-        )
+                listOf(Dart(19, 1)) // done.
+            )
 
         val aimDarts = expectedRounds.flatten().map { AimDart(it.score, it.multiplier) }
         val aiModel = predictableDartsModel(aimDarts, mercyThreshold = 7)
@@ -116,35 +143,56 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
 
         verifyState(gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 24)
 
-        retrieveAchievementsForPlayer(player.rowId).shouldContainExactlyInAnyOrder(
+        retrieveAchievementsForPlayer(player.rowId)
+            .shouldContainExactlyInAnyOrder(
                 AchievementSummary(AchievementType.CLOCK_BEST_STREAK, 5, game.rowId),
                 AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "4")
-        )
+            )
 
         checkAchievementConversions(player.rowId)
     }
 
     @Test
     @Tag("e2e")
-    fun `E2E - In Order- Team of 2`()
-    {
-        val game = insertGame(gameType = GameType.ROUND_THE_CLOCK, gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson())
+    fun `E2E - In Order- Team of 2`() {
+        val game =
+            insertGame(
+                gameType = GameType.ROUND_THE_CLOCK,
+                gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson()
+            )
         val (gamePanel, listener) = setUpGamePanel(game)
 
-        val p1Rounds = listOf(
-            listOf(drtOuterOne(), drtOuterTwo(), drtMissThree()), // Target: 3
-            listOf(drtOuterFive(), drtTrebleSix(), drtOuterSeven(), drtInnerEight()), // Target: 9
-            listOf(drtOuterTwelve(), drtTrebleThirteen(), drtOuterEleven()), // Target: 14
-            listOf(drtOuterSeventeen(), drtOuterEighteen(), drtInnerSeven()), // Target: 19
-            listOf(drtOuterTwenty()) // Fin
-        )
+        val p1Rounds =
+            listOf(
+                listOf(drtOuterOne(), drtOuterTwo(), drtMissThree()), // Target: 3
+                listOf(
+                    drtOuterFive(),
+                    drtTrebleSix(),
+                    drtOuterSeven(),
+                    drtInnerEight()
+                ), // Target: 9
+                listOf(drtOuterTwelve(), drtTrebleThirteen(), drtOuterEleven()), // Target: 14
+                listOf(drtOuterSeventeen(), drtOuterEighteen(), drtInnerSeven()), // Target: 19
+                listOf(drtOuterTwenty()) // Fin
+            )
 
-        val p2Rounds = listOf(
-            listOf(drtInnerSeventeen(), drtInnerThree(), drtOuterFour()), // Target: 5
-            listOf(drtOuterNine(), drtInnerTen(), drtDoubleEleven(), drtMissTwelve()), // Target: 12
-            listOf(drtInnerFourteen(), drtOuterFifteen(), drtOuterSixteen(), drtOuterThree()), // Target: 17
-            listOf(drtTrebleNineteen(), drtOuterFive(), drtOuterOne()) // Target: 20
-        )
+        val p2Rounds =
+            listOf(
+                listOf(drtInnerSeventeen(), drtInnerThree(), drtOuterFour()), // Target: 5
+                listOf(
+                    drtOuterNine(),
+                    drtInnerTen(),
+                    drtDoubleEleven(),
+                    drtMissTwelve()
+                ), // Target: 12
+                listOf(
+                    drtInnerFourteen(),
+                    drtOuterFifteen(),
+                    drtOuterSixteen(),
+                    drtOuterThree()
+                ), // Target: 17
+                listOf(drtTrebleNineteen(), drtOuterFive(), drtOuterOne()) // Target: 20
+            )
 
         val expectedRounds: List<List<Dart>> = p1Rounds.zipDartRounds(p2Rounds)
 
@@ -161,11 +209,19 @@ class TestRoundTheClockE2E: AbstractRegistryTest()
         gamePanel.startNewGame(participants)
         awaitGameFinish(game)
 
-        verifyState(gamePanel, listener, expectedRounds, finalScore = 28, pt = retrieveTeam(), scoreSuffix = " Darts")
-
-        retrieveAchievementsForPlayer(p1.rowId).shouldContainExactlyInAnyOrder(
-            AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "3"),
+        verifyState(
+            gamePanel,
+            listener,
+            expectedRounds,
+            finalScore = 28,
+            pt = retrieveTeam(),
+            scoreSuffix = " Darts"
         )
+
+        retrieveAchievementsForPlayer(p1.rowId)
+            .shouldContainExactlyInAnyOrder(
+                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, game.rowId, "3"),
+            )
 
         retrieveAchievementsForPlayer(p2.rowId).shouldBeEmpty()
 

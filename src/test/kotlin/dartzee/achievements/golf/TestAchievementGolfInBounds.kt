@@ -41,19 +41,32 @@ import dartzee.only
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-class TestAchievementGolfInBounds : AbstractAchievementTest<AchievementGolfInBounds>()
-{
+class TestAchievementGolfInBounds : AbstractAchievementTest<AchievementGolfInBounds>() {
     override fun factoryAchievement() = AchievementGolfInBounds()
 
     override fun insertRelevantGame(dtLastUpdate: Timestamp, database: Database) =
-        insertGame(gameType = factoryAchievement().gameType, gameParams = "18", dtLastUpdate = dtLastUpdate, database = database)
+        insertGame(
+            gameType = factoryAchievement().gameType,
+            gameParams = "18",
+            dtLastUpdate = dtLastUpdate,
+            database = database
+        )
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
-    {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 54, database = database)
+    override fun setUpAchievementRowForPlayerAndGame(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database
+    ) {
+        val pt =
+            insertParticipant(
+                playerId = p.rowId,
+                gameId = g.rowId,
+                finalScore = 54,
+                database = database
+            )
         setUpDartsForParticipant(pt, database)
     }
 
@@ -80,17 +93,13 @@ class TestAchievementGolfInBounds : AbstractAchievementTest<AchievementGolfInBou
             listOf(drtDoubleEighteen()), // 1
         )
 
-    private fun setUpDartsForParticipant(pt: ParticipantEntity, database: Database = mainDatabase)
-    {
+    private fun setUpDartsForParticipant(pt: ParticipantEntity, database: Database = mainDatabase) {
         val golfRounds = makeGolfRounds(factorySuccessRounds())
-        golfRounds.flatten().forEach {
-            insertDart(pt, it, database = database)
-        }
+        golfRounds.flatten().forEach { insertDart(pt, it, database = database) }
     }
 
     @Test
-    fun `Should populate with the correct score and gameId`()
-    {
+    fun `Should populate with the correct score and gameId`() {
         val g = insertRelevantGame()
         val p = insertPlayer()
         setUpAchievementRowForPlayerAndGame(p, g)
@@ -103,8 +112,7 @@ class TestAchievementGolfInBounds : AbstractAchievementTest<AchievementGolfInBou
     }
 
     @Test
-    fun `Should ignore 9 hole games`()
-    {
+    fun `Should ignore 9 hole games`() {
         val g = insertGame(gameType = factoryAchievement().gameType, gameParams = "9")
         val p = insertPlayer()
         setUpAchievementRowForPlayerAndGame(p, g)
@@ -115,8 +123,7 @@ class TestAchievementGolfInBounds : AbstractAchievementTest<AchievementGolfInBou
     }
 
     @Test
-    fun `Should ignore unfinished players`()
-    {
+    fun `Should ignore unfinished players`() {
         val g = insertRelevantGame()
         val p = insertPlayer()
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = -1)
@@ -128,11 +135,11 @@ class TestAchievementGolfInBounds : AbstractAchievementTest<AchievementGolfInBou
     }
 
     @Test
-    fun `Should ignore players who were on a team`()
-    {
+    fun `Should ignore players who were on a team`() {
         val g = insertRelevantGame()
         val p = insertPlayer()
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 54, teamId = "foo")
+        val pt =
+            insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 54, teamId = "foo")
         setUpDartsForParticipant(pt)
 
         runConversion()
@@ -141,8 +148,7 @@ class TestAchievementGolfInBounds : AbstractAchievementTest<AchievementGolfInBou
     }
 
     @Test
-    fun `Should reject games where a round ended with missing the board`()
-    {
+    fun `Should reject games where a round ended with missing the board`() {
         val g = insertRelevantGame()
         val p = insertPlayer()
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 56)
@@ -151,9 +157,7 @@ class TestAchievementGolfInBounds : AbstractAchievementTest<AchievementGolfInBou
         rounds[4] = listOf(drtMissFive(), drtMissFive(), drtMissFive())
 
         val golfRounds = makeGolfRounds(rounds)
-        golfRounds.flatten().forEach {
-            insertDart(pt, it)
-        }
+        golfRounds.flatten().forEach { insertDart(pt, it) }
 
         runConversion()
 
@@ -161,8 +165,7 @@ class TestAchievementGolfInBounds : AbstractAchievementTest<AchievementGolfInBou
     }
 
     @Test
-    fun `Should reject games where a round ended with hitting a different number`()
-    {
+    fun `Should reject games where a round ended with hitting a different number`() {
         val g = insertRelevantGame()
         val p = insertPlayer()
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 56)
@@ -171,9 +174,7 @@ class TestAchievementGolfInBounds : AbstractAchievementTest<AchievementGolfInBou
         rounds[0] = listOf(drtMissOne(), drtOuterOne(), drtDoubleTwenty())
 
         val golfRounds = makeGolfRounds(rounds)
-        golfRounds.flatten().forEach {
-            insertDart(pt, it)
-        }
+        golfRounds.flatten().forEach { insertDart(pt, it) }
 
         runConversion()
 

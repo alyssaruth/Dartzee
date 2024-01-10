@@ -14,13 +14,11 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.SwingConstants
 
-class DartzeeRuleSummaryPanel(private val carousel: DartzeeRuleCarousel): JPanel()
-{
+class DartzeeRuleSummaryPanel(private val carousel: DartzeeRuleCarousel) : JPanel() {
     private val lblHighScore = JLabel()
     val panelHighScore = JPanel()
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
         preferredSize = Dimension(150, 120)
 
@@ -33,23 +31,22 @@ class DartzeeRuleSummaryPanel(private val carousel: DartzeeRuleCarousel): JPanel
         add(panelHighScore)
     }
 
-    fun update(results: List<DartzeeRoundResultEntity>, darts: List<Dart>, currentScore: Int, roundNumber: Int)
-    {
-        if (roundNumber == 1)
-        {
+    fun update(
+        results: List<DartzeeRoundResultEntity>,
+        darts: List<Dart>,
+        currentScore: Int,
+        roundNumber: Int
+    ) {
+        if (roundNumber == 1) {
             swapInComponentIfNecessary(panelHighScore)
-        }
-        else
-        {
+        } else {
             swapInComponentIfNecessary(carousel)
             carousel.update(results, darts, currentScore)
         }
     }
 
-    private fun swapInComponentIfNecessary(c: Component)
-    {
-        if (components.contains(c))
-        {
+    private fun swapInComponentIfNecessary(c: Component) {
+        if (components.contains(c)) {
             return
         }
 
@@ -61,27 +58,23 @@ class DartzeeRuleSummaryPanel(private val carousel: DartzeeRuleCarousel): JPanel
     }
 
     fun getSegmentStatus(): SegmentStatuses =
-        when
-        {
-            components.contains(panelHighScore) -> SegmentStatuses(getAllPossibleSegments(), getAllPossibleSegments())
+        when {
+            components.contains(panelHighScore) ->
+                SegmentStatuses(getAllPossibleSegments(), getAllPossibleSegments())
             else -> carousel.getSegmentStatus()
         }
 
-    fun ensureReady()
-    {
-        while (!carousel.initialised)
-        {
+    fun ensureReady() {
+        while (!carousel.initialised) {
             Thread.sleep(200)
         }
     }
 
-    fun selectRule(model: DartsAiModel)
-    {
+    fun selectRule(model: DartsAiModel) {
         carousel.selectRule(model)
     }
 
-    fun gameFinished()
-    {
+    fun gameFinished() {
         swapInComponentIfNecessary(carousel)
         carousel.gameFinished()
     }

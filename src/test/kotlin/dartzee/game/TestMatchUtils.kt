@@ -9,11 +9,9 @@ import dartzee.helper.preparePlayers
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestMatchUtils : AbstractTest()
-{
+class TestMatchUtils : AbstractTest() {
     @Test
-    fun `Should identify an incomplete FIRST_TO match`()
-    {
+    fun `Should identify an incomplete FIRST_TO match`() {
         val match = insertDartsMatch(mode = MatchMode.FIRST_TO, games = 3)
 
         val (p1, p2) = preparePlayers(2)
@@ -23,8 +21,7 @@ class TestMatchUtils : AbstractTest()
     }
 
     @Test
-    fun `Should identify a complete FIRST_TO match`()
-    {
+    fun `Should identify a complete FIRST_TO match`() {
         val match = insertDartsMatch(mode = MatchMode.FIRST_TO, games = 4)
 
         val (p1, p2) = preparePlayers(2)
@@ -34,8 +31,7 @@ class TestMatchUtils : AbstractTest()
     }
 
     @Test
-    fun `Should identify an incomplete POINTS match`()
-    {
+    fun `Should identify an incomplete POINTS match`() {
         val match = insertDartsMatch(mode = MatchMode.POINTS, games = 4)
 
         val (p1, p2) = preparePlayers(2)
@@ -45,8 +41,7 @@ class TestMatchUtils : AbstractTest()
     }
 
     @Test
-    fun `Should identify a complete POINTS match`()
-    {
+    fun `Should identify a complete POINTS match`() {
         val match = insertDartsMatch(mode = MatchMode.POINTS, games = 4)
 
         val (p1, p2) = preparePlayers(2)
@@ -55,7 +50,10 @@ class TestMatchUtils : AbstractTest()
         matchIsComplete(match, pts) shouldBe true
     }
 
-    private fun insertWinningParticipants(player: PlayerEntity, count: Int): List<SingleParticipant> =
+    private fun insertWinningParticipants(
+        player: PlayerEntity,
+        count: Int
+    ): List<SingleParticipant> =
         (1..count).map {
             val pt = insertParticipant(playerId = player.rowId, finishingPosition = 1)
             SingleParticipant(pt)

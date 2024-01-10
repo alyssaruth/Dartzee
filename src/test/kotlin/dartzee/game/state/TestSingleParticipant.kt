@@ -6,11 +6,9 @@ import dartzee.helper.insertPlayer
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestSingleParticipant: AbstractTest()
-{
+class TestSingleParticipant : AbstractTest() {
     @Test
-    fun `Should always return details about the individual participant`()
-    {
+    fun `Should always return details about the individual participant`() {
         val player = insertPlayer(name = "Alyssa")
         val pt = insertParticipant(playerId = player.rowId)
 

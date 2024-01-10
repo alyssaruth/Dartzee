@@ -11,11 +11,9 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
-class TestDatabaseMIgrationV21toV22 : AbstractTest()
-{
+class TestDatabaseMIgrationV21toV22 : AbstractTest() {
     @Test
-    fun `Should update MISSED_BOARD darts to just MISS`()
-    {
+    fun `Should update MISSED_BOARD darts to just MISS`() {
         val segmentType = mockk<SegmentType>()
         every { segmentType.toString() } returns "MISSED_BOARD"
         val dart = insertDart(insertParticipant(), segmentType = segmentType)
@@ -27,8 +25,7 @@ class TestDatabaseMIgrationV21toV22 : AbstractTest()
     }
 
     @Test
-    fun `Should leave other segment types alone`()
-    {
+    fun `Should leave other segment types alone`() {
         SegmentType.values().forEach { segmentType ->
             wipeDatabase()
             val dart = insertDart(insertParticipant(), segmentType = segmentType)

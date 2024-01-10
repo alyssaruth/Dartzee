@@ -12,11 +12,9 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestGameWrapperX01Utils : AbstractTest()
-{
+class TestGameWrapperX01Utils : AbstractTest() {
     @Test
-    fun `Should report three dart average correctly`()
-    {
+    fun `Should report three dart average correctly`() {
         val gameWrapper = makeGameWrapper()
         gameWrapper.getThreeDartAverage(70) shouldBe -1.0
 
@@ -31,11 +29,10 @@ class TestGameWrapperX01Utils : AbstractTest()
     }
 
     @Test
-    fun `Should return scoring darts correctly based on threshold`()
-    {
+    fun `Should return scoring darts correctly based on threshold`() {
         val round1 = listOf(Dart(20, 3), Dart(20, 1), Dart(5, 1)) // 115
         val round2 = listOf(Dart(20, 1), Dart(20, 1), Dart(1, 1)) //  74
-        val round3 = listOf(Dart(9, 1), Dart(14, 1), Dart(1, 1))  //  50
+        val round3 = listOf(Dart(9, 1), Dart(14, 1), Dart(1, 1)) //  50
         val rounds = makeX01Rounds(200, round1, round2, round3)
 
         val wrapper = makeGameWrapper()
@@ -46,8 +43,7 @@ class TestGameWrapperX01Utils : AbstractTest()
     }
 
     @Test
-    fun `Should populate the three dart score map correctly`()
-    {
+    fun `Should populate the three dart score map correctly`() {
         // Full map with the lowest threshold possible
         val map = mutableMapOf<Int, ThreeDartScoreWrapper>()
         GAME_WRAPPER_301_1.populateThreeDartScoreMap(map, 62)
@@ -59,10 +55,9 @@ class TestGameWrapperX01Utils : AbstractTest()
         fortyFive.createRows().shouldContainExactly(arrayOf("20, 20, 5", 2, 1L))
 
         val sixty = map.getValue(60)
-        sixty.createRows().shouldContainExactly(
-            arrayOf("20, 20, 20", 1, 1L),
-            arrayOf("T12, 20, 4", 1, 2L)
-        )
+        sixty
+            .createRows()
+            .shouldContainExactly(arrayOf("20, 20, 20", 1, 1L), arrayOf("T12, 20, 4", 1, 2L))
 
         // Higher threshold - test rounds are knocked out
         val shorterMap = mutableMapOf<Int, ThreeDartScoreWrapper>()

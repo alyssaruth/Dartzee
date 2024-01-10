@@ -16,15 +16,13 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
-class TestReportingResultsScreen: AbstractTest()
-{
+class TestReportingResultsScreen : AbstractTest() {
     @Test
-    fun `Should initialise with results based on the report parameters`()
-    {
+    fun `Should initialise with results based on the report parameters`() {
         val rp = ReportParameters()
         rp.gameType = GameType.X01
 
@@ -44,8 +42,7 @@ class TestReportingResultsScreen: AbstractTest()
     }
 
     @Test
-    fun `Should adjust columns based on the configure dialog, without rerunning SQL`()
-    {
+    fun `Should adjust columns based on the configure dialog, without rerunning SQL`() {
         val gX01 = insertGame(localId = 1, gameType = GameType.X01, gameParams = "501")
         insertPlayerForGame("Bob", gX01.rowId)
 
@@ -58,7 +55,8 @@ class TestReportingResultsScreen: AbstractTest()
 
         val table = scrn.getChild<ScrollTable>()
         table.rowCount shouldBe 1
-        table.getColumnNames() shouldBe listOf("Game", "Type", "Players", "Start Date", "Finish Date", "Match")
+        table.getColumnNames() shouldBe
+            listOf("Game", "Type", "Players", "Start Date", "Finish Date", "Match")
 
         clearLogs()
         every { dlg.excludedColumns() } returns listOf("Players", "Finish Date")
@@ -70,8 +68,7 @@ class TestReportingResultsScreen: AbstractTest()
     }
 
     @Test
-    fun `Should sort by timestamps correctly`()
-    {
+    fun `Should sort by timestamps correctly`() {
         val g1 = insertGame(dtCreation = Timestamp.valueOf("2020-03-04 15:00:00"))
         val g2 = insertGame(dtCreation = Timestamp.valueOf("2020-01-01 00:00:00"))
         val g3 = insertGame(dtCreation = Timestamp.valueOf("2020-03-03 12:00:00"))
@@ -96,12 +93,10 @@ class TestReportingResultsScreen: AbstractTest()
     }
 
     @Test
-    fun `Should go back to setup screen`()
-    {
+    fun `Should go back to setup screen`() {
         val scrn = ReportingResultsScreen()
         scrn.btnBack.doClick()
 
         ScreenCache.currentScreen().shouldBeInstanceOf<ReportingSetupScreen>()
     }
-
 }

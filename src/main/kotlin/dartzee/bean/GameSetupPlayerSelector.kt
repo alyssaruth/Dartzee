@@ -7,13 +7,11 @@ import java.awt.event.ActionEvent
 import javax.swing.ImageIcon
 import javax.swing.JToggleButton
 
-class GameSetupPlayerSelector: AbstractPlayerSelector<ScrollTableOrdered>()
-{
+class GameSetupPlayerSelector : AbstractPlayerSelector<ScrollTableOrdered>() {
     override val tablePlayersSelected = ScrollTableOrdered()
     private val btnPairs = JToggleButton("")
 
-    init
-    {
+    init {
         super.render()
 
         btnPairs.icon = ImageIcon(javaClass.getResource("/buttons/teams.png"))
@@ -23,8 +21,7 @@ class GameSetupPlayerSelector: AbstractPlayerSelector<ScrollTableOrdered>()
         btnPairs.addActionListener(this)
     }
 
-    override fun init()
-    {
+    override fun init() {
         super.init()
 
         val nimbusRenderer = tablePlayersSelected.getBuiltInRenderer()
@@ -33,30 +30,24 @@ class GameSetupPlayerSelector: AbstractPlayerSelector<ScrollTableOrdered>()
 
     fun pairMode(): Boolean = btnPairs.isSelected
 
-    /**
-     * Is this selection valid for a game/match?
-     */
-    fun valid(match: Boolean): Boolean
-    {
+    /** Is this selection valid for a game/match? */
+    fun valid(match: Boolean): Boolean {
         val selectedPlayers = getSelectedPlayers()
         val rowCount = selectedPlayers.size
-        if (rowCount < 1)
-        {
+        if (rowCount < 1) {
             DialogUtil.showErrorOLD("You must select at least 1 player.")
             return false
         }
 
         val playerOrTeamDesc = if (btnPairs.isSelected) "teams" else "players"
         val matchMinimum = if (btnPairs.isSelected) 4 else 2
-        if (match && rowCount < matchMinimum)
-        {
+        if (match && rowCount < matchMinimum) {
             DialogUtil.showErrorOLD("You must select at least 2 $playerOrTeamDesc for a match.")
             return false
         }
 
         val maxPlayers = if (btnPairs.isSelected) MAX_PLAYERS * 2 else MAX_PLAYERS
-        if (rowCount > maxPlayers)
-        {
+        if (rowCount > maxPlayers) {
             DialogUtil.showErrorOLD("You cannot select more than $MAX_PLAYERS $playerOrTeamDesc.")
             return false
         }
@@ -64,10 +55,8 @@ class GameSetupPlayerSelector: AbstractPlayerSelector<ScrollTableOrdered>()
         return true
     }
 
-    override fun actionPerformed(e: ActionEvent)
-    {
-        when (e.source)
-        {
+    override fun actionPerformed(e: ActionEvent) {
+        when (e.source) {
             btnPairs -> tablePlayersSelected.repaint()
             else -> super.actionPerformed(e)
         }

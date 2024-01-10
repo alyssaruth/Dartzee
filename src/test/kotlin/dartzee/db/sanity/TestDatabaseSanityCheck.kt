@@ -25,11 +25,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class TestDatabaseSanityCheck : AbstractTest()
-{
+class TestDatabaseSanityCheck : AbstractTest() {
     @Test
-    fun `Should produce no results on an empty database, and tidy up all temp tables`()
-    {
+    fun `Should produce no results on an empty database, and tidy up all temp tables`() {
         DatabaseSanityCheck.runSanityCheck()
 
         awaitSanityCheck()
@@ -40,13 +38,16 @@ class TestDatabaseSanityCheck : AbstractTest()
     }
 
     @Test
-    fun `Should display failed checks with correct descriptions and counts`()
-    {
+    fun `Should display failed checks with correct descriptions and counts`() {
         val game = insertGame()
         val p1 = insertPlayer()
         val p2 = insertPlayer()
 
-        val checks = listOf(DummySanityCheckBadGames(listOf(game)), DummySanityCheckMultipleThings(listOf(p1, p2)))
+        val checks =
+            listOf(
+                DummySanityCheckBadGames(listOf(game)),
+                DummySanityCheckMultipleThings(listOf(p1, p2))
+            )
         DatabaseSanityCheck.runSanityCheck(checks)
 
         awaitSanityCheck()
@@ -61,8 +62,7 @@ class TestDatabaseSanityCheck : AbstractTest()
     }
 
     @Test
-    fun `Should support auto-fixing`()
-    {
+    fun `Should support auto-fixing`() {
         val mockResult = mockk<AbstractSanityCheckResult>(relaxed = true)
         every { mockResult.getDescription() } returns "Foo"
 
@@ -78,8 +78,7 @@ class TestDatabaseSanityCheck : AbstractTest()
     }
 
     @Test
-    fun `Should support viewing results breakdown`()
-    {
+    fun `Should support viewing results breakdown`() {
         val breakdownDialog = TableModelDialog("Mock breakdown", ScrollTable())
         breakdownDialog.shouldNotBeVisible()
 
@@ -98,27 +97,22 @@ class TestDatabaseSanityCheck : AbstractTest()
         breakdownDialog.shouldBeVisible()
     }
 
-    private fun findResultsWindow() =
-        findWindow<TableModelDialog> { it.title == "Sanity Results" }
+    private fun findResultsWindow() = findWindow<TableModelDialog> { it.title == "Sanity Results" }
 
-    private fun awaitSanityCheck()
-    {
-        waitForAssertion {
-            findLog(CODE_SANITY_CHECK_COMPLETED) shouldNotBe null
-        }
+    private fun awaitSanityCheck() {
+        waitForAssertion { findLog(CODE_SANITY_CHECK_COMPLETED) shouldNotBe null }
 
         flushEdt()
     }
 }
 
-private class DummySanityCheckBadGames(private val games: List<GameEntity>) : ISanityCheck
-{
+private class DummySanityCheckBadGames(private val games: List<GameEntity>) : ISanityCheck {
     override fun runCheck(): List<AbstractSanityCheckResult> =
         listOf(SanityCheckResultEntitiesSimple(games, "Games where something's wrong"))
 }
 
-private class DummySanityCheckMultipleThings(private val players: List<PlayerEntity>): ISanityCheck
-{
+private class DummySanityCheckMultipleThings(private val players: List<PlayerEntity>) :
+    ISanityCheck {
     override fun runCheck(): List<AbstractSanityCheckResult> {
         return listOf(
             SanityCheckResultEntitiesSimple(players, "Players with thing one wrong"),

@@ -26,47 +26,45 @@ import java.sql.Timestamp
 import java.util.*
 import java.util.regex.Pattern
 
-abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Database = InjectedThings.mainDatabase)
-{
-    //DB Fields
+abstract class AbstractEntity<E : AbstractEntity<E>>(
+    protected val database: Database = InjectedThings.mainDatabase
+) {
+    // DB Fields
     var rowId: String = ""
     var dtCreation = getSqlDateNow()
     var dtLastUpdate = DateStatics.END_OF_TIME
 
-    //other variables
+    // other variables
     var retrievedFromDb = false
 
-    /**
-     * Abstract fns
-     */
+    /** Abstract fns */
     abstract fun getTableName(): EntityName
+
     abstract fun getCreateTableSqlSpecific(): String
 
-    /**
-     * Default implementations
-     */
+    /** Default implementations */
     open fun getColumnsAllowedToBeUnset() = listOf<String>()
+
     open fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>) {}
+
     open fun cacheValuesWhileResultSetActive() {}
+
     open fun includeInSync() = true
 
-    /**
-     * Helpers
-     */
+    /** Helpers */
     private fun getColumnCount() = getColumns().size
 
-    private fun getCreateTableColumnSql() = "RowId VARCHAR(36) PRIMARY KEY, DtCreation Timestamp NOT NULL, DtLastUpdate Timestamp NOT NULL, ${getCreateTableSqlSpecific()}"
+    private fun getCreateTableColumnSql() =
+        "RowId VARCHAR(36) PRIMARY KEY, DtCreation Timestamp NOT NULL, DtLastUpdate Timestamp NOT NULL, ${getCreateTableSqlSpecific()}"
 
-    fun getColumns(): MutableList<String>
-    {
+    fun getColumns(): MutableList<String> {
         val columnCreateSql = getCreateTableColumnSql()
         val cols = columnCreateSql.split(",")
 
-        return cols.map{ getColumnNameFromCreateSql(it) }.toMutableList()
+        return cols.map { getColumnNameFromCreateSql(it) }.toMutableList()
     }
 
-    private fun getColumnsExcluding(vararg columnsToExclude: String): MutableList<String>
-    {
+    private fun getColumnsExcluding(vararg columnsToExclude: String): MutableList<String> {
         val columns = getColumns()
         columnsToExclude.forEach { columns.remove(it) }
         return columns
@@ -74,8 +72,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
     fun getTableNameUpperCase() = getTableName().name.uppercase()
 
-    fun factoryFromResultSet(rs: ResultSet): E
-    {
+    fun factoryFromResultSet(rs: ResultSet): E {
         val ret = factory()!!
 
         ret.rowId = rs.getString("RowId")
@@ -95,62 +92,56 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
     @Suppress("UNCHECKED_CAST")
     private fun factory(db: Database = database): E? =
-        try
-        {
+        try {
             javaClass.getDeclaredConstructor(Database::class.java).newInstance(db) as E
-        }
-        catch (t: Throwable)
-        {
-            logger.error(CODE_INSTANTIATION_ERROR, "Failed to instantiate ${javaClass.simpleName}", t)
+        } catch (t: Throwable) {
+            logger.error(
+                CODE_INSTANTIATION_ERROR,
+                "Failed to instantiate ${javaClass.simpleName}",
+                t
+            )
             null
         }
 
-
     fun columnCanBeUnset(columnName: String) = getColumnsAllowedToBeUnset().contains(columnName)
 
-    open fun assignRowId(): String
-    {
+    open fun assignRowId(): String {
         rowId = UUID.randomUUID().toString()
         return rowId
     }
 
-    fun retrieveEntity(whereSql: String): E?
-    {
+    fun retrieveEntity(whereSql: String): E? {
         val entities = retrieveEntities(whereSql)
-        if (entities.size > 1)
-        {
-            logger.error(CODE_SQL_EXCEPTION,
-                    "Retrieved ${entities.size} rows from ${getTableName()}. Expected 1. WhereSQL [$whereSql]",
-                    KEY_SQL to whereSql)
+        if (entities.size > 1) {
+            logger.error(
+                CODE_SQL_EXCEPTION,
+                "Retrieved ${entities.size} rows from ${getTableName()}. Expected 1. WhereSQL [$whereSql]",
+                KEY_SQL to whereSql
+            )
         }
 
         return entities.firstOrNull()
     }
 
-    fun retrieveEntities(whereSql: String = "", alias: String = ""): MutableList<E>
-    {
+    fun retrieveEntities(whereSql: String = "", alias: String = ""): MutableList<E> {
         var queryWithFrom = "FROM ${getTableName()}"
-        if (alias.isNotEmpty())
-        {
+        if (alias.isNotEmpty()) {
             queryWithFrom += " $alias"
         }
 
-        if (whereSql.isNotEmpty())
-        {
+        if (whereSql.isNotEmpty()) {
             queryWithFrom += " WHERE $whereSql"
         }
 
         return retrieveEntitiesWithFrom(queryWithFrom, alias)
     }
 
-    private fun retrieveEntitiesWithFrom(whereSqlWithFrom: String, alias: String): MutableList<E>
-    {
+    private fun retrieveEntitiesWithFrom(whereSqlWithFrom: String, alias: String): MutableList<E> {
         val query = "SELECT " + getColumnsForSelectStatement(alias) + " " + whereSqlWithFrom
         val ret = mutableListOf<E>()
 
         database.executeQuery(query).use { rs ->
-            while (rs.next())
-            {
+            while (rs.next()) {
                 val entity = factoryFromResultSet(rs)
                 ret.add(entity)
             }
@@ -159,22 +150,20 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return ret
     }
 
-    fun retrieveForId(rowId: String, stackTraceIfNotFound: Boolean = true): E?
-    {
+    fun retrieveForId(rowId: String, stackTraceIfNotFound: Boolean = true): E? {
         val entity = retrieveEntity("RowId = '$rowId'")
-        if (entity == null && stackTraceIfNotFound)
-        {
-            logger.error(CODE_SQL_EXCEPTION,
-                    "Failed to find ${getTableName()} for ID [$rowId]",
-                    KEY_SQL to "RowId = '$rowId'")
+        if (entity == null && stackTraceIfNotFound) {
+            logger.error(
+                CODE_SQL_EXCEPTION,
+                "Failed to find ${getTableName()} for ID [$rowId]",
+                KEY_SQL to "RowId = '$rowId'"
+            )
         }
-
 
         return entity
     }
 
-    fun deleteFromDatabase(): Boolean
-    {
+    fun deleteFromDatabase(): Boolean {
         val sql = "DELETE FROM ${getTableName()} WHERE RowId = '$rowId'"
         val success = database.executeUpdate(sql)
         if (success && includeInSync()) {
@@ -184,18 +173,18 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return success
     }
 
-    fun deleteAll()
-    {
-        if (includeInSync())
-        {
-            logger.error(CODE_DELETE_ERROR, "Wiping of ${getTableName()} will not be audited. This will break the sync!")
+    fun deleteAll() {
+        if (includeInSync()) {
+            logger.error(
+                CODE_DELETE_ERROR,
+                "Wiping of ${getTableName()} will not be audited. This will break the sync!"
+            )
         }
 
         database.executeUpdate("DELETE FROM ${getTableName()}")
     }
 
-    fun deleteWhere(whereSql: String): Boolean
-    {
+    fun deleteWhere(whereSql: String): Boolean {
         val audits = retrieveEntities(whereSql).map { DeletionAuditEntity.factory(it) }
         val sql = "DELETE FROM ${getTableName()} WHERE $whereSql"
         val success = database.executeUpdate(sql)
@@ -206,68 +195,62 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return success
     }
 
-    fun saveToDatabase(dtLastUpdate: Timestamp = getSqlDateNow())
-    {
+    fun saveToDatabase(dtLastUpdate: Timestamp = getSqlDateNow()) {
         this.dtLastUpdate = dtLastUpdate
 
-        if (retrievedFromDb)
-        {
+        if (retrievedFromDb) {
             updateDatabaseRow()
-        }
-        else
-        {
+        } else {
             insertIntoDatabase()
         }
     }
 
     fun count() = countWhere("")
-    fun countWhere(whereSql: String): Int
-    {
+
+    fun countWhere(whereSql: String): Int {
         val fullWhere = if (whereSql.isNotEmpty()) "WHERE $whereSql" else ""
         return database.executeQueryAggregate("SELECT COUNT(1) FROM ${getTableName()} $fullWhere")
     }
 
-    /**
-     * Merge helpers
-     */
-    fun countModifiedSince(dt: Timestamp?): Int
-    {
+    /** Merge helpers */
+    fun countModifiedSince(dt: Timestamp?): Int {
         val whereSql = if (dt != null) "DtLastUpdate > ${dt.getSqlString()}" else ""
         return countWhere(whereSql)
     }
-    fun retrieveModifiedSince(dt: Timestamp?): List<E>
-    {
+
+    fun retrieveModifiedSince(dt: Timestamp?): List<E> {
         val whereSql = if (dt != null) "DtLastUpdate > ${dt.getSqlString()}" else ""
         return retrieveEntities(whereSql).sortedBy { it.dtCreation }
     }
 
-    fun mergeIntoDatabase(otherDatabase: Database)
-    {
-        val otherDao = factory(otherDatabase) ?: throw ApplicationFault(CODE_MERGE_ERROR, "Failed to factory ${getTableName()} dao")
+    fun mergeIntoDatabase(otherDatabase: Database) {
+        val otherDao =
+            factory(otherDatabase)
+                ?: throw ApplicationFault(
+                    CODE_MERGE_ERROR,
+                    "Failed to factory ${getTableName()} dao"
+                )
         val existingRow = otherDao.retrieveForId(rowId, false)
-        if (existingRow == null)
-        {
+        if (existingRow == null) {
             reassignLocalId(otherDatabase)
             insertIntoDatabase(otherDatabase)
-        }
-        else if (dtLastUpdate.after(existingRow.dtLastUpdate))
-        {
+        } else if (dtLastUpdate.after(existingRow.dtLastUpdate)) {
             updateDatabaseRow(otherDatabase)
         }
 
         mergeImpl(otherDatabase)
     }
+
     open fun reassignLocalId(otherDatabase: Database) {}
+
     open fun mergeImpl(otherDatabase: Database) {}
 
-    private fun updateDatabaseRow(db: Database = database)
-    {
+    private fun updateDatabaseRow(db: Database = database) {
         val genericUpdate = buildUpdateQuery()
         var updateQuery = genericUpdate
 
         val conn = db.borrowConnection()
-        try
-        {
+        try {
             conn.prepareStatement(updateQuery).use { psUpdate ->
                 updateQuery = writeValuesToStatement(psUpdate, 1, updateQuery)
                 updateQuery = writeString(psUpdate, getColumnCount(), rowId, updateQuery)
@@ -277,29 +260,31 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
                 val updateCount = psUpdate.updateCount
 
-                logger.logSql(updateQuery, genericUpdate, timer.getDuration(), updateCount, db.dbName)
+                logger.logSql(
+                    updateQuery,
+                    genericUpdate,
+                    timer.getDuration(),
+                    updateCount,
+                    db.dbName
+                )
 
-                if (updateCount == 0)
-                {
-                    logger.error(CODE_SQL_EXCEPTION,
-                            "0 rows updated for statement $updateQuery",
-                            KEY_SQL to updateQuery)
+                if (updateCount == 0) {
+                    logger.error(
+                        CODE_SQL_EXCEPTION,
+                        "0 rows updated for statement $updateQuery",
+                        KEY_SQL to updateQuery
+                    )
                 }
             }
-        }
-        catch (sqle: SQLException)
-        {
+        } catch (sqle: SQLException) {
             throw WrappedSqlException(updateQuery, genericUpdate, sqle)
-        }
-        finally
-        {
+        } finally {
             db.returnConnection(conn)
         }
     }
 
-    private fun buildUpdateQuery(): String
-    {
-        //Some fun String manipulation
+    private fun buildUpdateQuery(): String {
+        // Some fun String manipulation
         var columns = getColumnsForSelectStatement()
         columns = columns.replaceFirst("RowId, ", "")
         columns = columns.replace(",", "=?,")
@@ -308,37 +293,41 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return "UPDATE ${getTableName()} SET $columns WHERE RowId=?"
     }
 
-    private fun insertIntoDatabase(db: Database = database)
-    {
+    private fun insertIntoDatabase(db: Database = database) {
         val genericInsert = "INSERT INTO ${getTableName()} VALUES ${getInsertBlockForStatement()}"
         var insertQuery = genericInsert
 
         val conn = db.borrowConnection()
-        try
-        {
+        try {
             conn.prepareStatement(insertQuery).use { psInsert ->
                 insertQuery = writeValuesToInsertStatement(insertQuery, psInsert)
 
                 val timer = DurationTimer()
                 psInsert.executeUpdate()
-                logger.logSql(insertQuery, genericInsert, timer.getDuration(), psInsert.updateCount, db.dbName)
+                logger.logSql(
+                    insertQuery,
+                    genericInsert,
+                    timer.getDuration(),
+                    psInsert.updateCount,
+                    db.dbName
+                )
 
-                //Set this so we can call save() again on the same object and get the right behaviour
+                // Set this so we can call save() again on the same object and get the right
+                // behaviour
                 retrievedFromDb = true
             }
-        }
-        catch (sqle: SQLException)
-        {
+        } catch (sqle: SQLException) {
             throw WrappedSqlException(insertQuery, genericInsert, sqle)
-        }
-        finally
-        {
+        } finally {
             db.returnConnection(conn)
         }
     }
 
-    fun writeValuesToInsertStatement(emptyStatement: String, psInsert: PreparedStatement, entityNumber: Int = 0): String
-    {
+    fun writeValuesToInsertStatement(
+        emptyStatement: String,
+        psInsert: PreparedStatement,
+        entityNumber: Int = 0
+    ): String {
         val adjustment = entityNumber * getColumnCount()
 
         var insertQuery = emptyStatement
@@ -348,8 +337,11 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return insertQuery
     }
 
-    private fun writeValuesToStatement(ps: PreparedStatement, startIx: Int, emptyStatement: String): String
-    {
+    private fun writeValuesToStatement(
+        ps: PreparedStatement,
+        startIx: Int,
+        emptyStatement: String
+    ): String {
         var ix = startIx
         var statementStr = emptyStatement
         getColumnsExcluding("RowId").forEach {
@@ -361,30 +353,25 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
 
     fun getInsertBlockForStatement() = "(${getColumns().joinToString{"?"}})"
 
-    open fun createTable(): Boolean
-    {
-        val createdTable = database.createTableIfNotExists(getTableName().name, getCreateTableColumnSql())
-        if (createdTable)
-        {
+    open fun createTable(): Boolean {
+        val createdTable =
+            database.createTableIfNotExists(getTableName().name, getCreateTableColumnSql())
+        if (createdTable) {
             createIndexes()
         }
 
         return createdTable
     }
 
-    private fun createIndexes()
-    {
-        //Also create the indexes
+    private fun createIndexes() {
+        // Also create the indexes
         val indexes = mutableListOf<List<String>>()
         addListsOfColumnsForIndexes(indexes)
 
-        indexes.forEach{
-            createIndex(it)
-        }
+        indexes.forEach { createIndex(it) }
     }
 
-    private fun createIndex(columns: List<String>)
-    {
+    private fun createIndex(columns: List<String>) {
         val columnList = columns.joinToString()
         val indexName = columnList.replace(", ", "_")
 
@@ -392,19 +379,16 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         database.executeUpdate(statement)
     }
 
-    fun getColumnsForSelectStatement(alias: String = ""): String
-    {
+    fun getColumnsForSelectStatement(alias: String = ""): String {
         var cols = getColumns().toList()
-        if (alias.isNotEmpty())
-        {
-            cols = cols.map{ "$alias.$it" }
+        if (alias.isNotEmpty()) {
+            cols = cols.map { "$alias.$it" }
         }
 
         return cols.joinToString()
     }
 
-    private fun getColumnNameFromCreateSql(col: String): String
-    {
+    private fun getColumnNameFromCreateSql(col: String): String {
         var colSanitised = col
         colSanitised = colSanitised.trim()
         colSanitised = colSanitised.replace("(", "")
@@ -413,78 +397,104 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
         return colSanitised.split(" ")[0]
     }
 
-    fun getField(fieldName: String): Any?
-    {
+    fun getField(fieldName: String): Any? {
         val getter = javaClass.getMethod("get$fieldName")
         return getter.invoke(this)
     }
-    fun setField(fieldName: String, value: Any?)
-    {
+
+    fun setField(fieldName: String, value: Any?) {
         val getMethod = javaClass.getMethod("get$fieldName")
         val setMethod = javaClass.getDeclaredMethod("set$fieldName", getMethod.returnType)
 
         setMethod.invoke(this, value)
     }
-    fun getFieldType(fieldName: String): Class<*>
-    {
+
+    fun getFieldType(fieldName: String): Class<*> {
         val getter = javaClass.getMethod("get$fieldName")
         return getter.returnType
     }
 
-    /**
-     * Write to statement methods
-     */
-    private fun writeLong(ps: PreparedStatement, ix: Int, value: Long, statementStr: String): String
-    {
+    /** Write to statement methods */
+    private fun writeLong(
+        ps: PreparedStatement,
+        ix: Int,
+        value: Long,
+        statementStr: String
+    ): String {
         ps.setLong(ix, value)
         return swapInValue(statementStr, value)
     }
 
-    private fun writeInt(ps: PreparedStatement, ix: Int, value: Int, statementStr: String): String
-    {
+    private fun writeInt(ps: PreparedStatement, ix: Int, value: Int, statementStr: String): String {
         ps.setInt(ix, value)
         return swapInValue(statementStr, value)
     }
 
-    private fun writeDouble(ps: PreparedStatement, ix: Int, value: Double, statementStr: String): String
-    {
+    private fun writeDouble(
+        ps: PreparedStatement,
+        ix: Int,
+        value: Double,
+        statementStr: String
+    ): String {
         ps.setDouble(ix, value)
         return swapInValue(statementStr, value)
     }
 
-    private fun writeString(ps: PreparedStatement, ix: Int, value: String, statementStr: String): String
-    {
+    private fun writeString(
+        ps: PreparedStatement,
+        ix: Int,
+        value: String,
+        statementStr: String
+    ): String {
         ps.setString(ix, value)
         return swapInValue(statementStr, "'$value'")
     }
 
-    private fun writeTimestamp(ps: PreparedStatement, ix: Int, value: Timestamp, statementStr: String): String
-    {
+    private fun writeTimestamp(
+        ps: PreparedStatement,
+        ix: Int,
+        value: Timestamp,
+        statementStr: String
+    ): String {
         ps.setTimestamp(ix, value)
         return swapInValue(statementStr, "'$value'")
     }
 
-    private fun writeBlob(ps: PreparedStatement, ix: Int, value: Blob, statementStr: String): String
-    {
+    private fun writeBlob(
+        ps: PreparedStatement,
+        ix: Int,
+        value: Blob,
+        statementStr: String
+    ): String {
         ps.setBlob(ix, value)
         val blobStr = "Blob (dataLength: " + value.length() + ")"
         return swapInValue(statementStr, blobStr)
     }
 
-    private fun writeBoolean(ps: PreparedStatement, ix: Int, value: Boolean, statementStr: String): String
-    {
+    private fun writeBoolean(
+        ps: PreparedStatement,
+        ix: Int,
+        value: Boolean,
+        statementStr: String
+    ): String {
         ps.setBoolean(ix, value)
         return swapInValue(statementStr, value)
     }
 
-    private fun swapInValue(statementStr: String, value: Any) = statementStr.replaceFirst(Pattern.quote("?").toRegex(), "" + value)
+    private fun swapInValue(statementStr: String, value: Any) =
+        statementStr.replaceFirst(Pattern.quote("?").toRegex(), "" + value)
 
-    private fun writeValue(ps: PreparedStatement, ix: Int, columnName: String, statementStr: String): String
-    {
-        val value = getField(columnName) ?: throw Exception("Attempted to write NULL value to ${getTableName()}.$columnName")
+    private fun writeValue(
+        ps: PreparedStatement,
+        ix: Int,
+        columnName: String,
+        statementStr: String
+    ): String {
+        val value =
+            getField(columnName)
+                ?: throw Exception("Attempted to write NULL value to ${getTableName()}.$columnName")
 
-        return when (getFieldType(columnName))
-        {
+        return when (getFieldType(columnName)) {
             String::class.java -> writeString(ps, ix, value as String, statementStr)
             Long::class.java -> writeLong(ps, ix, value as Long, statementStr)
             Int::class.java -> writeInt(ps, ix, value as Int, statementStr)
@@ -497,8 +507,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(protected val database: Dat
     }
 
     private fun getFieldFromResultSet(rs: ResultSet, columnName: String): Any? =
-        when(getFieldType(columnName))
-        {
+        when (getFieldType(columnName)) {
             String::class.java -> rs.getString(columnName)
             Long::class.java -> rs.getLong(columnName)
             Int::class.java -> rs.getInt(columnName)

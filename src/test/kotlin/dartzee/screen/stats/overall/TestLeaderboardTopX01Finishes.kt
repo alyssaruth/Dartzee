@@ -6,16 +6,14 @@ import dartzee.helper.insertPlayer
 import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
-{
+class TestLeaderboardTopX01Finishes : AbstractRegistryTest() {
     override fun getPreferencesAffected() = listOf(PREFERENCES_INT_LEADERBOARD_SIZE)
 
     @Test
-    fun `Should get the correct local game ids`()
-    {
+    fun `Should get the correct local game ids`() {
         val p = insertPlayer()
 
         val g1 = insertFinishForPlayer(p, 150)
@@ -29,8 +27,7 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
     }
 
     @Test
-    fun `Should respect the preference value for the number of rows to be returned`()
-    {
+    fun `Should respect the preference value for the number of rows to be returned`() {
         PreferenceUtil.saveInt(PREFERENCES_INT_LEADERBOARD_SIZE, 2)
 
         val p = insertPlayer()
@@ -53,8 +50,7 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
     }
 
     @Test
-    fun `Should respond to changing player filters, and pull through player names`()
-    {
+    fun `Should respond to changing player filters, and pull through player names`() {
         val robot = insertPlayer(name = "Robot", strategy = "foo")
         val human = insertPlayer(name = "Human", strategy = "")
 
@@ -78,8 +74,7 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
     }
 
     @Test
-    fun `Should use dtCreation as a tie-breaker when there are multiple rows with the same score`()
-    {
+    fun `Should use dtCreation as a tie-breaker when there are multiple rows with the same score`() {
         val p = insertPlayer()
 
         val g1 = insertFinishForPlayer(p, 100, Timestamp(20))
@@ -94,10 +89,12 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
         leaderboard.getGameIdAt(2) shouldBe g3.localId
     }
 
-
-
     private fun LeaderboardTopX01Finishes.rowCount() = tableTopFinishes.rowCount
+
     private fun LeaderboardTopX01Finishes.getNameAt(row: Int) = tableTopFinishes.getValueAt(row, 2)
-    private fun LeaderboardTopX01Finishes.getGameIdAt(row: Int) = tableTopFinishes.getValueAt(row, 3)
+
+    private fun LeaderboardTopX01Finishes.getGameIdAt(row: Int) =
+        tableTopFinishes.getValueAt(row, 3)
+
     private fun LeaderboardTopX01Finishes.getScoreAt(row: Int) = tableTopFinishes.getValueAt(row, 4)
 }

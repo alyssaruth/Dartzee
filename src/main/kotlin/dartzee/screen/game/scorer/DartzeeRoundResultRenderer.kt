@@ -6,21 +6,16 @@ import dartzee.utils.setColoursForDartzeeResult
 import java.awt.Font
 import javax.swing.SwingConstants
 
-class DartzeeRoundResultRenderer : AbstractTableRenderer<DartzeeRoundResult>()
-{
-    override fun getReplacementValue(value: DartzeeRoundResult): Any
-    {
-        return when
-        {
+class DartzeeRoundResultRenderer : AbstractTableRenderer<DartzeeRoundResult>() {
+    override fun getReplacementValue(value: DartzeeRoundResult): Any {
+        return when {
             value.ruleNumber == -1 -> "-"
             else -> "#${value.ruleNumber}"
         }
     }
 
-    override fun setCellColours(typedValue: DartzeeRoundResult?, isSelected: Boolean)
-    {
-        if (typedValue == null)
-        {
+    override fun setCellColours(typedValue: DartzeeRoundResult?, isSelected: Boolean) {
+        if (typedValue == null) {
             background = null
             foreground = null
             return
@@ -29,8 +24,7 @@ class DartzeeRoundResultRenderer : AbstractTableRenderer<DartzeeRoundResult>()
         setColoursForDartzeeResult(typedValue.success)
     }
 
-    override fun setFontsAndAlignment()
-    {
+    override fun setFontsAndAlignment() {
         horizontalAlignment = SwingConstants.CENTER
         font = Font(font.name, Font.BOLD, 12)
     }

@@ -4,11 +4,9 @@ import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestStringUtil: AbstractTest()
-{
+class TestStringUtil : AbstractTest() {
     @Test
-    fun `Should return the right position descriptions for 1 - 13`()
-    {
+    fun `Should return the right position descriptions for 1 - 13`() {
         StringUtil.convertOrdinalToText(1) shouldBe "1st"
         StringUtil.convertOrdinalToText(2) shouldBe "2nd"
         StringUtil.convertOrdinalToText(3) shouldBe "3rd"
@@ -25,8 +23,7 @@ class TestStringUtil: AbstractTest()
     }
 
     @Test
-    fun `Should return the right position descriptions for random other numbers`()
-    {
+    fun `Should return the right position descriptions for random other numbers`() {
         StringUtil.convertOrdinalToText(20) shouldBe "20th"
         StringUtil.convertOrdinalToText(51) shouldBe "51st"
         StringUtil.convertOrdinalToText(102) shouldBe "102nd"

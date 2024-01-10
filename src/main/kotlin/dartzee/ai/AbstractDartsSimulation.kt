@@ -10,10 +10,8 @@ import dartzee.`object`.DartsClient
 import dartzee.stats.GameWrapper
 import dartzee.utils.getDartForSegment
 
-abstract class AbstractDartsSimulation(val player: PlayerEntity,
-                                       val model: DartsAiModel)
-{
-    //Transient things
+abstract class AbstractDartsSimulation(val player: PlayerEntity, val model: DartsAiModel) {
+    // Transient things
     protected var currentRound = -1
     protected val dartsThrown = mutableListOf<Dart>()
 
@@ -23,18 +21,19 @@ abstract class AbstractDartsSimulation(val player: PlayerEntity,
     abstract val gameType: GameType
 
     abstract fun shouldPlayCurrentRound(): Boolean
+
     abstract fun startRound()
+
     abstract fun getTotalScore(): Int
+
     abstract fun dartThrown(dart: Dart)
 
-    fun simulateGame(gameId: Long): GameWrapper
-    {
+    fun simulateGame(gameId: Long): GameWrapper {
         resetVariables()
 
         val dtStart = getSqlDateNow()
 
-        while (shouldPlayCurrentRound())
-        {
+        while (shouldPlayCurrentRound()) {
             startRound()
         }
 
@@ -43,35 +42,40 @@ abstract class AbstractDartsSimulation(val player: PlayerEntity,
         val totalRounds = currentRound - 1
         val totalScore = getTotalScore()
 
-        val wrapper = GameWrapper(gameId, gameParams, dtStart, dtFinish, totalScore, false, totalRounds, hmRoundNumberToDarts)
+        val wrapper =
+            GameWrapper(
+                gameId,
+                gameParams,
+                dtStart,
+                dtFinish,
+                totalScore,
+                false,
+                totalRounds,
+                hmRoundNumberToDarts
+            )
 
-        if (DartsClient.devMode)
-        {
+        if (DartsClient.devMode) {
             wrapper.generateRealEntities(gameType, player)
         }
 
         return wrapper
     }
 
-    protected open fun resetVariables()
-    {
+    protected open fun resetVariables() {
         dartsThrown.clear()
         hmRoundNumberToDarts = HashMapList()
         currentRound = 1
     }
 
-    protected fun resetRound()
-    {
+    protected fun resetRound() {
         dartsThrown.clear()
     }
 
-    protected fun confirmRound()
-    {
+    protected fun confirmRound() {
         hmRoundNumberToDarts[currentRound] = dartsThrown.toMutableList()
     }
 
-    protected fun dartThrown(aiPt: ComputedPoint)
-    {
+    protected fun dartThrown(aiPt: ComputedPoint) {
         dartThrown(getDartForSegment(aiPt.segment))
     }
 }

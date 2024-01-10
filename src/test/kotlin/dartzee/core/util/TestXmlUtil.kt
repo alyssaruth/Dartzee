@@ -4,11 +4,9 @@ import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestXmlUtil: AbstractTest()
-{
+class TestXmlUtil : AbstractTest() {
     @Test
-    fun `Should convert an XML doc to a string`()
-    {
+    fun `Should convert an XML doc to a string`() {
         val doc = XmlUtil.factoryNewDocument()
 
         val rootElement = doc.createRootElement("Root")
@@ -22,22 +20,19 @@ class TestXmlUtil: AbstractTest()
     }
 
     @Test
-    fun `Should handle an empty document`()
-    {
+    fun `Should handle an empty document`() {
         val doc = XmlUtil.factoryNewDocument()
         doc.toXmlString() shouldBe ""
     }
 
     @Test
-    fun `Should return null for an invalid string`()
-    {
+    fun `Should return null for an invalid string`() {
         val str = "bugg'rit"
         str.toXmlDoc() shouldBe null
     }
 
     @Test
-    fun `Should convert a valid xml string back to a document`()
-    {
+    fun `Should convert a valid xml string back to a document`() {
         val str = """<Xml Foo="bar"/>"""
         val doc = str.toXmlDoc()!!
 
@@ -47,8 +42,7 @@ class TestXmlUtil: AbstractTest()
     }
 
     @Test
-    fun `Should create a root element and append it to the doc`()
-    {
+    fun `Should create a root element and append it to the doc`() {
         val doc = XmlUtil.factoryNewDocument()
         doc.createRootElement("Baz")
 
@@ -57,8 +51,7 @@ class TestXmlUtil: AbstractTest()
     }
 
     @Test
-    fun `Should handle setting non-string attributes`()
-    {
+    fun `Should handle setting non-string attributes`() {
         val doc = XmlUtil.factoryNewDocument()
         val root = doc.createRootElement("Root")
 
@@ -67,8 +60,7 @@ class TestXmlUtil: AbstractTest()
     }
 
     @Test
-    fun `Should return integer value if valid`()
-    {
+    fun `Should return integer value if valid`() {
         val doc = XmlUtil.factoryNewDocument()
         val root = doc.createRootElement("Root")
 
@@ -77,8 +69,7 @@ class TestXmlUtil: AbstractTest()
     }
 
     @Test
-    fun `Should return defaultValue if not present`()
-    {
+    fun `Should return defaultValue if not present`() {
         val doc = XmlUtil.factoryNewDocument()
         val root = doc.createRootElement("Root")
 
@@ -86,8 +77,7 @@ class TestXmlUtil: AbstractTest()
     }
 
     @Test
-    fun `Should return 0 if not present and no default value specified`()
-    {
+    fun `Should return 0 if not present and no default value specified`() {
         val doc = XmlUtil.factoryNewDocument()
         val root = doc.createRootElement("Root")
 

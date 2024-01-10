@@ -31,9 +31,8 @@ import javax.swing.table.TableColumnModel
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
-open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelListener,
-    ListSelectionListener, IMouseListener
-{
+open class ScrollTable(val testId: String = "") :
+    JPanel(), TableColumnModelListener, ListSelectionListener, IMouseListener {
     private var rowNameSingular = "row"
     private var rowNamePlural: String? = null
     private var fgColor: Color? = null
@@ -44,18 +43,19 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
     private val clickListeners = ArrayList<IDoubleClickListener>()
 
     private val scrollPane = JScrollPane()
-    val table: JTable = object : JTable() {
-        override fun isCellEditable(arg0: Int, arg1: Int) = isEditable(arg0, arg1)
-    }
+    val table: JTable =
+        object : JTable() {
+            override fun isCellEditable(arg0: Int, arg1: Int) = isEditable(arg0, arg1)
+        }
     val lblRowCount = JLabel("<Row Count>")
     private val panelRowCount = JPanel()
-    private val tableFooter: JTable = object : JTable() {
-        override fun isCellEditable(row: Int, column: Int) = false
-    }
+    private val tableFooter: JTable =
+        object : JTable() {
+            override fun isCellEditable(row: Int, column: Int) = false
+        }
     private val panelCenter = JPanel()
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
         table.columnModel.addColumnModelListener(this)
         table.addMouseListener(this)
@@ -81,9 +81,7 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
 
         addKeyAction(KeyEvent.VK_DOWN) {
             val row = table.selectedRow
-            if (row == table.rowCount - 1
-                && tableFooter.isVisible
-            ) {
+            if (row == table.rowCount - 1 && tableFooter.isVisible) {
                 selectRow(TABLE_ROW_FOOTER)
                 tableFooter.requestFocus()
             } else if (row < table.rowCount - 1) {
@@ -97,7 +95,7 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
         }
     }
 
-    //Initialise our footer model in preparation
+    // Initialise our footer model in preparation
     open var model: DefaultTableModel
         get() = table.model as DefaultTableModel
         set(model) {
@@ -106,7 +104,7 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
                 rowSorter = TableRowSorter(model)
                 table.rowSorter = rowSorter
             }
-            //Initialise our footer model in preparation
+            // Initialise our footer model in preparation
             val footerModel = DefaultModel()
             for (i in 0 until model.columnCount) {
                 footerModel.addColumn("")
@@ -115,61 +113,53 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
             refreshRowCount()
         }
 
-    fun addRow(row: List<*>)
-    {
+    fun addRow(row: List<*>) {
         addRow(row.toTypedArray())
     }
-    fun addRow(row: Array<*>)
-    {
+
+    fun addRow(row: Array<*>) {
         model.addRow(row)
         refreshRowCount()
     }
 
-    fun insertRow(row: Array<Any?>?, index: Int)
-    {
+    fun insertRow(row: Array<Any?>?, index: Int) {
         model.insertRow(index, row)
         refreshRowCount()
     }
 
-    fun addColumn(columnName: String?)
-    {
+    fun addColumn(columnName: String?) {
         model.addColumn(columnName)
         val footerModel = tableFooter.model as DefaultTableModel
         footerModel.addColumn(columnName)
     }
 
-    private fun refreshRowCount()
-    {
+    private fun refreshRowCount() {
         val rows = table.rowCount
         val rowCountDesc = getRowCountDesc(rows)
         lblRowCount.text = rowCountDesc
     }
 
-    private fun getRowCountDesc(rows: Int): String
-    {
-        val rowName = when
-        {
-            rows == 1 -> rowNameSingular
-            rowNamePlural != null -> rowNamePlural
-            else -> "${rowNameSingular}s"
-        }
+    private fun getRowCountDesc(rows: Int): String {
+        val rowName =
+            when {
+                rows == 1 -> rowNameSingular
+                rowNamePlural != null -> rowNamePlural
+                else -> "${rowNameSingular}s"
+            }
 
         return "$rows $rowName"
     }
 
-    fun setRowName(rowNameSingular: String, rowNamePlural: String? = null)
-    {
+    fun setRowName(rowNameSingular: String, rowNamePlural: String? = null) {
         this.rowNameSingular = rowNameSingular
         this.rowNamePlural = rowNamePlural
     }
 
-    fun setShowRowCount(show: Boolean)
-    {
+    fun setShowRowCount(show: Boolean) {
         panelRowCount.isVisible = show
     }
 
-    fun setRowCountAlignment(alignment: Int)
-    {
+    fun setRowCountAlignment(alignment: Int) {
         lblRowCount.horizontalAlignment = alignment
     }
 
@@ -192,12 +182,14 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
         table.rowHeight = height
     }
 
-    fun getNonNullValueAt(row: Int, col: Int) = getValueAt(row, col) ?: throw Exception("NULL value at row $row, col $col")
+    fun getNonNullValueAt(row: Int, col: Int) =
+        getValueAt(row, col) ?: throw Exception("NULL value at row $row, col $col")
 
-    fun getValueAt(row: Int, col: Int): Any? = when (row) {
-        TABLE_ROW_FOOTER -> tableFooter.getValueAt(0, col)
-        else -> model.getValueAt(row, col)
-    }
+    fun getValueAt(row: Int, col: Int): Any? =
+        when (row) {
+            TABLE_ROW_FOOTER -> tableFooter.getValueAt(0, col)
+            else -> model.getValueAt(row, col)
+        }
 
     fun setPreferredScrollableViewportSize(dim: Dimension?) {
         table.preferredScrollableViewportSize = dim
@@ -229,48 +221,39 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
 
     fun convertRowIndexToModel(viewRowIndex: Int) = table.convertRowIndexToModel(viewRowIndex)
 
-    fun setTableFont(font: Font)
-    {
+    fun setTableFont(font: Font) {
         this.font = font
         table.font = font
     }
 
-    /**
-     * Helpers
-     */
-    fun sortBy(columnIndex: Int, desc: Boolean)
-    {
+    /** Helpers */
+    fun sortBy(columnIndex: Int, desc: Boolean) {
         rowSorter?.let {
             it.toggleSortOrder(columnIndex)
             if (desc) it.toggleSortOrder(columnIndex)
         }
     }
 
-    fun setTableRenderer(renderer: TableCellRenderer)
-    {
+    fun setTableRenderer(renderer: TableCellRenderer) {
         table.setDefaultRenderer(Object::class.java, renderer)
     }
 
     fun getBuiltInRenderer(): TableCellRenderer = table.getDefaultRenderer(Object::class.java)
 
-    fun setRenderer(columnIndex: Int, renderer: TableCellRenderer?)
-    {
+    fun setRenderer(columnIndex: Int, renderer: TableCellRenderer?) {
         val column = getColumn(columnIndex)
         column.cellRenderer = renderer
         val footerColumn = tableFooter.columnModel.getColumn(columnIndex)
         footerColumn.cellRenderer = renderer
     }
 
-    fun <T> setComparator(columnIndex: Int, comp: Comparator<T>)
-    {
+    fun <T> setComparator(columnIndex: Int, comp: Comparator<T>) {
         rowSorter?.setComparator(columnIndex, comp)
     }
 
-    fun setColumnWidths(colStr: String)
-    {
+    fun setColumnWidths(colStr: String) {
         val columnWidths = colStr.split(";")
-        for (i in columnWidths.indices)
-        {
+        for (i in columnWidths.indices) {
             val colWidthStr = columnWidths[i]
             val colWidth = getColWidthForString(colWidthStr)
 
@@ -280,18 +263,19 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
             setWidthForColumn(tableFooter.columnModel.getColumn(i), colWidth)
         }
     }
-    private fun setWidthForColumn(column: TableColumn, colWidth: Int)
-    {
+
+    private fun setWidthForColumn(column: TableColumn, colWidth: Int) {
         column.preferredWidth = colWidth
         column.maxWidth = colWidth
     }
-    private fun getColWidthForString(colWidthStr: String) = when(colWidthStr) {
-        COL_WIDTH_STRING_DT -> COL_WIDTH_DT
-        else -> colWidthStr.toInt()
-    }
 
-    fun disableSorting()
-    {
+    private fun getColWidthForString(colWidthStr: String) =
+        when (colWidthStr) {
+            COL_WIDTH_STRING_DT -> COL_WIDTH_DT
+            else -> colWidthStr.toInt()
+        }
+
+    fun disableSorting() {
         table.rowSorter = null
         sortingEnabled = false
     }
@@ -329,21 +313,21 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
         }
 
     val selectedViewRow: Int
-        get() = if (footerRowSelected()) {
-            TABLE_ROW_FOOTER
-        } else table.selectedRow
+        get() =
+            if (footerRowSelected()) {
+                TABLE_ROW_FOOTER
+            } else table.selectedRow
 
     fun selectFirstRow() {
         selectRow(0)
     }
 
     fun selectRow(row: Int) {
-        if (table.rowCount == 0) { //Nothing to select
+        if (table.rowCount == 0) { // Nothing to select
             return
         }
 
-        when (row)
-        {
+        when (row) {
             -1 -> table.clearSelection()
             TABLE_ROW_FOOTER -> tableFooter.setRowSelectionInterval(0, 0)
             else -> {
@@ -368,19 +352,13 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
     }
 
     fun scrollToBottom() {
-        SwingUtilities.invokeLater {
-            scrollPane.scrollToBottom()
-        }
+        SwingUtilities.invokeLater { scrollPane.scrollToBottom() }
     }
 
-    /**
-     * Default methods
-     */
+    /** Default methods */
     open fun isEditable(row: Int, col: Int) = false
 
-    /**
-     * TableColumnModelListener
-     */
+    /** TableColumnModelListener */
     override fun columnAdded(e: TableColumnModelEvent) {}
 
     override fun columnMarginChanged(e: ChangeEvent) {
@@ -398,16 +376,14 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
     }
 
     override fun columnMoved(e: TableColumnModelEvent) {}
+
     override fun columnRemoved(e: TableColumnModelEvent) {}
+
     override fun columnSelectionChanged(e: ListSelectionEvent) {}
 
-    /**
-     * ListSelectionListener
-     */
-    override fun valueChanged(e: ListSelectionEvent)
-    {
-        when (e.source)
-        {
+    /** ListSelectionListener */
+    override fun valueChanged(e: ListSelectionEvent) {
+        when (e.source) {
             table.selectionModel -> updateSelection(table, tableFooter)
             else -> updateSelection(tableFooter, table)
         }
@@ -415,20 +391,22 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
         listeners.forEach { it.selectionChanged(this) }
     }
 
-    private fun updateSelection(src: JTable, dest: JTable)
-    {
+    private fun updateSelection(src: JTable, dest: JTable) {
         val srcRow = src.selectedRow
-        if (srcRow > -1) { //We've selected something in the source, so need to clear the destination table's selection
+        if (
+            srcRow > -1
+        ) { // We've selected something in the source, so need to clear the destination table's
+            // selection
             dest.clearSelection()
         }
     }
 
-    fun addKeyAction(key: Int, fn: () -> Unit)
-    {
-        val fullFn = fun () {
-            if (selectedModelRows.isEmpty()) return
-            fn()
-        }
+    fun addKeyAction(key: Int, fn: () -> Unit) {
+        val fullFn =
+            fun() {
+                if (selectedModelRows.isEmpty()) return
+                fn()
+            }
 
         table.addKeyAction(key, fullFn)
     }
@@ -441,8 +419,7 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
         clickListeners.add(listener)
     }
 
-    fun setTableBorder(border: AbstractBorder)
-    {
+    fun setTableBorder(border: AbstractBorder) {
         scrollPane.border = border
         table.border = border
     }
@@ -463,8 +440,7 @@ open class ScrollTable(val testId: String = "") : JPanel(), TableColumnModelList
         }
     }
 
-    companion object
-    {
+    companion object {
         const val TABLE_ROW_FOOTER = -2
         private const val COL_WIDTH_STRING_DT = "DT"
         private const val COL_WIDTH_DT = 115

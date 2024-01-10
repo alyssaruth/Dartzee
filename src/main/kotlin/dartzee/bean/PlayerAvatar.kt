@@ -14,15 +14,13 @@ import javax.swing.JLabel
 import javax.swing.SwingConstants
 import javax.swing.border.EtchedBorder
 
-class PlayerAvatar : JLabel(ResourceCache.AVATAR_UNSET)
-{
+class PlayerAvatar : JLabel(ResourceCache.AVATAR_UNSET) {
     private var player: PlayerEntity? = null
 
     var avatarId = ""
     var readOnly = false
 
-    init
-    {
+    init {
         preferredSize = Dimension(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
         border = EtchedBorder(EtchedBorder.RAISED, null, null)
         horizontalAlignment = SwingConstants.CENTER
@@ -30,27 +28,23 @@ class PlayerAvatar : JLabel(ResourceCache.AVATAR_UNSET)
         addMouseListener(AvatarClickListener())
     }
 
-    fun init(player: PlayerEntity, saveChanges: Boolean)
-    {
-        //Only set the player variable if we want to allow the label to directly make changes to it.
-        if (saveChanges)
-        {
+    fun init(player: PlayerEntity, saveChanges: Boolean) {
+        // Only set the player variable if we want to allow the label to directly make changes to
+        // it.
+        if (saveChanges) {
             this.player = player
         }
 
         avatarId = player.playerImageId
-        icon = if (player.playerImageId.isNotEmpty()) player.getAvatar() else ResourceCache.AVATAR_UNSET
+        icon =
+            if (player.playerImageId.isNotEmpty()) player.getAvatar()
+            else ResourceCache.AVATAR_UNSET
     }
 
-    /**
-     * MouseListener
-     */
-    private inner class AvatarClickListener : MouseAdapter()
-    {
-        override fun mouseClicked(arg0: MouseEvent?)
-        {
-            if (readOnly)
-            {
+    /** MouseListener */
+    private inner class AvatarClickListener : MouseAdapter() {
+        override fun mouseClicked(arg0: MouseEvent?) {
+            if (readOnly) {
                 return
             }
 
@@ -58,8 +52,7 @@ class PlayerAvatar : JLabel(ResourceCache.AVATAR_UNSET)
             dlg.isVisible = true
         }
 
-        private fun imageSelected(imageId: String)
-        {
+        private fun imageSelected(imageId: String) {
             avatarId = imageId
             val newIcon = PlayerImageEntity.retrieveImageIconForId(avatarId)
             icon = newIcon
@@ -70,18 +63,14 @@ class PlayerAvatar : JLabel(ResourceCache.AVATAR_UNSET)
             }
         }
 
-        override fun mouseEntered(arg0: MouseEvent?)
-        {
-            if (!readOnly)
-            {
+        override fun mouseEntered(arg0: MouseEvent?) {
+            if (!readOnly) {
                 cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
             }
         }
 
-        override fun mouseExited(arg0: MouseEvent?)
-        {
-            if (!readOnly)
-            {
+        override fun mouseExited(arg0: MouseEvent?) {
+            if (!readOnly) {
                 cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
             }
         }

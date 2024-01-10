@@ -1,24 +1,25 @@
 package dartzee.screen.game.x01
 
-import dartzee.`object`.Dart
 import dartzee.game.state.X01PlayerState
 import dartzee.helper.makeDart
 import dartzee.helper.makeX01PlayerState
 import dartzee.helper.makeX01PlayerStateWithRounds
 import dartzee.helper.makeX01Rounds
+import dartzee.`object`.Dart
 import dartzee.screen.game.AbstractGameStatisticsPanelTest
 import dartzee.screen.game.getValueForRow
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestMatchStatisticsPanelX01: AbstractGameStatisticsPanelTest<X01PlayerState, MatchStatisticsPanelX01>()
-{
+class TestMatchStatisticsPanelX01 :
+    AbstractGameStatisticsPanelTest<X01PlayerState, MatchStatisticsPanelX01>() {
     override fun factoryStatsPanel() = MatchStatisticsPanelX01("501")
-    override fun makePlayerState() = makeX01PlayerState(completedRound = listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)))
+
+    override fun makePlayerState() =
+        makeX01PlayerState(completedRound = listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)))
 
     @Test
-    fun `Should get the correct value for best finish`()
-    {
+    fun `Should get the correct value for best finish`() {
         val finishOne = listOf(makeDart(17, 1), makeDart(20, 0), makeDart(20, 2))
         makeX01Rounds(57, finishOne)
 

@@ -15,16 +15,14 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
 
-abstract class AbstractDartsScorerPausable<PlayerState: AbstractPlayerState<PlayerState>>(
+abstract class AbstractDartsScorerPausable<PlayerState : AbstractPlayerState<PlayerState>>(
     private val parent: GamePanelPausable<*, *>,
     participant: IWrappedParticipant
-    ) : AbstractDartsScorer<PlayerState>(participant), ActionListener
-{
+) : AbstractDartsScorer<PlayerState>(participant), ActionListener {
     private val btnResume = JButton("")
     private var latestState: PlayerState? = null
 
-    init
-    {
+    init {
         btnResume.preferredSize = Dimension(30, 30)
         panelSouth.add(btnResume, BorderLayout.EAST)
         btnResume.isVisible = false
@@ -35,22 +33,23 @@ abstract class AbstractDartsScorerPausable<PlayerState: AbstractPlayerState<Play
 
     fun getPaused() = btnResume.icon === ICON_RESUME && btnResume.isVisible
 
-    override fun stateChanged(state: PlayerState)
-    {
+    override fun stateChanged(state: PlayerState) {
         super.stateChanged(state)
         latestState = state
     }
 
-    fun toggleResume()
-    {
-        if (btnResume.icon === ICON_PAUSE)
-        {
-            logger.info(CODE_PLAYER_PAUSED, "Paused player ${participant.getUniqueParticipantName()}")
+    fun toggleResume() {
+        if (btnResume.icon === ICON_PAUSE) {
+            logger.info(
+                CODE_PLAYER_PAUSED,
+                "Paused player ${participant.getUniqueParticipantName()}"
+            )
             btnResume.icon = ICON_RESUME
-        }
-        else
-        {
-            logger.info(CODE_PLAYER_UNPAUSED, "Unpaused player ${participant.getUniqueParticipantName()}")
+        } else {
+            logger.info(
+                CODE_PLAYER_UNPAUSED,
+                "Unpaused player ${participant.getUniqueParticipantName()}"
+            )
             btnResume.icon = ICON_PAUSE
             updateResultColourForPosition(-1)
         }
@@ -58,39 +57,31 @@ abstract class AbstractDartsScorerPausable<PlayerState: AbstractPlayerState<Play
         latestState?.let(::stateChanged)
     }
 
-    protected fun finalisePlayerResult(state: PlayerState)
-    {
+    protected fun finalisePlayerResult(state: PlayerState) {
         val dartCount = state.getScoreSoFar()
         lblResult.text = "$dartCount Darts"
 
         val participant = state.wrappedParticipant.participant
-        if (participant.finishingPosition == -1)
-        {
+        if (participant.finishingPosition == -1) {
             return
         }
 
         val playerHasFinished = participant.dtFinished != DateStatics.END_OF_TIME
         btnResume.isVisible = !playerHasFinished
 
-        if (getPaused() && !playerHasFinished)
-        {
+        if (getPaused() && !playerHasFinished) {
             lblResult.text = "Unfinished"
         }
 
-        if (getPaused() || playerHasFinished)
-        {
+        if (getPaused() || playerHasFinished) {
             updateResultColourForPosition(participant.finishingPosition)
         }
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        if (getPaused())
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        if (getPaused()) {
             parent.unpauseLastPlayer()
-        }
-        else
-        {
+        } else {
             parent.pauseLastPlayer()
         }
 

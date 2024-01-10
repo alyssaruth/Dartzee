@@ -7,8 +7,7 @@ import dartzee.game.GameType
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 
-class AchievementX01HighestBust : AbstractAchievement()
-{
+class AchievementX01HighestBust : AbstractAchievement() {
     override val name = "Bognor"
     override val desc = "Highest number busted from in X01"
     override val achievementType = AchievementType.X01_HIGHEST_BUST
@@ -23,9 +22,9 @@ class AchievementX01HighestBust : AbstractAchievement()
     override val pinkThreshold = 100
     override val maxValue = 181
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
-        val whereSql = "RemainingScore < 0 OR RemainingSCore = 1 OR (RemainingScore = 0 AND LastDartMultiplier <> 2)"
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
+        val whereSql =
+            "RemainingScore < 0 OR RemainingSCore = 1 OR (RemainingScore = 0 AND LastDartMultiplier <> 2)"
 
         unlockThreeDartAchievement(playerIds, whereSql, "StartingScore", achievementType, database)
     }

@@ -11,18 +11,41 @@ import javax.swing.border.EmptyBorder
 import javax.swing.border.MatteBorder
 import javax.swing.table.TableCellRenderer
 
-class TeamRenderer(private val baseRenderer: TableCellRenderer, private val teamsEnabled: () -> Boolean): TableCellRenderer
-{
-    private val colors = listOf(Color.RED, Color.GREEN, Color.CYAN, Color.YELLOW, DartsColour.PURPLE, DartsColour.ORANGE)
+class TeamRenderer(
+    private val baseRenderer: TableCellRenderer,
+    private val teamsEnabled: () -> Boolean
+) : TableCellRenderer {
+    private val colors =
+        listOf(
+            Color.RED,
+            Color.GREEN,
+            Color.CYAN,
+            Color.YELLOW,
+            DartsColour.PURPLE,
+            DartsColour.ORANGE
+        )
 
-    override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
-    {
-        val c = baseRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JComponent
+    override fun getTableCellRendererComponent(
+        table: JTable?,
+        value: Any?,
+        isSelected: Boolean,
+        hasFocus: Boolean,
+        row: Int,
+        column: Int
+    ): Component {
+        val c =
+            baseRenderer.getTableCellRendererComponent(
+                table,
+                value,
+                isSelected,
+                hasFocus,
+                row,
+                column
+            ) as JComponent
 
-        val inBounds = row/2 < colors.size
-        if (teamsEnabled() && inBounds)
-        {
-            val rawColour = colors[row/2]
+        val inBounds = row / 2 < colors.size
+        if (teamsEnabled() && inBounds) {
+            val rawColour = colors[row / 2]
             c.background = if (isSelected) rawColour else rawColour?.translucent()
             c.foreground = Color.BLACK
 
@@ -30,9 +53,7 @@ class TeamRenderer(private val baseRenderer: TableCellRenderer, private val team
             val lineBorder = MatteBorder(0, 0, row % 2, 0, Color.BLACK)
             val padBorder = EmptyBorder(0, padding, 0, 0)
             c.border = CompoundBorder(lineBorder, padBorder)
-        }
-        else if (!isSelected)
-        {
+        } else if (!isSelected) {
             c.background = null
         }
 

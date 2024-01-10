@@ -8,11 +8,9 @@ import dartzee.utils.InjectedThings.mainDatabase
 import io.kotest.matchers.nulls.shouldNotBeNull
 import org.junit.jupiter.api.Test
 
-class TestDatabaseMigrationV20toV21: AbstractTest()
-{
+class TestDatabaseMigrationV20toV21 : AbstractTest() {
     @Test
-    fun `Should correctly drop old columns`()
-    {
+    fun `Should correctly drop old columns`() {
         val dart = insertDart(insertParticipant())
 
         mainDatabase.executeUpdate("ALTER TABLE Dart ADD COLUMN PosX INT DEFAULT 0")

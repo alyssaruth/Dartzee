@@ -9,13 +9,12 @@ import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.SQLException
 
-fun getGameCounts(player: PlayerEntity): HashMapCount<GameType>
-{
+fun getGameCounts(player: PlayerEntity): HashMapCount<GameType> {
     val hmTypeToCount = HashMapCount<GameType>()
-    val query = "SELECT g.GameType FROM Participant pt, Game g WHERE pt.GameId = g.RowId AND pt.PlayerId = '${player.rowId}'"
+    val query =
+        "SELECT g.GameType FROM Participant pt, Game g WHERE pt.GameId = g.RowId AND pt.PlayerId = '${player.rowId}'"
     mainDatabase.executeQuery(query).use { rs ->
-        while (rs.next())
-        {
+        while (rs.next()) {
             val gameType = GameType.valueOf(rs.getString("GameType"))
             hmTypeToCount.incrementCount(gameType)
         }
@@ -24,24 +23,23 @@ fun getGameCounts(player: PlayerEntity): HashMapCount<GameType>
     return hmTypeToCount
 }
 
-fun retrieveGameData(playerId: String, gameType: GameType): Map<Long, GameWrapper>
-{
+fun retrieveGameData(playerId: String, gameType: GameType): Map<Long, GameWrapper> {
     val hm = mutableMapOf<Long, GameWrapper>()
     val zzParticipants = buildParticipantTable(playerId, gameType) ?: return hm
 
     val sb = StringBuilder()
-    sb.append(" SELECT zz.LocalId, zz.GameParams, zz.DtCreation, zz.DtFinish, zz.FinalScore, zz.TeamId, ")
+    sb.append(
+        " SELECT zz.LocalId, zz.GameParams, zz.DtCreation, zz.DtFinish, zz.FinalScore, zz.TeamId, "
+    )
     sb.append(" drt.RoundNumber,")
     sb.append(" drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.SegmentType")
     sb.append(" FROM Dart drt, $zzParticipants zz")
     sb.append(" WHERE drt.ParticipantId = zz.ParticipantId")
     sb.append(" AND drt.PlayerId = zz.PlayerId")
 
-    try
-    {
+    try {
         mainDatabase.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
+            while (rs.next()) {
                 val gameId = rs.getLong("LocalId")
                 val gameParams = rs.getString("GameParams")
                 val dtStart = rs.getTimestamp("DtCreation")
@@ -55,7 +53,17 @@ fun retrieveGameData(playerId: String, gameType: GameType): Map<Long, GameWrappe
                 val segmentType = SegmentType.valueOf(rs.getString("SegmentType"))
                 val teamId = rs.getString("TeamId")
 
-                val wrapper = hm.getOrPut(gameId) { GameWrapper(gameId, gameParams, dtStart, dtFinish, numberOfDarts, teamId.isNotEmpty()) }
+                val wrapper =
+                    hm.getOrPut(gameId) {
+                        GameWrapper(
+                            gameId,
+                            gameParams,
+                            dtStart,
+                            dtFinish,
+                            numberOfDarts,
+                            teamId.isNotEmpty()
+                        )
+                    }
 
                 val dart = Dart(score, multiplier, segmentType = segmentType)
                 dart.ordinal = ordinal
@@ -64,32 +72,36 @@ fun retrieveGameData(playerId: String, gameType: GameType): Map<Long, GameWrappe
                 wrapper.addDart(dart)
             }
         }
-    }
-    catch (sqle: SQLException)
-    {
+    } catch (sqle: SQLException) {
         InjectedThings.logger.logSqlException(sb.toString(), "", sqle)
-    }
-    finally
-    {
+    } finally {
         mainDatabase.dropTable(zzParticipants)
     }
 
     return hm
 }
-private fun buildParticipantTable(playerId: String, gameType: GameType): String?
-{
-    val tmp = mainDatabase.createTempTable("ParticipantsForStats", "LocalId INT, GameParams VARCHAR(255), DtCreation TIMESTAMP, DtFinish TIMESTAMP, PlayerId VARCHAR(36), ParticipantId VARCHAR(36), FinalScore INT, TeamId VARCHAR(36)")
+
+private fun buildParticipantTable(playerId: String, gameType: GameType): String? {
+    val tmp =
+        mainDatabase.createTempTable(
+            "ParticipantsForStats",
+            "LocalId INT, GameParams VARCHAR(255), DtCreation TIMESTAMP, DtFinish TIMESTAMP, PlayerId VARCHAR(36), ParticipantId VARCHAR(36), FinalScore INT, TeamId VARCHAR(36)"
+        )
     tmp ?: return null
 
     val sb = StringBuilder()
     sb.append(" INSERT INTO $tmp")
-    sb.append(" SELECT g.LocalId, g.GameParams, g.DtCreation, g.DtFinish, pt.PlayerId, pt.RowId AS ParticipantId, pt.FinalScore, pt.TeamId")
+    sb.append(
+        " SELECT g.LocalId, g.GameParams, g.DtCreation, g.DtFinish, pt.PlayerId, pt.RowId AS ParticipantId, pt.FinalScore, pt.TeamId"
+    )
     sb.append(" FROM Participant pt, Game g")
     sb.append(" WHERE pt.GameId = g.RowId")
     sb.append(" AND pt.PlayerId = '$playerId'")
     sb.append(" AND g.GameType = '$gameType'")
 
     mainDatabase.executeUpdate(sb)
-    mainDatabase.executeUpdate("CREATE INDEX ${tmp}_PlayerId_ParticipantId ON $tmp(PlayerId, ParticipantId)")
+    mainDatabase.executeUpdate(
+        "CREATE INDEX ${tmp}_PlayerId_ParticipantId ON $tmp(PlayerId, ParticipantId)"
+    )
     return tmp
 }

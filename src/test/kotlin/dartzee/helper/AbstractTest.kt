@@ -31,13 +31,11 @@ const val TEST_DB_DIRECTORY = "Test/Databases"
 
 @ExtendWith(BeforeAllTestsExtension::class)
 @ExtendWith(SwingTestCleanupExtension::class)
-open class AbstractTest
-{
+open class AbstractTest {
     val dialogFactory = TestMessageDialogFactory()
 
     @BeforeEach
-    fun beforeEachTest()
-    {
+    fun beforeEachTest() {
         ScreenCache.emptyCache()
         dialogFactory.reset()
         clearLogs()
@@ -48,8 +46,7 @@ open class AbstractTest
 
         mainDatabase.localIdGenerator.clearCache()
 
-        if (logDestination.haveRunInsert)
-        {
+        if (logDestination.haveRunInsert) {
             wipeDatabase()
             logDestination.haveRunInsert = false
         }
@@ -61,14 +58,13 @@ open class AbstractTest
     }
 
     @AfterEach
-    fun afterEachTest()
-    {
-        if (!checkedForExceptions)
-        {
+    fun afterEachTest() {
+        if (!checkedForExceptions) {
             val errors = getErrorsLogged()
-            if (errors.isNotEmpty())
-            {
-                fail("Unexpected error(s) were logged during test: ${errors.map { it.toJsonString() } }")
+            if (errors.isNotEmpty()) {
+                fail(
+                    "Unexpected error(s) were logged during test: ${errors.map { it.toJsonString() } }"
+                )
             }
             errorLogged() shouldBe false
         }
@@ -76,20 +72,18 @@ open class AbstractTest
         checkedForExceptions = false
     }
 
-    fun wipeDatabase()
-    {
+    fun wipeDatabase() {
         DartsDatabaseUtil.getAllEntitiesIncludingVersion().forEach { wipeTable(it.getTableName()) }
     }
 
     fun getLastLog() = flushAndGetLogRecords().last()
 
-    fun verifyLog(code: LoggingCode, severity: Severity = Severity.INFO): LogRecord
-    {
-        val record = flushAndGetLogRecords().findLast { it.loggingCode == code && it.severity == severity }
+    fun verifyLog(code: LoggingCode, severity: Severity = Severity.INFO): LogRecord {
+        val record =
+            flushAndGetLogRecords().findLast { it.loggingCode == code && it.severity == severity }
         record.shouldNotBeNull()
 
-        if (severity == Severity.ERROR)
-        {
+        if (severity == Severity.ERROR) {
             checkedForExceptions = true
         }
 
@@ -99,13 +93,11 @@ open class AbstractTest
     protected fun findLog(code: LoggingCode, severity: Severity = Severity.INFO) =
         getLogRecordsSoFar().findLast { it.loggingCode == code && it.severity == severity }
 
-    fun verifyNoLogs(code: LoggingCode)
-    {
+    fun verifyNoLogs(code: LoggingCode) {
         flushAndGetLogRecords().any { it.loggingCode == code } shouldBe false
     }
 
-    fun errorLogged(): Boolean
-    {
+    fun errorLogged(): Boolean {
         checkedForExceptions = true
         return getErrorsLogged().isNotEmpty()
     }
@@ -114,13 +106,12 @@ open class AbstractTest
 
     fun getLogRecordsSoFar() = logDestination.logRecords.toList()
 
-    fun flushAndGetLogRecords(): List<LogRecord>
-    {
+    fun flushAndGetLogRecords(): List<LogRecord> {
         logger.waitUntilLoggingFinished()
         return logDestination.logRecords.toList()
     }
-    fun clearLogs()
-    {
+
+    fun clearLogs() {
         logger.waitUntilLoggingFinished()
         logDestination.clear()
     }

@@ -11,13 +11,11 @@ import dartzee.trebleNineteen
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDartzeeDartRuleOuter: AbstractDartzeeRuleTest<DartzeeDartRuleOuter>()
-{
+class TestDartzeeDartRuleOuter : AbstractDartzeeRuleTest<DartzeeDartRuleOuter>() {
     override fun factory() = DartzeeDartRuleOuter()
 
     @Test
-    fun `segment validation`()
-    {
+    fun `segment validation`() {
         val rule = DartzeeDartRuleOuter()
 
         rule.isValidSegment(bullseye) shouldBe false

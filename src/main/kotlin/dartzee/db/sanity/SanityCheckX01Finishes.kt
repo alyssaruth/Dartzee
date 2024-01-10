@@ -6,12 +6,10 @@ import dartzee.core.util.TableUtil
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.ResultSet
 
-class SanityCheckX01Finishes: ISanityCheck
-{
+class SanityCheckX01Finishes : ISanityCheck {
     data class X01Finish(val playerId: String, val gameId: String, val finish: Int)
 
-    override fun runCheck(): List<AbstractSanityCheckResult>
-    {
+    override fun runCheck(): List<AbstractSanityCheckResult> {
         ensureX01RoundsTableExists(emptyList(), mainDatabase)
 
         var sb = StringBuilder()
@@ -40,19 +38,16 @@ class SanityCheckX01Finishes: ISanityCheck
         missing.forEach { model.addRow(arrayOf("MISSING", it.playerId, it.gameId, it.finish)) }
         extra.forEach { model.addRow(arrayOf("EXTRA", it.playerId, it.gameId, it.finish)) }
 
-        if (model.rowCount > 0)
-        {
+        if (model.rowCount > 0) {
             return listOf(SanityCheckResultSimpleTableModel(model, "X01 Finish mismatches"))
         }
 
         return emptyList()
     }
 
-    private fun extractX01Finishes(rs: ResultSet): List<X01Finish>
-    {
+    private fun extractX01Finishes(rs: ResultSet): List<X01Finish> {
         val finishes = mutableListOf<X01Finish>()
-        while (rs.next())
-        {
+        while (rs.next()) {
             val playerId = rs.getString("PlayerId")
             val gameId = rs.getString("GameId")
             val finish = rs.getInt("Finish")
@@ -62,5 +57,4 @@ class SanityCheckX01Finishes: ISanityCheck
 
         return finishes.toList()
     }
-
 }

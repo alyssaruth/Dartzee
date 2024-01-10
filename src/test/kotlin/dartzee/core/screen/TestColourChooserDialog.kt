@@ -1,19 +1,17 @@
 package dartzee.core.screen
 
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.clickCancel
+import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import io.mockk.spyk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.awt.Color
+import org.junit.jupiter.api.Test
 
-class TestColourChooserDialog: AbstractTest()
-{
+class TestColourChooserDialog : AbstractTest() {
     @Test
-    fun `Should update selectedColour and dispose on Ok`()
-    {
+    fun `Should update selectedColour and dispose on Ok`() {
         val dlg = spyk<ColourChooserDialog>()
         dlg.initialColour = Color.RED
         dlg.selectedColour = Color.BLACK
@@ -26,8 +24,7 @@ class TestColourChooserDialog: AbstractTest()
     }
 
     @Test
-    fun `Should set selectedColour back to initialColour and dispose on Cancel`()
-    {
+    fun `Should set selectedColour back to initialColour and dispose on Cancel`() {
         val dlg = spyk<ColourChooserDialog>()
         dlg.initialColour = Color.RED
         dlg.selectedColour = Color.BLACK

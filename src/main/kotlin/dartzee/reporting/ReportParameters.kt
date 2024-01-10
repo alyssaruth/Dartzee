@@ -9,8 +9,7 @@ import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.Timestamp
 
-class ReportParameters
-{
+class ReportParameters {
     var gameType: GameType? = null
     var gameParams = ""
     var unfinishedOnly = false
@@ -24,78 +23,65 @@ class ReportParameters
     var partOfMatch = MatchFilter.BOTH
     var pendingChanges: Boolean? = null
 
-    fun getExtraWhereSql(): String
-    {
+    fun getExtraWhereSql(): String {
         val sb = StringBuilder()
 
-        if (gameType != null)
-        {
+        if (gameType != null) {
             sb.append(" AND g.GameType = '$gameType'")
         }
 
-        if (!gameParams.isEmpty())
-        {
+        if (!gameParams.isEmpty()) {
             sb.append(" AND g.GameParams = '$gameParams'")
         }
 
-        if (dtStartFrom != null)
-        {
+        if (dtStartFrom != null) {
             sb.append(" AND g.DtCreation >= '")
             sb.append(dtStartFrom)
             sb.append("'")
         }
 
-        if (dtStartTo != null)
-        {
+        if (dtStartTo != null) {
             sb.append(" AND g.DtCreation <= '")
             sb.append(dtStartTo)
             sb.append("'")
         }
 
-        if (dtFinishFrom != null)
-        {
+        if (dtFinishFrom != null) {
             sb.append(" AND g.DtFinish >= '")
             sb.append(dtFinishFrom)
             sb.append("'")
         }
 
-        if (dtFinishTo != null)
-        {
+        if (dtFinishTo != null) {
             sb.append(" AND g.DtFinish <= '")
             sb.append(dtFinishTo)
             sb.append("'")
         }
 
-        if (unfinishedOnly)
-        {
+        if (unfinishedOnly) {
             sb.append(" AND g.DtFinish = ")
             sb.append(getEndOfTimeSqlString())
         }
 
-        if (partOfMatch == MatchFilter.GAMES_ONLY)
-        {
+        if (partOfMatch == MatchFilter.GAMES_ONLY) {
             sb.append(" AND g.DartsMatchId = ''")
-        }
-        else if (partOfMatch == MatchFilter.MATCHES_ONLY)
-        {
+        } else if (partOfMatch == MatchFilter.MATCHES_ONLY) {
             sb.append(" AND g.DartsMatchId <> ''")
         }
 
         pendingChanges?.let { pendingChanges ->
-            val dtLastSynced = SyncAuditEntity.getLastSyncData(mainDatabase)?.lastSynced ?: DateStatics.START_OF_TIME
-            if (pendingChanges)
-            {
+            val dtLastSynced =
+                SyncAuditEntity.getLastSyncData(mainDatabase)?.lastSynced
+                    ?: DateStatics.START_OF_TIME
+            if (pendingChanges) {
                 sb.append(" AND g.DtLastUpdate > ${dtLastSynced.getSqlString()}")
-            }
-            else
-            {
+            } else {
                 sb.append(" AND g.DtLastUpdate <= ${dtLastSynced.getSqlString()}")
             }
         }
 
         val it = hmIncludedPlayerToParms.entries.iterator()
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             val entry = it.next()
             val player = entry.key
             val parms = entry.value
@@ -111,16 +97,14 @@ class ReportParameters
             sb.append(")")
         }
 
-        for (player in excludedPlayers)
-        {
+        for (player in excludedPlayers) {
             sb.append(" AND NOT EXISTS (")
             sb.append(" SELECT 1 FROM Participant z")
             sb.append(" WHERE z.PlayerId = '${player.rowId}'")
             sb.append(" AND z.GameId = g.RowId)")
         }
 
-        if (excludeOnlyAi)
-        {
+        if (excludeOnlyAi) {
             sb.append(" AND EXISTS (")
             sb.append(" SELECT 1 FROM Participant z, Player p")
             sb.append(" WHERE z.PlayerId = p.RowId")
@@ -131,16 +115,15 @@ class ReportParameters
         return sb.toString()
     }
 
-    override fun toString() = "[$gameType, $gameParams, $dtStartFrom, $dtStartTo, $dtFinishFrom, $dtFinishTo]"
+    override fun toString() =
+        "[$gameType, $gameParams, $dtStartFrom, $dtStartTo, $dtFinishFrom, $dtFinishTo]"
 
-    fun setEnforceMatch(matches: Boolean)
-    {
+    fun setEnforceMatch(matches: Boolean) {
         partOfMatch = if (matches) MatchFilter.MATCHES_ONLY else MatchFilter.GAMES_ONLY
     }
 }
 
-enum class MatchFilter
-{
+enum class MatchFilter {
     MATCHES_ONLY,
     GAMES_ONLY,
     BOTH

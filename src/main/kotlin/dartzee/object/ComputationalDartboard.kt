@@ -7,15 +7,20 @@ import dartzee.utils.getPotentialAimPoints
 import dartzee.utils.translatePoint
 import java.awt.Point
 
-class ComputationalDartboard(private val width: Int, private val height: Int): IDartboard
-{
+class ComputationalDartboard(private val width: Int, private val height: Int) : IDartboard {
     private val hmSegmentToCenterPoint = constructCenterPointMap()
 
     override fun computeRadius() = computeRadius(width, height)
+
     override fun computeCenter() = Point(width / 2, height / 2)
 
     fun getDeliberateMissPoint(): ComputedPoint {
-        val rawPoint = translatePoint(computeCenter(), computeRadius() * UPPER_BOUND_OUTSIDE_BOARD_RATIO, 180.0)
+        val rawPoint =
+            translatePoint(
+                computeCenter(),
+                computeRadius() * UPPER_BOUND_OUTSIDE_BOARD_RATIO,
+                180.0
+            )
         return toComputedPoint(rawPoint)
     }
 

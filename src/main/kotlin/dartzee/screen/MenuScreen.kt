@@ -22,8 +22,7 @@ import javax.swing.JButton
 private const val BUTTON_WIDTH = 220
 private const val BUTTON_HEIGHT = 80
 
-class MenuScreen : EmbeddedScreen()
-{
+class MenuScreen : EmbeddedScreen() {
     private val changeLog = ChangeLog()
     private val dartboard = PresentationDartboard()
     private val btnNewGame = JButton("New Game")
@@ -38,8 +37,7 @@ class MenuScreen : EmbeddedScreen()
 
     private val buttonFont = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
 
-    init
-    {
+    init {
         layout = null
         setLocations(1000, 663)
 
@@ -73,26 +71,25 @@ class MenuScreen : EmbeddedScreen()
             button.addActionListener(this)
         }
 
-        addComponentListener(object : ComponentAdapter() {
-            override fun componentResized(evt: ComponentEvent) = setLocations()
-        })
+        addComponentListener(
+            object : ComponentAdapter() {
+                override fun componentResized(evt: ComponentEvent) = setLocations()
+            }
+        )
     }
 
     override fun getScreenName() = "Menu"
 
-    override fun initialise()
-    {
+    override fun initialise() {
         // do nothing
     }
 
-    override fun postInit()
-    {
+    override fun postInit() {
         super.postInit()
         setLocations()
     }
 
-    private fun setLocations(width: Int = getWidth(), height: Int = getHeight())
-    {
+    private fun setLocations(width: Int = getWidth(), height: Int = getHeight()) {
         val widthToSubtract = maxOf(0, (minOf(width, height) + (2 * BUTTON_WIDTH) + 50) - width)
         val dartboardSize = minOf(width, height) - widthToSubtract
 
@@ -106,21 +103,44 @@ class MenuScreen : EmbeddedScreen()
         val btnYGap = maxOf(yGapSpace / 4, 40)
         val dartboardCenter = dartboardY + (dartboardSize / 2)
 
-        btnNewGame.setLocation(dartboardX - 140, dartboardCenter - (1.5 * btnYGap).toInt() - (2 * BUTTON_HEIGHT))
-        btnManagePlayers.setLocation(dartboardX - BUTTON_WIDTH, dartboardCenter - (0.5 * btnYGap).toInt() - BUTTON_HEIGHT)
-        btnLeaderboards.setLocation(dartboardX - BUTTON_WIDTH, dartboardCenter + (0.5 * btnYGap).toInt())
-        btnGameReport.setLocation(dartboardX - 140, dartboardCenter + (1.5 * btnYGap).toInt() + BUTTON_HEIGHT)
+        btnNewGame.setLocation(
+            dartboardX - 140,
+            dartboardCenter - (1.5 * btnYGap).toInt() - (2 * BUTTON_HEIGHT)
+        )
+        btnManagePlayers.setLocation(
+            dartboardX - BUTTON_WIDTH,
+            dartboardCenter - (0.5 * btnYGap).toInt() - BUTTON_HEIGHT
+        )
+        btnLeaderboards.setLocation(
+            dartboardX - BUTTON_WIDTH,
+            dartboardCenter + (0.5 * btnYGap).toInt()
+        )
+        btnGameReport.setLocation(
+            dartboardX - 140,
+            dartboardCenter + (1.5 * btnYGap).toInt() + BUTTON_HEIGHT
+        )
 
-        btnPreferences.setLocation(dartboardX + dartboardSize + 140 - BUTTON_WIDTH, dartboardCenter - (1.5 * btnYGap).toInt() - (2 * BUTTON_HEIGHT))
-        btnDartzeeTemplates.setLocation(dartboardX + dartboardSize, dartboardCenter - (0.5 * btnYGap).toInt() - BUTTON_HEIGHT)
-        btnUtilities.setLocation(dartboardX + dartboardSize, dartboardCenter + (0.5 * btnYGap).toInt())
-        btnSyncSummary.setLocation(dartboardX + dartboardSize + 140 - BUTTON_WIDTH, dartboardCenter + (1.5 * btnYGap).toInt() + BUTTON_HEIGHT)
+        btnPreferences.setLocation(
+            dartboardX + dartboardSize + 140 - BUTTON_WIDTH,
+            dartboardCenter - (1.5 * btnYGap).toInt() - (2 * BUTTON_HEIGHT)
+        )
+        btnDartzeeTemplates.setLocation(
+            dartboardX + dartboardSize,
+            dartboardCenter - (0.5 * btnYGap).toInt() - BUTTON_HEIGHT
+        )
+        btnUtilities.setLocation(
+            dartboardX + dartboardSize,
+            dartboardCenter + (0.5 * btnYGap).toInt()
+        )
+        btnSyncSummary.setLocation(
+            dartboardX + dartboardSize + 140 - BUTTON_WIDTH,
+            dartboardCenter + (1.5 * btnYGap).toInt() + BUTTON_HEIGHT
+        )
 
         lblVersion.setLocation(width - lblVersion.width - 5, height - lblVersion.height - 5)
     }
 
-    private fun linkClicked()
-    {
+    private fun linkClicked() {
         changeLog.run {
             setLocationRelativeTo(this)
             isVisible = true
@@ -129,10 +149,8 @@ class MenuScreen : EmbeddedScreen()
 
     override fun showBackButton() = false
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnPreferences -> ScreenCache.switch<PreferencesScreen>()
             btnSyncSummary -> ScreenCache.switch<SyncManagementScreen>()
             btnNewGame -> ScreenCache.switch<GameSetupScreen>()

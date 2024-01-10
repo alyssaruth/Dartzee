@@ -18,8 +18,7 @@ import javax.swing.JButton
 import javax.swing.JFrame
 import javax.swing.JPanel
 
-class TestWindow : JFrame(), ActionListener, DartboardListener, IDartzeeCarouselListener
-{
+class TestWindow : JFrame(), ActionListener, DartboardListener, IDartzeeCarouselListener {
     private val dartsThrown = mutableListOf<Dart>()
     private val template = DartzeeTemplateEntity().retrieveEntities().first()
     private val rules = DartzeeRuleEntity().retrieveForTemplate(template.rowId).map { it.toDto() }
@@ -31,8 +30,7 @@ class TestWindow : JFrame(), ActionListener, DartboardListener, IDartzeeCarousel
     private val btnChucklevision = JButton("Chucklevision")
     private val btnBadLuck = JButton("Bad luck")
 
-    init
-    {
+    init {
         contentPane.layout = BorderLayout(0, 0)
         size = Dimension(1000, 800)
         preferredSize = Dimension(1000, 800)
@@ -68,16 +66,14 @@ class TestWindow : JFrame(), ActionListener, DartboardListener, IDartzeeCarousel
         }
     }
 
-    private fun clearDarts()
-    {
+    private fun clearDarts() {
         dartboard.clearDarts()
         dartsThrown.clear()
         carousel.update(emptyList(), dartsThrown, 100)
         dartboard.refreshValidSegments(carousel.getSegmentStatus())
     }
 
-    override fun dartThrown(dart: Dart)
-    {
+    override fun dartThrown(dart: Dart) {
         dartsThrown.add(dart)
 
         if (dartsThrown.size <= 3) {
@@ -86,9 +82,8 @@ class TestWindow : JFrame(), ActionListener, DartboardListener, IDartzeeCarousel
         }
     }
 
-    override fun hoverChanged(segmentStatuses: SegmentStatuses)
-    {
-       dartboard.refreshValidSegments(segmentStatuses)
+    override fun hoverChanged(segmentStatuses: SegmentStatuses) {
+        dartboard.refreshValidSegments(segmentStatuses)
     }
 
     override fun tilePressed(dartzeeRoundResult: DartzeeRoundResult) {

@@ -10,15 +10,14 @@ import dartzee.core.util.DialogUtil
 import dartzee.`object`.Dart
 import dartzee.screen.ScreenCache
 import dartzee.utils.isBust
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import javax.swing.JLabel
 import javax.swing.JRadioButton
+import net.miginfocom.swing.MigLayout
 
-class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : SimpleDialog()
-{
+class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : SimpleDialog() {
     val panel = RadioButtonPanel()
     private val lblScore = JLabel("Score")
     val nfScore = NumberField(4, 501)
@@ -28,8 +27,7 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : 
     val rdbtnTreble = JRadioButton("Treble")
     val spinner = SpinnerSingleSelector()
 
-    init
-    {
+    init {
         title = "Add Rule"
         setSize(200, 200)
         isResizable = false
@@ -55,43 +53,35 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : 
         pack()
     }
 
-    private fun getDartFromSelections(): AimDart
-    {
+    private fun getDartFromSelections(): AimDart {
         val multiplier = getMultiplier()
         val value = spinner.value as Int
         return AimDart(value, multiplier)
     }
-    private fun getMultiplier(): Int
-    {
-        return when (panel.selection)
-        {
+
+    private fun getMultiplier(): Int {
+        return when (panel.selection) {
             rdbtnSingle -> 1
             rdbtnDouble -> 2
             else -> 3
         }
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        if (panel.isEventSource(arg0))
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        if (panel.isEventSource(arg0)) {
             panel.remove(spinner)
 
             val multiplier = getMultiplier()
             panel.add(spinner, "cell 2 $multiplier")
 
             pack()
-        }
-        else
-        {
+        } else {
             super.actionPerformed(arg0)
         }
     }
 
-    override fun okPressed()
-    {
-        if (valid())
-        {
+    override fun okPressed() {
+        if (valid()) {
             val score = nfScore.getNumber()
             val drt = getDartFromSelections()
 
@@ -101,36 +91,32 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : 
         }
     }
 
-    fun valid(): Boolean
-    {
+    fun valid(): Boolean {
         val score = nfScore.getNumber()
-        if (score == -1)
-        {
+        if (score == -1) {
             DialogUtil.showErrorOLD("You must enter a score for this rule to apply to.")
             return false
         }
 
         val drt = getDartFromSelections()
-        if (drt.score == 25 && drt.multiplier == 3)
-        {
+        if (drt.score == 25 && drt.multiplier == 3) {
             DialogUtil.showErrorOLD("Treble 25 is not a valid dart!")
             return false
         }
 
-        if (isBust(score, Dart(drt.score, drt.multiplier)))
-        {
+        if (isBust(score, Dart(drt.score, drt.multiplier))) {
             DialogUtil.showErrorOLD("This target would bust the player")
             return false
         }
 
-        //If we're specifying a rule for under 60, validate whether what we're setting up is
-        //already the default
-        if (score <= 60)
-        {
+        // If we're specifying a rule for under 60, validate whether what we're setting up is
+        // already the default
+        if (score <= 60) {
             val defaultDart = getDefaultDartToAimAt(score)
-            if (defaultDart == drt)
-            {
-                DialogUtil.showErrorOLD("The selected dart is already the default for this starting score.")
+            if (defaultDart == drt) {
+                DialogUtil.showErrorOLD(
+                    "The selected dart is already the default for this starting score."
+                )
                 return false
             }
         }
@@ -138,10 +124,8 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : 
         return true
     }
 
-    companion object
-    {
-        fun addNewSetupRule(hmScoreToDart: MutableMap<Int, AimDart>)
-        {
+    companion object {
+        fun addNewSetupRule(hmScoreToDart: MutableMap<Int, AimDart>) {
             val dlg = NewSetupRuleDialog(hmScoreToDart)
             dlg.setLocationRelativeTo(ScreenCache.mainScreen)
             dlg.isVisible = true

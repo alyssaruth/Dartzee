@@ -2,16 +2,14 @@ package dartzee.core.bean
 
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.Font
 import javax.swing.JTextField
 import javax.swing.SwingConstants.LEADING
+import org.junit.jupiter.api.Test
 
-class TestGhostText: AbstractTest()
-{
+class TestGhostText : AbstractTest() {
     @Test
-    fun `Should construct with the right values`()
-    {
+    fun `Should construct with the right values`() {
         val label = JTextField()
         val font = Font("Tahoma", Font.BOLD, 25)
         label.font = font
@@ -24,8 +22,7 @@ class TestGhostText: AbstractTest()
     }
 
     @Test
-    fun `Should be visible when text field has no text`()
-    {
+    fun `Should be visible when text field has no text`() {
         val tf = JTextField()
 
         val ghostText = GhostText("Foo", tf)
@@ -33,8 +30,7 @@ class TestGhostText: AbstractTest()
     }
 
     @Test
-    fun `Should not be visible when text is entered, and should return when field is cleared`()
-    {
+    fun `Should not be visible when text is entered, and should return when field is cleared`() {
         val tf = JTextField()
 
         val ghostText = GhostText("Foo", tf)

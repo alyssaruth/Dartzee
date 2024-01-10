@@ -22,17 +22,16 @@ import javax.swing.SwingConstants
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
+abstract class DartsMatchScreen<PlayerState : AbstractPlayerState<PlayerState>>(
     private val matchPanel: MatchSummaryPanel<PlayerState>,
-    val match: DartsMatchEntity): AbstractDartsGameScreen(), ChangeListener
-{
+    val match: DartsMatchEntity
+) : AbstractDartsGameScreen(), ChangeListener {
     override val windowName = match.getMatchDesc()
 
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
     private val hmGameIdToTab = mutableMapOf<String, DartsGamePanel<*, PlayerState>>()
 
-    init
-    {
+    init {
         contentPane.add(tabbedPane, BorderLayout.CENTER)
 
         tabbedPane.addTab("Match", matchPanel)
@@ -47,18 +46,17 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         totalPlayers: Int
     ): DartsGamePanel<*, PlayerState>
 
-    fun addGameToMatch(game: GameEntity, totalPlayers: Int): DartsGamePanel<*, *>
-    {
-        //Cache this screen in ScreenCache
+    fun addGameToMatch(game: GameEntity, totalPlayers: Int): DartsGamePanel<*, *> {
+        // Cache this screen in ScreenCache
         val gameId = game.rowId
         ScreenCache.addDartsGameScreen(gameId, this)
 
-        //Initialise some basic properties of the tab, such as visibility of components etc
+        // Initialise some basic properties of the tab, such as visibility of components etc
         val tab = factoryGamePanel(this, game, totalPlayers)
 
         matchPanel.addGameTab(tab)
 
-        //Add the single game tab and set the parent window to be visible
+        // Add the single game tab and set the parent window to be visible
         tabbedPane.addTab("#" + game.localId, tab)
         hmGameIdToTab[gameId] = tab
         isVisible = true
@@ -66,22 +64,22 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         return tab
     }
 
-    fun addParticipant(localId: Long, state: PlayerState)
-    {
+    fun addParticipant(localId: Long, state: PlayerState) {
         matchPanel.addParticipant(localId, state)
     }
 
-    fun finaliseParticipants()
-    {
+    fun finaliseParticipants() {
         matchPanel.finaliseScorers(this)
     }
 
-    override fun startNextGameIfNecessary()
-    {
-        if (isMatchComplete())
-        {
-            logger.info(CODE_MATCH_FINISHED, "Match #${match.localId} finished.",
-                KEY_MATCH_ID to match.rowId, KEY_MATCH_LOCAL_ID to match.localId)
+    override fun startNextGameIfNecessary() {
+        if (isMatchComplete()) {
+            logger.info(
+                CODE_MATCH_FINISHED,
+                "Match #${match.localId} finished.",
+                KEY_MATCH_ID to match.rowId,
+                KEY_MATCH_LOCAL_ID to match.localId
+            )
             match.dtFinish = getSqlDateNow()
             match.saveToDatabase()
             return
@@ -92,7 +90,12 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         val firstGamePanel = hmGameIdToTab.values.first()
         val firstGameParticipants = firstGamePanel.getPlayerStates().map { it.wrappedParticipant }
 
-        val (nextGame, nextParticipants) = prepareNextEntities(firstGamePanel.gameEntity, firstGameParticipants, hmGameIdToTab.size + 1)
+        val (nextGame, nextParticipants) =
+            prepareNextEntities(
+                firstGamePanel.gameEntity,
+                firstGameParticipants,
+                hmGameIdToTab.size + 1
+            )
 
         logger.info(
             CODE_GAME_LAUNCHED,
@@ -108,47 +111,39 @@ abstract class DartsMatchScreen<PlayerState: AbstractPlayerState<PlayerState>>(
         panel.startNewGame(nextParticipants)
     }
 
-    private fun isMatchComplete(): Boolean
-    {
+    private fun isMatchComplete(): Boolean {
         val participants = matchPanel.getAllParticipants()
         return matchIsComplete(match, participants)
     }
 
-    override fun achievementUnlocked(gameId: String, playerId: String, achievement: AbstractAchievement)
-    {
+    override fun achievementUnlocked(
+        gameId: String,
+        playerId: String,
+        achievement: AbstractAchievement
+    ) {
         val tab = hmGameIdToTab[gameId]!!
         tab.achievementUnlocked(playerId, achievement)
     }
 
-    override fun displayGame(gameId: String)
-    {
+    override fun displayGame(gameId: String) {
         super.displayGame(gameId)
 
         val tab = hmGameIdToTab[gameId]
         tabbedPane.selectedComponent = tab
     }
 
-    override fun fireAppearancePreferencesChanged()
-    {
-        hmGameIdToTab.values.forEach {
-            it.fireAppearancePreferencesChanged()
-        }
+    override fun fireAppearancePreferencesChanged() {
+        hmGameIdToTab.values.forEach { it.fireAppearancePreferencesChanged() }
     }
 
-    /**
-     * ChangeListener
-     */
-    override fun stateChanged(e: ChangeEvent)
-    {
+    /** ChangeListener */
+    override fun stateChanged(e: ChangeEvent) {
         val sourceTabbedPane = e.source as JTabbedPane
         val selectedTab = sourceTabbedPane.selectedComponent
-        if (selectedTab is DartsGamePanel<*, *>)
-        {
+        if (selectedTab is DartsGamePanel<*, *>) {
             val title = selectedTab.gameTitle
             setTitle(title)
-        }
-        else
-        {
+        } else {
             title = match.getMatchDesc()
         }
     }

@@ -5,20 +5,18 @@ import dartzee.logging.CODE_EDT_FROZEN
 import dartzee.logging.Severity
 import io.kotest.matchers.concurrent.shouldBeAlive
 import io.kotest.matchers.concurrent.shouldNotBeAlive
-import org.junit.jupiter.api.Test
 import javax.swing.SwingUtilities
+import org.junit.jupiter.api.Test
 
-class TestEdtMonitor : AbstractTest()
-{
+class TestEdtMonitor : AbstractTest() {
     @Test
-    fun `Should keep running while the EDT is responsive, then stop and log an error when it freezes`()
-    {
+    fun `Should keep running while the EDT is responsive, then stop and log an error when it freezes`() {
         val t = EdtMonitor.start(500)
         t.shouldBeAlive()
 
-        SwingUtilities.invokeAndWait { }
-        SwingUtilities.invokeAndWait { }
-        SwingUtilities.invokeAndWait { }
+        SwingUtilities.invokeAndWait {}
+        SwingUtilities.invokeAndWait {}
+        SwingUtilities.invokeAndWait {}
 
         Thread.sleep(1000)
 

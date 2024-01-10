@@ -5,19 +5,17 @@ import dartzee.core.util.DateStatics
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import dartzee.logging.CODE_SQL
-import io.kotest.matchers.string.shouldContain
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
-class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
-{
+class TestParticipantEntity : AbstractEntityTest<ParticipantEntity>() {
     override fun factoryDao() = ParticipantEntity()
 
     @Test
-    fun `Should cache the player on first query then use it from then on`()
-    {
+    fun `Should cache the player on first query then use it from then on`() {
         val playerId = insertPlayer(name = "Bob", strategy = "").rowId
 
         val pt = ParticipantEntity()
@@ -36,10 +34,8 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
     }
 
     @Test
-    fun `Should return correct values for an AI player`()
-    {
-        val aiId = insertPlayer(name = "Robot",
-                strategy = DartsAiModel.new().toJson()).rowId
+    fun `Should return correct values for an AI player`() {
+        val aiId = insertPlayer(name = "Robot", strategy = DartsAiModel.new().toJson()).rowId
 
         val pt = ParticipantEntity()
         pt.playerId = aiId
@@ -50,8 +46,7 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
     }
 
     @Test
-    fun `Should return correct values for a human player`()
-    {
+    fun `Should return correct values for a human player`() {
         val player = PlayerEntity()
         player.name = "Bob"
         player.strategy = ""
@@ -61,14 +56,11 @@ class TestParticipantEntity: AbstractEntityTest<ParticipantEntity>()
 
         pt.isAi() shouldBe false
         pt.getPlayerName() shouldBe "Bob"
-        shouldThrow<Exception>{
-            pt.getModel()
-        }
+        shouldThrow<Exception> { pt.getModel() }
     }
 
     @Test
-    fun `Factory and save`()
-    {
+    fun `Factory and save`() {
         val player = PlayerEntity()
         val playerId = player.assignRowId()
         player.name = "Stuart"

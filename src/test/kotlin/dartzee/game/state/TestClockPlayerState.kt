@@ -11,32 +11,33 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestClockPlayerState: AbstractTest()
-{
+class TestClockPlayerState : AbstractTest() {
     @Test
-    fun `should correctly compute the current target based on clockType`()
-    {
+    fun `should correctly compute the current target based on clockType`() {
         val roundOne = listOf(makeDart(1, 2, startingScore = 1))
 
-        makeClockPlayerState(ClockType.Standard, completedRounds = listOf(roundOne)).findCurrentTarget() shouldBe 2
-        makeClockPlayerState(ClockType.Doubles, completedRounds = listOf(roundOne)).findCurrentTarget() shouldBe 2
-        makeClockPlayerState(ClockType.Trebles, completedRounds = listOf(roundOne)).findCurrentTarget() shouldBe 1
+        makeClockPlayerState(ClockType.Standard, completedRounds = listOf(roundOne))
+            .findCurrentTarget() shouldBe 2
+        makeClockPlayerState(ClockType.Doubles, completedRounds = listOf(roundOne))
+            .findCurrentTarget() shouldBe 2
+        makeClockPlayerState(ClockType.Trebles, completedRounds = listOf(roundOne))
+            .findCurrentTarget() shouldBe 1
     }
 
     @Test
-    fun `Should report a target of one when no darts thrown`()
-    {
+    fun `Should report a target of one when no darts thrown`() {
         val state = makeClockPlayerState()
         state.findCurrentTarget() shouldBe 1
     }
 
     @Test
-    fun `Should combine all thrown darts to calculate current target`()
-    {
-        val roundOne = listOf(
-            makeDart(1, 1, startingScore = 1),
-            makeDart(2, 0, startingScore = 2),
-            makeDart(2, 3, startingScore = 2))
+    fun `Should combine all thrown darts to calculate current target`() {
+        val roundOne =
+            listOf(
+                makeDart(1, 1, startingScore = 1),
+                makeDart(2, 0, startingScore = 2),
+                makeDart(2, 3, startingScore = 2)
+            )
 
         val state = makeClockPlayerState(completedRounds = listOf(roundOne))
         state.findCurrentTarget() shouldBe 3
@@ -49,15 +50,13 @@ class TestClockPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should report a score of 0 when no darts thrown`()
-    {
+    fun `Should report a score of 0 when no darts thrown`() {
         val state = makeClockPlayerState()
         state.getScoreSoFar() shouldBe 0
     }
 
     @Test
-    fun `Should report a score based on how many darts have been thrown, including uncommitted ones`()
-    {
+    fun `Should report a score based on how many darts have been thrown, including uncommitted ones`() {
         val roundOne = listOf(Dart(1, 1), Dart(2, 1), Dart(3, 1), Dart(4, 1))
         val roundTwo = listOf(Dart(5, 0), Dart(5, 0), Dart(5, 0))
 
@@ -72,12 +71,13 @@ class TestClockPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should update darts that are thrown with their starting score`()
-    {
-        val roundOne = listOf(
-            makeDart(1, 1, startingScore = 1),
-            makeDart(2, 0, startingScore = 2),
-            makeDart(2, 3, startingScore = 2))
+    fun `Should update darts that are thrown with their starting score`() {
+        val roundOne =
+            listOf(
+                makeDart(1, 1, startingScore = 1),
+                makeDart(2, 0, startingScore = 2),
+                makeDart(2, 3, startingScore = 2)
+            )
 
         val state = makeClockPlayerState(completedRounds = listOf(roundOne))
         state.findCurrentTarget() shouldBe 3
@@ -91,8 +91,7 @@ class TestClockPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should correctly count the longest streak, taking into account clockType`()
-    {
+    fun `Should correctly count the longest streak, taking into account clockType`() {
         val standardState = makeClockPlayerState(clockType = ClockType.Standard)
         standardState.getLongestStreak() shouldBe 0
         standardState.dartThrown(Dart(1, 1))
@@ -107,8 +106,7 @@ class TestClockPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should correctly report on track for Brucey throughout a successful round`()
-    {
+    fun `Should correctly report on track for Brucey throughout a successful round`() {
         val state = makeClockPlayerState()
         state.onTrackForBrucey() shouldBe true
 
@@ -124,11 +122,15 @@ class TestClockPlayerState: AbstractTest()
         state.dartThrown(Dart(4, 3))
         state.onTrackForBrucey() shouldBe true
     }
-    
+
     @Test
-    fun `Longest streak should take into account previous rounds`()
-    {
-        val roundOne = listOf(makeDart(1, 0, startingScore = 1), makeDart(1, 1, startingScore = 1), makeDart(2, 1, startingScore = 2))
+    fun `Longest streak should take into account previous rounds`() {
+        val roundOne =
+            listOf(
+                makeDart(1, 0, startingScore = 1),
+                makeDart(1, 1, startingScore = 1),
+                makeDart(2, 1, startingScore = 2)
+            )
         val state = makeClockPlayerState(completedRounds = listOf(roundOne))
         state.getLongestStreak() shouldBe 2
 
@@ -140,8 +142,7 @@ class TestClockPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should report not on track for Brucey as soon as there has been a miss, taking into account clockType`()
-    {
+    fun `Should report not on track for Brucey as soon as there has been a miss, taking into account clockType`() {
         val state = makeClockPlayerState(clockType = ClockType.Doubles)
 
         state.dartThrown(Dart(1, 1))
@@ -156,24 +157,18 @@ class TestClockPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should report a current target of null for a finished player, and throw an exception if another dart is thrown`()
-    {
+    fun `Should report a current target of null for a finished player, and throw an exception if another dart is thrown`() {
         val rounds = (1..20).map { makeDart(it, 1, startingScore = it) }.chunked(4)
         val state = makeClockPlayerState(completedRounds = rounds)
         state.findCurrentTarget() shouldBe null
 
-        shouldThrow<Exception> {
-            state.dartThrown(Dart(1, 1))
-        }
+        shouldThrow<Exception> { state.dartThrown(Dart(1, 1)) }
 
-        shouldThrow<Exception> {
-            state.getCurrentTarget()
-        }
+        shouldThrow<Exception> { state.getCurrentTarget() }
     }
 
     @Test
-    fun `For out of order games, it should populate thrown darts with all remaining targets`()
-    {
+    fun `For out of order games, it should populate thrown darts with all remaining targets`() {
         val state = makeClockPlayerState(inOrder = false)
 
         val dartOne = Dart(5, 1)
@@ -186,8 +181,7 @@ class TestClockPlayerState: AbstractTest()
     }
 
     @Test
-    fun `For in order games, it should not populate thrown darts with all remaining targets`()
-    {
+    fun `For in order games, it should not populate thrown darts with all remaining targets`() {
         val state = makeClockPlayerState(inOrder = true)
 
         val dartOne = Dart(5, 1)
@@ -200,16 +194,14 @@ class TestClockPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should correctly report out of order targets as hit`()
-    {
+    fun `Should correctly report out of order targets as hit`() {
         val state = makeClockPlayerState(inOrder = false)
         state.dartThrown(Dart(5, 1))
         state.hasHitTarget(5) shouldBe true
     }
 
     @Test
-    fun `Should not report out of order targets if in ordered mode`()
-    {
+    fun `Should not report out of order targets if in ordered mode`() {
         val state = makeClockPlayerState(inOrder = true)
 
         val dartOne = Dart(5, 1)
@@ -221,8 +213,7 @@ class TestClockPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should report the correct current target in out of order mode`()
-    {
+    fun `Should report the correct current target in out of order mode`() {
         val state = makeClockPlayerState(inOrder = false)
 
         state.dartThrown(Dart(2, 1))
@@ -240,8 +231,7 @@ class TestClockPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should only report on track for brucey if hit in the right order`()
-    {
+    fun `Should only report on track for brucey if hit in the right order`() {
         val state = makeClockPlayerState(inOrder = false)
 
         state.dartThrown(Dart(2, 1))
@@ -264,8 +254,7 @@ class TestClockPlayerState: AbstractTest()
     }
 
     @Test
-    fun `when loading completed rounds, startingScore and clockTargets should be correctly set`()
-    {
+    fun `when loading completed rounds, startingScore and clockTargets should be correctly set`() {
         val darts = listOf(Dart(2, 1), Dart(1, 1), Dart(4, 1))
         val state = makeClockPlayerState(inOrder = false)
 
@@ -282,32 +271,62 @@ class TestClockPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should report the correct segmentStatus for inOrder mode`()
-    {
+    fun `Should report the correct segmentStatus for inOrder mode`() {
         val state = makeClockPlayerState(inOrder = true)
         val status = state.getSegmentStatus()
-        status.scoringSegments.shouldContainExactly(getAllNonMissSegments().filter { it.score == 1 } )
-        status.validSegments.shouldContainExactly(getAllNonMissSegments().filterNot { it.score == 1 } )
+        status.scoringSegments.shouldContainExactly(
+            getAllNonMissSegments().filter { it.score == 1 }
+        )
+        status.validSegments.shouldContainExactly(
+            getAllNonMissSegments().filterNot { it.score == 1 }
+        )
 
         state.dartThrown(Dart(1, 1))
         val newStatus = state.getSegmentStatus()
-        newStatus.scoringSegments.shouldContainExactly(getAllNonMissSegments().filter { it.score == 2 } )
-        newStatus.validSegments.shouldContainExactly(getAllNonMissSegments().filterNot { it.score == 2 } )
+        newStatus.scoringSegments.shouldContainExactly(
+            getAllNonMissSegments().filter { it.score == 2 }
+        )
+        newStatus.validSegments.shouldContainExactly(
+            getAllNonMissSegments().filterNot { it.score == 2 }
+        )
     }
 
     @Test
-    fun `Should report the correct segmentStatus for out of order mode`()
-    {
+    fun `Should report the correct segmentStatus for out of order mode`() {
         val state = makeClockPlayerState(inOrder = false)
-        state.getSegmentStatus().scoringSegments.shouldContainExactly(getAllNonMissSegments().filter { it.score == 1 })
-        state.getSegmentStatus().validSegments.shouldContainExactly(getAllNonMissSegments().filterNot { it.score == 25 })
+        state
+            .getSegmentStatus()
+            .scoringSegments
+            .shouldContainExactly(getAllNonMissSegments().filter { it.score == 1 })
+        state
+            .getSegmentStatus()
+            .validSegments
+            .shouldContainExactly(getAllNonMissSegments().filterNot { it.score == 25 })
 
         state.dartThrown(Dart(2, 1))
-        state.getSegmentStatus().scoringSegments.shouldContainExactly(getAllNonMissSegments().filter { it.score == 1 })
-        state.getSegmentStatus().validSegments.shouldContainExactly(getAllNonMissSegments().filterNot { it.score == 25 || it.score == 2 })
+        state
+            .getSegmentStatus()
+            .scoringSegments
+            .shouldContainExactly(getAllNonMissSegments().filter { it.score == 1 })
+        state
+            .getSegmentStatus()
+            .validSegments
+            .shouldContainExactly(
+                getAllNonMissSegments().filterNot { it.score == 25 || it.score == 2 }
+            )
 
         state.dartThrown(Dart(1, 1))
-        state.getSegmentStatus().scoringSegments.shouldContainExactly(getAllNonMissSegments().filter { it.score == 3 })
-        state.getSegmentStatus().validSegments.shouldContainExactly(getAllNonMissSegments().filterNot { it.score == 25 || it.score == 2 || it.score == 1 })
+        state
+            .getSegmentStatus()
+            .scoringSegments
+            .shouldContainExactly(getAllNonMissSegments().filter { it.score == 3 })
+        state
+            .getSegmentStatus()
+            .validSegments
+            .shouldContainExactly(
+                getAllNonMissSegments().filterNot {
+                    it.score == 25 || it.score == 2 || it.score == 1
+                }
+            )
     }
 }

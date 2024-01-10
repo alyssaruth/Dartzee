@@ -3,8 +3,7 @@ package dartzee.achievements.x01
 import dartzee.achievements.AchievementType
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_X01_HOTEL_INSPECTOR
 
-class AchievementX01HotelInspector : AbstractAchievementX01ScoreVariants()
-{
+class AchievementX01HotelInspector : AbstractAchievementX01ScoreVariants() {
     override val targetScore = 26
     override val name = "Hotel Inspector"
     override val desc = "Number of distinct ways the player has scored 26 (\"Bed and Breakfast\")"

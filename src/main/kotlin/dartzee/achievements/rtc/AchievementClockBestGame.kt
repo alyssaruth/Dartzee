@@ -7,8 +7,7 @@ import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
 import dartzee.utils.ResourceCache
 
-class AchievementClockBestGame : AbstractAchievementBestGame()
-{
+class AchievementClockBestGame : AbstractAchievementBestGame() {
     override val achievementType = AchievementType.CLOCK_BEST_GAME
     override val name = "Stop the Clock!"
     override val desc = "Best game of Round the Clock (Standard)"

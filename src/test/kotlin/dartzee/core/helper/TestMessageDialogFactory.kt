@@ -5,17 +5,16 @@ import java.awt.Component
 import java.io.File
 import javax.swing.JOptionPane
 
-class TestMessageDialogFactory: IMessageDialogFactory
-{
-    //Directory
+class TestMessageDialogFactory : IMessageDialogFactory {
+    // Directory
     var directoryToSelect: File? = null
 
-    //Inputs
+    // Inputs
     var inputSelection: Any? = null
     var inputOptionsPresented: Array<*>? = null
     val inputsShown = mutableListOf<String>()
 
-    //Questions
+    // Questions
     var questionOption = JOptionPane.NO_OPTION
     val questionsShown = mutableListOf<String>()
 
@@ -29,54 +28,52 @@ class TestMessageDialogFactory: IMessageDialogFactory
 
     val loadingsShown = mutableListOf<String>()
 
-    override fun <K> showInput(title: String, message: String, options: Array<K>?, defaultOption: K?): K?
-    {
+    override fun <K> showInput(
+        title: String,
+        message: String,
+        options: Array<K>?,
+        defaultOption: K?
+    ): K? {
         inputsShown.add(title)
         inputOptionsPresented = options
 
         val selection = inputSelection
         selection ?: return null
 
-        if (options == null || options.contains(inputSelection))
-        {
-            @Suppress("UNCHECKED_CAST")
-            return inputSelection as K
+        if (options == null || options.contains(inputSelection)) {
+            @Suppress("UNCHECKED_CAST") return inputSelection as K
         }
 
-        throw Exception("Running a test where $inputSelection was to be returned, but wasn't a valid selection in the dialog shown.")
+        throw Exception(
+            "Running a test where $inputSelection was to be returned, but wasn't a valid selection in the dialog shown."
+        )
     }
 
-    override fun showInfo(text: String)
-    {
+    override fun showInfo(text: String) {
         infosShown.add(text)
     }
 
-    override fun showError(text: String)
-    {
+    override fun showError(text: String) {
         errorsShown.add(text)
     }
 
-    override fun showQuestion(text: String, allowCancel: Boolean): Int
-    {
+    override fun showQuestion(text: String, allowCancel: Boolean): Int {
         questionsShown.add(text)
         return questionOption
     }
 
-    override fun showOption(title: String, message: String, options: List<String>): String?
-    {
+    override fun showOption(title: String, message: String, options: List<String>): String? {
         optionsShown.add(message)
         val selection = optionSequence.removeAt(0)
         return selection
     }
 
-    override fun showLoading(text: String)
-    {
+    override fun showLoading(text: String) {
         loadingsShown.add(text)
         loadingVisible = true
     }
 
-    override fun dismissLoading(): Boolean
-    {
+    override fun dismissLoading(): Boolean {
         val wasVisible = loadingVisible
         loadingVisible = false
         return wasVisible
@@ -84,8 +81,7 @@ class TestMessageDialogFactory: IMessageDialogFactory
 
     override fun chooseDirectory(parent: Component?) = directoryToSelect
 
-    fun reset()
-    {
+    fun reset() {
         inputsShown.clear()
         inputOptionsPresented = arrayOf<Any>()
         infosShown.clear()

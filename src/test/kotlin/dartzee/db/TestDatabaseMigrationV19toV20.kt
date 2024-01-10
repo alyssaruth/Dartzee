@@ -10,11 +10,9 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDatabaseMigrationV19toV20: AbstractTest()
-{
+class TestDatabaseMigrationV19toV20 : AbstractTest() {
     @Test
-    fun `Should correctly add Team table, and TeamId column for Participant`()
-    {
+    fun `Should correctly add Team table, and TeamId column for Participant`() {
         // Setup
         val pt = insertParticipant()
         mainDatabase.dropTable(EntityName.Team)

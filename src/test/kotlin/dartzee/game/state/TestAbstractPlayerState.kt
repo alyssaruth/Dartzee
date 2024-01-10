@@ -26,11 +26,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class TestAbstractPlayerState: AbstractTest()
-{
+class TestAbstractPlayerState : AbstractTest() {
     @Test
-    fun `it should take a copy of the darts that are added`()
-    {
+    fun `it should take a copy of the darts that are added`() {
         val state = TestPlayerState(insertParticipant())
         val darts = mutableListOf(Dart(20, 1))
 
@@ -41,8 +39,7 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `should populate darts with the ParticipantId and RoundNumber`()
-    {
+    fun `should populate darts with the ParticipantId and RoundNumber`() {
         val pt = insertParticipant()
         val state = TestPlayerState(pt)
 
@@ -57,8 +54,7 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `It should populate completed rounds with the ParticipantId`()
-    {
+    fun `It should populate completed rounds with the ParticipantId`() {
         val pt = insertParticipant()
         val state = TestPlayerState(pt)
 
@@ -71,8 +67,7 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should support resetting the currently thrown darts`()
-    {
+    fun `Should support resetting the currently thrown darts`() {
         val state = TestPlayerState(insertParticipant())
 
         state.dartThrown(Dart(20, 1))
@@ -83,8 +78,7 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should support committing a round of darts and saving them to the database`()
-    {
+    fun `Should support committing a round of darts and saving them to the database`() {
         val pt = insertParticipant()
         val dartOne = Dart(20, 1, SegmentType.OUTER_SINGLE)
         val dartTwo = Dart(5, 1, SegmentType.OUTER_SINGLE)
@@ -97,7 +91,9 @@ class TestAbstractPlayerState: AbstractTest()
 
         state.commitRound()
         state.currentRound.shouldBeEmpty()
-        state.completedRounds.shouldContainExactly(listOf(listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1))))
+        state.completedRounds.shouldContainExactly(
+            listOf(listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)))
+        )
 
         val entities = DartEntity().retrieveEntities()
         entities.forEach {
@@ -115,8 +111,8 @@ class TestAbstractPlayerState: AbstractTest()
         val entityThree = entities.find { it.ordinal == 3 }!!
         validateDartEntity(entityThree, dartThree)
     }
-    private fun validateDartEntity(dartEntity: DartEntity, originalDart: Dart)
-    {
+
+    private fun validateDartEntity(dartEntity: DartEntity, originalDart: Dart) {
         dartEntity.multiplier shouldBe originalDart.multiplier
         dartEntity.score shouldBe originalDart.score
         dartEntity.segmentType shouldBe originalDart.segmentType
@@ -124,8 +120,7 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should correctly compute the current round number`()
-    {
+    fun `Should correctly compute the current round number`() {
         val state = TestPlayerState(insertParticipant())
         state.currentRoundNumber() shouldBe 1
 
@@ -143,9 +138,13 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should mark a participant as finished`()
-    {
-        val participant = insertParticipant(dtFinished = DateStatics.END_OF_TIME, finalScore = -1, finishingPosition = -1)
+    fun `Should mark a participant as finished`() {
+        val participant =
+            insertParticipant(
+                dtFinished = DateStatics.END_OF_TIME,
+                finalScore = -1,
+                finishingPosition = -1
+            )
         val state = TestPlayerState(participant)
 
         state.participantFinished(1, 100)
@@ -160,9 +159,13 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should update the finishing position`()
-    {
-        val participant = insertParticipant(dtFinished = DateStatics.END_OF_TIME, finalScore = -1, finishingPosition = -1)
+    fun `Should update the finishing position`() {
+        val participant =
+            insertParticipant(
+                dtFinished = DateStatics.END_OF_TIME,
+                finalScore = -1,
+                finishingPosition = -1
+            )
         val state = TestPlayerState(participant)
 
         state.setParticipantFinishPosition(4)
@@ -177,8 +180,7 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should fire state changed`()
-    {
+    fun `Should fire state changed`() {
         val state = TestPlayerState(insertParticipant())
 
         state.shouldFireStateChange { it.dartThrown(Dart(1, 1)) }
@@ -193,8 +195,7 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should fire state changed at the point a listener is added`()
-    {
+    fun `Should fire state changed at the point a listener is added`() {
         val state = TestPlayerState(insertParticipant())
         val listener = mockk<PlayerStateListener<TestPlayerState>>(relaxed = true)
         state.addListener(listener)
@@ -203,8 +204,7 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should identify human vs ai`()
-    {
+    fun `Should identify human vs ai`() {
         val ai = insertPlayer(strategy = "foo")
         val human = insertPlayer(strategy = "")
 
@@ -216,8 +216,7 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should correctly identify the current individual within a team`()
-    {
+    fun `Should correctly identify the current individual within a team`() {
         val pt1 = insertParticipant()
         val pt2 = insertParticipant()
 
@@ -231,8 +230,7 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should correctly identify whether or not there are multiple participants`()
-    {
+    fun `Should correctly identify whether or not there are multiple participants`() {
         TestPlayerState(insertParticipant()).hasMultiplePlayers() shouldBe false
 
         val pt1 = insertParticipant()
@@ -241,8 +239,7 @@ class TestAbstractPlayerState: AbstractTest()
     }
 
     @Test
-    fun `Should correctly extract the rounds for a player, including the current one`()
-    {
+    fun `Should correctly extract the rounds for a player, including the current one`() {
         val pt1 = insertParticipant()
         val pt2 = insertParticipant()
         val state = TestTeamState(listOf(pt1, pt2))
@@ -263,28 +260,31 @@ class TestAbstractPlayerState: AbstractTest()
     }
 }
 
-data class TestPlayerState(val participant: ParticipantEntity,
-                           override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
-                           override val currentRound: MutableList<Dart> = mutableListOf(),
-                           override var isActive: Boolean = false,
-                           private val scoreSoFar: Int = -1): AbstractPlayerState<TestPlayerState>()
-{
+data class TestPlayerState(
+    val participant: ParticipantEntity,
+    override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
+    override val currentRound: MutableList<Dart> = mutableListOf(),
+    override var isActive: Boolean = false,
+    private val scoreSoFar: Int = -1
+) : AbstractPlayerState<TestPlayerState>() {
     override val wrappedParticipant = SingleParticipant(participant)
+
     override fun getScoreSoFar() = scoreSoFar
 }
 
-data class TestTeamState(val participants: List<ParticipantEntity>,
-                         override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
-                         override val currentRound: MutableList<Dart> = mutableListOf(),
-                         override var isActive: Boolean = false,
-                         private val scoreSoFar: Int = -1): AbstractPlayerState<TestTeamState>()
-{
+data class TestTeamState(
+    val participants: List<ParticipantEntity>,
+    override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
+    override val currentRound: MutableList<Dart> = mutableListOf(),
+    override var isActive: Boolean = false,
+    private val scoreSoFar: Int = -1
+) : AbstractPlayerState<TestTeamState>() {
     override val wrappedParticipant = TeamParticipant(insertTeam(), participants)
+
     override fun getScoreSoFar() = scoreSoFar
 }
 
-fun <S: AbstractPlayerState<S>> S.shouldFireStateChange(fn: (state: S) -> Unit)
-{
+fun <S : AbstractPlayerState<S>> S.shouldFireStateChange(fn: (state: S) -> Unit) {
     val listener = mockk<PlayerStateListener<S>>(relaxed = true)
     addListener(listener)
     clearMocks(listener)
@@ -295,8 +295,7 @@ fun <S: AbstractPlayerState<S>> S.shouldFireStateChange(fn: (state: S) -> Unit)
     verify { listener.stateChanged(state) }
 }
 
-fun <S: AbstractPlayerState<S>> S.shouldNotFireStateChange(fn: (state: S) -> Unit)
-{
+fun <S : AbstractPlayerState<S>> S.shouldNotFireStateChange(fn: (state: S) -> Unit) {
     val listener = mockk<PlayerStateListener<S>>(relaxed = true)
     addListener(listener)
     clearMocks(listener)

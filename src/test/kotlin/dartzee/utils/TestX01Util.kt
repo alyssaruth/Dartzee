@@ -13,11 +13,9 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestX01Util: AbstractTest()
-{
+class TestX01Util : AbstractTest() {
     @Test
-    fun `isBust should return the right values when just passed a dart`()
-    {
+    fun `isBust should return the right values when just passed a dart`() {
         isBust(makeDart(3, 1, startingScore = 5)) shouldBe false
         isBust(makeDart(3, 1, startingScore = 4)) shouldBe true
         isBust(makeDart(3, 1, startingScore = 3)) shouldBe true
@@ -28,8 +26,7 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testIsBust()
-    {
+    fun testIsBust() {
         isBust(5, Dart(3, 2)).shouldBeTrue()
         isBust(10, Dart(10, 1)).shouldBeTrue()
         isBust(60, Dart(20, 3)).shouldBeTrue()
@@ -44,8 +41,7 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testShouldStopForMercyRule()
-    {
+    fun testShouldStopForMercyRule() {
         var model = makeDartsModel(mercyThreshold = 19)
 
         shouldStopForMercyRule(model, 19, 16).shouldBeFalse()
@@ -66,8 +62,7 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testIsCheckoutDart()
-    {
+    fun testIsCheckoutDart() {
         assertCheckout(52, false)
         assertCheckout(50, true)
         assertCheckout(45, false)
@@ -78,8 +73,7 @@ class TestX01Util: AbstractTest()
         assertCheckout(2, true)
     }
 
-    private fun assertCheckout(startingScore: Int, expected: Boolean)
-    {
+    private fun assertCheckout(startingScore: Int, expected: Boolean) {
         val drt = Dart(20, 2)
         drt.startingScore = startingScore
 
@@ -87,24 +81,21 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testIsFinishRound()
-    {
+    fun testIsFinishRound() {
         isFinishRound(listOf(Dart(2, 1), makeDart(20, 1, startingScore = 20))).shouldBeFalse()
         isFinishRound(listOf(Dart(2, 1), makeDart(20, 2, startingScore = 20))).shouldBeFalse()
         isFinishRound(listOf(Dart(2, 1), makeDart(10, 2, startingScore = 20))).shouldBeTrue()
     }
 
     @Test
-    fun testGetScoringDartsNull()
-    {
+    fun testGetScoringDartsNull() {
         val result = getScoringDarts(null, 20)
 
         result.shouldBeEmpty()
     }
 
     @Test
-    fun testGetScoringDarts()
-    {
+    fun testGetScoringDarts() {
         val d1 = makeDart(1, 1, startingScore = 51)
         val d2 = makeDart(1, 1, startingScore = 50)
         val d3 = makeDart(20, 1, startingScore = 49)
@@ -116,11 +107,10 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun `getScoringRounds should exclude rounds correctly`()
-    {
+    fun `getScoringRounds should exclude rounds correctly`() {
         val round1 = listOf(Dart(20, 3), Dart(20, 1), Dart(5, 1)) // 115
         val round2 = listOf(Dart(20, 1), Dart(20, 1), Dart(1, 1)) //  74
-        val round3 = listOf(Dart(9, 1), Dart(14, 1), Dart(1, 1))  //  50
+        val round3 = listOf(Dart(9, 1), Dart(14, 1), Dart(1, 1)) //  50
         val rounds = makeX01Rounds(200, round1, round2, round3)
 
         getScoringRounds(rounds, 200).shouldBeEmpty()
@@ -131,8 +121,7 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testCalculateThreeDartAverage()
-    {
+    fun testCalculateThreeDartAverage() {
         val d1 = makeDart(20, 1, startingScore = 100)
         val d2 = makeDart(20, 2, startingScore = 100)
         val d3 = makeDart(10, 0, startingScore = 80)
@@ -140,8 +129,8 @@ class TestX01Util: AbstractTest()
 
         val list = listOf(d1, d2, d3, d4)
         val result = calculateThreeDartAverage(list, 70)
-        val resultTwo = calculateThreeDartAverage(list, 90) //The miss should be excluded
-        val resultThree = calculateThreeDartAverage(list, 200) //Test an empty list
+        val resultTwo = calculateThreeDartAverage(list, 90) // The miss should be excluded
+        val resultThree = calculateThreeDartAverage(list, 200) // Test an empty list
 
         result shouldBe 56.25
         resultTwo shouldBe 75.0
@@ -149,8 +138,7 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testSumScore()
-    {
+    fun testSumScore() {
         val d1 = Dart(20, 2)
         val d2 = Dart(13, 0)
         val d3 = Dart(11, 1)
@@ -161,8 +149,7 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testIsShanghai()
-    {
+    fun testIsShanghai() {
         val tooShort = mutableListOf(Dart(20, 3), Dart(20, 3))
         val miss = mutableListOf(Dart(20, 3), Dart(20, 3), Dart(20, 0))
         val wrongSum = mutableListOf(Dart(20, 1), Dart(20, 3), Dart(20, 3))
@@ -180,8 +167,7 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testGetSortedDartStr()
-    {
+    fun testGetSortedDartStr() {
         val listOne = mutableListOf(Dart(2, 3), Dart(3, 2), Dart(20, 1))
         val listTwo = mutableListOf(Dart(1, 1), Dart(7, 1), Dart(5, 1))
         val listThree = mutableListOf(Dart(20, 3), Dart(20, 3), Dart(20, 3))
@@ -194,8 +180,7 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testIsNearMissDouble()
-    {
+    fun testIsNearMissDouble() {
         val nonCheckoutDart = Dart(16, 2)
         nonCheckoutDart.startingScore = 48
 

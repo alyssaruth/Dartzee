@@ -9,11 +9,9 @@ import dartzee.screen.stats.player.golf.makeOptimalScorecardStartingMap
 import io.kotest.matchers.collections.shouldContainExactly
 import org.junit.jupiter.api.Test
 
-class TestGameWrapperGolfUtils : AbstractTest()
-{
+class TestGameWrapperGolfUtils : AbstractTest() {
     @Test
-    fun `Should populate optimal scorecard map correctly`()
-    {
+    fun `Should populate optimal scorecard map correctly`() {
         val hm = makeOptimalScorecardStartingMap()
 
         golfFrontNine22(1L).populateOptimalScorecardMaps(hm)
@@ -33,8 +31,7 @@ class TestGameWrapperGolfUtils : AbstractTest()
     }
 
     @Test
-    fun `Optimal scorecard should cope with missing rounds (due to a team game)`()
-    {
+    fun `Optimal scorecard should cope with missing rounds (due to a team game)`() {
         val hm = makeOptimalScorecardStartingMap()
 
         golfFrontNine22EvenRounds().populateOptimalScorecardMaps(hm)
@@ -43,8 +40,10 @@ class TestGameWrapperGolfUtils : AbstractTest()
         getDataRowForHole(hm, 4).shouldContainExactly(1L, 5, 5, 4)
     }
 
-    private fun getDataRowForHole(optimalHoleMap: MutableMap<Int, OptimalHoleStat>, hole: Int): List<Any>
-    {
+    private fun getDataRowForHole(
+        optimalHoleMap: MutableMap<Int, OptimalHoleStat>,
+        hole: Int
+    ): List<Any> {
         val stat = optimalHoleMap.getValue(hole)
 
         val scores = stat.darts.map { it.getGolfScore() }

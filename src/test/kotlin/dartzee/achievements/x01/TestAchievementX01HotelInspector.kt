@@ -18,13 +18,12 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<AchievementX01HotelInspector>()
-{
+class TestAchievementX01HotelInspector :
+    AbstractMultiRowAchievementTest<AchievementX01HotelInspector>() {
     override fun factoryAchievement() = AchievementX01HotelInspector()
 
     @Test
-    fun `Should include rounds that were completed as part of a team`()
-    {
+    fun `Should include rounds that were completed as part of a team`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
         val team = insertTeam(gameId = g.rowId)
@@ -40,8 +39,7 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
     }
 
     @Test
-    fun `Should ignore rounds that contain any misses`()
-    {
+    fun `Should ignore rounds that contain any misses`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -55,8 +53,7 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
     }
 
     @Test
-    fun `Should ignore rounds that bust the player`()
-    {
+    fun `Should ignore rounds that bust the player`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -69,8 +66,7 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
     }
 
     @Test
-    fun `Should ignore rounds that do not add up to 26`()
-    {
+    fun `Should ignore rounds that do not add up to 26`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -82,17 +78,26 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
     }
 
     @Test
-    fun `Should ignore rounds that do not add up to 26, in a game where another round does add up to 26`()
-    {
+    fun `Should ignore rounds that do not add up to 26, in a game where another round does add up to 26`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        insertDartsForPlayer(g, p, listOf(Dart(20, 1), Dart(5, 1), Dart(2, 1)),
-            participant = pt, roundNumber = 1)
+        insertDartsForPlayer(
+            g,
+            p,
+            listOf(Dart(20, 1), Dart(5, 1), Dart(2, 1)),
+            participant = pt,
+            roundNumber = 1
+        )
 
-        insertDartsForPlayer(g, p, listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)),
-            participant = pt, roundNumber = 2)
+        insertDartsForPlayer(
+            g,
+            p,
+            listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)),
+            participant = pt,
+            roundNumber = 2
+        )
 
         runConversion()
 
@@ -100,8 +105,7 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
     }
 
     @Test
-    fun `Should ignore rounds that contain fewer than 3 darts`()
-    {
+    fun `Should ignore rounds that contain fewer than 3 darts`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -113,8 +117,7 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
     }
 
     @Test
-    fun `Should ignore permutations of the same method, and track the earliest one`()
-    {
+    fun `Should ignore permutations of the same method, and track the earliest one`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -132,13 +135,13 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
 
         getAchievementCount() shouldBe 1
 
-        val a = AchievementEntity.retrieveAchievement(AchievementType.X01_HOTEL_INSPECTOR, p.rowId)!!
+        val a =
+            AchievementEntity.retrieveAchievement(AchievementType.X01_HOTEL_INSPECTOR, p.rowId)!!
         a.gameIdEarned shouldBe g.rowId
     }
 
     @Test
-    fun `Should insert a row for each valid permutation, and should match front end format`()
-    {
+    fun `Should insert a row for each valid permutation, and should match front end format`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -153,36 +156,55 @@ class TestAchievementX01HotelInspector: AbstractMultiRowAchievementTest<Achievem
         getAchievementCount() shouldBe 2
 
         val achievements = AchievementEntity().retrieveEntities("PlayerId = '${p.rowId}'")
-        val methods = achievements.map{ it.achievementDetail }
+        val methods = achievements.map { it.achievementDetail }
 
-        methods.shouldContainExactlyInAnyOrder(getSortedDartStr(validOne), getSortedDartStr(validTwo))
+        methods.shouldContainExactlyInAnyOrder(
+            getSortedDartStr(validOne),
+            getSortedDartStr(validTwo)
+        )
     }
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
-    {
+    override fun setUpAchievementRowForPlayerAndGame(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database
+    ) {
         insertStandardBurltonConstant(p, g, database)
     }
 
-    private fun insertStandardBurltonConstant(p: PlayerEntity, g: GameEntity, database: Database = mainDatabase)
-    {
+    private fun insertStandardBurltonConstant(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database = mainDatabase
+    ) {
         insertDartsForPlayer(g, p, listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)), database = database)
     }
 
-    private fun insertDartsForPlayer(g: GameEntity,
-                                     p: PlayerEntity,
-                                     darts: List<Dart>,
-                                     startingScore: Int = 501,
-                                     database: Database = mainDatabase,
-                                     participant: ParticipantEntity? = null,
-                                     roundNumber: Int = 1)
-    {
-        val pt = participant ?: insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
+    private fun insertDartsForPlayer(
+        g: GameEntity,
+        p: PlayerEntity,
+        darts: List<Dart>,
+        startingScore: Int = 501,
+        database: Database = mainDatabase,
+        participant: ParticipantEntity? = null,
+        roundNumber: Int = 1
+    ) {
+        val pt =
+            participant
+                ?: insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
         var currentScore = startingScore
         darts.forEachIndexed { ix, drt ->
-            insertDart(pt, score = drt.score, multiplier = drt.multiplier, ordinal = ix+1, startingScore = currentScore, roundNumber = roundNumber, database = database)
+            insertDart(
+                pt,
+                score = drt.score,
+                multiplier = drt.multiplier,
+                ordinal = ix + 1,
+                startingScore = currentScore,
+                roundNumber = roundNumber,
+                database = database
+            )
             currentScore -= drt.getTotal()
         }
-
     }
 }

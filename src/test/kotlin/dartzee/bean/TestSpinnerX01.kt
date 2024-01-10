@@ -4,25 +4,21 @@ import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestSpinnerX01: AbstractTest()
-{
+class TestSpinnerX01 : AbstractTest() {
     @Test
-    fun `It should default to 501`()
-    {
+    fun `It should default to 501`() {
         val spinner = SpinnerX01()
         spinner.value shouldBe 501
     }
 
     @Test
-    fun `It should increment in multiples of 100`()
-    {
+    fun `It should increment in multiples of 100`() {
         val spinner = SpinnerX01()
         spinner.model.nextValue shouldBe 601
     }
 
     @Test
-    fun `It should range from 101 to 701`()
-    {
+    fun `It should range from 101 to 701`() {
         val spinner = SpinnerX01()
 
         spinner.value = 701
@@ -33,8 +29,7 @@ class TestSpinnerX01: AbstractTest()
     }
 
     @Test
-    fun `It should reset to 501 if an invalid value is entered`()
-    {
+    fun `It should reset to 501 if an invalid value is entered`() {
         val spinner = SpinnerX01()
 
         spinner.value = 301

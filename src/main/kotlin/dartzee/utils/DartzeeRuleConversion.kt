@@ -3,20 +3,16 @@ package dartzee.utils
 import dartzee.core.screen.ProgressDialog
 import dartzee.db.DartzeeRuleEntity
 
-object DartzeeRuleConversion
-{
-    fun convertDartzeeRules()
-    {
+object DartzeeRuleConversion {
+    fun convertDartzeeRules() {
         val allRules = DartzeeRuleEntity().retrieveEntities()
 
         val r = Runnable {
-            val dlg = ProgressDialog.factory("Converting Dartzee Rules",
-                "rules", allRules.size)
+            val dlg = ProgressDialog.factory("Converting Dartzee Rules", "rules", allRules.size)
 
             dlg.setVisibleLater()
 
-            try
-            {
+            try {
                 allRules.forEach { rule ->
                     val dto = rule.toDto(false)
                     val newResult = dto.runStrengthCalculation()
@@ -25,9 +21,7 @@ object DartzeeRuleConversion
 
                     dlg.incrementProgressLater()
                 }
-            }
-            finally
-            {
+            } finally {
                 dlg.disposeLater()
             }
         }

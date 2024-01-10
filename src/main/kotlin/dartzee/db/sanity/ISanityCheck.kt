@@ -1,6 +1,5 @@
 package dartzee.db.sanity
 
-interface ISanityCheck
-{
+interface ISanityCheck {
     fun runCheck(): List<AbstractSanityCheckResult>
 }

@@ -10,22 +10,20 @@ import java.awt.BorderLayout
 import java.util.concurrent.CopyOnWriteArrayList
 
 /**
- * The first tab displayed for any match. Provides a summary of the players' overall scores with (hopefully) nice graphs and stuff
+ * The first tab displayed for any match. Provides a summary of the players' overall scores with
+ * (hopefully) nice graphs and stuff
  */
-class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
+class MatchSummaryPanel<PlayerState : AbstractPlayerState<PlayerState>>(
     val match: DartsMatchEntity,
-    private val statsPanel: AbstractGameStatisticsPanel<PlayerState>) : PanelWithScorers<MatchScorer>(),
-    PlayerStateListener<PlayerState>
-{
+    private val statsPanel: AbstractGameStatisticsPanel<PlayerState>
+) : PanelWithScorers<MatchScorer>(), PlayerStateListener<PlayerState> {
     private val gameTabs = CopyOnWriteArrayList<DartsGamePanel<*, PlayerState>>()
 
-    init
-    {
+    init {
         panelCenter.add(statsPanel, BorderLayout.CENTER)
     }
 
-    fun addParticipant(localId: Long, state: PlayerState)
-    {
+    fun addParticipant(localId: Long, state: PlayerState) {
         val participant = state.wrappedParticipant
         val scorer = findOrAssignScorer(participant)
 
@@ -35,17 +33,17 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
         state.addListener(this)
     }
 
-    fun getAllParticipants(): List<IWrappedParticipant>
-    {
+    fun getAllParticipants(): List<IWrappedParticipant> {
         val states = gameTabs.map { it.getPlayerStates() }.flatten()
         return states.map { it.wrappedParticipant }
     }
 
     private fun findOrAssignScorer(participant: IWrappedParticipant) =
-        scorersOrdered.find { it.participant.getUniqueParticipantName() == participant.getUniqueParticipantName() } ?: assignScorer(participant)
+        scorersOrdered.find {
+            it.participant.getUniqueParticipantName() == participant.getUniqueParticipantName()
+        } ?: assignScorer(participant)
 
-    private fun updateStats()
-    {
+    private fun updateStats() {
         scorersOrdered.forEach { it.updateResult() }
 
         val states = gameTabs.map { it.getPlayerStates() }.flatten()
@@ -54,13 +52,11 @@ class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
 
     override fun factoryScorer(participant: IWrappedParticipant) = MatchScorer(participant, match)
 
-    fun addGameTab(tab: DartsGamePanel<*, PlayerState>)
-    {
+    fun addGameTab(tab: DartsGamePanel<*, PlayerState>) {
         gameTabs.add(tab)
     }
 
-    override fun stateChanged(state: PlayerState)
-    {
+    override fun stateChanged(state: PlayerState) {
         runOnEventThread { updateStats() }
     }
 }

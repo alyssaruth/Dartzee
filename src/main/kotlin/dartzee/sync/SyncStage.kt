@@ -1,7 +1,6 @@
 package dartzee.sync
 
-enum class SyncStage
-{
+enum class SyncStage {
     PULL_REMOTE,
     VALIDATE_REMOTE,
     MERGE_LOCAL_CHANGES,
@@ -12,8 +11,7 @@ enum class SyncStage
 }
 
 fun SyncStage.desc() =
-    when (this)
-    {
+    when (this) {
         SyncStage.PULL_REMOTE -> "Download data"
         SyncStage.VALIDATE_REMOTE -> "Validate database"
         SyncStage.MERGE_LOCAL_CHANGES -> "Merge changes"

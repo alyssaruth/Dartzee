@@ -23,17 +23,14 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class TestGameSqlUtils : AbstractTest()
-{
+class TestGameSqlUtils : AbstractTest() {
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         InjectedCore.collectionShuffler = CollectionShuffler()
     }
 
     @Test
-    fun `Should prepare and load players for a non team game correctly`()
-    {
+    fun `Should prepare and load players for a non team game correctly`() {
         val players = preparePlayers(3)
         val (p1, p2, p3) = players
         val g = insertGame()
@@ -52,8 +49,7 @@ class TestGameSqlUtils : AbstractTest()
     }
 
     @Test
-    fun `Should prepare and load players for a team game correctly`()
-    {
+    fun `Should prepare and load players for a team game correctly`() {
         val players = preparePlayers(4)
         val (p1, p2, p3, p4) = players
         val g = insertGame()
@@ -71,8 +67,7 @@ class TestGameSqlUtils : AbstractTest()
     }
 
     @Test
-    fun `Should create a single participant if there are an odd number of players`()
-    {
+    fun `Should create a single participant if there are an odd number of players`() {
         val players = preparePlayers(3)
         val (p1, p2, p3) = players
         val g = insertGame()
@@ -90,8 +85,7 @@ class TestGameSqlUtils : AbstractTest()
     }
 
     @Test
-    fun `Should prepare next participants correctly for a 2 player game`()
-    {
+    fun `Should prepare next participants correctly for a 2 player game`() {
         val match = insertDartsMatch()
         val g1 = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
         val players = preparePlayers(2)
@@ -110,8 +104,7 @@ class TestGameSqlUtils : AbstractTest()
     }
 
     @Test
-    fun `Should prepare next participants correctly for a 2 team game`()
-    {
+    fun `Should prepare next participants correctly for a 2 team game`() {
         val match = insertDartsMatch()
         val g1 = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
         val players = preparePlayers(4)
@@ -131,8 +124,7 @@ class TestGameSqlUtils : AbstractTest()
     }
 
     @Test
-    fun `Should prepare next participants correctly for a game with more than 2 teams`()
-    {
+    fun `Should prepare next participants correctly for a game with more than 2 teams`() {
         InjectedCore.collectionShuffler = DeterministicCollectionShuffler()
 
         val match = insertDartsMatch()
@@ -161,8 +153,7 @@ class TestGameSqlUtils : AbstractTest()
     }
 
     @Test
-    fun `Should insert the right non-participant next entities`()
-    {
+    fun `Should insert the right non-participant next entities`() {
         val match = insertDartsMatch()
         val g1 = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
         val firstGameParticipants = prepareParticipants(g1.rowId, preparePlayers(2), false)
@@ -176,8 +167,7 @@ class TestGameSqlUtils : AbstractTest()
     }
 
     @Test
-    fun `Should insert dartzee rules as part of next entities if appropriate`()
-    {
+    fun `Should insert dartzee rules as part of next entities if appropriate`() {
         val match = insertDartsMatch()
         val g1 = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
         val firstGameParticipants = prepareParticipants(g1.rowId, preparePlayers(2), false)
@@ -189,11 +179,18 @@ class TestGameSqlUtils : AbstractTest()
         val rules = DartzeeRuleEntity().retrieveForGame(g2.rowId)
         rules.size shouldBe 2
 
-        rules.map { it.toDto().generateRuleDescription() }.shouldContainExactly(originalRules.map { it.generateRuleDescription() })
+        rules
+            .map { it.toDto().generateRuleDescription() }
+            .shouldContainExactly(originalRules.map { it.generateRuleDescription() })
     }
 
-    private fun validateTeam(team: IWrappedParticipant, gameId: String, ordinal: Int, p1: PlayerEntity, p2: PlayerEntity)
-    {
+    private fun validateTeam(
+        team: IWrappedParticipant,
+        gameId: String,
+        ordinal: Int,
+        p1: PlayerEntity,
+        p2: PlayerEntity
+    ) {
         team.shouldBeInstanceOf<TeamParticipant>()
         val teamEntity = team.participant
         teamEntity.gameId shouldBe gameId
@@ -212,11 +209,14 @@ class TestGameSqlUtils : AbstractTest()
         pt2.ordinal shouldBe 1
         pt2.playerId shouldBe p2.rowId
         pt2.retrievedFromDb shouldBe true
-
     }
 
-    private fun validateSingleParticipant(pt: IWrappedParticipant, gameId: String, ordinal: Int, player: PlayerEntity)
-    {
+    private fun validateSingleParticipant(
+        pt: IWrappedParticipant,
+        gameId: String,
+        ordinal: Int,
+        player: PlayerEntity
+    ) {
         pt.shouldBeInstanceOf<SingleParticipant>()
         pt.participant.gameId shouldBe gameId
         pt.participant.playerId shouldBe player.rowId

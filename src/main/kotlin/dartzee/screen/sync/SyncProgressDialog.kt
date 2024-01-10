@@ -12,12 +12,10 @@ import javax.swing.SwingUtilities
 import javax.swing.WindowConstants
 import javax.swing.border.EmptyBorder
 
-class SyncProgressDialog : JDialog()
-{
+class SyncProgressDialog : JDialog() {
     private val progressBar = JProgressBar()
 
-    init
-    {
+    init {
         setSize(300, 90)
         isResizable = false
         setLocationRelativeTo(ScreenCache.mainScreen)
@@ -39,13 +37,11 @@ class SyncProgressDialog : JDialog()
         defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
     }
 
-    fun setVisibleLater()
-    {
+    fun setVisibleLater() {
         SwingUtilities.invokeLater { isVisible = true }
     }
 
-    fun progressToStage(stage: SyncStage)
-    {
+    fun progressToStage(stage: SyncStage) {
         val stageIndex = SyncStage.values().toList().indexOf(stage)
         SwingUtilities.invokeLater {
             progressBar.value = stageIndex
@@ -54,28 +50,23 @@ class SyncProgressDialog : JDialog()
         }
     }
 
-    fun disposeLater()
-    {
+    fun disposeLater() {
         SwingUtilities.invokeLater { dispose() }
     }
 
-    companion object
-    {
+    companion object {
         private val instance = SyncProgressDialog()
 
-        fun syncStarted()
-        {
+        fun syncStarted() {
             instance.progressToStage(SyncStage.PULL_REMOTE)
             instance.setVisibleLater()
         }
 
-        fun progressToStage(stage: SyncStage)
-        {
+        fun progressToStage(stage: SyncStage) {
             instance.progressToStage(stage)
         }
 
-        fun dispose()
-        {
+        fun dispose() {
             instance.disposeLater()
         }
 

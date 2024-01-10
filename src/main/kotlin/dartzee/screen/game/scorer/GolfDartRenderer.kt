@@ -14,12 +14,19 @@ import javax.swing.border.Border
 import javax.swing.border.MatteBorder
 import javax.swing.table.DefaultTableCellRenderer
 
-class GolfDartRenderer(private val showGameId: Boolean) : DefaultTableCellRenderer()
-{
-    override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
-    {
+class GolfDartRenderer(private val showGameId: Boolean) : DefaultTableCellRenderer() {
+    override fun getTableCellRendererComponent(
+        table: JTable?,
+        value: Any?,
+        isSelected: Boolean,
+        hasFocus: Boolean,
+        row: Int,
+        column: Int
+    ): Component {
         val newValue = getReplacementValue(table, value, row)
-        val cell = super.getTableCellRendererComponent(table, newValue, isSelected, hasFocus, row, column) as JComponent
+        val cell =
+            super.getTableCellRendererComponent(table, newValue, isSelected, hasFocus, row, column)
+                as JComponent
 
         horizontalAlignment = SwingConstants.CENTER
         font = Font("Trebuchet MS", Font.BOLD, 15)
@@ -27,13 +34,10 @@ class GolfDartRenderer(private val showGameId: Boolean) : DefaultTableCellRender
         val border = getBorderForCell(row, column)
         cell.border = border
 
-        if (column == 0 || newValue == null || isScoreRow(row))
-        {
+        if (column == 0 || newValue == null || isScoreRow(row)) {
             foreground = null
             background = null
-        }
-        else
-        {
+        } else {
             val score = newValue as Int
 
             val bgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS)
@@ -46,15 +50,12 @@ class GolfDartRenderer(private val showGameId: Boolean) : DefaultTableCellRender
         return this
     }
 
-    private fun getReplacementValue(table: JTable?, obj: Any?, row: Int): Any?
-    {
-        if (obj == null)
-        {
+    private fun getReplacementValue(table: JTable?, obj: Any?, row: Int): Any? {
+        if (obj == null) {
             return null
         }
 
-        if (obj !is Dart)
-        {
+        if (obj !is Dart) {
             return obj
         }
 
@@ -62,31 +63,26 @@ class GolfDartRenderer(private val showGameId: Boolean) : DefaultTableCellRender
         return obj.getGolfScore(target)
     }
 
-    private fun getBorderForCell(row: Int, col: Int): Border
-    {
+    private fun getBorderForCell(row: Int, col: Int): Border {
         var top = 0
         var bottom = 0
         var left = 0
         var right = 0
 
-        if (isScoreRow(row))
-        {
+        if (isScoreRow(row)) {
             top = 2
             bottom = 2
         }
 
-        if (col == 1)
-        {
+        if (col == 1) {
             left = 2
         }
 
-        if (col == 3)
-        {
+        if (col == 3) {
             right = 2
         }
 
-        if (showGameId && col == 4)
-        {
+        if (showGameId && col == 4) {
             right = 2
         }
 

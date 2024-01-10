@@ -6,11 +6,9 @@ import dartzee.helper.makeDartsModel
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestAIConfigurationSubPanelX01: AbstractTest()
-{
+class TestAIConfigurationSubPanelX01 : AbstractTest() {
     @Test
-    fun `Should populate the scoring dart onto the model`()
-    {
+    fun `Should populate the scoring dart onto the model`() {
         val panel = AIConfigurationSubPanelX01()
         panel.spinnerScoringDart.value = 18
 
@@ -19,8 +17,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
     }
 
     @Test
-    fun `Should populate the mercy threshold onto the model`()
-    {
+    fun `Should populate the mercy threshold onto the model`() {
         val panel = AIConfigurationSubPanelX01()
         panel.chckbxMercyRule.isSelected = true
         panel.spinnerMercyThreshold.value = 13
@@ -30,8 +27,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
     }
 
     @Test
-    fun `Should not populate the mercy threshold if the box is unticked`()
-    {
+    fun `Should not populate the mercy threshold if the box is unticked`() {
         val panel = AIConfigurationSubPanelX01()
         panel.chckbxMercyRule.isSelected = false
         panel.spinnerMercyThreshold.value = 13
@@ -41,8 +37,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
     }
 
     @Test
-    fun `Should populate the model with the setup darts`()
-    {
+    fun `Should populate the model with the setup darts`() {
         val panel = AIConfigurationSubPanelX01()
         panel.hmScoreToDart[20] = AimDart(10, 2)
 
@@ -51,8 +46,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
     }
 
     @Test
-    fun `Should initialise the scoringDart from the model`()
-    {
+    fun `Should initialise the scoringDart from the model`() {
         val model = makeDartsModel(scoringDart = 15)
 
         val panel = AIConfigurationSubPanelX01()
@@ -62,8 +56,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
     }
 
     @Test
-    fun `Should initialise the mercy threshold from the model`()
-    {
+    fun `Should initialise the mercy threshold from the model`() {
         val model = makeDartsModel(mercyThreshold = 11)
 
         val panel = AIConfigurationSubPanelX01()
@@ -75,8 +68,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
     }
 
     @Test
-    fun `Should initialise an unset mercy threshold from the model`()
-    {
+    fun `Should initialise an unset mercy threshold from the model`() {
         val model = makeDartsModel(mercyThreshold = null)
 
         val panel = AIConfigurationSubPanelX01()
@@ -88,8 +80,7 @@ class TestAIConfigurationSubPanelX01: AbstractTest()
     }
 
     @Test
-    fun `Mercy rule checkbox should toggle other components`()
-    {
+    fun `Mercy rule checkbox should toggle other components`() {
         val panel = AIConfigurationSubPanelX01()
         panel.chckbxMercyRule.doClick()
         panel.spinnerMercyThreshold.isEnabled shouldBe true

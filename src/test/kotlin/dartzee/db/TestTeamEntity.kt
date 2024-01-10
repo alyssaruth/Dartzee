@@ -6,13 +6,11 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 
-class TestTeamEntity: AbstractEntityTest<TeamEntity>()
-{
+class TestTeamEntity : AbstractEntityTest<TeamEntity>() {
     override fun factoryDao() = TeamEntity()
 
     @Test
-    fun `Factory and save`()
-    {
+    fun `Factory and save`() {
         val gameId = randomGuid()
 
         val tean = TeamEntity.factoryAndSave(gameId, 2)

@@ -21,19 +21,17 @@ import dartzee.updateSelection
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 import java.time.LocalDate
 import javax.swing.JCheckBox
 import javax.swing.JComboBox
 import javax.swing.JLabel
 import javax.swing.JRadioButton
+import org.junit.jupiter.api.Test
 
-class TestReportingGameTab: AbstractTest()
-{
+class TestReportingGameTab : AbstractTest() {
     @Test
-    fun `Should have the correct initial state`()
-    {
+    fun `Should have the correct initial state`() {
         val scrn = ReportingGameTab()
         val checkBoxes = scrn.getAllChildComponentsForType<JCheckBox>()
         checkBoxes.forEach { it.isSelected shouldBe false }
@@ -45,8 +43,7 @@ class TestReportingGameTab: AbstractTest()
     }
 
     @Test
-    fun `Should toggle game type combo box correctly`()
-    {
+    fun `Should toggle game type combo box correctly`() {
         val scrn = ReportingGameTab()
         scrn.clickChild<JCheckBox>(text = "Game")
         scrn.getChild<ComboBoxGameType>().shouldBeEnabled()
@@ -56,20 +53,20 @@ class TestReportingGameTab: AbstractTest()
     }
 
     @Test
-    fun `Should swap in the right game param filter panel`()
-    {
+    fun `Should swap in the right game param filter panel`() {
         val scrn = ReportingGameTab()
         scrn.getChild<GameParamFilterPanel>().shouldBeInstanceOf<GameParamFilterPanelX01>()
 
         scrn.clickChild<JCheckBox>(text = "Game")
         val comboBox = scrn.getChild<ComboBoxGameType>()
         comboBox.updateSelection(GameType.ROUND_THE_CLOCK)
-        scrn.getChild<GameParamFilterPanel>().shouldBeInstanceOf<GameParamFilterPanelRoundTheClock>()
+        scrn
+            .getChild<GameParamFilterPanel>()
+            .shouldBeInstanceOf<GameParamFilterPanelRoundTheClock>()
     }
 
     @Test
-    fun `Should toggle the game param filter panel correctly`()
-    {
+    fun `Should toggle the game param filter panel correctly`() {
         val scrn = ReportingGameTab()
         scrn.clickChild<JCheckBox>(text = "Type")
         scrn.getChild<GameParamFilterPanel>().shouldBeEnabled()
@@ -79,8 +76,7 @@ class TestReportingGameTab: AbstractTest()
     }
 
     @Test
-    fun `Should toggle the start date filter panel correctly`()
-    {
+    fun `Should toggle the start date filter panel correctly`() {
         val scrn = ReportingGameTab()
         scrn.clickChild<JCheckBox>(text = "Start Date")
         scrn.getStartDateFilterPanel().cbDateFrom.shouldBeEnabled()
@@ -90,8 +86,7 @@ class TestReportingGameTab: AbstractTest()
     }
 
     @Test
-    fun `Should toggle the finish date filter panel correctly`()
-    {
+    fun `Should toggle the finish date filter panel correctly`() {
         val scrn = ReportingGameTab()
         scrn.clickChild<JCheckBox>(text = "Finish Date")
         scrn.getFinishDateFilterPanel().cbDateTo.shouldBeEnabled()
@@ -111,8 +106,7 @@ class TestReportingGameTab: AbstractTest()
     }
 
     @Test
-    fun `Should toggle match radio buttons correctly`()
-    {
+    fun `Should toggle match radio buttons correctly`() {
         val tab = ReportingGameTab()
         tab.clickChild<JCheckBox>(text = "Part of Match")
         tab.getChild<JRadioButton>(text = "Yes").shouldBeEnabled()
@@ -124,8 +118,7 @@ class TestReportingGameTab: AbstractTest()
     }
 
     @Test
-    fun `Should toggle the sync status radio buttons correctly`()
-    {
+    fun `Should toggle the sync status radio buttons correctly`() {
         val tab = ReportingGameTab()
         tab.clickChild<JCheckBox>(text = "Sync Status")
         tab.getChild<JRadioButton>(text = "Pending changes").shouldBeEnabled()
@@ -136,44 +129,40 @@ class TestReportingGameTab: AbstractTest()
         tab.getChild<JRadioButton>(text = "Synced").shouldBeDisabled()
     }
 
-    /**
-     * Validation
-     */
+    /** Validation */
     @Test
-    fun `Should validate against the start date filters`()
-    {
+    fun `Should validate against the start date filters`() {
         val tab = ReportingGameTab()
         tab.clickChild<JCheckBox>(text = "Start Date")
         tab.getStartDateFilterPanel().makeInvalid()
 
         tab.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("The 'date from' cannot be after the 'date to'")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "The 'date from' cannot be after the 'date to'"
+        )
     }
 
     @Test
-    fun `Should validate against the finish date filters`()
-    {
+    fun `Should validate against the finish date filters`() {
         val tab = ReportingGameTab()
         tab.clickChild<JCheckBox>(text = "Finish Date")
         tab.getFinishDateFilterPanel().makeInvalid()
 
         tab.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("The 'date from' cannot be after the 'date to'")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "The 'date from' cannot be after the 'date to'"
+        )
     }
 
     @Test
-    fun `Should be valid by default`()
-    {
+    fun `Should be valid by default`() {
         val tab = ReportingGameTab()
         tab.valid() shouldBe true
     }
 
-    /**
-     * Population
-     */
+    /** Population */
     @Test
-    fun `Should populate game type correctly`()
-    {
+    fun `Should populate game type correctly`() {
         val rp = ReportParameters()
         val tab = ReportingGameTab()
 
@@ -190,8 +179,7 @@ class TestReportingGameTab: AbstractTest()
     }
 
     @Test
-    fun `Should populate gameParams correctly`()
-    {
+    fun `Should populate gameParams correctly`() {
         val rp = ReportParameters()
         val tab = ReportingGameTab()
 
@@ -208,8 +196,7 @@ class TestReportingGameTab: AbstractTest()
     }
 
     @Test
-    fun `Should populate part of match correctly`()
-    {
+    fun `Should populate part of match correctly`() {
         val rp = ReportParameters()
         val tab = ReportingGameTab()
 
@@ -226,8 +213,7 @@ class TestReportingGameTab: AbstractTest()
     }
 
     @Test
-    fun `Should populate sync status correctly`()
-    {
+    fun `Should populate sync status correctly`() {
         val rp = ReportParameters()
         val tab = ReportingGameTab()
 
@@ -244,8 +230,7 @@ class TestReportingGameTab: AbstractTest()
     }
 
     @Test
-    fun `Should populate start date correctly`()
-    {
+    fun `Should populate start date correctly`() {
         val rp = ReportParameters()
         val tab = ReportingGameTab()
 
@@ -264,8 +249,7 @@ class TestReportingGameTab: AbstractTest()
     }
 
     @Test
-    fun `Should populate finish date correctly`()
-    {
+    fun `Should populate finish date correctly`() {
         var rp = ReportParameters()
         val tab = ReportingGameTab()
 
@@ -292,6 +276,9 @@ class TestReportingGameTab: AbstractTest()
         rp.unfinishedOnly shouldBe true
     }
 
-    private fun ReportingGameTab.getStartDateFilterPanel() = getAllChildComponentsForType<DateFilterPanel>().first()
-    private fun ReportingGameTab.getFinishDateFilterPanel() = getAllChildComponentsForType<DateFilterPanel>()[1]
+    private fun ReportingGameTab.getStartDateFilterPanel() =
+        getAllChildComponentsForType<DateFilterPanel>().first()
+
+    private fun ReportingGameTab.getFinishDateFilterPanel() =
+        getAllChildComponentsForType<DateFilterPanel>()[1]
 }

@@ -35,16 +35,14 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JOptionPane
 import javax.swing.JTextField
+import org.junit.jupiter.api.Test
 
-class TestPlayerManagementPanel: AbstractTest()
-{
+class TestPlayerManagementPanel : AbstractTest() {
     @Test
-    fun `Should clear down when refreshed with a null player`()
-    {
+    fun `Should clear down when refreshed with a null player`() {
         val player = insertPlayer()
         val panel = PlayerManagementPanel()
         panel.refresh(player)
@@ -59,8 +57,7 @@ class TestPlayerManagementPanel: AbstractTest()
     }
 
     @Test
-    fun `Should not delete a player if cancelled`()
-    {
+    fun `Should not delete a player if cancelled`() {
         val player = insertPlayer(name = "Leah")
         val managementScreen = ScreenCache.get<PlayerManagementScreen>()
         managementScreen.initialise()
@@ -78,8 +75,7 @@ class TestPlayerManagementPanel: AbstractTest()
     }
 
     @Test
-    fun `Should delete a player and update management screen`()
-    {
+    fun `Should delete a player and update management screen`() {
         val player = insertPlayer(name = "BTBF")
         val managementScreen = ScreenCache.get<PlayerManagementScreen>()
         managementScreen.initialise()
@@ -97,8 +93,7 @@ class TestPlayerManagementPanel: AbstractTest()
     }
 
     @Test
-    fun `Should initialise correctly for a human player`()
-    {
+    fun `Should initialise correctly for a human player`() {
         val image = insertPlayerImage(resource = "Sid")
         val player = insertPlayer(name = "Alex", playerImageId = image.rowId, strategy = "")
 
@@ -113,8 +108,7 @@ class TestPlayerManagementPanel: AbstractTest()
     }
 
     @Test
-    fun `Should initialise correctly for an AI player`()
-    {
+    fun `Should initialise correctly for an AI player`() {
         val image = insertPlayerImage(resource = "Dennis")
         val player = insertPlayer(name = "Dennis", playerImageId = image.rowId, strategy = "foo")
 
@@ -129,13 +123,11 @@ class TestPlayerManagementPanel: AbstractTest()
     }
 
     @Test
-    fun `Should handle a player with 0 games or achievements`()
-    {
+    fun `Should handle a player with 0 games or achievements`() {
         val player = insertPlayer()
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-
 
         val x01Button = panel.getChild<PlayerStatsButton> { it.text.contains("X01") }
         x01Button.isEnabled shouldBe false
@@ -148,8 +140,7 @@ class TestPlayerManagementPanel: AbstractTest()
     }
 
     @Test
-    fun `Should pull through total games played by type`()
-    {
+    fun `Should pull through total games played by type`() {
         val player = insertPlayer()
 
         insertGameForPlayer(player, GameType.X01)
@@ -174,11 +165,18 @@ class TestPlayerManagementPanel: AbstractTest()
     }
 
     @Test
-    fun `Should pull through a players best game per type`()
-    {
+    fun `Should pull through a players best game per type`() {
         val player = insertPlayer()
-        insertAchievement(playerId = player.rowId, type = AchievementType.X01_BEST_GAME, achievementCounter = 25)
-        insertAchievement(playerId = player.rowId, type = AchievementType.GOLF_BEST_GAME, achievementCounter = 55)
+        insertAchievement(
+            playerId = player.rowId,
+            type = AchievementType.X01_BEST_GAME,
+            achievementCounter = 25
+        )
+        insertAchievement(
+            playerId = player.rowId,
+            type = AchievementType.GOLF_BEST_GAME,
+            achievementCounter = 55
+        )
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
@@ -194,13 +192,20 @@ class TestPlayerManagementPanel: AbstractTest()
     }
 
     @Test
-    fun `Should pull through a players total achievement count`()
-    {
+    fun `Should pull through a players total achievement count`() {
         val player = insertPlayer()
 
-        //1 pink, 1 green = 10 total
-        insertAchievement(playerId = player.rowId, type = AchievementType.X01_BEST_GAME, achievementCounter = AchievementX01BestGame().pinkThreshold)
-        insertAchievement(playerId = player.rowId, type = AchievementType.GOLF_BEST_GAME, achievementCounter = AchievementGolfBestGame().greenThreshold)
+        // 1 pink, 1 green = 10 total
+        insertAchievement(
+            playerId = player.rowId,
+            type = AchievementType.X01_BEST_GAME,
+            achievementCounter = AchievementX01BestGame().pinkThreshold
+        )
+        insertAchievement(
+            playerId = player.rowId,
+            type = AchievementType.GOLF_BEST_GAME,
+            achievementCounter = AchievementGolfBestGame().greenThreshold
+        )
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
@@ -210,8 +215,7 @@ class TestPlayerManagementPanel: AbstractTest()
     }
 
     @Test
-    fun `Should support editing a human player`()
-    {
+    fun `Should support editing a human player`() {
         val player = insertPlayer(name = "Old name")
 
         val panel = PlayerManagementPanel()
@@ -229,8 +233,7 @@ class TestPlayerManagementPanel: AbstractTest()
     }
 
     @Test
-    fun `Should support editing an AI player`()
-    {
+    fun `Should support editing an AI player`() {
         val player = insertPlayer(model = makeDartsModel(), name = "Old name")
 
         val panel = PlayerManagementPanel()
@@ -248,8 +251,7 @@ class TestPlayerManagementPanel: AbstractTest()
     }
 
     @Test
-    fun `Should run a simulation for a player`()
-    {
+    fun `Should run a simulation for a player`() {
         val player = insertPlayer(makeDartsModel())
 
         val panel = PlayerManagementPanel()

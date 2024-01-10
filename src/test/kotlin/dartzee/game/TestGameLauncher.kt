@@ -32,39 +32,37 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class TestGameLauncher: AbstractTest()
-{
+class TestGameLauncher : AbstractTest() {
     @Test
-    fun `Should launch a new game of X01 successfully`()
-    {
+    fun `Should launch a new game of X01 successfully`() {
         testNewGameLaunch<GamePanelX01>(GameType.X01, "501")
     }
 
     @Test
-    fun `Should launch a new game of RTC successfully`()
-    {
-        testNewGameLaunch<GamePanelRoundTheClock>(GameType.ROUND_THE_CLOCK, RoundTheClockConfig(ClockType.Standard, true).toJson())
+    fun `Should launch a new game of RTC successfully`() {
+        testNewGameLaunch<GamePanelRoundTheClock>(
+            GameType.ROUND_THE_CLOCK,
+            RoundTheClockConfig(ClockType.Standard, true).toJson()
+        )
     }
 
     @Test
-    fun `Should launch a new game of Golf successfully`()
-    {
+    fun `Should launch a new game of Golf successfully`() {
         testNewGameLaunch<GamePanelGolf>(GameType.GOLF, "18")
     }
 
     @Test
-    fun `Should launch a new game of Dartzee successfully`()
-    {
+    fun `Should launch a new game of Dartzee successfully`() {
         val dartzeeDtos = listOf(twoBlackOneWhite, scoreEighteens)
         testNewGameLaunch<GamePanelDartzee>(GameType.DARTZEE, "", dartzeeDtos)
         getCountFromTable(EntityName.DartzeeRule) shouldBe 2
     }
 
-    private inline fun <reified T: DartsGamePanel<*, *>> testNewGameLaunch(
+    private inline fun <reified T : DartsGamePanel<*, *>> testNewGameLaunch(
         gameType: GameType,
         gameParams: String,
-        dartzeeDtos: List<DartzeeRuleDto> = emptyList())
-    {
+        dartzeeDtos: List<DartzeeRuleDto> = emptyList()
+    ) {
         val p = insertPlayer(strategy = "")
         val params = GameLaunchParams(listOf(p), gameType, gameParams, false, dartzeeDtos)
         GameLauncher().launchNewGame(params)
@@ -86,8 +84,7 @@ class TestGameLauncher: AbstractTest()
     }
 
     @Test
-    fun `Should launch a new match successfully`()
-    {
+    fun `Should launch a new match successfully`() {
         val match = DartsMatchEntity.factoryFirstTo(2)
         val p = insertPlayer()
         val p2 = insertPlayer()
@@ -105,8 +102,7 @@ class TestGameLauncher: AbstractTest()
     }
 
     @Test
-    fun `Should bring up the window when loading an already visible game`()
-    {
+    fun `Should bring up the window when loading an already visible game`() {
         val scrn = mockk<AbstractDartsGameScreen>(relaxed = true)
         ScreenCache.addDartsGameScreen("foo", scrn)
 
@@ -116,16 +112,14 @@ class TestGameLauncher: AbstractTest()
     }
 
     @Test
-    fun `Should show an error and return if no game exists for the id`()
-    {
+    fun `Should show an error and return if no game exists for the id`() {
         GameLauncher().loadAndDisplayGame("foo")
 
         dialogFactory.errorsShown.shouldContainExactly("Game foo does not exist.")
     }
 
     @Test
-    fun `Should handle an error when trying to load a single game`()
-    {
+    fun `Should handle an error when trying to load a single game`() {
         val g = insertGame()
 
         GameLauncher().loadAndDisplayGame(g.rowId)
@@ -136,8 +130,7 @@ class TestGameLauncher: AbstractTest()
     }
 
     @Test
-    fun `Should handle an error when trying to load a game that's part of a match`()
-    {
+    fun `Should handle an error when trying to load a game that's part of a match`() {
         val match = insertDartsMatch()
         val g = insertGame(dartsMatchId = match.rowId)
 

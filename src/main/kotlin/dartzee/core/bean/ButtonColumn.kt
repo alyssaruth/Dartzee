@@ -18,20 +18,17 @@ import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
 /**
- * The ButtonColumn class provides a renderer and an editor that looks like a
- * JButton. The renderer and editor will then be used for a specified column
- * in the table. The TableModel will contain the String to be displayed on
- * the button.
+ * The ButtonColumn class provides a renderer and an editor that looks like a JButton. The renderer
+ * and editor will then be used for a specified column in the table. The TableModel will contain the
+ * String to be displayed on the button.
  *
- * The button can be invoked by a mouse click or by pressing the space bar
- * when the cell has focus. Optionally a mnemonic can be set to invoke the
- * button. When the button is invoked the provided Action is invoked. The
- * source of the Action will be the table. The action command will contain
+ * The button can be invoked by a mouse click or by pressing the space bar when the cell has focus.
+ * Optionally a mnemonic can be set to invoke the button. When the button is invoked the provided
+ * Action is invoked. The source of the Action will be the table. The action command will contain
  * the model row number of the button that was clicked.
- *
  */
-class ButtonColumn(private val table: ScrollTable, private val action: Action, column: Int) : AbstractCellEditor(), TableCellRenderer, TableCellEditor, ActionListener, IMouseListener
-{
+class ButtonColumn(private val table: ScrollTable, private val action: Action, column: Int) :
+    AbstractCellEditor(), TableCellRenderer, TableCellEditor, ActionListener, IMouseListener {
     private val originalBorder: Border
 
     private val renderButton = JButton()
@@ -39,8 +36,7 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
     private var editorValue: Any? = null
     private var isButtonColumnEditor: Boolean = false
 
-    init
-    {
+    init {
         editButton.isFocusPainted = false
         editButton.addActionListener(this)
         originalBorder = editButton.border
@@ -52,10 +48,14 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
         table.addMouseListener(this)
     }
 
-    override fun getTableCellEditorComponent(table: JTable, value: Any?, isSelected: Boolean, row: Int, column: Int): Component
-    {
-        when (value)
-        {
+    override fun getTableCellEditorComponent(
+        table: JTable,
+        value: Any?,
+        isSelected: Boolean,
+        row: Int,
+        column: Int
+    ): Component {
+        when (value) {
             null -> editButton.clear()
             is Icon -> editButton.icon = value
             else -> editButton.text = "$value"
@@ -64,26 +64,27 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
         this.editorValue = value
         return editButton
     }
-    private fun JButton.clear()
-    {
+
+    private fun JButton.clear() {
         text = ""
         icon = null
     }
 
     override fun getCellEditorValue() = editorValue
 
-    /**
-     * TableCellRenderer
-     */
-    override fun getTableCellRendererComponent(table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
-    {
-        if (isSelected)
-        {
+    /** TableCellRenderer */
+    override fun getTableCellRendererComponent(
+        table: JTable,
+        value: Any?,
+        isSelected: Boolean,
+        hasFocus: Boolean,
+        row: Int,
+        column: Int
+    ): Component {
+        if (isSelected) {
             renderButton.foreground = table.selectionForeground
             renderButton.background = table.selectionBackground
-        }
-        else
-        {
+        } else {
             renderButton.foreground = table.foreground
             renderButton.background = UIManager.getColor("Button.background")
         }
@@ -92,8 +93,7 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
 
         table.rowHeight = 40
 
-        when (value)
-        {
+        when (value) {
             null -> renderButton.clear()
             is Icon -> renderButton.icon = value
             else -> renderButton.text = "$value"
@@ -102,11 +102,8 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
         return renderButton
     }
 
-    /**
-     * ActionListener
-     */
-    override fun actionPerformed(e: ActionEvent)
-    {
+    /** ActionListener */
+    override fun actionPerformed(e: ActionEvent) {
         val row = table.convertRowIndexToModel(table.editingRow)
         fireEditingStopped()
 
@@ -115,22 +112,17 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
         action.actionPerformed(event)
     }
 
-
     /**
-     * When the mouse is pressed the editor is invoked. If you then drag
-     * the mouse to another cell before releasing it, the editor is still
-     * active. Make sure editing is stopped when the mouse is released.
+     * When the mouse is pressed the editor is invoked. If you then drag the mouse to another cell
+     * before releasing it, the editor is still active. Make sure editing is stopped when the mouse
+     * is released.
      */
-    override fun mousePressed(e: MouseEvent)
-    {
-        if (table.isEditing && table.cellEditor === this)
-            isButtonColumnEditor = true
+    override fun mousePressed(e: MouseEvent) {
+        if (table.isEditing && table.cellEditor === this) isButtonColumnEditor = true
     }
 
-    override fun mouseReleased(e: MouseEvent)
-    {
-        if (isButtonColumnEditor && table.isEditing)
-            table.cellEditor.stopCellEditing()
+    override fun mouseReleased(e: MouseEvent) {
+        if (isButtonColumnEditor && table.isEditing) table.cellEditor.stopCellEditing()
 
         isButtonColumnEditor = false
     }

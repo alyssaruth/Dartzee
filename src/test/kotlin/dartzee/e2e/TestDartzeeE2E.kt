@@ -34,20 +34,17 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestDartzeeE2E: AbstractRegistryTest()
-{
+class TestDartzeeE2E : AbstractRegistryTest() {
     override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
 
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
     }
 
     @Test
     @Tag("e2e")
-    fun `E2E - Dartzee`()
-    {
+    fun `E2E - Dartzee`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val game = insertGame(gameType = GameType.DARTZEE)
@@ -61,11 +58,12 @@ class TestDartzeeE2E: AbstractRegistryTest()
         val (panel, listener) = setUpGamePanelAndStartGame(game, listOf(player))
         awaitGameFinish(game)
 
-        val expectedRounds = listOf(
-                listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)), //Scoring round
-                listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1)), //All Twenties
-                listOf(Dart(18, 1), Dart(18, 1), Dart(25, 2)) //Score Eighteens
-        )
+        val expectedRounds =
+            listOf(
+                listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)), // Scoring round
+                listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1)), // All Twenties
+                listOf(Dart(18, 1), Dart(18, 1), Dart(25, 2)) // Score Eighteens
+            )
 
         verifyState(panel, listener, expectedRounds, finalScore = 276)
 
@@ -89,8 +87,7 @@ class TestDartzeeE2E: AbstractRegistryTest()
 
     @Test
     @Tag("e2e")
-    fun `E2E - Dartzee - 2 player team`()
-    {
+    fun `E2E - Dartzee - 2 player team`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val game = insertGame(gameType = GameType.DARTZEE)
@@ -98,26 +95,38 @@ class TestDartzeeE2E: AbstractRegistryTest()
 
         val (gamePanel, listener) = setUpGamePanel(game)
 
-        val p1Rounds = listOf(
-            listOf(makeDart(20, 1), makeDart(5, 1), makeDart(1, 1)), // Scoring round - 26
-            listOf(makeDart(18, 1), makeDart(19, 1), makeDart(18, 1)), // Score 18s & 2B1W, picks 2B1W - 107
-            listOf(makeDart(20, 1), makeDart(18, 1), makeDart(12, 1)), // Total is 50 - 175
-        )
-
-        val p2Rounds = listOf(
+        val p1Rounds =
             listOf(
-                makeDart(20, 1, SegmentType.INNER_SINGLE),
-                makeDart(5, 1, SegmentType.OUTER_SINGLE),
-                makeDart(1, 1, SegmentType.INNER_SINGLE)), // IOI - 52
-            listOf(makeDart(18, 1), makeDart(20, 1), makeDart(5, 1)), // Score 18s - 125
-        )
+                listOf(makeDart(20, 1), makeDart(5, 1), makeDart(1, 1)), // Scoring round - 26
+                listOf(
+                    makeDart(18, 1),
+                    makeDart(19, 1),
+                    makeDart(18, 1)
+                ), // Score 18s & 2B1W, picks 2B1W - 107
+                listOf(makeDart(20, 1), makeDart(18, 1), makeDart(12, 1)), // Total is 50 - 175
+            )
+
+        val p2Rounds =
+            listOf(
+                listOf(
+                    makeDart(20, 1, SegmentType.INNER_SINGLE),
+                    makeDart(5, 1, SegmentType.OUTER_SINGLE),
+                    makeDart(1, 1, SegmentType.INNER_SINGLE)
+                ), // IOI - 52
+                listOf(makeDart(18, 1), makeDart(20, 1), makeDart(5, 1)), // Score 18s - 125
+            )
 
         val expectedRounds = p1Rounds.zipDartRounds(p2Rounds)
 
         val p1AimDarts = p1Rounds.flatten().map { it.toAimDart() }
         val p2AimDarts = p2Rounds.flatten().map { it.toAimDart() }
 
-        val p1Model = predictableDartsModel(p1AimDarts, mercyThreshold = 7, dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE)
+        val p1Model =
+            predictableDartsModel(
+                p1AimDarts,
+                mercyThreshold = 7,
+                dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE
+            )
         val p2Model = predictableDartsModel(p2AimDarts, mercyThreshold = 20)
 
         val p1 = makePlayerWithModel(p1Model, name = "Alan")
@@ -129,9 +138,15 @@ class TestDartzeeE2E: AbstractRegistryTest()
         awaitGameFinish(game)
         verifyState(gamePanel, listener, expectedRounds, finalScore = 175, pt = retrieveTeam())
 
-        retrieveAchievementsForPlayer(p1.rowId).shouldContainExactly(
-            AchievementSummary(AchievementType.DARTZEE_UNDER_PRESSURE, 50, game.rowId, totalIsFifty.getDisplayName())
-        )
+        retrieveAchievementsForPlayer(p1.rowId)
+            .shouldContainExactly(
+                AchievementSummary(
+                    AchievementType.DARTZEE_UNDER_PRESSURE,
+                    50,
+                    game.rowId,
+                    totalIsFifty.getDisplayName()
+                )
+            )
 
         retrieveAchievementsForPlayer(p2.rowId).shouldBeEmpty()
 

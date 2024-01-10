@@ -11,20 +11,27 @@ import dartzee.utils.Database
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01NoMercy>()
-{
+class TestAchievementX01NoMercy : AbstractMultiRowAchievementTest<AchievementX01NoMercy>() {
     override fun factoryAchievement() = AchievementX01NoMercy()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
-    {
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 21, database = database)
+    override fun setUpAchievementRowForPlayerAndGame(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database
+    ) {
+        val pt =
+            insertParticipant(
+                playerId = p.rowId,
+                gameId = g.rowId,
+                finalScore = 21,
+                database = database
+            )
 
         insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1, database = database)
     }
 
     @Test
-    fun `Should include participants who were part of a team`()
-    {
+    fun `Should include participants who were part of a team`() {
         val pt = insertRelevantParticipant(team = true, finalScore = 21)
         val drt = insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1)
 
@@ -34,8 +41,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
     }
 
     @Test
-    fun `Should not include data for an unfinished player`()
-    {
+    fun `Should not include data for an unfinished player`() {
         val g = insertRelevantGame()
         val p = insertPlayer()
 
@@ -48,8 +54,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
     }
 
     @Test
-    fun `Should only count if the first dart has the right startingScore`()
-    {
+    fun `Should only count if the first dart has the right startingScore`() {
         val g = insertRelevantGame()
         val p = insertPlayer()
 
@@ -62,8 +67,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
     }
 
     @Test
-    fun `Should insert a row for every successful finish, even with the same startingScore`()
-    {
+    fun `Should insert a row for every successful finish, even with the same startingScore`() {
         val alice = insertPlayer(name = "Alice")
 
         setUpAchievementRowForPlayer(alice)
@@ -75,8 +79,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
     }
 
     @Test
-    fun `Should count finishes of 3, 5, 7 and 9`()
-    {
+    fun `Should count finishes of 3, 5, 7 and 9`() {
         val alice = insertPlayer(name = "Alice")
 
         setUpFinishForPlayer(alice, 3)
@@ -90,8 +93,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
     }
 
     @Test
-    fun `Should not count higher odd numbers, or even finishes`()
-    {
+    fun `Should not count higher odd numbers, or even finishes`() {
         val alice = insertPlayer(name = "Alice")
 
         setUpFinishForPlayer(alice, 2)
@@ -105,8 +107,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
     }
 
     @Test
-    fun `Should set the detail on the achievement row to be the finish that was attained`()
-    {
+    fun `Should set the detail on the achievement row to be the finish that was attained`() {
         val p = insertPlayer()
         setUpFinishForPlayer(p, 5)
 
@@ -116,8 +117,7 @@ class TestAchievementX01NoMercy: AbstractMultiRowAchievementTest<AchievementX01N
         retrieveAchievement().achievementDetail shouldBe "5"
     }
 
-    private fun setUpFinishForPlayer(p: PlayerEntity, finish: Int)
-    {
+    private fun setUpFinishForPlayer(p: PlayerEntity, finish: Int) {
         val g = insertRelevantGame()
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = 21)
 

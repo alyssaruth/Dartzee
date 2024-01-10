@@ -6,8 +6,7 @@ import dartzee.db.DartEntity
 import dartzee.db.ParticipantEntity
 import dartzee.`object`.Dart
 
-abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
-{
+abstract class AbstractPlayerState<S : AbstractPlayerState<S>> {
     private val listeners = mutableListOf<PlayerStateListener<S>>()
 
     abstract val wrappedParticipant: IWrappedParticipant
@@ -18,33 +17,33 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
     abstract fun getScoreSoFar(): Int
 
     @Suppress("UNCHECKED_CAST")
-    fun addListener(listener: PlayerStateListener<S>)
-    {
+    fun addListener(listener: PlayerStateListener<S>) {
         listeners.add(listener)
         listener.stateChanged(this as S)
     }
 
-    /**
-     * Helpers
-     */
+    /** Helpers */
     fun currentRoundNumber() = completedRounds.size + 1
+
     fun currentIndividual() = wrappedParticipant.getIndividual(currentRoundNumber())
+
     fun lastIndividual() = wrappedParticipant.getIndividual(completedRounds.size)
 
     fun getRoundsForIndividual(individual: ParticipantEntity) =
-        (completedRounds + listOf(currentRound)).filter { it.all { drt -> drt.participantId == individual.rowId } }
+        (completedRounds + listOf(currentRound)).filter {
+            it.all { drt -> drt.participantId == individual.rowId }
+        }
 
     protected fun getAllDartsFlattened() = completedRounds.flatten() + currentRound
 
     fun isHuman() = !currentIndividual().isAi()
+
     fun hasMultiplePlayers() = wrappedParticipant.individuals.size > 1
+
     fun getPlayerIds() = wrappedParticipant.individuals.map { it.playerId }
 
-    /**
-     * Modifiers
-     */
-    open fun dartThrown(dart: Dart)
-    {
+    /** Modifiers */
+    open fun dartThrown(dart: Dart) {
         dart.roundNumber = currentRoundNumber()
         dart.participantId = currentIndividual().rowId
         currentRound.add(dart)
@@ -52,18 +51,17 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
         fireStateChanged()
     }
 
-    fun resetRound()
-    {
+    fun resetRound() {
         currentRound.clear()
         fireStateChanged()
     }
 
-    fun commitRound()
-    {
+    fun commitRound() {
         val pt = currentIndividual()
-        val entities = currentRound.mapIndexed { ix, drt ->
-            DartEntity.factory(drt, pt.playerId, pt.rowId, currentRoundNumber(), ix + 1)
-        }
+        val entities =
+            currentRound.mapIndexed { ix, drt ->
+                DartEntity.factory(drt, pt.playerId, pt.rowId, currentRoundNumber(), ix + 1)
+            }
 
         BulkInserter.insert(entities)
 
@@ -73,13 +71,11 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
         fireStateChanged()
     }
 
-    open fun addLoadedRound(darts: List<Dart>)
-    {
+    open fun addLoadedRound(darts: List<Dart>) {
         addCompletedRound(darts)
     }
 
-    fun addCompletedRound(darts: List<Dart>)
-    {
+    fun addCompletedRound(darts: List<Dart>) {
         val pt = currentIndividual()
         darts.forEach { it.participantId = pt.rowId }
         this.completedRounds.add(darts.toList())
@@ -87,8 +83,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
         fireStateChanged()
     }
 
-    fun setParticipantFinishPosition(finishingPosition: Int)
-    {
+    fun setParticipantFinishPosition(finishingPosition: Int) {
         val ptEntity = wrappedParticipant.participant
         ptEntity.finishingPosition = finishingPosition
         ptEntity.saveToDatabase()
@@ -96,8 +91,7 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
         fireStateChanged()
     }
 
-    fun participantFinished(finishingPosition: Int, finalScore: Int)
-    {
+    fun participantFinished(finishingPosition: Int, finalScore: Int) {
         val ptEntity = wrappedParticipant.participant
         ptEntity.finishingPosition = finishingPosition
         ptEntity.finalScore = finalScore
@@ -107,22 +101,16 @@ abstract class AbstractPlayerState<S: AbstractPlayerState<S>>
         fireStateChanged()
     }
 
-    fun updateActive(active: Boolean)
-    {
+    fun updateActive(active: Boolean) {
         val changing = active != isActive
         isActive = active
-        if (changing)
-        {
+        if (changing) {
             fireStateChanged()
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    protected fun fireStateChanged()
-    {
+    protected fun fireStateChanged() {
         listeners.forEach { it.stateChanged(this as S) }
     }
 }
-
-
-

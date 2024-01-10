@@ -12,30 +12,26 @@ import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.InjectedThings.mainDatabase
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
-import io.kotest.matchers.string.shouldContain
-import io.kotest.matchers.string.shouldNotBeEmpty
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.assertions.throwables.shouldThrow
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotBeEmpty
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-class TestGameEntity: AbstractEntityTest<GameEntity>()
-{
+class TestGameEntity : AbstractEntityTest<GameEntity>() {
     override fun factoryDao() = GameEntity()
 
     @Test
-    fun `LocalId field should be unique`()
-    {
+    fun `LocalId field should be unique`() {
         insertGame(localId = 5)
         verifyNoLogs(CODE_SQL_EXCEPTION)
 
-        val ex = shouldThrow<WrappedSqlException> {
-            insertGame(localId = 5)
-        }
+        val ex = shouldThrow<WrappedSqlException> { insertGame(localId = 5) }
 
         val sqle = ex.sqlException
         sqle.message shouldContain "duplicate key"
@@ -44,8 +40,7 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `LocalIds should be assigned along with RowId`()
-    {
+    fun `LocalIds should be assigned along with RowId`() {
         val entity = GameEntity()
         entity.assignRowId()
 
@@ -54,8 +49,7 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `isFinished should work correctly`()
-    {
+    fun `isFinished should work correctly`() {
         val entity = GameEntity()
         entity.isFinished() shouldBe false
 
@@ -64,8 +58,7 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `Should handle no participants when getting players vector`()
-    {
+    fun `Should handle no participants when getting players vector`() {
         val game = GameEntity()
         game.saveToDatabase()
 
@@ -73,9 +66,8 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `Should return the player vector correctly`()
-    {
-        //Insert a random player
+    fun `Should return the player vector correctly`() {
+        // Insert a random player
         val game = GameEntity()
         val gameId = game.assignRowId()
         game.saveToDatabase()
@@ -89,10 +81,8 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
         players.first().name shouldBe "Clive"
     }
 
-
     @Test
-    fun `Should get the description along with the params`()
-    {
+    fun `Should get the description along with the params`() {
         val game = GameEntity()
         game.gameParams = "foo"
         game.gameType = GameType.GOLF
@@ -100,8 +90,7 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `Factory individual game`()
-    {
+    fun `Factory individual game`() {
         val game = GameEntity.factory(GameType.X01, "301")
         game.localId shouldNotBe -1
         game.gameType shouldBe GameType.X01
@@ -115,8 +104,7 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `Factory and save individual game`()
-    {
+    fun `Factory and save individual game`() {
         val launchParams = GameLaunchParams(emptyList(), GameType.GOLF, "18", false)
         val game = GameEntity.factoryAndSave(launchParams)
         game.matchOrdinal shouldBe -1
@@ -130,8 +118,7 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `Factory and save for a match`()
-    {
+    fun `Factory and save for a match`() {
         val match = DartsMatchEntity.factoryFirstTo(4)
 
         val launchParams = GameLaunchParams(emptyList(), GameType.GOLF, "18", false)
@@ -144,23 +131,31 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `Should retrieve games in the right order for a match`()
-    {
+    fun `Should retrieve games in the right order for a match`() {
         val matchId = randomGuid()
 
         val millis = System.currentTimeMillis()
-        val gameTwoId = insertGame(dartsMatchId = matchId, matchOrdinal = 1, dtCreation = Timestamp(millis)).rowId
-        val gameOneId = insertGame(dartsMatchId = matchId, matchOrdinal = 1, dtCreation = Timestamp(millis - 5)).rowId
+        val gameTwoId =
+            insertGame(dartsMatchId = matchId, matchOrdinal = 1, dtCreation = Timestamp(millis))
+                .rowId
+        val gameOneId =
+            insertGame(dartsMatchId = matchId, matchOrdinal = 1, dtCreation = Timestamp(millis - 5))
+                .rowId
         insertGame(dartsMatchId = randomGuid())
-        val gameThreeId = insertGame(dartsMatchId = matchId, matchOrdinal = 2, dtCreation = Timestamp(millis - 10)).rowId
+        val gameThreeId =
+            insertGame(
+                    dartsMatchId = matchId,
+                    matchOrdinal = 2,
+                    dtCreation = Timestamp(millis - 10)
+                )
+                .rowId
 
-        val gameIds = GameEntity.retrieveGamesForMatch(matchId).map{it.rowId}.toList()
+        val gameIds = GameEntity.retrieveGamesForMatch(matchId).map { it.rowId }.toList()
         gameIds.shouldContainExactly(gameOneId, gameTwoId, gameThreeId)
     }
 
     @Test
-    fun `Should map localId to gameId`()
-    {
+    fun `Should map localId to gameId`() {
         val gameOne = insertGame(localId = 1)
         val gameTwo = insertGame(localId = 2)
 
@@ -170,8 +165,7 @@ class TestGameEntity: AbstractEntityTest<GameEntity>()
     }
 
     @Test
-    fun `Should reassign localId when merging into another database`()
-    {
+    fun `Should reassign localId when merging into another database`() {
         usingInMemoryDatabase(withSchema = true) { otherDatabase ->
             insertGame(database = otherDatabase)
             insertGame(database = otherDatabase)

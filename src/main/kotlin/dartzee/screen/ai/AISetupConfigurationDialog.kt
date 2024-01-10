@@ -19,19 +19,20 @@ import javax.swing.text.DefaultStyledDocument
 
 /**
  * Dialog to specify setup darts that override defaults. Some examples:
- * - On 48, the default is to aim for 8 (D20). But you might want to override this to aim for 16 (D16).
- * - On 10, the default is to aim for D5. But if an AI is bad, you might want to override this to aim for 2.
+ * - On 48, the default is to aim for 8 (D20). But you might want to override this to aim for 16
+ *   (D16).
+ * - On 10, the default is to aim for D5. But if an AI is bad, you might want to override this to
+ *   aim for 2.
  * - On 35, the default is to aim for 3 (D16). But you might want to aim for 19 (D8).
  */
-class AISetupConfigurationDialog(private val hmScoreToSingle: MutableMap<Int, AimDart>): SimpleDialog()
-{
+class AISetupConfigurationDialog(private val hmScoreToSingle: MutableMap<Int, AimDart>) :
+    SimpleDialog() {
     private val info = JTextPane()
     private val tableScores = ScrollTable()
     private val btnAddRule = JButton("Add Rule...")
     private val btnRemove = JButton("Remove")
 
-    init
-    {
+    init {
         title = "Setup Configuration"
         setSize(500, 500)
         isResizable = false
@@ -61,8 +62,7 @@ class AISetupConfigurationDialog(private val hmScoreToSingle: MutableMap<Int, Ai
         buildTable(hmScoreToSingle)
     }
 
-    private fun initInfo()
-    {
+    private fun initInfo() {
         info.append("By default, the AI strategy is as follows:")
         info.append("\n\n")
 
@@ -102,8 +102,7 @@ class AISetupConfigurationDialog(private val hmScoreToSingle: MutableMap<Int, Ai
         info.append("Below you can further configure the dart aimed at for any individual score.")
     }
 
-    private fun buildTable(hmRules: Map<Int, AimDart>)
-    {
+    private fun buildTable(hmRules: Map<Int, AimDart>) {
         val allValues = hmRules.entries
 
         val tm = TableUtil.DefaultModel()
@@ -119,10 +118,8 @@ class AISetupConfigurationDialog(private val hmScoreToSingle: MutableMap<Int, Ai
         tableScores.sortBy(0, false)
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnAddRule -> {
                 val hmCurrentRules = mutableMapOf<Int, AimDart>()
                 fillHashMapFromTable(hmCurrentRules)
@@ -135,11 +132,9 @@ class AISetupConfigurationDialog(private val hmScoreToSingle: MutableMap<Int, Ai
         }
     }
 
-    private fun removeScores()
-    {
+    private fun removeScores() {
         val rows = tableScores.selectedModelRows
-        if (rows.isEmpty())
-        {
+        if (rows.isEmpty()) {
             DialogUtil.showErrorOLD("You must select row(s) to remove.")
             return
         }
@@ -152,20 +147,17 @@ class AISetupConfigurationDialog(private val hmScoreToSingle: MutableMap<Int, Ai
         buildTable(hmCurrentRules)
     }
 
-    override fun okPressed()
-    {
+    override fun okPressed() {
         hmScoreToSingle.clear()
         fillHashMapFromTable(hmScoreToSingle)
 
         dispose()
     }
 
-    private fun fillHashMapFromTable(hm: MutableMap<Int, AimDart>)
-    {
+    private fun fillHashMapFromTable(hm: MutableMap<Int, AimDart>) {
         val tm = tableScores.model
         val rows = tm.rowCount
-        for (i in 0 until rows)
-        {
+        for (i in 0 until rows) {
             val score = tm.getValueAt(i, 0) as Int
             val drt = tm.getValueAt(i, 1) as AimDart
 
@@ -173,10 +165,8 @@ class AISetupConfigurationDialog(private val hmScoreToSingle: MutableMap<Int, Ai
         }
     }
 
-    companion object
-    {
-        fun configureSetups(hmScoreToSingle: MutableMap<Int, AimDart>)
-        {
+    companion object {
+        fun configureSetups(hmScoreToSingle: MutableMap<Int, AimDart>) {
             val dlg = AISetupConfigurationDialog(hmScoreToSingle)
             dlg.setLocationRelativeTo(ScreenCache.mainScreen)
             dlg.isVisible = true

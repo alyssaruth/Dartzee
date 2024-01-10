@@ -8,25 +8,25 @@ import org.w3c.dom.Element
 const val MISS_FUDGE_FACTOR = 1805
 
 /**
- * Data class so that equivalent segments are treated as equal (e.g. DartzeeRuleCalculationResult externalisation)
+ * Data class so that equivalent segments are treated as equal (e.g. DartzeeRuleCalculationResult
+ * externalisation)
  */
 @JsonIgnoreProperties("miss", "doubleExcludingBull", "multiplier", "total", "roughProbability")
-data class DartboardSegment(val type: SegmentType, val score: Int)
-{
-    /**
-     * Helpers
-     */
+data class DartboardSegment(val type: SegmentType, val score: Int) {
+    /** Helpers */
     fun isMiss() = type == SegmentType.MISS
+
     fun isDoubleExcludingBull() = type == SegmentType.DOUBLE && score != 25
+
     fun getMultiplier() = type.getMultiplier()
+
     fun getTotal(): Int = score * getMultiplier()
 
     override fun toString() = "$score ($type)"
 
     fun getRoughProbability() = type.getRoughSize(score).toDouble() / getRoughScoringArea()
 
-    fun writeXml(root: Element, name: String)
-    {
+    fun writeXml(root: Element, name: String) {
         val element = root.ownerDocument.createElement(name)
         element.setAttributeAny("Score", score)
         element.setAttributeAny("Type", type)
@@ -34,10 +34,8 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
         root.appendChild(element)
     }
 
-    companion object
-    {
-        fun readList(root: Element, itemName: String): List<DartboardSegment>
-        {
+    companion object {
+        fun readList(root: Element, itemName: String): List<DartboardSegment> {
             val list = root.getElementsByTagName(itemName)
 
             return (0 until list.length).map { i ->
@@ -49,4 +47,3 @@ data class DartboardSegment(val type: SegmentType, val score: Int)
         }
     }
 }
-

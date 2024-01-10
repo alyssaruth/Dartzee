@@ -1,6 +1,5 @@
 package dartzee.core.util
 
-object InjectedCore
-{
+object InjectedCore {
     var collectionShuffler: IShuffler = CollectionShuffler()
 }

@@ -8,15 +8,13 @@ import dartzee.helper.insertPlayer
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
-class TestPlayerSelector: AbstractTest()
-{
+class TestPlayerSelector : AbstractTest() {
     @Test
-    fun `Should start with no players selected`()
-    {
+    fun `Should start with no players selected`() {
         insertPlayer(name = "Alex")
 
         val selector = PlayerSelector()
@@ -28,8 +26,7 @@ class TestPlayerSelector: AbstractTest()
     }
 
     @Test
-    fun `Should return all selected players to unselected on init`()
-    {
+    fun `Should return all selected players to unselected on init`() {
         val alex = insertPlayer(name = "Alex")
 
         val selector = PlayerSelector()
@@ -41,8 +38,7 @@ class TestPlayerSelector: AbstractTest()
     }
 
     @Test
-    fun `Should do nothing if the select button is clicked with no selection`()
-    {
+    fun `Should do nothing if the select button is clicked with no selection`() {
         insertPlayer()
 
         val selector = PlayerSelector()
@@ -53,8 +49,7 @@ class TestPlayerSelector: AbstractTest()
     }
 
     @Test
-    fun `Should move the selected player across when the select button is clicked`()
-    {
+    fun `Should move the selected player across when the select button is clicked`() {
         insertPlayer(name = "Alex")
         insertPlayer(name = "Bob")
         insertPlayer(name = "Clive")
@@ -70,8 +65,7 @@ class TestPlayerSelector: AbstractTest()
     }
 
     @Test
-    fun `Should maintain selection in tables as players are moved`()
-    {
+    fun `Should maintain selection in tables as players are moved`() {
         insertPlayer(name = "Alex")
         insertPlayer(name = "Bob")
         insertPlayer(name = "Clive")
@@ -96,8 +90,7 @@ class TestPlayerSelector: AbstractTest()
     }
 
     @Test
-    fun `Should initialise with the selected players passed in`()
-    {
+    fun `Should initialise with the selected players passed in`() {
         val alex = insertPlayer(name = "Alex")
         insertPlayer(name = "Bob")
         val clive = insertPlayer(name = "Clive")
@@ -110,8 +103,7 @@ class TestPlayerSelector: AbstractTest()
     }
 
     @Test
-    fun `Should do nothing if the deselect button is clicked with no selection`()
-    {
+    fun `Should do nothing if the deselect button is clicked with no selection`() {
         val alex = insertPlayer(name = "Alex")
         insertPlayer(name = "Bob")
         insertPlayer(name = "Clive")
@@ -125,8 +117,7 @@ class TestPlayerSelector: AbstractTest()
     }
 
     @Test
-    fun `Should move the selected player back when deselect button is clicked`()
-    {
+    fun `Should move the selected player back when deselect button is clicked`() {
         val alex = insertPlayer(name = "Alex")
         val bob = insertPlayer(name = "Bob")
         val clive = insertPlayer(name = "Clive")
@@ -141,8 +132,7 @@ class TestPlayerSelector: AbstractTest()
     }
 
     @Test
-    fun `Should select players when Enter is pressed`()
-    {
+    fun `Should select players when Enter is pressed`() {
         insertPlayer("Alex")
 
         val selector = PlayerSelector()
@@ -157,8 +147,7 @@ class TestPlayerSelector: AbstractTest()
     }
 
     @Test
-    fun `Should deselect players when Enter is pressed`()
-    {
+    fun `Should deselect players when Enter is pressed`() {
         val alex = insertPlayer("Alex")
 
         val selector = PlayerSelector()
@@ -173,8 +162,7 @@ class TestPlayerSelector: AbstractTest()
     }
 
     @Test
-    fun `Should select players on double-click`()
-    {
+    fun `Should select players on double-click`() {
         insertPlayer("Alex")
 
         val selector = PlayerSelector()
@@ -186,8 +174,7 @@ class TestPlayerSelector: AbstractTest()
     }
 
     @Test
-    fun `Should deselect players on double-click`()
-    {
+    fun `Should deselect players on double-click`() {
         val alex = insertPlayer("Alex")
 
         val selector = PlayerSelector()
@@ -199,6 +186,7 @@ class TestPlayerSelector: AbstractTest()
     }
 
     private fun PlayerSelector.clickSelect() = clickChild<JButton>("Select")
+
     private fun PlayerSelector.clickUnselect() = clickChild<JButton>("Unselect")
 
     private fun getPlayerNamesToSelectFrom(selector: PlayerSelector) =

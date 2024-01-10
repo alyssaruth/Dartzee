@@ -18,17 +18,14 @@ import java.beans.PropertyChangeListener
 import javax.swing.JLabel
 import javax.swing.JPanel
 
-/**
- * Shows running stats for X01 games - three-dart average, checkout % etc.
- */
-open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPanel<X01PlayerState>(), PropertyChangeListener
-{
+/** Shows running stats for X01 games - three-dart average, checkout % etc. */
+open class GameStatisticsPanelX01(gameParams: String) :
+    AbstractGameStatisticsPanel<X01PlayerState>(), PropertyChangeListener {
     private val panel = JPanel()
     private val lblSetupThreshold = JLabel("Setup Threshold")
     val nfSetupThreshold = NumberField()
 
-    init
-    {
+    init {
         add(panel, BorderLayout.NORTH)
         panel.add(lblSetupThreshold)
 
@@ -41,13 +38,26 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
         nfSetupThreshold.setMaximum(Integer.parseInt(gameParams) - 1)
     }
 
-    override fun getRankedRowsHighestWins() = listOf("Highest Score", "3-dart avg", "Lowest Score", "Treble %", "Checkout %")
+    override fun getRankedRowsHighestWins() =
+        listOf("Highest Score", "3-dart avg", "Lowest Score", "Treble %", "Checkout %")
+
     override fun getRankedRowsLowestWins() = listOf("Miss %")
-    override fun getHistogramRows() = listOf("180", "140 - 179", "100 - 139", "80 - 99", "60 - 79", "40 - 59", "20 - 39", "0 - 19")
+
+    override fun getHistogramRows() =
+        listOf(
+            "180",
+            "140 - 179",
+            "100 - 139",
+            "80 - 99",
+            "60 - 79",
+            "40 - 59",
+            "20 - 39",
+            "0 - 19"
+        )
+
     override fun getStartOfSectionRows() = listOf("180", "Top Darts", "Checkout %", "Best Game")
 
-    override fun addRowsToTable()
-    {
+    override fun addRowsToTable() {
         addRow(getScoreRow("Highest Score") { it.maxOrZero() })
         addRow(getThreeDartAvgsRow())
         addRow(getScoreRow("Lowest Score") { it.minOrZero() })
@@ -70,8 +80,7 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
         table.setColumnWidths("120")
     }
 
-    private fun addTopDartsRows()
-    {
+    private fun addTopDartsRows() {
         val topDarts = factoryRow("Top Darts")
         val secondDarts = factoryRow("")
         val thirdDarts = factoryRow("")
@@ -79,16 +88,18 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
         val fifthDarts = factoryRow("")
         val remainingDarts = factoryRow("Remainder")
 
-        for (i in uniqueParticipantNamesOrdered.indices)
-        {
+        for (i in uniqueParticipantNamesOrdered.indices) {
             val playerName = uniqueParticipantNamesOrdered[i]
             val darts = getScoringDarts(playerName)
 
-            val hmHitScoreToDarts = darts.groupBy{it.getHitScore()}
-            val sortedEntries = hmHitScoreToDarts.entries
-                                                 .sortedWith(compareByDescending<Map.Entry<Int, List<Dart>>> {it.value.size}
-                                                 .thenByDescending{it.key})
-                                                 .toMutableList()
+            val hmHitScoreToDarts = darts.groupBy { it.getHitScore() }
+            val sortedEntries =
+                hmHitScoreToDarts.entries
+                    .sortedWith(
+                        compareByDescending<Map.Entry<Int, List<Dart>>> { it.value.size }
+                            .thenByDescending { it.key }
+                    )
+                    .toMutableList()
 
             parseTopDartEntry(sortedEntries, topDarts, i, darts.size)
             parseTopDartEntry(sortedEntries, secondDarts, i, darts.size)
@@ -96,10 +107,10 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
             parseTopDartEntry(sortedEntries, fourthDarts, i, darts.size)
             parseTopDartEntry(sortedEntries, fifthDarts, i, darts.size)
 
-            //Deal with the remainder
+            // Deal with the remainder
             val remainder = sortedEntries.map { it.value.size }.sum().toDouble()
             val percent = MathsUtil.getPercentage(remainder, darts.size, 0).toInt()
-            remainingDarts[i+1] = "$percent%"
+            remainingDarts[i + 1] = "$percent%"
         }
 
         addRow(topDarts)
@@ -109,83 +120,82 @@ open class GameStatisticsPanelX01(gameParams: String): AbstractGameStatisticsPan
         addRow(fifthDarts)
         addRow(remainingDarts)
     }
-    private fun parseTopDartEntry(sortedEntries: MutableList<Map.Entry<Int, List<Dart>>>, row: Array<Any?>,
-                                  i: Int, totalDarts: Int)
-    {
-        if (sortedEntries.isEmpty())
-        {
-            row[i+1] = "N/A [0%]"
-        }
-        else
-        {
+
+    private fun parseTopDartEntry(
+        sortedEntries: MutableList<Map.Entry<Int, List<Dart>>>,
+        row: Array<Any?>,
+        i: Int,
+        totalDarts: Int
+    ) {
+        if (sortedEntries.isEmpty()) {
+            row[i + 1] = "N/A [0%]"
+        } else {
             val entry = sortedEntries.removeAt(0)
             val percent = MathsUtil.getPercentage(entry.value.size, totalDarts, 0).toInt()
 
-            row[i+1] = "${entry.key} [$percent%]"
+            row[i + 1] = "${entry.key} [$percent%]"
         }
     }
 
+    private fun getThreeDartAvgsRow() =
+        prepareRow("3-dart avg") { playerName ->
+            val darts = getFlattenedDarts(playerName)
 
-    private fun getThreeDartAvgsRow() = prepareRow("3-dart avg") { playerName ->
-        val darts = getFlattenedDarts(playerName)
-
-        val avg = calculateThreeDartAverage(darts, nfSetupThreshold.getNumber())
-        if (avg < 0) null else MathsUtil.round(avg, 2)
-    }
-
-    private fun getCheckoutPercentRow() = prepareRow("Checkout %") { playerName ->
-        val darts = getFlattenedDarts(playerName)
-
-        val potentialFinishers = darts.filter { d -> isCheckoutDart(d) }
-        val actualFinishes = potentialFinishers.filter { d -> d.isDouble() && d.getTotal() == d.startingScore }
-
-        if (actualFinishes.isEmpty())
-        {
-            null
+            val avg = calculateThreeDartAverage(darts, nfSetupThreshold.getNumber())
+            if (avg < 0) null else MathsUtil.round(avg, 2)
         }
-        else
-        {
-            MathsUtil.getPercentage(actualFinishes.size, potentialFinishers.size)
+
+    private fun getCheckoutPercentRow() =
+        prepareRow("Checkout %") { playerName ->
+            val darts = getFlattenedDarts(playerName)
+
+            val potentialFinishers = darts.filter { d -> isCheckoutDart(d) }
+            val actualFinishes =
+                potentialFinishers.filter { d -> d.isDouble() && d.getTotal() == d.startingScore }
+
+            if (actualFinishes.isEmpty()) {
+                null
+            } else {
+                MathsUtil.getPercentage(actualFinishes.size, potentialFinishers.size)
+            }
         }
-    }
 
-    private fun getScoresBetween(min: Int, max: Int, desc: String) = prepareRow(desc) { playerName ->
-        val rounds = getScoringRounds(playerName)
-        val roundsInRange = rounds.filter { r -> sumScore(r) in min until max }
-        roundsInRange.size
-    }
+    private fun getScoresBetween(min: Int, max: Int, desc: String) =
+        prepareRow(desc) { playerName ->
+            val rounds = getScoringRounds(playerName)
+            val roundsInRange = rounds.filter { r -> sumScore(r) in min until max }
+            roundsInRange.size
+        }
 
-    private fun getScoreRow(desc: String, f: (i: List<Int>) -> Int) = prepareRow(desc) { playerName ->
-        val rounds = getScoringRounds(playerName)
-        val roundsAsTotal = rounds.map { rnd -> sumScore(rnd) }
-        if (roundsAsTotal.isEmpty()) null else f(roundsAsTotal)
-    }
+    private fun getScoreRow(desc: String, f: (i: List<Int>) -> Int) =
+        prepareRow(desc) { playerName ->
+            val rounds = getScoringRounds(playerName)
+            val roundsAsTotal = rounds.map { rnd -> sumScore(rnd) }
+            if (roundsAsTotal.isEmpty()) null else f(roundsAsTotal)
+        }
 
-    private fun getMultiplePercent(desc: String, multiplier: Int) = prepareRow(desc) { playerName ->
-        val scoringDarts = getScoringDarts(playerName)
-        val hits = scoringDarts.filter { d -> d.multiplier == multiplier }
-        MathsUtil.getPercentage(hits.size, scoringDarts.size)
-    }
+    private fun getMultiplePercent(desc: String, multiplier: Int) =
+        prepareRow(desc) { playerName ->
+            val scoringDarts = getScoringDarts(playerName)
+            val hits = scoringDarts.filter { d -> d.multiplier == multiplier }
+            MathsUtil.getPercentage(hits.size, scoringDarts.size)
+        }
 
-    private fun getScoringRounds(playerName: UniqueParticipantName): List<List<Dart>>
-    {
+    private fun getScoringRounds(playerName: UniqueParticipantName): List<List<Dart>> {
         val rounds = hmPlayerToDarts[playerName]
         rounds ?: return mutableListOf()
 
         return rounds.filter { it.last().startingScore > nfSetupThreshold.getNumber() }.toList()
     }
 
-    private fun getScoringDarts(playerName: UniqueParticipantName): List<Dart>
-    {
+    private fun getScoringDarts(playerName: UniqueParticipantName): List<Dart> {
         val darts = getFlattenedDarts(playerName)
         return getScoringDarts(darts, nfSetupThreshold.getNumber())
     }
 
-    override fun propertyChange(arg0: PropertyChangeEvent)
-    {
+    override fun propertyChange(arg0: PropertyChangeEvent) {
         val propertyName = arg0.propertyName
-        if (propertyName == "value")
-        {
+        if (propertyName == "value") {
             buildTableModel()
             repaint()
         }

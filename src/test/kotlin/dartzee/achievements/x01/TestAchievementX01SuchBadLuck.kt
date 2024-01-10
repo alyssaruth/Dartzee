@@ -10,23 +10,31 @@ import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.utils.Database
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchBadLuck>()
-{
+class TestAchievementX01SuchBadLuck : AbstractAchievementTest<AchievementX01SuchBadLuck>() {
     override fun factoryAchievement() = AchievementX01SuchBadLuck()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
-    {
+    override fun setUpAchievementRowForPlayerAndGame(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database
+    ) {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
-        insertDart(pt, ordinal = 1, startingScore = 2, score = 20, multiplier = 2, database = database)
+        insertDart(
+            pt,
+            ordinal = 1,
+            startingScore = 2,
+            score = 20,
+            multiplier = 2,
+            database = database
+        )
     }
 
     @Test
-    fun `Should include participants who were part of a team`()
-    {
+    fun `Should include participants who were part of a team`() {
         val pt = insertRelevantParticipant(team = true)
         insertDart(pt, ordinal = 1, startingScore = 2, score = 20, multiplier = 2)
 
@@ -36,8 +44,7 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
     }
 
     @Test
-    fun `Should report on the highest streak per player`()
-    {
+    fun `Should report on the highest streak per player`() {
         val p = insertPlayer()
 
         val g1 = insertRelevantGame()
@@ -45,11 +52,11 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
         val pt1 = insertParticipant(playerId = p.rowId, gameId = g1.rowId)
         val pt2 = insertParticipant(playerId = p.rowId, gameId = g2.rowId)
 
-        //Scores 2 in first game
+        // Scores 2 in first game
         insertDart(pt1, ordinal = 1, startingScore = 2, score = 20, multiplier = 2)
         insertDart(pt1, ordinal = 2, startingScore = 2, score = 18, multiplier = 2)
 
-        //Scores 3 in second game
+        // Scores 3 in second game
         insertDart(pt2, ordinal = 1, startingScore = 2, score = 20, multiplier = 2)
         insertDart(pt2, ordinal = 2, startingScore = 2, score = 18, multiplier = 2)
         insertDart(pt2, ordinal = 3, startingScore = 2, score = 20, multiplier = 2)
@@ -66,13 +73,12 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
     }
 
     @Test
-    fun `Should include near-miss bullseyes`()
-    {
+    fun `Should include near-miss bullseyes`() {
         val g = insertRelevantGame()
         val p = insertPlayer()
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
 
-        //Scores 2 in first game
+        // Scores 2 in first game
         insertDart(pt, ordinal = 1, startingScore = 50, score = 25, multiplier = 1)
 
         runConversion()
@@ -85,8 +91,7 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
     }
 
     @Test
-    fun `Should report the earliest example of the highest streak`()
-    {
+    fun `Should report the earliest example of the highest streak`() {
         val p = insertPlayer()
 
         val g1 = insertRelevantGame()
@@ -94,13 +99,41 @@ class TestAchievementX01SuchBadLuck: AbstractAchievementTest<AchievementX01SuchB
         val pt1 = insertParticipant(playerId = p.rowId, gameId = g1.rowId)
         val pt2 = insertParticipant(playerId = p.rowId, gameId = g2.rowId)
 
-        //Scores 2 in first game
-        insertDart(pt1, ordinal = 1, startingScore = 2, score = 20, multiplier = 2, dtLastUpdate = Timestamp(500))
-        insertDart(pt1, ordinal = 2, startingScore = 2, score = 18, multiplier = 2, dtLastUpdate = Timestamp(800))
+        // Scores 2 in first game
+        insertDart(
+            pt1,
+            ordinal = 1,
+            startingScore = 2,
+            score = 20,
+            multiplier = 2,
+            dtLastUpdate = Timestamp(500)
+        )
+        insertDart(
+            pt1,
+            ordinal = 2,
+            startingScore = 2,
+            score = 18,
+            multiplier = 2,
+            dtLastUpdate = Timestamp(800)
+        )
 
-        //Scores 3 in second game
-        insertDart(pt2, ordinal = 1, startingScore = 2, score = 20, multiplier = 2, dtLastUpdate = Timestamp(200))
-        insertDart(pt2, ordinal = 2, startingScore = 2, score = 18, multiplier = 2, dtLastUpdate = Timestamp(250))
+        // Scores 3 in second game
+        insertDart(
+            pt2,
+            ordinal = 1,
+            startingScore = 2,
+            score = 20,
+            multiplier = 2,
+            dtLastUpdate = Timestamp(200)
+        )
+        insertDart(
+            pt2,
+            ordinal = 2,
+            startingScore = 2,
+            score = 18,
+            multiplier = 2,
+            dtLastUpdate = Timestamp(250)
+        )
 
         runConversion()
 

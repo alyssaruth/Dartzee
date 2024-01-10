@@ -6,24 +6,22 @@ import dartzee.`object`.Dart
 
 private const val ROUNDS = 18
 
-class DartsSimulationGolf(player: PlayerEntity, model: DartsAiModel) : AbstractDartsSimulation(player, model)
-{
+class DartsSimulationGolf(player: PlayerEntity, model: DartsAiModel) :
+    AbstractDartsSimulation(player, model) {
     override val gameType = GameType.GOLF
     override val gameParams = "$ROUNDS"
     var score = 0
 
     override fun shouldPlayCurrentRound() = currentRound <= ROUNDS
 
-    override fun resetVariables()
-    {
+    override fun resetVariables() {
         super.resetVariables()
         score = 0
     }
 
     override fun getTotalScore() = score
 
-    override fun startRound()
-    {
+    override fun startRound() {
         resetRound()
 
         val dartNo = dartsThrown.size + 1
@@ -31,8 +29,7 @@ class DartsSimulationGolf(player: PlayerEntity, model: DartsAiModel) : AbstractD
         dartThrown(pt)
     }
 
-    private fun finishedRound()
-    {
+    private fun finishedRound() {
         confirmRound()
 
         val drt = dartsThrown.last()
@@ -42,18 +39,17 @@ class DartsSimulationGolf(player: PlayerEntity, model: DartsAiModel) : AbstractD
         currentRound++
     }
 
-    override fun dartThrown(dart: Dart)
-    {
+    override fun dartThrown(dart: Dart) {
         dartsThrown.add(dart)
 
         val noDarts = dartsThrown.size
 
-        if (noDarts == 3 || dart.getGolfScore(currentRound) <= model.getStopThresholdForDartNo(noDarts))
-        {
+        if (
+            noDarts == 3 ||
+                dart.getGolfScore(currentRound) <= model.getStopThresholdForDartNo(noDarts)
+        ) {
             finishedRound()
-        }
-        else
-        {
+        } else {
             val dartNo = dartsThrown.size + 1
             val pt = model.throwGolfDart(currentRound, dartNo)
             dartThrown(pt)

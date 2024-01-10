@@ -11,17 +11,18 @@ import dartzee.db.PlayerEntity
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.simulationRunner
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.FlowLayout
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JRadioButton
+import net.miginfocom.swing.MigLayout
 
-class AISimulationSetupDialog(private val player: PlayerEntity,
-                              private val model: DartsAiModel,
-                              private val modal: Boolean = false) : SimpleDialog()
-{
+class AISimulationSetupDialog(
+    private val player: PlayerEntity,
+    private val model: DartsAiModel,
+    private val modal: Boolean = false
+) : SimpleDialog() {
     private val panelCenter = JPanel()
     private val lblGameMode = JLabel("Game Mode")
     private val panelSimulationType = RadioButtonPanel()
@@ -30,8 +31,7 @@ class AISimulationSetupDialog(private val player: PlayerEntity,
     private val lblNumberOfGames = JLabel("Number of games")
     private val nfNumberOfGames = NumberField(100, 100000)
 
-    init
-    {
+    init {
         title = "Simulation Options"
         setSize(400, 160)
         setLocationRelativeTo(ScreenCache.mainScreen)
@@ -51,17 +51,14 @@ class AISimulationSetupDialog(private val player: PlayerEntity,
         nfNumberOfGames.value = 1000
     }
 
-    override fun okPressed()
-    {
+    override fun okPressed() {
         val sim = factorySimulationForSelection()
         simulationRunner.runSimulation(sim, nfNumberOfGames.getNumber(), modal)
         dispose()
     }
 
-    private fun factorySimulationForSelection(): AbstractDartsSimulation
-    {
-        return when (panelSimulationType.selection)
-        {
+    private fun factorySimulationForSelection(): AbstractDartsSimulation {
+        return when (panelSimulationType.selection) {
             rdbtn501 -> DartsSimulationX01(player, model)
             else -> DartsSimulationGolf(player, model)
         }

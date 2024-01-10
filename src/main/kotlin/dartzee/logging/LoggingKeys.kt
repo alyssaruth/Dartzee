@@ -1,6 +1,6 @@
 package dartzee.logging
 
-//Logging Context
+// Logging Context
 const val KEY_USERNAME = "username"
 const val KEY_APP_VERSION = "appVersion"
 const val KEY_DB_VERSION = "dbVersion"
@@ -10,7 +10,7 @@ const val KEY_DEV_MODE = "devMode"
 const val KEY_CURRENT_SCREEN = "currentScreen"
 const val KEY_ACTIVE_WINDOW = "activeWindow"
 
-//Other
+// Other
 const val KEY_DURATION = "duration"
 const val KEY_SQL = "sql"
 const val KEY_GENERIC_SQL = "genericSql"

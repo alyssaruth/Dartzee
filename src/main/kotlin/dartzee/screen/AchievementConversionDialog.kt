@@ -8,7 +8,6 @@ import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
 import dartzee.utils.InjectedThings
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.util.*
@@ -16,17 +15,16 @@ import javax.swing.DefaultComboBoxModel
 import javax.swing.JComboBox
 import javax.swing.JOptionPane
 import javax.swing.JRadioButton
+import net.miginfocom.swing.MigLayout
 
-class AchievementConversionDialog : SimpleDialog()
-{
+class AchievementConversionDialog : SimpleDialog() {
     private val panelTop = RadioButtonPanel()
     private val rdbtnAll = JRadioButton("All")
     private val rdbtnSpecific = JRadioButton("Specific conversion")
     private val cbConversionType = JComboBox<AbstractAchievement>()
     private val playerSelector = PlayerSelector()
 
-    init
-    {
+    init {
         title = "Achievement Conversion"
         setSize(600, 400)
         isResizable = false
@@ -47,27 +45,21 @@ class AchievementConversionDialog : SimpleDialog()
         initComboBox()
     }
 
-    private fun initComboBox()
-    {
+    private fun initComboBox() {
         val achievements = Vector(getAllAchievements())
         cbConversionType.model = DefaultComboBoxModel(achievements)
     }
 
-    override fun okPressed()
-    {
-        if (!valid())
-        {
+    override fun okPressed() {
+        if (!valid()) {
             return
         }
 
         val selectedPlayerIds = playerSelector.getSelectedPlayers().map { it.rowId }
-        if (rdbtnAll.isSelected)
-        {
+        if (rdbtnAll.isSelected) {
             val achievements = getAllAchievements()
             runConversionsWithProgressBar(achievements, selectedPlayerIds)
-        }
-        else
-        {
+        } else {
             val ix = cbConversionType.selectedIndex
             val achievement = cbConversionType.getItemAt(ix)
 
@@ -77,25 +69,23 @@ class AchievementConversionDialog : SimpleDialog()
         dispose()
     }
 
-    private fun valid() : Boolean
-    {
-        if (playerSelector.getSelectedPlayers().isEmpty())
-        {
-            val ans = DialogUtil.showQuestionOLD("This will run the conversion(s) for ALL players. Proceed?", false)
+    private fun valid(): Boolean {
+        if (playerSelector.getSelectedPlayers().isEmpty()) {
+            val ans =
+                DialogUtil.showQuestionOLD(
+                    "This will run the conversion(s) for ALL players. Proceed?",
+                    false
+                )
             return ans == JOptionPane.YES_OPTION
         }
 
         return true
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        if (panelTop.isEventSource(arg0))
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        if (panelTop.isEventSource(arg0)) {
             cbConversionType.isEnabled = rdbtnSpecific.isSelected
-        }
-        else
-        {
+        } else {
             super.actionPerformed(arg0)
         }
     }

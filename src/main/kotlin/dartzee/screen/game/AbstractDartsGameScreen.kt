@@ -8,58 +8,56 @@ import java.awt.event.WindowEvent
 import java.awt.event.WindowListener
 import javax.swing.WindowConstants
 
-abstract class AbstractDartsGameScreen : FocusableWindow(), WindowListener
-{
+abstract class AbstractDartsGameScreen : FocusableWindow(), WindowListener {
     var haveLostFocus = false
     protected var shouldPack = true
 
-    init
-    {
+    init {
         defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
         addWindowListener(this)
     }
 
-    /**
-     * Abstract fns
-     */
-    abstract fun achievementUnlocked(gameId: String, playerId: String, achievement: AbstractAchievement)
+    /** Abstract fns */
+    abstract fun achievementUnlocked(
+        gameId: String,
+        playerId: String,
+        achievement: AbstractAchievement
+    )
+
     abstract fun fireAppearancePreferencesChanged()
 
-    /**
-     * Hook for when a GameId has been clicked and the screen is already visible.
-     */
-    open fun displayGame(gameId: String)
-    {
+    /** Hook for when a GameId has been clicked and the screen is already visible. */
+    open fun displayGame(gameId: String) {
         toFront()
         state = Frame.NORMAL
     }
-    open fun startNextGameIfNecessary()
-    {
-        //Do nothing by default
+
+    open fun startNextGameIfNecessary() {
+        // Do nothing by default
     }
-    fun packIfNecessary()
-    {
-        if (shouldPack)
-        {
+
+    fun packIfNecessary() {
+        if (shouldPack) {
             pack()
         }
     }
 
-    /**
-     * WindowListener
-     */
-    override fun windowClosed(arg0: WindowEvent)
-    {
+    /** WindowListener */
+    override fun windowClosed(arg0: WindowEvent) {
         ScreenCache.removeDartsGameScreen(this)
     }
-    override fun windowDeactivated(arg0: WindowEvent)
-    {
+
+    override fun windowDeactivated(arg0: WindowEvent) {
         haveLostFocus = true
     }
 
-    override fun windowActivated(arg0: WindowEvent){}
-    override fun windowClosing(arg0: WindowEvent){}
-    override fun windowDeiconified(arg0: WindowEvent){}
-    override fun windowIconified(arg0: WindowEvent){}
-    override fun windowOpened(arg0: WindowEvent){}
+    override fun windowActivated(arg0: WindowEvent) {}
+
+    override fun windowClosing(arg0: WindowEvent) {}
+
+    override fun windowDeiconified(arg0: WindowEvent) {}
+
+    override fun windowIconified(arg0: WindowEvent) {}
+
+    override fun windowOpened(arg0: WindowEvent) {}
 }

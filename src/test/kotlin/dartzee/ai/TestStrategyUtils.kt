@@ -9,12 +9,10 @@ import dartzee.`object`.SegmentType
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestStrategyUtils: AbstractTest()
-{
+class TestStrategyUtils : AbstractTest() {
     @Test
     @Tag("screenshot")
-    fun `Should aim at the average point for the relevant segment`()
-    {
+    fun `Should aim at the average point for the relevant segment`() {
         val t20 = getPointForScore(AimDart(20, 3))
         val outerEleven = getPointForScore(11, SegmentType.OUTER_SINGLE)
 

@@ -18,16 +18,14 @@ import javax.swing.JPanel
 
 const val ACHIEVEMENT_COLUMN_IX = 3
 
-class LeaderboardAchievements: AbstractLeaderboard()
-{
+class LeaderboardAchievements : AbstractLeaderboard() {
     val table = ScrollTableAchievements()
     private val panelFilters = JPanel()
 
     val cbSpecificAchievement = JCheckBox("Achievement")
     val comboBox = JComboBox<AbstractAchievement>()
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
         table.setRowHeight(23)
         add(table)
@@ -45,16 +43,14 @@ class LeaderboardAchievements: AbstractLeaderboard()
         cbSpecificAchievement.addActionListener(this)
     }
 
-    private fun initComboBox()
-    {
+    private fun initComboBox() {
         val achievements = Vector(getAllAchievements())
         comboBox.model = DefaultComboBoxModel(achievements)
     }
 
     override fun getTabName() = "Achievements"
 
-    override fun buildTable()
-    {
+    override fun buildTable() {
         val achievement = getSelectedAchievement()
         val achievementRows = achievement.retrieveAllRows()
 
@@ -65,20 +61,22 @@ class LeaderboardAchievements: AbstractLeaderboard()
         model.addColumn("Score")
 
         val players = PlayerEntity.retrievePlayers(panelPlayerFilters.getWhereSql())
-        val entries = players.map { p ->
-            val myRows = achievementRows.filter { it.playerId == p.rowId }
+        val entries =
+            players
+                .map { p ->
+                    val myRows = achievementRows.filter { it.playerId == p.rowId }
 
-            val myAchievement = achievement.javaClass.getDeclaredConstructor().newInstance()
-            myAchievement.initialiseFromDb(myRows, p)
+                    val myAchievement = achievement.javaClass.getDeclaredConstructor().newInstance()
+                    myAchievement.initialiseFromDb(myRows, p)
 
-            if (myAchievement.isDecreasing() && myAchievement.attainedValue == -1)
-            {
-                myAchievement.attainedValue = Integer.MAX_VALUE
-            }
+                    if (myAchievement.isDecreasing() && myAchievement.attainedValue == -1) {
+                        myAchievement.attainedValue = Integer.MAX_VALUE
+                    }
 
-            val row = listOf(p.getFlag(), p, myAchievement)
-            LeaderboardEntry(myAchievement.attainedValue, row)
-        }.sortedBy(!achievement.isDecreasing()) { it.score }
+                    val row = listOf(p.getFlag(), p, myAchievement)
+                    LeaderboardEntry(myAchievement.attainedValue, row)
+                }
+                .sortedBy(!achievement.isDecreasing()) { it.score }
 
         val modelRows = getRankedRowsForTable(entries)
         model.addRows(modelRows)
@@ -87,50 +85,54 @@ class LeaderboardAchievements: AbstractLeaderboard()
         table.setColumnWidths("35;25;200")
         table.sortBy(0, false)
 
-        table.setComparator(ACHIEVEMENT_COLUMN_IX, compareBy<AbstractAchievement>{ it.attainedValue })
+        table.setComparator(
+            ACHIEVEMENT_COLUMN_IX,
+            compareBy<AbstractAchievement> { it.attainedValue }
+        )
         val renderer = AchievementProgressBarRenderer()
         renderer.minimum = 0
-        if (achievement.isDecreasing())
-        {
+        if (achievement.isDecreasing()) {
             renderer.maximum = achievement.redThreshold - achievement.maxValue
-        }
-        else
-        {
+        } else {
             renderer.maximum = achievement.maxValue
         }
 
         table.getColumn(ACHIEVEMENT_COLUMN_IX).cellRenderer = renderer
     }
 
-    private fun getSelectedAchievement(): AbstractAchievement = if (cbSpecificAchievement.isSelected) comboBox.getItemAt(comboBox.selectedIndex) else DummyAchievementTotal()
+    private fun getSelectedAchievement(): AbstractAchievement =
+        if (cbSpecificAchievement.isSelected) comboBox.getItemAt(comboBox.selectedIndex)
+        else DummyAchievementTotal()
 
-    override fun actionPerformed(e: ActionEvent?)
-    {
+    override fun actionPerformed(e: ActionEvent?) {
         super.actionPerformed(e)
 
         comboBox.isEnabled = cbSpecificAchievement.isSelected
     }
 
-    class AchievementProgressBarRenderer: AbstractProgressBarRenderer()
-    {
-        override fun getColorForValue(value: Any?) = (value!! as AbstractAchievement).getColor(false)
+    class AchievementProgressBarRenderer : AbstractProgressBarRenderer() {
+        override fun getColorForValue(value: Any?) =
+            (value!! as AbstractAchievement).getColor(false)
 
-        override fun getScoreForValue(value: Any?): Int
-        {
+        override fun getScoreForValue(value: Any?): Int {
             val achievement = (value!! as AbstractAchievement)
 
-            if (achievement.isDecreasing())
-            {
+            if (achievement.isDecreasing()) {
                 return (achievement.redThreshold - achievement.attainedValue).coerceAtLeast(0)
             }
 
             return achievement.attainedValue
         }
 
-        override fun getScoreDescForValue(value: Any?): String
-        {
+        override fun getScoreDescForValue(value: Any?): String {
             val achievement = value!! as AbstractAchievement
-            val attainedValueDesc = if (achievement.attainedValue == -1 || achievement.attainedValue == Integer.MAX_VALUE) "-" else "${achievement.attainedValue}"
+            val attainedValueDesc =
+                if (
+                    achievement.attainedValue == -1 ||
+                        achievement.attainedValue == Integer.MAX_VALUE
+                )
+                    "-"
+                else "${achievement.attainedValue}"
             return "$attainedValueDesc/${achievement.maxValue}"
         }
     }
