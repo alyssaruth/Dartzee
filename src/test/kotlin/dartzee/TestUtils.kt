@@ -38,6 +38,7 @@ import io.mockk.MockKMatcherScope
 import java.awt.Color
 import java.awt.Component
 import java.awt.Point
+import java.io.File
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -222,7 +223,7 @@ fun FileUploader.uploadFileFromResource(resourceName: String) {
     chooserDialog.clickChild<JButton>(text = "Open")
     flushEdt()
 
-    getChild<JTextField>().text shouldBe rsrcPath
+    getChild<JTextField>().text shouldBe File(rsrcPath).path
     clickChild<JButton>(text = "Upload")
     flushEdt()
 }
