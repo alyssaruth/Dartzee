@@ -51,7 +51,7 @@ class TestFileUploader : AbstractTest() {
     @Test
     fun `Should be able to upload a file`() {
         val rsrc = javaClass.getResource("/outer-wilds.jpeg")!!
-        val path = rsrc.path
+        val path = File(rsrc.path).path
 
         val uploader = FileUploader(FileNameExtensionFilter("all", "*"))
         val listener = makeFileListener(true)
@@ -65,7 +65,7 @@ class TestFileUploader : AbstractTest() {
     @Test
     fun `Should not clear text if file listener reports failure`() {
         val rsrc = javaClass.getResource("/outer-wilds.jpeg")!!
-        val path = rsrc.path
+        val path = File(rsrc.path).path
 
         val uploader = FileUploader(FileNameExtensionFilter("all", "*"))
         val listener = makeFileListener(false)
