@@ -10,6 +10,7 @@ import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
 import dartzee.utils.DARTS_VERSION_NUMBER
+import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
 import java.awt.Dimension
 import java.awt.Font
@@ -39,7 +40,7 @@ class MenuScreen : EmbeddedScreen() {
 
     init {
         layout = null
-        setLocations(1000, 663)
+        layoutScreen(1000, 663)
 
         add(dartboard)
 
@@ -73,7 +74,7 @@ class MenuScreen : EmbeddedScreen() {
 
         addComponentListener(
             object : ComponentAdapter() {
-                override fun componentResized(evt: ComponentEvent) = setLocations()
+                override fun componentResized(evt: ComponentEvent) = layoutScreen()
             }
         )
     }
@@ -86,10 +87,23 @@ class MenuScreen : EmbeddedScreen() {
 
     override fun postInit() {
         super.postInit()
-        setLocations()
+        layoutScreen()
     }
 
-    private fun setLocations(width: Int = getWidth(), height: Int = getHeight()) {
+    private fun layoutScreen(width: Int = getWidth(), height: Int = getHeight()) {
+        if (InjectedThings.partyMode) {
+            layoutSimplifiedScreen(width, height)
+        } else {
+            layoutFullScreen(width, height)
+        }
+    }
+
+    private fun layoutSimplifiedScreen(width: Int, height: Int) {
+        btnManagePlayers.isVisible = false
+        btnGameReport.isVisible = false
+    }
+
+    private fun layoutFullScreen(width: Int, height: Int) {
         val widthToSubtract = maxOf(0, (minOf(width, height) + (2 * BUTTON_WIDTH) + 50) - width)
         val dartboardSize = minOf(width, height) - widthToSubtract
 
