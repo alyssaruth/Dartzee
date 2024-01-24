@@ -50,6 +50,7 @@ val CODE_SWITCHED_SCREEN = LoggingCode("switchedScreen")
 val CODE_GAME_LAUNCHED = LoggingCode("gameLaunched")
 val CODE_MATCH_LAUNCHED = LoggingCode("matchLaunched")
 val CODE_MATCH_FINISHED = LoggingCode("matchFinished")
+val CODE_PARTY_MODE = LoggingCode("partyMode")
 
 // Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpectedArgument")
