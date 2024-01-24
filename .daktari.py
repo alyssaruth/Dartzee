@@ -1,17 +1,8 @@
-from daktari.checks.certs import *
-from daktari.checks.docker import *
 from daktari.checks.files import *
 from daktari.checks.git import *
-from daktari.checks.google import *
 from daktari.checks.intellij_idea import *
 from daktari.checks.java import *
-from daktari.checks.kubernetes import *
 from daktari.checks.misc import *
-from daktari.checks.nodejs import *
-from daktari.checks.onepassword import *
-from daktari.checks.ssh import *
-from daktari.checks.xml import *
-from daktari.checks.yarn import *
 
 daktari_version = "0.0.171"
 title = "Dartzee"
