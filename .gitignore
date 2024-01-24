@@ -13,6 +13,7 @@ out
 /src/main/resources/AWS*
 *.failed.png
 *.comparison.png
+.daktari-local.yaml
 
 ### Synced idea settings
 !.idea/dataSources.xml
