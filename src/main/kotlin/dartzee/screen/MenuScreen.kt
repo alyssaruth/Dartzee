@@ -101,6 +101,31 @@ class MenuScreen : EmbeddedScreen() {
     private fun layoutSimplifiedScreen(width: Int, height: Int) {
         btnManagePlayers.isVisible = false
         btnGameReport.isVisible = false
+        btnPreferences.isVisible = false
+        btnDartzeeTemplates.isVisible = false
+        btnUtilities.isVisible = false
+        btnSyncSummary.isVisible = false
+
+        val widthToSubtract = maxOf(0, (minOf(width, height) + (BUTTON_WIDTH) + 50) - width)
+        val dartboardSize = minOf(width, height) - widthToSubtract
+
+        val dartboardX = 50
+        val dartboardY = (height - dartboardSize) / 2
+        dartboard.setSize(dartboardSize, dartboardSize)
+        dartboard.setLocation(dartboardX, dartboardY)
+
+        val yGapSpace = (height - (4 * BUTTON_HEIGHT))
+        val btnYGap = maxOf(yGapSpace / 4, 40)
+        val dartboardCenter = dartboardY + (dartboardSize / 2)
+
+        btnNewGame.setLocation(
+            dartboardX + dartboardSize,
+            dartboardCenter - (0.5 * btnYGap).toInt() - BUTTON_HEIGHT
+        )
+        btnLeaderboards.setLocation(
+            dartboardX + dartboardSize,
+            dartboardCenter + (0.5 * btnYGap).toInt()
+        )
     }
 
     private fun layoutFullScreen(width: Int, height: Int) {
