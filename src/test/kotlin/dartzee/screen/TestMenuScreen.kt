@@ -5,6 +5,7 @@ import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.helper.AbstractTest
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.screen.player.PlayerManagementScreen
@@ -12,6 +13,7 @@ import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
+import dartzee.utils.InjectedThings
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.types.shouldBeInstanceOf
 import javax.swing.JButton
@@ -85,5 +87,21 @@ class TestMenuScreen : AbstractTest() {
         val changeLog = findWindow<ChangeLog>()
         changeLog.shouldNotBeNull()
         changeLog.shouldBeVisible()
+    }
+
+    @Test
+    fun `Should show correct state in party mode`() {
+        InjectedThings.partyMode = true
+
+        val scrn = MenuScreen()
+        scrn.getChild<JButton>(text = "New Game").shouldBeVisible()
+        scrn.getChild<JButton>(text = "Leaderboards").shouldBeVisible()
+
+        scrn.getChild<JButton>(text = "Sync Setup").shouldNotBeVisible()
+        scrn.getChild<JButton>(text = "Manage Players").shouldNotBeVisible()
+        scrn.getChild<JButton>(text = "Game Report").shouldNotBeVisible()
+        scrn.getChild<JButton>(text = "Utilities").shouldNotBeVisible()
+        scrn.getChild<JButton>(text = "Preferences").shouldNotBeVisible()
+        scrn.getChild<JButton>(text = "Dartzee Rules").shouldNotBeVisible()
     }
 }

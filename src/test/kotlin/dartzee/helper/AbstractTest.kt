@@ -53,6 +53,7 @@ open class AbstractTest {
 
         InjectedThings.esDestination = mockk(relaxed = true)
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
+        InjectedThings.partyMode = false
 
         logger.loggingContext.clear()
     }

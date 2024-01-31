@@ -39,7 +39,7 @@ class PreferencesPanelMisc :
     private val lblRowsToShow = JLabel("Rows to show on Leaderboards")
     val nfLeaderboardSize = NumberField(10, 200)
     val chckbxShowAnimations = JCheckBox("Play sounds/animations")
-    val btnPartyMode = JButton("Enter Party Mode")
+    private val btnPartyMode = JButton("Enter Party Mode")
 
     init {
         add(panelCenter, BorderLayout.CENTER)
