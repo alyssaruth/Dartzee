@@ -114,18 +114,8 @@ class MenuScreen : EmbeddedScreen() {
         dartboard.setSize(dartboardSize, dartboardSize)
         dartboard.setLocation(dartboardX, dartboardY)
 
-        val yGapSpace = (height - (4 * BUTTON_HEIGHT))
-        val btnYGap = maxOf(yGapSpace / 4, 40)
-        val dartboardCenter = dartboardY + (dartboardSize / 2)
-
-        btnNewGame.setLocation(
-            dartboardX + dartboardSize,
-            dartboardCenter - (0.5 * btnYGap).toInt() - BUTTON_HEIGHT
-        )
-        btnLeaderboards.setLocation(
-            dartboardX + dartboardSize,
-            dartboardCenter + (0.5 * btnYGap).toInt()
-        )
+        setButtonLocation(dartboard, btnNewGame, height, false, 1)
+        setButtonLocation(dartboard, btnLeaderboards, height, false, 2)
     }
 
     private fun layoutFullScreen(width: Int, height: Int) {
