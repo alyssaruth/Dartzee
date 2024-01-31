@@ -10,6 +10,7 @@ import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.sync.SyncManagementScreen
 import dartzee.utils.DARTS_VERSION_NUMBER
+import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
 import java.awt.Dimension
 import java.awt.Font
@@ -39,7 +40,7 @@ class MenuScreen : EmbeddedScreen() {
 
     init {
         layout = null
-        setLocations(1000, 663)
+        layoutScreen(1000, 663)
 
         add(dartboard)
 
@@ -73,7 +74,7 @@ class MenuScreen : EmbeddedScreen() {
 
         addComponentListener(
             object : ComponentAdapter() {
-                override fun componentResized(evt: ComponentEvent) = setLocations()
+                override fun componentResized(evt: ComponentEvent) = layoutScreen()
             }
         )
     }
@@ -86,10 +87,38 @@ class MenuScreen : EmbeddedScreen() {
 
     override fun postInit() {
         super.postInit()
-        setLocations()
+        layoutScreen()
     }
 
-    private fun setLocations(width: Int = getWidth(), height: Int = getHeight()) {
+    private fun layoutScreen(width: Int = getWidth(), height: Int = getHeight()) {
+        if (InjectedThings.partyMode) {
+            layoutSimplifiedScreen(width, height)
+        } else {
+            layoutFullScreen(width, height)
+        }
+    }
+
+    private fun layoutSimplifiedScreen(width: Int, height: Int) {
+        btnManagePlayers.isVisible = false
+        btnGameReport.isVisible = false
+        btnPreferences.isVisible = false
+        btnDartzeeTemplates.isVisible = false
+        btnUtilities.isVisible = false
+        btnSyncSummary.isVisible = false
+
+        val widthToSubtract = maxOf(0, (minOf(width, height) + (BUTTON_WIDTH) + 50) - width)
+        val dartboardSize = minOf(width, height) - widthToSubtract
+
+        val dartboardX = 50
+        val dartboardY = (height - dartboardSize) / 2
+        dartboard.setSize(dartboardSize, dartboardSize)
+        dartboard.setLocation(dartboardX, dartboardY)
+
+        setButtonLocation(dartboard, btnNewGame, height, false, 1)
+        setButtonLocation(dartboard, btnLeaderboards, height, false, 2)
+    }
+
+    private fun layoutFullScreen(width: Int, height: Int) {
         val widthToSubtract = maxOf(0, (minOf(width, height) + (2 * BUTTON_WIDTH) + 50) - width)
         val dartboardSize = minOf(width, height) - widthToSubtract
 
@@ -98,46 +127,43 @@ class MenuScreen : EmbeddedScreen() {
         dartboard.setSize(dartboardSize, dartboardSize)
         dartboard.setLocation(dartboardX, dartboardY)
 
-        val yGapSpace = (height - (4 * BUTTON_HEIGHT))
+        // Left
+        setButtonLocation(dartboard, btnNewGame, height, true, 0)
+        setButtonLocation(dartboard, btnManagePlayers, height, true, 1)
+        setButtonLocation(dartboard, btnLeaderboards, height, true, 2)
+        setButtonLocation(dartboard, btnGameReport, height, true, 3)
 
-        val btnYGap = maxOf(yGapSpace / 4, 40)
-        val dartboardCenter = dartboardY + (dartboardSize / 2)
-
-        btnNewGame.setLocation(
-            dartboardX - 140,
-            dartboardCenter - (1.5 * btnYGap).toInt() - (2 * BUTTON_HEIGHT)
-        )
-        btnManagePlayers.setLocation(
-            dartboardX - BUTTON_WIDTH,
-            dartboardCenter - (0.5 * btnYGap).toInt() - BUTTON_HEIGHT
-        )
-        btnLeaderboards.setLocation(
-            dartboardX - BUTTON_WIDTH,
-            dartboardCenter + (0.5 * btnYGap).toInt()
-        )
-        btnGameReport.setLocation(
-            dartboardX - 140,
-            dartboardCenter + (1.5 * btnYGap).toInt() + BUTTON_HEIGHT
-        )
-
-        btnPreferences.setLocation(
-            dartboardX + dartboardSize + 140 - BUTTON_WIDTH,
-            dartboardCenter - (1.5 * btnYGap).toInt() - (2 * BUTTON_HEIGHT)
-        )
-        btnDartzeeTemplates.setLocation(
-            dartboardX + dartboardSize,
-            dartboardCenter - (0.5 * btnYGap).toInt() - BUTTON_HEIGHT
-        )
-        btnUtilities.setLocation(
-            dartboardX + dartboardSize,
-            dartboardCenter + (0.5 * btnYGap).toInt()
-        )
-        btnSyncSummary.setLocation(
-            dartboardX + dartboardSize + 140 - BUTTON_WIDTH,
-            dartboardCenter + (1.5 * btnYGap).toInt() + BUTTON_HEIGHT
-        )
+        // Right
+        setButtonLocation(dartboard, btnPreferences, height, false, 0)
+        setButtonLocation(dartboard, btnDartzeeTemplates, height, false, 1)
+        setButtonLocation(dartboard, btnUtilities, height, false, 2)
+        setButtonLocation(dartboard, btnSyncSummary, height, false, 3)
 
         lblVersion.setLocation(width - lblVersion.width - 5, height - lblVersion.height - 5)
+    }
+
+    private fun setButtonLocation(
+        dartboard: PresentationDartboard,
+        button: JButton,
+        screenHeight: Int,
+        left: Boolean,
+        index: Int
+    ) {
+        val yGapSpace = (screenHeight - (4 * BUTTON_HEIGHT))
+
+        val btnYGap = maxOf(yGapSpace / 4, 40)
+        val dartboardCenter = dartboard.y + (dartboard.height / 2)
+
+        val y = dartboardCenter + ((index - 1.5) * btnYGap).toInt() + ((index - 2) * BUTTON_HEIGHT)
+        if (left) {
+            val x = if (index == 0 || index == 3) dartboard.x - 140 else dartboard.x - BUTTON_WIDTH
+            button.setLocation(x, y)
+        } else {
+            val x =
+                if (index == 0 || index == 3) dartboard.x + dartboard.width + 140 - BUTTON_WIDTH
+                else dartboard.x + dartboard.width
+            button.setLocation(x, y)
+        }
     }
 
     private fun linkClicked() {

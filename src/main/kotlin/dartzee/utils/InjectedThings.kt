@@ -42,4 +42,5 @@ object InjectedThings {
         AmazonS3RemoteDatabaseStore(SYNC_BUCKET_NAME)
     var syncConfigurer: SyncConfigurer = SyncConfigurer(remoteDatabaseStore)
     var syncManager: SyncManager = SyncManager(remoteDatabaseStore)
+    var partyMode = false
 }
