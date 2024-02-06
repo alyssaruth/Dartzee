@@ -11,7 +11,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
-class TestDatabaseMIgrationV21toV22 : AbstractTest() {
+class TestDatabaseMigrationV21toV22 : AbstractTest() {
     @Test
     fun `Should update MISSED_BOARD darts to just MISS`() {
         val segmentType = mockk<SegmentType>()

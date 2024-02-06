@@ -21,8 +21,10 @@ import dartzee.db.PlayerEntity
 import dartzee.db.PlayerImageEntity
 import dartzee.db.TeamEntity
 import dartzee.db.X01FinishEntity
+import dartzee.game.FinishType
 import dartzee.game.GameType
 import dartzee.game.MatchMode
+import dartzee.game.X01Config
 import dartzee.logging.LoggingCode
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
@@ -284,7 +286,7 @@ fun insertGameForReport(
     uuid: String = randomGuid(),
     localId: Long = mainDatabase.generateLocalId(EntityName.Game),
     gameType: GameType = GameType.X01,
-    gameParams: String = "501",
+    gameParams: String = X01Config(501, FinishType.Doubles).toJson(),
     dtFinish: Timestamp = DateStatics.END_OF_TIME,
     dartsMatchId: String = "",
     matchOrdinal: Int = -1,
@@ -315,7 +317,7 @@ fun insertGame(
     database: Database = mainDatabase,
     localId: Long = database.generateLocalId(EntityName.Game),
     gameType: GameType = GameType.X01,
-    gameParams: String = "501",
+    gameParams: String = X01Config(501, FinishType.Doubles).toJson(),
     dtFinish: Timestamp = DateStatics.END_OF_TIME,
     dartsMatchId: String = "",
     matchOrdinal: Int = -1,
