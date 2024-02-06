@@ -10,6 +10,7 @@ import dartzee.db.PlayerImageEntity
 import dartzee.game.loadParticipants
 import dartzee.game.state.X01PlayerState
 import dartzee.helper.AbstractTest
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
@@ -187,7 +188,7 @@ class TestDartsMatchScreen : AbstractTest() {
     }
 
     private fun setUpMatchScreen(
-        match: DartsMatchEntity = insertDartsMatch(gameParams = "501"),
+        match: DartsMatchEntity = insertDartsMatch(gameParams = DEFAULT_X01_CONFIG.toJson()),
         matchSummaryPanel: MatchSummaryPanel<X01PlayerState> =
             MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams))
     ): FakeMatchScreen {

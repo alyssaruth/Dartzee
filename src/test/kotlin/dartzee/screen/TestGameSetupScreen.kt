@@ -13,11 +13,14 @@ import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartsMatchEntity
 import dartzee.db.EntityName
 import dartzee.db.PlayerEntity
+import dartzee.game.FinishType
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.game.MatchMode
+import dartzee.game.X01Config
 import dartzee.helper.AbstractTest
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartzeeRuleDto
@@ -95,7 +98,13 @@ class TestGameSetupScreen : AbstractTest() {
         screen.btnLaunch.doClick()
 
         val expectedParams =
-            GameLaunchParams(listOf(alice, clive), GameType.X01, "701", false, null)
+            GameLaunchParams(
+                listOf(alice, clive),
+                GameType.X01,
+                X01Config(701, FinishType.Doubles).toJson(),
+                false,
+                null
+            )
         verify { gameLauncher.launchNewGame(expectedParams) }
     }
 
@@ -193,7 +202,8 @@ class TestGameSetupScreen : AbstractTest() {
 
         scrn.btnLaunch.doClick()
 
-        val launchParams = GameLaunchParams(players, GameType.X01, "501", false)
+        val launchParams =
+            GameLaunchParams(players, GameType.X01, DEFAULT_X01_CONFIG.toJson(), false)
         verify { gameLauncher.launchNewMatch(any(), launchParams) }
 
         val match = slot.captured

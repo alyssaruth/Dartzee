@@ -13,6 +13,7 @@ import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.game.X01Config
 import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.retrieveDartsMatch
 import dartzee.screen.ScreenCache
@@ -49,7 +50,13 @@ class TestMatchE2E : AbstractRegistryTest() {
         match.gameParams = "501"
 
         val (winner, loser) = createPlayers()
-        val launchParams = GameLaunchParams(listOf(winner, loser), GameType.X01, "501", false)
+        val launchParams =
+            GameLaunchParams(
+                listOf(winner, loser),
+                GameType.X01,
+                DEFAULT_X01_CONFIG.toJson(),
+                false
+            )
         GameLauncher().launchNewMatch(match, launchParams)
 
         waitForAssertion { retrieveDartsMatch().dtFinish shouldNotBe DateStatics.END_OF_TIME }

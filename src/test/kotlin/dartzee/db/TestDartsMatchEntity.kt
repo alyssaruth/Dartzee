@@ -3,6 +3,7 @@ package dartzee.db
 import dartzee.db.DartsMatchEntity.Companion.constructPointsJson
 import dartzee.game.GameType
 import dartzee.game.MatchMode
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertGame
@@ -66,7 +67,7 @@ class TestDartsMatchEntity : AbstractEntityTest<DartsMatchEntity>() {
         dm.games = 3
         dm.mode = MatchMode.FIRST_TO
         dm.gameType = GameType.X01
-        dm.gameParams = "501"
+        dm.gameParams = DEFAULT_X01_CONFIG.toJson()
 
         dm.getMatchDesc() shouldBe "Match #1 (First to 3 - 501)"
     }

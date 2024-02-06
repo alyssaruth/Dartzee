@@ -1,5 +1,7 @@
 package dartzee.helper
 
+import dartzee.game.FinishType
+import dartzee.game.X01Config
 import dartzee.`object`.Dart
 
 private val gameOneRounds =
@@ -29,3 +31,5 @@ val GAME_WRAPPER_301_2 =
     makeGameWrapper(gameParams = "301", finalScore = 17, localId = 2L).also {
         gameTwoRounds.flatten().forEach(it::addDart)
     }
+
+val DEFAULT_X01_CONFIG = X01Config(501, FinishType.Doubles)

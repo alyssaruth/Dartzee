@@ -1,7 +1,9 @@
 package dartzee.ai
 
 import dartzee.db.PlayerEntity
+import dartzee.game.FinishType
 import dartzee.game.GameType
+import dartzee.game.X01Config
 import dartzee.`object`.Dart
 import dartzee.utils.isBust
 import dartzee.utils.shouldStopForMercyRule
@@ -15,7 +17,7 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) :
     private var startingScore = -1
     private var currentScore = -1
 
-    override val gameParams = "$X01"
+    override val gameParams = X01Config(501, FinishType.Doubles).toJson()
     override val gameType = GameType.X01
 
     override fun getTotalScore(): Int {

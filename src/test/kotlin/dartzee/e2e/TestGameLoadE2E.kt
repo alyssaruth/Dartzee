@@ -8,6 +8,7 @@ import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.getRows
 import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.retrieveGame
 import dartzee.helper.retrieveParticipant
 import dartzee.`object`.Dart
@@ -39,7 +40,13 @@ class TestGameLoadE2E : AbstractRegistryTest() {
     fun `E2E - Game load and AI resume`() {
         val (winner, loser) = createPlayers()
 
-        val params = GameLaunchParams(listOf(winner, loser), GameType.X01, "501", false)
+        val params =
+            GameLaunchParams(
+                listOf(winner, loser),
+                GameType.X01,
+                DEFAULT_X01_CONFIG.toJson(),
+                false
+            )
         GameLauncher().launchNewGame(params)
 
         waitForAssertion { retrieveGame().isFinished() shouldBe true }

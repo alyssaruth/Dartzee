@@ -13,6 +13,7 @@ import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.SingleParticipant
 import dartzee.game.state.TeamParticipant
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
@@ -50,11 +51,14 @@ fun makeGolfGamePanel(pt: IWrappedParticipant) =
     GamePanelGolf(FakeDartsScreen(), insertGame(gameType = GameType.GOLF, gameParams = "18"), 1)
         .apply { testInit(pt) }
 
-fun makeX01GamePanel(currentPlayerId: String = randomGuid(), gameParams: String = "501") =
+fun makeX01GamePanel(
+    currentPlayerId: String = randomGuid(),
+    gameParams: String = DEFAULT_X01_CONFIG.toJson()
+) =
     GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = gameParams), 1)
         .apply { testInit(currentPlayerId) }
 
-fun makeX01GamePanel(pt: IWrappedParticipant, gameParams: String = "501") =
+fun makeX01GamePanel(pt: IWrappedParticipant, gameParams: String = DEFAULT_X01_CONFIG.toJson()) =
     GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = gameParams), 1)
         .apply { testInit(pt) }
 

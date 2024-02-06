@@ -13,6 +13,7 @@ import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.TEST_DB_DIRECTORY
 import dartzee.helper.TEST_ROOT
 import dartzee.helper.getCountFromTable
@@ -146,7 +147,13 @@ class SyncE2E : AbstractRegistryTest() {
     }
 
     private fun runGame(winner: PlayerEntity, loser: PlayerEntity): String {
-        val params = GameLaunchParams(listOf(winner, loser), GameType.X01, "501", false)
+        val params =
+            GameLaunchParams(
+                listOf(winner, loser),
+                GameType.X01,
+                DEFAULT_X01_CONFIG.toJson(),
+                false
+            )
         GameLauncher().launchNewGame(params)
 
         val gameId = retrieveGame().rowId

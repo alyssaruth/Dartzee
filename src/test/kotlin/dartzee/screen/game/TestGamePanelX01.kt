@@ -4,6 +4,8 @@ import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.EntityName
 import dartzee.db.X01FinishEntity
+import dartzee.game.FinishType
+import dartzee.game.X01Config
 import dartzee.helper.AbstractTest
 import dartzee.helper.AchievementSummary
 import dartzee.helper.preparePlayers
@@ -290,7 +292,8 @@ class TestGamePanelX01 : AbstractTest() {
 
     private fun verifyNotStylishFinish(finalRound: List<Dart>) {
         val playerId = randomGuid()
-        val panel = makeX01GamePanel(playerId, gameParams = "101")
+        val panel =
+            makeX01GamePanel(playerId, gameParams = X01Config(101, FinishType.Doubles).toJson())
 
         panel.addCompletedRound(listOf(Dart(20, 3), Dart(1, 1), Dart(20, 1)))
         panel.addCompletedRound(finalRound)
