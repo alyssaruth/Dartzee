@@ -10,6 +10,7 @@ import dartzee.core.util.playDodgySound
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.X01FinishEntity
+import dartzee.game.X01Config
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
 import dartzee.`object`.ComputedPoint
@@ -27,9 +28,9 @@ import dartzee.utils.sumScore
 
 class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
     GamePanelPausable<DartsScorerX01, X01PlayerState>(parent, game, totalPlayers) {
-    private val startingScore = Integer.parseInt(game.gameParams)
+    private val config = X01Config.fromJson(game.gameParams)
 
-    override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(startingScore, pt)
+    override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(config.target, pt)
 
     override fun saveDartsAndProceed() {
         // Finalise the scorer
@@ -186,7 +187,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
     }
 
     override fun factoryScorer(participant: IWrappedParticipant) =
-        DartsScorerX01(this, gameEntity.gameParams, participant)
+        DartsScorerX01(this, config.target, participant)
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelX01(gameParams)
 

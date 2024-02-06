@@ -6,10 +6,12 @@ import dartzee.core.util.DateStatics
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
+import dartzee.game.FinishType
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.game.MatchMode
+import dartzee.game.X01Config
 import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.retrieveDartsMatch
@@ -60,7 +62,7 @@ class TestMatchE2E : AbstractRegistryTest() {
         val games = GameEntity().retrieveEntities()
         games.size shouldBe 2
         games.forEach {
-            it.gameParams shouldBe "501"
+            it.gameParams shouldBe X01Config(501, FinishType.Doubles).toJson()
             it.gameType shouldBe GameType.X01
             it.dtFinish shouldNotBe DateStatics.END_OF_TIME
             it.dartsMatchId shouldBe matchId

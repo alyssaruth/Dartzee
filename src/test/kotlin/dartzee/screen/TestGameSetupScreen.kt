@@ -1,8 +1,10 @@
 package dartzee.screen
 
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelX01
+import dartzee.bean.SpinnerX01
 import dartzee.bean.getAllPlayers
 import dartzee.core.bean.items
 import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
@@ -88,7 +90,7 @@ class TestGameSetupScreen : AbstractTest() {
         screen.playerSelector.init(listOf(alice, clive))
 
         val gameParamsPanel = screen.gameParamFilterPanel as GameParamFilterPanelX01
-        gameParamsPanel.spinner.value = 701
+        gameParamsPanel.getChild<SpinnerX01>().value = 701
 
         screen.btnLaunch.doClick()
 

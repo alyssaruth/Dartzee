@@ -28,7 +28,7 @@ enum class GameType {
 
     fun getParamsDescription(gameParams: String) =
         when (this) {
-            X01 -> gameParams
+            X01 -> X01Config.fromJson(gameParams).description()
             GOLF -> "$gameParams holes"
             ROUND_THE_CLOCK -> RoundTheClockConfig.fromJson(gameParams).getDescription()
             DARTZEE -> DartzeeTemplateEntity().retrieveForId(gameParams, false)?.name.orEmpty()

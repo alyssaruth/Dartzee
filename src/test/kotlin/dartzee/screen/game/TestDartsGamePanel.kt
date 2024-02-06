@@ -3,7 +3,9 @@ package dartzee.screen.game
 import dartzee.achievements.AchievementType
 import dartzee.ai.DartsAiModel
 import dartzee.db.EntityName
+import dartzee.game.FinishType
 import dartzee.game.GameType
+import dartzee.game.X01Config
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
 import dartzee.helper.AbstractTest
@@ -93,10 +95,10 @@ class TestDartsGamePanel : AbstractTest() {
             )
     }
 
-    class TestGamePanel(gameParams: String = "501") :
+    class TestGamePanel(private val config: X01Config = X01Config(501, FinishType.Doubles)) :
         GamePanelPausable<DartsScorerX01, X01PlayerState>(
             FakeDartsScreen(),
-            insertGame(gameType = GameType.X01, gameParams = gameParams),
+            insertGame(gameType = GameType.X01, gameParams = config.toJson()),
             1
         ) {
         override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(501, pt)
@@ -113,6 +115,6 @@ class TestDartsGamePanel : AbstractTest() {
         override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelX01(gameParams)
 
         override fun factoryScorer(participant: IWrappedParticipant) =
-            DartsScorerX01(this, gameEntity.gameParams, participant)
+            DartsScorerX01(this, config.target, participant)
     }
 }

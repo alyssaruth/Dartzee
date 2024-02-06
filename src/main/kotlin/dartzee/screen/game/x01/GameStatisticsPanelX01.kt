@@ -5,6 +5,7 @@ import dartzee.core.util.MathsUtil
 import dartzee.core.util.maxOrZero
 import dartzee.core.util.minOrZero
 import dartzee.game.UniqueParticipantName
+import dartzee.game.X01Config
 import dartzee.game.state.X01PlayerState
 import dartzee.`object`.Dart
 import dartzee.screen.game.AbstractGameStatisticsPanel
@@ -35,7 +36,7 @@ open class GameStatisticsPanelX01(gameParams: String) :
         nfSetupThreshold.value = 100
         nfSetupThreshold.addPropertyChangeListener(this)
         nfSetupThreshold.setMinimum(62)
-        nfSetupThreshold.setMaximum(Integer.parseInt(gameParams) - 1)
+        nfSetupThreshold.setMaximum(X01Config.fromJson(gameParams).target - 1)
     }
 
     override fun getRankedRowsHighestWins() =
