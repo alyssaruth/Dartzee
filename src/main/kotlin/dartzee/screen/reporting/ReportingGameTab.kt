@@ -116,7 +116,7 @@ class ReportingGameTab : JPanel(), ActionListener {
 
     fun generateReportParameters(): ReportParametersGame {
         val gameType = grabIfSelected(checkBoxGameType) { comboBox.getGameType() }
-        val gameParams = grabIfSelected(cbType) { panelGameParams.getGameParams() } ?: ""
+        val gameParams = grabIfSelected(cbType) { panelGameParams.getGameParams() }.orEmpty()
         val dtStartFrom = grabIfSelected(cbStartDate) { dateFilterPanelStart.getSqlDtFrom() }
         val dtStartTo = grabIfSelected(cbStartDate) { dateFilterPanelStart.getSqlDtTo() }
         val unfinishedOnly = grabIfSelected(cbFinishDate) { rdbtnUnfinished.isSelected } ?: false

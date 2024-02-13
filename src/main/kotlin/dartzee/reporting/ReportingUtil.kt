@@ -6,9 +6,8 @@ import java.sql.ResultSet
 import java.sql.Timestamp
 import javax.swing.JCheckBox
 
-fun <T> grabIfSelected(checkbox: JCheckBox, getter: () -> T): T? {
-    return if (checkbox.isSelected) getter() else null
-}
+fun <T> grabIfSelected(checkbox: JCheckBox, getter: () -> T) =
+    if (checkbox.isSelected) getter() else null
 
 fun runReport(rp: ReportParameters?): List<ReportResultWrapper> {
     rp ?: return emptyList()

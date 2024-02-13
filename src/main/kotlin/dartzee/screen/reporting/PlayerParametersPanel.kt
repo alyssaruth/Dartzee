@@ -58,9 +58,8 @@ class PlayerParametersPanel : JPanel(), ActionListener {
     fun generateParameters(): IncludedPlayerParameters {
         val finalScore = grabIfSelected(chckbxFinalScore) { spinner.value as Int }
         val finalScoreComparator =
-            grabIfSelected(chckbxFinalScore) { comboBox.selectedItem as String } ?: ""
-        val finishingPosition =
-            grabIfSelected(chckbxPosition) { getFinishingPositions() } ?: emptyList()
+            grabIfSelected(chckbxFinalScore) { comboBox.selectedItem as String }.orEmpty()
+        val finishingPosition = grabIfSelected(chckbxPosition) { getFinishingPositions() }.orEmpty()
 
         return IncludedPlayerParameters(finishingPosition, finalScoreComparator, finalScore)
     }
