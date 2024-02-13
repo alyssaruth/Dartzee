@@ -22,11 +22,11 @@ object DatabaseMigrations {
 
     private fun convertX01GameParams(database: Database) {
         val games = GameEntity(database).retrieveEntities("GameType = '${GameType.X01}'")
-        games.forEach {
-            val target = it.gameParams.toInt()
+        games.forEach { game ->
+            val target = game.gameParams.toInt()
             val config = X01Config(target, FinishType.Doubles)
-            it.gameParams = config.toJson()
-            it.saveToDatabase()
+            game.gameParams = config.toJson()
+            game.saveToDatabase()
         }
     }
 

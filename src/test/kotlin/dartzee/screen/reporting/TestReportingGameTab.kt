@@ -12,7 +12,9 @@ import dartzee.bean.GameParamFilterPanelX01
 import dartzee.bean.SpinnerX01
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.util.getAllChildComponentsForType
+import dartzee.game.FinishType
 import dartzee.game.GameType
+import dartzee.game.X01Config
 import dartzee.helper.AbstractTest
 import dartzee.makeInvalid
 import dartzee.reporting.MatchFilter
@@ -33,7 +35,10 @@ class TestReportingGameTab : AbstractTest() {
     @Test
     fun `Should have the correct initial state`() {
         val scrn = ReportingGameTab()
-        val checkBoxes = scrn.getAllChildComponentsForType<JCheckBox>()
+        val checkBoxes =
+            scrn.getAllChildComponentsForType<JCheckBox>().filter {
+                it.name?.startsWith("filter") ?: false
+            }
         checkBoxes.forEach { it.isSelected shouldBe false }
 
         scrn.getAllChildComponentsForType<JRadioButton>().forEach { it.shouldBeDisabled() }
@@ -188,11 +193,12 @@ class TestReportingGameTab : AbstractTest() {
 
         tab.clickChild<JCheckBox>(text = "Type")
         tab.populateReportParameters(rp)
-        rp.gameParams shouldBe "501"
+        rp.gameParams shouldBe X01Config(501, FinishType.Doubles).toJson()
 
         tab.getChild<SpinnerX01>().value = 701
+        tab.clickChild<JCheckBox>(text = "Finish on double")
         tab.populateReportParameters(rp)
-        rp.gameParams shouldBe "701"
+        rp.gameParams shouldBe X01Config(701, FinishType.Any).toJson()
     }
 
     @Test
