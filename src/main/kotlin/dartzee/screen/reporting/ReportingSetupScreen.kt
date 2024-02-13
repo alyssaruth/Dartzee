@@ -39,9 +39,8 @@ class ReportingSetupScreen : EmbeddedScreen() {
     }
 
     private fun generateReportParams(): ReportParameters {
-        val rp = ReportParameters()
-        gameTab.populateReportParameters(rp)
-        playerTab.populateReportParameters(rp)
-        return rp
+        val gameFilters = gameTab.generateReportParameters()
+        val playerFilters = playerTab.generateReportParameters()
+        return ReportParameters(gameFilters, playerFilters)
     }
 }

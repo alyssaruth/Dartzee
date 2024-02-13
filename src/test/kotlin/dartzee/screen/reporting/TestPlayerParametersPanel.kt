@@ -4,8 +4,8 @@ import com.github.alyssaburlton.swingtest.clickChild
 import dartzee.core.bean.ComboBoxNumberComparison
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
+import dartzee.helper.makeIncludedPlayerParameters
 import dartzee.reporting.COMPARATOR_SCORE_UNSET
-import dartzee.reporting.IncludedPlayerParameters
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -27,7 +27,7 @@ class TestPlayerParametersPanel : AbstractTest() {
         panel.chckbxPosition.isSelected shouldBe false
         panel.chckbxFinalScore.isSelected shouldBe false
 
-        panel.generateParameters() shouldBe IncludedPlayerParameters()
+        panel.generateParameters() shouldBe makeIncludedPlayerParameters()
     }
 
     @Test
