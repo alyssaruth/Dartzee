@@ -2,12 +2,13 @@ package dartzee.screen.reporting
 
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
+import dartzee.helper.makeIncludedPlayerParameters
 import dartzee.reporting.IncludedPlayerParameters
-import dartzee.reporting.ReportParameters
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotContain
+import io.kotest.matchers.maps.shouldBeEmpty
 import io.kotest.matchers.maps.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -88,33 +89,24 @@ class TestReportingPlayersTab : AbstractTest() {
     @Test
     fun `Should populate report parameters correctly with no players selected`() {
         val tab = ReportingPlayersTab()
-
-        val rp = ReportParameters()
-        tab.populateReportParameters(rp)
-        rp.excludedPlayers.shouldBeEmpty()
-        rp.hmIncludedPlayerToParms.size shouldBe 0
+        tab.generateReportParameters().excludedPlayers.shouldBeEmpty()
+        tab.generateReportParameters().includedPlayers.shouldBeEmpty()
 
         tab.rdbtnExclude.doClick()
-        tab.populateReportParameters(rp)
-        rp.excludedPlayers.shouldBeEmpty()
-        rp.hmIncludedPlayerToParms.size shouldBe 0
+        tab.generateReportParameters().excludedPlayers.shouldBeEmpty()
+        tab.generateReportParameters().includedPlayers.shouldBeEmpty()
     }
 
     @Test
     fun `Should populate excludeOnlyAi correctly`() {
         val tab = ReportingPlayersTab()
-        val rp = ReportParameters()
-
-        tab.populateReportParameters(rp)
-        rp.excludeOnlyAi shouldBe false
+        tab.generateReportParameters().excludeOnlyAi shouldBe false
 
         tab.checkBoxExcludeOnlyAi.doClick()
-        tab.populateReportParameters(rp)
-        rp.excludeOnlyAi shouldBe true
+        tab.generateReportParameters().excludeOnlyAi shouldBe true
 
         tab.checkBoxExcludeOnlyAi.doClick()
-        tab.populateReportParameters(rp)
-        rp.excludeOnlyAi shouldBe false
+        tab.generateReportParameters().excludeOnlyAi shouldBe false
     }
 
     @Test
@@ -126,16 +118,15 @@ class TestReportingPlayersTab : AbstractTest() {
         tab.addPlayers(listOf(playerOne, playerTwo))
         tab.includedPlayerPanel.chckbxFinalScore.doClick()
 
-        val rp = ReportParameters()
-        tab.populateReportParameters(rp)
-
-        rp.excludedPlayers.shouldBeEmpty()
-        rp.hmIncludedPlayerToParms.shouldContainExactly(
-            mapOf(
-                playerOne to IncludedPlayerParameters(listOf(), "=", 3),
-                playerTwo to IncludedPlayerParameters()
+        tab.generateReportParameters().excludedPlayers.shouldBeEmpty()
+        tab.generateReportParameters()
+            .includedPlayers
+            .shouldContainExactly(
+                mapOf(
+                    playerOne to IncludedPlayerParameters(listOf(), "=", 3),
+                    playerTwo to makeIncludedPlayerParameters()
+                )
             )
-        )
     }
 
     @Test
@@ -148,11 +139,8 @@ class TestReportingPlayersTab : AbstractTest() {
         tab.includedPlayerPanel.chckbxFinalScore.doClick()
         tab.rdbtnExclude.doClick()
 
-        val rp = ReportParameters()
-        tab.populateReportParameters(rp)
-
-        rp.excludedPlayers.shouldContainExactly(playerOne, playerTwo)
-        rp.hmIncludedPlayerToParms.size shouldBe 0
+        tab.generateReportParameters().excludedPlayers.shouldContainExactly(playerOne, playerTwo)
+        tab.generateReportParameters().includedPlayers.shouldBeEmpty()
     }
 
     @Test

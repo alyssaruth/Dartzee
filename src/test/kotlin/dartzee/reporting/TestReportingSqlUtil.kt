@@ -9,6 +9,7 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerForGame
+import dartzee.helper.makeReportParameters
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -25,7 +26,7 @@ class TestReportingSqlUtil : AbstractTest() {
         insertParticipant(gameId = g1.rowId, playerId = bob.rowId, finishingPosition = 3)
         insertParticipant(gameId = g1.rowId, playerId = clive.rowId, finishingPosition = 2)
 
-        val results = runReport(ReportParameters())
+        val results = runReport(makeReportParameters())
         results.size shouldBe 1
         val wrapper = results.first()
 
@@ -48,7 +49,7 @@ class TestReportingSqlUtil : AbstractTest() {
         val g = insertGame(dartsMatchId = "", gameType = GameType.GOLF, gameParams = "18")
         insertParticipant(gameId = g.rowId, playerId = alice.rowId, finishingPosition = -1)
 
-        val results = runReport(ReportParameters())
+        val results = runReport(makeReportParameters())
         results.size shouldBe 1
         val wrapper = results.first()
 
@@ -65,7 +66,7 @@ class TestReportingSqlUtil : AbstractTest() {
         val gBob = insertGame(dtFinish = getSqlDateNow())
         insertPlayerForGame("Bob", gBob.rowId)
 
-        val results = runReport(ReportParameters())
+        val results = runReport(makeReportParameters())
         results.size shouldBe 2
 
         val rows = ReportResultWrapper.getTableRowsFromWrappers(results)
@@ -86,7 +87,7 @@ class TestReportingSqlUtil : AbstractTest() {
         insertPlayerForGame("Bob", dartzeeGameStandalone.rowId)
         insertPlayerForGame("Clive", x01Game.rowId)
 
-        val results = runReport(ReportParameters())
+        val results = runReport(makeReportParameters())
         results.first { it.localId == 1L }.templateName shouldBe "BTBF's House Party"
         results.first { it.localId == 2L }.templateName shouldBe null
         results.first { it.localId == 3L }.templateName shouldBe null

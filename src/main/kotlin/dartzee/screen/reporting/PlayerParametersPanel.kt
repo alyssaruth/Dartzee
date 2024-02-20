@@ -7,6 +7,7 @@ import dartzee.db.MAX_PLAYERS
 import dartzee.db.PlayerEntity
 import dartzee.reporting.COMPARATOR_SCORE_UNSET
 import dartzee.reporting.IncludedPlayerParameters
+import dartzee.reporting.grabIfSelected
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JCheckBox
@@ -55,22 +56,12 @@ class PlayerParametersPanel : JPanel(), ActionListener {
     }
 
     fun generateParameters(): IncludedPlayerParameters {
-        val parms = IncludedPlayerParameters()
+        val finalScore = grabIfSelected(chckbxFinalScore) { spinner.value as Int }
+        val finalScoreComparator =
+            grabIfSelected(chckbxFinalScore) { comboBox.selectedItem as String }.orEmpty()
+        val finishingPosition = grabIfSelected(chckbxPosition) { getFinishingPositions() }.orEmpty()
 
-        if (chckbxFinalScore.isSelected) {
-            val finalScore = spinner.value as Int
-            val comparator = comboBox.selectedItem as String
-
-            parms.finalScore = finalScore
-            parms.finalScoreComparator = comparator
-        }
-
-        if (chckbxPosition.isSelected) {
-            val finishingPositions = getFinishingPositions()
-            parms.finishingPositions = finishingPositions
-        }
-
-        return parms
+        return IncludedPlayerParameters(finishingPosition, finalScoreComparator, finalScore)
     }
 
     private fun getFinishingPositions(): List<Int> {

@@ -65,8 +65,8 @@ class TestReportingSetupScreen : AbstractTest() {
         ScreenCache.currentScreen().shouldBeInstanceOf<ReportingResultsScreen>()
         val resultsScreen = ScreenCache.currentScreen() as ReportingResultsScreen
         val rp = resultsScreen.rp!!
-        rp.gameType shouldBe GameType.X01
-        rp.excludeOnlyAi shouldBe true
+        rp.game.gameType shouldBe GameType.X01
+        rp.players.excludeOnlyAi shouldBe true
     }
 
     private fun ReportingGameTab.getStartDateFilterPanel() =

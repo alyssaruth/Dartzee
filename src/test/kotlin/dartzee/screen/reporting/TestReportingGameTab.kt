@@ -18,7 +18,6 @@ import dartzee.game.X01Config
 import dartzee.helper.AbstractTest
 import dartzee.makeInvalid
 import dartzee.reporting.MatchFilter
-import dartzee.reporting.ReportParameters
 import dartzee.updateSelection
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -168,118 +167,93 @@ class TestReportingGameTab : AbstractTest() {
     /** Population */
     @Test
     fun `Should populate game type correctly`() {
-        val rp = ReportParameters()
         val tab = ReportingGameTab()
-
-        tab.populateReportParameters(rp)
-        rp.gameType shouldBe null
+        tab.generateReportParameters().gameType shouldBe null
 
         tab.clickChild<JCheckBox>(text = "Game")
-        tab.populateReportParameters(rp)
-        rp.gameType shouldBe GameType.X01
+        tab.generateReportParameters().gameType shouldBe GameType.X01
 
         tab.getChild<ComboBoxGameType>().updateSelection(GameType.DARTZEE)
-        tab.populateReportParameters(rp)
-        rp.gameType shouldBe GameType.DARTZEE
+        tab.generateReportParameters().gameType shouldBe GameType.DARTZEE
     }
 
     @Test
     fun `Should populate gameParams correctly`() {
-        val rp = ReportParameters()
         val tab = ReportingGameTab()
-
-        tab.populateReportParameters(rp)
-        rp.gameParams shouldBe ""
+        tab.generateReportParameters().gameParams shouldBe ""
 
         tab.clickChild<JCheckBox>(text = "Type")
-        tab.populateReportParameters(rp)
-        rp.gameParams shouldBe X01Config(501, FinishType.Doubles).toJson()
+        tab.generateReportParameters().gameParams shouldBe X01Config(501, FinishType.Doubles).toJson()
 
         tab.getChild<SpinnerX01>().value = 701
         tab.clickChild<JCheckBox>(text = "Finish on double")
-        tab.populateReportParameters(rp)
-        rp.gameParams shouldBe X01Config(701, FinishType.Any).toJson()
+        tab.generateReportParameters().gameParams shouldBe X01Config(701, FinishType.Any).toJson()
     }
 
     @Test
     fun `Should populate part of match correctly`() {
-        val rp = ReportParameters()
         val tab = ReportingGameTab()
-
-        tab.populateReportParameters(rp)
-        rp.partOfMatch shouldBe MatchFilter.BOTH
+        tab.generateReportParameters().partOfMatch shouldBe MatchFilter.BOTH
 
         tab.clickChild<JCheckBox>(text = "Part of Match")
-        tab.populateReportParameters(rp)
-        rp.partOfMatch shouldBe MatchFilter.MATCHES_ONLY
+        tab.generateReportParameters().partOfMatch shouldBe MatchFilter.MATCHES_ONLY
 
         tab.clickChild<JRadioButton>(text = "No")
-        tab.populateReportParameters(rp)
-        rp.partOfMatch shouldBe MatchFilter.GAMES_ONLY
+        tab.generateReportParameters().partOfMatch shouldBe MatchFilter.GAMES_ONLY
     }
 
     @Test
     fun `Should populate sync status correctly`() {
-        val rp = ReportParameters()
         val tab = ReportingGameTab()
-
-        tab.populateReportParameters(rp)
-        rp.pendingChanges shouldBe null
+        tab.generateReportParameters().pendingChanges shouldBe null
 
         tab.clickChild<JCheckBox>(text = "Sync Status")
-        tab.populateReportParameters(rp)
-        rp.pendingChanges shouldBe true
+        tab.generateReportParameters().pendingChanges shouldBe true
 
         tab.clickChild<JRadioButton>(text = "Synced")
-        tab.populateReportParameters(rp)
-        rp.pendingChanges shouldBe false
+        tab.generateReportParameters().pendingChanges shouldBe false
     }
 
     @Test
     fun `Should populate start date correctly`() {
-        val rp = ReportParameters()
         val tab = ReportingGameTab()
-
-        tab.populateReportParameters(rp)
-        rp.dtStartFrom shouldBe null
-        rp.dtStartTo shouldBe null
+        tab.generateReportParameters().dtStartFrom shouldBe null
+        tab.generateReportParameters().dtStartTo shouldBe null
 
         val startDate = LocalDate.ofYearDay(2020, 20)
         val endDate = LocalDate.ofYearDay(2020, 30)
         tab.clickChild<JCheckBox>(text = "Start Date")
         tab.getStartDateFilterPanel().cbDateFrom.date = startDate
         tab.getStartDateFilterPanel().cbDateTo.date = endDate
-        tab.populateReportParameters(rp)
-        rp.dtStartFrom shouldBe Timestamp.valueOf(startDate.atTime(0, 0))
-        rp.dtStartTo shouldBe Timestamp.valueOf(endDate.atTime(0, 0))
+        tab.generateReportParameters().dtStartFrom shouldBe
+            Timestamp.valueOf(startDate.atTime(0, 0))
+        tab.generateReportParameters().dtStartTo shouldBe Timestamp.valueOf(endDate.atTime(0, 0))
     }
 
     @Test
     fun `Should populate finish date correctly`() {
-        var rp = ReportParameters()
         val tab = ReportingGameTab()
 
-        tab.populateReportParameters(rp)
-        rp.dtFinishFrom shouldBe null
-        rp.dtFinishTo shouldBe null
-        rp.unfinishedOnly shouldBe false
+        val rpDefault = tab.generateReportParameters()
+        rpDefault.dtFinishFrom shouldBe null
+        rpDefault.dtFinishTo shouldBe null
+        rpDefault.unfinishedOnly shouldBe false
 
         val startDate = LocalDate.ofYearDay(2020, 20)
         val endDate = LocalDate.ofYearDay(2020, 30)
         tab.clickChild<JCheckBox>(text = "Finish Date")
         tab.getFinishDateFilterPanel().cbDateFrom.date = startDate
         tab.getFinishDateFilterPanel().cbDateTo.date = endDate
-        tab.populateReportParameters(rp)
-        rp.dtFinishFrom shouldBe Timestamp.valueOf(startDate.atTime(0, 0))
-        rp.dtFinishTo shouldBe Timestamp.valueOf(endDate.atTime(0, 0))
-        rp.unfinishedOnly shouldBe false
+        val rpBetweenDates = tab.generateReportParameters()
+        rpBetweenDates.dtFinishFrom shouldBe Timestamp.valueOf(startDate.atTime(0, 0))
+        rpBetweenDates.dtFinishTo shouldBe Timestamp.valueOf(endDate.atTime(0, 0))
+        rpBetweenDates.unfinishedOnly shouldBe false
 
-        rp = ReportParameters()
         tab.clickChild<JRadioButton>(text = "Unfinished")
-        tab.populateReportParameters(rp)
-        rp.dtFinishFrom shouldBe null
-        rp.dtFinishTo shouldBe null
-        rp.unfinishedOnly shouldBe true
+        val rpUnfinished = tab.generateReportParameters()
+        rpUnfinished.dtFinishFrom shouldBe null
+        rpUnfinished.dtFinishTo shouldBe null
+        rpUnfinished.unfinishedOnly shouldBe true
     }
 
     private fun ReportingGameTab.getStartDateFilterPanel() =

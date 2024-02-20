@@ -8,7 +8,7 @@ import dartzee.core.bean.RowSelectionListener
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.DialogUtil
 import dartzee.db.PlayerEntity
-import dartzee.reporting.ReportParameters
+import dartzee.reporting.ReportParametersPlayers
 import dartzee.screen.PlayerSelectDialog
 import dartzee.screen.ScreenCache
 import java.awt.BorderLayout
@@ -149,14 +149,22 @@ class ReportingPlayersTab : JPanel(), ActionListener, RowSelectionListener {
         return true
     }
 
-    fun populateReportParameters(rp: ReportParameters) {
-        rp.excludeOnlyAi = checkBoxExcludeOnlyAi.isSelected
+    fun generateReportParameters(): ReportParametersPlayers {
+        val excludeOnlyAi = checkBoxExcludeOnlyAi.isSelected
+        val includedPlayers =
+            if (rdbtnInclude.isSelected) {
+                hmPlayerToParametersPanel.mapValues { it.value.generateParameters() }
+            } else {
+                emptyMap()
+            }
 
-        if (rdbtnInclude.isSelected) {
-            rp.hmIncludedPlayerToParms =
-                hmPlayerToParametersPanel.mapValues { entry -> entry.value.generateParameters() }
-        } else {
-            rp.excludedPlayers = hmPlayerToParametersPanel.keys.toList()
-        }
+        val excludedPlayers =
+            if (rdbtnExclude.isSelected) {
+                hmPlayerToParametersPanel.keys.toList()
+            } else {
+                emptyList()
+            }
+
+        return ReportParametersPlayers(includedPlayers, excludedPlayers, excludeOnlyAi)
     }
 }
