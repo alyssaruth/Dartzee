@@ -128,7 +128,7 @@ class ReportingGameTab : JPanel(), ActionListener {
             grabIfSelected(cbFinishDate) {
                 if (rdbtnUnfinished.isSelected) null else dateFilterPanelFinish.getSqlDtTo()
             }
-        val enforceMatch = grabIfSelected(cbPartOfMatch) { enforceMatch() }
+        val enforceMatch = grabIfSelected(cbPartOfMatch) { enforceMatch() } ?: MatchFilter.BOTH
         val pendingChanges = grabIfSelected(cbSyncStatus) { rdbtnPendingChanges.isSelected }
 
         return ReportParametersGame(

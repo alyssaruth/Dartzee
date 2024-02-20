@@ -1,8 +1,8 @@
+import java.net.URI
 import kotlinx.kover.api.KoverTaskExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.net.URI
 
 plugins {
     kotlin("jvm") version "1.9.22"
@@ -19,6 +19,7 @@ repositories {
 }
 
 apply(plugin = "kotlin")
+
 apply(plugin = "application")
 
 detekt {
@@ -27,9 +28,7 @@ detekt {
     config.setFrom("$projectDir/detekt-config.yml")
 }
 
-ktfmt {
-    kotlinLangStyle()
-}
+ktfmt { kotlinLangStyle() }
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")
@@ -54,13 +53,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
 
-kotlin {
-    sourceSets.all {
-        languageSettings {
-            languageVersion = "2.0"
-        }
-    }
-}
+kotlin { sourceSets.all { languageSettings { languageVersion = "2.0" } } }
 
 project.setProperty("mainClassName", "dartzee.main.DartsMainKt")
 
@@ -86,65 +79,51 @@ compileTestKotlin.kotlinOptions {
 }
 
 task<JavaExec>("runDev") {
-    configure(closureOf<JavaExec> {
-        group = "run"
-        classpath = project.the<SourceSetContainer>()["main"].runtimeClasspath
-        args = listOf("devMode", "trueLaunch")
-        mainClass.set("dartzee.main.DartsMainKt")
-    })
+    configure(
+        closureOf<JavaExec> {
+            group = "run"
+            classpath = project.the<SourceSetContainer>()["main"].runtimeClasspath
+            args = listOf("devMode", "trueLaunch")
+            mainClass.set("dartzee.main.DartsMainKt")
+        }
+    )
 }
 
-kover {
-    filters {
-        classes {
-            excludes.add("dartzee.screen.TestWindow")
-        }
-    }
-}
+kover { filters { classes { excludes.add("dartzee.screen.TestWindow") } } }
 
 task<Test>("unitTest") {
     group = "verification"
-    useJUnitPlatform {
-        excludeTags = setOf("integration", "e2e")
-    }
+    useJUnitPlatform { excludeTags = setOf("integration", "e2e") }
 }
 
 task<Test>("updateScreenshots") {
     group = "verification"
-    useJUnitPlatform {
-        includeTags = setOf("screenshot")
-    }
+    useJUnitPlatform { includeTags = setOf("screenshot") }
 
     jvmArgs = listOf("-DupdateSnapshots=true")
 }
 
 task<Test>("integrationAndE2E") {
     group = "verification"
-    useJUnitPlatform {
-        includeTags = setOf("integration", "e2e")
-    }
+    useJUnitPlatform { includeTags = setOf("integration", "e2e") }
 }
 
-tasks {
-    named<Test>("test") {
-        useJUnitPlatform()
-    }
-}
+tasks { named<Test>("test") { useJUnitPlatform() } }
 
 tasks.withType<Test> {
     minHeapSize = "1024m"
     maxHeapSize = "1024m"
 
-    jvmArgs = listOf("-Dcom.sun.management.jmxremote",
-        "-Dcom.sun.management.jmxremote.port=9010",
-        "-Dcom.sun.management.jmxremote.authenticate=false",
-        "-Dcom.sun.management.jmxremote.ssl=false",
-        "-Djava.rmi.server.hostname=localhost",
-        "-DscreenshotOs=linux")
+    jvmArgs =
+        listOf(
+            "-Dcom.sun.management.jmxremote",
+            "-Dcom.sun.management.jmxremote.port=9010",
+            "-Dcom.sun.management.jmxremote.authenticate=false",
+            "-Dcom.sun.management.jmxremote.ssl=false",
+            "-Djava.rmi.server.hostname=localhost"
+        )
 
-    extensions.configure<KoverTaskExtension> {
-        isDisabled.set(name != "unitTest")
-    }
+    extensions.configure<KoverTaskExtension> { isDisabled.set(name != "unitTest") }
 
     testLogging {
         events = mutableSetOf(TestLogEvent.STARTED, TestLogEvent.FAILED)
@@ -153,12 +132,12 @@ tasks.withType<Test> {
 }
 
 tasks.withType<Jar> {
-    manifest {
-        attributes["Main-Class"] = "dartzee.main.DartsMainKt"
-    }
+    manifest { attributes["Main-Class"] = "dartzee.main.DartsMainKt" }
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     dependsOn(configurations.runtimeClasspath)
-    from(configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) })
+    from(
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    )
 }

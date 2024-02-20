@@ -275,7 +275,7 @@ fun makeReportParametersGame(
     unfinishedOnly: Boolean = false,
     dtFinishFrom: Timestamp? = null,
     dtFinishTo: Timestamp? = null,
-    partOfMatch: MatchFilter? = null,
+    partOfMatch: MatchFilter = MatchFilter.BOTH,
     pendingChanges: Boolean? = null
 ) =
     ReportParametersGame(

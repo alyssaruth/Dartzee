@@ -11,6 +11,6 @@ data class ReportParametersGame(
     val unfinishedOnly: Boolean,
     val dtFinishFrom: Timestamp?,
     val dtFinishTo: Timestamp?,
-    val partOfMatch: MatchFilter?,
+    val partOfMatch: MatchFilter,
     val pendingChanges: Boolean?
 )
