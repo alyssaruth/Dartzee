@@ -183,7 +183,8 @@ class TestReportingGameTab : AbstractTest() {
         tab.generateReportParameters().gameParams shouldBe ""
 
         tab.clickChild<JCheckBox>(text = "Type")
-        tab.generateReportParameters().gameParams shouldBe X01Config(501, FinishType.Doubles).toJson()
+        tab.generateReportParameters().gameParams shouldBe
+            X01Config(501, FinishType.Doubles).toJson()
 
         tab.getChild<SpinnerX01>().value = 701
         tab.clickChild<JCheckBox>(text = "Finish on double")

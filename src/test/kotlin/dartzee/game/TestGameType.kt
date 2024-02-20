@@ -16,7 +16,8 @@ class TestGameType : AbstractTest() {
 
     @Test
     fun `Sensible descriptions with params`() {
-        GameType.X01.getDescription("701") shouldBe "701"
+        val x01Config = X01Config(701, FinishType.Any)
+        GameType.X01.getDescription(x01Config.toJson()) shouldBe x01Config.description()
         GameType.GOLF.getDescription("18") shouldBe "Golf - 18 holes"
         GameType.ROUND_THE_CLOCK.getDescription(
             RoundTheClockConfig(ClockType.Trebles, true).toJson()

@@ -6,12 +6,7 @@ import dartzee.db.EntityName
 import dartzee.db.X01FinishEntity
 import dartzee.game.FinishType
 import dartzee.game.X01Config
-import dartzee.helper.AbstractTest
-import dartzee.helper.AchievementSummary
-import dartzee.helper.preparePlayers
-import dartzee.helper.randomGuid
-import dartzee.helper.retrieveAchievementsForPlayer
-import dartzee.helper.wipeTable
+import dartzee.helper.*
 import dartzee.`object`.Dart
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
@@ -163,7 +158,7 @@ class TestGamePanelX01 : AbstractTest() {
     fun `Should correctly update such bad luck achievement for a team`() {
         val (p1, p2) = preparePlayers(2)
         val team = makeTeam(p1, p2)
-        val panel = makeX01GamePanel(team, gameParams = "101")
+        val panel = makeX01GamePanel(team, gameParams = X01Config(101, FinishType.Doubles).toJson())
         val gameId = panel.gameEntity.rowId
 
         panel.addCompletedRound(
@@ -205,7 +200,8 @@ class TestGamePanelX01 : AbstractTest() {
     @Test
     fun `Should not update hotel inspector achievement if board is missed, or player is bust`() {
         val playerId = randomGuid()
-        val panel = makeX01GamePanel(playerId, gameParams = "101")
+        val panel =
+            makeX01GamePanel(playerId, gameParams = X01Config(101, FinishType.Doubles).toJson())
 
         panel.addCompletedRound(listOf(Dart(20, 1), Dart(3, 2), Dart(19, 0)))
         panel.addCompletedRound(listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1)))
@@ -242,7 +238,8 @@ class TestGamePanelX01 : AbstractTest() {
     @Test
     fun `Should not update chucklevision achievement if board is missed, or player is bust`() {
         val playerId = randomGuid()
-        val panel = makeX01GamePanel(playerId, gameParams = "101")
+        val panel =
+            makeX01GamePanel(playerId, gameParams = X01Config(101, FinishType.Doubles).toJson())
 
         panel.addCompletedRound(listOf(Dart(20, 3), Dart(3, 3), Dart(19, 0)))
         panel.addCompletedRound(listOf(Dart(5, 1), Dart(4, 1), Dart(20, 3)))
@@ -264,7 +261,8 @@ class TestGamePanelX01 : AbstractTest() {
 
     private fun verifyStylishFinish(finalRound: List<Dart>) {
         val playerId = randomGuid()
-        val panel = makeX01GamePanel(playerId, gameParams = "101")
+        val panel =
+            makeX01GamePanel(playerId, gameParams = X01Config(101, FinishType.Doubles).toJson())
 
         panel.addCompletedRound(listOf(Dart(20, 3), Dart(1, 1), Dart(20, 1)))
         panel.addCompletedRound(finalRound)
