@@ -120,7 +120,7 @@ fun DartsGamePanel<*, *>.doAiTurn(model: DartsAiModel) {
 
 fun makeMatchSummaryPanel(
     match: DartsMatchEntity = insertDartsMatch(),
-    statsPanel: GameStatisticsPanelX01 = GameStatisticsPanelX01("501")
+    statsPanel: GameStatisticsPanelX01 = GameStatisticsPanelX01(DEFAULT_X01_CONFIG.toJson())
 ) = MatchSummaryPanel(match, statsPanel)
 
 class FakeDartsScreen : AbstractDartsGameScreen() {
