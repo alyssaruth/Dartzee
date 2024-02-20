@@ -9,8 +9,9 @@ import dartzee.getDisplayValueAt
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayerForGame
+import dartzee.helper.makeReportParameters
+import dartzee.helper.makeReportParametersGame
 import dartzee.logging.CODE_SQL
-import dartzee.reporting.ReportParameters
 import dartzee.screen.ScreenCache
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -23,8 +24,7 @@ import org.junit.jupiter.api.Test
 class TestReportingResultsScreen : AbstractTest() {
     @Test
     fun `Should initialise with results based on the report parameters`() {
-        val rp = ReportParameters()
-        rp.gameType = GameType.X01
+        val rp = makeReportParameters(game = makeReportParametersGame(gameType = GameType.X01))
 
         val gX01 = insertGame(localId = 1, gameType = GameType.X01, gameParams = "501")
         insertPlayerForGame("Bob", gX01.rowId)
@@ -50,7 +50,7 @@ class TestReportingResultsScreen : AbstractTest() {
         val scrn = ReportingResultsScreen(dlg)
 
         every { dlg.excludedColumns() } returns emptyList()
-        scrn.rp = ReportParameters()
+        scrn.rp = makeReportParameters()
         scrn.initialise()
 
         val table = scrn.getChild<ScrollTable>()
@@ -80,7 +80,7 @@ class TestReportingResultsScreen : AbstractTest() {
         insertPlayerForGame("Bob", g4.rowId)
 
         val scrn = ReportingResultsScreen()
-        scrn.rp = ReportParameters()
+        scrn.rp = makeReportParameters()
         scrn.initialise()
 
         val table = scrn.getChild<ScrollTable>()

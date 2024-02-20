@@ -4,10 +4,13 @@ import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 import java.sql.ResultSet
 import java.sql.Timestamp
+import javax.swing.JCheckBox
 
-/** Refactored from ReportingResultsScreen */
+fun <T> grabIfSelected(checkbox: JCheckBox, getter: () -> T) =
+    if (checkbox.isSelected) getter() else null
+
 fun runReport(rp: ReportParameters?): List<ReportResultWrapper> {
-    rp ?: return listOf()
+    rp ?: return emptyList()
 
     var sql = buildBasicSqlStatement()
     sql += rp.getExtraWhereSql()

@@ -8,6 +8,7 @@ import dartzee.db.LocalIdGenerator
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
+import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
 import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.GolfPlayerState
@@ -15,6 +16,11 @@ import dartzee.game.state.SingleParticipant
 import dartzee.game.state.X01PlayerState
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
+import dartzee.reporting.IncludedPlayerParameters
+import dartzee.reporting.MatchFilter
+import dartzee.reporting.ReportParameters
+import dartzee.reporting.ReportParametersGame
+import dartzee.reporting.ReportParametersPlayers
 import dartzee.stats.GameWrapper
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.isBust
@@ -255,3 +261,43 @@ fun makeClockGameWrapper(
     rounds.forEach(wrapper::addDart)
     return wrapper
 }
+
+fun makeReportParameters(
+    game: ReportParametersGame = makeReportParametersGame(),
+    players: ReportParametersPlayers = makeReportParametersPlayers()
+) = ReportParameters(game, players)
+
+fun makeReportParametersGame(
+    gameType: GameType? = null,
+    gameParams: String = "",
+    dtStartFrom: Timestamp? = null,
+    dtStartTo: Timestamp? = null,
+    unfinishedOnly: Boolean = false,
+    dtFinishFrom: Timestamp? = null,
+    dtFinishTo: Timestamp? = null,
+    partOfMatch: MatchFilter = MatchFilter.BOTH,
+    pendingChanges: Boolean? = null
+) =
+    ReportParametersGame(
+        gameType,
+        gameParams,
+        dtStartFrom,
+        dtStartTo,
+        unfinishedOnly,
+        dtFinishFrom,
+        dtFinishTo,
+        partOfMatch,
+        pendingChanges
+    )
+
+fun makeReportParametersPlayers(
+    includedPlayers: Map<PlayerEntity, IncludedPlayerParameters> = emptyMap(),
+    excludedPlayers: List<PlayerEntity> = emptyList(),
+    excludeOnlyAi: Boolean = false
+) = ReportParametersPlayers(includedPlayers, excludedPlayers, excludeOnlyAi)
+
+fun makeIncludedPlayerParameters(
+    finishingPositions: List<Int> = emptyList(),
+    finalScoreComparator: String = "",
+    finalScore: Int? = null
+) = IncludedPlayerParameters(finishingPositions, finalScoreComparator, finalScore)

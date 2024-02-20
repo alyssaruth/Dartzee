@@ -8,7 +8,9 @@ import dartzee.core.bean.isSelectedAndEnabled
 import dartzee.core.util.addActionListenerToAllChildren
 import dartzee.core.util.createButtonGroup
 import dartzee.core.util.enableChildren
-import dartzee.reporting.ReportParameters
+import dartzee.reporting.MatchFilter
+import dartzee.reporting.ReportParametersGame
+import dartzee.reporting.grabIfSelected
 import dartzee.utils.getFilterPanel
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
@@ -112,35 +114,36 @@ class ReportingGameTab : JPanel(), ActionListener {
 
     fun valid() = dateFilterPanelStart.valid() && dateFilterPanelFinish.valid()
 
-    fun populateReportParameters(rp: ReportParameters) {
-        if (checkBoxGameType.isSelected) {
-            rp.gameType = comboBox.getGameType()
-        }
-
-        if (cbType.isSelected) {
-            rp.gameParams = panelGameParams.getGameParams()
-        }
-
-        if (cbPartOfMatch.isSelected) {
-            rp.setEnforceMatch(rdbtnYes.isSelected)
-        }
-
-        if (cbSyncStatus.isSelected) {
-            rp.pendingChanges = rdbtnPendingChanges.isSelected
-        }
-
-        if (cbStartDate.isSelected) {
-            rp.dtStartFrom = dateFilterPanelStart.getSqlDtFrom()
-            rp.dtStartTo = dateFilterPanelStart.getSqlDtTo()
-        }
-
-        if (cbFinishDate.isSelected) {
-            if (rdbtnUnfinished.isSelected) {
-                rp.unfinishedOnly = true
-            } else {
-                rp.dtFinishFrom = dateFilterPanelFinish.getSqlDtFrom()
-                rp.dtFinishTo = dateFilterPanelFinish.getSqlDtTo()
+    fun generateReportParameters(): ReportParametersGame {
+        val gameType = grabIfSelected(checkBoxGameType) { comboBox.getGameType() }
+        val gameParams = grabIfSelected(cbType) { panelGameParams.getGameParams() }.orEmpty()
+        val dtStartFrom = grabIfSelected(cbStartDate) { dateFilterPanelStart.getSqlDtFrom() }
+        val dtStartTo = grabIfSelected(cbStartDate) { dateFilterPanelStart.getSqlDtTo() }
+        val unfinishedOnly = grabIfSelected(cbFinishDate) { rdbtnUnfinished.isSelected } ?: false
+        val dtFinishFrom =
+            grabIfSelected(cbFinishDate) {
+                if (rdbtnUnfinished.isSelected) null else dateFilterPanelFinish.getSqlDtFrom()
             }
-        }
+        val dtFinishTo =
+            grabIfSelected(cbFinishDate) {
+                if (rdbtnUnfinished.isSelected) null else dateFilterPanelFinish.getSqlDtTo()
+            }
+        val enforceMatch = grabIfSelected(cbPartOfMatch) { enforceMatch() } ?: MatchFilter.BOTH
+        val pendingChanges = grabIfSelected(cbSyncStatus) { rdbtnPendingChanges.isSelected }
+
+        return ReportParametersGame(
+            gameType,
+            gameParams,
+            dtStartFrom,
+            dtStartTo,
+            unfinishedOnly,
+            dtFinishFrom,
+            dtFinishTo,
+            enforceMatch,
+            pendingChanges
+        )
     }
+
+    private fun enforceMatch() =
+        if (rdbtnYes.isSelected) MatchFilter.MATCHES_ONLY else MatchFilter.GAMES_ONLY
 }
