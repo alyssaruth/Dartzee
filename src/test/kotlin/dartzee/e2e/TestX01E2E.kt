@@ -2,10 +2,13 @@ package dartzee.e2e
 
 import dartzee.achievements.AchievementType
 import dartzee.ai.AimDart
+import dartzee.game.FinishType
 import dartzee.game.GameType
+import dartzee.game.X01Config
 import dartzee.game.prepareParticipants
 import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.AchievementSummary
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.beastDartsModel
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
@@ -33,7 +36,7 @@ class TestX01E2E : AbstractRegistryTest() {
     @Test
     @Tag("e2e")
     fun `E2E - 501 - 9 dart game`() {
-        val game = insertGame(gameType = GameType.X01, gameParams = "501")
+        val game = insertGame(gameType = GameType.X01, gameParams = DEFAULT_X01_CONFIG.toJson())
 
         val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
         val player = insertPlayer(model = aiModel)
@@ -70,7 +73,11 @@ class TestX01E2E : AbstractRegistryTest() {
     @Test
     @Tag("e2e")
     fun `E2E - 301 - bust and mercy rule`() {
-        val game = insertGame(gameType = GameType.X01, gameParams = "301")
+        val game =
+            insertGame(
+                gameType = GameType.X01,
+                gameParams = X01Config(301, FinishType.Doubles).toJson()
+            )
 
         val (gamePanel, listener) = setUpGamePanel(game)
 
@@ -109,7 +116,7 @@ class TestX01E2E : AbstractRegistryTest() {
     @Test
     @Tag("e2e")
     fun `E2E - 501 - Team of 2`() {
-        val game = insertGame(gameType = GameType.X01, gameParams = "501")
+        val game = insertGame(gameType = GameType.X01, gameParams = DEFAULT_X01_CONFIG.toJson())
         val (gamePanel, listener) = setUpGamePanel(game)
 
         val p1Rounds =
