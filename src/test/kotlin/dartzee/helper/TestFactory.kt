@@ -197,7 +197,7 @@ fun makeGolfPlayerState(
 
 fun makeGameWrapper(
     localId: Long = LocalIdGenerator(mainDatabase).generateLocalId(EntityName.Game),
-    gameParams: String = "501",
+    gameParams: String = DEFAULT_X01_CONFIG.toJson(),
     dtStart: Timestamp = Timestamp(1000),
     dtFinish: Timestamp = DateStatics.END_OF_TIME,
     finalScore: Int = -1,

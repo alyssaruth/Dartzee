@@ -6,6 +6,7 @@ import dartzee.core.bean.NumberField
 import dartzee.core.bean.selectedItemTyped
 import dartzee.core.obj.HashMapCount
 import dartzee.core.util.TableUtil.DefaultModel
+import dartzee.game.GAME_PARAMS_NOT_APPLICABLE
 import dartzee.screen.stats.median
 import dartzee.stats.GameWrapper
 import java.awt.BorderLayout
@@ -315,7 +316,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
 
         // Handle 0 games
         if (startingScores.isEmpty()) {
-            startingScores.add("N/A")
+            startingScores.add(GAME_PARAMS_NOT_APPLICABLE)
         }
 
         val comboOptions =

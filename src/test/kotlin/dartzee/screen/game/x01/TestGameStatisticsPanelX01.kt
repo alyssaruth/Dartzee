@@ -1,5 +1,7 @@
 package dartzee.screen.game.x01
 
+import dartzee.game.FinishType
+import dartzee.game.X01Config
 import dartzee.game.state.X01PlayerState
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeX01PlayerState
@@ -14,17 +16,20 @@ import org.junit.jupiter.api.Test
 
 class TestGameStatisticsPanelX01 :
     AbstractGameStatisticsPanelTest<X01PlayerState, GameStatisticsPanelX01>() {
-    override fun factoryStatsPanel() = GameStatisticsPanelX01("501")
+    override fun factoryStatsPanel() = factoryStatsPanel(501)
+
+    private fun factoryStatsPanel(startingScore: Int) =
+        GameStatisticsPanelX01(X01Config(startingScore, FinishType.Doubles).toJson())
 
     override fun makePlayerState() =
         makeX01PlayerState(completedRound = listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)))
 
     @Test
     fun `Should set the maximum setupThreshold to be 1 less than the starting score`() {
-        val panel = GameStatisticsPanelX01("501")
+        val panel = factoryStatsPanel(501)
         panel.nfSetupThreshold.getMaximum() shouldBe 500
 
-        val panelTwo = GameStatisticsPanelX01("301")
+        val panelTwo = factoryStatsPanel(301)
         panelTwo.nfSetupThreshold.getMaximum() shouldBe 300
     }
 
@@ -128,7 +133,7 @@ class TestGameStatisticsPanelX01 :
 
         val state =
             makeX01PlayerState(player = insertPlayer(name = "Alice"), completedRound = roundOne)
-        val statsPanel = GameStatisticsPanelX01("501")
+        val statsPanel = factoryStatsPanel(501)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(hashMapOf("20 - 39" to 1))
 
@@ -183,7 +188,7 @@ class TestGameStatisticsPanelX01 :
 
         val state =
             makeX01PlayerState(player = insertPlayer(name = "Alice"), completedRound = roundOne)
-        val statsPanel = GameStatisticsPanelX01("701")
+        val statsPanel = factoryStatsPanel(701)
         statsPanel.showStats(listOf(state))
         statsPanel.shouldHaveBreakdownState(hashMapOf("180" to 1))
 
@@ -213,7 +218,7 @@ class TestGameStatisticsPanelX01 :
 
         val state =
             makeX01PlayerState(player = insertPlayer(name = "Alice"), completedRound = roundOne)
-        val statsPanel = GameStatisticsPanelX01("501")
+        val statsPanel = factoryStatsPanel(501)
         statsPanel.showStats(listOf(state))
 
         // [20, 20, 5]
