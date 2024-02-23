@@ -2,10 +2,13 @@ package dartzee.screen.ai
 
 import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.ai.AimDart
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.maps.shouldContain
 import io.kotest.matchers.shouldBe
 import net.miginfocom.swing.MigLayout
@@ -31,11 +34,14 @@ class TestNewSetupRuleDialog : AbstractTest() {
     @Test
     fun `Should not allow the score field to be left blank`() {
         val dlg = NewSetupRuleDialog(mutableMapOf())
+        dlg.isModal = false
+        dlg.isVisible = true
+        dlg.clickOk(async = true)
 
-        dlg.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
+        getErrorDialog().getDialogMessage() shouldBe
             "You must enter a score for this rule to apply to."
-        )
+
+        dlg.shouldBeVisible()
     }
 
     @Test
@@ -46,8 +52,8 @@ class TestNewSetupRuleDialog : AbstractTest() {
         dlg.spinner.value = 25
         dlg.rdbtnTreble.doClick()
 
-        dlg.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("Treble 25 is not a valid dart!")
+        dlg.clickOk(async = true)
+        getErrorDialog().getDialogMessage() shouldBe "Treble 25 is not a valid dart!"
     }
 
     @Test
@@ -59,8 +65,8 @@ class TestNewSetupRuleDialog : AbstractTest() {
         dlg.spinner.value = 20
         dlg.rdbtnTreble.doClick()
 
-        dlg.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("This target would bust the player")
+        dlg.clickOk(async = true)
+        getErrorDialog().getDialogMessage() shouldBe "This target would bust the player"
     }
 
     @Test
@@ -71,10 +77,9 @@ class TestNewSetupRuleDialog : AbstractTest() {
         dlg.spinner.value = 20
         dlg.rdbtnSingle.doClick()
 
-        dlg.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
+        dlg.clickOk(async = true)
+        getErrorDialog().getDialogMessage() shouldBe
             "The selected dart is already the default for this starting score."
-        )
     }
 
     @Test
@@ -87,7 +92,7 @@ class TestNewSetupRuleDialog : AbstractTest() {
         dlg.rdbtnDouble.doClick()
 
         dlg.clickOk()
-        dialogFactory.errorsShown.shouldBeEmpty()
+        dlg.shouldNotBeVisible()
         hm.shouldContain(50, AimDart(25, 2))
         hm.size shouldBe 1
     }
@@ -102,7 +107,6 @@ class TestNewSetupRuleDialog : AbstractTest() {
         dlg.rdbtnDouble.doClick()
 
         dlg.clickCancel()
-        dialogFactory.errorsShown.shouldBeEmpty()
         hm.size shouldBe 0
     }
 

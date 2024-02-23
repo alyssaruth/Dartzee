@@ -124,6 +124,20 @@ class TestX01PlayerState : AbstractTest() {
     }
 
     @Test
+    fun `should compute the remaining score correctly when finishType is Any`() {
+        val state =
+            X01PlayerState(X01Config(101, FinishType.Any), SingleParticipant(insertParticipant()))
+
+        state.dartThrown(makeDart(20, 3))
+        state.dartThrown(makeDart(20, 1))
+        state.dartThrown(makeDart(20, 1))
+        state.getRemainingScore() shouldBe 1
+
+        state.commitRound()
+        state.getRemainingScore() shouldBe 1
+    }
+
+    @Test
     fun `Should return a bad luck count of 0 if no darts thrown`() {
         val state = makeX01PlayerStateWithRounds(completedRounds = emptyList())
         state.getBadLuckCount() shouldBe 0
@@ -237,20 +251,34 @@ class TestX01PlayerState : AbstractTest() {
         val bustRound = listOf(Dart(20, 3), Dart(20, 3))
         val finishedRound = listOf(Dart(17, 3), Dart(25, 2))
         val incompleteRound = listOf(Dart(20, 1), Dart(20, 1))
+        val leftOneRemaining = listOf(Dart(20, 3), Dart(20, 2))
 
         stateWithCurrentRound(threeDartRound).isCurrentRoundComplete() shouldBe true
         stateWithCurrentRound(bustRound).isCurrentRoundComplete() shouldBe true
         stateWithCurrentRound(finishedRound).isCurrentRoundComplete() shouldBe true
+        stateWithCurrentRound(leftOneRemaining).isCurrentRoundComplete() shouldBe true
         stateWithCurrentRound(incompleteRound).isCurrentRoundComplete() shouldBe false
         stateWithCurrentRound(emptyList()).isCurrentRoundComplete() shouldBe false
+
+        val finishedOnTreble = listOf(Dart(20, 3), Dart(20, 1), Dart(7, 3))
+        stateWithCurrentRound(bustRound, FinishType.Any).isCurrentRoundComplete() shouldBe true
+        stateWithCurrentRound(finishedRound, FinishType.Any).isCurrentRoundComplete() shouldBe true
+        stateWithCurrentRound(finishedOnTreble, FinishType.Any).isCurrentRoundComplete() shouldBe
+            true
+
+        stateWithCurrentRound(leftOneRemaining, FinishType.Any).isCurrentRoundComplete() shouldBe
+            false
+        stateWithCurrentRound(incompleteRound, FinishType.Any).isCurrentRoundComplete() shouldBe
+            false
+        stateWithCurrentRound(emptyList(), FinishType.Any).isCurrentRoundComplete() shouldBe false
     }
 
-    private fun stateWithCurrentRound(darts: List<Dart>): X01PlayerState {
+    private fun stateWithCurrentRound(
+        darts: List<Dart>,
+        finishType: FinishType = FinishType.Doubles
+    ): X01PlayerState {
         val state =
-            X01PlayerState(
-                X01Config(101, FinishType.Doubles),
-                SingleParticipant(insertParticipant())
-            )
+            X01PlayerState(X01Config(101, finishType), SingleParticipant(insertParticipant()))
         darts.forEach { state.dartThrown(it) }
         return state
     }

@@ -92,22 +92,22 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : 
         }
     }
 
-    fun valid(): Boolean {
+    private fun valid(): Boolean {
         val score = nfScore.getNumber()
         if (score == -1) {
-            DialogUtil.showErrorOLD("You must enter a score for this rule to apply to.")
+            DialogUtil.showError("You must enter a score for this rule to apply to.")
             return false
         }
 
         val drt = getDartFromSelections()
         if (drt.score == 25 && drt.multiplier == 3) {
-            DialogUtil.showErrorOLD("Treble 25 is not a valid dart!")
+            DialogUtil.showError("Treble 25 is not a valid dart!")
             return false
         }
 
         val actualDart = Dart(drt.score, drt.multiplier).apply { startingScore = score }
         if (isBust(actualDart, FinishType.Doubles)) {
-            DialogUtil.showErrorOLD("This target would bust the player")
+            DialogUtil.showError("This target would bust the player")
             return false
         }
 
@@ -116,7 +116,7 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : 
         if (score <= 60) {
             val defaultDart = getDefaultDartToAimAt(score)
             if (defaultDart == drt) {
-                DialogUtil.showErrorOLD(
+                DialogUtil.showError(
                     "The selected dart is already the default for this starting score."
                 )
                 return false
