@@ -31,7 +31,7 @@ class TestX01Util : AbstractTest() {
 
     @Test
     fun `isBust should return correct values for finishType Any`() {
-        isBust(makeDart(3, 1, startingScore = 4), FinishType.Any) shouldBe true
+        isBust(makeDart(3, 1, startingScore = 4), FinishType.Any) shouldBe false
         isBust(makeDart(3, 1, startingScore = 3), FinishType.Any) shouldBe false
         isBust(makeDart(20, 3, startingScore = 60), FinishType.Any) shouldBe false
 
