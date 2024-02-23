@@ -10,6 +10,7 @@ import dartzee.core.util.playDodgySound
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.X01FinishEntity
+import dartzee.game.FinishType
 import dartzee.game.X01Config
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
@@ -122,13 +123,6 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
         val finalRound = getCurrentPlayerState().getLastRound()
 
         val sum = sumScore(finalRound)
-        AchievementEntity.updateAchievement(
-            AchievementType.X01_BEST_FINISH,
-            playerId,
-            getGameId(),
-            sum
-        )
-
         if (finalRound.count { it.multiplier > 1 } > 1) {
             val method = finalRound.joinToString()
             AchievementEntity.insertAchievement(
@@ -139,6 +133,17 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
                 sum
             )
         }
+
+        if (!finalRound.last().isDouble()) {
+            return
+        }
+
+        AchievementEntity.updateAchievement(
+            AchievementType.X01_BEST_FINISH,
+            playerId,
+            getGameId(),
+            sum
+        )
 
         // Insert into the X01Finishes table for the leaderboard
         X01FinishEntity.factoryAndSave(playerId, getGameId(), sum)
@@ -152,7 +157,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
             ""
         )
 
-        if (sum in listOf(3, 5, 7, 9)) {
+        if (sum in listOf(3, 5, 7, 9) && config.finishType == FinishType.Doubles) {
             AchievementEntity.insertAchievement(
                 AchievementType.X01_NO_MERCY,
                 playerId,
