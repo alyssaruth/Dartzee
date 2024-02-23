@@ -10,6 +10,7 @@ import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.AchievementSummary
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
@@ -101,9 +102,9 @@ class TestDartsGamePanel : AbstractTest() {
             insertGame(gameType = GameType.X01, gameParams = config.toJson()),
             1
         ) {
-        override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(501, pt)
+        override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(DEFAULT_X01_CONFIG, pt)
 
-        override fun computeAiDart(model: DartsAiModel): ComputedPoint? {
+        override fun computeAiDart(model: DartsAiModel): ComputedPoint {
             val currentScore = getCurrentPlayerState().getRemainingScore()
             return model.throwX01Dart(currentScore)
         }

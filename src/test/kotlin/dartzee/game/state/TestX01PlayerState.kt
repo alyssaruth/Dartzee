@@ -8,6 +8,8 @@ import dartzee.drtMissTwenty
 import dartzee.drtOuterOne
 import dartzee.drtOuterTen
 import dartzee.drtTrebleTwenty
+import dartzee.game.FinishType
+import dartzee.game.X01Config
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertTeam
@@ -99,7 +101,11 @@ class TestX01PlayerState : AbstractTest() {
 
     @Test
     fun `Should take into account current round when computing the remaining score`() {
-        val state = X01PlayerState(301, SingleParticipant(insertParticipant()))
+        val state =
+            X01PlayerState(
+                X01Config(301, FinishType.Doubles),
+                SingleParticipant(insertParticipant())
+            )
         state.dartThrown(makeDart(20, 3))
         state.dartThrown(makeDart(20, 3))
         state.dartThrown(makeDart(20, 3))
@@ -157,7 +163,11 @@ class TestX01PlayerState : AbstractTest() {
         val team = insertTeam()
         val pt1 = insertParticipant(teamId = team.rowId)
         val pt2 = insertParticipant(teamId = team.rowId)
-        val state = X01PlayerState(101, TeamParticipant(team, listOf(pt1, pt2)))
+        val state =
+            X01PlayerState(
+                X01Config(101, FinishType.Doubles),
+                TeamParticipant(team, listOf(pt1, pt2))
+            )
 
         val roundOne = listOf(drtTrebleTwenty(), drtOuterOne(), drtMissTwenty()) // Get down to 40
 
@@ -202,7 +212,11 @@ class TestX01PlayerState : AbstractTest() {
 
     @Test
     fun `Should set startingScore on darts as they are added`() {
-        val state = X01PlayerState(301, SingleParticipant(insertParticipant()))
+        val state =
+            X01PlayerState(
+                X01Config(301, FinishType.Doubles),
+                SingleParticipant(insertParticipant())
+            )
 
         val dartOne = makeDart(20, 1)
         val dartTwo = makeDart(25, 2)
@@ -232,7 +246,11 @@ class TestX01PlayerState : AbstractTest() {
     }
 
     private fun stateWithCurrentRound(darts: List<Dart>): X01PlayerState {
-        val state = X01PlayerState(101, SingleParticipant(insertParticipant()))
+        val state =
+            X01PlayerState(
+                X01Config(101, FinishType.Doubles),
+                SingleParticipant(insertParticipant())
+            )
         darts.forEach { state.dartThrown(it) }
         return state
     }

@@ -47,7 +47,7 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) :
         confirmRound()
 
         // If we've bust, then reset the current score back
-        if (isBust(dartsThrown.last())) {
+        if (isBust(dartsThrown.last(), FinishType.Doubles)) {
             currentScore = startingScore
         }
 

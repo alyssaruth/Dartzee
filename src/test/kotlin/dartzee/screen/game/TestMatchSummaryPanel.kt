@@ -4,6 +4,7 @@ import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
 import dartzee.getRows
 import dartzee.helper.AbstractTest
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.insertPlayer
 import dartzee.`object`.Dart
 import dartzee.screen.game.x01.GameStatisticsPanelX01
@@ -51,7 +52,7 @@ class TestMatchSummaryPanel : AbstractTest() {
         localId: Long,
         participant: IWrappedParticipant
     ) {
-        addParticipant(localId, X01PlayerState(501, participant))
+        addParticipant(localId, X01PlayerState(DEFAULT_X01_CONFIG, participant))
     }
 
     @Test

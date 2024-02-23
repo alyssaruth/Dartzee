@@ -1,5 +1,6 @@
 package dartzee.game.state
 
+import dartzee.game.X01Config
 import dartzee.`object`.Dart
 import dartzee.utils.isBust
 import dartzee.utils.isFinishRound
@@ -7,7 +8,7 @@ import dartzee.utils.isNearMissDouble
 import dartzee.utils.sumScore
 
 data class X01PlayerState(
-    private val startingScore: Int,
+    private val config: X01Config,
     override val wrappedParticipant: IWrappedParticipant,
     override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
     override val currentRound: MutableList<Dart> = mutableListOf(),
@@ -33,7 +34,7 @@ data class X01PlayerState(
             roundSubSet
                 .filterNot { round ->
                     val lastDart = round.lastOrNull()
-                    lastDart?.let(::isBust) ?: false
+                    lastDart?.let { isBust(it, config.finishType) } ?: false
                 }
                 .toMutableList()
 
@@ -41,7 +42,7 @@ data class X01PlayerState(
             nonBustRounds.add(currentRound.toList())
         }
 
-        return startingScore - nonBustRounds.sumOf { sumScore(it) }
+        return config.target - nonBustRounds.sumOf { sumScore(it) }
     }
 
     fun getRemainingScore() = getRemainingScoreForRound(currentRoundNumber())
@@ -53,7 +54,10 @@ data class X01PlayerState(
 
     fun getLastRound() = completedRounds.last()
 
-    fun isCurrentRoundComplete() = currentRound.size == 3 || getRemainingScore() <= 1
+    fun isCurrentRoundComplete() =
+        currentRound.size == 3 ||
+            getRemainingScore() <= 0 ||
+            currentRound.lastOrNull()?.let { isBust(it, config.finishType) } ?: false
 
     override fun dartThrown(dart: Dart) {
         dart.startingScore = getRemainingScore()

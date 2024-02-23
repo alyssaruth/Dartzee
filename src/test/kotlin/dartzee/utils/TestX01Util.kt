@@ -1,5 +1,6 @@
 package dartzee.utils
 
+import dartzee.game.FinishType
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDart
 import dartzee.helper.makeDartsModel
@@ -15,29 +16,31 @@ import org.junit.jupiter.api.Test
 
 class TestX01Util : AbstractTest() {
     @Test
-    fun `isBust should return the right values when just passed a dart`() {
-        isBust(makeDart(3, 1, startingScore = 5)) shouldBe false
-        isBust(makeDart(3, 1, startingScore = 4)) shouldBe true
-        isBust(makeDart(3, 1, startingScore = 3)) shouldBe true
+    fun `isBust should return the right values for finishType Doubles`() {
+        isBust(makeDart(3, 1, startingScore = 4), FinishType.Doubles) shouldBe true
+        isBust(makeDart(3, 1, startingScore = 3), FinishType.Doubles) shouldBe true
+        isBust(makeDart(20, 3, startingScore = 60), FinishType.Doubles) shouldBe true
 
-        isBust(makeDart(2, 2, startingScore = 5)) shouldBe true
-        isBust(makeDart(2, 2, startingScore = 4)) shouldBe false
-        isBust(makeDart(2, 2, startingScore = 3)) shouldBe true
+        isBust(makeDart(2, 2, startingScore = 5), FinishType.Doubles) shouldBe true
+        isBust(makeDart(2, 2, startingScore = 4), FinishType.Doubles) shouldBe false
+        isBust(makeDart(2, 2, startingScore = 3), FinishType.Doubles) shouldBe true
+
+        isBust(makeDart(25, 2, startingScore = 50), FinishType.Doubles) shouldBe false
+        isBust(makeDart(3, 1, startingScore = 5), FinishType.Doubles) shouldBe false
     }
 
     @Test
-    fun testIsBust() {
-        isBust(5, Dart(3, 2)).shouldBeTrue()
-        isBust(10, Dart(10, 1)).shouldBeTrue()
-        isBust(60, Dart(20, 3)).shouldBeTrue()
+    fun `isBust should return correct values for finishType Any`() {
+        isBust(makeDart(3, 1, startingScore = 4), FinishType.Any) shouldBe true
+        isBust(makeDart(3, 1, startingScore = 3), FinishType.Any) shouldBe false
+        isBust(makeDart(20, 3, startingScore = 60), FinishType.Any) shouldBe false
 
-        isBust(41, Dart(20, 2)).shouldBeTrue()
+        isBust(makeDart(2, 2, startingScore = 5), FinishType.Any) shouldBe false
+        isBust(makeDart(2, 2, startingScore = 4), FinishType.Any) shouldBe false
+        isBust(makeDart(2, 2, startingScore = 3), FinishType.Any) shouldBe true
 
-        isBust(40, Dart(20, 2)).shouldBeFalse()
-        isBust(50, Dart(25, 2)).shouldBeFalse()
-
-        isBust(60, Dart(20, 2)).shouldBeFalse()
-        isBust(40, Dart(20, 1)).shouldBeFalse()
+        isBust(makeDart(25, 2, startingScore = 50), FinishType.Any) shouldBe false
+        isBust(makeDart(3, 1, startingScore = 5), FinishType.Any) shouldBe false
     }
 
     @Test

@@ -30,12 +30,12 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
     GamePanelPausable<DartsScorerX01, X01PlayerState>(parent, game, totalPlayers) {
     private val config = X01Config.fromJson(game.gameParams)
 
-    override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(config.target, pt)
+    override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(config, pt)
 
     override fun saveDartsAndProceed() {
         // Finalise the scorer
         val lastDart = getDartsThrown().last()
-        val bust = isBust(lastDart)
+        val bust = isBust(lastDart, config.finishType)
 
         val count = getCurrentPlayerState().getBadLuckCount()
         if (count > 0) {

@@ -8,8 +8,10 @@ import dartzee.db.LocalIdGenerator
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
+import dartzee.game.FinishType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
+import dartzee.game.X01Config
 import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.GolfPlayerState
 import dartzee.game.state.SingleParticipant
@@ -100,7 +102,7 @@ fun makeX01Rounds(startingScore: Int = 501, vararg darts: List<Dart>): List<List
         makeX01Round(currentScore, ix + 1, *dartRound.toTypedArray())
 
         val lastDartForRound = dartRound.last()
-        if (!isBust(lastDartForRound)) {
+        if (!isBust(lastDartForRound, FinishType.Doubles)) {
             currentScore = lastDartForRound.startingScore - lastDartForRound.getTotal()
         }
     }
@@ -162,7 +164,11 @@ fun makeX01PlayerState(
     participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
     completedRound: List<Dart> = listOf()
 ): X01PlayerState =
-    X01PlayerState(startingScore, SingleParticipant(participant), mutableListOf(completedRound))
+    X01PlayerState(
+        X01Config(startingScore, FinishType.Doubles),
+        SingleParticipant(participant),
+        mutableListOf(completedRound)
+    )
 
 fun makeX01PlayerStateWithRounds(
     startingScore: Int = 501,
@@ -173,7 +179,7 @@ fun makeX01PlayerStateWithRounds(
 ): X01PlayerState {
     completedRounds.flatten().forEach { it.participantId = participant.rowId }
     return X01PlayerState(
-        startingScore,
+        X01Config(startingScore, FinishType.Doubles),
         SingleParticipant(participant),
         completedRounds.toMutableList(),
         mutableListOf(),

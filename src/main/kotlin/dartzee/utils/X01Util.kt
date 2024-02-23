@@ -1,15 +1,23 @@
 package dartzee.utils
 
 import dartzee.ai.DartsAiModel
+import dartzee.game.FinishType
 import dartzee.`object`.Dart
 
-fun isBust(dart: Dart) = isBust(dart.startingScore, dart)
+fun isBust(dart: Dart, finishType: FinishType) = isBust(dart.startingScore, dart, finishType)
 
-fun isBust(score: Int, lastDart: Dart): Boolean {
+private fun isBust(score: Int, lastDart: Dart, finishType: FinishType): Boolean {
     val scoreRemaining = score - lastDart.getTotal()
-    return (scoreRemaining < 0 ||
-        scoreRemaining == 1 ||
-        scoreRemaining == 0 && !lastDart.isDouble())
+
+    if (scoreRemaining < 0) {
+        return true
+    }
+
+    if (finishType == FinishType.Any) {
+        return false
+    }
+
+    return scoreRemaining == 1 || (scoreRemaining == 0 && !lastDart.isDouble())
 }
 
 /**

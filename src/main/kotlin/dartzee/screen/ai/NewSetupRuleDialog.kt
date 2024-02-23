@@ -7,6 +7,7 @@ import dartzee.core.bean.NumberField
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
+import dartzee.game.FinishType
 import dartzee.`object`.Dart
 import dartzee.screen.ScreenCache
 import dartzee.utils.isBust
@@ -104,7 +105,8 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : 
             return false
         }
 
-        if (isBust(score, Dart(drt.score, drt.multiplier))) {
+        val actualDart = Dart(drt.score, drt.multiplier).apply { startingScore = score }
+        if (isBust(actualDart, FinishType.Doubles)) {
             DialogUtil.showErrorOLD("This target would bust the player")
             return false
         }
