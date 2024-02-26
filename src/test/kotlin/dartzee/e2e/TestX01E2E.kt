@@ -1,5 +1,6 @@
 package dartzee.e2e
 
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.AchievementType
 import dartzee.ai.AimDart
 import dartzee.game.FinishType
@@ -17,20 +18,25 @@ import dartzee.helper.predictableDartsModel
 import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.helper.retrieveTeam
 import dartzee.`object`.Dart
+import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import dartzee.zipDartRounds
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.ints.shouldBeGreaterThan
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
 class TestX01E2E : AbstractRegistryTest() {
-    override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
+    override fun getPreferencesAffected() =
+        listOf(PREFERENCES_INT_AI_SPEED, PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
 
     @BeforeEach
     fun beforeEach() {
         PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
+        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, true)
     }
 
     @Test
@@ -103,45 +109,68 @@ class TestX01E2E : AbstractRegistryTest() {
 
     @Test
     @Tag("e2e")
-    fun `E2E - 301 - relaxed`() {
+    fun `E2E - 101 - relaxed`() {
         val game =
             insertGame(
                 gameType = GameType.X01,
-                gameParams = X01Config(301, FinishType.Any).toJson()
+                gameParams = X01Config(101, FinishType.Any).toJson()
             )
 
-        val (gamePanel, listener) = setUpGamePanel(game)
+        val (gamePanel) = setUpGamePanel(game, 2)
 
-        val expectedRounds =
+        val p1Rounds =
             listOf(
-                listOf(makeDart(20, 3), makeDart(20, 3), makeDart(20, 3)), // 121
-                listOf(makeDart(20, 3), makeDart(20, 2), makeDart(1, 1)), // 20
-                listOf(makeDart(15, 2)), // 20 (bust)
-                listOf(makeDart(10, 1), makeDart(5, 1), makeDart(5, 0)), //  5
-                listOf(makeDart(5, 0), makeDart(5, 0), makeDart(5, 0)), //  5
-                listOf(makeDart(1, 1)), //  4 (mercy)
-                listOf(makeDart(2, 2)) //  0
+                listOf(makeDart(20, 3), makeDart(20, 1), makeDart(20, 1)), // 1
+                listOf(makeDart(20, 1)), // 1 (bust)
+                listOf(makeDart(1, 0), makeDart(1, 0), makeDart(1, 1)), // 0
             )
 
-        val aimDarts = expectedRounds.flatten().map { it.toAimDart() }
-        val aiModel = predictableDartsModel(aimDarts, mercyThreshold = 7)
+        val p2Rounds =
+            listOf(
+                listOf(makeDart(20, 1), makeDart(5, 1), makeDart(1, 1)), // 75
+                listOf(makeDart(20, 3), makeDart(5, 1), makeDart(20, 2)), // 75 (bust)
+                listOf(makeDart(20, 3), makeDart(5, 1), makeDart(5, 2)) // 0
+            )
 
-        val player = makePlayerWithModel(aiModel)
-        gamePanel.startGame(listOf(player))
+        val p1Model = predictableDartsModel(p1Rounds.flatten().map { it.toAimDart() })
+        val p1 = makePlayerWithModel(p1Model)
+
+        val p2Model = predictableDartsModel(p2Rounds.flatten().map { it.toAimDart() })
+        val p2 = makePlayerWithModel(p2Model, "Jeff")
+
+        val (pt1, pt2) = gamePanel.startGame(listOf(p1, p2))
         awaitGameFinish(game)
+        waitForAssertion { pt2.participant.finalScore shouldBeGreaterThan -1 }
 
-        verifyState(gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 19)
+        pt1.participant.finalScore shouldBe 9
+        pt1.participant.finishingPosition shouldBe 1
+        pt2.participant.finalScore shouldBe 9
+        pt2.participant.finishingPosition shouldBe 2
 
-        retrieveAchievementsForPlayer(player.rowId)
+        retrieveAchievementsForPlayer(p1.rowId)
             .shouldContainExactlyInAnyOrder(
-                AchievementSummary(AchievementType.X01_BEST_FINISH, 4, game.rowId),
-                AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 180, game.rowId),
-                AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 2, game.rowId),
-                AchievementSummary(AchievementType.X01_HIGHEST_BUST, 20, game.rowId),
+                AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 100, game.rowId),
+                AchievementSummary(AchievementType.X01_HIGHEST_BUST, 1, game.rowId),
+                AchievementSummary(AchievementType.X01_GAMES_WON, -1, game.rowId, "9"),
+            )
+
+        retrieveAchievementsForPlayer(p2.rowId)
+            .shouldContainExactlyInAnyOrder(
+                AchievementSummary(AchievementType.X01_HOTEL_INSPECTOR, -1, game.rowId, "20, 5, 1"),
+                AchievementSummary(AchievementType.X01_BEST_FINISH, 75, game.rowId),
+                AchievementSummary(
+                    AchievementType.X01_STYLISH_FINISH,
+                    75,
+                    game.rowId,
+                    "T20, 5, D5"
+                ),
+                AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 75, game.rowId),
+                AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 5, game.rowId),
+                AchievementSummary(AchievementType.X01_HIGHEST_BUST, 75, game.rowId),
                 AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, game.rowId)
             )
 
-        checkAchievementConversions(player.rowId)
+        checkAchievementConversions(p2.rowId)
     }
 
     @Test
