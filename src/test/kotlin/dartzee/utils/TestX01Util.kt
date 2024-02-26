@@ -44,24 +44,26 @@ class TestX01Util : AbstractTest() {
     }
 
     @Test
-    fun testShouldStopForMercyRule() {
+    fun `mercy rule`() {
         var model = makeDartsModel(mercyThreshold = 19)
 
-        shouldStopForMercyRule(model, 19, 16).shouldBeFalse()
-        shouldStopForMercyRule(model, 17, 16).shouldBeTrue()
-        shouldStopForMercyRule(model, 15, 8).shouldBeTrue()
-        shouldStopForMercyRule(model, 16, 8).shouldBeFalse()
-        shouldStopForMercyRule(model, 17, 13).shouldBeFalse()
-        shouldStopForMercyRule(model, 17, 17).shouldBeFalse()
+        shouldStopForMercyRule(model, 19, 16, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 16, FinishType.Doubles).shouldBeTrue()
+        shouldStopForMercyRule(model, 15, 8, FinishType.Doubles).shouldBeTrue()
+        shouldStopForMercyRule(model, 16, 8, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 13, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 17, FinishType.Doubles).shouldBeFalse()
+
+        shouldStopForMercyRule(model, 15, 8, FinishType.Any).shouldBeFalse()
 
         model = makeDartsModel(mercyThreshold = null)
 
-        shouldStopForMercyRule(model, 19, 16).shouldBeFalse()
-        shouldStopForMercyRule(model, 17, 16).shouldBeFalse()
-        shouldStopForMercyRule(model, 15, 8).shouldBeFalse()
-        shouldStopForMercyRule(model, 16, 8).shouldBeFalse()
-        shouldStopForMercyRule(model, 17, 13).shouldBeFalse()
-        shouldStopForMercyRule(model, 17, 17).shouldBeFalse()
+        shouldStopForMercyRule(model, 19, 16, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 16, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 15, 8, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 16, 8, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 13, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 17, FinishType.Doubles).shouldBeFalse()
     }
 
     @Test

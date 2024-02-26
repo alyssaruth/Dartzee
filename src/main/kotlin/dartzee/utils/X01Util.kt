@@ -26,7 +26,16 @@ private fun isBust(score: Int, lastDart: Dart, finishType: FinishType): Boolean 
  * - The starting score was odd and < the threshold (configurable per AI)
  * - The current score is even, meaning we have bailed ourselves out in some way
  */
-fun shouldStopForMercyRule(model: DartsAiModel, startingScore: Int, currentScore: Int): Boolean {
+fun shouldStopForMercyRule(
+    model: DartsAiModel,
+    startingScore: Int,
+    currentScore: Int,
+    finishType: FinishType
+): Boolean {
+    if (finishType == FinishType.Any) {
+        return false
+    }
+
     val mercyThreshold = model.mercyThreshold ?: return false
     return startingScore < mercyThreshold && startingScore % 2 != 0 && currentScore % 2 == 0
 }

@@ -65,7 +65,7 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) :
         if (
             currentScore <= 1 ||
                 dartsThrown.size == 3 ||
-                shouldStopForMercyRule(model, startingScore, currentScore)
+                shouldStopForMercyRule(model, startingScore, currentScore, config.finishType)
         ) {
             finishedRound()
         } else {

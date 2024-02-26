@@ -183,7 +183,9 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
         val startOfRoundScore =
             getCurrentPlayerState().getRemainingScoreForRound(currentRoundNumber - 1)
         val currentScore = getCurrentPlayerState().getRemainingScore()
-        return if (shouldStopForMercyRule(model, startOfRoundScore, currentScore)) {
+        return if (
+            shouldStopForMercyRule(model, startOfRoundScore, currentScore, config.finishType)
+        ) {
             stopThrowing()
             null
         } else {

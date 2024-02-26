@@ -103,6 +103,49 @@ class TestX01E2E : AbstractRegistryTest() {
 
     @Test
     @Tag("e2e")
+    fun `E2E - 301 - relaxed`() {
+        val game =
+            insertGame(
+                gameType = GameType.X01,
+                gameParams = X01Config(301, FinishType.Any).toJson()
+            )
+
+        val (gamePanel, listener) = setUpGamePanel(game)
+
+        val expectedRounds =
+            listOf(
+                listOf(makeDart(20, 3), makeDart(20, 3), makeDart(20, 3)), // 121
+                listOf(makeDart(20, 3), makeDart(20, 2), makeDart(1, 1)), // 20
+                listOf(makeDart(15, 2)), // 20 (bust)
+                listOf(makeDart(10, 1), makeDart(5, 1), makeDart(5, 0)), //  5
+                listOf(makeDart(5, 0), makeDart(5, 0), makeDart(5, 0)), //  5
+                listOf(makeDart(1, 1)), //  4 (mercy)
+                listOf(makeDart(2, 2)) //  0
+            )
+
+        val aimDarts = expectedRounds.flatten().map { it.toAimDart() }
+        val aiModel = predictableDartsModel(aimDarts, mercyThreshold = 7)
+
+        val player = makePlayerWithModel(aiModel)
+        gamePanel.startGame(listOf(player))
+        awaitGameFinish(game)
+
+        verifyState(gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 19)
+
+        retrieveAchievementsForPlayer(player.rowId)
+            .shouldContainExactlyInAnyOrder(
+                AchievementSummary(AchievementType.X01_BEST_FINISH, 4, game.rowId),
+                AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 180, game.rowId),
+                AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 2, game.rowId),
+                AchievementSummary(AchievementType.X01_HIGHEST_BUST, 20, game.rowId),
+                AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, game.rowId)
+            )
+
+        checkAchievementConversions(player.rowId)
+    }
+
+    @Test
+    @Tag("e2e")
     fun `E2E - 301 - bust and mercy rule`() {
         val game =
             insertGame(
