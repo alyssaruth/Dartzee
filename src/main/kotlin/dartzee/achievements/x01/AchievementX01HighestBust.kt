@@ -24,7 +24,7 @@ class AchievementX01HighestBust : AbstractAchievement() {
 
     override fun populateForConversion(playerIds: List<String>, database: Database) {
         val whereSql =
-            "RemainingScore < 0 OR RemainingSCore = 1 OR (RemainingScore = 0 AND LastDartMultiplier <> 2)"
+            "RemainingScore < 0 OR (GameParams LIKE '%Doubles%' AND (RemainingScore = 1 OR (RemainingScore = 0 AND LastDartMultiplier <> 2)))"
 
         unlockThreeDartAchievement(playerIds, whereSql, "StartingScore", achievementType, database)
     }

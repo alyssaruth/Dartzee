@@ -4,7 +4,11 @@ import dartzee.achievements.AbstractAchievementTest
 import dartzee.achievements.AchievementType
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
+import dartzee.game.FinishType
+import dartzee.game.GameType
+import dartzee.game.X01Config
 import dartzee.helper.insertDart
+import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.retrieveAchievement
@@ -110,6 +114,39 @@ class TestAchievementX01HighestBust : AbstractAchievementTest<AchievementX01High
 
         val a = retrieveAchievement()
         a.achievementCounter shouldBe 21
+    }
+
+    @Test
+    fun `Should ignore exact finishes in relaxed mode`() {
+        val g =
+            insertGame(
+                gameType = GameType.X01,
+                gameParams = X01Config(501, FinishType.Any).toJson()
+            )
+
+        val pt = insertParticipant(playerId = insertPlayer().rowId, gameId = g.rowId)
+        insertDart(pt, ordinal = 1, roundNumber = 1, startingScore = 18, score = 6, multiplier = 3)
+
+        runConversion()
+
+        getAchievementCount() shouldBe 0
+    }
+
+    @Test
+    fun `Should ignore rounds where the score was reduced to exactly 1 in relaxed mode`() {
+        val g =
+            insertGame(
+                gameType = GameType.X01,
+                gameParams = X01Config(501, FinishType.Any).toJson()
+            )
+
+        val pt = insertParticipant(playerId = insertPlayer().rowId, gameId = g.rowId)
+
+        insertDart(pt, ordinal = 1, roundNumber = 1, startingScore = 21, score = 20, multiplier = 1)
+
+        runConversion()
+
+        getAchievementCount() shouldBe 0
     }
 
     @Test

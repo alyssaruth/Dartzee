@@ -72,6 +72,37 @@ class TestX01E2E : AbstractRegistryTest() {
 
     @Test
     @Tag("e2e")
+    fun `E2E - 501 - 9 dart game, relaxed finish`() {
+        val game =
+            insertGame(
+                gameType = GameType.X01,
+                gameParams = X01Config(501, FinishType.Any).toJson()
+            )
+
+        val player = insertPlayer(model = beastDartsModel())
+
+        val (panel, listener) = setUpGamePanelAndStartGame(game, listOf(player))
+        awaitGameFinish(game)
+
+        val expectedRounds =
+            listOf(
+                listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
+                listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
+                listOf(Dart(20, 3), Dart(20, 3), Dart(7, 3))
+            )
+
+        verifyState(panel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 9)
+
+        retrieveAchievementsForPlayer(player.rowId)
+            .shouldContainExactlyInAnyOrder(
+                AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 180, game.rowId),
+            )
+
+        checkAchievementConversions(player.rowId)
+    }
+
+    @Test
+    @Tag("e2e")
     fun `E2E - 301 - bust and mercy rule`() {
         val game =
             insertGame(

@@ -122,6 +122,10 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
         val playerId = playerState.lastIndividual().playerId
         val finalRound = getCurrentPlayerState().getLastRound()
 
+        if (!finalRound.last().isDouble()) {
+            return
+        }
+
         val sum = sumScore(finalRound)
         if (finalRound.count { it.multiplier > 1 } > 1) {
             val method = finalRound.joinToString()
@@ -132,10 +136,6 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
                 method,
                 sum
             )
-        }
-
-        if (!finalRound.last().isDouble()) {
-            return
         }
 
         AchievementEntity.updateAchievement(
