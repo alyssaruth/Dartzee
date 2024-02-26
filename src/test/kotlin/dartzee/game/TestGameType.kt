@@ -8,12 +8,11 @@ import org.junit.jupiter.api.Test
 class TestGameType : AbstractTest() {
     @Test
     fun `Not applicable params`() {
-        GameType.X01.getDescription(GAME_PARAMS_NOT_APPLICABLE) shouldBe GAME_PARAMS_NOT_APPLICABLE
-        GameType.GOLF.getDescription(GAME_PARAMS_NOT_APPLICABLE) shouldBe GAME_PARAMS_NOT_APPLICABLE
+        GameType.X01.getDescription(GAME_PARAMS_NOT_APPLICABLE) shouldBe "N/A"
+        GameType.GOLF.getDescription(GAME_PARAMS_NOT_APPLICABLE) shouldBe "Golf - N/A"
         GameType.ROUND_THE_CLOCK.getDescription(GAME_PARAMS_NOT_APPLICABLE) shouldBe
-            GAME_PARAMS_NOT_APPLICABLE
-        GameType.DARTZEE.getDescription(GAME_PARAMS_NOT_APPLICABLE) shouldBe
-            GAME_PARAMS_NOT_APPLICABLE
+            "Round the Clock - N/A"
+        GameType.DARTZEE.getDescription(GAME_PARAMS_NOT_APPLICABLE) shouldBe "Dartzee - N/A"
     }
 
     @Test
