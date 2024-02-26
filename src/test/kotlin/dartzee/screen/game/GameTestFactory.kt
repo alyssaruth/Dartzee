@@ -9,6 +9,7 @@ import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
+import dartzee.game.X01Config
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.SingleParticipant
@@ -53,9 +54,13 @@ fun makeGolfGamePanel(pt: IWrappedParticipant) =
 
 fun makeX01GamePanel(
     currentPlayerId: String = randomGuid(),
-    gameParams: String = DEFAULT_X01_CONFIG.toJson()
+    gameParams: X01Config = DEFAULT_X01_CONFIG
 ) =
-    GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = gameParams), 1)
+    GamePanelX01(
+            FakeDartsScreen(),
+            insertGame(gameType = GameType.X01, gameParams = gameParams.toJson()),
+            1
+        )
         .apply { testInit(currentPlayerId) }
 
 fun makeX01GamePanel(pt: IWrappedParticipant, gameParams: String = DEFAULT_X01_CONFIG.toJson()) =
