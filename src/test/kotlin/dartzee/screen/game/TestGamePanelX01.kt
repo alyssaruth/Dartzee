@@ -193,7 +193,7 @@ class TestGamePanelX01 : AbstractTest() {
     fun `Should correctly update such bad luck achievement for a team`() {
         val (p1, p2) = preparePlayers(2)
         val team = makeTeam(p1, p2)
-        val panel = makeX01GamePanel(team, gameParams = X01Config(101, FinishType.Doubles).toJson())
+        val panel = makeX01GamePanel(team, gameParams = X01Config(101, FinishType.Doubles))
         val gameId = panel.gameEntity.rowId
 
         panel.addCompletedRound(

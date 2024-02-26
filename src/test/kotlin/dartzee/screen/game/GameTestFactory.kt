@@ -63,8 +63,12 @@ fun makeX01GamePanel(
         )
         .apply { testInit(currentPlayerId) }
 
-fun makeX01GamePanel(pt: IWrappedParticipant, gameParams: String = DEFAULT_X01_CONFIG.toJson()) =
-    GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = gameParams), 1)
+fun makeX01GamePanel(pt: IWrappedParticipant, gameParams: X01Config = DEFAULT_X01_CONFIG) =
+    GamePanelX01(
+            FakeDartsScreen(),
+            insertGame(gameType = GameType.X01, gameParams = gameParams.toJson()),
+            1
+        )
         .apply { testInit(pt) }
 
 fun makeRoundTheClockGamePanel(playerId: String = randomGuid()) =
