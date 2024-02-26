@@ -89,7 +89,7 @@ fun predictableDartsModel(
 
     every { model.throwScoringDart() } answers { throwDartFn() }
     every { model.throwDartzeeDart(any(), any()) } answers { throwDartFn() }
-    every { model.throwX01Dart(any()) } answers { throwDartFn() }
+    every { model.throwX01Dart(any(), any()) } answers { throwDartFn() }
     every { model.throwClockDart(any(), any()) } answers { throwDartFn() }
     every { model.throwGolfDart(any(), any()) } answers { throwDartFn() }
     every { model.getStopThresholdForDartNo(any()) } answers { callOriginal() }

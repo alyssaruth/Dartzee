@@ -17,7 +17,8 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) :
     private var startingScore = -1
     private var currentScore = -1
 
-    override val gameParams = X01Config(501, FinishType.Doubles).toJson()
+    private val config = X01Config(501, FinishType.Doubles)
+    override val gameParams = config.toJson()
     override val gameType = GameType.X01
 
     override fun getTotalScore(): Int {
@@ -39,7 +40,7 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) :
         startingScore = currentScore
         resetRound()
 
-        val pt = model.throwX01Dart(currentScore)
+        val pt = model.throwX01Dart(currentScore, config.finishType)
         dartThrown(pt)
     }
 
@@ -47,7 +48,7 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) :
         confirmRound()
 
         // If we've bust, then reset the current score back
-        if (isBust(dartsThrown.last(), FinishType.Doubles)) {
+        if (isBust(dartsThrown.last(), config.finishType)) {
             currentScore = startingScore
         }
 
@@ -68,7 +69,7 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) :
         ) {
             finishedRound()
         } else {
-            val pt = model.throwX01Dart(currentScore)
+            val pt = model.throwX01Dart(currentScore, config.finishType)
             dartThrown(pt)
         }
     }

@@ -106,7 +106,7 @@ class TestDartsGamePanel : AbstractTest() {
 
         override fun computeAiDart(model: DartsAiModel): ComputedPoint {
             val currentScore = getCurrentPlayerState().getRemainingScore()
-            return model.throwX01Dart(currentScore)
+            return model.throwX01Dart(currentScore, config.finishType)
         }
 
         override fun shouldStopAfterDartThrown() = getCurrentPlayerState().isCurrentRoundComplete()

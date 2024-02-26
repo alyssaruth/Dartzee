@@ -187,7 +187,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
             stopThrowing()
             null
         } else {
-            model.throwX01Dart(currentScore)
+            model.throwX01Dart(currentScore, config.finishType)
         }
     }
 

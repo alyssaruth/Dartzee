@@ -1,7 +1,7 @@
 package dartzee.screen.ai
 
 import dartzee.ai.AimDart
-import dartzee.ai.getDefaultDartToAimAt
+import dartzee.ai.getX01AimDart
 import dartzee.bean.SpinnerSingleSelector
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.RadioButtonPanel
@@ -114,7 +114,7 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : 
         // If we're specifying a rule for under 60, validate whether what we're setting up is
         // already the default
         if (score <= 60) {
-            val defaultDart = getDefaultDartToAimAt(score)
+            val defaultDart = getX01AimDart(score, FinishType.Doubles)
             if (defaultDart == drt) {
                 DialogUtil.showError(
                     "The selected dart is already the default for this starting score."
