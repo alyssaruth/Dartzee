@@ -13,10 +13,12 @@ import dartzee.utils.combinePlayerFlags
 import dartzee.utils.doesHighestWin
 import dartzee.utils.getFilterPanel
 import java.awt.BorderLayout
+import java.awt.Dimension
 import java.awt.event.ActionListener
-import javax.swing.Box
 import javax.swing.JPanel
 import javax.swing.JRadioButton
+import javax.swing.JSeparator
+import javax.swing.SwingConstants
 
 class LeaderboardTotalScore(private val gameType: GameType) :
     AbstractLeaderboard(), ActionListener {
@@ -27,28 +29,40 @@ class LeaderboardTotalScore(private val gameType: GameType) :
     private val panelBestOrWorst = RadioButtonPanel()
     private val rdbtnBest = JRadioButton("Best")
     private val rdbtnWorst = JRadioButton("Worst")
+    private val panelTeamsOrIndividuals = RadioButtonPanel()
+    private val rdbtnBoth = JRadioButton("All")
+    private val rdbtnTeams = JRadioButton("Teams")
+    private val rdbtnIndividuals = JRadioButton("Individuals")
 
     init {
         layout = BorderLayout(0, 0)
+        table.setRowHeight(23)
+
+        panelBestOrWorst.add(rdbtnBest)
+        panelBestOrWorst.add(rdbtnWorst)
+        panelTeamsOrIndividuals.add(rdbtnBoth)
+        panelTeamsOrIndividuals.add(rdbtnTeams)
+        panelTeamsOrIndividuals.add(rdbtnIndividuals)
+
+        add(panelFilters, BorderLayout.NORTH)
+
+        panelFilters.add(panelGameParams)
+        panelFilters.add(makeSeparator())
+        panelFilters.add(panelTeamsOrIndividuals)
+        panelFilters.add(makeSeparator())
+        panelFilters.add(panelPlayerFilters)
+        panelFilters.add(makeSeparator())
+        panelFilters.add(panelBestOrWorst)
+        add(table, BorderLayout.CENTER)
 
         panelGameParams.addActionListener(this)
         panelPlayerFilters.addActionListener(this)
-        table.setRowHeight(23)
-        add(panelFilters, BorderLayout.NORTH)
-        panelFilters.add(panelGameParams)
-
-        val horizontalStrut = Box.createHorizontalStrut(20)
-        panelFilters.add(horizontalStrut)
-        panelFilters.add(panelPlayerFilters)
-        val horizontalStrut2 = Box.createHorizontalStrut(20)
-        panelFilters.add(horizontalStrut2)
-        panelFilters.add(panelBestOrWorst)
-        panelBestOrWorst.add(rdbtnBest)
-        panelBestOrWorst.add(rdbtnWorst)
-        add(table, BorderLayout.CENTER)
-
+        panelTeamsOrIndividuals.addActionListener(this)
         panelBestOrWorst.addActionListener(this)
     }
+
+    private fun makeSeparator() =
+        JSeparator(SwingConstants.VERTICAL).also { it.preferredSize = Dimension(2, 20) }
 
     override fun getTabName() = gameType.getDescription()
 
@@ -69,26 +83,23 @@ class LeaderboardTotalScore(private val gameType: GameType) :
     }
 
     private fun retrieveDatabaseRowsForLeaderboard(): List<Array<Any>> {
-        val individualRows = retrieveEntries(singleParticipantSql())
-        val teamRows = retrieveEntries(teamSql())
+        val individuals = if (rdbtnTeams.isSelected) emptyList() else retrieveSingleParticipants()
+        val teams = if (rdbtnIndividuals.isSelected) emptyList() else retrieveTeams()
 
         val descending = doesHighestWin(gameType) != rdbtnWorst.isSelected
         val sorted =
-            (individualRows + teamRows)
+            (individuals + teams)
                 .sortedBy(descending) { it.score }
                 .take(PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE))
         return getRankedRowsForTable(sorted)
     }
 
-    private fun singleParticipantSql(): String {
-        val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
+    private fun retrieveSingleParticipants(): List<LeaderboardEntry> {
         val gameParams = panelGameParams.getGameParams()
         val playerWhereSql = panelPlayerFilters.getWhereSql()
 
         val sb = StringBuilder()
-        sb.append(
-            "SELECT p.Strategy AS Strategy1, 'NULL' AS Strategy2, p.Name AS Name1, 'NULL' as Name2, g.LocalId, pt.FinalScore"
-        )
+        sb.append("SELECT p.Strategy, p.Name, g.LocalId, pt.FinalScore")
         sb.append(" FROM Participant pt, Game g, Player p")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND pt.PlayerId = p.RowId")
@@ -100,20 +111,26 @@ class LeaderboardTotalScore(private val gameType: GameType) :
             sb.append(" AND p.$playerWhereSql")
         }
 
-        val orderStr = if (doesHighestWin(gameType) == rdbtnWorst.isSelected) "ASC" else "DESC"
-        sb.append(" ORDER BY pt.FinalScore $orderStr")
-        sb.append(" FETCH FIRST $leaderboardSize ROWS ONLY")
-        return sb.toString()
+        appendOrderBy(sb, "pt")
+
+        return mainDatabase.retrieveAsList(sb) { rs ->
+            val strategy = rs.getString("Strategy")
+            val playerName = rs.getString("Name")
+            val localId = rs.getLong("LocalId")
+            val score = rs.getInt("FinalScore")
+
+            val flag = PlayerEntity.getPlayerFlag(strategy.isEmpty())
+            LeaderboardEntry(score, listOf(flag, playerName, localId, score))
+        }
     }
 
-    private fun teamSql(): String {
-        val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
+    private fun retrieveTeams(): List<LeaderboardEntry> {
         val gameParams = panelGameParams.getGameParams()
         val playerWhereSql = panelPlayerFilters.getWhereSql()
 
         val sb = StringBuilder()
         sb.append(
-            "SELECT p1.Strategy AS Strategy1, p2.Strategy AS Strategy2, p1.Name AS Name1, p2.Name as Name2, g.LocalId, t.FinalScore"
+            "SELECT p1.Strategy, p2.Strategy AS Strategy2, p1.Name, p2.Name as Name2, g.LocalId, t.FinalScore"
         )
         sb.append(" FROM Team t, Participant pt1, Participant pt2, Game g, Player p1, Player p2")
         sb.append(" WHERE t.GameId = g.RowId")
@@ -132,40 +149,29 @@ class LeaderboardTotalScore(private val gameType: GameType) :
             sb.append(" AND p2.$playerWhereSql")
         }
 
-        val orderStr = if (doesHighestWin(gameType) == rdbtnWorst.isSelected) "ASC" else "DESC"
-        sb.append(" ORDER BY t.FinalScore $orderStr")
-        sb.append(" FETCH FIRST $leaderboardSize ROWS ONLY")
-        return sb.toString()
+        appendOrderBy(sb, "t")
+
+        return mainDatabase.retrieveAsList(sb) { rs ->
+            val strategy = rs.getString("Strategy")
+            val strategy2 = rs.getString("Strategy2")
+            val playerName1 = rs.getString("Name")
+            val playerName2 = rs.getString("Name2")
+            val localId = rs.getLong("LocalId")
+            val score = rs.getInt("FinalScore")
+
+            val playerFlag = PlayerEntity.getPlayerFlag(strategy.isEmpty())
+            val playerFlag2 = PlayerEntity.getPlayerFlag(strategy2.isEmpty())
+            val combinedFlag = combinePlayerFlags(playerFlag, playerFlag2)
+            val playerName = "$playerName1 & $playerName2"
+
+            LeaderboardEntry(score, listOf(combinedFlag, playerName, localId, score))
+        }
     }
 
-    private fun retrieveEntries(sql: String): List<LeaderboardEntry> {
-        val rows = mutableListOf<LeaderboardEntry>()
-
-        mainDatabase.executeQuery(sql).use { rs ->
-            while (rs.next()) {
-                val strategy = rs.getString("Strategy1")
-                val strategy2 = rs.getString("Strategy2")
-                val playerName1 = rs.getString("Name1")
-                val playerName2 = rs.getString("Name2")
-                val localId = rs.getLong("LocalId")
-                val score = rs.getInt("FinalScore")
-
-                val playerFlag = PlayerEntity.getPlayerFlag(strategy.isEmpty())
-                val playerFlag2 =
-                    if (strategy2 != "NULL") PlayerEntity.getPlayerFlag(strategy2.isEmpty())
-                    else null
-
-                val combinedFlag = playerFlag2?.let { combinePlayerFlags(playerFlag, playerFlag2) }
-                val flag = combinedFlag ?: playerFlag
-
-                val playerName =
-                    if (playerName2 != "NULL") "$playerName1 & $playerName2" else playerName1
-
-                val entry = LeaderboardEntry(score, listOf(flag, playerName, localId, score))
-                rows.add(entry)
-            }
-        }
-
-        return rows.toList()
+    private fun appendOrderBy(sb: StringBuilder, tableAlias: String) {
+        val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
+        val orderStr = if (doesHighestWin(gameType) == rdbtnWorst.isSelected) "ASC" else "DESC"
+        sb.append(" ORDER BY $tableAlias.FinalScore $orderStr")
+        sb.append(" FETCH FIRST $leaderboardSize ROWS ONLY")
     }
 }

@@ -157,6 +157,20 @@ class Database(
         }
     }
 
+    fun <T> retrieveAsList(sb: StringBuilder, fn: (rs: ResultSet) -> T) =
+        retrieveAsList(sb.toString(), fn)
+
+    fun <T> retrieveAsList(query: String, fn: (rs: ResultSet) -> T): List<T> {
+        executeQuery(query).use { rs ->
+            val result = mutableListOf<T>()
+            while (rs.next()) {
+                result.add(fn(rs))
+            }
+
+            return result.toList()
+        }
+    }
+
     fun executeQueryAggregate(sb: StringBuilder) = executeQueryAggregate(sb.toString())
 
     fun executeQueryAggregate(sql: String): Int {

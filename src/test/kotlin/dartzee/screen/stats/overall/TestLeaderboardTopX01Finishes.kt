@@ -1,5 +1,7 @@
 package dartzee.screen.stats.overall
 
+import com.github.alyssaburlton.swingtest.getChild
+import dartzee.core.bean.ScrollTable
 import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.insertFinishForPlayer
 import dartzee.helper.insertPlayer
@@ -89,12 +91,13 @@ class TestLeaderboardTopX01Finishes : AbstractRegistryTest() {
         leaderboard.getGameIdAt(2) shouldBe g3.localId
     }
 
-    private fun LeaderboardTopX01Finishes.rowCount() = tableTopFinishes.rowCount
+    private fun LeaderboardTopX01Finishes.rowCount() = table().rowCount
 
-    private fun LeaderboardTopX01Finishes.getNameAt(row: Int) = tableTopFinishes.getValueAt(row, 2)
+    private fun LeaderboardTopX01Finishes.getNameAt(row: Int) = table().getValueAt(row, 2)
 
-    private fun LeaderboardTopX01Finishes.getGameIdAt(row: Int) =
-        tableTopFinishes.getValueAt(row, 3)
+    private fun LeaderboardTopX01Finishes.getGameIdAt(row: Int) = table().getValueAt(row, 3)
 
-    private fun LeaderboardTopX01Finishes.getScoreAt(row: Int) = tableTopFinishes.getValueAt(row, 4)
+    private fun LeaderboardTopX01Finishes.getScoreAt(row: Int) = table().getValueAt(row, 4)
+
+    private fun LeaderboardTopX01Finishes.table() = getChild<ScrollTable>()
 }
