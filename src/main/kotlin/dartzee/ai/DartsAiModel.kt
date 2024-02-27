@@ -46,7 +46,7 @@ data class DartsAiModel(
     fun throwX01Dart(score: Int, finishType: FinishType, dartsRemaining: Int) =
         if (score > 60) {
             val checkout = CheckoutSuggester.suggestCheckout(score, dartsRemaining)
-            if (checkout != null) {
+            if (checkout != null && finishType == FinishType.Doubles) {
                 val pt = getPointForScore(checkout.first().toAimDart())
                 throwDartAtPoint(pt)
             } else {
