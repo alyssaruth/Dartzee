@@ -52,7 +52,7 @@ fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database) {
     val created =
         database.createTableIfNotExists(
             X01_ROUNDS_TABLE,
-            "PlayerId VARCHAR(36), GameId VARCHAR(36), ParticipantId VARCHAR(36), StartingScore INT, RoundNumber INT, " +
+            "PlayerId VARCHAR(36), GameId VARCHAR(36), GameParams VARCHAR(255), ParticipantId VARCHAR(36), StartingScore INT, RoundNumber INT, " +
                 "TotalDartsThrown INT, RemainingScore INT, LastDartScore INT, LastDartMultiplier INT, DtRoundFinished TIMESTAMP"
         )
 
@@ -63,13 +63,13 @@ fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database) {
     val tmp1 =
         database.createTempTable(
             "X01RoundsPt1",
-            "PlayerId VARCHAR(36), GameId VARCHAR(36), ParticipantId VARCHAR(36), StartingScore INT, RoundNumber INT, LastDartOrdinal INT"
+            "PlayerId VARCHAR(36), GameId VARCHAR(36), GameParams VARCHAR(255), ParticipantId VARCHAR(36), StartingScore INT, RoundNumber INT, LastDartOrdinal INT"
         )
 
     database.executeUpdate(
         """
         INSERT INTO $tmp1
-        SELECT pt.PlayerId, pt.GameId, pt.RowId, drtFirst.StartingScore, drtFirst.RoundNumber, MAX(drt.Ordinal)
+        SELECT pt.PlayerId, pt.GameId, g.GameParams, pt.RowId, drtFirst.StartingScore, drtFirst.RoundNumber, MAX(drt.Ordinal)
         FROM ${EntityName.Dart} drtFirst, ${EntityName.Participant} pt, ${EntityName.Game} g, ${EntityName.Dart} drt
         WHERE drtFirst.ParticipantId = pt.RowId
         AND drtFirst.PlayerId = pt.PlayerId
@@ -80,7 +80,7 @@ fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database) {
         AND drtFirst.ParticipantId = drt.ParticipantId
         AND drtFirst.RoundNumber = drt.RoundNumber
         ${getPlayerSql(playerIds)}
-        GROUP BY pt.PlayerId, pt.GameId, pt.RowId, drtFirst.StartingScore, drtFirst.RoundNumber
+        GROUP BY pt.PlayerId, pt.GameId, g.GameParams, pt.RowId, drtFirst.StartingScore, drtFirst.RoundNumber
     """
             .trimIndent()
     )
@@ -91,6 +91,7 @@ fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database) {
         SELECT 
             zz.PlayerId, 
             zz.GameId, 
+            zz.GameParams,
             zz.ParticipantId, 
             zz.StartingScore, 
             zz.RoundNumber, 

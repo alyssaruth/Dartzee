@@ -10,6 +10,8 @@ import dartzee.core.util.playDodgySound
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.X01FinishEntity
+import dartzee.game.FinishType
+import dartzee.game.X01Config
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
 import dartzee.`object`.ComputedPoint
@@ -27,14 +29,14 @@ import dartzee.utils.sumScore
 
 class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
     GamePanelPausable<DartsScorerX01, X01PlayerState>(parent, game, totalPlayers) {
-    private val startingScore = Integer.parseInt(game.gameParams)
+    private val config = X01Config.fromJson(game.gameParams)
 
-    override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(startingScore, pt)
+    override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(config, pt)
 
     override fun saveDartsAndProceed() {
         // Finalise the scorer
         val lastDart = getDartsThrown().last()
-        val bust = isBust(lastDart)
+        val bust = isBust(lastDart, config.finishType)
 
         val count = getCurrentPlayerState().getBadLuckCount()
         if (count > 0) {
@@ -120,14 +122,11 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
         val playerId = playerState.lastIndividual().playerId
         val finalRound = getCurrentPlayerState().getLastRound()
 
-        val sum = sumScore(finalRound)
-        AchievementEntity.updateAchievement(
-            AchievementType.X01_BEST_FINISH,
-            playerId,
-            getGameId(),
-            sum
-        )
+        if (!finalRound.last().isDouble()) {
+            return
+        }
 
+        val sum = sumScore(finalRound)
         if (finalRound.count { it.multiplier > 1 } > 1) {
             val method = finalRound.joinToString()
             AchievementEntity.insertAchievement(
@@ -138,6 +137,13 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
                 sum
             )
         }
+
+        AchievementEntity.updateAchievement(
+            AchievementType.X01_BEST_FINISH,
+            playerId,
+            getGameId(),
+            sum
+        )
 
         // Insert into the X01Finishes table for the leaderboard
         X01FinishEntity.factoryAndSave(playerId, getGameId(), sum)
@@ -151,7 +157,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
             ""
         )
 
-        if (sum in listOf(3, 5, 7, 9)) {
+        if (sum in listOf(3, 5, 7, 9) && config.finishType == FinishType.Doubles) {
             AchievementEntity.insertAchievement(
                 AchievementType.X01_NO_MERCY,
                 playerId,
@@ -177,16 +183,18 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
         val startOfRoundScore =
             getCurrentPlayerState().getRemainingScoreForRound(currentRoundNumber - 1)
         val currentScore = getCurrentPlayerState().getRemainingScore()
-        return if (shouldStopForMercyRule(model, startOfRoundScore, currentScore)) {
+        return if (
+            shouldStopForMercyRule(model, startOfRoundScore, currentScore, config.finishType)
+        ) {
             stopThrowing()
             null
         } else {
-            model.throwX01Dart(currentScore)
+            model.throwX01Dart(currentScore, config.finishType)
         }
     }
 
     override fun factoryScorer(participant: IWrappedParticipant) =
-        DartsScorerX01(this, gameEntity.gameParams, participant)
+        DartsScorerX01(this, config.target, participant)
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelX01(gameParams)
 

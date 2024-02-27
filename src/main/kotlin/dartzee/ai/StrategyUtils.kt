@@ -1,5 +1,6 @@
 package dartzee.ai
 
+import dartzee.game.FinishType
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
@@ -22,7 +23,13 @@ fun getComputedPointForScore(score: Int, type: SegmentType): ComputedPoint =
     AI_DARTBOARD.getPointToAimAt(DartboardSegment(type, score))
 
 /** Get the application-wide default thing to aim for, which applies to any score of 60 or less */
-fun getDefaultDartToAimAt(score: Int): AimDart {
+fun getX01AimDart(score: Int, finishType: FinishType) =
+    when (finishType) {
+        FinishType.Doubles -> getX01AimDartDoublesMode(score)
+        FinishType.Any -> getX01AimDartRelaxedMode(score)
+    }
+
+private fun getX01AimDartDoublesMode(score: Int): AimDart {
     // Aim for the single that puts you on double top
     if (score > 40) {
         val single = score - 40
@@ -38,6 +45,26 @@ fun getDefaultDartToAimAt(score: Int): AimDart {
     val scoreToLeaveRemaining = getHighestPowerOfTwoLessThan(score)
     val singleToAimFor = score - scoreToLeaveRemaining
     return AimDart(singleToAimFor, 1)
+}
+
+private fun getX01AimDartRelaxedMode(score: Int): AimDart {
+    // Finish on single if possible
+    if (score <= 20) {
+        return AimDart(score, 1)
+    }
+
+    // Go for treble finishes if possible
+    if (score % 3 == 0) {
+        return AimDart(score / 3, 3)
+    }
+
+    // Aim to put ourselves on single 20
+    if (score <= 40) {
+        return AimDart(score - 20, 1)
+    }
+
+    // Just go for single 20
+    return AimDart(20, 1)
 }
 
 private fun getHighestPowerOfTwoLessThan(score: Int): Int {

@@ -81,7 +81,7 @@ class TestReportingSqlUtil : AbstractTest() {
         val dartzeeGameWithTemplate =
             insertGame(gameType = GameType.DARTZEE, gameParams = template.rowId)
         val dartzeeGameStandalone = insertGame(gameType = GameType.DARTZEE, gameParams = "")
-        val x01Game = insertGame(gameType = GameType.X01, gameParams = "501")
+        val x01Game = insertGame(gameType = GameType.X01)
 
         insertPlayerForGame("Alice", dartzeeGameWithTemplate.rowId)
         insertPlayerForGame("Bob", dartzeeGameStandalone.rowId)

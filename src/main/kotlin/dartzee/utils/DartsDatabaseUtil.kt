@@ -40,7 +40,7 @@ import org.apache.derby.jdbc.EmbeddedDriver
 
 /** Database helpers specific to Dartzee, e.g. first time initialisation */
 object DartsDatabaseUtil {
-    const val DATABASE_VERSION = 22
+    const val DATABASE_VERSION = 23
     const val DATABASE_NAME = "Darts"
     const val OTHER_DATABASE_NAME =
         "DartsOther" // Tmp name used for restore from backup and/or sync

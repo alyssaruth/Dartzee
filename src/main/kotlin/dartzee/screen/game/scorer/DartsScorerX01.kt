@@ -11,10 +11,10 @@ import javax.swing.SwingConstants
 
 class DartsScorerX01(
     parent: GamePanelPausable<*, *>,
-    gameParams: String,
+    target: Int,
     participant: IWrappedParticipant
 ) : AbstractDartsScorerPausable<X01PlayerState>(parent, participant) {
-    private val lblStartingScore = JLabel(gameParams)
+    private val lblStartingScore = JLabel(target.toString())
 
     init {
         lblStartingScore.horizontalAlignment = SwingConstants.CENTER

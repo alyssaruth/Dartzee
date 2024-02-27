@@ -6,6 +6,7 @@ import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.game.X01Config
 import dartzee.`object`.Dart
 import dartzee.screen.stats.player.HoleBreakdownWrapper
 import dartzee.screen.stats.player.golf.OptimalHoleStat
@@ -47,7 +48,7 @@ class GameWrapper(
     // For unfinished games, return -1 so they're sorted to the back
     fun getCheckoutTotal() = if (finalScore == -1) -1 else getScoreForFinalRound()
 
-    fun getGameStartValueX01() = gameParams.toInt()
+    fun getGameStartValueX01() = X01Config.fromJson(gameParams).target
 
     private fun getAllDartsFlattened() = hmRoundNumberToDarts.getAllValues()
 

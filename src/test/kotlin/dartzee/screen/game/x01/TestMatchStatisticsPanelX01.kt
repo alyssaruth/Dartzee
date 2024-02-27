@@ -1,6 +1,7 @@
 package dartzee.screen.game.x01
 
 import dartzee.game.state.X01PlayerState
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.makeDart
 import dartzee.helper.makeX01PlayerState
 import dartzee.helper.makeX01PlayerStateWithRounds
@@ -13,7 +14,7 @@ import org.junit.jupiter.api.Test
 
 class TestMatchStatisticsPanelX01 :
     AbstractGameStatisticsPanelTest<X01PlayerState, MatchStatisticsPanelX01>() {
-    override fun factoryStatsPanel() = MatchStatisticsPanelX01("501")
+    override fun factoryStatsPanel() = MatchStatisticsPanelX01(DEFAULT_X01_CONFIG.toJson())
 
     override fun makePlayerState() =
         makeX01PlayerState(completedRound = listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)))

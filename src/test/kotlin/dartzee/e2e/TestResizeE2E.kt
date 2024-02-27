@@ -3,6 +3,7 @@ package dartzee.e2e
 import dartzee.ai.AimDart
 import dartzee.game.GameType
 import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.beastDartsModel
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
@@ -26,7 +27,7 @@ class TestResizeE2E : AbstractRegistryTest() {
     @Test
     @Tag("e2e")
     fun `E2E - Small dartboard`() {
-        val game = insertGame(gameType = GameType.X01, gameParams = "501")
+        val game = insertGame(gameType = GameType.X01, gameParams = DEFAULT_X01_CONFIG.toJson())
 
         val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
         val player = insertPlayer(model = aiModel)

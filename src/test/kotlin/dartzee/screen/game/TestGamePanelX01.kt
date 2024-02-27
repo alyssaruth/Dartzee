@@ -4,8 +4,11 @@ import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.db.EntityName
 import dartzee.db.X01FinishEntity
+import dartzee.game.FinishType
+import dartzee.game.X01Config
 import dartzee.helper.AbstractTest
 import dartzee.helper.AchievementSummary
+import dartzee.helper.getCountFromTable
 import dartzee.helper.preparePlayers
 import dartzee.helper.randomGuid
 import dartzee.helper.retrieveAchievementsForPlayer
@@ -77,6 +80,23 @@ class TestGamePanelX01 : AbstractTest() {
     }
 
     @Test
+    fun `Should not update finish things if finish was not on a double`() {
+        val playerId = randomGuid()
+        val panel = makeX01GamePanel(playerId, gameParams = X01Config(501, FinishType.Any))
+
+        val darts = listOf(Dart(20, 3), Dart(20, 30), Dart(20, 1))
+        panel.addCompletedRound(darts)
+        panel.updateAchievementsForFinish(2, 30)
+
+        getCountFromTable(EntityName.X01Finish) shouldBe 0
+
+        AchievementEntity.retrieveAchievement(AchievementType.X01_BEST_FINISH, playerId) shouldBe
+            null
+        AchievementEntity.retrieveAchievement(AchievementType.X01_STYLISH_FINISH, playerId) shouldBe
+            null
+    }
+
+    @Test
     fun `Should update No Mercy achievement if the game was finished on from 3, 5, 7 or 9`() {
         val playerId = randomGuid()
         val panel = makeX01GamePanel(playerId)
@@ -92,6 +112,18 @@ class TestGamePanelX01 : AbstractTest() {
             a.gameIdEarned shouldBe panel.getGameId()
             a.achievementDetail shouldBe "$i"
         }
+    }
+
+    @Test
+    fun `Should not update No Mercy achievement if the game did not require finishing on a double`() {
+        val playerId = randomGuid()
+        val panel = makeX01GamePanel(playerId, X01Config(501, FinishType.Any))
+
+        val darts = listOf(Dart(1, 1), Dart(2, 2))
+        panel.addCompletedRound(darts)
+        panel.updateAchievementsForFinish(1, 30)
+
+        AchievementEntity.retrieveAchievement(AchievementType.X01_NO_MERCY, playerId) shouldBe null
     }
 
     @Test
@@ -161,7 +193,7 @@ class TestGamePanelX01 : AbstractTest() {
     fun `Should correctly update such bad luck achievement for a team`() {
         val (p1, p2) = preparePlayers(2)
         val team = makeTeam(p1, p2)
-        val panel = makeX01GamePanel(team, gameParams = "101")
+        val panel = makeX01GamePanel(team, gameParams = X01Config(101, FinishType.Doubles))
         val gameId = panel.gameEntity.rowId
 
         panel.addCompletedRound(
@@ -203,7 +235,7 @@ class TestGamePanelX01 : AbstractTest() {
     @Test
     fun `Should not update hotel inspector achievement if board is missed, or player is bust`() {
         val playerId = randomGuid()
-        val panel = makeX01GamePanel(playerId, gameParams = "101")
+        val panel = makeX01GamePanel(playerId, gameParams = X01Config(101, FinishType.Doubles))
 
         panel.addCompletedRound(listOf(Dart(20, 1), Dart(3, 2), Dart(19, 0)))
         panel.addCompletedRound(listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1)))
@@ -240,7 +272,7 @@ class TestGamePanelX01 : AbstractTest() {
     @Test
     fun `Should not update chucklevision achievement if board is missed, or player is bust`() {
         val playerId = randomGuid()
-        val panel = makeX01GamePanel(playerId, gameParams = "101")
+        val panel = makeX01GamePanel(playerId, gameParams = X01Config(101, FinishType.Doubles))
 
         panel.addCompletedRound(listOf(Dart(20, 3), Dart(3, 3), Dart(19, 0)))
         panel.addCompletedRound(listOf(Dart(5, 1), Dart(4, 1), Dart(20, 3)))
@@ -262,7 +294,7 @@ class TestGamePanelX01 : AbstractTest() {
 
     private fun verifyStylishFinish(finalRound: List<Dart>) {
         val playerId = randomGuid()
-        val panel = makeX01GamePanel(playerId, gameParams = "101")
+        val panel = makeX01GamePanel(playerId, gameParams = X01Config(101, FinishType.Doubles))
 
         panel.addCompletedRound(listOf(Dart(20, 3), Dart(1, 1), Dart(20, 1)))
         panel.addCompletedRound(finalRound)
@@ -290,7 +322,7 @@ class TestGamePanelX01 : AbstractTest() {
 
     private fun verifyNotStylishFinish(finalRound: List<Dart>) {
         val playerId = randomGuid()
-        val panel = makeX01GamePanel(playerId, gameParams = "101")
+        val panel = makeX01GamePanel(playerId, gameParams = X01Config(101, FinishType.Doubles))
 
         panel.addCompletedRound(listOf(Dart(20, 3), Dart(1, 1), Dart(20, 1)))
         panel.addCompletedRound(finalRound)

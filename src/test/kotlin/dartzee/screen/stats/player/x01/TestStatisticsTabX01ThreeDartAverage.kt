@@ -25,6 +25,8 @@ import dartzee.drtOuterTwenty
 import dartzee.drtTrebleFourteen
 import dartzee.drtTrebleOne
 import dartzee.drtTrebleTwenty
+import dartzee.game.FinishType
+import dartzee.game.X01Config
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeGameWrapper
@@ -144,7 +146,11 @@ class TestStatisticsTabX01ThreeDartAverage : AbstractTest() {
                 listOf(drtDoubleSixteen()) // Fin.
             )
 
-        val g = makeGameWrapper(gameParams = "301", dartRounds = rounds)
+        val g =
+            makeGameWrapper(
+                gameParams = X01Config(301, FinishType.Doubles).toJson(),
+                dartRounds = rounds
+            )
         val tab = StatisticsTabX01ThreeDartAverage()
         tab.setFilteredGames(listOf(g), emptyList())
         tab.populateStats()

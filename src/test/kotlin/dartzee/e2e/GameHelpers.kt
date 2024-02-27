@@ -16,6 +16,7 @@ import dartzee.db.GameEntity
 import dartzee.db.IParticipant
 import dartzee.db.PlayerEntity
 import dartzee.game.prepareParticipants
+import dartzee.game.state.IWrappedParticipant
 import dartzee.helper.beastDartsModel
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
@@ -76,8 +77,8 @@ data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *>, val listener:
 fun setUpGamePanelAndStartGame(game: GameEntity, players: List<PlayerEntity>) =
     setUpGamePanel(game).also { it.gamePanel.startGame(players) }
 
-fun setUpGamePanel(game: GameEntity): GamePanelTestSetup {
-    val parentWindow = DartsGameScreen(game, 1)
+fun setUpGamePanel(game: GameEntity, totalPlayers: Int = 1): GamePanelTestSetup {
+    val parentWindow = DartsGameScreen(game, totalPlayers)
     parentWindow.isVisible = true
     val gamePanel = parentWindow.gamePanel
 
@@ -87,9 +88,10 @@ fun setUpGamePanel(game: GameEntity): GamePanelTestSetup {
     return GamePanelTestSetup(gamePanel, listener)
 }
 
-fun DartsGamePanel<*, *>.startGame(players: List<PlayerEntity>) {
+fun DartsGamePanel<*, *>.startGame(players: List<PlayerEntity>): List<IWrappedParticipant> {
     val participants = prepareParticipants(gameEntity.rowId, players, false)
     startNewGame(participants)
+    return participants
 }
 
 fun awaitGameFinish(game: GameEntity) {

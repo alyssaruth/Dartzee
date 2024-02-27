@@ -2,7 +2,9 @@ package dartzee.achievements.x01
 
 import dartzee.achievements.AbstractAchievementBestGame
 import dartzee.achievements.AchievementType
+import dartzee.game.FinishType
 import dartzee.game.GameType
+import dartzee.game.X01Config
 import dartzee.utils.ResourceCache
 
 class AchievementX01BestGame : AbstractAchievementBestGame() {
@@ -10,7 +12,7 @@ class AchievementX01BestGame : AbstractAchievementBestGame() {
     override val name = "Leg-up"
     override val desc = "Best game of 501"
     override val gameType = GameType.X01
-    override val gameParams = "501"
+    override val gameParams = X01Config(501, FinishType.Doubles).toJson()
 
     override val redThreshold = 99
     override val orangeThreshold = 60

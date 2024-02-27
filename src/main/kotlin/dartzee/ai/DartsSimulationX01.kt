@@ -1,7 +1,9 @@
 package dartzee.ai
 
 import dartzee.db.PlayerEntity
+import dartzee.game.FinishType
 import dartzee.game.GameType
+import dartzee.game.X01Config
 import dartzee.`object`.Dart
 import dartzee.utils.isBust
 import dartzee.utils.shouldStopForMercyRule
@@ -15,7 +17,8 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) :
     private var startingScore = -1
     private var currentScore = -1
 
-    override val gameParams = "$X01"
+    private val config = X01Config(501, FinishType.Doubles)
+    override val gameParams = config.toJson()
     override val gameType = GameType.X01
 
     override fun getTotalScore(): Int {
@@ -37,7 +40,7 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) :
         startingScore = currentScore
         resetRound()
 
-        val pt = model.throwX01Dart(currentScore)
+        val pt = model.throwX01Dart(currentScore, config.finishType)
         dartThrown(pt)
     }
 
@@ -45,7 +48,7 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) :
         confirmRound()
 
         // If we've bust, then reset the current score back
-        if (isBust(dartsThrown.last())) {
+        if (isBust(dartsThrown.last(), config.finishType)) {
             currentScore = startingScore
         }
 
@@ -62,11 +65,11 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) :
         if (
             currentScore <= 1 ||
                 dartsThrown.size == 3 ||
-                shouldStopForMercyRule(model, startingScore, currentScore)
+                shouldStopForMercyRule(model, startingScore, currentScore, config.finishType)
         ) {
             finishedRound()
         } else {
-            val pt = model.throwX01Dart(currentScore)
+            val pt = model.throwX01Dart(currentScore, config.finishType)
             dartThrown(pt)
         }
     }

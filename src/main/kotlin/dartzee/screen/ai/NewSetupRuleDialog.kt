@@ -1,12 +1,13 @@
 package dartzee.screen.ai
 
 import dartzee.ai.AimDart
-import dartzee.ai.getDefaultDartToAimAt
+import dartzee.ai.getX01AimDart
 import dartzee.bean.SpinnerSingleSelector
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
+import dartzee.game.FinishType
 import dartzee.`object`.Dart
 import dartzee.screen.ScreenCache
 import dartzee.utils.isBust
@@ -91,30 +92,31 @@ class NewSetupRuleDialog(private val hmScoreToDart: MutableMap<Int, AimDart>) : 
         }
     }
 
-    fun valid(): Boolean {
+    private fun valid(): Boolean {
         val score = nfScore.getNumber()
         if (score == -1) {
-            DialogUtil.showErrorOLD("You must enter a score for this rule to apply to.")
+            DialogUtil.showError("You must enter a score for this rule to apply to.")
             return false
         }
 
         val drt = getDartFromSelections()
         if (drt.score == 25 && drt.multiplier == 3) {
-            DialogUtil.showErrorOLD("Treble 25 is not a valid dart!")
+            DialogUtil.showError("Treble 25 is not a valid dart!")
             return false
         }
 
-        if (isBust(score, Dart(drt.score, drt.multiplier))) {
-            DialogUtil.showErrorOLD("This target would bust the player")
+        val actualDart = Dart(drt.score, drt.multiplier).apply { startingScore = score }
+        if (isBust(actualDart, FinishType.Doubles)) {
+            DialogUtil.showError("This target would bust the player")
             return false
         }
 
         // If we're specifying a rule for under 60, validate whether what we're setting up is
         // already the default
         if (score <= 60) {
-            val defaultDart = getDefaultDartToAimAt(score)
+            val defaultDart = getX01AimDart(score, FinishType.Doubles)
             if (defaultDart == drt) {
-                DialogUtil.showErrorOLD(
+                DialogUtil.showError(
                     "The selected dart is already the default for this starting score."
                 )
                 return false

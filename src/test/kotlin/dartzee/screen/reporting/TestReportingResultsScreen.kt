@@ -3,7 +3,9 @@ package dartzee.screen.reporting
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.ScrollTable
+import dartzee.game.FinishType
 import dartzee.game.GameType
+import dartzee.game.X01Config
 import dartzee.getColumnNames
 import dartzee.getDisplayValueAt
 import dartzee.helper.AbstractTest
@@ -26,7 +28,12 @@ class TestReportingResultsScreen : AbstractTest() {
     fun `Should initialise with results based on the report parameters`() {
         val rp = makeReportParameters(game = makeReportParametersGame(gameType = GameType.X01))
 
-        val gX01 = insertGame(localId = 1, gameType = GameType.X01, gameParams = "501")
+        val gX01 =
+            insertGame(
+                localId = 1,
+                gameType = GameType.X01,
+                gameParams = X01Config(501, FinishType.Doubles).toJson()
+            )
         insertPlayerForGame("Bob", gX01.rowId)
 
         val gDartzee = insertGame(localId = 2, gameType = GameType.DARTZEE, gameParams = "")
@@ -43,7 +50,12 @@ class TestReportingResultsScreen : AbstractTest() {
 
     @Test
     fun `Should adjust columns based on the configure dialog, without rerunning SQL`() {
-        val gX01 = insertGame(localId = 1, gameType = GameType.X01, gameParams = "501")
+        val gX01 =
+            insertGame(
+                localId = 1,
+                gameType = GameType.X01,
+                gameParams = X01Config(501, FinishType.Doubles).toJson()
+            )
         insertPlayerForGame("Bob", gX01.rowId)
 
         val dlg = mockk<ConfigureReportColumnsDialog>(relaxed = true)

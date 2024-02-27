@@ -69,6 +69,13 @@ class ReportingGameTab : JPanel(), ActionListener {
         add(rdbtnPendingChanges, "flowx,cell 2 7")
         add(rdbtnSynced, "cell 2 7")
 
+        checkBoxGameType.name = "filterGameType"
+        cbType.name = "filterGameParams"
+        cbStartDate.name = "filterStartDate"
+        cbFinishDate.name = "filterFinishDate"
+        cbPartOfMatch.name = "filterPartOfMatch"
+        cbSyncStatus.name = "filterSyncStatus"
+
         createButtonGroupsAndSelectDefaults()
         addListeners()
     }

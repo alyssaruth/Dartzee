@@ -10,6 +10,7 @@ import dartzee.db.PlayerImageEntity
 import dartzee.game.loadParticipants
 import dartzee.game.state.X01PlayerState
 import dartzee.helper.AbstractTest
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
@@ -60,7 +61,7 @@ class TestDartsMatchScreen : AbstractTest() {
 
     @Test
     fun `Should update title based on selected tab`() {
-        val match = insertDartsMatch(gameParams = "501")
+        val match = insertDartsMatch(gameParams = DEFAULT_X01_CONFIG.toJson())
         val scrn = setUpMatchScreen(match)
 
         val g1 = insertGame()
@@ -123,7 +124,7 @@ class TestDartsMatchScreen : AbstractTest() {
 
     @Test
     fun `Should mark the match as complete if no more games need to be played`() {
-        val match = insertDartsMatch(games = 1, gameParams = "501")
+        val match = insertDartsMatch(games = 1, gameParams = DEFAULT_X01_CONFIG.toJson())
         val scrn = setUpMatchScreen(match = match)
 
         val firstGame = insertGame()
@@ -144,7 +145,7 @@ class TestDartsMatchScreen : AbstractTest() {
         val p2 = insertPlayer(name = "Billie")
         val gameOneStates = listOf(p1, p2).map { makeX01PlayerState(player = it) }
 
-        val match = insertDartsMatch(gameParams = "501")
+        val match = insertDartsMatch(gameParams = DEFAULT_X01_CONFIG.toJson())
 
         val scrn = setUpMatchScreen(match = match)
         val firstGame = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
@@ -173,7 +174,7 @@ class TestDartsMatchScreen : AbstractTest() {
         val p2 = insertPlayer(name = "Billie")
         val gameOneStates = listOf(p1, p2).map { makeX01PlayerState(player = it) }
 
-        val match = insertDartsMatch(gameParams = "501")
+        val match = insertDartsMatch(gameParams = DEFAULT_X01_CONFIG.toJson())
 
         val scrn = setUpMatchScreen(match = match)
         val firstGame = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
@@ -187,7 +188,7 @@ class TestDartsMatchScreen : AbstractTest() {
     }
 
     private fun setUpMatchScreen(
-        match: DartsMatchEntity = insertDartsMatch(gameParams = "501"),
+        match: DartsMatchEntity = insertDartsMatch(gameParams = DEFAULT_X01_CONFIG.toJson()),
         matchSummaryPanel: MatchSummaryPanel<X01PlayerState> =
             MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams))
     ): FakeMatchScreen {

@@ -134,7 +134,7 @@ class TestDartsScorerX01 : AbstractTest() {
     private fun factoryScorer(
         participant: ParticipantEntity = insertParticipant()
     ): DartsScorerX01 {
-        val scorer = DartsScorerX01(mockk(relaxed = true), "501", SingleParticipant(participant))
+        val scorer = DartsScorerX01(mockk(relaxed = true), 501, SingleParticipant(participant))
         scorer.init()
         return scorer
     }

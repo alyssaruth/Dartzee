@@ -9,10 +9,12 @@ import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
+import dartzee.game.X01Config
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.SingleParticipant
 import dartzee.game.state.TeamParticipant
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
@@ -50,12 +52,23 @@ fun makeGolfGamePanel(pt: IWrappedParticipant) =
     GamePanelGolf(FakeDartsScreen(), insertGame(gameType = GameType.GOLF, gameParams = "18"), 1)
         .apply { testInit(pt) }
 
-fun makeX01GamePanel(currentPlayerId: String = randomGuid(), gameParams: String = "501") =
-    GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = gameParams), 1)
+fun makeX01GamePanel(
+    currentPlayerId: String = randomGuid(),
+    gameParams: X01Config = DEFAULT_X01_CONFIG
+) =
+    GamePanelX01(
+            FakeDartsScreen(),
+            insertGame(gameType = GameType.X01, gameParams = gameParams.toJson()),
+            1
+        )
         .apply { testInit(currentPlayerId) }
 
-fun makeX01GamePanel(pt: IWrappedParticipant, gameParams: String = "501") =
-    GamePanelX01(FakeDartsScreen(), insertGame(gameType = GameType.X01, gameParams = gameParams), 1)
+fun makeX01GamePanel(pt: IWrappedParticipant, gameParams: X01Config = DEFAULT_X01_CONFIG) =
+    GamePanelX01(
+            FakeDartsScreen(),
+            insertGame(gameType = GameType.X01, gameParams = gameParams.toJson()),
+            1
+        )
         .apply { testInit(pt) }
 
 fun makeRoundTheClockGamePanel(playerId: String = randomGuid()) =
@@ -116,7 +129,7 @@ fun DartsGamePanel<*, *>.doAiTurn(model: DartsAiModel) {
 
 fun makeMatchSummaryPanel(
     match: DartsMatchEntity = insertDartsMatch(),
-    statsPanel: GameStatisticsPanelX01 = GameStatisticsPanelX01("501")
+    statsPanel: GameStatisticsPanelX01 = GameStatisticsPanelX01(DEFAULT_X01_CONFIG.toJson())
 ) = MatchSummaryPanel(match, statsPanel)
 
 class FakeDartsScreen : AbstractDartsGameScreen() {

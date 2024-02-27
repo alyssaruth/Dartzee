@@ -3,6 +3,7 @@ package dartzee.ai
 import com.fasterxml.jackson.module.kotlin.readValue
 import dartzee.core.util.jsonMapper
 import dartzee.game.ClockType
+import dartzee.game.FinishType
 import dartzee.logging.CODE_AI_ERROR
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.SegmentType
@@ -42,7 +43,7 @@ data class DartsAiModel(
     private val distribution = NormalDistribution(mean.toDouble(), standardDeviation)
 
     /** X01 */
-    fun throwX01Dart(score: Int): ComputedPoint {
+    fun throwX01Dart(score: Int, finishType: FinishType): ComputedPoint {
         // Check for a specific dart to aim for. It's possible to override any value for a specific
         // AI strategy.
         val drtToAimAt = getOveriddenDartToAimAt(score)
@@ -55,7 +56,7 @@ data class DartsAiModel(
         return if (score > 60) {
             throwScoringDart()
         } else {
-            val defaultDrt = getDefaultDartToAimAt(score)
+            val defaultDrt = getX01AimDart(score, finishType)
             val ptToAimAt = getPointForScore(defaultDrt)
             throwDartAtPoint(ptToAimAt)
         }

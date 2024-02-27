@@ -1,15 +1,23 @@
 package dartzee.utils
 
 import dartzee.ai.DartsAiModel
+import dartzee.game.FinishType
 import dartzee.`object`.Dart
 
-fun isBust(dart: Dart) = isBust(dart.startingScore, dart)
+fun isBust(dart: Dart, finishType: FinishType) = isBust(dart.startingScore, dart, finishType)
 
-fun isBust(score: Int, lastDart: Dart): Boolean {
+private fun isBust(score: Int, lastDart: Dart, finishType: FinishType): Boolean {
     val scoreRemaining = score - lastDart.getTotal()
-    return (scoreRemaining < 0 ||
-        scoreRemaining == 1 ||
-        scoreRemaining == 0 && !lastDart.isDouble())
+
+    if (scoreRemaining < 0) {
+        return true
+    }
+
+    if (finishType == FinishType.Any) {
+        return false
+    }
+
+    return scoreRemaining == 1 || (scoreRemaining == 0 && !lastDart.isDouble())
 }
 
 /**
@@ -18,7 +26,16 @@ fun isBust(score: Int, lastDart: Dart): Boolean {
  * - The starting score was odd and < the threshold (configurable per AI)
  * - The current score is even, meaning we have bailed ourselves out in some way
  */
-fun shouldStopForMercyRule(model: DartsAiModel, startingScore: Int, currentScore: Int): Boolean {
+fun shouldStopForMercyRule(
+    model: DartsAiModel,
+    startingScore: Int,
+    currentScore: Int,
+    finishType: FinishType
+): Boolean {
+    if (finishType == FinishType.Any) {
+        return false
+    }
+
     val mercyThreshold = model.mercyThreshold ?: return false
     return startingScore < mercyThreshold && startingScore % 2 != 0 && currentScore % 2 == 0
 }

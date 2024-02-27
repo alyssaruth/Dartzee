@@ -5,6 +5,7 @@ import dartzee.db.DartsMatchEntity
 import dartzee.db.EntityName
 import dartzee.game.state.GolfPlayerState
 import dartzee.helper.AbstractTest
+import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.insertGame
@@ -35,7 +36,7 @@ import org.junit.jupiter.api.Test
 class TestGameLauncher : AbstractTest() {
     @Test
     fun `Should launch a new game of X01 successfully`() {
-        testNewGameLaunch<GamePanelX01>(GameType.X01, "501")
+        testNewGameLaunch<GamePanelX01>(GameType.X01, DEFAULT_X01_CONFIG.toJson())
     }
 
     @Test
