@@ -54,11 +54,11 @@ fun splitAvatar(
     return ImageIcon(newImage)
 }
 
-private fun PlayerEntity.getAvatarImage() = getAvatar().toBufferedImage()
+private fun PlayerEntity.getAvatarImage() = getAvatar().toBufferedImage(BufferedImage.TYPE_INT_RGB)
 
 fun combinePlayerFlags(flagOne: ImageIcon, flagTwo: ImageIcon): ImageIcon {
-    val imageOne = flagOne.toBufferedImage()
-    val imageTwo = flagTwo.toBufferedImage()
+    val imageOne = flagOne.toBufferedImage(BufferedImage.TYPE_INT_ARGB)
+    val imageTwo = flagTwo.toBufferedImage(BufferedImage.TYPE_INT_ARGB)
     val newImage =
         BufferedImage(
             flagOne.iconWidth + flagTwo.iconWidth,
@@ -77,7 +77,8 @@ fun combinePlayerFlags(flagOne: ImageIcon, flagTwo: ImageIcon): ImageIcon {
     return ImageIcon(newImage)
 }
 
-fun ImageIcon.toBufferedImage(): BufferedImage = image.toBufferedImage(iconWidth, iconHeight)
+fun ImageIcon.toBufferedImage(type: Int): BufferedImage =
+    image.toBufferedImage(iconWidth, iconHeight, type)
 
 fun ImageIcon.greyscale(): ImageIcon {
     val original = image.toBufferedImage(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
