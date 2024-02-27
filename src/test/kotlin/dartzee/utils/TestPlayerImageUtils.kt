@@ -1,14 +1,12 @@
 package dartzee.utils
 
-import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.core.util.FileUtil
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
-import java.awt.Dimension
+import dartzee.shouldMatchImage
 import javax.swing.ImageIcon
-import javax.swing.JLabel
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
@@ -19,10 +17,7 @@ class TestPlayerImageUtils : AbstractTest() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, null, false)
-        val label = JLabel(result)
-        label.size = Dimension(150, 150)
-        label.repaint()
-        label.shouldMatchImage("split-50-inactive")
+        result.shouldMatchImage("split-50-inactive")
     }
 
     @Test
@@ -31,10 +26,7 @@ class TestPlayerImageUtils : AbstractTest() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, null, true)
-        val label = JLabel(result)
-        label.size = Dimension(150, 150)
-        label.repaint()
-        label.shouldMatchImage("split-50-game-over")
+        result.shouldMatchImage("split-50-game-over")
     }
 
     @Test
@@ -43,10 +35,7 @@ class TestPlayerImageUtils : AbstractTest() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, p1, true)
-        val label = JLabel(result)
-        label.size = Dimension(150, 150)
-        label.repaint()
-        label.shouldMatchImage("split-50-game-over-selected")
+        result.shouldMatchImage("split-50-game-over-selected")
     }
 
     @Test
@@ -55,10 +44,7 @@ class TestPlayerImageUtils : AbstractTest() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, p1, false)
-        val label = JLabel(result)
-        label.size = Dimension(150, 150)
-        label.repaint()
-        label.shouldMatchImage("split-p1")
+        result.shouldMatchImage("split-p1")
     }
 
     @Test
@@ -67,10 +53,7 @@ class TestPlayerImageUtils : AbstractTest() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, p2, false)
-        val label = JLabel(result)
-        label.size = Dimension(150, 150)
-        label.repaint()
-        label.shouldMatchImage("split-p2")
+        result.shouldMatchImage("split-p2")
     }
 
     @Test
@@ -79,10 +62,22 @@ class TestPlayerImageUtils : AbstractTest() {
         val bytes = FileUtil.getByteArrayForResource("/outer-wilds.jpeg")!!
         val result = convertImageToAvatarDimensions(bytes)
 
-        val label = JLabel(ImageIcon(result))
-        label.size = Dimension(150, 150)
-        label.repaint()
-        label.shouldMatchImage("outer-wilds-avatar")
+        ImageIcon(result).shouldMatchImage("outer-wilds-avatar")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should combine player flags`() {
+        combinePlayerFlags(PlayerEntity.ICON_HUMAN, PlayerEntity.ICON_AI)
+            .shouldMatchImage("human-ai")
+
+        combinePlayerFlags(PlayerEntity.ICON_AI, PlayerEntity.ICON_AI).shouldMatchImage("ai-ai")
+
+        combinePlayerFlags(PlayerEntity.ICON_AI, PlayerEntity.ICON_HUMAN)
+            .shouldMatchImage("ai-human")
+
+        combinePlayerFlags(PlayerEntity.ICON_HUMAN, PlayerEntity.ICON_HUMAN)
+            .shouldMatchImage("human-human")
     }
 
     private fun setUpPlayers(): Pair<PlayerEntity, PlayerEntity> {

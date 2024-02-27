@@ -27,26 +27,6 @@ class LeaderboardTopX01Finishes : AbstractLeaderboard() {
     override fun getTabName() = "X01 Finishes"
 
     override fun buildTable() {
-        val extraWhereSql = panelPlayerFilters.getWhereSql()
-
-        val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
-
-        val sb = StringBuilder()
-        sb.append(" SELECT p.Strategy, p.Name, g.LocalId, xf.Finish")
-        sb.append(" FROM X01Finish xf, Player p, Game g")
-        sb.append(" WHERE xf.PlayerId = p.RowId")
-        sb.append(" AND xf.GameId = g.RowId")
-        if (!extraWhereSql.isEmpty()) {
-            sb.append(" AND p.$extraWhereSql")
-        }
-        sb.append(" ORDER BY Finish DESC, xf.DtCreation ASC")
-        sb.append(" FETCH FIRST $leaderboardSize ROWS ONLY")
-
-        val sql = sb.toString()
-        buildStandardLeaderboard(tableTopFinishes, sql)
-    }
-
-    private fun buildStandardLeaderboard(table: ScrollTableDartsGame, sql: String) {
         val model = TableUtil.DefaultModel()
         model.addColumn("#")
         model.addColumn("")
@@ -54,18 +34,32 @@ class LeaderboardTopX01Finishes : AbstractLeaderboard() {
         model.addColumn("Game")
         model.addColumn("Finish")
 
-        val rows = retrieveDatabaseRowsForLeaderboard(sql)
+        val rows = retrieveDatabaseRowsForLeaderboard()
         model.addRows(rows)
 
-        table.model = model
-        table.setColumnWidths("35;25")
-        table.sortBy(0, false)
+        tableTopFinishes.model = model
+        tableTopFinishes.setColumnWidths("35;25")
+        tableTopFinishes.sortBy(0, false)
     }
 
-    private fun retrieveDatabaseRowsForLeaderboard(sqlStr: String): List<Array<Any>> {
+    private fun retrieveDatabaseRowsForLeaderboard(): List<Array<Any>> {
         val rows = mutableListOf<LeaderboardEntry>()
 
-        InjectedThings.mainDatabase.executeQuery(sqlStr).use { rs ->
+        val extraWhereSql = panelPlayerFilters.getWhereSql()
+        val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
+
+        val sb = StringBuilder()
+        sb.append(" SELECT p.Strategy, p.Name, g.LocalId, xf.Finish")
+        sb.append(" FROM X01Finish xf, Player p, Game g")
+        sb.append(" WHERE xf.PlayerId = p.RowId")
+        sb.append(" AND xf.GameId = g.RowId")
+        if (extraWhereSql.isNotEmpty()) {
+            sb.append(" AND p.$extraWhereSql")
+        }
+        sb.append(" ORDER BY Finish DESC, xf.DtCreation ASC")
+        sb.append(" FETCH FIRST $leaderboardSize ROWS ONLY")
+
+        InjectedThings.mainDatabase.executeQuery(sb).use { rs ->
             while (rs.next()) {
                 val strategy = rs.getString("Strategy")
                 val playerName = rs.getString("Name")
