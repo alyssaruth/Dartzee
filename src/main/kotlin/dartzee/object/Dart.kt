@@ -38,13 +38,7 @@ open class Dart(
         }
     }
 
-    fun getSegmentTypeToAimAt(): SegmentType {
-        return when (multiplier) {
-            1 -> SegmentType.OUTER_SINGLE
-            2 -> SegmentType.DOUBLE
-            else -> SegmentType.TREBLE
-        }
-    }
+    fun getSegmentTypeToAimAt() = getSegmentTypeForMultiplier(multiplier)
 
     fun getGolfScore(target: Int): Int {
         return if (score != target) {

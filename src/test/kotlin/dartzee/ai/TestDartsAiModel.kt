@@ -103,7 +103,7 @@ class TestDartsAiModel : AbstractTest() {
     fun `Should use the double distribution if throwing at a double, and the regular distribution otherwise`() {
         val model = beastDartsModel(standardDeviationDoubles = 100000.0, maxRadius = 1000)
 
-        val pt = model.throwX01Dart(40, FinishType.Doubles)
+        val pt = model.throwX01Dart(40, FinishType.Doubles, 3)
         pt.segment shouldNotBe DartboardSegment(SegmentType.DOUBLE, 20)
     }
 
@@ -111,7 +111,7 @@ class TestDartsAiModel : AbstractTest() {
     fun `Should revert to the regular distribution for doubles`() {
         val model = beastDartsModel(standardDeviationDoubles = null)
 
-        val pt = model.throwX01Dart(40, FinishType.Doubles)
+        val pt = model.throwX01Dart(40, FinishType.Doubles, 3)
         pt.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 20)
     }
 
@@ -165,7 +165,7 @@ class TestDartsAiModel : AbstractTest() {
         val model = beastDartsModel(scoringDart = 18)
 
         FinishType.values().forEach { finishType ->
-            val pt = model.throwX01Dart(61, finishType)
+            val pt = model.throwX01Dart(61, finishType, 3)
             pt.segment shouldBe DartboardSegment(SegmentType.TREBLE, 18)
         }
     }
@@ -174,7 +174,7 @@ class TestDartsAiModel : AbstractTest() {
     fun `Should throw at inner bull if the scoring dart is 25`() {
         val model = beastDartsModel(scoringDart = 25)
 
-        val pt = model.throwX01Dart(501, FinishType.Doubles)
+        val pt = model.throwX01Dart(501, FinishType.Doubles, 3)
         pt.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
     }
 
@@ -183,7 +183,7 @@ class TestDartsAiModel : AbstractTest() {
         val model = beastDartsModel(scoringDart = 25)
 
         for (i in 41..60) {
-            val pt = model.throwX01Dart(i, FinishType.Doubles)
+            val pt = model.throwX01Dart(i, FinishType.Doubles, 3)
             pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, i - 40)
         }
     }
@@ -192,7 +192,7 @@ class TestDartsAiModel : AbstractTest() {
     fun `Should aim to reduce to 32 when the score is less than 40`() {
         val model = beastDartsModel()
 
-        val pt = model.throwX01Dart(37, FinishType.Doubles)
+        val pt = model.throwX01Dart(37, FinishType.Doubles, 3)
         pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 5)
     }
 
@@ -200,7 +200,7 @@ class TestDartsAiModel : AbstractTest() {
     fun `Should aim to reduce to 16 when the score is less than 32`() {
         val model = beastDartsModel()
 
-        val pt = model.throwX01Dart(31, FinishType.Doubles)
+        val pt = model.throwX01Dart(31, FinishType.Doubles, 3)
         pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 15)
     }
 
@@ -208,7 +208,7 @@ class TestDartsAiModel : AbstractTest() {
     fun `Should aim to reduce to 8 when the score is less than 16`() {
         val model = beastDartsModel()
 
-        val pt = model.throwX01Dart(15, FinishType.Doubles)
+        val pt = model.throwX01Dart(15, FinishType.Doubles, 3)
         pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 7)
     }
 
@@ -216,7 +216,7 @@ class TestDartsAiModel : AbstractTest() {
     fun `Should aim to reduce to 4 when the score is less than 8`() {
         val model = beastDartsModel()
 
-        val pt = model.throwX01Dart(7, FinishType.Doubles)
+        val pt = model.throwX01Dart(7, FinishType.Doubles, 3)
         pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 3)
     }
 
@@ -226,7 +226,7 @@ class TestDartsAiModel : AbstractTest() {
 
         val scores = getCheckoutScores().filter { it <= 40 }
         scores.forEach {
-            val pt = model.throwX01Dart(it, FinishType.Doubles)
+            val pt = model.throwX01Dart(it, FinishType.Doubles, 3)
             pt.segment shouldBe DartboardSegment(SegmentType.DOUBLE, it / 2)
         }
     }
@@ -238,7 +238,7 @@ class TestDartsAiModel : AbstractTest() {
 
         val scores = 1..20
         scores.forEach {
-            val pt = model.throwX01Dart(it, FinishType.Any)
+            val pt = model.throwX01Dart(it, FinishType.Any, 3)
             pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, it)
         }
     }
@@ -247,13 +247,13 @@ class TestDartsAiModel : AbstractTest() {
     fun `Should aim for treble finishes`() {
         val model = beastDartsModel()
 
-        model.throwX01Dart(21, FinishType.Any).segment shouldBe
+        model.throwX01Dart(21, FinishType.Any, 3).segment shouldBe
             DartboardSegment(SegmentType.TREBLE, 7)
 
-        model.throwX01Dart(39, FinishType.Any).segment shouldBe
+        model.throwX01Dart(39, FinishType.Any, 3).segment shouldBe
             DartboardSegment(SegmentType.TREBLE, 13)
 
-        model.throwX01Dart(60, FinishType.Any).segment shouldBe
+        model.throwX01Dart(60, FinishType.Any, 3).segment shouldBe
             DartboardSegment(SegmentType.TREBLE, 20)
     }
 
@@ -261,13 +261,13 @@ class TestDartsAiModel : AbstractTest() {
     fun `Should aim to leave single twenty`() {
         val model = beastDartsModel()
 
-        model.throwX01Dart(40, FinishType.Any).segment shouldBe
+        model.throwX01Dart(40, FinishType.Any, 3).segment shouldBe
             DartboardSegment(SegmentType.OUTER_SINGLE, 20)
 
-        model.throwX01Dart(31, FinishType.Any).segment shouldBe
+        model.throwX01Dart(31, FinishType.Any, 3).segment shouldBe
             DartboardSegment(SegmentType.OUTER_SINGLE, 11)
 
-        model.throwX01Dart(29, FinishType.Any).segment shouldBe
+        model.throwX01Dart(29, FinishType.Any, 3).segment shouldBe
             DartboardSegment(SegmentType.OUTER_SINGLE, 9)
     }
 
@@ -275,13 +275,13 @@ class TestDartsAiModel : AbstractTest() {
     fun `Should fall back on aiming for single twenty otherwise`() {
         val model = beastDartsModel()
 
-        model.throwX01Dart(41, FinishType.Any).segment shouldBe
+        model.throwX01Dart(41, FinishType.Any, 3).segment shouldBe
             DartboardSegment(SegmentType.OUTER_SINGLE, 20)
 
-        model.throwX01Dart(50, FinishType.Any).segment shouldBe
+        model.throwX01Dart(50, FinishType.Any, 3).segment shouldBe
             DartboardSegment(SegmentType.OUTER_SINGLE, 20)
 
-        model.throwX01Dart(58, FinishType.Any).segment shouldBe
+        model.throwX01Dart(58, FinishType.Any, 3).segment shouldBe
             DartboardSegment(SegmentType.OUTER_SINGLE, 20)
     }
 

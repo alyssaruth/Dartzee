@@ -1,8 +1,9 @@
 package dartzee.`object`
 
-class DartHint(score: Int, multiplier: Int) : Dart(score, multiplier)
+class DartHint(score: Int, multiplier: Int) :
+    Dart(score, multiplier, getSegmentTypeForMultiplier(multiplier))
 
-fun factoryDartHintFromString(dartStr: String): DartHint? {
+fun factoryDartHintFromString(dartStr: String): DartHint {
     return if (dartStr.startsWith("D")) {
         val score = dartStr.replace("D", "").toInt()
         DartHint(score, 2)

@@ -180,16 +180,17 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
     override fun shouldStopAfterDartThrown() = getCurrentPlayerState().isCurrentRoundComplete()
 
     override fun computeAiDart(model: DartsAiModel): ComputedPoint? {
-        val startOfRoundScore =
-            getCurrentPlayerState().getRemainingScoreForRound(currentRoundNumber - 1)
-        val currentScore = getCurrentPlayerState().getRemainingScore()
+        val state = getCurrentPlayerState()
+        val startOfRoundScore = state.getRemainingScoreForRound(currentRoundNumber - 1)
+        val currentScore = state.getRemainingScore()
+        val dartsRemaining = 3 - dartsThrownCount()
         return if (
             shouldStopForMercyRule(model, startOfRoundScore, currentScore, config.finishType)
         ) {
             stopThrowing()
             null
         } else {
-            model.throwX01Dart(currentScore, config.finishType)
+            model.throwX01Dart(currentScore, config.finishType, dartsRemaining)
         }
     }
 

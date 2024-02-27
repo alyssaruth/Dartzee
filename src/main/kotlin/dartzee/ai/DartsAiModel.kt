@@ -5,6 +5,7 @@ import dartzee.core.util.jsonMapper
 import dartzee.game.ClockType
 import dartzee.game.FinishType
 import dartzee.logging.CODE_AI_ERROR
+import dartzee.`object`.CheckoutSuggester
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.SegmentType
 import dartzee.`object`.getSegmentTypeForClockType
@@ -42,15 +43,20 @@ data class DartsAiModel(
     private val distribution = NormalDistribution(mean.toDouble(), standardDeviation)
 
     /** X01 */
-    fun throwX01Dart(score: Int, finishType: FinishType): ComputedPoint {
-        return if (score > 60) {
-            throwScoringDart()
+    fun throwX01Dart(score: Int, finishType: FinishType, dartsRemaining: Int) =
+        if (score > 60) {
+            val checkout = CheckoutSuggester.suggestCheckout(score, dartsRemaining)
+            if (checkout != null) {
+                val pt = getPointForScore(checkout.first().toAimDart())
+                throwDartAtPoint(pt)
+            } else {
+                throwScoringDart()
+            }
         } else {
             val defaultDrt = getX01AimDart(score, finishType)
             val ptToAimAt = getPointForScore(defaultDrt)
             throwDartAtPoint(ptToAimAt)
         }
-    }
 
     fun throwScoringDart(): ComputedPoint {
         val ptToAimAt = calculateScoringPoint()

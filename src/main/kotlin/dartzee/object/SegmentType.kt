@@ -47,5 +47,13 @@ fun getSegmentTypeForClockType(clockType: ClockType): SegmentType {
     }
 }
 
+fun getSegmentTypeForMultiplier(multiplier: Int): SegmentType {
+    return when (multiplier) {
+        1 -> SegmentType.OUTER_SINGLE
+        2 -> SegmentType.DOUBLE
+        else -> SegmentType.TREBLE
+    }
+}
+
 /** Hard-coded values based on counting the points in a 500x500 rendered dartboard. */
 fun getRoughScoringArea(): Double = 96173.0 + MISS_FUDGE_FACTOR
