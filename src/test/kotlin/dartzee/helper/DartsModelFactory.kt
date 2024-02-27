@@ -21,7 +21,6 @@ fun beastDartsModel(
     standardDeviationCentral: Double? = null,
     maxRadius: Int = 450,
     scoringDart: Int = 20,
-    hmScoreToDart: Map<Int, AimDart> = emptyMap(),
     mercyThreshold: Int? = null,
     hmDartNoToSegmentType: Map<Int, SegmentType> =
         DartsAiModel.DEFAULT_GOLF_SEGMENT_TYPES.toMutableMap(),
@@ -35,7 +34,6 @@ fun beastDartsModel(
         standardDeviationCentral,
         maxRadius,
         scoringDart,
-        hmScoreToDart,
         mercyThreshold,
         hmDartNoToSegmentType,
         hmDartNoToStopThreshold,
@@ -49,7 +47,6 @@ fun makeDartsModel(
     standardDeviationCentral: Double? = null,
     maxRadius: Int = 250,
     scoringDart: Int = 20,
-    hmScoreToDart: Map<Int, AimDart> = emptyMap(),
     mercyThreshold: Int? = null,
     hmDartNoToSegmentType: Map<Int, SegmentType> =
         DartsAiModel.DEFAULT_GOLF_SEGMENT_TYPES.toMutableMap(),
@@ -63,7 +60,6 @@ fun makeDartsModel(
         standardDeviationCentral,
         maxRadius,
         scoringDart,
-        hmScoreToDart,
         mercyThreshold,
         hmDartNoToSegmentType,
         hmDartNoToStopThreshold,

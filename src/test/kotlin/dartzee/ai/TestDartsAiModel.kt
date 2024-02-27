@@ -56,7 +56,6 @@ class TestDartsAiModel : AbstractTest() {
     }
 
     private fun makePopulatedAiModel(): DartsAiModel {
-        val setupDarts = mapOf(57 to AimDart(17, 1), 97 to AimDart(19, 3))
         val hmDartNoToSegmentType =
             mapOf(1 to SegmentType.TREBLE, 2 to SegmentType.TREBLE, 3 to SegmentType.OUTER_SINGLE)
         val hmDartNoToThreshold = mapOf(1 to 2, 2 to 3)
@@ -66,7 +65,6 @@ class TestDartsAiModel : AbstractTest() {
             35.0,
             345,
             20,
-            setupDarts,
             17,
             hmDartNoToSegmentType,
             hmDartNoToThreshold,
@@ -162,14 +160,6 @@ class TestDartsAiModel : AbstractTest() {
     }
 
     /** X01 test */
-    @Test
-    fun `Should aim for the overridden value if one is set for the current setup score`() {
-        val model = beastDartsModel(hmScoreToDart = mapOf(77 to AimDart(17, 2)))
-
-        val pt = model.throwX01Dart(77, FinishType.Doubles)
-        pt.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 17)
-    }
-
     @Test
     fun `Should aim for the scoring dart when the score is over 60`() {
         val model = beastDartsModel(scoringDart = 18)

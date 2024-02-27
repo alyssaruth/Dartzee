@@ -20,7 +20,6 @@ class DartsAiModelBenchmarkTest : AbstractTest() {
             80.0,
             129,
             20,
-            emptyMap(),
             18,
             mapOf(1 to SegmentType.DOUBLE, 2 to SegmentType.DOUBLE, 3 to SegmentType.DOUBLE),
             mapOf(1 to 3, 2 to 4),
@@ -34,7 +33,6 @@ class DartsAiModelBenchmarkTest : AbstractTest() {
             90.0,
             101,
             20,
-            emptyMap(),
             null,
             mapOf(
                 1 to SegmentType.INNER_SINGLE,

@@ -6,7 +6,6 @@ import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.getAllAchievements
 import dartzee.achievements.runConversionsWithProgressBar
-import dartzee.ai.AimDart
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSortedValues
@@ -59,7 +58,7 @@ fun AbstractDartsGameScreen.getScorer(playerName: String) =
 data class TwoPlayers(val winner: PlayerEntity, val loser: PlayerEntity)
 
 fun createPlayers(): TwoPlayers {
-    val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
+    val aiModel = beastDartsModel()
     val winner = insertPlayer(model = aiModel, name = "Winner")
 
     val loserModel = makeDartsModel(standardDeviation = 20.0)

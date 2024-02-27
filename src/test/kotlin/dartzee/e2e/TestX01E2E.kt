@@ -2,7 +2,6 @@ package dartzee.e2e
 
 import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.AchievementType
-import dartzee.ai.AimDart
 import dartzee.game.FinishType
 import dartzee.game.GameType
 import dartzee.game.X01Config
@@ -44,7 +43,7 @@ class TestX01E2E : AbstractRegistryTest() {
     fun `E2E - 501 - 9 dart game`() {
         val game = insertGame(gameType = GameType.X01, gameParams = DEFAULT_X01_CONFIG.toJson())
 
-        val aiModel = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
+        val aiModel = beastDartsModel()
         val player = insertPlayer(model = aiModel)
 
         val (panel, listener) = setUpGamePanelAndStartGame(game, listOf(player))

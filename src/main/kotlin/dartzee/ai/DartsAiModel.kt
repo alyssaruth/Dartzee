@@ -31,7 +31,6 @@ data class DartsAiModel(
     val standardDeviationCentral: Double?,
     val maxRadius: Int,
     val scoringDart: Int,
-    val hmScoreToDart: Map<Int, AimDart>,
     val mercyThreshold: Int?,
     val hmDartNoToSegmentType: Map<Int, SegmentType>,
     val hmDartNoToStopThreshold: Map<Int, Int>,
@@ -44,15 +43,6 @@ data class DartsAiModel(
 
     /** X01 */
     fun throwX01Dart(score: Int, finishType: FinishType): ComputedPoint {
-        // Check for a specific dart to aim for. It's possible to override any value for a specific
-        // AI strategy.
-        val drtToAimAt = getOveriddenDartToAimAt(score)
-        if (drtToAimAt != null) {
-            val ptToAimAt = getPointForScore(drtToAimAt)
-            return throwDartAtPoint(ptToAimAt)
-        }
-
-        // No overridden strategy, do the default thing
         return if (score > 60) {
             throwScoringDart()
         } else {
@@ -71,8 +61,6 @@ data class DartsAiModel(
         val segmentType = if (scoringDart == 25) SegmentType.DOUBLE else SegmentType.TREBLE
         return getComputedPointForScore(scoringDart, segmentType)
     }
-
-    private fun getOveriddenDartToAimAt(score: Int) = hmScoreToDart[score]
 
     /** Golf */
     fun throwGolfDart(targetHole: Int, dartNo: Int): ComputedPoint {
@@ -202,7 +190,6 @@ data class DartsAiModel(
                 null,
                 150,
                 20,
-                emptyMap(),
                 null,
                 hmDartNoToSegmentType,
                 hmDartNoToStopThreshold,
