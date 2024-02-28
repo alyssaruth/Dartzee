@@ -62,7 +62,7 @@ object TableUtil {
             cols.forEach { addColumn(it) }
         }
 
-        fun addRows(rows: Collection<Array<Any>>) {
+        fun <T : Any> addRows(rows: Collection<Array<T>>) {
             rows.forEach { addRow(it) }
         }
 

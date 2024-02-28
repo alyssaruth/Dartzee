@@ -313,14 +313,8 @@ class Database(
         sb.append(" WHERE TableType = 'T'")
         sb.append(" AND TableName NOT IN $tableNameSql")
 
-        val list = mutableListOf<String>()
-        executeQuery(sb).use { rs ->
-            while (rs.next()) {
-                list.add(rs.getString("TableName"))
-            }
-        }
-
-        list.forEach { dropTable(it) }
-        return list
+        val tables = retrieveAsList(sb) { it.getString("TableName") }
+        tables.forEach { dropTable(it) }
+        return tables
     }
 }

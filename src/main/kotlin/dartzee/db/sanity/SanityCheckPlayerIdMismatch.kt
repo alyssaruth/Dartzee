@@ -19,16 +19,18 @@ class SanityCheckPlayerIdMismatch : ISanityCheck {
         tm.addColumn("ParticipantId")
         tm.addColumn("DartPlayerId")
         tm.addColumn("ParticipantPlayerId")
-        mainDatabase.executeQuery(sb).use { rs ->
-            while (rs.next()) {
+
+        val rows =
+            mainDatabase.retrieveAsList(sb) { rs ->
                 val dartId = rs.getString("DartId")
                 val participantId = rs.getString("ParticipantId")
                 val dartPlayerId = rs.getString("DartPlayerId")
                 val participantPlayerId = rs.getString("ParticipantPlayerId")
 
-                tm.addRow(arrayOf(dartId, participantId, dartPlayerId, participantPlayerId))
+                arrayOf(dartId, participantId, dartPlayerId, participantPlayerId)
             }
-        }
+
+        tm.addRows(rows)
 
         if (tm.rowCount > 0) {
             return listOf(
