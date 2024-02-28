@@ -6,7 +6,10 @@ import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.getAllAchievements
 import dartzee.achievements.runConversionsWithProgressBar
+import dartzee.ai.AI_DARTBOARD
 import dartzee.ai.DartsAiModel
+import dartzee.ai.getPointForScore
+import dartzee.bean.ParticipantAvatar
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSortedValues
 import dartzee.db.DartEntity
@@ -25,6 +28,8 @@ import dartzee.helper.retrieveParticipant
 import dartzee.helper.wipeTable
 import dartzee.listener.DartboardListener
 import dartzee.`object`.Dart
+import dartzee.`object`.SegmentType
+import dartzee.screen.GameplayDartboard
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.DartsGamePanel
@@ -35,10 +40,12 @@ import dartzee.utils.ResourceCache.ICON_RESUME
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.mockk
 import io.mockk.verifySequence
 import javax.swing.JButton
 import javax.swing.JToggleButton
+import javax.swing.border.LineBorder
 
 fun AbstractDartsScorerPausable<*>.shouldBePaused() {
     getChild<JButton> { it.icon == ICON_RESUME }
@@ -92,6 +99,14 @@ fun DartsGamePanel<*, *>.startGame(players: List<PlayerEntity>): List<IWrappedPa
     startNewGame(participants)
     return participants
 }
+
+fun DartsGamePanel<*, *>.throwHumanDart(score: Int, segmentType: SegmentType) {
+    val singleTwentyPt = getPointForScore(score, segmentType)
+    val computedPt = AI_DARTBOARD.toComputedPoint(singleTwentyPt)
+    getChild<GameplayDartboard>().dartThrown(computedPt)
+}
+
+fun ParticipantAvatar.shouldBeSelected() = border.shouldBeInstanceOf<LineBorder>()
 
 fun awaitGameFinish(game: GameEntity) {
     waitForAssertion(timeout = 30000) { game.isFinished() shouldBe true }
