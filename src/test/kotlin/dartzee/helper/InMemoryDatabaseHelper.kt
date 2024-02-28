@@ -50,6 +50,32 @@ fun insertPlayerForGame(name: String, gameId: String, strategy: String = "foo"):
     return player
 }
 
+fun insertFinishedParticipant(
+    name: String,
+    gameType: GameType,
+    gameParams: String,
+    finalScore: Int
+) {
+    val p = insertPlayer(name = name)
+    val g = insertGame(gameType = gameType, gameParams = gameParams)
+    insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = finalScore)
+}
+
+fun insertFinishedTeam(
+    name1: String,
+    name2: String,
+    gameType: GameType,
+    gameParams: String,
+    finalScore: Int
+) {
+    val p = insertPlayer(name = name1)
+    val p2 = insertPlayer(name = name2)
+    val g = insertGame(gameType = gameType, gameParams = gameParams)
+    val t = insertTeam(gameId = g.rowId, finalScore = finalScore)
+    insertParticipant(playerId = p.rowId, teamId = t.rowId, ordinal = 0)
+    insertParticipant(playerId = p2.rowId, teamId = t.rowId, ordinal = 1)
+}
+
 fun factoryPlayer(name: String): PlayerEntity {
     val p = PlayerEntity()
     p.name = name
