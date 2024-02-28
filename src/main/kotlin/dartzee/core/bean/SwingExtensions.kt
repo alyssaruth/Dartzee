@@ -62,8 +62,12 @@ fun JTextComponent.addGhostText(text: String) {
     this.add(GhostText(text, this))
 }
 
-fun Image.toBufferedImage(width: Int, height: Int): BufferedImage {
-    val bi = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+fun Image.toBufferedImage(
+    width: Int,
+    height: Int,
+    type: Int = BufferedImage.TYPE_INT_RGB
+): BufferedImage {
+    val bi = BufferedImage(width, height, type)
     val g = bi.createGraphics()
     g.drawImage(this, 0, 0, null)
     g.dispose()

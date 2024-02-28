@@ -37,6 +37,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.MockKMatcherScope
 import java.awt.Color
 import java.awt.Component
+import java.awt.Dimension
 import java.awt.Point
 import java.io.File
 import java.time.Instant
@@ -44,6 +45,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JDialog
@@ -273,4 +275,11 @@ inline fun <reified T : Component> JTabbedPane.selectTab(
     noinline filterFn: ((T) -> Boolean)? = null
 ) {
     runOnEventThreadBlocking { selectedComponent = getChild<T>(name, filterFn = filterFn) }
+}
+
+fun ImageIcon.toLabel(): JLabel {
+    val label = JLabel(this)
+    label.size = Dimension(iconWidth, iconHeight)
+    label.repaint()
+    return label
 }
