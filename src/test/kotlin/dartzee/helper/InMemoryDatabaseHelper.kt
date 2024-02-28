@@ -53,27 +53,32 @@ fun insertPlayerForGame(name: String, gameId: String, strategy: String = "foo"):
 fun insertFinishedParticipant(
     name: String,
     gameType: GameType,
-    gameParams: String,
-    finalScore: Int
-) {
-    val p = insertPlayer(name = name)
+    finalScore: Int,
+    gameParams: String = DEFAULT_X01_CONFIG.toJson(),
+    ai: Boolean = true,
+): GameEntity {
+    val p = insertPlayer(name = name, strategy = if (ai) DartsAiModel.new().toJson() else "")
     val g = insertGame(gameType = gameType, gameParams = gameParams)
     insertParticipant(playerId = p.rowId, gameId = g.rowId, finalScore = finalScore)
+    return g
 }
 
 fun insertFinishedTeam(
     name1: String,
     name2: String,
     gameType: GameType,
-    gameParams: String,
-    finalScore: Int
-) {
-    val p = insertPlayer(name = name1)
-    val p2 = insertPlayer(name = name2)
+    finalScore: Int,
+    gameParams: String = DEFAULT_X01_CONFIG.toJson(),
+    p1Ai: Boolean = true,
+    p2Ai: Boolean = true
+): GameEntity {
+    val p = insertPlayer(name = name1, strategy = if (p1Ai) DartsAiModel.new().toJson() else "")
+    val p2 = insertPlayer(name = name2, strategy = if (p2Ai) DartsAiModel.new().toJson() else "")
     val g = insertGame(gameType = gameType, gameParams = gameParams)
     val t = insertTeam(gameId = g.rowId, finalScore = finalScore)
     insertParticipant(playerId = p.rowId, teamId = t.rowId, ordinal = 0)
     insertParticipant(playerId = p2.rowId, teamId = t.rowId, ordinal = 1)
+    return g
 }
 
 fun factoryPlayer(name: String): PlayerEntity {
