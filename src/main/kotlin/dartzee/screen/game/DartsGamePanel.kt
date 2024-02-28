@@ -7,6 +7,7 @@ import dartzee.achievements.getWinAchievementType
 import dartzee.ai.DartsAiModel
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.obj.HashMapList
+import dartzee.core.util.DialogUtil
 import dartzee.core.util.doBadMiss
 import dartzee.core.util.doBull
 import dartzee.core.util.getSortedValues
@@ -44,6 +45,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.ImageIcon
 import javax.swing.JButton
+import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.JToggleButton
 
@@ -77,6 +79,7 @@ abstract class DartsGamePanel<
     protected val panelButtons = JPanel()
     val btnConfirm = JButton("")
     val btnReset = JButton("")
+    private val btnResign = JButton("")
     private val btnStats = JToggleButton("")
     private val btnSlider = JToggleButton("")
 
@@ -84,6 +87,8 @@ abstract class DartsGamePanel<
         if (totalPlayers == 1) "practice game" else "$totalPlayers players"
 
     protected fun getActiveCount() = getParticipants().count { it.participant.isActive() }
+
+    private fun getResignedCount() = getParticipants().count { it.participant.resigned }
 
     fun getGameId() = gameEntity.rowId
 
@@ -94,7 +99,7 @@ abstract class DartsGamePanel<
             return -1
         }
 
-        return totalPlayers - getActiveCount() + 1
+        return totalPlayers - getActiveCount() - getResignedCount() + 1
     }
 
     protected fun getCurrentPlayerStrategy(): DartsAiModel {
@@ -146,6 +151,11 @@ abstract class DartsGamePanel<
         btnReset.icon = ImageIcon(javaClass.getResource("/buttons/Reset.png"))
         btnReset.toolTipText = "Reset round"
         panelButtons.add(btnReset)
+        btnResign.preferredSize = Dimension(80, 80)
+        btnResign.icon = ImageIcon(javaClass.getResource("/buttons/gameReport.png"))
+        btnResign.toolTipText = "Resign"
+        panelButtons.add(btnResign)
+
         btnStats.toolTipText = "View stats"
         btnStats.preferredSize = Dimension(80, 80)
         btnStats.icon = ICON_STATS_LARGE
@@ -162,6 +172,7 @@ abstract class DartsGamePanel<
 
         panelButtons.add(btnSlider)
 
+        btnResign.addActionListener(this)
         btnConfirm.addActionListener(this)
         btnReset.addActionListener(this)
         btnStats.addActionListener(this)
@@ -181,6 +192,8 @@ abstract class DartsGamePanel<
 
     abstract fun factoryStatsPanel(gameParams: String): AbstractGameStatisticsPanel<PlayerState>
 
+    abstract fun turnFinished()
+
     open fun updateVariablesForDartThrown(dart: Dart) {}
 
     /** Regular methods */
@@ -198,8 +211,9 @@ abstract class DartsGamePanel<
         // Create a new round for this player
         currentRoundNumber = getCurrentPlayerState().currentRoundNumber()
 
-        btnReset.isEnabled = false
-        btnConfirm.isEnabled = false
+        btnReset.isVisible = false
+        btnConfirm.isVisible = false
+        btnResign.isVisible = getCurrentPlayerState().isHuman()
 
         btnStats.isEnabled = currentRoundNumber > 1
 
@@ -246,12 +260,11 @@ abstract class DartsGamePanel<
 
         if (getActiveCount() == 0) {
             btnSlider.isVisible = false
-            btnConfirm.isVisible = false
-            btnReset.isVisible = false
-        } else {
-            btnConfirm.isEnabled = false
-            btnReset.isEnabled = false
         }
+
+        btnConfirm.isVisible = false
+        btnReset.isVisible = false
+        btnResign.isVisible = false
 
         // Default to showing the stats panel for completed games, if applicable
         if (btnStats.isVisible) {
@@ -444,9 +457,9 @@ abstract class DartsGamePanel<
         doAnimations(dart)
 
         // Enable both of these
-        btnReset.isEnabled = getCurrentPlayerState().isHuman()
+        btnReset.isVisible = getCurrentPlayerState().isHuman()
         if (!mustContinueThrowing()) {
-            btnConfirm.isEnabled = getCurrentPlayerState().isHuman()
+            btnConfirm.isVisible = getCurrentPlayerState().isHuman()
         }
 
         // If we've thrown three or should stop for other reasons (bust in X01), then stop throwing
@@ -485,9 +498,27 @@ abstract class DartsGamePanel<
         }
     }
 
+    private fun resignFromGame() {
+        val state = getCurrentPlayerState()
+        val name = state.wrappedParticipant.getParticipantName()
+        val a =
+            DialogUtil.showQuestion(
+                "Are you sure you want to resign $name from this game? They will not be able to return.",
+                parent = parentWindow
+            )
+
+        if (a == JOptionPane.NO_OPTION) {
+            return
+        }
+
+        val finishingPosition = getActiveCount()
+        state.participantResigned(finishingPosition)
+        turnFinished()
+    }
+
     private fun confirmRound() {
-        btnConfirm.isEnabled = false
-        btnReset.isEnabled = false
+        btnConfirm.isVisible = false
+        btnReset.isVisible = false
 
         dartboard.clearDarts()
 
@@ -499,8 +530,8 @@ abstract class DartsGamePanel<
         getCurrentPlayerState().resetRound()
 
         // If we're resetting, disable the buttons
-        btnConfirm.isEnabled = false
-        btnReset.isEnabled = false
+        btnConfirm.isVisible = false
+        btnReset.isVisible = false
 
         // Might need to re-enable the dartboard for listening if we're a human player
         if (getCurrentPlayerState().isHuman()) {
@@ -534,6 +565,7 @@ abstract class DartsGamePanel<
                 resetRound()
                 readyForThrow()
             }
+            btnResign -> resignFromGame()
             btnConfirm -> confirmRound()
             btnStats -> viewStats()
             btnSlider -> toggleSlider()
@@ -590,8 +622,9 @@ abstract class DartsGamePanel<
     }
 
     fun disableInputButtons() {
-        btnConfirm.isEnabled = false
-        btnReset.isEnabled = false
+        btnResign.isVisible = false
+        btnConfirm.isVisible = false
+        btnReset.isVisible = false
     }
 
     internal inner class DelayedOpponentTurn : Runnable {

@@ -101,6 +101,16 @@ abstract class AbstractPlayerState<S : AbstractPlayerState<S>> {
         fireStateChanged()
     }
 
+    fun participantResigned(finishingPosition: Int) {
+        val ptEntity = wrappedParticipant.participant
+        ptEntity.finishingPosition = finishingPosition
+        ptEntity.dtFinished = getSqlDateNow()
+        ptEntity.resigned = true
+        ptEntity.saveToDatabase()
+
+        fireStateChanged()
+    }
+
     fun updateActive(active: Boolean) {
         val changing = active != isActive
         isActive = active

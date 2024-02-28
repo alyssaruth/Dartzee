@@ -19,6 +19,10 @@ abstract class GamePanelFixedLength<
             handlePlayerFinish()
         }
 
+        turnFinished()
+    }
+
+    override fun turnFinished() {
         currentPlayerNumber = getNextPlayerNumber(currentPlayerNumber)
         if (getActiveCount() > 0) {
             nextTurn()

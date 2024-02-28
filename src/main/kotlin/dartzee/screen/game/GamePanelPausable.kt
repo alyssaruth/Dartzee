@@ -26,6 +26,10 @@ abstract class GamePanelPausable<
             handlePlayerFinish()
         }
 
+        turnFinished()
+    }
+
+    override fun turnFinished() {
         currentPlayerNumber = getNextPlayerNumber(currentPlayerNumber)
 
         val activePlayers = getActiveCount()
