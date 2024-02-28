@@ -456,9 +456,9 @@ abstract class DartsGamePanel<
 
         doAnimations(dart)
 
-        // Enable both of these
+        // Display human controls to reset / confirm
         btnReset.isVisible = getCurrentPlayerState().isHuman()
-        if (!mustContinueThrowing()) {
+        if (showConfirmButton()) {
             btnConfirm.isVisible = getCurrentPlayerState().isHuman()
         }
 
@@ -557,7 +557,7 @@ abstract class DartsGamePanel<
         }
     }
 
-    protected open fun mustContinueThrowing() = false
+    protected open fun showConfirmButton() = false
 
     override fun actionPerformed(arg0: ActionEvent) {
         when (arg0.source) {
