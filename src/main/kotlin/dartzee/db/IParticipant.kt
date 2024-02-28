@@ -10,6 +10,7 @@ interface IParticipant {
     var finishingPosition: Int
     var finalScore: Int
     var dtFinished: Timestamp
+    var resigned: Boolean
 
     fun saveToDatabase()
 

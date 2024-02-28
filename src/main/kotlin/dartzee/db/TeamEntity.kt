@@ -14,6 +14,7 @@ class TeamEntity(database: Database = mainDatabase) :
     override var finishingPosition = -1
     override var finalScore = -1
     override var dtFinished = DateStatics.END_OF_TIME
+    override var resigned = false
 
     override fun getTableName() = EntityName.Team
 
@@ -22,7 +23,8 @@ class TeamEntity(database: Database = mainDatabase) :
             "Ordinal INT NOT NULL, " +
             "FinishingPosition INT NOT NULL, " +
             "FinalScore INT NOT NULL, " +
-            "DtFinished TIMESTAMP NOT NULL")
+            "DtFinished TIMESTAMP NOT NULL, " +
+            "Resigned BOOLEAN NOT NULL")
     }
 
     override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>) {

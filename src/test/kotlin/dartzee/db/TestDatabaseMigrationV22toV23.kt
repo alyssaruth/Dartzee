@@ -6,8 +6,11 @@ import dartzee.game.GameType
 import dartzee.game.X01Config
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
+import dartzee.helper.insertTeam
 import dartzee.helper.runConversion
+import dartzee.utils.InjectedThings.mainDatabase
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -49,5 +52,21 @@ class TestDatabaseMigrationV22toV23 : AbstractTest() {
 
         val retrieved = GameEntity().retrieveForId(g.rowId)!!
         retrieved.gameParams shouldBe "18"
+    }
+
+    @Test
+    fun `Should add resigned columns`() {
+        val pt = insertParticipant()
+        val t = insertTeam()
+        mainDatabase.executeUpdate("ALTER TABLE Participant DROP COLUMN Resigned")
+        mainDatabase.executeUpdate("ALTER TABLE Team DROP COLUMN Resigned")
+
+        runConversion(22)
+
+        val retrievedPt = ParticipantEntity().retrieveForId(pt.rowId)!!
+        retrievedPt.resigned shouldBe false
+
+        val retrievedTeam = TeamEntity().retrieveForId(t.rowId)!!
+        retrievedTeam.resigned shouldBe false
     }
 }
