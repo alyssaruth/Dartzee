@@ -412,12 +412,11 @@ class TestGamePanelDartzee : AbstractTest() {
         val panel = makeGamePanel(testRules, summaryPanel, game)
         panel.startNewGame(listOf(makeSingleParticipant(player)))
 
-        panel.btnConfirm.isVisible shouldBe true
-
         panel.dartThrown(makeDart(20, 1, SegmentType.OUTER_SINGLE))
         panel.dartThrown(makeDart(5, 1, SegmentType.OUTER_SINGLE))
         panel.dartThrown(makeDart(1, 1, SegmentType.OUTER_SINGLE))
 
+        panel.btnConfirm.isVisible shouldBe true
         panel.btnConfirm.doClick()
 
         panel.btnConfirm.isVisible shouldBe false
@@ -427,6 +426,7 @@ class TestGamePanelDartzee : AbstractTest() {
         panel.dartThrown(makeDart(20, 1, SegmentType.INNER_SINGLE))
         panel.dartThrown(makeDart(5, 1, SegmentType.OUTER_SINGLE))
         panel.dartThrown(makeDart(1, 1, SegmentType.INNER_SINGLE))
+        panel.btnConfirm.isVisible shouldBe false
 
         carousel.getDisplayedTiles().first().doClick()
 

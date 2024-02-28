@@ -159,6 +159,29 @@ class TestAbstractPlayerState : AbstractTest() {
     }
 
     @Test
+    fun `Should mark a participant as resigned`() {
+        val participant =
+            insertParticipant(
+                dtFinished = DateStatics.END_OF_TIME,
+                finalScore = -1,
+                finishingPosition = -1
+            )
+        val state = TestPlayerState(participant)
+
+        state.participantResigned(4)
+        participant.finalScore shouldBe -1
+        participant.finishingPosition shouldBe 4
+        participant.dtFinished shouldNotBe DateStatics.END_OF_TIME
+        participant.resigned shouldBe true
+
+        val reretrieved = ParticipantEntity().retrieveForId(participant.rowId)!!
+        reretrieved.finalScore shouldBe -1
+        reretrieved.finishingPosition shouldBe 4
+        reretrieved.dtFinished shouldNotBe DateStatics.END_OF_TIME
+        reretrieved.resigned shouldBe true
+    }
+
+    @Test
     fun `Should update the finishing position`() {
         val participant =
             insertParticipant(

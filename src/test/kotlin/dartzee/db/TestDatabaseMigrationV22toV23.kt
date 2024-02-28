@@ -26,7 +26,7 @@ class TestDatabaseMigrationV22toV23 : AbstractTest() {
 
         val p = insertPlayer(strategy = raw)
 
-        runConversion(22)
+        runConversion()
 
         val retrieved = PlayerEntity().retrieveForId(p.rowId)!!
         retrieved.strategy shouldBe expected
@@ -38,7 +38,7 @@ class TestDatabaseMigrationV22toV23 : AbstractTest() {
     fun `Should convert games of X01`() {
         val g = insertGame(gameType = GameType.X01, gameParams = "701")
 
-        runConversion(22)
+        runConversion()
 
         val retrieved = GameEntity().retrieveForId(g.rowId)!!
         retrieved.gameParams shouldBe X01Config(701, FinishType.Doubles).toJson()
@@ -48,7 +48,7 @@ class TestDatabaseMigrationV22toV23 : AbstractTest() {
     fun `Should leave other game types alone`() {
         val g = insertGame(gameType = GameType.GOLF, gameParams = "18")
 
-        runConversion(22)
+        runConversion()
 
         val retrieved = GameEntity().retrieveForId(g.rowId)!!
         retrieved.gameParams shouldBe "18"
@@ -58,15 +58,19 @@ class TestDatabaseMigrationV22toV23 : AbstractTest() {
     fun `Should add resigned columns`() {
         val pt = insertParticipant()
         val t = insertTeam()
-        mainDatabase.executeUpdate("ALTER TABLE Participant DROP COLUMN Resigned")
-        mainDatabase.executeUpdate("ALTER TABLE Team DROP COLUMN Resigned")
 
-        runConversion(22)
+        runConversion()
 
         val retrievedPt = ParticipantEntity().retrieveForId(pt.rowId)!!
         retrievedPt.resigned shouldBe false
 
         val retrievedTeam = TeamEntity().retrieveForId(t.rowId)!!
         retrievedTeam.resigned shouldBe false
+    }
+
+    private fun runConversion() {
+        mainDatabase.executeUpdate("ALTER TABLE Participant DROP COLUMN Resigned")
+        mainDatabase.executeUpdate("ALTER TABLE Team DROP COLUMN Resigned")
+        runConversion(22)
     }
 }
