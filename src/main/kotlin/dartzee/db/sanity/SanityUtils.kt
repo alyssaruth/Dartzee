@@ -2,7 +2,7 @@ package dartzee.db.sanity
 
 import dartzee.db.AbstractEntity
 import dartzee.utils.DartsDatabaseUtil
-import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.mainDatabase
 
 fun getIdColumns(entity: AbstractEntity<*>): List<String> {
     val potentialIdColumns = DartsDatabaseUtil.getAllEntities().map { "${it.getTableName()}Id" }
@@ -19,15 +19,10 @@ fun getColumnsAllowingDefaults(): List<TableAndColumn> {
     sb.append("AND t.TableType = 'T' ")
     sb.append("AND c.ColumnDefault IS NOT NULL")
 
-    val result = mutableListOf<TableAndColumn>()
-    InjectedThings.mainDatabase.executeQuery(sb).use { rs ->
-        while (rs.next()) {
-            val tableName = rs.getString("TableName")
-            val columnName = rs.getString("ColumnName")
+    return mainDatabase.retrieveAsList(sb) { rs ->
+        val tableName = rs.getString("TableName")
+        val columnName = rs.getString("ColumnName")
 
-            result.add(TableAndColumn(tableName, columnName))
-        }
+        TableAndColumn(tableName, columnName)
     }
-
-    return result.toList()
 }

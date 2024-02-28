@@ -33,16 +33,9 @@ object DevUtilities {
             return null
         }
 
-        val gameIds = mutableListOf<Long>()
-
-        mainDatabase.executeQuery("SELECT LocalId FROM Game").use { rs ->
-            while (rs.next()) {
-                val rowId = rs.getLong("LocalId")
-                gameIds.add(rowId)
-            }
-        }
-
-        return gameIds.toTypedArray()
+        return mainDatabase
+            .retrieveAsList("SELECT LocalId FROM Game") { it.getLong("LocalId") }
+            .toTypedArray()
     }
 
     fun purgeGame(localId: Long) {

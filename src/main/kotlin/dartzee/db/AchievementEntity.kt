@@ -45,8 +45,7 @@ class AchievementEntity(database: Database = mainDatabase) :
     }
 
     companion object {
-        fun retrieveAchievements(playerId: String): MutableList<AchievementEntity> {
-            val achievements = mutableListOf<AchievementEntity>()
+        fun retrieveAchievements(playerId: String): List<AchievementEntity> {
             val dao = AchievementEntity()
 
             val sb = StringBuilder()
@@ -56,14 +55,12 @@ class AchievementEntity(database: Database = mainDatabase) :
             sb.append(" LEFT OUTER JOIN Game g ON (a.GameIdEarned = g.RowId)")
             sb.append(" WHERE PlayerId = '$playerId'")
 
-            mainDatabase.executeQuery(sb).use { rs ->
-                while (rs.next()) {
-                    val entity = dao.factoryFromResultSet(rs)
-                    entity.localGameIdEarned = rs.getLong("LocalGameId")
-
-                    achievements.add(entity)
+            val achievements =
+                mainDatabase.retrieveAsList(sb) { rs ->
+                    dao.factoryFromResultSet(rs).apply {
+                        localGameIdEarned = rs.getLong("LocalGameId")
+                    }
                 }
-            }
 
             return achievements
         }

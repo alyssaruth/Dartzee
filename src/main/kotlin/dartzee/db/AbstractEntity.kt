@@ -123,7 +123,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         return entities.firstOrNull()
     }
 
-    fun retrieveEntities(whereSql: String = "", alias: String = ""): MutableList<E> {
+    fun retrieveEntities(whereSql: String = "", alias: String = ""): List<E> {
         var queryWithFrom = "FROM ${getTableName()}"
         if (alias.isNotEmpty()) {
             queryWithFrom += " $alias"
@@ -136,18 +136,9 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         return retrieveEntitiesWithFrom(queryWithFrom, alias)
     }
 
-    private fun retrieveEntitiesWithFrom(whereSqlWithFrom: String, alias: String): MutableList<E> {
+    private fun retrieveEntitiesWithFrom(whereSqlWithFrom: String, alias: String): List<E> {
         val query = "SELECT " + getColumnsForSelectStatement(alias) + " " + whereSqlWithFrom
-        val ret = mutableListOf<E>()
-
-        database.executeQuery(query).use { rs ->
-            while (rs.next()) {
-                val entity = factoryFromResultSet(rs)
-                ret.add(entity)
-            }
-        }
-
-        return ret
+        return database.retrieveAsList(query, ::factoryFromResultSet)
     }
 
     fun retrieveForId(rowId: String, stackTraceIfNotFound: Boolean = true): E? {

@@ -83,7 +83,7 @@ class GameEntity(database: Database = mainDatabase) : AbstractEntity<GameEntity>
          * Ordered by DtCreation as well because of an historic bug with loading where the ordinals
          * could get screwed up.
          */
-        fun retrieveGamesForMatch(matchId: String): MutableList<GameEntity> {
+        fun retrieveGamesForMatch(matchId: String): List<GameEntity> {
             val sql = "DartsMatchId = '$matchId' ORDER BY MatchOrdinal, DtCreation"
             return GameEntity().retrieveEntities(sql)
         }
