@@ -161,11 +161,27 @@ class TestDartsAiModel : AbstractTest() {
 
     /** X01 test */
     @Test
+    fun `Should adopt checkout suggestion if there is one`() {
+        val model = beastDartsModel()
+
+        val pt = model.throwX01Dart(81, FinishType.Doubles, 2)
+        pt.segment shouldBe DartboardSegment(SegmentType.TREBLE, 19)
+    }
+
+    @Test
+    fun `Should not use checkout suggestion in relaxed mode`() {
+        val model = beastDartsModel()
+
+        val pt = model.throwX01Dart(81, FinishType.Any, 2)
+        pt.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
+    }
+
+    @Test
     fun `Should aim for the scoring dart when the score is over 60`() {
         val model = beastDartsModel(scoringDart = 18)
 
         FinishType.values().forEach { finishType ->
-            val pt = model.throwX01Dart(61, finishType, 3)
+            val pt = model.throwX01Dart(61, finishType, 1)
             pt.segment shouldBe DartboardSegment(SegmentType.TREBLE, 18)
         }
     }
