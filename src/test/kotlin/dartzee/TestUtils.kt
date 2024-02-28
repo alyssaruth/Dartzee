@@ -8,7 +8,6 @@ import com.github.alyssaburlton.swingtest.findAll
 import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldMatchImage
 import com.github.alyssaburlton.swingtest.typeText
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.InteractiveDartboard
@@ -278,9 +277,9 @@ inline fun <reified T : Component> JTabbedPane.selectTab(
     runOnEventThreadBlocking { selectedComponent = getChild<T>(name, filterFn = filterFn) }
 }
 
-fun ImageIcon.shouldMatchImage(name: String) {
+fun ImageIcon.toLabel(): JLabel {
     val label = JLabel(this)
     label.size = Dimension(iconWidth, iconHeight)
     label.repaint()
-    label.shouldMatchImage(name)
+    return label
 }

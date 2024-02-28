@@ -1,11 +1,12 @@
 package dartzee.utils
 
+import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.core.util.FileUtil
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
-import dartzee.shouldMatchImage
+import dartzee.toLabel
 import javax.swing.ImageIcon
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -17,7 +18,7 @@ class TestPlayerImageUtils : AbstractTest() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, null, false)
-        result.shouldMatchImage("split-50-inactive")
+        result.toLabel().shouldMatchImage("split-50-inactive")
     }
 
     @Test
@@ -26,7 +27,7 @@ class TestPlayerImageUtils : AbstractTest() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, null, true)
-        result.shouldMatchImage("split-50-game-over")
+        result.toLabel().shouldMatchImage("split-50-game-over")
     }
 
     @Test
@@ -35,7 +36,7 @@ class TestPlayerImageUtils : AbstractTest() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, p1, true)
-        result.shouldMatchImage("split-50-game-over-selected")
+        result.toLabel().shouldMatchImage("split-50-game-over-selected")
     }
 
     @Test
@@ -44,7 +45,7 @@ class TestPlayerImageUtils : AbstractTest() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, p1, false)
-        result.shouldMatchImage("split-p1")
+        result.toLabel().shouldMatchImage("split-p1")
     }
 
     @Test
@@ -53,7 +54,7 @@ class TestPlayerImageUtils : AbstractTest() {
         val (p1, p2) = setUpPlayers()
 
         val result = splitAvatar(p1, p2, p2, false)
-        result.shouldMatchImage("split-p2")
+        result.toLabel().shouldMatchImage("split-p2")
     }
 
     @Test
@@ -62,21 +63,26 @@ class TestPlayerImageUtils : AbstractTest() {
         val bytes = FileUtil.getByteArrayForResource("/outer-wilds.jpeg")!!
         val result = convertImageToAvatarDimensions(bytes)
 
-        ImageIcon(result).shouldMatchImage("outer-wilds-avatar")
+        ImageIcon(result).toLabel().shouldMatchImage("outer-wilds-avatar")
     }
 
     @Test
     @Tag("screenshot")
     fun `Should combine player flags`() {
         combinePlayerFlags(PlayerEntity.ICON_HUMAN, PlayerEntity.ICON_AI)
+            .toLabel()
             .shouldMatchImage("human-ai")
 
-        combinePlayerFlags(PlayerEntity.ICON_AI, PlayerEntity.ICON_AI).shouldMatchImage("ai-ai")
+        combinePlayerFlags(PlayerEntity.ICON_AI, PlayerEntity.ICON_AI)
+            .toLabel()
+            .shouldMatchImage("ai-ai")
 
         combinePlayerFlags(PlayerEntity.ICON_AI, PlayerEntity.ICON_HUMAN)
+            .toLabel()
             .shouldMatchImage("ai-human")
 
         combinePlayerFlags(PlayerEntity.ICON_HUMAN, PlayerEntity.ICON_HUMAN)
+            .toLabel()
             .shouldMatchImage("human-human")
     }
 
