@@ -1,6 +1,5 @@
 package dartzee.screen.ai
 
-import dartzee.ai.AimDart
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
 import io.kotest.matchers.shouldBe
@@ -34,15 +33,6 @@ class TestAIConfigurationSubPanelX01 : AbstractTest() {
 
         val model = panel.populateModel(makeDartsModel())
         model.mercyThreshold shouldBe null
-    }
-
-    @Test
-    fun `Should populate the model with the setup darts`() {
-        val panel = AIConfigurationSubPanelX01()
-        panel.hmScoreToDart[20] = AimDart(10, 2)
-
-        val model = panel.populateModel(makeDartsModel())
-        model.hmScoreToDart[20] shouldBe AimDart(10, 2)
     }
 
     @Test

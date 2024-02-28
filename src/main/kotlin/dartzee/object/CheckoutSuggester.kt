@@ -40,7 +40,7 @@ object CheckoutSuggester {
 
             val score = split[0].toInt()
             val dartStrs = split[1].split(",")
-            val darts = dartStrs.map { d -> factoryDartHintFromString(d)!! }.toList()
+            val darts = dartStrs.map { d -> factoryDartHintFromString(d) }.toList()
 
             addCheckoutsToMap(score, darts, map)
         }

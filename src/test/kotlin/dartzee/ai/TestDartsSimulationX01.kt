@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 class TestDartsSimulationX01 : AbstractTest() {
     @Test
     fun `Should simulate a game correctly for a perfect player`() {
-        val model = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
+        val model = beastDartsModel()
         val player = insertPlayer(model = model)
 
         val simulation = DartsSimulationX01(player, model)

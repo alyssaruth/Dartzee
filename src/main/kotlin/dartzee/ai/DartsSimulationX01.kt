@@ -40,8 +40,7 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) :
         startingScore = currentScore
         resetRound()
 
-        val pt = model.throwX01Dart(currentScore, config.finishType)
-        dartThrown(pt)
+        throwNextDart()
     }
 
     private fun finishedRound() {
@@ -69,8 +68,12 @@ class DartsSimulationX01(player: PlayerEntity, model: DartsAiModel) :
         ) {
             finishedRound()
         } else {
-            val pt = model.throwX01Dart(currentScore, config.finishType)
-            dartThrown(pt)
+            throwNextDart()
         }
+    }
+
+    private fun throwNextDart() {
+        val pt = model.throwX01Dart(currentScore, config.finishType, 3 - dartsThrown.size)
+        dartThrown(pt)
     }
 }

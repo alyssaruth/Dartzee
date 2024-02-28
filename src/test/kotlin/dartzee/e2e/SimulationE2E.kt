@@ -3,7 +3,6 @@ package dartzee.e2e
 import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.waitForAssertion
-import dartzee.ai.AimDart
 import dartzee.ai.SimulationRunner
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.bean.NumberField
@@ -35,7 +34,7 @@ class SimulationE2E : AbstractTest() {
     @Test
     @Tag("e2e")
     fun `Should be able to run a simulation of 500 games`() {
-        val model = beastDartsModel(hmScoreToDart = mapOf(81 to AimDart(19, 3)))
+        val model = beastDartsModel()
         val player = insertPlayer(model = model)
 
         val dlg = AISimulationSetupDialog(player, model, true)

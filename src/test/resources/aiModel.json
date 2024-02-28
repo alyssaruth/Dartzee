@@ -4,16 +4,6 @@
   "standardDeviationCentral": 35,
   "maxRadius": 345,
   "scoringDart": 20,
-  "hmScoreToDart": {
-    "57": {
-      "score": 17,
-      "multiplier": 1
-    },
-    "97": {
-      "score": 19,
-      "multiplier": 3
-    }
-  },
   "mercyThreshold": 17,
   "hmDartNoToSegmentType": {
     "1": "TREBLE",

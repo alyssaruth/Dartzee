@@ -1,6 +1,9 @@
 package dartzee.utils
 
+import com.fasterxml.jackson.module.kotlin.readValue
+import dartzee.core.util.jsonMapper
 import dartzee.db.GameEntity
+import dartzee.db.PlayerEntity
 import dartzee.db.TeamEntity
 import dartzee.game.FinishType
 import dartzee.game.GameType
@@ -16,8 +19,18 @@ object DatabaseMigrations {
                 ),
             20 to listOf { db -> runScript(db, 21, "Dart.sql") },
             21 to listOf { db -> runScript(db, 22, "Dart.sql") },
-            22 to listOf { db -> convertX01GameParams(db) }
+            22 to listOf(::convertX01GameParams, ::dropHmScoreToDarts)
         )
+    }
+
+    private fun dropHmScoreToDarts(database: Database) {
+        val players = PlayerEntity(database).retrieveEntities("Strategy != ''")
+        players.forEach { player ->
+            val strategyMap = jsonMapper().readValue<MutableMap<Any, Any>>(player.strategy)
+            strategyMap.remove("hmScoreToDart")
+            player.strategy = jsonMapper().writeValueAsString(strategyMap)
+            player.saveToDatabase()
+        }
     }
 
     private fun convertX01GameParams(database: Database) {
