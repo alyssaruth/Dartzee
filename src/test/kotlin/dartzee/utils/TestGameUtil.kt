@@ -58,6 +58,21 @@ class TestGameUtil : AbstractTest() {
     }
 
     @Test
+    fun `Should ignore players who resigned when assigning finishing positions`() {
+        val pt = insertParticipant(finalScore = -1, resigned = true, finishingPosition = 4)
+        val pt2 = insertParticipant(finalScore = 40)
+        val pt3 = insertParticipant(finalScore = 55)
+        val pt4 = insertParticipant(finalScore = -1, resigned = true, finishingPosition = 3)
+
+        setFinishingPositions(listOf(pt, pt3, pt2, pt4), insertGame(gameType = GameType.GOLF))
+
+        pt.finishingPosition shouldBe 4
+        pt2.finishingPosition shouldBe 1
+        pt3.finishingPosition shouldBe 2
+        pt4.finishingPosition shouldBe 3
+    }
+
+    @Test
     fun `Should correctly handle ties when lowest wins`() {
         val pt = insertParticipant(finalScore = 25)
         val pt2 = insertParticipant(finalScore = 40)

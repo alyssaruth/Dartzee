@@ -557,7 +557,7 @@ abstract class DartsGamePanel<
         }
     }
 
-    protected open fun showConfirmButton() = false
+    protected open fun showConfirmButton() = true
 
     override fun actionPerformed(arg0: ActionEvent) {
         when (arg0.source) {

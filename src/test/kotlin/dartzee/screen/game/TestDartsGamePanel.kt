@@ -1,5 +1,8 @@
 package dartzee.screen.game
 
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.achievements.AchievementType
 import dartzee.ai.DartsAiModel
 import dartzee.db.EntityName
@@ -16,11 +19,13 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.preparePlayers
 import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.`object`.ComputedPoint
+import dartzee.`object`.Dart
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.screen.game.x01.GameStatisticsPanelX01
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
+import javax.swing.JButton
 import org.junit.jupiter.api.Test
 
 class TestDartsGamePanel : AbstractTest() {
@@ -95,11 +100,54 @@ class TestDartsGamePanel : AbstractTest() {
             )
     }
 
-    class TestGamePanel(private val config: X01Config = X01Config(501, FinishType.Doubles)) :
+    @Test
+    fun `Should toggle button visibility as a game progresses`() {
+        val panel = TestGamePanel(totalPlayers = 2)
+
+        val human = makeSingleParticipant(insertPlayer(strategy = ""), panel.gameEntity.rowId)
+        val ai =
+            makeSingleParticipant(
+                insertPlayer(strategy = DartsAiModel.new().toJson()),
+                panel.gameEntity.rowId
+            )
+
+        panel.startNewGame(listOf(human, ai))
+        panel.resignButton().shouldBeVisible()
+        panel.confirmButton().shouldNotBeVisible()
+        panel.resetButton().shouldNotBeVisible()
+
+        panel.dartThrown(Dart(20, 1))
+        panel.confirmButton().shouldBeVisible()
+        panel.resetButton().shouldBeVisible()
+
+        panel.confirmButton().doClick()
+
+        // AI Turn
+        panel.resignButton().shouldNotBeVisible()
+        panel.confirmButton().shouldNotBeVisible()
+        panel.resetButton().shouldNotBeVisible()
+
+        panel.dartThrown(Dart(20, 1))
+        panel.resignButton().shouldNotBeVisible()
+        panel.confirmButton().shouldNotBeVisible()
+        panel.resetButton().shouldNotBeVisible()
+    }
+
+    private fun TestGamePanel.confirmButton() =
+        getChild<JButton> { it.toolTipText == "Confirm round" }
+
+    private fun TestGamePanel.resetButton() = getChild<JButton> { it.toolTipText == "Reset round" }
+
+    private fun TestGamePanel.resignButton() = getChild<JButton> { it.toolTipText == "Resign" }
+
+    class TestGamePanel(
+        private val config: X01Config = X01Config(501, FinishType.Doubles),
+        totalPlayers: Int = 1
+    ) :
         GamePanelPausable<DartsScorerX01, X01PlayerState>(
             FakeDartsScreen(),
             insertGame(gameType = GameType.X01, gameParams = config.toJson()),
-            1
+            totalPlayers
         ) {
         override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(config, pt)
 
