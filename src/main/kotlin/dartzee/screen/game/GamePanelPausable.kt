@@ -62,7 +62,8 @@ abstract class GamePanelPausable<
             return
         }
 
-        getCurrentPlayerState().setParticipantFinishPosition(totalPlayers)
+        getCurrentPlayerState()
+            .setParticipantFinishPosition(getFinishingPositionFromPlayersRemaining())
 
         gameEntity.dtFinish = getSqlDateNow()
         gameEntity.saveToDatabase()

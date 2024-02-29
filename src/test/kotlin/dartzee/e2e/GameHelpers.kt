@@ -34,6 +34,7 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.DartsGamePanel
 import dartzee.screen.game.DartsGameScreen
+import dartzee.screen.game.scorer.AbstractDartsScorer
 import dartzee.screen.game.scorer.AbstractDartsScorerPausable
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.ResourceCache.ICON_RESUME
@@ -104,6 +105,11 @@ fun DartsGamePanel<*, *>.throwHumanDart(score: Int, segmentType: SegmentType) {
     val singleTwentyPt = getPointForScore(score, segmentType)
     val computedPt = AI_DARTBOARD.toComputedPoint(singleTwentyPt)
     getChild<GameplayDartboard>().dartThrown(computedPt)
+}
+
+fun DartsGamePanel<*, *>.awaitTurn(participant: IWrappedParticipant) {
+    val scorer = getChild<AbstractDartsScorer<*>> { it.participant == participant }
+    waitForAssertion { scorer.lblAvatar.shouldBeSelected() }
 }
 
 fun ParticipantAvatar.shouldBeSelected() = border.shouldBeInstanceOf<LineBorder>()
