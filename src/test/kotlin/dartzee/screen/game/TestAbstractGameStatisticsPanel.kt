@@ -46,6 +46,32 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
     }
 
     @Test
+    fun `Should exclude players who have resigned from the game`() {
+        val winner = insertPlayer(name = "Winner")
+        val coward = insertPlayer(name = "Coward")
+
+        val activeState =
+            makeX01PlayerState(
+                player = winner,
+                completedRound =
+                    listOf(
+                        makeDart(),
+                        makeDart(),
+                        makeDart(),
+                    )
+            )
+        val resignedState = makeX01PlayerState(player = coward, completedRound = listOf(makeDart()))
+        resignedState.participantResigned(2)
+
+        val panel = FakeGameStatisticsPanel()
+        panel.showStats(listOf(activeState, resignedState))
+
+        panel.tm.columnCount shouldBe 2
+        panel.tm.getColumnName(0) shouldBe ""
+        panel.tm.getColumnName(1) shouldBe "Winner"
+    }
+
+    @Test
     fun `Should clear down previous stats`() {
         val clive = insertPlayer(name = "Clive")
         val cliveState1 =

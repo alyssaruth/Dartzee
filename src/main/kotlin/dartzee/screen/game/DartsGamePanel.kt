@@ -152,7 +152,7 @@ abstract class DartsGamePanel<
         btnReset.toolTipText = "Reset round"
         panelButtons.add(btnReset)
         btnResign.preferredSize = Dimension(80, 80)
-        btnResign.icon = ImageIcon(javaClass.getResource("/buttons/gameReport.png"))
+        btnResign.icon = ImageIcon(javaClass.getResource("/buttons/resign.png"))
         btnResign.toolTipText = "Resign"
         panelButtons.add(btnResign)
 

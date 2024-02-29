@@ -53,12 +53,14 @@ abstract class AbstractGameStatisticsPanel<PlayerState : AbstractPlayerState<Pla
     }
 
     fun showStats(playerStates: List<PlayerState>) {
-        this.participants = playerStates.map { it.wrappedParticipant }
+        val statesToUse = playerStates.filterNot { it.hasResigned() }
+
+        this.participants = statesToUse.map { it.wrappedParticipant }
 
         hmPlayerToDarts.clear()
         hmPlayerToStates.clear()
 
-        val hm = playerStates.groupBy { it.wrappedParticipant.getUniqueParticipantName() }
+        val hm = statesToUse.groupBy { it.wrappedParticipant.getUniqueParticipantName() }
         hmPlayerToStates.putAll(hm)
 
         hmPlayerToDarts.putAll(hm.mapValues { it.value.flatMap { state -> state.completedRounds } })

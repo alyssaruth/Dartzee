@@ -119,6 +119,8 @@ abstract class AbstractPlayerState<S : AbstractPlayerState<S>> {
         }
     }
 
+    fun hasResigned() = wrappedParticipant.participant.resigned
+
     @Suppress("UNCHECKED_CAST")
     protected fun fireStateChanged() {
         listeners.forEach { it.stateChanged(this as S) }
