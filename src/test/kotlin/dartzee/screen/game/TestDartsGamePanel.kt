@@ -1,6 +1,9 @@
 package dartzee.screen.game
 
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.achievements.AchievementType
@@ -11,6 +14,7 @@ import dartzee.game.GameType
 import dartzee.game.X01Config
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
+import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.AchievementSummary
 import dartzee.helper.getCountFromTable
@@ -132,6 +136,40 @@ class TestDartsGamePanel : AbstractTest() {
         panel.confirmButton().shouldNotBeVisible()
         panel.resetButton().shouldNotBeVisible()
     }
+
+    @Test
+    fun `Should not show resign button in a practice game`() {
+        val panel = TestGamePanel(totalPlayers = 1)
+
+        val player = makeSingleParticipant(insertPlayer(strategy = ""), panel.gameEntity.rowId)
+
+        panel.startNewGame(listOf(player))
+        panel.resignButton().shouldNotBeVisible()
+    }
+
+    @Test
+    fun `Should not show resign button if only one active player remaining`() {
+        val panel = TestGamePanel(totalPlayers = 3)
+
+        val human1 = makeSingleParticipant(insertPlayer(strategy = ""), panel.gameEntity.rowId)
+        val human2 = makeSingleParticipant(insertPlayer(strategy = ""), panel.gameEntity.rowId)
+        val human3 = makeSingleParticipant(insertPlayer(strategy = ""), panel.gameEntity.rowId)
+
+        panel.startNewGame(listOf(human1, human2, human3))
+        panel.resignButton().shouldBeVisible()
+        panel.clickResign()
+        getQuestionDialog().clickYes(async = true)
+        purgeWindows()
+
+        panel.resignButton().shouldBeVisible()
+        panel.clickResign()
+        getQuestionDialog().clickYes(async = true)
+
+        panel.resignButton().shouldNotBeVisible()
+    }
+
+    private fun TestGamePanel.clickResign() =
+        clickChild<JButton>(async = true) { it.toolTipText == "Resign" }
 
     private fun TestGamePanel.confirmButton() =
         getChild<JButton> { it.toolTipText == "Confirm round" }

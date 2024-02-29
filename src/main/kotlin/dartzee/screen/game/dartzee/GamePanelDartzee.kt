@@ -138,7 +138,7 @@ class GamePanelDartzee(
             getCurrentPlayerState().saveRoundResult(result)
         }
 
-        disableInputButtons()
+        hideInputButtons()
         dartboard.clearDarts()
 
         commitRound()

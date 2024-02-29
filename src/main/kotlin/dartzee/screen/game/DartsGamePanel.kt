@@ -208,12 +208,14 @@ abstract class DartsGamePanel<
     protected fun nextTurn() {
         updateActivePlayer()
 
+        println("NEXT TURN")
+
         // Create a new round for this player
         currentRoundNumber = getCurrentPlayerState().currentRoundNumber()
 
         btnReset.isVisible = false
         btnConfirm.isVisible = false
-        btnResign.isVisible = getCurrentPlayerState().isHuman()
+        btnResign.isVisible = getCurrentPlayerState().isHuman() && getActiveCount() > 1
 
         btnStats.isEnabled = currentRoundNumber > 1
 
@@ -511,6 +513,10 @@ abstract class DartsGamePanel<
             return
         }
 
+        hideInputButtons()
+        dartboard.clearDarts()
+        dartboard.stopListening()
+
         val finishingPosition = getActiveCount()
         state.participantResigned(finishingPosition)
         turnFinished()
@@ -529,7 +535,6 @@ abstract class DartsGamePanel<
         dartboard.clearDarts()
         getCurrentPlayerState().resetRound()
 
-        // If we're resetting, disable the buttons
         btnConfirm.isVisible = false
         btnReset.isVisible = false
 
@@ -621,7 +626,7 @@ abstract class DartsGamePanel<
             ?.achievementUnlocked(achievement, playerId)
     }
 
-    fun disableInputButtons() {
+    fun hideInputButtons() {
         btnResign.isVisible = false
         btnConfirm.isVisible = false
         btnReset.isVisible = false
