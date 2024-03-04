@@ -14,7 +14,8 @@ jobs:
       - name: normalise
         working-directory: src/main/resources/wav
         run: |
-          normalize-audio .
+          FILES=$(ls)
+          normalize-audio $FILES
       - name: commit
         uses: EndBug/add-and-commit@v9
         if: github.ref == 'refs/heads/main'
