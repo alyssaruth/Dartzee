@@ -184,6 +184,7 @@ fun insertParticipant(
     finalScore: Int = -1,
     dtFinished: Timestamp = DateStatics.END_OF_TIME,
     teamId: String = "",
+    resigned: Boolean = false,
     database: Database = mainDatabase
 ): ParticipantEntity {
     val pe = ParticipantEntity(database)
@@ -195,6 +196,7 @@ fun insertParticipant(
     pe.finalScore = finalScore
     pe.dtFinished = dtFinished
     pe.teamId = teamId
+    pe.resigned = resigned
 
     pe.saveToDatabase()
 

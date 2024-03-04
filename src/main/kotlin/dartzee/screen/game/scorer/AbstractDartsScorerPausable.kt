@@ -58,10 +58,16 @@ abstract class AbstractDartsScorerPausable<PlayerState : AbstractPlayerState<Pla
     }
 
     protected fun finalisePlayerResult(state: PlayerState) {
+        val participant = state.wrappedParticipant.participant
+        if (state.hasResigned()) {
+            lblResult.text = "RESIGNED"
+            updateResultColourForPosition(participant.finishingPosition)
+            return
+        }
+
         val dartCount = state.getScoreSoFar()
         lblResult.text = "$dartCount Darts"
 
-        val participant = state.wrappedParticipant.participant
         if (participant.finishingPosition == -1) {
             return
         }

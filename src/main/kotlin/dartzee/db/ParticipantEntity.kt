@@ -20,6 +20,7 @@ class ParticipantEntity(database: Database = mainDatabase) :
     override var finalScore = -1
     override var dtFinished = DateStatics.END_OF_TIME
     var teamId = ""
+    override var resigned = false
 
     // In memory things
     private var player: PlayerEntity? = null
@@ -33,7 +34,8 @@ class ParticipantEntity(database: Database = mainDatabase) :
             "FinishingPosition INT NOT NULL, " +
             "FinalScore INT NOT NULL, " +
             "DtFinished TIMESTAMP NOT NULL, " +
-            "TeamId VARCHAR(36) NOT NULL")
+            "TeamId VARCHAR(36) NOT NULL, " +
+            "Resigned BOOLEAN NOT NULL")
     }
 
     override fun addListsOfColumnsForIndexes(indexes: MutableList<List<String>>) {

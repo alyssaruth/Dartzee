@@ -9,10 +9,11 @@ class SanityCheckFinishedParticipantsNoScore : ISanityCheck {
         sb.append(" DtFinished < ")
         sb.append(getEndOfTimeSqlString())
         sb.append(" AND FinalScore = -1")
+        sb.append(" AND Resigned = false")
 
         val whereSql = sb.toString()
         val participants = ParticipantEntity().retrieveEntities(whereSql)
-        if (!participants.isEmpty()) {
+        if (participants.isNotEmpty()) {
             return listOf(
                 SanityCheckResultEntitiesSimple(
                     participants,

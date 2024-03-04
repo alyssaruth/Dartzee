@@ -36,13 +36,46 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
         val panel = FakeGameStatisticsPanel()
         panel.showStats(listOf(cliveState1, aliceState1, aliceState2, cliveState2))
 
-        panel.tm.columnCount shouldBe 3
-        panel.tm.getColumnName(0) shouldBe ""
-        panel.tm.getColumnName(1) shouldBe "Clive"
-        panel.tm.getColumnName(2) shouldBe "Alice"
+        panel.table.columnCount shouldBe 3
+        panel.table.getColumnName(0) shouldBe ""
+        panel.table.getColumnName(1) shouldBe "Clive"
+        panel.table.getColumnName(2) shouldBe "Alice"
 
         panel.getValueForRow("Darts Thrown", 1) shouldBe 8
         panel.getValueForRow("Darts Thrown", 2) shouldBe 3
+    }
+
+    @Test
+    fun `Should exclude players who have resigned from the game`() {
+        val winner = insertPlayer(name = "Winner")
+        val coward = insertPlayer(name = "Coward")
+
+        val activeState =
+            makeX01PlayerState(
+                player = winner,
+                completedRound =
+                    listOf(
+                        makeDart(),
+                        makeDart(),
+                        makeDart(),
+                    )
+            )
+        val resignedState = makeX01PlayerState(player = coward, completedRound = listOf(makeDart()))
+
+        val panel = FakeGameStatisticsPanel()
+        panel.showStats(listOf(activeState, resignedState))
+
+        panel.table.columnCount shouldBe 3
+        panel.table.getColumnName(0) shouldBe ""
+        panel.table.getColumnName(1) shouldBe "Winner"
+        panel.table.getColumnName(2) shouldBe "Coward"
+
+        resignedState.participantResigned(2)
+        panel.showStats(listOf(activeState, resignedState))
+
+        panel.table.columnCount shouldBe 2
+        panel.table.getColumnName(0) shouldBe ""
+        panel.table.getColumnName(1) shouldBe "Winner"
     }
 
     @Test
@@ -74,7 +107,7 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
         val panel = FakeGameStatisticsPanel()
         panel.showStats(listOf(aliceState, bobState))
 
-        panel.tm.rowCount shouldBe 0
+        panel.table.rowCount shouldBe 0
     }
 
     @Test

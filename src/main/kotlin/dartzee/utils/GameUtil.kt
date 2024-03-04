@@ -34,6 +34,7 @@ fun setFinishingPositions(participants: List<IParticipant>, game: GameEntity) {
 
     val entries =
         participants
+            .filterNot { it.resigned }
             .groupBy { it.finalScore }
             .entries
             .sortedBy(doesHighestWin(game.gameType)) { it.key }

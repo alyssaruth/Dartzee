@@ -59,6 +59,25 @@ class TestAbstractDartsScorerPausable : AbstractTest() {
     }
 
     @Test
+    fun `Should show the correct state for a resigned player`() {
+        val scorer = factoryScorer()
+        val state =
+            TestPlayerState(
+                insertParticipant(
+                    finishingPosition = 2,
+                    resigned = true,
+                    dtFinished = getSqlDateNow()
+                ),
+                scoreSoFar = 30
+            )
+        scorer.stateChanged(state)
+
+        scorer.lblResult.text shouldBe "RESIGNED"
+        scorer.lblResult.shouldHaveColours(DartsColour.SECOND_COLOURS)
+        scorer.getChild<JButton> { it.icon == ICON_RESUME }.shouldNotBeVisible()
+    }
+
+    @Test
     fun `Should show the correct paused state for a player who came last but has not finished`() {
         val scorer = factoryScorer()
         val state =

@@ -26,6 +26,10 @@ abstract class GamePanelPausable<
             handlePlayerFinish()
         }
 
+        turnFinished()
+    }
+
+    override fun turnFinished() {
         currentPlayerNumber = getNextPlayerNumber(currentPlayerNumber)
 
         val activePlayers = getActiveCount()
@@ -58,7 +62,8 @@ abstract class GamePanelPausable<
             return
         }
 
-        getCurrentPlayerState().setParticipantFinishPosition(totalPlayers)
+        getCurrentPlayerState()
+            .setParticipantFinishPosition(getFinishingPositionFromPlayersRemaining())
 
         gameEntity.dtFinish = getSqlDateNow()
         gameEntity.saveToDatabase()

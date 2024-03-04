@@ -37,19 +37,19 @@ abstract class AbstractGameStatisticsPanelTest<
 }
 
 private fun AbstractGameStatisticsPanel<*>.getAllRowNames(): List<String> {
-    val rows = 0 until tm.rowCount
-    return rows.map { tm.getValueAt(it, 0) as String }
+    val rows = 0 until table.rowCount
+    return rows.map { table.getValueAt(it, 0) as String }
 }
 
 fun AbstractGameStatisticsPanel<*>.getRowIndex(rowName: String) = getAllRowNames().indexOf(rowName)
 
 fun AbstractGameStatisticsPanel<*>.getValueForRow(rowIndex: Int, column: Int = 1): Any? =
-    tm.getValueAt(rowIndex, column)
+    table.getValueAt(rowIndex, column)
 
 fun AbstractGameStatisticsPanel<*>.getValueForRow(rowName: String, column: Int = 1): Any? {
     val rowIndex = getAllRowNames().indexOf(rowName)
     if (rowIndex > -1) {
-        return tm.getValueAt(rowIndex, column)
+        return table.getValueAt(rowIndex, column)
     }
 
     logger.error(LoggingCode("invalidRow"), "No row called $rowName")

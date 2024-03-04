@@ -22,8 +22,6 @@ abstract class AbstractGameStatisticsPanel<PlayerState : AbstractPlayerState<Pla
     protected val hmPlayerToDarts = mutableMapOf<UniqueParticipantName, List<List<Dart>>>()
     protected val hmPlayerToStates = mutableMapOf<UniqueParticipantName, List<PlayerState>>()
 
-    val tm = TableUtil.DefaultModel()
-
     val table = ScrollTable()
 
     abstract fun getRankedRowsHighestWins(): List<String>
@@ -49,16 +47,19 @@ abstract class AbstractGameStatisticsPanel<PlayerState : AbstractPlayerState<Pla
         table.setShowRowCount(false)
 
         table.setRowHeight(20)
-        table.model = tm
+        table.model = TableUtil.DefaultModel()
     }
 
     fun showStats(playerStates: List<PlayerState>) {
-        this.participants = playerStates.map { it.wrappedParticipant }
+        val statesToUse = playerStates.filterNot { it.hasResigned() }
 
+        this.participants = statesToUse.map { it.wrappedParticipant }
+
+        uniqueParticipantNamesOrdered.clear()
         hmPlayerToDarts.clear()
         hmPlayerToStates.clear()
 
-        val hm = playerStates.groupBy { it.wrappedParticipant.getUniqueParticipantName() }
+        val hm = statesToUse.groupBy { it.wrappedParticipant.getUniqueParticipantName() }
         hmPlayerToStates.putAll(hm)
 
         hmPlayerToDarts.putAll(hm.mapValues { it.value.flatMap { state -> state.completedRounds } })
@@ -74,7 +75,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState : AbstractPlayerState<Pla
     }
 
     protected fun buildTableModel() {
-        tm.clear()
+        table.model = TableUtil.DefaultModel()
 
         for (pt in participants) {
             val participantName = pt.getUniqueParticipantName()
@@ -82,12 +83,12 @@ abstract class AbstractGameStatisticsPanel<PlayerState : AbstractPlayerState<Pla
         }
 
         val requiredColumns = listOf("") + uniqueParticipantNamesOrdered.map { it.value }
-        (tm.columnCount until requiredColumns.size).forEach { table.addColumn(requiredColumns[it]) }
+        requiredColumns.forEach(table::addColumn)
 
         addRowsToTable()
 
         // Rendering
-        for (i in 0 until tm.columnCount) {
+        for (i in 0 until table.columnCount) {
             table.getColumn(i).cellRenderer = factoryStatsCellRenderer()
             table.getColumn(i).headerRenderer = GameStatisticsHeaderRenderer()
         }
@@ -102,7 +103,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState : AbstractPlayerState<Pla
         )
 
     protected fun addRow(row: Array<Any?>) {
-        tm.addRow(row)
+        table.model.addRow(row)
     }
 
     protected fun getFlattenedDarts(uniqueParticipantName: UniqueParticipantName): List<Dart> {
@@ -111,7 +112,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState : AbstractPlayerState<Pla
     }
 
     protected fun factoryRow(rowName: String): Array<Any?> {
-        val row = arrayOfNulls<Any>(tm.columnCount)
+        val row = arrayOfNulls<Any>(table.columnCount)
         row[0] = rowName
         return row
     }

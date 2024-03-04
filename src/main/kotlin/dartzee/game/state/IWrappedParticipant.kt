@@ -25,6 +25,8 @@ sealed interface IWrappedParticipant {
     fun getUniqueParticipantName() =
         UniqueParticipantName(individuals.map { it.getPlayerName() }.sorted().joinToString(" & "))
 
+    fun getParticipantName() = individuals.joinToString(" & ") { it.getPlayerName() }
+
     fun getParticipantNameHtml(
         active: Boolean,
         currentParticipant: ParticipantEntity? = null

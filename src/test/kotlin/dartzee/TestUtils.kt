@@ -230,11 +230,13 @@ fun FileUploader.uploadFileFromResource(resourceName: String) {
     flushEdt()
 }
 
-fun getInfoDialog() = findWindow<JDialog> { it.title == "Information" }!!
+fun getInfoDialog() = getOptionPaneDialog("Information")
 
-fun getQuestionDialog() = findWindow<JDialog> { it.title == "Question" }!!
+fun getQuestionDialog() = getOptionPaneDialog("Question")
 
-fun getErrorDialog() = findWindow<JDialog> { it.title == "Error" }!!
+fun getErrorDialog() = getOptionPaneDialog("Error")
+
+private fun getOptionPaneDialog(title: String) = findWindow<JDialog> { it.title == title }!!
 
 fun JDialog.getDialogMessage(): String {
     val messageLabels = findAll<JLabel>().filter { it.name == "OptionPane.label" }

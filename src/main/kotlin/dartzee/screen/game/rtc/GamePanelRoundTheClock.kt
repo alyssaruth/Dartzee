@@ -57,7 +57,7 @@ class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, 
         return dartsThrownCount() == 3 && !allHits
     }
 
-    override fun mustContinueThrowing() = !shouldStopAfterDartThrown()
+    override fun showConfirmButton() = shouldStopAfterDartThrown()
 
     override fun saveDartsAndProceed() {
         if (dartsThrownCount() == 4 && getDartsThrown().last().hitClockTarget(config.clockType)) {

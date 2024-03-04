@@ -90,6 +90,8 @@ class GamePanelDartzee(
         updateCarouselAndDartboard()
     }
 
+    override fun showConfirmButton() = isScoringRound()
+
     override fun shouldStopAfterDartThrown(): Boolean {
         val segmentStatus = summaryPanel.getSegmentStatus()
         val failedAllRules = segmentStatus.validSegments.isEmpty()
@@ -102,10 +104,6 @@ class GamePanelDartzee(
         super.readyForThrow()
 
         updateCarouselAndDartboard()
-
-        if (!isScoringRound()) {
-            btnConfirm.isVisible = false
-        }
     }
 
     private fun updateCarouselAndDartboard() {
@@ -140,7 +138,7 @@ class GamePanelDartzee(
             getCurrentPlayerState().saveRoundResult(result)
         }
 
-        disableInputButtons()
+        hideInputButtons()
         dartboard.clearDarts()
 
         commitRound()

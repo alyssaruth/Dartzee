@@ -36,6 +36,9 @@ class TestTeamParticipant : AbstractTest() {
 
         teamOne.getParticipantNameHtml(false) shouldBe "<html>Alyssa &#38; Leah</html>"
         teamTwo.getParticipantNameHtml(false) shouldBe "<html>Leah &#38; Alyssa</html>"
+
+        teamOne.getParticipantName() shouldBe "Alyssa & Leah"
+        teamTwo.getParticipantName() shouldBe "Leah & Alyssa"
     }
 
     @Test
