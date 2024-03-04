@@ -2,7 +2,7 @@ name: Normalise audio files
 on:
   workflow_dispatch:
 jobs:
-  build:
+  normalise-audio:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -12,9 +12,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install normalize-audio
       - name: normalise
+        working-directory: src/main/resources/wav
         run: |
-          FILES=$(ls src/main/resources/wav)
-          normalize-audio $FILES
+          normalize-audio .
       - name: commit
         uses: EndBug/add-and-commit@v9
         if: github.ref == 'refs/heads/main'
