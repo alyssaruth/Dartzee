@@ -9,8 +9,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: apt install
         run: |
-          apt-get update
-          apt-get install normalize-audio
+          sudo apt-get update
+          sudo apt-get install normalize-audio
       - name: normalise
         run: |
           FILES=$(ls src/main/resources/wav)
