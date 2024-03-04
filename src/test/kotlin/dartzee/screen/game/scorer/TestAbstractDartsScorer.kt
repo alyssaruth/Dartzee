@@ -53,6 +53,22 @@ class TestAbstractDartsScorer : AbstractTest() {
     }
 
     @Test
+    fun `Should display as resigned`() {
+        val state =
+            TestPlayerState(
+                insertParticipant(finishingPosition = 3, resigned = true),
+                scoreSoFar = 30
+            )
+
+        val scorer = TestDartsScorer()
+        scorer.init()
+        scorer.stateChanged(state)
+
+        scorer.lblResult.shouldHaveColours(DartsColour.THIRD_COLOURS)
+        scorer.lblResult.text shouldBe "RESIGNED"
+    }
+
+    @Test
     fun `Should correctly update bold text when selected and deselected`() {
         val scorer = TestDartsScorer()
         scorer.init()

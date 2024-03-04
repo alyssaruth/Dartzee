@@ -208,8 +208,6 @@ abstract class DartsGamePanel<
     protected fun nextTurn() {
         updateActivePlayer()
 
-        println("NEXT TURN")
-
         // Create a new round for this player
         currentRoundNumber = getCurrentPlayerState().currentRoundNumber()
 

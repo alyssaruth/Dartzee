@@ -167,8 +167,10 @@ class TestAbstractPlayerState : AbstractTest() {
                 finishingPosition = -1
             )
         val state = TestPlayerState(participant)
+        state.hasResigned() shouldBe false
 
         state.participantResigned(4)
+        state.hasResigned() shouldBe true
         participant.finalScore shouldBe -1
         participant.finishingPosition shouldBe 4
         participant.dtFinished shouldNotBe DateStatics.END_OF_TIME

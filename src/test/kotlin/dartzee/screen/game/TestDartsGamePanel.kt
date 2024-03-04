@@ -1,13 +1,16 @@
 package dartzee.screen.game
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickNo
 import com.github.alyssaburlton.swingtest.clickYes
+import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.achievements.AchievementType
 import dartzee.ai.DartsAiModel
+import dartzee.bean.DartLabel
 import dartzee.db.EntityName
 import dartzee.game.FinishType
 import dartzee.game.GameType
@@ -24,6 +27,7 @@ import dartzee.helper.preparePlayers
 import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
+import dartzee.only
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.screen.game.x01.GameStatisticsPanelX01
 import io.kotest.matchers.collections.shouldContainExactly
@@ -166,6 +170,39 @@ class TestDartsGamePanel : AbstractTest() {
         getQuestionDialog().clickYes(async = true)
 
         panel.resignButton().shouldNotBeVisible()
+    }
+
+    @Test
+    fun `Should not resign a player if cancelled`() {
+        val panel = TestGamePanel(totalPlayers = 3)
+
+        val human1 = makeSingleParticipant(insertPlayer(strategy = ""), panel.gameEntity.rowId)
+        val human2 = makeSingleParticipant(insertPlayer(strategy = ""), panel.gameEntity.rowId)
+
+        panel.startNewGame(listOf(human1, human2))
+        panel.resignButton().shouldBeVisible()
+        panel.clickResign()
+        getQuestionDialog().clickNo(async = true)
+
+        panel.getPlayerStates().count { it.hasResigned() } shouldBe 0
+    }
+
+    @Test
+    fun `Should resign a player and clear the dartboard`() {
+        val panel = TestGamePanel(totalPlayers = 3)
+
+        val human1 = makeSingleParticipant(insertPlayer(strategy = ""), panel.gameEntity.rowId)
+        val human2 = makeSingleParticipant(insertPlayer(strategy = ""), panel.gameEntity.rowId)
+
+        panel.startNewGame(listOf(human1, human2))
+        panel.dartThrown(Dart(20, 1))
+        panel.resignButton().shouldBeVisible()
+        panel.clickResign()
+        getQuestionDialog().clickYes(async = true)
+
+        val human1State = panel.getPlayerStates().filter { it.wrappedParticipant == human1 }.only()
+        human1State.hasResigned() shouldBe true
+        panel.dartboard.findChild<DartLabel>() shouldBe null
     }
 
     private fun TestGamePanel.clickResign() =
