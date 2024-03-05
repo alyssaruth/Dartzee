@@ -56,9 +56,7 @@ private fun makeParticipantTempTable(): String? {
             .trimIndent()
     )
 
-    mainDatabase.executeUpdate(
-        "CREATE INDEX ${tempTable}_GameId_PlayerId ON $tempTable(GameId, PlayerId)"
-    )
+    mainDatabase.executeUpdate("CREATE INDEX ${tempTable}_GameId ON $tempTable(GameId)")
 
     return tempTable
 }
