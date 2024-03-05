@@ -8,6 +8,7 @@ import com.github.alyssaburlton.swingtest.findAll
 import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.typeText
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.InteractiveDartboard
@@ -249,6 +250,20 @@ fun <T> runAsync(block: () -> T?): T? {
 
     flushEdt()
     return result
+}
+
+fun runExpectingError(errorText: String, block: () -> Boolean) {
+    var result: Boolean? = null
+    SwingUtilities.invokeLater { result = block() }
+
+    flushEdt()
+    getErrorDialog().getDialogMessage() shouldBe errorText
+
+    getErrorDialog().clickOk()
+    flushEdt()
+    purgeWindows()
+
+    result shouldBe false
 }
 
 fun purgeGameAndConfirm(localId: Long): String {

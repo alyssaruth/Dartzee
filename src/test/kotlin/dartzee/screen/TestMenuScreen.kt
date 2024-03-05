@@ -36,6 +36,15 @@ class TestMenuScreen : AbstractTest() {
     }
 
     @Test
+    fun `Should go to the simplified game setup screen in party mode`() {
+        InjectedThings.partyMode = true
+
+        val scrn = MenuScreen()
+        scrn.clickChild<JButton>(text = "New Game")
+        ScreenCache.currentScreen().shouldBeInstanceOf<SimplePlayerSelectionScreen>()
+    }
+
+    @Test
     fun `Should go to the player management screen`() {
         val scrn = MenuScreen()
         scrn.clickChild<JButton>(text = "Manage Players")

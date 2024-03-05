@@ -34,7 +34,7 @@ class GameSetupScreen : EmbeddedScreen() {
     private val panelGameType = JPanel()
     private val panelPlayers = JPanel()
     private val launchPanel = JPanel()
-    val btnLaunch = JButton("Launch Game")
+    private val btnLaunch = JButton("Launch Game")
     val playerSelector = GameSetupPlayerSelector()
     val gameTypeComboBox = ComboBoxGameType()
     private val panelGameTypeCb = JPanel()
@@ -93,6 +93,7 @@ class GameSetupScreen : EmbeddedScreen() {
         spinners.forEachIndexed { ix, spinner ->
             panelPointBreakdown.add(spinner, "cell $ix 0,alignx center")
         }
+        btnLaunch.name = "LaunchButton"
 
         matchConfigPanel.addActionListener(this)
         gameTypeComboBox.addActionListener(this)
