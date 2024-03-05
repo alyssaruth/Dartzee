@@ -9,11 +9,12 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerForGame
+import dartzee.helper.insertTeamAndParticipants
 import dartzee.helper.makeReportParameters
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestReportingSqlUtil : AbstractTest() {
+class TestReportingUtil : AbstractTest() {
     @Test
     fun `Should parse participants and finishing positions correctly`() {
         val alice = insertPlayer(name = "Alice")
@@ -22,9 +23,24 @@ class TestReportingSqlUtil : AbstractTest() {
 
         val match = insertDartsMatch(localId = 7)
         val g1 = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
-        insertParticipant(gameId = g1.rowId, playerId = alice.rowId, finishingPosition = 1)
-        insertParticipant(gameId = g1.rowId, playerId = bob.rowId, finishingPosition = 3)
-        insertParticipant(gameId = g1.rowId, playerId = clive.rowId, finishingPosition = 2)
+        insertParticipant(
+            gameId = g1.rowId,
+            playerId = alice.rowId,
+            finishingPosition = 1,
+            ordinal = 2
+        )
+        insertParticipant(
+            gameId = g1.rowId,
+            playerId = bob.rowId,
+            finishingPosition = 3,
+            ordinal = 0
+        )
+        insertParticipant(
+            gameId = g1.rowId,
+            playerId = clive.rowId,
+            finishingPosition = 2,
+            ordinal = 1
+        )
 
         val results = runReport(makeReportParameters())
         results.size shouldBe 1
@@ -35,11 +51,41 @@ class TestReportingSqlUtil : AbstractTest() {
             arrayOf(
                 g1.localId,
                 "501",
-                "Alice (1), Clive (2), Bob (3)",
+                "Bob (3), Clive (2), Alice (1)",
                 g1.dtCreation,
                 g1.dtFinish,
                 "#7 (Game 1)"
             )
+    }
+
+    @Test
+    fun `Should parse teams correctly`() {
+        val alice = insertPlayer(name = "Alice")
+        val bob = insertPlayer(name = "Bob")
+        val clive = insertPlayer(name = "Clive")
+
+        val g1 = insertGame()
+        insertParticipant(
+            gameId = g1.rowId,
+            playerId = alice.rowId,
+            finishingPosition = 1,
+            ordinal = 1
+        )
+        insertTeamAndParticipants(
+            gameId = g1.rowId,
+            playerOne = clive,
+            playerTwo = bob,
+            finishingPosition = 2,
+            ordinal = 0,
+        )
+
+        val results = runReport(makeReportParameters())
+        results.size shouldBe 1
+        val wrapper = results.first()
+
+        val row = wrapper.getTableRow()
+        row shouldBe
+            arrayOf(g1.localId, "501", "Clive & Bob (2), Alice (1)", g1.dtCreation, g1.dtFinish, "")
     }
 
     @Test

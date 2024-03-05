@@ -203,6 +203,45 @@ fun insertParticipant(
     return pe
 }
 
+fun insertTeamAndParticipants(
+    gameId: String = randomGuid(),
+    ordinal: Int = 1,
+    finishingPosition: Int = -1,
+    finalScore: Int = -1,
+    dtFinished: Timestamp = DateStatics.END_OF_TIME,
+    playerOne: PlayerEntity = insertPlayer(),
+    playerTwo: PlayerEntity = insertPlayer(),
+    database: Database = mainDatabase
+): TeamEntity {
+    val t =
+        insertTeam(
+            gameId = gameId,
+            ordinal = ordinal,
+            finishingPosition = finishingPosition,
+            finalScore = finalScore,
+            dtFinished = dtFinished,
+            database = database
+        )
+
+    insertParticipant(
+        gameId = gameId,
+        playerId = playerOne.rowId,
+        teamId = t.rowId,
+        ordinal = 0,
+        database = database
+    )
+
+    insertParticipant(
+        gameId = gameId,
+        playerId = playerTwo.rowId,
+        teamId = t.rowId,
+        ordinal = 1,
+        database = database
+    )
+
+    return t
+}
+
 fun insertTeam(
     uuid: String = randomGuid(),
     gameId: String = randomGuid(),
