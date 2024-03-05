@@ -18,6 +18,7 @@ fun runReport(rp: ReportParameters?): List<ReportResultWrapper> {
 
     var sql = buildBasicSqlStatement(ptTemp)
     sql += rp.getExtraWhereSql(ptTemp)
+    sql += "\n ORDER BY LocalId, TeamOrdinal, Ordinal"
 
     val hm = mutableMapOf<Long, ReportResultWrapper>()
     mainDatabase.executeQuery(sql).use { rs ->
@@ -36,7 +37,8 @@ private fun makeParticipantTempTable(): String? {
     val tempTable =
         mainDatabase.createTempTable(
             "reportParticipants",
-            "GameId VARCHAR(36), PlayerId VARCHAR(36), FinishingPosition INT, FinalScore INT, TeamId VARCHAR(36), Resigned BOOLEAN"
+            "GameId VARCHAR(36), PlayerId VARCHAR(36), FinishingPosition INT, FinalScore INT, " +
+                "TeamId VARCHAR(36), Resigned BOOLEAN, TeamOrdinal INT, Ordinal INT"
         ) ?: return null
 
     mainDatabase.executeUpdate(
@@ -49,7 +51,9 @@ private fun makeParticipantTempTable(): String? {
             ${isNullStatement("t.FinishingPosition", "pt.FinishingPosition", "FinishingPosition")},
             ${isNullStatement("t.FinalScore", "pt.FinalScore", "FinalScore")},
             pt.TeamId,
-            ${isNullStatement("t.Resigned", "pt.Resigned", "Resigned")}
+            ${isNullStatement("t.Resigned", "pt.Resigned", "Resigned")},
+            ${isNullStatement("t.Ordinal", "99", "TeamOrdinal")},
+            pt.Ordinal
         FROM 
             ${EntityName.Participant} pt LEFT OUTER JOIN ${EntityName.Team} t ON (pt.TeamId = t.RowId)
     """
@@ -117,10 +121,7 @@ data class ReportResultWrapper(
         return arrayOf(localId, gameTypeDesc, playerDesc, dtStart, dtFinish, matchDesc)
     }
 
-    private fun getPlayerDesc(): String {
-        participants.sortBy { it.finishingPosition }
-        return participants.joinToString()
-    }
+    private fun getPlayerDesc() = participants.joinToString()
 
     fun addParticipant(rs: ResultSet) {
         val playerName = rs.getString("Name")
