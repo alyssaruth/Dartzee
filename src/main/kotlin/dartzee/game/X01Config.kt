@@ -3,6 +3,8 @@ package dartzee.game
 import com.fasterxml.jackson.module.kotlin.readValue
 import dartzee.core.util.jsonMapper
 
+val X01_PARTY_CONFIG = X01Config(301, FinishType.Any)
+
 enum class FinishType {
     Any,
     Doubles

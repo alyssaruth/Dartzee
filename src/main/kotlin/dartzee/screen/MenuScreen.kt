@@ -8,6 +8,7 @@ import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
+import dartzee.screen.stats.overall.SimplifiedLeaderboardScreen
 import dartzee.screen.sync.SyncManagementScreen
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings
@@ -181,6 +182,14 @@ class MenuScreen : EmbeddedScreen() {
         }
     }
 
+    private fun openLeaderboards() {
+        if (InjectedThings.partyMode) {
+            ScreenCache.switch<SimplifiedLeaderboardScreen>()
+        } else {
+            ScreenCache.switch<LeaderboardsScreen>()
+        }
+    }
+
     override fun showBackButton() = false
 
     override fun actionPerformed(arg0: ActionEvent) {
@@ -190,7 +199,7 @@ class MenuScreen : EmbeddedScreen() {
             btnNewGame -> newGame()
             btnManagePlayers -> ScreenCache.switch<PlayerManagementScreen>()
             btnGameReport -> ScreenCache.switch<ReportingSetupScreen>()
-            btnLeaderboards -> ScreenCache.switch<LeaderboardsScreen>()
+            btnLeaderboards -> openLeaderboards()
             btnUtilities -> ScreenCache.switch<UtilitiesScreen>()
             btnDartzeeTemplates -> ScreenCache.switch<DartzeeTemplateSetupScreen>()
             else -> super.actionPerformed(arg0)

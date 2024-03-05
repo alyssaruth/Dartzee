@@ -1,10 +1,9 @@
 package dartzee.screen
 
 import dartzee.bean.GameSetupPlayerSelector
-import dartzee.game.FinishType
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
-import dartzee.game.X01Config
+import dartzee.game.X01_PARTY_CONFIG
 import dartzee.utils.InjectedThings.gameLauncher
 import java.awt.BorderLayout
 
@@ -28,7 +27,7 @@ class SimplePlayerSelectionScreen : EmbeddedScreen() {
             GameLaunchParams(
                 playerSelector.getSelectedPlayers(),
                 GameType.X01,
-                X01Config(301, FinishType.Any).toJson(),
+                X01_PARTY_CONFIG.toJson(),
                 playerSelector.pairMode(),
             )
 
