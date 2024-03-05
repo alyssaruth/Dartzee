@@ -8,6 +8,7 @@ import dartzee.game.GameType
 import dartzee.`object`.SegmentType
 import dartzee.utils.Database
 import dartzee.utils.getQuotedIdStr
+import dartzee.utils.isNullStatement
 import java.sql.ResultSet
 
 const val X01_ROUNDS_TABLE = "X01Rounds"
@@ -119,9 +120,7 @@ fun buildQualifyingDartzeeGamesTable(database: Database): String? {
 
     val sb = StringBuilder()
     sb.append(" INSERT INTO $dartzeeGames")
-    sb.append(
-        " SELECT g.RowId, COUNT(1) + 1, CASE WHEN dt.Name IS NULL THEN '' ELSE dt.Name END AS TemplateName"
-    )
+    sb.append(" SELECT g.RowId, COUNT(1) + 1, ${isNullStatement("dt.Name", "''", "TemplateName")}")
     sb.append(" FROM ${EntityName.DartzeeRule} dr, ${EntityName.Game} g")
     sb.append(" LEFT OUTER JOIN ${EntityName.DartzeeTemplate} dt ON (g.GameParams = dt.RowId)")
     sb.append(" WHERE dr.EntityId = g.RowId")

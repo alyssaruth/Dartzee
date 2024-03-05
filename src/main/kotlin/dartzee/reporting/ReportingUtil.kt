@@ -79,7 +79,7 @@ fun buildBasicSqlStatement(ptTempTable: String) =
         g.DartsMatchId, 
         g.MatchOrdinal, 
         dt.Name AS TemplateName,
-        CASE WHEN m.LocalId IS NULL THEN -1 ELSE m.LocalId END AS LocalMatchId
+        ${isNullStatement("m.LocalId", "-1", "LocalMatchId")}
     FROM
         $ptTempTable pt,
         ${EntityName.Player} p,

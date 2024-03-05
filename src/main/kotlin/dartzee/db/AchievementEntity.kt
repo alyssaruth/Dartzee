@@ -7,6 +7,7 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.screen.ScreenCache
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.isNullStatement
 import java.sql.Timestamp
 
 /**
@@ -50,7 +51,7 @@ class AchievementEntity(database: Database = mainDatabase) :
 
             val sb = StringBuilder()
             sb.append("SELECT ${dao.getColumnsForSelectStatement("a")}, ")
-            sb.append(" CASE WHEN g.LocalId IS NULL THEN -1 ELSE g.LocalId END AS LocalGameId")
+            sb.append(isNullStatement("g.LocalId", "-1", "LocalGameId"))
             sb.append(" FROM Achievement a")
             sb.append(" LEFT OUTER JOIN Game g ON (a.GameIdEarned = g.RowId)")
             sb.append(" WHERE PlayerId = '$playerId'")
