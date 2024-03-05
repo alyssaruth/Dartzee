@@ -61,7 +61,7 @@ private fun makeParticipantTempTable(): String? {
     return tempTable
 }
 
-fun buildBasicSqlStatement(ptTempTable: String) =
+private fun buildBasicSqlStatement(ptTempTable: String) =
     """
     SELECT 
         g.RowId, 
