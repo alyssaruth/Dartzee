@@ -1,7 +1,9 @@
 package dartzee.reporting
 
+import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.isNullStatement
 import java.sql.ResultSet
 import java.sql.Timestamp
 import javax.swing.JCheckBox
@@ -12,8 +14,10 @@ fun <T> grabIfSelected(checkbox: JCheckBox, getter: () -> T) =
 fun runReport(rp: ReportParameters?): List<ReportResultWrapper> {
     rp ?: return emptyList()
 
-    var sql = buildBasicSqlStatement()
-    sql += rp.getExtraWhereSql()
+    val ptTemp = makeParticipantTempTable() ?: return emptyList()
+
+    var sql = buildBasicSqlStatement(ptTemp)
+    sql += rp.getExtraWhereSql(ptTemp)
 
     val hm = mutableMapOf<Long, ReportResultWrapper>()
     mainDatabase.executeQuery(sql).use { rs ->
@@ -28,22 +32,67 @@ fun runReport(rp: ReportParameters?): List<ReportResultWrapper> {
     return hm.values.toList()
 }
 
-fun buildBasicSqlStatement(): String {
-    val sb = StringBuilder()
-    sb.append(
-        "SELECT g.RowId, g.LocalId, g.GameType, g.GameParams, g.DtCreation, g.DtFinish, p.Name, pt.FinishingPosition, g.DartsMatchId, g.MatchOrdinal, dt.Name AS TemplateName,"
-    )
-    sb.append(" CASE WHEN m.LocalId IS NULL THEN -1 ELSE m.LocalId END AS LocalMatchId")
-    sb.append(" FROM Participant pt, Player p, Game g")
-    sb.append(" LEFT OUTER JOIN DartsMatch m ON (g.DartsMatchId = m.RowId)")
-    sb.append(
-        " LEFT OUTER JOIN DartzeeTemplate dt ON (g.GameType = '${GameType.DARTZEE}' AND g.GameParams = dt.RowId)"
-    )
-    sb.append(" WHERE pt.GameId = g.RowId")
-    sb.append(" AND pt.PlayerId = p.RowId")
+private fun makeParticipantTempTable(): String? {
+    val tempTable =
+        mainDatabase.createTempTable(
+            "reportParticipants",
+            "GameId VARCHAR(36), PlayerId VARCHAR(36), FinishingPosition INT, FinalScore INT, TeamId VARCHAR(36), Resigned BOOLEAN"
+        ) ?: return null
 
-    return sb.toString()
+    mainDatabase.executeUpdate(
+        """
+        INSERT INTO 
+            $tempTable
+        SELECT
+            pt.GameId,
+            pt.PlayerId,
+            ${isNullStatement("t.FinishingPosition", "pt.FinishingPosition", "FinishingPosition")},
+            ${isNullStatement("t.FinalScore", "pt.FinalScore", "FinalScore")},
+            pt.TeamId,
+            ${isNullStatement("t.Resigned", "pt.Resigned", "Resigned")}
+        FROM 
+            ${EntityName.Participant} pt LEFT OUTER JOIN ${EntityName.Team} t ON (pt.TeamId = t.RowId)
+    """
+            .trimIndent()
+    )
+
+    mainDatabase.executeUpdate(
+        "CREATE INDEX ${tempTable}_GameId_PlayerId ON $tempTable(GameId, PlayerId)"
+    )
+
+    return tempTable
 }
+
+fun buildBasicSqlStatement(ptTempTable: String) =
+    """
+    SELECT 
+        g.RowId, 
+        g.LocalId, 
+        g.GameType, 
+        g.GameParams, 
+        g.DtCreation, 
+        g.DtFinish, 
+        p.Name, 
+        pt.FinishingPosition, 
+        pt.Resigned,
+        pt.TeamId,
+        g.DartsMatchId, 
+        g.MatchOrdinal, 
+        dt.Name AS TemplateName,
+        CASE WHEN m.LocalId IS NULL THEN -1 ELSE m.LocalId END AS LocalMatchId
+    FROM
+        $ptTempTable pt,
+        ${EntityName.Player} p,
+        ${EntityName.Game} g
+    LEFT OUTER JOIN 
+        ${EntityName.DartsMatch} m ON (g.DartsMatchId = m.RowId)
+    LEFT OUTER JOIN 
+        ${EntityName.DartzeeTemplate} dt ON (g.GameType = '${GameType.DARTZEE}' AND g.GameParams = dt.RowId)
+    WHERE
+        pt.GameId = g.RowId
+    AND pt.PlayerId = p.RowId
+"""
+        .trimIndent()
 
 data class ReportResultWrapper(
     val localId: Long,
@@ -78,7 +127,15 @@ data class ReportResultWrapper(
     fun addParticipant(rs: ResultSet) {
         val playerName = rs.getString("Name")
         val finishPos = rs.getInt("FinishingPosition")
-        participants.add(ParticipantWrapper(playerName, finishPos))
+        val resigned = rs.getBoolean("Resigned")
+        val teamId = rs.getString("TeamId")
+
+        val existing = if (teamId.isNotEmpty()) participants.find { it.teamId == teamId } else null
+        if (existing != null) {
+            existing.playerName = "${existing.playerName} & $playerName"
+        } else {
+            participants.add(ParticipantWrapper(playerName, finishPos, resigned, teamId))
+        }
     }
 
     companion object {
@@ -99,7 +156,7 @@ data class ReportResultWrapper(
                 dtFinish,
                 localMatchId,
                 matchOrdinal,
-                templateName
+                templateName,
             )
         }
 

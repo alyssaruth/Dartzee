@@ -8,7 +8,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 
 data class ReportParameters(val game: ReportParametersGame, val players: ReportParametersPlayers) {
 
-    fun getExtraWhereSql(): String {
+    fun getExtraWhereSql(participantTempTable: String): String {
         val sb = StringBuilder()
 
         if (game.gameType != null) {
@@ -72,7 +72,7 @@ data class ReportParameters(val game: ReportParametersGame, val players: ReportP
             val parms = entry.value
 
             sb.append(" AND EXISTS (")
-            sb.append(" SELECT 1 FROM Participant z")
+            sb.append(" SELECT 1 FROM $participantTempTable z")
             sb.append(" WHERE z.PlayerId = '${player.rowId}'")
             sb.append(" AND z.GameId = g.RowId")
 
@@ -84,14 +84,14 @@ data class ReportParameters(val game: ReportParametersGame, val players: ReportP
 
         for (player in players.excludedPlayers) {
             sb.append(" AND NOT EXISTS (")
-            sb.append(" SELECT 1 FROM Participant z")
+            sb.append(" SELECT 1 FROM $participantTempTable z")
             sb.append(" WHERE z.PlayerId = '${player.rowId}'")
             sb.append(" AND z.GameId = g.RowId)")
         }
 
         if (players.excludeOnlyAi) {
             sb.append(" AND EXISTS (")
-            sb.append(" SELECT 1 FROM Participant z, Player p")
+            sb.append(" SELECT 1 FROM $participantTempTable z, Player p")
             sb.append(" WHERE z.PlayerId = p.RowId")
             sb.append(" AND z.GameId = g.RowId")
             sb.append(" AND p.Strategy = '')")
