@@ -7,6 +7,7 @@ import dartzee.core.util.sortedBy
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.InjectedThings.partyMode
 import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import dartzee.utils.PreferenceUtil
 import dartzee.utils.combinePlayerFlags
@@ -20,7 +21,7 @@ import javax.swing.JRadioButton
 import javax.swing.JSeparator
 import javax.swing.SwingConstants
 
-class LeaderboardTotalScore(private val gameType: GameType) :
+class LeaderboardTotalScore(private val gameType: GameType, gameParams: String? = null) :
     AbstractLeaderboard(), ActionListener {
     private val panelGameParams = getFilterPanel(gameType)
 
@@ -46,14 +47,23 @@ class LeaderboardTotalScore(private val gameType: GameType) :
 
         add(panelFilters, BorderLayout.NORTH)
 
-        panelFilters.add(panelGameParams)
-        panelFilters.add(makeSeparator())
+        if (!partyMode) {
+            panelFilters.add(panelGameParams)
+            panelFilters.add(makeSeparator())
+        }
+
         panelFilters.add(panelTeamsOrIndividuals)
         panelFilters.add(makeSeparator())
-        panelFilters.add(panelPlayerFilters)
-        panelFilters.add(makeSeparator())
+
+        if (!partyMode) {
+            panelFilters.add(panelPlayerFilters)
+            panelFilters.add(makeSeparator())
+        }
+
         panelFilters.add(panelBestOrWorst)
         add(table, BorderLayout.CENTER)
+
+        gameParams?.let(panelGameParams::setGameParams)
 
         panelGameParams.addActionListener(this)
         panelPlayerFilters.addActionListener(this)

@@ -12,6 +12,7 @@ import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.preference.PreferencesScreen
 import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
+import dartzee.screen.stats.overall.SimplifiedLeaderboardScreen
 import dartzee.screen.sync.SyncManagementScreen
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -63,6 +64,15 @@ class TestMenuScreen : AbstractTest() {
         val scrn = MenuScreen()
         scrn.clickChild<JButton>(text = "Leaderboards")
         ScreenCache.currentScreen().shouldBeInstanceOf<LeaderboardsScreen>()
+    }
+
+    @Test
+    fun `Should go to the simplified leaderboards screen in party mode`() {
+        InjectedThings.partyMode = true
+
+        val scrn = MenuScreen()
+        scrn.clickChild<JButton>(text = "Leaderboards")
+        ScreenCache.currentScreen().shouldBeInstanceOf<SimplifiedLeaderboardScreen>()
     }
 
     @Test

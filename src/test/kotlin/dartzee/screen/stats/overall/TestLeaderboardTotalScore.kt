@@ -1,19 +1,27 @@
 package dartzee.screen.stats.overall
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.getChild
+import dartzee.bean.GameParamFilterPanel
+import dartzee.bean.GameParamFilterPanelRoundTheClock
 import dartzee.bean.GameParamFilterPanelX01
+import dartzee.bean.PlayerTypeFilterPanel
 import dartzee.bean.SpinnerX01
 import dartzee.core.bean.ScrollTable
+import dartzee.game.ClockType
 import dartzee.game.FinishType
 import dartzee.game.GameType
+import dartzee.game.RoundTheClockConfig
 import dartzee.game.X01Config
 import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.insertFinishedParticipant
 import dartzee.helper.insertFinishedTeam
+import dartzee.utils.InjectedThings
 import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.shouldBe
+import javax.swing.JCheckBox
 import javax.swing.JRadioButton
 import org.junit.jupiter.api.Test
 
@@ -159,6 +167,29 @@ class TestLeaderboardTotalScore : AbstractRegistryTest() {
         leaderboard.rowCount() shouldBe 2
         leaderboard.getNameAt(0) shouldBe "Wall-e & Eve"
         leaderboard.getNameAt(1) shouldBe "Robocop"
+    }
+
+    @Test
+    fun `Should support pre-populating game params`() {
+        val leaderboard =
+            LeaderboardTotalScore(
+                GameType.ROUND_THE_CLOCK,
+                RoundTheClockConfig(ClockType.Trebles, false).toJson()
+            )
+
+        val filterPanel = leaderboard.getChild<GameParamFilterPanelRoundTheClock>()
+        filterPanel.getChild<JCheckBox>(text = "In order").isSelected shouldBe false
+        filterPanel.getChild<JRadioButton>(text = ClockType.Trebles.toString()).isSelected shouldBe
+            true
+    }
+
+    @Test
+    fun `Should omit irrelevant filters in party mode`() {
+        InjectedThings.partyMode = true
+
+        val leaderboard = LeaderboardTotalScore(GameType.X01)
+        leaderboard.findChild<GameParamFilterPanel>() shouldBe null
+        leaderboard.findChild<PlayerTypeFilterPanel>() shouldBe null
     }
 
     private fun LeaderboardTotalScore.rowCount() = table().rowCount
