@@ -9,6 +9,7 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerForGame
+import dartzee.helper.insertTeamAndParticipants
 import dartzee.helper.makeReportParameters
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -40,6 +41,30 @@ class TestReportingSqlUtil : AbstractTest() {
                 g1.dtFinish,
                 "#7 (Game 1)"
             )
+    }
+
+    @Test
+    fun `Should parse teams correctly`() {
+        val alice = insertPlayer(name = "Alice")
+        val bob = insertPlayer(name = "Bob")
+        val clive = insertPlayer(name = "Clive")
+
+        val g1 = insertGame()
+        insertParticipant(gameId = g1.rowId, playerId = alice.rowId, finishingPosition = 1)
+        insertTeamAndParticipants(
+            gameId = g1.rowId,
+            playerOne = bob,
+            playerTwo = clive,
+            finishingPosition = 2
+        )
+
+        val results = runReport(makeReportParameters())
+        results.size shouldBe 1
+        val wrapper = results.first()
+
+        val row = wrapper.getTableRow()
+        row shouldBe
+            arrayOf(g1.localId, "501", "Alice (1), Bob & Clive (2)", g1.dtCreation, g1.dtFinish, "")
     }
 
     @Test

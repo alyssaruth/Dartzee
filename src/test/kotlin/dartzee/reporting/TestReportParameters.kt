@@ -12,6 +12,7 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertGameForReport
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayerForGame
+import dartzee.helper.insertTeamAndParticipants
 import dartzee.helper.makeIncludedPlayerParameters
 import dartzee.helper.makeReportParametersGame
 import dartzee.helper.makeReportParametersPlayers
@@ -226,6 +227,54 @@ class TestReportParameters : AbstractTest() {
         val gCliveDaisy = insertGame()
         insertParticipant(playerId = clive.rowId, gameId = gCliveDaisy.rowId)
         insertParticipant(playerId = daisy.rowId, gameId = gCliveDaisy.rowId)
+
+        val rpIncludeAlice =
+            makeReportParametersPlayers(
+                includedPlayers = mapOf(alice to makeIncludedPlayerParameters())
+            )
+        val resultsAlice = runReportForTest(player = rpIncludeAlice)
+        resultsAlice.shouldContainExactlyInAnyOrder(
+            gAllPlayers.localId,
+            gAliceAndBob.localId,
+            gAliceCliveDaisy.localId
+        )
+
+        val rpIncludeAliceAndBob =
+            makeReportParametersPlayers(
+                includedPlayers =
+                    mapOf(
+                        alice to makeIncludedPlayerParameters(),
+                        bob to makeIncludedPlayerParameters()
+                    )
+            )
+        val resultsAliceAndBob = runReportForTest(player = rpIncludeAliceAndBob)
+        resultsAliceAndBob.shouldContainExactly(gAllPlayers.localId, gAliceAndBob.localId)
+    }
+
+    @Test
+    fun `Should account for teams when restricting to specific players`() {
+        val gAllPlayers = insertGame()
+        val alice = insertPlayerForGame("Alice", gAllPlayers.rowId)
+        val bob = insertPlayerForGame("Bob", gAllPlayers.rowId)
+        val clive = insertPlayerForGame("Clive", gAllPlayers.rowId)
+        val daisy = insertPlayerForGame("Daisy", gAllPlayers.rowId)
+
+        val gAliceAndBob = insertGame()
+        insertTeamAndParticipants(gameId = gAliceAndBob.rowId, playerOne = alice, playerTwo = bob)
+
+        val gAliceCliveDaisy = insertGame()
+        insertTeamAndParticipants(
+            gameId = gAliceCliveDaisy.rowId,
+            playerOne = alice,
+            playerTwo = clive
+        )
+        insertParticipant(playerId = daisy.rowId, gameId = gAliceCliveDaisy.rowId)
+
+        val gBobAndDaisy = insertGame()
+        insertTeamAndParticipants(gameId = gBobAndDaisy.rowId, playerOne = bob, playerTwo = daisy)
+
+        val gCliveDaisy = insertGame()
+        insertTeamAndParticipants(gameId = gCliveDaisy.rowId, playerOne = clive, playerTwo = daisy)
 
         val rpIncludeAlice =
             makeReportParametersPlayers(
