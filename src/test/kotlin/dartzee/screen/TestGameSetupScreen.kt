@@ -1,5 +1,7 @@
 package dartzee.screen
 
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
@@ -7,6 +9,7 @@ import dartzee.bean.GameParamFilterPanelX01
 import dartzee.bean.SpinnerX01
 import dartzee.bean.getAllPlayers
 import dartzee.core.bean.items
+import dartzee.core.helper.verifyNotCalled
 import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
@@ -19,6 +22,8 @@ import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.game.X01Config
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.insertDartzeeTemplate
@@ -30,17 +35,18 @@ import dartzee.updateSelection
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.types.shouldNotBeInstanceOf
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.slot
 import io.mockk.verify
+import javax.swing.JButton
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -64,9 +70,12 @@ class TestGameSetupScreen : AbstractTest() {
     @Test
     fun `Should perform player selector validation when attempting to launch a game`() {
         val screen = GameSetupScreen()
-        screen.btnLaunch.doClick()
+        screen.clickChild<JButton>(text = "Launch Game", async = true)
 
-        dialogFactory.errorsShown.shouldContainExactly("You must select at least 1 player.")
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "You must select at least 1 player."
+        error.clickOk()
+        verifyNotCalled { gameLauncher.launchNewGame(any()) }
     }
 
     @Test
@@ -95,7 +104,7 @@ class TestGameSetupScreen : AbstractTest() {
         val gameParamsPanel = screen.gameParamFilterPanel as GameParamFilterPanelX01
         gameParamsPanel.getChild<SpinnerX01>().value = 701
 
-        screen.btnLaunch.doClick()
+        screen.launchButton().doClick()
 
         val expectedParams =
             GameLaunchParams(
@@ -119,7 +128,7 @@ class TestGameSetupScreen : AbstractTest() {
         screen.lblGames.isVisible shouldBe false
         screen.spinnerGames.isVisible shouldBe false
         screen.matchConfigPanel.components.toList() shouldNotContain screen.panelPointBreakdown
-        screen.btnLaunch.text shouldBe "Launch Game"
+        screen.launchButton().text shouldBe "Launch Game"
 
         // First to
         screen.rdbtnFirstTo.doClick()
@@ -128,7 +137,7 @@ class TestGameSetupScreen : AbstractTest() {
         screen.lblGames.isVisible shouldBe false
         screen.spinnerGames.isVisible shouldBe false
         screen.matchConfigPanel.components.toList() shouldNotContain screen.panelPointBreakdown
-        screen.btnLaunch.text shouldBe "Launch Match"
+        screen.launchButton().text shouldBe "Launch Match"
 
         // Points-based
         screen.rdbtnPoints.doClick()
@@ -137,7 +146,7 @@ class TestGameSetupScreen : AbstractTest() {
         screen.lblGames.isVisible shouldBe true
         screen.spinnerGames.isVisible shouldBe true
         screen.matchConfigPanel.components.toList() shouldContain screen.panelPointBreakdown
-        screen.btnLaunch.text shouldBe "Launch Match"
+        screen.launchButton().text shouldBe "Launch Match"
 
         // Back to single game
         screen.rdbtnSingleGame.doClick()
@@ -146,7 +155,7 @@ class TestGameSetupScreen : AbstractTest() {
         screen.lblGames.isVisible shouldBe false
         screen.spinnerGames.isVisible shouldBe false
         screen.matchConfigPanel.components.toList() shouldNotContain screen.panelPointBreakdown
-        screen.btnLaunch.text shouldBe "Launch Game"
+        screen.launchButton().text shouldBe "Launch Game"
     }
 
     @Test
@@ -156,13 +165,13 @@ class TestGameSetupScreen : AbstractTest() {
         val screen = GameSetupScreen()
         screen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
 
-        screen.btnLaunch.isVisible shouldBe false
+        screen.launchButton().isVisible shouldBe false
         screen.btnNext.isVisible shouldBe true
 
         val dartzeeParamPanel = screen.gameParamFilterPanel as GameParamFilterPanelDartzee
         dartzeeParamPanel.comboBox.selectedIndex = 2
 
-        screen.btnLaunch.isVisible shouldBe true
+        screen.launchButton().isVisible shouldBe true
         screen.btnNext.isVisible shouldBe false
     }
 
@@ -183,7 +192,7 @@ class TestGameSetupScreen : AbstractTest() {
         val dartzeeParamPanel = screen.gameParamFilterPanel as GameParamFilterPanelDartzee
         dartzeeParamPanel.comboBox.selectedIndex = 2
 
-        screen.btnLaunch.doClick()
+        screen.launchButton().doClick()
 
         val expectedParams =
             GameLaunchParams(players, GameType.DARTZEE, templateId, false, listOf(ruleOne, ruleTwo))
@@ -200,7 +209,7 @@ class TestGameSetupScreen : AbstractTest() {
         scrn.rdbtnFirstTo.doClick()
         scrn.spinnerWins.value = 7
 
-        scrn.btnLaunch.doClick()
+        scrn.launchButton().doClick()
 
         val launchParams =
             GameLaunchParams(players, GameType.X01, DEFAULT_X01_CONFIG.toJson(), false)
@@ -229,7 +238,7 @@ class TestGameSetupScreen : AbstractTest() {
         scrn.spinners[4].value = 2
         scrn.spinners[5].value = 1
 
-        scrn.btnLaunch.doClick()
+        scrn.launchButton().doClick()
 
         verify { gameLauncher.launchNewMatch(any(), any()) }
 
@@ -246,9 +255,14 @@ class TestGameSetupScreen : AbstractTest() {
         setupScreen.playerSelector.init(listOf())
 
         setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
-        setupScreen.btnNext.doClick()
+        setupScreen.clickChild<JButton>(text = "Next > ", async = true)
 
-        dialogFactory.errorsShown.shouldContainExactly("You must select at least 1 player.")
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "You must select at least 1 player."
+        error.clickOk()
+
+        val currentScreen = ScreenCache.currentScreen()
+        currentScreen.shouldNotBeInstanceOf<DartzeeRuleSetupScreen>()
     }
 
     @Test
@@ -262,8 +276,6 @@ class TestGameSetupScreen : AbstractTest() {
 
         setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
         setupScreen.btnNext.doClick()
-
-        dialogFactory.errorsShown.shouldBeEmpty()
 
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<DartzeeRuleSetupScreen>()
@@ -290,8 +302,6 @@ class TestGameSetupScreen : AbstractTest() {
         setupScreen.rdbtnFirstTo.doClick()
         setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
         setupScreen.btnNext.doClick()
-
-        dialogFactory.errorsShown.shouldBeEmpty()
 
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<DartzeeRuleSetupScreen>()
@@ -321,6 +331,8 @@ class TestGameSetupScreen : AbstractTest() {
         val newFilterPanel = setupScreen.gameParamFilterPanel as GameParamFilterPanelDartzee
         newFilterPanel.comboBox.items().mapNotNull { it.hiddenData }.shouldHaveSize(1)
     }
+
+    private fun GameSetupScreen.launchButton() = getChild<JButton>("LaunchButton")
 
     private fun makeGameSetupScreenReadyToLaunch(): Pair<GameSetupScreen, List<PlayerEntity>> {
         val p1 = insertPlayer(strategy = "")

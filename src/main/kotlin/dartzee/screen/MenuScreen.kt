@@ -173,13 +173,21 @@ class MenuScreen : EmbeddedScreen() {
         }
     }
 
+    private fun newGame() {
+        if (InjectedThings.partyMode) {
+            ScreenCache.switch<SimplePlayerSelectionScreen>()
+        } else {
+            ScreenCache.switch<GameSetupScreen>()
+        }
+    }
+
     override fun showBackButton() = false
 
     override fun actionPerformed(arg0: ActionEvent) {
         when (arg0.source) {
             btnPreferences -> ScreenCache.switch<PreferencesScreen>()
             btnSyncSummary -> ScreenCache.switch<SyncManagementScreen>()
-            btnNewGame -> ScreenCache.switch<GameSetupScreen>()
+            btnNewGame -> newGame()
             btnManagePlayers -> ScreenCache.switch<PlayerManagementScreen>()
             btnGameReport -> ScreenCache.switch<ReportingSetupScreen>()
             btnLeaderboards -> ScreenCache.switch<LeaderboardsScreen>()

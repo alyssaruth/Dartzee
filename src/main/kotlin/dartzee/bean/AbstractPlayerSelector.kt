@@ -32,7 +32,7 @@ abstract class AbstractPlayerSelector<S : ScrollTable> :
     private val btnUnselect = JButton("")
 
     protected fun render() {
-        layout = MigLayout("", "[452px][100px][452px]", "[407px]")
+        layout = MigLayout("al center center", "[452px][100px][452px]", "[407px]")
 
         val panelMovementOptions = JPanel()
         add(tablePlayersToSelectFrom, "cell 0 0,alignx left,growy")

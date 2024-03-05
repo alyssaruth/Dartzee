@@ -4,9 +4,7 @@ import com.github.alyssaburlton.swingtest.clickChild
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContain
-import io.kotest.matchers.collections.shouldContainExactly
+import dartzee.runExpectingError
 import io.kotest.matchers.shouldBe
 import javax.swing.JToggleButton
 import org.junit.jupiter.api.Test
@@ -17,10 +15,8 @@ class TestGameSetupPlayerSelector : AbstractTest() {
         val selector = GameSetupPlayerSelector()
         selector.init()
 
-        selector.valid(false) shouldBe false
-        selector.valid(true) shouldBe false
-
-        dialogFactory.errorsShown.shouldContain("You must select at least 1 player.")
+        runExpectingError("You must select at least 1 player.") { selector.valid(false) }
+        runExpectingError("You must select at least 1 player.") { selector.valid(true) }
     }
 
     @Test
@@ -29,9 +25,7 @@ class TestGameSetupPlayerSelector : AbstractTest() {
 
         val selector = GameSetupPlayerSelector()
         selector.init(listOf(alex))
-
         selector.valid(false) shouldBe true
-        dialogFactory.errorsShown.shouldBeEmpty()
     }
 
     @Test
@@ -41,10 +35,9 @@ class TestGameSetupPlayerSelector : AbstractTest() {
         val selector = GameSetupPlayerSelector()
         selector.init(listOf(alex))
 
-        selector.valid(true) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
-            "You must select at least 2 players for a match."
-        )
+        runExpectingError("You must select at least 2 players for a match.") {
+            selector.valid(true)
+        }
     }
 
     @Test
@@ -55,10 +48,7 @@ class TestGameSetupPlayerSelector : AbstractTest() {
         selector.init(listOf(alex, alyssa))
         selector.clickChild<JToggleButton>()
 
-        selector.valid(true) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
-            "You must select at least 2 teams for a match."
-        )
+        runExpectingError("You must select at least 2 teams for a match.") { selector.valid(true) }
     }
 
     @Test
@@ -73,7 +63,6 @@ class TestGameSetupPlayerSelector : AbstractTest() {
 
             selector.valid(true) shouldBe true
             selector.valid(false) shouldBe true
-            dialogFactory.errorsShown.shouldBeEmpty()
 
             val p = insertPlayer()
             players.add(p)
@@ -90,7 +79,6 @@ class TestGameSetupPlayerSelector : AbstractTest() {
 
             selector.valid(true) shouldBe true
             selector.valid(false) shouldBe true
-            dialogFactory.errorsShown.shouldBeEmpty()
 
             val p = insertPlayer()
             players.add(p)
@@ -107,12 +95,8 @@ class TestGameSetupPlayerSelector : AbstractTest() {
         val selector = GameSetupPlayerSelector()
         selector.init(players)
 
-        selector.valid(true) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("You cannot select more than 6 players.")
-
-        dialogFactory.errorsShown.clear()
-        selector.valid(false) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("You cannot select more than 6 players.")
+        runExpectingError("You cannot select more than 6 players.") { selector.valid(true) }
+        runExpectingError("You cannot select more than 6 players.") { selector.valid(false) }
     }
 
     @Test
@@ -124,12 +108,8 @@ class TestGameSetupPlayerSelector : AbstractTest() {
         selector.init(players)
         selector.clickChild<JToggleButton>()
 
-        selector.valid(true) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("You cannot select more than 6 teams.")
-
-        dialogFactory.errorsShown.clear()
-        selector.valid(false) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("You cannot select more than 6 teams.")
+        runExpectingError("You cannot select more than 6 teams.") { selector.valid(true) }
+        runExpectingError("You cannot select more than 6 teams.") { selector.valid(false) }
     }
 
     @Test
