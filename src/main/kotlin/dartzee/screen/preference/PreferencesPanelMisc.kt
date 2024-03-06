@@ -3,11 +3,6 @@ package dartzee.screen.preference
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.bean.NumberField
 import dartzee.core.util.setFontSize
-import dartzee.logging.CODE_PARTY_MODE
-import dartzee.screen.MenuScreen
-import dartzee.screen.ScreenCache
-import dartzee.utils.InjectedThings
-import dartzee.utils.InjectedThings.logger
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
 import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
@@ -19,7 +14,6 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
-import javax.swing.JButton
 import javax.swing.JCheckBox
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -39,7 +33,6 @@ class PreferencesPanelMisc :
     private val lblRowsToShow = JLabel("Rows to show on Leaderboards")
     val nfLeaderboardSize = NumberField(10, 200)
     val chckbxShowAnimations = JCheckBox("Play sounds/animations")
-    private val btnPartyMode = JButton("Enter Party Mode")
 
     init {
         add(panelCenter, BorderLayout.CENTER)
@@ -60,14 +53,12 @@ class PreferencesPanelMisc :
         panelCenter.add(chckbxAiAutomaticallyFinish, "flowx,cell 0 2")
         panelCenter.add(chckbxCheckForUpdates, "flowx,cell 0 3")
         panelCenter.add(chckbxShowAnimations, "cell 0 4")
-        panelCenter.add(btnPartyMode, "cell 0 5")
 
         slider.addChangeListener(this)
         nfLeaderboardSize.addPropertyChangeListener(this)
         chckbxAiAutomaticallyFinish.addActionListener(this)
         chckbxCheckForUpdates.addActionListener(this)
         chckbxShowAnimations.addActionListener(this)
-        btnPartyMode.addActionListener(this)
     }
 
     override fun refreshImpl(useDefaults: Boolean) {
@@ -99,13 +90,6 @@ class PreferencesPanelMisc :
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, showAnimations)
     }
 
-    private fun enterPartyMode() {
-        logger.info(CODE_PARTY_MODE, "Entering party mode!")
-        InjectedThings.partyMode = true
-
-        ScreenCache.switch<MenuScreen>()
-    }
-
     override fun hasOutstandingChanges() =
         slider.value != PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED) ||
             nfLeaderboardSize.value !=
@@ -122,10 +106,6 @@ class PreferencesPanelMisc :
     override fun propertyChange(evt: PropertyChangeEvent?) = stateChanged()
 
     override fun actionPerformed(e: ActionEvent?) {
-        if (e?.source == btnPartyMode) {
-            enterPartyMode()
-        } else {
-            stateChanged()
-        }
+        stateChanged()
     }
 }

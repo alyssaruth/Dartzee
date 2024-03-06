@@ -1,10 +1,6 @@
 package dartzee.screen.preference
 
-import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.uncheck
-import dartzee.screen.MenuScreen
-import dartzee.screen.ScreenCache
-import dartzee.utils.InjectedThings
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
 import dartzee.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
 import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
@@ -12,8 +8,6 @@ import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.shouldBe
-import javax.swing.JButton
-import org.junit.jupiter.api.Test
 
 class TestPreferencesPanelMisc : AbstractPreferencePanelTest<PreferencesPanelMisc>() {
     override fun getPreferencesAffected(): MutableList<String> {
@@ -59,15 +53,5 @@ class TestPreferencesPanelMisc : AbstractPreferencePanelTest<PreferencesPanelMis
         panel.chckbxAiAutomaticallyFinish.isSelected shouldBe true
         panel.chckbxCheckForUpdates.isSelected shouldBe true
         panel.chckbxShowAnimations.isSelected shouldBe true
-    }
-
-    @Test
-    fun `Should enter party mode`() {
-        ScreenCache.switch<PreferencesScreen>()
-        val panel = factory()
-        panel.clickChild<JButton>(text = "Enter Party Mode")
-
-        InjectedThings.partyMode shouldBe true
-        ScreenCache.currentScreen() shouldBe ScreenCache.get<MenuScreen>()
     }
 }
