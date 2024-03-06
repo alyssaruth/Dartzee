@@ -121,7 +121,7 @@ class TestX01E2E : AbstractRegistryTest() {
             listOf(
                 listOf(makeDart(20, 3), makeDart(20, 1), makeDart(20, 1)), // 1
                 listOf(makeDart(20, 1)), // 1 (bust)
-                listOf(makeDart(1, 0), makeDart(1, 0), makeDart(1, 1)), // 0
+                listOf(makeDart(1, 0), makeDart(1, 1)), // 0
             )
 
         val p2Rounds =
@@ -141,7 +141,7 @@ class TestX01E2E : AbstractRegistryTest() {
         awaitGameFinish(game)
         waitForAssertion { pt2.participant.finalScore shouldBeGreaterThan -1 }
 
-        pt1.participant.finalScore shouldBe 9
+        pt1.participant.finalScore shouldBe 8
         pt1.participant.finishingPosition shouldBe 1
         pt2.participant.finalScore shouldBe 9
         pt2.participant.finishingPosition shouldBe 2
@@ -150,7 +150,7 @@ class TestX01E2E : AbstractRegistryTest() {
             .shouldContainExactlyInAnyOrder(
                 AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 100, game.rowId),
                 AchievementSummary(AchievementType.X01_HIGHEST_BUST, 1, game.rowId),
-                AchievementSummary(AchievementType.X01_GAMES_WON, -1, game.rowId, "9"),
+                AchievementSummary(AchievementType.X01_GAMES_WON, -1, game.rowId, "8"),
             )
 
         retrieveAchievementsForPlayer(p2.rowId)

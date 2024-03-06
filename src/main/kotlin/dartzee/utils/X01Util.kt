@@ -74,9 +74,9 @@ fun getCheckoutScores(): MutableList<Int> {
 
 fun getCheckoutSingles(): List<Int> = getCheckoutScores().map { it / 2 }
 
-fun isFinishRound(round: List<Dart>): Boolean {
+fun isFinishRound(round: List<Dart>, finishType: FinishType): Boolean {
     val drt = round.last()
-    return drt.isDouble() && drt.getTotal() == drt.startingScore
+    return drt.getTotal() == drt.startingScore && !isBust(drt, finishType)
 }
 
 /** Refactored out of GameWrapper for use in game stats panel */

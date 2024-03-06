@@ -9,7 +9,10 @@ import dartzee.achievements.runConversionsWithProgressBar
 import dartzee.ai.AI_DARTBOARD
 import dartzee.ai.DartsAiModel
 import dartzee.ai.getPointForScore
+import dartzee.bean.GameSetupPlayerSelector
 import dartzee.bean.ParticipantAvatar
+import dartzee.clickButton
+import dartzee.core.bean.ScrollTable
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSortedValues
 import dartzee.db.DartEntity
@@ -28,7 +31,6 @@ import dartzee.helper.retrieveParticipant
 import dartzee.helper.wipeTable
 import dartzee.listener.DartboardListener
 import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.GameplayDartboard
 import dartzee.screen.ScreenCache
@@ -102,8 +104,13 @@ fun DartsGamePanel<*, *>.startGame(players: List<PlayerEntity>): List<IWrappedPa
     return participants
 }
 
-fun DartsGamePanel<*, *>.throwHumanRound(darts: List<DartboardSegment>) {
-    darts.forEach { throwHumanDart(it.score, it.type) }
+fun GameSetupPlayerSelector.selectTopPlayer() {
+    getChild<ScrollTable>("TableUnselected").selectRow(0)
+    clickButton("Select")
+}
+
+fun DartsGamePanel<*, *>.throwHumanRound(vararg darts: Dart) {
+    darts.forEach { throwHumanDart(it.score, it.segmentType) }
 
     confirmRound()
 }
