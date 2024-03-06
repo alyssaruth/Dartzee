@@ -107,6 +107,10 @@ fun DartsGamePanel<*, *>.throwHumanDart(score: Int, segmentType: SegmentType) {
     getChild<GameplayDartboard>().dartThrown(computedPt)
 }
 
+fun DartsGamePanel<*, *>.confirmRound() {
+    clickChild<JButton> { it.toolTipText == "Confirm round" }
+}
+
 fun DartsGamePanel<*, *>.awaitTurn(participant: IWrappedParticipant) {
     val scorer = getChild<AbstractDartsScorer<*>> { it.participant == participant }
     waitForAssertion { scorer.lblAvatar.shouldBeSelected() }

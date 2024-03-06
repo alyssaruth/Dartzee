@@ -52,7 +52,7 @@ class TestResignationE2E : AbstractRegistryTest() {
         gamePanel.throwHumanDart(20, SegmentType.OUTER_SINGLE)
         gamePanel.throwHumanDart(5, SegmentType.OUTER_SINGLE)
         gamePanel.throwHumanDart(1, SegmentType.OUTER_SINGLE)
-        gamePanel.clickChild<JButton> { it.toolTipText == "Confirm round" }
+        gamePanel.confirmRound()
 
         gamePanel.awaitTurn(ptResignee)
         gamePanel.clickChild<JButton>(async = true) { it.toolTipText == "Resign" }
