@@ -38,6 +38,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.MockKMatcherScope
 import java.awt.Color
 import java.awt.Component
+import java.awt.Container
 import java.awt.Dimension
 import java.awt.Point
 import java.io.File
@@ -299,4 +300,29 @@ fun ImageIcon.toLabel(): JLabel {
     label.size = Dimension(iconWidth, iconHeight)
     label.repaint()
     return label
+}
+
+fun <T> waitForAssertionWithReturn(timeout: Int = 10000, assertion: (() -> T)): T {
+    val startTime = System.currentTimeMillis()
+    while (true) {
+        try {
+            return assertion()
+        } catch (e: AssertionError) {
+            Thread.sleep(200)
+
+            val elapsed = System.currentTimeMillis() - startTime
+            if (elapsed > timeout) {
+                throw AssertionError("Timed out waiting for assertion - see cause for details", e)
+            }
+        }
+    }
+}
+
+fun Container.clickButton(
+    name: String? = null,
+    text: String? = null,
+    async: Boolean = false,
+    filterFn: ((JButton) -> Boolean)? = null,
+) {
+    clickChild<JButton>(name, text, async, filterFn)
 }

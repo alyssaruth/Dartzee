@@ -28,6 +28,7 @@ import dartzee.helper.retrieveParticipant
 import dartzee.helper.wipeTable
 import dartzee.listener.DartboardListener
 import dartzee.`object`.Dart
+import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.GameplayDartboard
 import dartzee.screen.ScreenCache
@@ -101,14 +102,26 @@ fun DartsGamePanel<*, *>.startGame(players: List<PlayerEntity>): List<IWrappedPa
     return participants
 }
 
+fun DartsGamePanel<*, *>.throwHumanRound(darts: List<DartboardSegment>) {
+    darts.forEach { throwHumanDart(it.score, it.type) }
+
+    confirmRound()
+}
+
 fun DartsGamePanel<*, *>.throwHumanDart(score: Int, segmentType: SegmentType) {
-    val singleTwentyPt = getPointForScore(score, segmentType)
-    val computedPt = AI_DARTBOARD.toComputedPoint(singleTwentyPt)
+    val computedPt =
+        if (segmentType == SegmentType.MISS) AI_DARTBOARD.getDeliberateMissPoint()
+        else {
+            val singleTwentyPt = getPointForScore(score, segmentType)
+            AI_DARTBOARD.toComputedPoint(singleTwentyPt)
+        }
+
     getChild<GameplayDartboard>().dartThrown(computedPt)
 }
 
 fun DartsGamePanel<*, *>.confirmRound() {
     clickChild<JButton> { it.toolTipText == "Confirm round" }
+    // waitForAssertion { getChild<GameplayDartboard>().findAll<DartLabel>().shouldBeEmpty() }
 }
 
 fun DartsGamePanel<*, *>.awaitTurn(participant: IWrappedParticipant) {
