@@ -6,7 +6,6 @@ import dartzee.game.FinishType
 import dartzee.game.GameType
 import dartzee.game.X01Config
 import dartzee.game.prepareParticipants
-import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.AchievementSummary
 import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.beastDartsModel
@@ -17,29 +16,14 @@ import dartzee.helper.predictableDartsModel
 import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.helper.retrieveTeam
 import dartzee.`object`.Dart
-import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
-import dartzee.utils.PREFERENCES_INT_AI_SPEED
-import dartzee.utils.PreferenceUtil
 import dartzee.zipDartRounds
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestX01E2E : AbstractRegistryTest() {
-    override fun getPreferencesAffected() =
-        listOf(PREFERENCES_INT_AI_SPEED, PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
-
-    @BeforeEach
-    fun beforeEach() {
-        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, true)
-    }
-
+class TestX01E2E : AbstractE2ETest() {
     @Test
-    @Tag("e2e")
     fun `E2E - 501 - 9 dart game`() {
         val game = insertGame(gameType = GameType.X01, gameParams = DEFAULT_X01_CONFIG.toJson())
 
@@ -76,7 +60,6 @@ class TestX01E2E : AbstractRegistryTest() {
     }
 
     @Test
-    @Tag("e2e")
     fun `E2E - 501 - 9 dart game, relaxed finish`() {
         val game =
             insertGame(
@@ -107,7 +90,6 @@ class TestX01E2E : AbstractRegistryTest() {
     }
 
     @Test
-    @Tag("e2e")
     fun `E2E - 101 - relaxed`() {
         val game =
             insertGame(
@@ -173,7 +155,6 @@ class TestX01E2E : AbstractRegistryTest() {
     }
 
     @Test
-    @Tag("e2e")
     fun `E2E - 301 - bust and mercy rule`() {
         val game =
             insertGame(
@@ -216,7 +197,6 @@ class TestX01E2E : AbstractRegistryTest() {
     }
 
     @Test
-    @Tag("e2e")
     fun `E2E - 501 - Team of 2`() {
         val game = insertGame(gameType = GameType.X01, gameParams = DEFAULT_X01_CONFIG.toJson())
         val (gamePanel, listener) = setUpGamePanel(game)

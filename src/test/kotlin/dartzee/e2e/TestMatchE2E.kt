@@ -12,7 +12,6 @@ import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.game.X01Config
-import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.retrieveDartsMatch
@@ -21,7 +20,6 @@ import dartzee.screen.game.MatchSummaryPanel
 import dartzee.screen.game.scorer.MatchScorer
 import dartzee.screen.game.x01.X01MatchScreen
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
-import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -29,21 +27,16 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import javax.swing.JTabbedPane
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestMatchE2E : AbstractRegistryTest() {
-    override fun getPreferencesAffected() =
-        listOf(PREFERENCES_INT_AI_SPEED, PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
-
+class TestMatchE2E : AbstractE2ETest() {
     @BeforeEach
-    fun beforeEach() {
-        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 0)
+    override fun beforeEach() {
+        super.beforeEach()
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, false)
     }
 
     @Test
-    @Tag("e2e")
     fun `E2E - Two game match`() {
         val match = insertDartsMatch(games = 2, matchParams = "", mode = MatchMode.FIRST_TO)
         match.gameType = GameType.X01
