@@ -19,7 +19,7 @@ open class AbstractE2ETest : AbstractRegistryTest() {
 
     @BeforeEach
     open fun beforeEach() {
-        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 0)
+        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 50)
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, true)
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, false)
     }
