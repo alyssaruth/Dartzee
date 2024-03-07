@@ -32,7 +32,6 @@ import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
 import dartzee.game.prepareParticipants
-import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.AchievementSummary
 import dartzee.helper.beastDartsModel
 import dartzee.helper.insertGame
@@ -41,25 +40,13 @@ import dartzee.helper.predictableDartsModel
 import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.helper.retrieveTeam
 import dartzee.`object`.Dart
-import dartzee.utils.PREFERENCES_INT_AI_SPEED
-import dartzee.utils.PreferenceUtil
 import dartzee.zipDartRounds
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestRoundTheClockE2E : AbstractRegistryTest() {
-    override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
-
-    @BeforeEach
-    fun beforeEach() {
-        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
-    }
-
+class TestRoundTheClockE2E : AbstractE2ETest() {
     @Test
-    @Tag("e2e")
     fun `E2E - RTC - perfect game`() {
         val game =
             insertGame(
@@ -91,7 +78,6 @@ class TestRoundTheClockE2E : AbstractRegistryTest() {
     }
 
     @Test
-    @Tag("e2e")
     fun `E2E - RTC - unordered`() {
         val game =
             insertGame(
@@ -153,7 +139,6 @@ class TestRoundTheClockE2E : AbstractRegistryTest() {
     }
 
     @Test
-    @Tag("e2e")
     fun `E2E - In Order- Team of 2`() {
         val game =
             insertGame(

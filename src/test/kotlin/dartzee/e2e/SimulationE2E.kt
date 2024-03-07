@@ -9,7 +9,6 @@ import dartzee.core.bean.NumberField
 import dartzee.core.bean.ScrollTable
 import dartzee.game.GameType
 import dartzee.getRows
-import dartzee.helper.AbstractTest
 import dartzee.helper.beastDartsModel
 import dartzee.helper.insertPlayer
 import dartzee.screen.ai.AISimulationSetupDialog
@@ -22,17 +21,17 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class SimulationE2E : AbstractTest() {
+class SimulationE2E : AbstractE2ETest() {
     @BeforeEach
-    fun beforeEach() {
+    override fun beforeEach() {
+        super.beforeEach()
+
         InjectedThings.simulationRunner = SimulationRunner()
     }
 
     @Test
-    @Tag("e2e")
     fun `Should be able to run a simulation of 500 games`() {
         val model = beastDartsModel()
         val player = insertPlayer(model = model)

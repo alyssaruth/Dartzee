@@ -6,7 +6,6 @@ import dartzee.dartzee.DartzeeCalculator
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.game.GameType
 import dartzee.game.prepareParticipants
-import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.AchievementSummary
 import dartzee.helper.allTwenties
 import dartzee.helper.beastDartsModel
@@ -23,27 +22,15 @@ import dartzee.helper.totalIsFifty
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.utils.InjectedThings
-import dartzee.utils.PREFERENCES_INT_AI_SPEED
-import dartzee.utils.PreferenceUtil
 import dartzee.utils.insertDartzeeRules
 import dartzee.zipDartRounds
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestDartzeeE2E : AbstractRegistryTest() {
-    override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
-
-    @BeforeEach
-    fun beforeEach() {
-        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
-    }
-
+class TestDartzeeE2E : AbstractE2ETest() {
     @Test
-    @Tag("e2e")
     fun `E2E - Dartzee`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
@@ -86,7 +73,6 @@ class TestDartzeeE2E : AbstractRegistryTest() {
     }
 
     @Test
-    @Tag("e2e")
     fun `E2E - Dartzee - 2 player team`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 

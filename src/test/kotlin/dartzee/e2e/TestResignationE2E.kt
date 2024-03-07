@@ -8,32 +8,16 @@ import dartzee.game.GameType
 import dartzee.game.X01Config
 import dartzee.game.state.IWrappedParticipant
 import dartzee.getQuestionDialog
-import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.`object`.SegmentType
-import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
-import dartzee.utils.PREFERENCES_INT_AI_SPEED
-import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import javax.swing.JButton
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestResignationE2E : AbstractRegistryTest() {
-    override fun getPreferencesAffected() =
-        listOf(PREFERENCES_INT_AI_SPEED, PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
-
-    @BeforeEach
-    fun beforeEach() {
-        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, true)
-    }
-
+class TestResignationE2E : AbstractE2ETest() {
     @Test
-    @Tag("e2e")
     fun `Resigning mid-game - X01`() {
         val game =
             insertGame(
@@ -65,7 +49,6 @@ class TestResignationE2E : AbstractRegistryTest() {
     }
 
     @Test
-    @Tag("e2e")
     fun `Resigning mid-game - Golf`() {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "9")
 
