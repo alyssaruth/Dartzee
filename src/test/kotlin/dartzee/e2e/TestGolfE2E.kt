@@ -34,7 +34,6 @@ import dartzee.drtTrebleFour
 import dartzee.drtTrebleSeventeen
 import dartzee.game.GameType
 import dartzee.game.prepareParticipants
-import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.AchievementSummary
 import dartzee.helper.beastDartsModel
 import dartzee.helper.insertGame
@@ -43,24 +42,12 @@ import dartzee.helper.predictableDartsModel
 import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.helper.retrieveTeam
 import dartzee.`object`.Dart
-import dartzee.utils.PREFERENCES_INT_AI_SPEED
-import dartzee.utils.PreferenceUtil
 import dartzee.zipDartRounds
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestGolfE2E : AbstractRegistryTest() {
-    override fun getPreferencesAffected() = listOf(PREFERENCES_INT_AI_SPEED)
-
-    @BeforeEach
-    fun beforeEach() {
-        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 100)
-    }
-
+class TestGolfE2E : AbstractE2ETest() {
     @Test
-    @Tag("e2e")
     fun `E2E - Golf`() {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "18")
 
@@ -87,7 +74,6 @@ class TestGolfE2E : AbstractRegistryTest() {
     }
 
     @Test
-    @Tag("e2e")
     fun `E2E - Golf - Gambler, stop threshold`() {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "9")
         val (gamePanel, listener) = setUpGamePanel(game)
@@ -136,7 +122,6 @@ class TestGolfE2E : AbstractRegistryTest() {
     }
 
     @Test
-    @Tag("e2e")
     fun `E2E - 9 holes - Team of 2`() {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "9")
         val (gamePanel, listener) = setUpGamePanel(game)

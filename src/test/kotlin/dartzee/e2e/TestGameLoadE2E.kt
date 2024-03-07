@@ -7,7 +7,6 @@ import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.getRows
-import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.retrieveGame
 import dartzee.helper.retrieveParticipant
@@ -15,28 +14,20 @@ import dartzee.`object`.Dart
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
-import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import javax.swing.SwingUtilities
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestGameLoadE2E : AbstractRegistryTest() {
-    override fun getPreferencesAffected() =
-        listOf(PREFERENCES_INT_AI_SPEED, PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
-
-    @BeforeEach
-    fun beforeEach() {
-        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, 0)
+class TestGameLoadE2E : AbstractE2ETest() {
+    override fun beforeEach() {
+        super.beforeEach()
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, false)
     }
 
     @Test
-    @Tag("e2e")
     fun `E2E - Game load and AI resume`() {
         val (winner, loser) = createPlayers()
 
