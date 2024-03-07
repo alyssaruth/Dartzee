@@ -135,21 +135,28 @@ class TestX01E2E : AbstractE2ETest() {
                 AchievementSummary(AchievementType.X01_GAMES_WON, -1, game.rowId, "8"),
             )
 
-        retrieveAchievementsForPlayer(p2.rowId)
-            .shouldContainExactlyInAnyOrder(
-                AchievementSummary(AchievementType.X01_HOTEL_INSPECTOR, -1, game.rowId, "20, 5, 1"),
-                AchievementSummary(AchievementType.X01_BEST_FINISH, 75, game.rowId),
-                AchievementSummary(
-                    AchievementType.X01_STYLISH_FINISH,
-                    75,
-                    game.rowId,
-                    "T20, 5, D5"
-                ),
-                AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 75, game.rowId),
-                AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 5, game.rowId),
-                AchievementSummary(AchievementType.X01_HIGHEST_BUST, 75, game.rowId),
-                AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, game.rowId)
-            )
+        waitForAssertion {
+            retrieveAchievementsForPlayer(p2.rowId)
+                .shouldContainExactlyInAnyOrder(
+                    AchievementSummary(
+                        AchievementType.X01_HOTEL_INSPECTOR,
+                        -1,
+                        game.rowId,
+                        "20, 5, 1"
+                    ),
+                    AchievementSummary(AchievementType.X01_BEST_FINISH, 75, game.rowId),
+                    AchievementSummary(
+                        AchievementType.X01_STYLISH_FINISH,
+                        75,
+                        game.rowId,
+                        "T20, 5, D5"
+                    ),
+                    AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 75, game.rowId),
+                    AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 5, game.rowId),
+                    AchievementSummary(AchievementType.X01_HIGHEST_BUST, 75, game.rowId),
+                    AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, game.rowId)
+                )
+        }
 
         checkAchievementConversions(p2.rowId)
     }
