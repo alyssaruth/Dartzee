@@ -19,9 +19,11 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import javax.swing.SwingUtilities
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class TestGameLoadE2E : AbstractE2ETest() {
+    @BeforeEach
     override fun beforeEach() {
         super.beforeEach()
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, false)

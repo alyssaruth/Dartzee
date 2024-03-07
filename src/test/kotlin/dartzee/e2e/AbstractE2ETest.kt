@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 
 @Tag("e2e")
-abstract class AbstractE2ETest : AbstractRegistryTest() {
+open class AbstractE2ETest : AbstractRegistryTest() {
     override fun getPreferencesAffected() =
         listOf(
             PREFERENCES_INT_AI_SPEED,

@@ -40,9 +40,11 @@ import java.util.*
 import javax.swing.JButton
 import javax.swing.JOptionPane
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class SyncE2E : AbstractE2ETest() {
+    @BeforeEach
     override fun beforeEach() {
         super.beforeEach()
 

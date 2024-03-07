@@ -26,10 +26,13 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import javax.swing.JTabbedPane
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class TestMatchE2E : AbstractE2ETest() {
+    @BeforeEach
     override fun beforeEach() {
+        super.beforeEach()
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, false)
     }
 
