@@ -9,12 +9,14 @@ import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.achievements.AchievementType
+import dartzee.achievements.x01.AchievementX01BestThreeDarts
 import dartzee.ai.DartsAiModel
 import dartzee.bean.DartLabel
 import dartzee.db.EntityName
 import dartzee.game.FinishType
 import dartzee.game.GameType
 import dartzee.game.X01Config
+import dartzee.game.prepareParticipants
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
 import dartzee.getQuestionDialog
@@ -28,15 +30,63 @@ import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
 import dartzee.only
+import dartzee.screen.game.scorer.AchievementOverlay
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.screen.game.x01.GameStatisticsPanelX01
+import dartzee.utils.InjectedThings
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import javax.swing.JButton
 import org.junit.jupiter.api.Test
 
 class TestDartsGamePanel : AbstractTest() {
+    @Test
+    fun `should show achievement popup on the correct scorer`() {
+        val panel = TestGamePanel(totalPlayers = 2)
+        val g = panel.gameEntity
+        val (p1, p2) = preparePlayers(2)
+        val (pt1, pt2) = prepareParticipants(g.rowId, listOf(p1, p2), false)
+        panel.startNewGame(listOf(pt1, pt2))
+
+        val p1Scorer = panel.getChild<DartsScorerX01> { it.participant == pt1 }
+        val p2Scorer = panel.getChild<DartsScorerX01> { it.participant == pt2 }
+
+        val achievement =
+            AchievementX01BestThreeDarts().apply {
+                attainedValue = 80
+                gameIdEarned = g.rowId
+                localGameIdEarned = g.localId
+            }
+
+        panel.achievementUnlocked(p1.rowId, achievement)
+        p1Scorer.findChild<AchievementOverlay>().shouldNotBeNull()
+        p2Scorer.findChild<AchievementOverlay>().shouldBeNull()
+    }
+
+    @Test
+    fun `should not show achievement popup in party mode`() {
+        InjectedThings.partyMode = true
+
+        val panel = TestGamePanel(totalPlayers = 2)
+        val g = panel.gameEntity
+        val (p1, p2) = preparePlayers(2)
+        val (pt1, pt2) = prepareParticipants(g.rowId, listOf(p1, p2), false)
+        panel.startNewGame(listOf(pt1, pt2))
+
+        val achievement =
+            AchievementX01BestThreeDarts().apply {
+                attainedValue = 80
+                gameIdEarned = g.rowId
+                localGameIdEarned = g.localId
+            }
+
+        panel.achievementUnlocked(p1.rowId, achievement)
+        panel.findChild<AchievementOverlay>().shouldBeNull()
+    }
+
     @Test
     fun `Should insert a win achievement for both players on a team`() {
         val (p1, p2) = preparePlayers(2)
