@@ -27,6 +27,7 @@ abstract class AbstractDartsScorerPausable<PlayerState : AbstractPlayerState<Pla
         panelSouth.add(btnResume, BorderLayout.EAST)
         btnResume.isVisible = false
         btnResume.icon = ICON_RESUME
+        btnResume.toolTipText = "Resume throwing"
 
         btnResume.addActionListener(this)
     }
@@ -45,12 +46,14 @@ abstract class AbstractDartsScorerPausable<PlayerState : AbstractPlayerState<Pla
                 "Paused player ${participant.getUniqueParticipantName()}"
             )
             btnResume.icon = ICON_RESUME
+            btnResume.toolTipText = "Resume throwing"
         } else {
             logger.info(
                 CODE_PLAYER_UNPAUSED,
                 "Unpaused player ${participant.getUniqueParticipantName()}"
             )
             btnResume.icon = ICON_PAUSE
+            btnResume.toolTipText = "Pause throwing"
             updateResultColourForPosition(-1)
         }
 

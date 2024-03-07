@@ -15,7 +15,8 @@ data class X01PlayerState(
     override var isActive: Boolean = false
 ) : AbstractPlayerState<X01PlayerState>() {
     override fun getScoreSoFar(): Int {
-        val hasFinished = completedRounds.isNotEmpty() && isFinishRound(completedRounds.last())
+        val hasFinished =
+            completedRounds.isNotEmpty() && isFinishRound(completedRounds.last(), config.finishType)
         if (!hasFinished) {
             return (completedRounds.size * 3) + currentRound.size
         } else {

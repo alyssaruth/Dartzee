@@ -1,10 +1,13 @@
 package dartzee.screen.game.x01
 
 import dartzee.core.util.minOrZero
+import dartzee.game.X01Config
 import dartzee.utils.isFinishRound
 import dartzee.utils.sumScore
 
 class MatchStatisticsPanelX01(gameParams: String) : GameStatisticsPanelX01(gameParams) {
+    private val config = X01Config.fromJson(gameParams)
+
     override fun addRowsToTable() {
         super.addRowsToTable()
 
@@ -17,7 +20,7 @@ class MatchStatisticsPanelX01(gameParams: String) : GameStatisticsPanelX01(gameP
     private fun getHighestFinishRow() =
         prepareRow("Best Finish") { playerName ->
             val rounds = hmPlayerToDarts[playerName].orEmpty()
-            val finishRounds = rounds.filter { r -> isFinishRound(r) }
+            val finishRounds = rounds.filter { r -> isFinishRound(r, config.finishType) }
             finishRounds.maxOfOrNull { r -> sumScore(r) }
         }
 

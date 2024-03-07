@@ -50,6 +50,20 @@ class TestX01PlayerState : AbstractTest() {
     }
 
     @Test
+    fun `Should not count the finishing round as 3 darts in relaxed mode`() {
+        val roundOne = listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1))
+        val roundTwo = listOf(Dart(20, 3))
+        val roundThree = listOf(Dart(20, 2), makeDart(20, 1, startingScore = 20))
+
+        val state =
+            makeX01PlayerStateWithRounds(
+                completedRounds = listOf(roundOne, roundTwo, roundThree),
+                finishType = FinishType.Any
+            )
+        state.getScoreSoFar() shouldBe 8
+    }
+
+    @Test
     fun `should add on darts from the in progress round`() {
         val roundOne = listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1))
         val roundTwo = listOf(Dart(20, 3))

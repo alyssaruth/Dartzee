@@ -87,9 +87,16 @@ class TestX01Util : AbstractTest() {
 
     @Test
     fun testIsFinishRound() {
-        isFinishRound(listOf(Dart(2, 1), makeDart(20, 1, startingScore = 20))).shouldBeFalse()
-        isFinishRound(listOf(Dart(2, 1), makeDart(20, 2, startingScore = 20))).shouldBeFalse()
-        isFinishRound(listOf(Dart(2, 1), makeDart(10, 2, startingScore = 20))).shouldBeTrue()
+        isFinishRound(listOf(Dart(2, 1), makeDart(20, 1, startingScore = 20)), FinishType.Doubles)
+            .shouldBeFalse()
+        isFinishRound(listOf(Dart(2, 1), makeDart(20, 2, startingScore = 20)), FinishType.Doubles)
+            .shouldBeFalse()
+        isFinishRound(listOf(Dart(2, 1), makeDart(10, 2, startingScore = 20)), FinishType.Doubles)
+            .shouldBeTrue()
+
+        isFinishRound(listOf(Dart(2, 1), makeDart(20, 1, startingScore = 20)), FinishType.Any)
+            .shouldBeTrue()
+        isFinishRound(listOf(makeDart(20, 1, startingScore = 19)), FinishType.Any).shouldBeFalse()
     }
 
     @Test

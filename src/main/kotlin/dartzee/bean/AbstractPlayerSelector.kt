@@ -34,6 +34,8 @@ abstract class AbstractPlayerSelector<S : ScrollTable> :
     protected fun render() {
         layout = MigLayout("al center center", "[452px][100px][452px]", "[407px]")
 
+        tablePlayersToSelectFrom.name = "TableUnselected"
+
         val panelMovementOptions = JPanel()
         add(tablePlayersToSelectFrom, "cell 0 0,alignx left,growy")
         panelMovementOptions.minimumSize = Dimension(50, 10)

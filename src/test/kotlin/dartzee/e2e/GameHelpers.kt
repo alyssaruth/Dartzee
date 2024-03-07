@@ -9,7 +9,10 @@ import dartzee.achievements.runConversionsWithProgressBar
 import dartzee.ai.AI_DARTBOARD
 import dartzee.ai.DartsAiModel
 import dartzee.ai.getPointForScore
+import dartzee.bean.GameSetupPlayerSelector
 import dartzee.bean.ParticipantAvatar
+import dartzee.clickButton
+import dartzee.core.bean.ScrollTable
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSortedValues
 import dartzee.db.DartEntity
@@ -101,10 +104,30 @@ fun DartsGamePanel<*, *>.startGame(players: List<PlayerEntity>): List<IWrappedPa
     return participants
 }
 
+fun GameSetupPlayerSelector.selectTopPlayer() {
+    getChild<ScrollTable>("TableUnselected").selectRow(0)
+    clickButton("Select")
+}
+
+fun DartsGamePanel<*, *>.throwHumanRound(vararg darts: Dart) {
+    darts.forEach { throwHumanDart(it.score, it.segmentType) }
+
+    confirmRound()
+}
+
 fun DartsGamePanel<*, *>.throwHumanDart(score: Int, segmentType: SegmentType) {
-    val singleTwentyPt = getPointForScore(score, segmentType)
-    val computedPt = AI_DARTBOARD.toComputedPoint(singleTwentyPt)
+    val computedPt =
+        if (segmentType == SegmentType.MISS) AI_DARTBOARD.getDeliberateMissPoint()
+        else {
+            val singleTwentyPt = getPointForScore(score, segmentType)
+            AI_DARTBOARD.toComputedPoint(singleTwentyPt)
+        }
+
     getChild<GameplayDartboard>().dartThrown(computedPt)
+}
+
+fun DartsGamePanel<*, *>.confirmRound() {
+    clickChild<JButton> { it.toolTipText == "Confirm round" }
 }
 
 fun DartsGamePanel<*, *>.awaitTurn(participant: IWrappedParticipant) {

@@ -32,6 +32,7 @@ import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.scorer.AbstractDartsScorer
 import dartzee.screen.game.x01.GamePanelX01
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PreferenceUtil
@@ -619,9 +620,11 @@ abstract class DartsGamePanel<
     }
 
     fun achievementUnlocked(playerId: String, achievement: AbstractAchievement) {
-        scorersOrdered
-            .find { it.playerIds.contains(playerId) }
-            ?.achievementUnlocked(achievement, playerId)
+        if (!InjectedThings.partyMode) {
+            scorersOrdered
+                .find { it.playerIds.contains(playerId) }
+                ?.achievementUnlocked(achievement, playerId)
+        }
     }
 
     fun hideInputButtons() {

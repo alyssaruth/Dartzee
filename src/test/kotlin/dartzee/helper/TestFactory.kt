@@ -175,11 +175,12 @@ fun makeX01PlayerStateWithRounds(
     player: PlayerEntity = insertPlayer(),
     participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
     completedRounds: List<List<Dart>> = emptyList(),
-    isActive: Boolean = false
+    isActive: Boolean = false,
+    finishType: FinishType = FinishType.Doubles
 ): X01PlayerState {
     completedRounds.flatten().forEach { it.participantId = participant.rowId }
     return X01PlayerState(
-        X01Config(startingScore, FinishType.Doubles),
+        X01Config(startingScore, finishType),
         SingleParticipant(participant),
         completedRounds.toMutableList(),
         mutableListOf(),
