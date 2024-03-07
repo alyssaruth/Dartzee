@@ -128,7 +128,6 @@ fun DartsGamePanel<*, *>.throwHumanDart(score: Int, segmentType: SegmentType) {
 
 fun DartsGamePanel<*, *>.confirmRound() {
     clickChild<JButton> { it.toolTipText == "Confirm round" }
-    // waitForAssertion { getChild<GameplayDartboard>().findAll<DartLabel>().shouldBeEmpty() }
 }
 
 fun DartsGamePanel<*, *>.awaitTurn(participant: IWrappedParticipant) {

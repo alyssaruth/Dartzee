@@ -26,21 +26,31 @@ import dartzee.drtTrebleNineteen
 import dartzee.drtTrebleSeven
 import dartzee.drtTrebleTwenty
 import dartzee.getRows
-import dartzee.helper.AbstractTest
+import dartzee.helper.AbstractRegistryTest
 import dartzee.helper.preparePlayers
 import dartzee.screen.DartsApp
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGamePanel
 import dartzee.screen.game.DartsGameScreen
+import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
+import dartzee.utils.PreferenceUtil
 import dartzee.waitForAssertionWithReturn
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import javax.swing.JButton
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestPartyModeE2E : AbstractTest() {
+class TestPartyModeE2E : AbstractRegistryTest() {
+    override fun getPreferencesAffected() = listOf(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)
+
+    @BeforeEach
+    fun beforeEach() {
+        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, false)
+    }
+
     @Test
     @Tag("e2e")
     fun `E2E - Party Mode`() {
