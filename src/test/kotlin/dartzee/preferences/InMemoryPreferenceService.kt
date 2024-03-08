@@ -10,6 +10,8 @@ class InMemoryPreferenceService : AbstractPreferenceService() {
     override fun <T> getRaw(preference: Preference<T>) =
         hmPreferences.getOrDefault(preference.name, preference.default.toString())
 
+    override fun <T> findRaw(preference: Preference<T>) = hmPreferences[preference.name]
+
     override fun <T : Any> save(preference: Preference<T>, value: T) {
         hmPreferences[preference.name] = value.toString()
     }

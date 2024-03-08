@@ -12,6 +12,7 @@ object Preferences {
     val evenSingleColour = Preference("evensing", DARTBOARD_BLACK_STR)
     val evenDoubleColour = Preference("evendoub", DARTBOARD_RED_STR)
     val evenTrebleColour = Preference("eventreb", DARTBOARD_RED_STR)
+    val deviceId = Preference("deviceId", "")
 
     val aiAutoContinue = Preference("aiauto", true)
     val checkForUpdates = Preference("chkupd", true)

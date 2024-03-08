@@ -44,6 +44,7 @@ interface PreferenceServiceTest {
 
     @Test
     fun `Getting and setting strings`() {
+        implementation.find(STRING_PREF) shouldBe null
         implementation.get(STRING_PREF) shouldBe "foo"
 
         implementation.save(STRING_PREF, "bar")
@@ -54,6 +55,7 @@ interface PreferenceServiceTest {
 
     @Test
     fun `Getting and setting booleans`() {
+        implementation.find(BOOLEAN_PREF) shouldBe null
         implementation.get(BOOLEAN_PREF) shouldBe false
 
         implementation.save(BOOLEAN_PREF, true)
@@ -64,6 +66,7 @@ interface PreferenceServiceTest {
 
     @Test
     fun `Getting and setting ints`() {
+        implementation.find(INT_PREF) shouldBe null
         implementation.get(INT_PREF) shouldBe 20
 
         implementation.save(INT_PREF, 5000)
@@ -74,6 +77,7 @@ interface PreferenceServiceTest {
 
     @Test
     fun `Getting and setting doubles`() {
+        implementation.find(DOUBLE_PREF) shouldBe null
         implementation.get(DOUBLE_PREF) shouldBe 2.5
 
         implementation.save(DOUBLE_PREF, 0.00017)

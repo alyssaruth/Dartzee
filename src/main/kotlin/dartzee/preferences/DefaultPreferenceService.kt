@@ -15,4 +15,7 @@ class DefaultPreferenceService : AbstractPreferenceService() {
 
     override fun <T> getRaw(preference: Preference<T>): String =
         preferences.get(preference.name, preference.default.toString())
+
+    override fun <T> findRaw(preference: Preference<T>): String? =
+        preferences.get(preference.name, null)
 }
