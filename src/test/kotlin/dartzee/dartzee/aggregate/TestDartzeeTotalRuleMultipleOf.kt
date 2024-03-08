@@ -15,6 +15,7 @@ class TestDartzeeTotalRuleMultipleOf : AbstractDartzeeRuleTest<DartzeeTotalRuleM
         rule.isValidTotal(20) shouldBe false
         rule.isValidTotal(21) shouldBe true
         rule.isValidTotal(22) shouldBe false
+        rule.isValidTotal(0) shouldBe false
     }
 
     @Test
