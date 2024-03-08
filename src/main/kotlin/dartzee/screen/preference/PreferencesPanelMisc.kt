@@ -88,11 +88,9 @@ class PreferencesPanelMisc :
     override fun hasOutstandingChanges() =
         slider.value != preferenceService.get(Preferences.aiSpeed) ||
             nfLeaderboardSize.value != preferenceService.get(Preferences.leaderboardSize) ||
-            chckbxAiAutomaticallyFinish.isSelected !=
-                preferenceService.get(Preferences.aiAutoContinue) ||
-            chckbxCheckForUpdates.isSelected !=
-                preferenceService.get(Preferences.checkForUpdates) ||
-            chckbxShowAnimations.isSelected != preferenceService.get(Preferences.showAnimations)
+            !chckbxAiAutomaticallyFinish.matchesPreference(Preferences.aiAutoContinue) ||
+            !chckbxCheckForUpdates.matchesPreference(Preferences.checkForUpdates) ||
+            !chckbxShowAnimations.matchesPreference(Preferences.showAnimations)
 
     override fun stateChanged(e: ChangeEvent?) = stateChanged()
 

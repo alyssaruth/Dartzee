@@ -1,12 +1,15 @@
 package dartzee.screen.preference
 
 import dartzee.core.util.setFontSize
+import dartzee.preferences.Preference
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.resetCachedDartboardValues
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
+import javax.swing.JCheckBox
 import javax.swing.JPanel
 
 abstract class AbstractPreferencesPanel : JPanel() {
@@ -38,6 +41,9 @@ abstract class AbstractPreferencesPanel : JPanel() {
     fun stateChanged() {
         btnApply.isEnabled = hasOutstandingChanges()
     }
+
+    protected fun JCheckBox.matchesPreference(preference: Preference<Boolean>) =
+        isSelected == preferenceService.get(preference)
 
     inner class PreferencesPanelListener : ActionListener {
         override fun actionPerformed(e: ActionEvent?) {
