@@ -13,8 +13,8 @@ import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.Logger
 import dartzee.logging.LoggerFactory
 import dartzee.logging.LoggingConsole
-import dartzee.screen.ai.AISetupRuleFactory
-import dartzee.screen.ai.IAISetupRuleFactory
+import dartzee.preferences.AbstractPreferenceService
+import dartzee.preferences.DefaultPreferenceService
 import dartzee.sync.AmazonS3RemoteDatabaseStore
 import dartzee.sync.IRemoteDatabaseStore
 import dartzee.sync.SYNC_BUCKET_NAME
@@ -36,11 +36,11 @@ object InjectedThings {
     var logger: Logger = Logger(listOf(loggingConsole, LogDestinationSystemOut(), esDestination))
     var gameLauncher: GameLauncher = GameLauncher()
     var dartzeeAimCalculator: DartzeeAimCalculator = DartzeeAimCalculator()
-    var aiSetupRuleFactory: IAISetupRuleFactory = AISetupRuleFactory()
     var simulationRunner: SimulationRunner = SimulationRunner()
     private val remoteDatabaseStore: IRemoteDatabaseStore =
         AmazonS3RemoteDatabaseStore(SYNC_BUCKET_NAME)
     var syncConfigurer: SyncConfigurer = SyncConfigurer(remoteDatabaseStore)
     var syncManager: SyncManager = SyncManager(remoteDatabaseStore)
+    var preferenceService: AbstractPreferenceService = DefaultPreferenceService()
     var partyMode = false
 }

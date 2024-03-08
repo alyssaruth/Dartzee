@@ -9,6 +9,7 @@ import dartzee.logging.Logger
 import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
 import dartzee.`object`.DartsClient
+import dartzee.preferences.InMemoryPreferenceService
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
@@ -54,6 +55,7 @@ open class AbstractTest {
         InjectedThings.esDestination = mockk(relaxed = true)
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
         InjectedThings.partyMode = false
+        InjectedThings.preferenceService = InMemoryPreferenceService()
 
         logger.loggingContext.clear()
     }

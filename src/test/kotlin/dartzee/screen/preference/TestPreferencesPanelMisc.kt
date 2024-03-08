@@ -1,9 +1,9 @@
 package dartzee.screen.preference
 
 import com.github.alyssaburlton.swingtest.uncheck
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
-import dartzee.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
-import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import dartzee.utils.PreferenceUtil
@@ -14,9 +14,7 @@ class TestPreferencesPanelMisc : AbstractPreferencePanelTest<PreferencesPanelMis
         return mutableListOf(
             PREFERENCES_INT_AI_SPEED,
             PREFERENCES_INT_LEADERBOARD_SIZE,
-            PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE,
-            PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES,
-            PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
+            PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
         )
     }
 
@@ -43,8 +41,8 @@ class TestPreferencesPanelMisc : AbstractPreferencePanelTest<PreferencesPanelMis
         PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED) shouldBe 20
         PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE) shouldBe 100
         PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE) shouldBe false
-        PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES) shouldBe false
-        PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS) shouldBe false
+        preferenceService.get(Preferences.checkForUpdates) shouldBe false
+        preferenceService.get(Preferences.showAnimations) shouldBe false
     }
 
     override fun checkUiFieldValuesAreDefaults(panel: PreferencesPanelMisc) {

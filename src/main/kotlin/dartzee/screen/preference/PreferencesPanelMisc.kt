@@ -3,9 +3,9 @@ package dartzee.screen.preference
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.bean.NumberField
 import dartzee.core.util.setFontSize
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
-import dartzee.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
-import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
 import dartzee.utils.PREFERENCES_INT_AI_SPEED
 import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
 import dartzee.utils.PreferenceUtil
@@ -68,9 +68,9 @@ class PreferencesPanelMisc :
         chckbxAiAutomaticallyFinish.isSelected =
             PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, useDefaults)
         chckbxCheckForUpdates.isSelected =
-            PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES, useDefaults)
+            preferenceService.get(Preferences.checkForUpdates, useDefaults)
         chckbxShowAnimations.isSelected =
-            PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, useDefaults)
+            preferenceService.get(Preferences.showAnimations, useDefaults)
     }
 
     override fun saveImpl() {
@@ -84,10 +84,10 @@ class PreferencesPanelMisc :
         PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, aiAuto)
 
         val checkForUpdates = chckbxCheckForUpdates.isSelected
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES, checkForUpdates)
+        preferenceService.save(Preferences.checkForUpdates, checkForUpdates)
 
         val showAnimations = chckbxShowAnimations.isSelected
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, showAnimations)
+        preferenceService.save(Preferences.showAnimations, showAnimations)
     }
 
     override fun hasOutstandingChanges() =
@@ -97,9 +97,8 @@ class PreferencesPanelMisc :
             chckbxAiAutomaticallyFinish.isSelected !=
                 PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE) ||
             chckbxCheckForUpdates.isSelected !=
-                PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES) ||
-            chckbxShowAnimations.isSelected !=
-                PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)
+                preferenceService.get(Preferences.checkForUpdates) ||
+            chckbxShowAnimations.isSelected != preferenceService.get(Preferences.showAnimations)
 
     override fun stateChanged(e: ChangeEvent?) = stateChanged()
 
