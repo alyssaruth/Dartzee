@@ -1,10 +1,9 @@
 package dartzee.preferences
 
-import dartzee.utils.NODE_PREFERENCES
 import java.util.prefs.Preferences
 
 class DefaultPreferenceService : AbstractPreferenceService() {
-    private val preferences = Preferences.userRoot().node(NODE_PREFERENCES)
+    private val preferences = Preferences.userRoot().node("DartsPrefs")
 
     override fun <T : Any> delete(preference: Preference<T>) {
         preferences.remove(preference.name)

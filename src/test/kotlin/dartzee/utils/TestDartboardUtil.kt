@@ -1,8 +1,10 @@
 package dartzee.utils
 
 import dartzee.core.bean.getPointList
-import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AbstractTest
 import dartzee.`object`.SegmentType
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.assertions.withClue
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainAll
@@ -18,17 +20,7 @@ import org.junit.jupiter.api.Test
 
 private const val MAX_DARTBOARD_RADIUS = 325
 
-class TestDartboardUtil : AbstractRegistryTest() {
-    override fun getPreferencesAffected(): MutableList<String> {
-        return mutableListOf(
-            PREFERENCES_STRING_EVEN_SINGLE_COLOUR,
-            PREFERENCES_STRING_EVEN_DOUBLE_COLOUR,
-            PREFERENCES_STRING_EVEN_TREBLE_COLOUR,
-            PREFERENCES_STRING_ODD_SINGLE_COLOUR,
-            PREFERENCES_STRING_ODD_DOUBLE_COLOUR,
-            PREFERENCES_STRING_ODD_TREBLE_COLOUR
-        )
-    }
+class TestDartboardUtil : AbstractTest() {
 
     /** X X X X X O O X X O O X X X X X */
     @Test
@@ -157,8 +149,6 @@ class TestDartboardUtil : AbstractRegistryTest() {
 
     @Test
     fun testFactorySegmentKeyForPoint() {
-        clearPreferences()
-
         resetCachedDartboardValues()
 
         // Bullseyes
@@ -203,11 +193,7 @@ class TestDartboardUtil : AbstractRegistryTest() {
     @Test
     fun testResetCachedValues() {
         resetCachedDartboardValues()
-        val pink = Color.pink
-        PreferenceUtil.saveString(
-            PREFERENCES_STRING_EVEN_SINGLE_COLOUR,
-            DartsColour.toPrefStr(pink)
-        )
+        preferenceService.save(Preferences.evenSingleColour, DartsColour.toPrefStr(Color.pink))
         assertSegment(Point(0, -629), SegmentType.OUTER_SINGLE, 20, 1)
     }
 

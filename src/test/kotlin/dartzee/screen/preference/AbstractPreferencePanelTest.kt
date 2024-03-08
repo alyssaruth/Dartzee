@@ -4,11 +4,11 @@ import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeDisabled
 import com.github.alyssaburlton.swingtest.shouldBeEnabled
-import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AbstractTest
 import javax.swing.JButton
 import org.junit.jupiter.api.Test
 
-abstract class AbstractPreferencePanelTest<T : AbstractPreferencesPanel> : AbstractRegistryTest() {
+abstract class AbstractPreferencePanelTest<T : AbstractPreferencesPanel> : AbstractTest() {
     abstract fun checkUiFieldValuesAreDefaults(panel: T)
 
     abstract fun checkUiFieldValuesAreNonDefaults(panel: T)
@@ -33,8 +33,6 @@ abstract class AbstractPreferencePanelTest<T : AbstractPreferencesPanel> : Abstr
 
     @Test
     fun `should set fields to their defaults when first loaded`() {
-        clearPreferences()
-
         val panel = factory()
         panel.refresh(false)
 
@@ -43,8 +41,6 @@ abstract class AbstractPreferencePanelTest<T : AbstractPreferencesPanel> : Abstr
 
     @Test
     fun `should save preferences appropriately`() {
-        clearPreferences()
-
         val panel = factory()
         setUiFieldValuesToNonDefaults(panel)
         panel.clickChild<JButton>(text = "Apply")
@@ -74,8 +70,6 @@ abstract class AbstractPreferencePanelTest<T : AbstractPreferencesPanel> : Abstr
 
     @Test
     fun `apply button should respond to UI changes correctly`() {
-        clearPreferences()
-
         val panel = factory()
         panel.refresh(false)
         panel.getChild<JButton>(text = "Apply").shouldBeDisabled()

@@ -9,7 +9,7 @@ object Preferences {
     val oddSingleColour = Preference("oddsing", DARTBOARD_WHITE_STR)
     val oddDoubleColour = Preference("odddoub", DARTBOARD_GREEN_STR)
     val oddTrebleColour = Preference("oddtreb", DARTBOARD_GREEN_STR)
-    val eventSingleColour = Preference("evensing", DARTBOARD_BLACK_STR)
+    val evenSingleColour = Preference("evensing", DARTBOARD_BLACK_STR)
     val evenDoubleColour = Preference("evendoub", DARTBOARD_RED_STR)
     val evenTrebleColour = Preference("eventreb", DARTBOARD_RED_STR)
 

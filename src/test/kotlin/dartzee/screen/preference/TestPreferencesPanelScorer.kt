@@ -5,10 +5,6 @@ import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.shouldBe
 
 class TestPreferencesPanelScorer : AbstractPreferencePanelTest<PreferencesPanelScorer>() {
-    override fun getPreferencesAffected(): MutableList<String> {
-        return mutableListOf()
-    }
-
     override fun factory() = PreferencesPanelScorer()
 
     override fun checkUiFieldValuesAreDefaults(panel: PreferencesPanelScorer) {
