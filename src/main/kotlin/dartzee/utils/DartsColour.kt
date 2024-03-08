@@ -1,7 +1,9 @@
 package dartzee.utils
 
 import dartzee.logging.CODE_PARSE_ERROR
+import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.preferenceService
 import java.awt.Color
 import java.awt.Component
 import java.lang.Float.max
@@ -87,14 +89,14 @@ object DartsColour {
     }
 
     fun getScorerForegroundColour(totalScore: Double): Color {
-        val hueFactor = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_HUE_FACTOR)
-        val fgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_FG_BRIGHTNESS)
+        val hueFactor = preferenceService.get(Preferences.hueFactor)
+        val fgBrightness = preferenceService.get(Preferences.fgBrightness)
         return getScorerColour(totalScore, hueFactor, fgBrightness)
     }
 
     fun getScorerBackgroundColour(totalScore: Double): Color {
-        val hueFactor = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_HUE_FACTOR)
-        val bgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS)
+        val hueFactor = preferenceService.get(Preferences.hueFactor)
+        val bgBrightness = preferenceService.get(Preferences.bgBrightness)
         return getScorerColour(totalScore, hueFactor, bgBrightness)
     }
 

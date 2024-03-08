@@ -24,6 +24,7 @@ import dartzee.listener.DartboardListener
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
+import dartzee.preferences.Preferences
 import dartzee.screen.GameplayDartboard
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
@@ -34,8 +35,7 @@ import dartzee.screen.game.scorer.AbstractDartsScorer
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.utils.PREFERENCES_INT_AI_SPEED
-import dartzee.utils.PreferenceUtil
+import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.ResourceCache.ICON_STATS_LARGE
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getQuotedIdStr
@@ -227,9 +227,7 @@ abstract class DartsGamePanel<
 
     private fun initForAi(hasAi: Boolean) {
         btnSlider.isVisible = hasAi
-
-        val defaultSpd = PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED)
-        slider.value = defaultSpd
+        slider.value = preferenceService.get(Preferences.aiSpeed)
     }
 
     protected fun makeGameTitle(): String {

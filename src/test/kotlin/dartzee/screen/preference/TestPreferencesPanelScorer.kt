@@ -1,20 +1,10 @@
 package dartzee.screen.preference
 
-import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
-import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
-import dartzee.utils.PREFERENCES_DOUBLE_HUE_FACTOR
-import dartzee.utils.PreferenceUtil
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.shouldBe
 
 class TestPreferencesPanelScorer : AbstractPreferencePanelTest<PreferencesPanelScorer>() {
-    override fun getPreferencesAffected(): MutableList<String> {
-        return mutableListOf(
-            PREFERENCES_DOUBLE_HUE_FACTOR,
-            PREFERENCES_DOUBLE_BG_BRIGHTNESS,
-            PREFERENCES_DOUBLE_FG_BRIGHTNESS
-        )
-    }
-
     override fun factory() = PreferencesPanelScorer()
 
     override fun checkUiFieldValuesAreDefaults(panel: PreferencesPanelScorer) {
@@ -36,8 +26,8 @@ class TestPreferencesPanelScorer : AbstractPreferencePanelTest<PreferencesPanelS
     }
 
     override fun checkPreferencesAreSetToNonDefaults() {
-        PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_HUE_FACTOR) shouldBe 0.5
-        PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_FG_BRIGHTNESS) shouldBe 0.9
-        PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS) shouldBe 0.6
+        preferenceService.get(Preferences.hueFactor) shouldBe 0.5
+        preferenceService.get(Preferences.fgBrightness) shouldBe 0.9
+        preferenceService.get(Preferences.bgBrightness) shouldBe 0.6
     }
 }

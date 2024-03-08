@@ -2,11 +2,11 @@ package dartzee.core.util
 
 import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.logging.CODE_RESOURCE_CACHE_NOT_INITIALISED
+import dartzee.preferences.Preferences
 import dartzee.screen.GameplayDartboard
 import dartzee.screen.LAYER_DODGY
 import dartzee.utils.InjectedThings.logger
-import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
-import dartzee.utils.PreferenceUtil
+import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.ResourceCache
 import java.util.*
 import javax.sound.sampled.AudioInputStream
@@ -66,7 +66,7 @@ fun GameplayDartboard.doGolfMiss() {
 }
 
 private fun GameplayDartboard.doDodgy(ii: ImageIcon, width: Int, height: Int, soundName: String) {
-    if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)) {
+    if (!preferenceService.get(Preferences.showAnimations)) {
         return
     }
 
@@ -100,7 +100,7 @@ private fun GameplayDartboard.doDodgyOnEdt(
 }
 
 fun GameplayDartboard.playDodgySound(soundName: String) {
-    if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)) {
+    if (!preferenceService.get(Preferences.showAnimations)) {
         return
     }
 

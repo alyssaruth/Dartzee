@@ -3,12 +3,8 @@ package dartzee.screen.preference
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.bean.NumberField
 import dartzee.core.util.setFontSize
-import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
-import dartzee.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
-import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
-import dartzee.utils.PREFERENCES_INT_AI_SPEED
-import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
-import dartzee.utils.PreferenceUtil
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -62,44 +58,39 @@ class PreferencesPanelMisc :
     }
 
     override fun refreshImpl(useDefaults: Boolean) {
-        slider.value = PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED, useDefaults)
-        nfLeaderboardSize.value =
-            PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE, useDefaults)
+        slider.value = preferenceService.get(Preferences.aiSpeed, useDefaults)
+        nfLeaderboardSize.value = preferenceService.get(Preferences.leaderboardSize, useDefaults)
         chckbxAiAutomaticallyFinish.isSelected =
-            PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, useDefaults)
+            preferenceService.get(Preferences.aiAutoContinue, useDefaults)
         chckbxCheckForUpdates.isSelected =
-            PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES, useDefaults)
+            preferenceService.get(Preferences.checkForUpdates, useDefaults)
         chckbxShowAnimations.isSelected =
-            PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, useDefaults)
+            preferenceService.get(Preferences.showAnimations, useDefaults)
     }
 
     override fun saveImpl() {
         val aiSpd = slider.value
-        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, aiSpd)
+        preferenceService.save(Preferences.aiSpeed, aiSpd)
 
         val leaderboardSize = nfLeaderboardSize.getNumber()
-        PreferenceUtil.saveInt(PREFERENCES_INT_LEADERBOARD_SIZE, leaderboardSize)
+        preferenceService.save(Preferences.leaderboardSize, leaderboardSize)
 
         val aiAuto = chckbxAiAutomaticallyFinish.isSelected
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, aiAuto)
+        preferenceService.save(Preferences.aiAutoContinue, aiAuto)
 
         val checkForUpdates = chckbxCheckForUpdates.isSelected
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES, checkForUpdates)
+        preferenceService.save(Preferences.checkForUpdates, checkForUpdates)
 
         val showAnimations = chckbxShowAnimations.isSelected
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, showAnimations)
+        preferenceService.save(Preferences.showAnimations, showAnimations)
     }
 
     override fun hasOutstandingChanges() =
-        slider.value != PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED) ||
-            nfLeaderboardSize.value !=
-                PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE) ||
-            chckbxAiAutomaticallyFinish.isSelected !=
-                PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE) ||
-            chckbxCheckForUpdates.isSelected !=
-                PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES) ||
-            chckbxShowAnimations.isSelected !=
-                PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)
+        slider.value != preferenceService.get(Preferences.aiSpeed) ||
+            nfLeaderboardSize.value != preferenceService.get(Preferences.leaderboardSize) ||
+            !chckbxAiAutomaticallyFinish.matchesPreference(Preferences.aiAutoContinue) ||
+            !chckbxCheckForUpdates.matchesPreference(Preferences.checkForUpdates) ||
+            !chckbxShowAnimations.matchesPreference(Preferences.showAnimations)
 
     override fun stateChanged(e: ChangeEvent?) = stateChanged()
 

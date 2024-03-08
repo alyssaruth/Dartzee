@@ -5,14 +5,9 @@ import com.github.alyssaburlton.swingtest.toBufferedImage
 import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.bean.PresentationDartboard
 import dartzee.core.util.runOnEventThreadBlocking
+import dartzee.preferences.Preferences
 import dartzee.utils.DartsColour
-import dartzee.utils.PREFERENCES_STRING_EVEN_DOUBLE_COLOUR
-import dartzee.utils.PREFERENCES_STRING_EVEN_SINGLE_COLOUR
-import dartzee.utils.PREFERENCES_STRING_EVEN_TREBLE_COLOUR
-import dartzee.utils.PREFERENCES_STRING_ODD_DOUBLE_COLOUR
-import dartzee.utils.PREFERENCES_STRING_ODD_SINGLE_COLOUR
-import dartzee.utils.PREFERENCES_STRING_ODD_TREBLE_COLOUR
-import dartzee.utils.PreferenceUtil
+import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import java.awt.BorderLayout
@@ -57,17 +52,6 @@ class TestPreferencesPanelDartboard : AbstractPreferencePanelTest<PreferencesPan
 
     override fun factory() = PreferencesPanelDartboard()
 
-    override fun getPreferencesAffected(): MutableList<String> {
-        return mutableListOf(
-            PREFERENCES_STRING_EVEN_SINGLE_COLOUR,
-            PREFERENCES_STRING_EVEN_DOUBLE_COLOUR,
-            PREFERENCES_STRING_EVEN_TREBLE_COLOUR,
-            PREFERENCES_STRING_ODD_SINGLE_COLOUR,
-            PREFERENCES_STRING_ODD_DOUBLE_COLOUR,
-            PREFERENCES_STRING_ODD_TREBLE_COLOUR
-        )
-    }
-
     override fun checkUiFieldValuesAreDefaults(panel: PreferencesPanelDartboard) {
         panel.cpOddSingle.selectedColour shouldBe DartsColour.DARTBOARD_WHITE
         panel.cpOddDouble.selectedColour shouldBe DartsColour.DARTBOARD_GREEN
@@ -99,12 +83,12 @@ class TestPreferencesPanelDartboard : AbstractPreferencePanelTest<PreferencesPan
     }
 
     override fun checkPreferencesAreSetToNonDefaults() {
-        val evenSingleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_SINGLE_COLOUR)
-        val evenDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_DOUBLE_COLOUR)
-        val evenTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_TREBLE_COLOUR)
-        val oddSingleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_SINGLE_COLOUR)
-        val oddDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
-        val oddTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_TREBLE_COLOUR)
+        val evenSingleStr = preferenceService.get(Preferences.evenSingleColour)
+        val evenDoubleStr = preferenceService.get(Preferences.evenDoubleColour)
+        val evenTrebleStr = preferenceService.get(Preferences.evenTrebleColour)
+        val oddSingleStr = preferenceService.get(Preferences.oddSingleColour)
+        val oddDoubleStr = preferenceService.get(Preferences.oddDoubleColour)
+        val oddTrebleStr = preferenceService.get(Preferences.oddTrebleColour)
 
         DartsColour.getColorFromPrefStr(oddSingleStr) shouldBe Color.BLUE
         DartsColour.getColorFromPrefStr(oddDoubleStr) shouldBe Color(200, 50, 128)

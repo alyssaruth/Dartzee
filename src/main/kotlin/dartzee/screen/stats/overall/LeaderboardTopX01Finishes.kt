@@ -3,9 +3,9 @@ package dartzee.screen.stats.overall
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.util.TableUtil
 import dartzee.db.PlayerEntity
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
-import dartzee.utils.PreferenceUtil
 import java.awt.BorderLayout
 import javax.swing.JPanel
 
@@ -44,7 +44,7 @@ class LeaderboardTopX01Finishes : AbstractLeaderboard() {
 
     private fun retrieveDatabaseRowsForLeaderboard(): List<Array<Any>> {
         val extraWhereSql = panelPlayerFilters.getWhereSql()
-        val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
+        val leaderboardSize = InjectedThings.preferenceService.get(Preferences.leaderboardSize)
 
         val sb = StringBuilder()
         sb.append(" SELECT p.Strategy, p.Name, g.LocalId, xf.Finish")

@@ -1,28 +1,20 @@
 package dartzee.db
 
-import dartzee.core.util.CoreRegistry
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.makeSyncAudit
 import dartzee.`object`.DartsClient
+import dartzee.preferences.Preferences
 import dartzee.sync.LastSyncData
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotBeEmpty
 import java.sql.Timestamp
 import java.util.*
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
 class TestSyncAuditEntity : AbstractEntityTest<SyncAuditEntity>() {
-    private val originalDeviceId =
-        CoreRegistry.instance.get(CoreRegistry.INSTANCE_STRING_DEVICE_ID, "")
-
-    @AfterEach
-    fun afterEach() {
-        CoreRegistry.instance.put(CoreRegistry.INSTANCE_STRING_DEVICE_ID, originalDeviceId)
-    }
-
     override fun factoryDao() = SyncAuditEntity()
 
     @Test
@@ -34,7 +26,7 @@ class TestSyncAuditEntity : AbstractEntityTest<SyncAuditEntity>() {
     fun `Should insert a sync audit with the correct values`() {
         val deviceId = UUID.randomUUID().toString()
         DartsClient.operatingSystem = "Funky OS 2.1"
-        CoreRegistry.instance.put(CoreRegistry.INSTANCE_STRING_DEVICE_ID, deviceId)
+        preferenceService.save(Preferences.deviceId, deviceId)
         System.setProperty("user.name", "Bob")
 
         SyncAuditEntity.insertSyncAudit(mainDatabase, "Goomba")
