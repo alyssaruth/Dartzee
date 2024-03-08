@@ -13,12 +13,16 @@ private val INT_PREF = Preference("fake_int", 20)
 private val DOUBLE_PREF = Preference("fake_double", 2.5)
 private val BOOLEAN_PREF = Preference("fake_boolean", false)
 
+class InMemoryPreferenceServiceTest : AbstractTest(), PreferenceServiceTest {
+    override val implementation = InMemoryPreferenceService()
+}
+
 class DefaultPreferenceServiceTest : AbstractTest(), PreferenceServiceTest {
     override val implementation = DefaultPreferenceService()
 }
 
 interface PreferenceServiceTest {
-    val implementation: IPreferenceService
+    val implementation: AbstractPreferenceService
 
     @AfterEach
     fun afterEach() {
