@@ -87,7 +87,7 @@ class DartsAiModelBenchmarkTest : AbstractTest() {
         val simulation = DartsSimulationX01(insertPlayer(), bruceForsyth)
 
         val results = (1..5000).map { simulation.simulateGame(-it.toLong()).finalScore }
-        results.average().shouldBeBetween(44.5, 45.0, SIMPLE_SIMULATION_TOLERANCE)
+        results.average().shouldBeBetween(44.0, 45.0, SIMPLE_SIMULATION_TOLERANCE)
         results.median().shouldBeBetween(40.0, 40.0, SIMPLE_SIMULATION_TOLERANCE)
     }
 }

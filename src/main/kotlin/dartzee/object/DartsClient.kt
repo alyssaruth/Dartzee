@@ -4,10 +4,10 @@ import dartzee.logging.CODE_JUST_UPDATED
 import dartzee.logging.CODE_MEMORY_SETTINGS
 import dartzee.logging.CODE_UNEXPECTED_ARGUMENT
 import dartzee.logging.CODE_UPDATE_CHECK
+import dartzee.preferences.Preferences
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings.logger
-import dartzee.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
-import dartzee.utils.PreferenceUtil
+import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.UpdateManager
 import java.util.*
 
@@ -59,7 +59,7 @@ object DartsClient {
             return
         }
 
-        if (!PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES)) {
+        if (!preferenceService.get(Preferences.checkForUpdates)) {
             logger.info(CODE_UPDATE_CHECK, "Not checking for updates: preference disabled")
             return
         }

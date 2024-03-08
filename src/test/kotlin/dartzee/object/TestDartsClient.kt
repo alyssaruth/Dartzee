@@ -1,14 +1,14 @@
 package dartzee.`object`
 
 import dartzee.core.helper.verifyNotCalled
-import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_JUST_UPDATED
 import dartzee.logging.CODE_UNEXPECTED_ARGUMENT
 import dartzee.logging.CODE_UPDATE_CHECK
 import dartzee.logging.Severity
+import dartzee.preferences.Preferences
 import dartzee.utils.DARTS_VERSION_NUMBER
-import dartzee.utils.PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES
-import dartzee.utils.PreferenceUtil
+import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.UpdateManager
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -17,9 +17,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class TestDartsClient : AbstractRegistryTest() {
-    override fun getPreferencesAffected() = listOf(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES)
-
+class TestDartsClient : AbstractTest() {
     @Test
     fun `Should log unexpected arguments`() {
         DartsClient.parseProgramArguments(arrayOf("foo"))
@@ -109,7 +107,7 @@ class TestDartsClient : AbstractRegistryTest() {
     fun `Should not check for updates if preference is unset`() {
         DartsClient.devMode = false
         DartsClient.justUpdated = false
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES, false)
+        preferenceService.save(Preferences.checkForUpdates, false)
 
         val mock = mockk<UpdateManager>(relaxed = true)
         DartsClient.updateManager = mock
@@ -125,7 +123,7 @@ class TestDartsClient : AbstractRegistryTest() {
     fun `Should check for updates if necessary`() {
         DartsClient.devMode = false
         DartsClient.justUpdated = false
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_CHECK_FOR_UPDATES, true)
+        preferenceService.save(Preferences.checkForUpdates, true)
 
         val mock = mockk<UpdateManager>(relaxed = true)
         DartsClient.updateManager = mock

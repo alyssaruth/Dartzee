@@ -15,12 +15,12 @@ import dartzee.game.X01Config
 import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.insertDartsMatch
 import dartzee.helper.retrieveDartsMatch
+import dartzee.preferences.Preferences
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.MatchSummaryPanel
 import dartzee.screen.game.scorer.MatchScorer
 import dartzee.screen.game.x01.X01MatchScreen
-import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
-import dartzee.utils.PreferenceUtil
+import dartzee.utils.InjectedThings
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
@@ -33,7 +33,7 @@ class TestMatchE2E : AbstractE2ETest() {
     @BeforeEach
     override fun beforeEach() {
         super.beforeEach()
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, false)
+        InjectedThings.preferenceService.save(Preferences.aiAutoContinue, false)
     }
 
     @Test

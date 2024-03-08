@@ -5,6 +5,8 @@ import dartzee.`object`.ColourWrapper
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import java.awt.Canvas
 import java.awt.Color
 import java.awt.Font
@@ -221,12 +223,12 @@ fun getColourWrapperFromPrefs(): ColourWrapper {
         return colourWrapperFromPrefs!!
     }
 
-    val evenSingleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_SINGLE_COLOUR)
-    val evenDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_DOUBLE_COLOUR)
-    val evenTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_TREBLE_COLOUR)
-    val oddSingleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_SINGLE_COLOUR)
-    val oddDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
-    val oddTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_TREBLE_COLOUR)
+    val evenSingleStr = preferenceService.get(Preferences.evenSingleColour)
+    val evenDoubleStr = preferenceService.get(Preferences.evenDoubleColour)
+    val evenTrebleStr = preferenceService.get(Preferences.evenTrebleColour)
+    val oddSingleStr = preferenceService.get(Preferences.oddSingleColour)
+    val oddDoubleStr = preferenceService.get(Preferences.oddDoubleColour)
+    val oddTrebleStr = preferenceService.get(Preferences.oddTrebleColour)
 
     val evenSingle = DartsColour.getColorFromPrefStr(evenSingleStr)
     val evenDouble = DartsColour.getColorFromPrefStr(evenDoubleStr)

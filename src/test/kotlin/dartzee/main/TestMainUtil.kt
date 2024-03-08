@@ -1,7 +1,5 @@
 package dartzee.main
 
-import dartzee.core.util.CoreRegistry.INSTANCE_STRING_DEVICE_ID
-import dartzee.core.util.CoreRegistry.instance
 import dartzee.helper.AbstractTest
 import dartzee.helper.logger
 import dartzee.logging.CODE_LOOK_AND_FEEL_ERROR
@@ -13,7 +11,9 @@ import dartzee.logging.KEY_OPERATING_SYSTEM
 import dartzee.logging.KEY_USERNAME
 import dartzee.logging.Severity
 import dartzee.`object`.DartsClient
+import dartzee.preferences.Preferences
 import dartzee.utils.DARTS_VERSION_NUMBER
+import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.maps.shouldContainAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -22,17 +22,9 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import javax.swing.UIManager
 import javax.swing.plaf.metal.MetalLookAndFeel
 import javax.swing.plaf.nimbus.NimbusLookAndFeel
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
 class TestMainUtil : AbstractTest() {
-    private val originalDeviceId = instance.get(INSTANCE_STRING_DEVICE_ID, "")
-
-    @AfterEach
-    fun afterEach() {
-        instance.put(INSTANCE_STRING_DEVICE_ID, originalDeviceId)
-    }
-
     @Test
     fun `Should not attempt to set look and feel for Apple OS`() {
         UIManager.setLookAndFeel(MetalLookAndFeel())
@@ -67,18 +59,17 @@ class TestMainUtil : AbstractTest() {
 
     @Test
     fun `Should generate a device ID if not present, then return it in subsequent calls`() {
-        instance.remove(INSTANCE_STRING_DEVICE_ID)
 
         val deviceId = getDeviceId()
         deviceId.shouldNotBeEmpty()
 
-        instance.get(INSTANCE_STRING_DEVICE_ID, null) shouldBe deviceId
+        preferenceService.get(Preferences.deviceId) shouldBe deviceId
         getDeviceId() shouldBe deviceId
     }
 
     @Test
     fun `Should just return the value of the device ID in the registry if present`() {
-        instance.put(INSTANCE_STRING_DEVICE_ID, "foo")
+        preferenceService.save(Preferences.deviceId, "foo")
         getDeviceId() shouldBe "foo"
     }
 
@@ -92,7 +83,7 @@ class TestMainUtil : AbstractTest() {
     @Test
     fun `Should set up logging context fields`() {
         System.setProperty("user.name", "some.user")
-        instance.put(INSTANCE_STRING_DEVICE_ID, "some.device")
+        preferenceService.save(Preferences.deviceId, "some.device")
         DartsClient.operatingSystem = "Windows 10"
         DartsClient.devMode = true
 

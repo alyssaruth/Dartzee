@@ -14,21 +14,18 @@ import dartzee.game.FinishType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
 import dartzee.game.X01Config
-import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AbstractTest
 import dartzee.helper.insertFinishedParticipant
 import dartzee.helper.insertFinishedTeam
+import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
-import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
-import dartzee.utils.PreferenceUtil
+import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.shouldBe
 import javax.swing.JCheckBox
 import javax.swing.JRadioButton
 import org.junit.jupiter.api.Test
 
-class TestLeaderboardTotalScore : AbstractRegistryTest() {
-
-    override fun getPreferencesAffected() = listOf(PREFERENCES_INT_LEADERBOARD_SIZE)
-
+class TestLeaderboardTotalScore : AbstractTest() {
     @Test
     fun `should extract the right data into rows`() {
         val gAlice = insertFinishedParticipant("Alice", GameType.X01, 50)
@@ -97,7 +94,7 @@ class TestLeaderboardTotalScore : AbstractRegistryTest() {
 
     @Test
     fun `Should correctly sort and limit teams and individuals`() {
-        PreferenceUtil.saveInt(PREFERENCES_INT_LEADERBOARD_SIZE, 2)
+        preferenceService.save(Preferences.leaderboardSize, 2)
 
         insertFinishedParticipant("Alice", GameType.X01, 35)
         insertFinishedParticipant("Bob", GameType.X01, 53)
@@ -127,7 +124,7 @@ class TestLeaderboardTotalScore : AbstractRegistryTest() {
 
     @Test
     fun `Should sort correctly based on game type and selection`() {
-        PreferenceUtil.saveInt(PREFERENCES_INT_LEADERBOARD_SIZE, 2)
+        preferenceService.save(Preferences.leaderboardSize, 2)
 
         insertFinishedParticipant("Alice", GameType.DARTZEE, 72, gameParams = "")
         insertFinishedParticipant("Bob", GameType.DARTZEE, 54, gameParams = "")

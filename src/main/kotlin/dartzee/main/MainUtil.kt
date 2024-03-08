@@ -1,7 +1,5 @@
 package dartzee.main
 
-import dartzee.core.util.CoreRegistry.INSTANCE_STRING_DEVICE_ID
-import dartzee.core.util.CoreRegistry.instance
 import dartzee.core.util.DialogUtil
 import dartzee.logging.CODE_LOOK_AND_FEEL_ERROR
 import dartzee.logging.CODE_LOOK_AND_FEEL_SET
@@ -11,8 +9,10 @@ import dartzee.logging.KEY_DEV_MODE
 import dartzee.logging.KEY_OPERATING_SYSTEM
 import dartzee.logging.KEY_USERNAME
 import dartzee.`object`.DartsClient
+import dartzee.preferences.Preferences
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.preferenceService
 import java.util.*
 import javax.swing.UIManager
 
@@ -41,11 +41,11 @@ fun setLoggingContextFields() {
     logger.addToContext(KEY_DEV_MODE, DartsClient.devMode)
 }
 
-fun getDeviceId() = instance.get(INSTANCE_STRING_DEVICE_ID, null) ?: setDeviceId()
+fun getDeviceId() = preferenceService.find(Preferences.deviceId) ?: setDeviceId()
 
 private fun setDeviceId(): String {
     val deviceId = UUID.randomUUID().toString()
-    instance.put(INSTANCE_STRING_DEVICE_ID, deviceId)
+    preferenceService.save(Preferences.deviceId, deviceId)
     return deviceId
 }
 

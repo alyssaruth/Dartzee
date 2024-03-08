@@ -5,12 +5,12 @@ import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import dartzee.core.helper.verifyNotCalled
-import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.logging.Severity
+import dartzee.preferences.Preferences
 import dartzee.screen.GameplayDartboard
-import dartzee.utils.PREFERENCES_BOOLEAN_SHOW_ANIMATIONS
-import dartzee.utils.PreferenceUtil
+import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.ResourceCache
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -28,22 +28,15 @@ import javax.sound.sampled.LineListener
 import javax.swing.JLabel
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class TestDartboardDodgyUtil : AbstractRegistryTest() {
-    override fun getPreferencesAffected() = listOf(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS)
-
-    @BeforeEach
-    fun beforeEach() {
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, true)
-    }
+class TestDartboardDodgyUtil : AbstractTest() {
 
     @Test
     fun `should not play a sound if preference is disabled`() {
         mockkStatic(AudioSystem::class)
 
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_SHOW_ANIMATIONS, false)
+        preferenceService.save(Preferences.showAnimations, false)
         val dartboard = GameplayDartboard()
         dartboard.playDodgySound("60")
 

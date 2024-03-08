@@ -3,9 +3,9 @@ package dartzee.screen.game
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.GameEntity
 import dartzee.game.state.AbstractPlayerState
+import dartzee.preferences.Preferences
 import dartzee.screen.game.scorer.AbstractDartsScorerPausable
-import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
-import dartzee.utils.PreferenceUtil
+import dartzee.utils.InjectedThings.preferenceService
 import javax.swing.SwingUtilities
 
 abstract class GamePanelPausable<
@@ -74,8 +74,7 @@ abstract class GamePanelPausable<
         // automatically play on.
         updateActivePlayer()
         if (
-            !getCurrentPlayerState().isHuman() &&
-                PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE)
+            !getCurrentPlayerState().isHuman() && preferenceService.get(Preferences.aiAutoContinue)
         ) {
             getCurrentScorer().toggleResume()
         }

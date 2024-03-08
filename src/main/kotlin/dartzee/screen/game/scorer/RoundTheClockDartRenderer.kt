@@ -4,9 +4,8 @@ import dartzee.core.bean.AbstractTableRenderer
 import dartzee.game.ClockType
 import dartzee.`object`.Dart
 import dartzee.`object`.DartNotThrown
-import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
-import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
-import dartzee.utils.PreferenceUtil
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import java.awt.Color
 import java.awt.Font
 import javax.swing.SwingConstants
@@ -25,8 +24,8 @@ class RoundTheClockDartRenderer(private val clockType: ClockType) : AbstractTabl
             foreground = Color.BLACK
             background = Color.BLACK
         } else {
-            val bgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS)
-            val fgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_FG_BRIGHTNESS)
+            val bgBrightness = preferenceService.get(Preferences.bgBrightness)
+            val fgBrightness = preferenceService.get(Preferences.fgBrightness)
 
             var hue = 0f // Red
             if (typedValue.hitClockTarget(clockType)) {

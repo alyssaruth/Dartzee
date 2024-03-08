@@ -1,9 +1,8 @@
 package dartzee.screen.game.scorer
 
 import dartzee.core.bean.AbstractTableRenderer
-import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
-import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
-import dartzee.utils.PreferenceUtil
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import java.awt.Color
 import java.awt.Font
 import javax.swing.SwingConstants
@@ -22,8 +21,8 @@ class RoundTheClockScorecardRenderer : AbstractTableRenderer<ClockResult>() {
             foreground = Color.BLACK
             background = null
         } else {
-            val bgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS)
-            val fgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_FG_BRIGHTNESS)
+            val bgBrightness = preferenceService.get(Preferences.bgBrightness)
+            val fgBrightness = preferenceService.get(Preferences.fgBrightness)
 
             foreground = Color.getHSBColor(0.3f, 1f, fgBrightness.toFloat())
             background = Color.getHSBColor(0.3f, 1f, bgBrightness.toFloat())
