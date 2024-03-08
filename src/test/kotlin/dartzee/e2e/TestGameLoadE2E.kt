@@ -11,10 +11,10 @@ import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.retrieveGame
 import dartzee.helper.retrieveParticipant
 import dartzee.`object`.Dart
+import dartzee.preferences.Preferences
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
-import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
-import dartzee.utils.PreferenceUtil
+import dartzee.utils.InjectedThings
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -26,7 +26,7 @@ class TestGameLoadE2E : AbstractE2ETest() {
     @BeforeEach
     override fun beforeEach() {
         super.beforeEach()
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, false)
+        InjectedThings.preferenceService.save(Preferences.aiAutoContinue, false)
     }
 
     @Test

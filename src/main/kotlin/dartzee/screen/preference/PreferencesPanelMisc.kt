@@ -5,10 +5,6 @@ import dartzee.core.bean.NumberField
 import dartzee.core.util.setFontSize
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings.preferenceService
-import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
-import dartzee.utils.PREFERENCES_INT_AI_SPEED
-import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
-import dartzee.utils.PreferenceUtil
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -62,11 +58,10 @@ class PreferencesPanelMisc :
     }
 
     override fun refreshImpl(useDefaults: Boolean) {
-        slider.value = PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED, useDefaults)
-        nfLeaderboardSize.value =
-            PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE, useDefaults)
+        slider.value = preferenceService.get(Preferences.aiSpeed, useDefaults)
+        nfLeaderboardSize.value = preferenceService.get(Preferences.leaderboardSize, useDefaults)
         chckbxAiAutomaticallyFinish.isSelected =
-            PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, useDefaults)
+            preferenceService.get(Preferences.aiAutoContinue, useDefaults)
         chckbxCheckForUpdates.isSelected =
             preferenceService.get(Preferences.checkForUpdates, useDefaults)
         chckbxShowAnimations.isSelected =
@@ -75,13 +70,13 @@ class PreferencesPanelMisc :
 
     override fun saveImpl() {
         val aiSpd = slider.value
-        PreferenceUtil.saveInt(PREFERENCES_INT_AI_SPEED, aiSpd)
+        preferenceService.save(Preferences.aiSpeed, aiSpd)
 
         val leaderboardSize = nfLeaderboardSize.getNumber()
-        PreferenceUtil.saveInt(PREFERENCES_INT_LEADERBOARD_SIZE, leaderboardSize)
+        preferenceService.save(Preferences.leaderboardSize, leaderboardSize)
 
         val aiAuto = chckbxAiAutomaticallyFinish.isSelected
-        PreferenceUtil.saveBoolean(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE, aiAuto)
+        preferenceService.save(Preferences.aiAutoContinue, aiAuto)
 
         val checkForUpdates = chckbxCheckForUpdates.isSelected
         preferenceService.save(Preferences.checkForUpdates, checkForUpdates)
@@ -91,11 +86,10 @@ class PreferencesPanelMisc :
     }
 
     override fun hasOutstandingChanges() =
-        slider.value != PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED) ||
-            nfLeaderboardSize.value !=
-                PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE) ||
+        slider.value != preferenceService.get(Preferences.aiSpeed) ||
+            nfLeaderboardSize.value != preferenceService.get(Preferences.leaderboardSize) ||
             chckbxAiAutomaticallyFinish.isSelected !=
-                PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE) ||
+                preferenceService.get(Preferences.aiAutoContinue) ||
             chckbxCheckForUpdates.isSelected !=
                 preferenceService.get(Preferences.checkForUpdates) ||
             chckbxShowAnimations.isSelected != preferenceService.get(Preferences.showAnimations)

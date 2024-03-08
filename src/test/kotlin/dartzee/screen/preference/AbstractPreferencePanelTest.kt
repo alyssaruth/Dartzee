@@ -24,6 +24,7 @@ abstract class AbstractPreferencePanelTest<T : AbstractPreferencesPanel> : Abstr
         val panel = factory()
 
         setUiFieldValuesToNonDefaults(panel)
+        panel.clickChild<JButton>(text = "Apply")
 
         panel.refresh(true)
 

@@ -2,18 +2,16 @@ package dartzee.screen.stats.overall
 
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.ScrollTable
-import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AbstractTest
 import dartzee.helper.insertFinishForPlayer
 import dartzee.helper.insertPlayer
-import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
-import dartzee.utils.PreferenceUtil
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.shouldBe
 import java.sql.Timestamp
 import org.junit.jupiter.api.Test
 
-class TestLeaderboardTopX01Finishes : AbstractRegistryTest() {
-    override fun getPreferencesAffected() = listOf(PREFERENCES_INT_LEADERBOARD_SIZE)
-
+class TestLeaderboardTopX01Finishes : AbstractTest() {
     @Test
     fun `Should get the correct local game ids`() {
         val p = insertPlayer()
@@ -30,7 +28,7 @@ class TestLeaderboardTopX01Finishes : AbstractRegistryTest() {
 
     @Test
     fun `Should respect the preference value for the number of rows to be returned`() {
-        PreferenceUtil.saveInt(PREFERENCES_INT_LEADERBOARD_SIZE, 2)
+        preferenceService.save(Preferences.leaderboardSize, 2)
 
         val p = insertPlayer()
 
@@ -45,7 +43,7 @@ class TestLeaderboardTopX01Finishes : AbstractRegistryTest() {
         leaderboard.getScoreAt(0) shouldBe 150
         leaderboard.getScoreAt(1) shouldBe 100
 
-        PreferenceUtil.saveInt(PREFERENCES_INT_LEADERBOARD_SIZE, 3)
+        preferenceService.save(Preferences.leaderboardSize, 3)
         leaderboard.buildTable()
 
         leaderboard.rowCount() shouldBe 3

@@ -3,19 +3,11 @@ package dartzee.screen.preference
 import com.github.alyssaburlton.swingtest.uncheck
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings.preferenceService
-import dartzee.utils.PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
-import dartzee.utils.PREFERENCES_INT_AI_SPEED
-import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
-import dartzee.utils.PreferenceUtil
 import io.kotest.matchers.shouldBe
 
 class TestPreferencesPanelMisc : AbstractPreferencePanelTest<PreferencesPanelMisc>() {
     override fun getPreferencesAffected(): MutableList<String> {
-        return mutableListOf(
-            PREFERENCES_INT_AI_SPEED,
-            PREFERENCES_INT_LEADERBOARD_SIZE,
-            PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE
-        )
+        return mutableListOf()
     }
 
     override fun factory() = PreferencesPanelMisc()
@@ -38,9 +30,9 @@ class TestPreferencesPanelMisc : AbstractPreferencePanelTest<PreferencesPanelMis
     }
 
     override fun checkPreferencesAreSetToNonDefaults() {
-        PreferenceUtil.getIntValue(PREFERENCES_INT_AI_SPEED) shouldBe 20
-        PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE) shouldBe 100
-        PreferenceUtil.getBooleanValue(PREFERENCES_BOOLEAN_AI_AUTO_CONTINUE) shouldBe false
+        preferenceService.get(Preferences.aiSpeed) shouldBe 20
+        preferenceService.get(Preferences.leaderboardSize) shouldBe 100
+        preferenceService.get(Preferences.aiAutoContinue) shouldBe false
         preferenceService.get(Preferences.checkForUpdates) shouldBe false
         preferenceService.get(Preferences.showAnimations) shouldBe false
     }

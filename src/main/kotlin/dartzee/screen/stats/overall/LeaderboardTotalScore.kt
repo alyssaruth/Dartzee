@@ -6,10 +6,10 @@ import dartzee.core.util.TableUtil
 import dartzee.core.util.sortedBy
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.partyMode
-import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
-import dartzee.utils.PreferenceUtil
+import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.combinePlayerFlags
 import dartzee.utils.doesHighestWin
 import dartzee.utils.getFilterPanel
@@ -100,7 +100,7 @@ class LeaderboardTotalScore(private val gameType: GameType, gameParams: String? 
         val sorted =
             (individuals + teams)
                 .sortedBy(descending) { it.score }
-                .take(PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE))
+                .take(preferenceService.get(Preferences.leaderboardSize))
         return getRankedRowsForTable(sorted)
     }
 
@@ -179,7 +179,7 @@ class LeaderboardTotalScore(private val gameType: GameType, gameParams: String? 
     }
 
     private fun appendOrderBy(sb: StringBuilder, tableAlias: String) {
-        val leaderboardSize = PreferenceUtil.getIntValue(PREFERENCES_INT_LEADERBOARD_SIZE)
+        val leaderboardSize = preferenceService.get(Preferences.leaderboardSize)
         val orderStr = if (doesHighestWin(gameType) == rdbtnWorst.isSelected) "ASC" else "DESC"
         sb.append(" ORDER BY $tableAlias.FinalScore $orderStr")
         sb.append(" FETCH FIRST $leaderboardSize ROWS ONLY")
