@@ -22,5 +22,5 @@ object Preferences {
 
     val hueFactor = Preference("huefactor", 0.8)
     val fgBrightness = Preference("fgbri", 0.5)
-    val bgBrightness = Preference("bgbri", 1)
+    val bgBrightness = Preference("bgbri", 1.0)
 }

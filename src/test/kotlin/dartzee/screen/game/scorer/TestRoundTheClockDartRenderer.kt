@@ -1,26 +1,16 @@
 package dartzee.screen.game.scorer
 
 import dartzee.game.ClockType
-import dartzee.helper.AbstractRegistryTest
+import dartzee.helper.AbstractTest
 import dartzee.helper.makeDart
 import dartzee.`object`.DartNotThrown
-import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
-import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
-import dartzee.utils.PreferenceUtil
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.shouldBe
 import java.awt.Color
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class TestRoundTheClockDartRenderer : AbstractRegistryTest() {
-    override fun getPreferencesAffected() =
-        listOf(PREFERENCES_DOUBLE_FG_BRIGHTNESS, PREFERENCES_DOUBLE_BG_BRIGHTNESS)
-
-    @BeforeEach
-    fun beforeEach() {
-        clearPreferences()
-    }
-
+class TestRoundTheClockDartRenderer : AbstractTest() {
     @Test
     fun `Should render hits as normal darts, and misses as an X`() {
         val renderer = RoundTheClockDartRenderer(ClockType.Standard)
@@ -89,8 +79,8 @@ class TestRoundTheClockDartRenderer : AbstractRegistryTest() {
 
     @Test
     fun `Should adhere to brightness preferences`() {
-        PreferenceUtil.saveDouble(PREFERENCES_DOUBLE_FG_BRIGHTNESS, 0.8)
-        PreferenceUtil.saveDouble(PREFERENCES_DOUBLE_BG_BRIGHTNESS, 0.1)
+        preferenceService.save(Preferences.fgBrightness, 0.8)
+        preferenceService.save(Preferences.bgBrightness, 0.1)
 
         val renderer = RoundTheClockDartRenderer(ClockType.Standard)
         val hit = makeDart(1, 1, startingScore = 1)

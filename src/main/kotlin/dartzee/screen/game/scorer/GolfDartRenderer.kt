@@ -1,9 +1,8 @@
 package dartzee.screen.game.scorer
 
 import dartzee.`object`.Dart
-import dartzee.utils.PREFERENCES_DOUBLE_BG_BRIGHTNESS
-import dartzee.utils.PREFERENCES_DOUBLE_FG_BRIGHTNESS
-import dartzee.utils.PreferenceUtil
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import java.awt.Color
 import java.awt.Component
 import java.awt.Font
@@ -40,8 +39,8 @@ class GolfDartRenderer(private val showGameId: Boolean) : DefaultTableCellRender
         } else {
             val score = newValue as Int
 
-            val bgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS)
-            val fgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_FG_BRIGHTNESS)
+            val bgBrightness = preferenceService.get(Preferences.bgBrightness)
+            val fgBrightness = preferenceService.get(Preferences.fgBrightness)
 
             foreground = getGolfScorerColour(score, fgBrightness)
             background = getGolfScorerColour(score, bgBrightness)
