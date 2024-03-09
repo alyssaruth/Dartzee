@@ -22,14 +22,18 @@ class DeletionAuditEntity(database: Database = mainDatabase) :
     }
 
     companion object {
+        fun factory(entity: AbstractEntity<*>, database: Database = mainDatabase) =
+            factory(entity.getTableName(), entity.rowId, database)
+
         fun factory(
-            entity: AbstractEntity<*>,
-            database: Database = mainDatabase
+            entityName: EntityName,
+            entityId: String,
+            database: Database,
         ): DeletionAuditEntity {
             val result = DeletionAuditEntity(database)
             result.assignRowId()
-            result.entityName = entity.getTableName()
-            result.entityId = entity.rowId
+            result.entityName = entityName
+            result.entityId = entityId
             return result
         }
 

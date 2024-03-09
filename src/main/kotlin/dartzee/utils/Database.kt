@@ -1,6 +1,8 @@
 package dartzee.utils
 
 import dartzee.core.util.DialogUtil
+import dartzee.db.BulkInserter
+import dartzee.db.DeletionAuditEntity
 import dartzee.db.EntityName
 import dartzee.db.LocalIdGenerator
 import dartzee.db.VersionEntity
@@ -298,6 +300,11 @@ class Database(
             val idStr = rowIdBatch.getQuotedIdStr()
             val sql = "DELETE FROM $entityName WHERE RowId IN $idStr"
             success = executeUpdate(sql)
+        }
+
+        if (success) {
+            val deletionAudits = rowIds.map { DeletionAuditEntity.factory(entityName, it, this) }
+            BulkInserter.insert(deletionAudits, database = this)
         }
 
         return success
