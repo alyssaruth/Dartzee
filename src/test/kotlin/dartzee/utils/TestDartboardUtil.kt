@@ -193,7 +193,7 @@ class TestDartboardUtil : AbstractTest() {
     @Test
     fun testResetCachedValues() {
         resetCachedDartboardValues()
-        preferenceService.save(Preferences.evenSingleColour, DartsColour.toPrefStr(Color.pink))
+        preferenceService.save(Preferences.evenSingleColour, Color.pink)
         assertSegment(Point(0, -629), SegmentType.OUTER_SINGLE, 20, 1)
     }
 

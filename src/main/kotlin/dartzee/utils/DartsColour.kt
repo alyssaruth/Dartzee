@@ -1,8 +1,6 @@
 package dartzee.utils
 
-import dartzee.logging.CODE_PARSE_ERROR
 import dartzee.preferences.Preferences
-import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.preferenceService
 import java.awt.Color
 import java.awt.Component
@@ -15,11 +13,6 @@ object DartsColour {
     val DARTBOARD_GREEN: Color = Color.green
     val DARTBOARD_BLACK: Color = Color(32, 42, 68)
     val DARTBOARD_WHITE: Color = Color.white
-
-    val DARTBOARD_BLACK_STR = toPrefStr(DARTBOARD_BLACK)
-    val DARTBOARD_GREEN_STR = toPrefStr(DARTBOARD_GREEN)
-    val DARTBOARD_RED_STR = toPrefStr(DARTBOARD_RED)
-    val DARTBOARD_WHITE_STR = toPrefStr(DARTBOARD_WHITE)
 
     val DARTBOARD_LIGHTEST_GREY: Color = Color.getHSBColor(0f, 0f, 0.9.toFloat())
     val DARTBOARD_LIGHTER_GREY: Color = Color.getHSBColor(0f, 0f, 0.75.toFloat())
@@ -52,24 +45,6 @@ object DartsColour {
         val decreasedSat = max(0f, (hsbValues[1] - 0.5).toFloat())
         return Color.getHSBColor(hsbValues[0], decreasedSat, hsbValues[2])
     }
-
-    fun toPrefStr(colour: Color): String {
-        val r = colour.red
-        val g = colour.green
-        val b = colour.blue
-        val a = colour.alpha
-
-        return "$r;$g;$b;$a"
-    }
-
-    fun getColorFromPrefStr(prefStr: String): Color =
-        try {
-            val colours = prefStr.split(";").map { it.toInt() }
-            Color(colours[0], colours[1], colours[2], colours[3])
-        } catch (t: Throwable) {
-            logger.error(CODE_PARSE_ERROR, "Failed to reconstruct colour from string: $prefStr", t)
-            Color.BLACK
-        }
 
     fun setFgAndBgColoursForPosition(c: Component, finishPos: Int, defaultBg: Color? = null) {
         when (finishPos) {

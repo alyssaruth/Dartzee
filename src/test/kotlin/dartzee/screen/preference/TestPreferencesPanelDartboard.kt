@@ -83,18 +83,12 @@ class TestPreferencesPanelDartboard : AbstractPreferencePanelTest<PreferencesPan
     }
 
     override fun checkPreferencesAreSetToNonDefaults() {
-        val evenSingleStr = preferenceService.get(Preferences.evenSingleColour)
-        val evenDoubleStr = preferenceService.get(Preferences.evenDoubleColour)
-        val evenTrebleStr = preferenceService.get(Preferences.evenTrebleColour)
-        val oddSingleStr = preferenceService.get(Preferences.oddSingleColour)
-        val oddDoubleStr = preferenceService.get(Preferences.oddDoubleColour)
-        val oddTrebleStr = preferenceService.get(Preferences.oddTrebleColour)
-
-        DartsColour.getColorFromPrefStr(oddSingleStr) shouldBe Color.BLUE
-        DartsColour.getColorFromPrefStr(oddDoubleStr) shouldBe Color(200, 50, 128)
-        DartsColour.getColorFromPrefStr(oddTrebleStr) shouldBe Color.getHSBColor(0.9f, 0.8f, 1.0f)
-        DartsColour.getColorFromPrefStr(evenSingleStr) shouldBe Color.YELLOW
-        DartsColour.getColorFromPrefStr(evenDoubleStr) shouldBe Color.MAGENTA
-        DartsColour.getColorFromPrefStr(evenTrebleStr) shouldBe Color.CYAN
+        preferenceService.get(Preferences.evenSingleColour) shouldBe Color.YELLOW
+        preferenceService.get(Preferences.evenDoubleColour) shouldBe Color.MAGENTA
+        preferenceService.get(Preferences.evenTrebleColour) shouldBe Color.CYAN
+        preferenceService.get(Preferences.oddSingleColour) shouldBe Color.BLUE
+        preferenceService.get(Preferences.oddDoubleColour) shouldBe Color(200, 50, 128)
+        preferenceService.get(Preferences.oddTrebleColour) shouldBe
+            Color.getHSBColor(0.9f, 0.8f, 1.0f)
     }
 }

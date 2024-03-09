@@ -223,20 +223,12 @@ fun getColourWrapperFromPrefs(): ColourWrapper {
         return colourWrapperFromPrefs!!
     }
 
-    val evenSingleStr = preferenceService.get(Preferences.evenSingleColour)
-    val evenDoubleStr = preferenceService.get(Preferences.evenDoubleColour)
-    val evenTrebleStr = preferenceService.get(Preferences.evenTrebleColour)
-    val oddSingleStr = preferenceService.get(Preferences.oddSingleColour)
-    val oddDoubleStr = preferenceService.get(Preferences.oddDoubleColour)
-    val oddTrebleStr = preferenceService.get(Preferences.oddTrebleColour)
-
-    val evenSingle = DartsColour.getColorFromPrefStr(evenSingleStr)
-    val evenDouble = DartsColour.getColorFromPrefStr(evenDoubleStr)
-    val evenTreble = DartsColour.getColorFromPrefStr(evenTrebleStr)
-
-    val oddSingle = DartsColour.getColorFromPrefStr(oddSingleStr)
-    val oddDouble = DartsColour.getColorFromPrefStr(oddDoubleStr)
-    val oddTreble = DartsColour.getColorFromPrefStr(oddTrebleStr)
+    val evenSingle = preferenceService.get(Preferences.evenSingleColour)
+    val evenDouble = preferenceService.get(Preferences.evenDoubleColour)
+    val evenTreble = preferenceService.get(Preferences.evenTrebleColour)
+    val oddSingle = preferenceService.get(Preferences.oddSingleColour)
+    val oddDouble = preferenceService.get(Preferences.oddDoubleColour)
+    val oddTreble = preferenceService.get(Preferences.oddTrebleColour)
 
     colourWrapperFromPrefs =
         ColourWrapper(
