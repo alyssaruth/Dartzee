@@ -1,3 +1,16 @@
+--------- v7.1.0 ---------
+
++ Option to not have to finish on a double in X01
++ Ability for an individual or team to resign from an in-progress game
++ Party Mode, accessible via Utilities. Simplifies the app considerably, hoping to make it "idiot-proof"
++ Leaderboards for best/worst games now include teams
++ AI will now use checkout suggestions in X01 where they exist (so e.g. on 81 will aim for T19 not T20)
+= Normalised audio assets so they all play at a similar volume
+= Fixed game report to display teams properly, and to display players in throw order
+= Dartzee "total divisible by" rule no longer treats 0 as a pass
+- Manual setup configuration per AI (never used, and superseded by checkout suggestion improvement)
+= 93.3% test coverage (14163 / 15173 lines covered by 2425 tests)
+
 --------- v7.0.1 ---------
 
 = Fixed bugs with game deletion that left behind some data
