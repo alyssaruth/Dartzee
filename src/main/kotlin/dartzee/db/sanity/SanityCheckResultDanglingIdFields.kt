@@ -18,7 +18,7 @@ class SanityCheckResultDanglingIdFields(
         val rowIds = entities.map { it.rowId }
 
         val ans =
-            DialogUtil.showQuestionOLD(
+            DialogUtil.showQuestion(
                 "Are you sure you want to delete ${entities.size} rows from $entityName?"
             )
         if (ans != JOptionPane.YES_OPTION) {
@@ -27,9 +27,9 @@ class SanityCheckResultDanglingIdFields(
 
         val success = mainDatabase.deleteRowsFromTable(entityName, rowIds)
         if (success) {
-            DialogUtil.showInfoOLD("Rows deleted successfully. You should re-run the sanity check.")
+            DialogUtil.showInfo("Rows deleted successfully. You should re-run the sanity check.")
         } else {
-            DialogUtil.showErrorOLD("An error occurred deleting the rows.")
+            DialogUtil.showError("An error occurred deleting the rows.")
         }
     }
 }

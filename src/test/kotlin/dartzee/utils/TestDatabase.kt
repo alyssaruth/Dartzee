@@ -1,9 +1,12 @@
 package dartzee.utils
 
+import dartzee.db.DeletionAuditEntity
 import dartzee.db.EntityName
+import dartzee.db.GameEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.getTableNames
+import dartzee.helper.insertGame
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_NEW_CONNECTION
 import dartzee.logging.CODE_SQL
@@ -178,5 +181,24 @@ class TestDatabase : AbstractTest() {
         mainDatabase
             .dropUnexpectedTables()
             .shouldContainExactlyInAnyOrder("SOMETABLE", tmpName?.uppercase())
+    }
+
+    @Test
+    fun `Should delete specified entities by ID, and add deletion audits`() {
+        val gameIdsToDelete = (1..100).map { insertGame().rowId }
+        val gameIdsToKeep = (1..50).map { insertGame().rowId }
+
+        val result = mainDatabase.deleteRowsFromTable(EntityName.Game, gameIdsToDelete)
+
+        result shouldBe true
+
+        GameEntity()
+            .retrieveEntities()
+            .map(GameEntity::rowId)
+            .shouldContainExactlyInAnyOrder(gameIdsToKeep)
+
+        val audits = DeletionAuditEntity().retrieveEntities()
+        audits.map { it.entityId }.shouldContainExactlyInAnyOrder(gameIdsToDelete)
+        audits.forEach { it.entityName shouldBe EntityName.Game }
     }
 }
