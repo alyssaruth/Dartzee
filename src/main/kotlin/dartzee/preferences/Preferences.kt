@@ -1,17 +1,18 @@
 package dartzee.preferences
 
-import dartzee.utils.DartsColour.DARTBOARD_BLACK_STR
-import dartzee.utils.DartsColour.DARTBOARD_GREEN_STR
-import dartzee.utils.DartsColour.DARTBOARD_RED_STR
-import dartzee.utils.DartsColour.DARTBOARD_WHITE_STR
+import dartzee.utils.DartsColour.DARTBOARD_BLACK
+import dartzee.utils.DartsColour.DARTBOARD_GREEN
+import dartzee.utils.DartsColour.DARTBOARD_RED
+import dartzee.utils.DartsColour.DARTBOARD_WHITE
 
 object Preferences {
-    val oddSingleColour = Preference("oddsing", DARTBOARD_WHITE_STR)
-    val oddDoubleColour = Preference("odddoub", DARTBOARD_GREEN_STR)
-    val oddTrebleColour = Preference("oddtreb", DARTBOARD_GREEN_STR)
-    val evenSingleColour = Preference("evensing", DARTBOARD_BLACK_STR)
-    val evenDoubleColour = Preference("evendoub", DARTBOARD_RED_STR)
-    val evenTrebleColour = Preference("eventreb", DARTBOARD_RED_STR)
+    val oddSingleColour = Preference("oddsing", DARTBOARD_WHITE)
+    val oddDoubleColour = Preference("odddoub", DARTBOARD_GREEN)
+    val oddTrebleColour = Preference("oddtreb", DARTBOARD_GREEN)
+    val evenSingleColour = Preference("evensing", DARTBOARD_BLACK)
+    val evenDoubleColour = Preference("evendoub", DARTBOARD_RED)
+    val evenTrebleColour = Preference("eventreb", DARTBOARD_RED)
+
     val deviceId = Preference("deviceId", "")
 
     val aiAutoContinue = Preference("aiauto", true)

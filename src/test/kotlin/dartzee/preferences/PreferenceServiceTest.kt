@@ -1,9 +1,12 @@
 package dartzee.preferences
 
 import dartzee.helper.AbstractTest
+import dartzee.logging.CODE_PARSE_ERROR
+import dartzee.logging.Severity
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import java.awt.Color
 import kotlin.reflect.full.memberProperties
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -12,17 +15,18 @@ private val STRING_PREF = Preference("fake_string", "foo")
 private val INT_PREF = Preference("fake_int", 20)
 private val DOUBLE_PREF = Preference("fake_double", 2.5)
 private val BOOLEAN_PREF = Preference("fake_boolean", false)
+private val COLOR_PREF = Preference("fake_color", Color.RED)
 
-class InMemoryPreferenceServiceTest : AbstractTest(), PreferenceServiceTest {
+class InMemoryPreferenceServiceTest : PreferenceServiceTest() {
     override val implementation = InMemoryPreferenceService()
 }
 
-class DefaultPreferenceServiceTest : AbstractTest(), PreferenceServiceTest {
+class DefaultPreferenceServiceTest : PreferenceServiceTest() {
     override val implementation = DefaultPreferenceService()
 }
 
-interface PreferenceServiceTest {
-    val implementation: AbstractPreferenceService
+abstract class PreferenceServiceTest : AbstractTest() {
+    abstract val implementation: AbstractPreferenceService
 
     @AfterEach
     fun afterEach() {
@@ -30,6 +34,7 @@ interface PreferenceServiceTest {
         implementation.delete(INT_PREF)
         implementation.delete(DOUBLE_PREF)
         implementation.delete(BOOLEAN_PREF)
+        implementation.delete(COLOR_PREF)
     }
 
     @Test
@@ -87,8 +92,29 @@ interface PreferenceServiceTest {
     }
 
     @Test
+    fun `Getting and setting colors`() {
+        implementation.find(COLOR_PREF) shouldBe null
+        implementation.get(COLOR_PREF) shouldBe Color.RED
+
+        implementation.save(COLOR_PREF, Color(50, 75, 100, 90))
+
+        implementation.get(COLOR_PREF) shouldBe Color(50, 75, 100, 90)
+        implementation.get(COLOR_PREF, true) shouldBe Color.RED
+    }
+
+    @Test
+    fun `Invalid color`() {
+        val stringPref = Preference("fake_color", "foo")
+        implementation.save(stringPref, "something")
+
+        implementation.get(COLOR_PREF) shouldBe Color.BLACK
+        verifyLog(CODE_PARSE_ERROR, Severity.ERROR)
+    }
+
+    @Test
     fun `Unsupported type`() {
         val pref = Preference("listPreference", listOf(5))
+        implementation.save(pref, listOf(10))
 
         val t = shouldThrow<TypeCastException> { implementation.get(pref) }
         t.message shouldBe

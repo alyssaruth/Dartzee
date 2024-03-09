@@ -2,7 +2,6 @@ package dartzee.core.bean
 
 import dartzee.bean.IMouseListener
 import dartzee.core.util.InjectedDesktopCore
-import dartzee.utils.DartsColour
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.event.MouseEvent
@@ -42,8 +41,6 @@ class ColourPicker : JLabel(), IMouseListener {
             listener?.colourSelected(newColor)
         }
     }
-
-    fun getPrefString() = DartsColour.toPrefStr(selectedColour)
 
     override fun mouseReleased(e: MouseEvent) {
         val newColour = InjectedDesktopCore.colourSelector.selectColour(selectedColour)
