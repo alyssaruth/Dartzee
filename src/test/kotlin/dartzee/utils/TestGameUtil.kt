@@ -1,18 +1,14 @@
 package dartzee.utils
 
-import dartzee.achievements.AchievementType
 import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelRoundTheClock
 import dartzee.bean.GameParamFilterPanelX01
-import dartzee.db.AchievementEntity
 import dartzee.db.ParticipantEntity
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
-import dartzee.helper.insertAchievement
 import dartzee.helper.insertGame
 import dartzee.helper.insertParticipant
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
@@ -127,28 +123,5 @@ class TestGameUtil : AbstractTest() {
 
         val retrievedPt2 = ParticipantEntity().retrieveForId(pt2.rowId)
         retrievedPt2!!.finishingPosition shouldBe 2
-    }
-
-    @Test
-    fun `Should update the relevant total wins achievement for all winners`() {
-        val pt = insertParticipant(finalScore = 29)
-        val pt2 = insertParticipant(finalScore = 29)
-        val pt3 = insertParticipant(finalScore = 50)
-
-        insertAchievement(type = AchievementType.GOLF_GAMES_WON, playerId = pt.playerId)
-
-        val game = insertGame(gameType = GameType.GOLF)
-        setFinishingPositions(listOf(pt, pt2, pt3), game)
-
-        val playerOneAchievements = AchievementEntity.retrieveAchievements(pt.playerId)
-        playerOneAchievements.size shouldBe 2
-
-        val a2 = AchievementEntity.retrieveAchievement(AchievementType.GOLF_GAMES_WON, pt2.playerId)
-        a2.shouldNotBeNull()
-        a2.gameIdEarned shouldBe game.rowId
-        a2.achievementDetail shouldBe "29"
-
-        AchievementEntity.retrieveAchievement(AchievementType.GOLF_GAMES_WON, pt3.playerId) shouldBe
-            null
     }
 }

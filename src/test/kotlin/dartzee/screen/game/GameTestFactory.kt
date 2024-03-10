@@ -10,6 +10,7 @@ import dartzee.game.ClockType
 import dartzee.game.GameType
 import dartzee.game.RoundTheClockConfig
 import dartzee.game.X01Config
+import dartzee.game.prepareParticipants
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.SingleParticipant
@@ -48,9 +49,18 @@ fun makeGolfGamePanel(currentPlayerId: String = randomGuid(), gameParams: String
         )
         .apply { testInit(currentPlayerId) }
 
-fun makeGolfGamePanel(pt: IWrappedParticipant) =
-    GamePanelGolf(FakeDartsScreen(), insertGame(gameType = GameType.GOLF, gameParams = "18"), 1)
-        .apply { testInit(pt) }
+fun makeGolfGamePanel(
+    players: List<PlayerEntity>,
+    teamMode: Boolean,
+    gameParams: String
+): GamePanelGolf {
+    val g = insertGame(gameType = GameType.GOLF, gameParams = gameParams)
+    val participants = prepareParticipants(g.rowId, players, teamMode)
+
+    val panel = GamePanelGolf(FakeDartsScreen(), g, participants.size)
+    panel.startNewGame(participants)
+    return panel
+}
 
 fun makeX01GamePanel(
     currentPlayerId: String = randomGuid(),
@@ -119,7 +129,9 @@ fun DartsGamePanel<*, *>.addCompletedRound(dartsThrown: List<Dart>) {
 
 fun <PlayerState : AbstractPlayerState<PlayerState>> DartsGamePanel<*, PlayerState>
     .updateAchievementsForFinish(finishingPosition: Int, score: Int) {
-    updateAchievementsForFinish(getPlayerStates().first(), finishingPosition, score)
+    val state = getPlayerStates().first()
+    state.participantFinished(finishingPosition, score)
+    updateAchievementsForFinish(state, score)
 }
 
 fun DartsGamePanel<*, *>.doAiTurn(model: DartsAiModel) {

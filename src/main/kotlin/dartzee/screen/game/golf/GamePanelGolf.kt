@@ -57,12 +57,8 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
         finishRound()
     }
 
-    override fun updateAchievementsForFinish(
-        playerState: GolfPlayerState,
-        finishingPosition: Int,
-        score: Int
-    ) {
-        super.updateAchievementsForFinish(playerState, finishingPosition, score)
+    override fun updateAchievementsForFinish(playerState: GolfPlayerState, score: Int) {
+        super.updateAchievementsForFinish(playerState, score)
 
         if (!playerState.hasMultiplePlayers()) {
             val scores = playerState.completedRounds.map { it.last().getGolfScore() }

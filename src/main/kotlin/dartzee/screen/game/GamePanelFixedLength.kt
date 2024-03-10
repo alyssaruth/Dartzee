@@ -35,6 +35,8 @@ abstract class GamePanelFixedLength<
         // Get the participants sorted by score so we can assign finishing positions
         setFinishingPositions(getParticipants().map { it.participant }, gameEntity)
 
+        getPlayerStates().forEach { updateWinAchievement(it.wrappedParticipant) }
+
         allPlayersFinished()
 
         parentWindow.startNextGameIfNecessary()

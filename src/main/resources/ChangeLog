@@ -6,10 +6,11 @@
 + Leaderboards for best/worst games now include teams
 + AI will now use checkout suggestions in X01 where they exist (so e.g. on 81 will aim for T19 not T20)
 = Normalised audio assets so they all play at a similar volume
+- Fix bug where "team win" achievements did not unlock properly in Golf and Dartzee modes
 = Fixed game report to display teams properly, and to display players in throw order
 = Dartzee "total divisible by" rule no longer treats 0 as a pass
 - Manual setup configuration per AI (never used, and superseded by checkout suggestion improvement)
-= 93.3% test coverage (14163 / 15173 lines covered by 2425 tests)
+= 93.5% test coverage (14153 / 15139 lines covered by 2442 tests)
 
 --------- v7.0.1 ---------
 

@@ -132,6 +132,7 @@ class TestExtensionFunctions : AbstractTest() {
         map[4] = "Fourth"
 
         map.getSortedValues().shouldContainExactly("First", "Second", "Third", "Fourth")
+        map.getSortedValues(true).shouldContainExactly("Fourth", "Third", "Second", "First")
     }
 
     @Test

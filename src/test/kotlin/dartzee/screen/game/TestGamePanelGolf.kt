@@ -3,8 +3,12 @@ package dartzee.screen.game
 import dartzee.achievements.AchievementType
 import dartzee.db.AchievementEntity
 import dartzee.drtDoubleEight
+import dartzee.drtDoubleFive
+import dartzee.drtDoubleFour
+import dartzee.drtDoubleNine
 import dartzee.drtDoubleOne
 import dartzee.drtDoubleSeven
+import dartzee.drtDoubleSix
 import dartzee.drtDoubleSixteen
 import dartzee.drtDoubleThree
 import dartzee.drtDoubleTwo
@@ -222,8 +226,7 @@ class TestGamePanelGolf : AbstractTest() {
     @Test
     fun `Should unlock the correct achievements for team play`() {
         val (p1, p2) = preparePlayers(2)
-        val team = makeTeam(p1, p2)
-        val panel = makeGolfGamePanel(team)
+        val panel = makeGolfGamePanel(listOf(p1, p2), true, "18")
         val gameId = panel.gameEntity.rowId
 
         val roundOne =
@@ -314,8 +317,7 @@ class TestGamePanelGolf : AbstractTest() {
     @Test
     fun `Should not update In Bounds achievement for a team`() {
         val (p1, p2) = preparePlayers(2)
-        val team = makeTeam(p1, p2)
-        val panel = makeGolfGamePanel(team)
+        val panel = makeGolfGamePanel(listOf(p1, p2), true, "18")
 
         panel.addCompletedRound(drtOuterOne())
         panel.addCompletedRound(drtInnerTwo())
@@ -361,5 +363,86 @@ class TestGamePanelGolf : AbstractTest() {
         panel.gameEntity.isFinished() shouldBe true
         AchievementEntity.retrieveAchievement(AchievementType.GOLF_IN_BOUNDS, playerId) shouldBe
             null
+    }
+
+    @Test
+    fun `Should unlock individual win achievement`() {
+        val players = preparePlayers(2)
+        val panel = makeGolfGamePanel(players, false, "9")
+
+        panel.addCompletedRound(drtOuterOne())
+        panel.addCompletedRound(drtDoubleOne())
+        panel.addCompletedRound(drtInnerTwo())
+        panel.addCompletedRound(drtDoubleTwo())
+        panel.addCompletedRound(drtOuterThree(), drtOuterThree())
+        panel.addCompletedRound(drtDoubleThree())
+        panel.addCompletedRound(drtOuterFour())
+        panel.addCompletedRound(drtDoubleFour())
+        panel.addCompletedRound(drtOuterTwenty(), drtTrebleFive())
+        panel.addCompletedRound(drtDoubleFive())
+        panel.addCompletedRound(drtInnerSix())
+        panel.addCompletedRound(drtDoubleSix())
+        panel.addCompletedRound(drtDoubleSeven())
+        panel.addCompletedRound(drtDoubleSeven())
+        panel.addCompletedRound(drtDoubleEight())
+        panel.addCompletedRound(drtDoubleEight())
+        panel.addCompletedRound(drtInnerNine())
+        panel.addCompletedRound(drtDoubleNine())
+        panel.gameEntity.isFinished() shouldBe true
+
+        val (p1, p2) = players
+        AchievementEntity.retrieveAchievement(AchievementType.GOLF_GAMES_WON, p1.rowId) shouldBe
+            null
+
+        val a = AchievementEntity.retrieveAchievement(AchievementType.GOLF_GAMES_WON, p2.rowId)!!
+        a.gameIdEarned shouldBe panel.gameEntity.rowId
+        a.achievementDetail shouldBe "9"
+    }
+
+    @Test
+    fun `Should unlock team win achievement`() {
+        val players = preparePlayers(4)
+        val panel = makeGolfGamePanel(players, true, "9")
+
+        panel.addCompletedRound(drtOuterOne())
+        panel.addCompletedRound(drtDoubleOne())
+        panel.addCompletedRound(drtInnerTwo())
+        panel.addCompletedRound(drtDoubleTwo())
+        panel.addCompletedRound(drtOuterThree(), drtOuterThree())
+        panel.addCompletedRound(drtDoubleThree())
+        panel.addCompletedRound(drtOuterFour())
+        panel.addCompletedRound(drtDoubleFour())
+        panel.addCompletedRound(drtOuterTwenty(), drtTrebleFive())
+        panel.addCompletedRound(drtDoubleFive())
+        panel.addCompletedRound(drtInnerSix())
+        panel.addCompletedRound(drtDoubleSix())
+        panel.addCompletedRound(drtDoubleSeven())
+        panel.addCompletedRound(drtDoubleSeven())
+        panel.addCompletedRound(drtDoubleEight())
+        panel.addCompletedRound(drtDoubleEight())
+        panel.addCompletedRound(drtInnerNine())
+        panel.addCompletedRound(drtDoubleNine())
+        panel.gameEntity.isFinished() shouldBe true
+
+        val (p1, p2, p3, p4) = players
+        AchievementEntity.retrieveAchievement(
+            AchievementType.GOLF_TEAM_GAMES_WON,
+            p1.rowId
+        ) shouldBe null
+
+        AchievementEntity.retrieveAchievement(
+            AchievementType.GOLF_TEAM_GAMES_WON,
+            p2.rowId
+        ) shouldBe null
+
+        val a =
+            AchievementEntity.retrieveAchievement(AchievementType.GOLF_TEAM_GAMES_WON, p3.rowId)!!
+        a.gameIdEarned shouldBe panel.gameEntity.rowId
+        a.achievementDetail shouldBe "9"
+
+        val a2 =
+            AchievementEntity.retrieveAchievement(AchievementType.GOLF_TEAM_GAMES_WON, p4.rowId)!!
+        a2.gameIdEarned shouldBe panel.gameEntity.rowId
+        a2.achievementDetail shouldBe "9"
     }
 }

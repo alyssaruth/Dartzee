@@ -1,6 +1,5 @@
 package dartzee.db
 
-import dartzee.achievements.getWinAchievementType
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.utils.Database
@@ -45,15 +44,6 @@ class ParticipantEntity(database: Database = mainDatabase) :
     override fun getColumnsAllowedToBeUnset() = listOf("TeamId")
 
     override fun saveToDatabase() = saveToDatabase(getSqlDateNow())
-
-    override fun saveFinishingPosition(game: GameEntity, position: Int) {
-        super.saveFinishingPosition(game, position)
-
-        if (position == 1) {
-            val type = getWinAchievementType(game.gameType)
-            AchievementEntity.insertAchievement(type, playerId, game.rowId, "$finalScore")
-        }
-    }
 
     /** Helpers */
     fun isAi() = getPlayer().isAi()
