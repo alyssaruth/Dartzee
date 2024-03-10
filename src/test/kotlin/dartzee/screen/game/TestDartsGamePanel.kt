@@ -93,6 +93,7 @@ class TestDartsGamePanel : AbstractTest() {
         val team = makeTeam(p1, p2)
         val panel = TestGamePanel()
         panel.startNewGame(listOf(team))
+        panel.addCompletedRound(Dart(20, 1))
 
         panel.updateAchievementsForFinish(1, 50)
 
@@ -123,6 +124,7 @@ class TestDartsGamePanel : AbstractTest() {
         val team = makeTeam(p1, p2)
         val panel = TestGamePanel()
         panel.startNewGame(listOf(team))
+        panel.addCompletedRound(Dart(20, 1))
 
         panel.updateAchievementsForFinish(2, 50)
 
@@ -134,6 +136,7 @@ class TestDartsGamePanel : AbstractTest() {
         val panel = TestGamePanel()
         val pt = makeSingleParticipant(insertPlayer(), panel.gameEntity.rowId)
         panel.startNewGame(listOf(pt))
+        panel.addCompletedRound(Dart(20, 1))
 
         panel.updateAchievementsForFinish(1, 50)
 
@@ -149,6 +152,7 @@ class TestDartsGamePanel : AbstractTest() {
         val panel = TestGamePanel()
         val pt = makeSingleParticipant(insertPlayer(), panel.gameEntity.rowId)
         panel.startNewGame(listOf(pt))
+        panel.addCompletedRound(Dart(20, 1))
 
         panel.updateAchievementsForFinish(3, 50)
 
