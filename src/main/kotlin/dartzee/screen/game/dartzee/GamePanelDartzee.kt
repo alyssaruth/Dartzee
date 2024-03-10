@@ -157,12 +157,8 @@ class GamePanelDartzee(
         updateCarousel()
     }
 
-    override fun updateAchievementsForFinish(
-        playerState: DartzeePlayerState,
-        finishingPosition: Int,
-        score: Int
-    ) {
-        super.updateAchievementsForFinish(playerState, finishingPosition, score)
+    override fun updateAchievementsForFinish(playerState: DartzeePlayerState, score: Int) {
+        super.updateAchievementsForFinish(playerState, score)
         if (totalRounds < DARTZEE_ACHIEVEMENT_MIN_ROUNDS) {
             return
         }

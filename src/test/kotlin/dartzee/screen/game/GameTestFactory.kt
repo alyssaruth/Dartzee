@@ -119,7 +119,9 @@ fun DartsGamePanel<*, *>.addCompletedRound(dartsThrown: List<Dart>) {
 
 fun <PlayerState : AbstractPlayerState<PlayerState>> DartsGamePanel<*, PlayerState>
     .updateAchievementsForFinish(finishingPosition: Int, score: Int) {
-    updateAchievementsForFinish(getPlayerStates().first(), finishingPosition, score)
+    val state = getPlayerStates().first()
+    state.participantFinished(finishingPosition, score)
+    updateAchievementsForFinish(state, score)
 }
 
 fun DartsGamePanel<*, *>.doAiTurn(model: DartsAiModel) {

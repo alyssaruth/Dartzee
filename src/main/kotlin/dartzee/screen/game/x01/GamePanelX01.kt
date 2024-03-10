@@ -112,12 +112,8 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
 
     override fun currentPlayerHasFinished() = getCurrentPlayerState().getRemainingScore() == 0
 
-    override fun updateAchievementsForFinish(
-        playerState: X01PlayerState,
-        finishingPosition: Int,
-        score: Int
-    ) {
-        super.updateAchievementsForFinish(playerState, finishingPosition, score)
+    override fun updateAchievementsForFinish(playerState: X01PlayerState, score: Int) {
+        super.updateAchievementsForFinish(playerState, score)
 
         val playerId = playerState.lastIndividual().playerId
         val finalRound = getCurrentPlayerState().getLastRound()

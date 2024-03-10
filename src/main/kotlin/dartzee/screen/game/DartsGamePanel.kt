@@ -408,41 +408,43 @@ abstract class DartsGamePanel<
         val numberOfDarts = state.getScoreSoFar()
         state.participantFinished(finishingPosition, numberOfDarts)
 
-        updateAchievementsForFinish(getCurrentPlayerState(), finishingPosition, numberOfDarts)
+        updateAchievementsForFinish(getCurrentPlayerState(), numberOfDarts)
 
         return finishingPosition
     }
 
-    open fun updateAchievementsForFinish(
-        playerState: PlayerState,
-        finishingPosition: Int,
-        score: Int
-    ) {
-        if (playerState.hasMultiplePlayers()) {
-            if (finishingPosition == 1) {
-                val type = getTeamWinAchievementType(gameEntity.gameType)
-                playerState.getPlayerIds().forEach { playerId ->
-                    AchievementEntity.insertAchievement(type, playerId, gameEntity.rowId, "$score")
-                }
-            }
-        } else {
-            val playerId = playerState.lastIndividual().playerId
-            if (finishingPosition == 1) {
-                val type = getWinAchievementType(gameEntity.gameType)
+    open fun updateAchievementsForFinish(playerState: PlayerState, score: Int) {
+        updateWinAchievement(playerState.wrappedParticipant)
+
+        // Update the 'best game' achievement
+        val playerId = playerState.lastIndividual().playerId
+        val aa = getBestGameAchievement(gameEntity.gameType) ?: return
+        val gameParams = aa.gameParams
+        if (gameParams == gameEntity.gameParams) {
+            AchievementEntity.updateAchievement(
+                aa.achievementType,
+                playerId,
+                gameEntity.rowId,
+                score
+            )
+        }
+    }
+
+    protected fun updateWinAchievement(participant: IWrappedParticipant) {
+        if (participant.participant.finishingPosition != 1) {
+            return
+        }
+
+        val playerIds = participant.getPlayerIds()
+        val score = participant.participant.finalScore
+        if (playerIds.size > 1) {
+            val type = getTeamWinAchievementType(gameEntity.gameType)
+            playerIds.forEach { playerId ->
                 AchievementEntity.insertAchievement(type, playerId, gameEntity.rowId, "$score")
             }
-
-            // Update the 'best game' achievement
-            val aa = getBestGameAchievement(gameEntity.gameType) ?: return
-            val gameParams = aa.gameParams
-            if (gameParams == gameEntity.gameParams) {
-                AchievementEntity.updateAchievement(
-                    aa.achievementType,
-                    playerId,
-                    gameEntity.rowId,
-                    score
-                )
-            }
+        } else {
+            val type = getWinAchievementType(gameEntity.gameType)
+            AchievementEntity.insertAchievement(type, playerIds.first(), gameEntity.rowId, "$score")
         }
     }
 

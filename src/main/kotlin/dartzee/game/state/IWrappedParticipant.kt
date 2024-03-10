@@ -20,6 +20,8 @@ sealed interface IWrappedParticipant {
 
     fun ordinal() = participant.ordinal
 
+    fun getPlayerIds() = individuals.map { it.playerId }
+
     fun getIndividual(roundNumber: Int): ParticipantEntity
 
     fun getUniqueParticipantName() =

@@ -41,7 +41,10 @@ fun setFinishingPositions(participants: List<IParticipant>, game: GameEntity) {
 
     var finishPos = 1
     entries.forEach { (_, participants) ->
-        participants.forEach { it.saveFinishingPosition(game, finishPos) }
+        participants.forEach {
+            it.finishingPosition = finishPos
+            it.saveToDatabase()
+        }
         finishPos += participants.size
     }
 }
