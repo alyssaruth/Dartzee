@@ -420,7 +420,7 @@ abstract class DartsGamePanel<
         val playerId = playerState.lastIndividual().playerId
         val aa = getBestGameAchievement(gameEntity.gameType) ?: return
         val gameParams = aa.gameParams
-        if (gameParams == gameEntity.gameParams) {
+        if (gameParams == gameEntity.gameParams && !playerState.hasMultiplePlayers()) {
             AchievementEntity.updateAchievement(
                 aa.achievementType,
                 playerId,
