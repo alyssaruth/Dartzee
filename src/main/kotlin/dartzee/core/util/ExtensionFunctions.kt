@@ -6,8 +6,8 @@ fun <E> MutableList<E>.addUnique(element: E) {
     }
 }
 
-fun <K : Comparable<K>, V> Map<K, V>.getSortedValues(): List<V> =
-    entries.sortedBy { it.key }.map { it.value }
+fun <K : Comparable<K>, V> Map<K, V>.getSortedValues(descending: Boolean = false): List<V> =
+    entries.sortedBy(descending) { it.key }.map { it.value }
 
 fun List<Int>.minOrZero() = minOrNull() ?: 0
 

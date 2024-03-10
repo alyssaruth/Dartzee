@@ -4,7 +4,7 @@ import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelRoundTheClock
 import dartzee.bean.GameParamFilterPanelX01
-import dartzee.core.util.sortedBy
+import dartzee.core.util.getSortedValues
 import dartzee.db.GameEntity
 import dartzee.db.IParticipant
 import dartzee.game.GameType
@@ -32,19 +32,18 @@ fun setFinishingPositions(participants: List<IParticipant>, game: GameEntity) {
         return
     }
 
-    val entries =
+    val sortedParticipants =
         participants
             .filterNot { it.resigned }
             .groupBy { it.finalScore }
-            .entries
-            .sortedBy(doesHighestWin(game.gameType)) { it.key }
+            .getSortedValues(doesHighestWin(game.gameType))
 
-    var finishPos = 1
-    entries.forEach { (_, participants) ->
-        participants.forEach {
-            it.finishingPosition = finishPos
-            it.saveToDatabase()
+    sortedParticipants.fold(1) { finishPos, participantGroup ->
+        participantGroup.forEach { pt ->
+            pt.finishingPosition = finishPos
+            pt.saveToDatabase()
         }
-        finishPos += participants.size
+
+        finishPos + participantGroup.size
     }
 }
