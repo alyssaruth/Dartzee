@@ -2,6 +2,8 @@ package dartzee.bean
 
 import dartzee.core.bean.IDoubleClickListener
 import dartzee.core.bean.ScrollTable
+import dartzee.core.util.setBold
+import dartzee.core.util.setFontSize
 import dartzee.db.PlayerEntity
 import dartzee.logging.CODE_SWING_ERROR
 import dartzee.utils.InjectedThings
@@ -12,6 +14,7 @@ import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import javax.swing.ImageIcon
 import javax.swing.JButton
+import javax.swing.JLabel
 import javax.swing.JPanel
 import net.miginfocom.swing.MigLayout
 
@@ -30,28 +33,38 @@ abstract class AbstractPlayerSelector<S : ScrollTable> :
     val tablePlayersToSelectFrom = ScrollTable()
     private val btnSelect = JButton("")
     private val btnUnselect = JButton("")
+    private val lblAvailable = JLabel("Available")
+    protected val lblSelected = JLabel("Selected")
 
     protected fun render() {
-        layout = MigLayout("al center center", "[452px][100px][452px]", "[407px]")
+        layout = MigLayout("al center center", "[452px][100px][452px]", "[20px][407px]")
 
         tablePlayersToSelectFrom.name = "TableUnselected"
 
+        lblSelected.setFontSize(14)
+        lblAvailable.setFontSize(14)
+        lblAvailable.setBold()
+        lblSelected.setBold()
+
         val panelMovementOptions = JPanel()
-        add(tablePlayersToSelectFrom, "cell 0 0,alignx left,growy")
+        add(lblAvailable, "cell 0 0, alignx center")
+        add(tablePlayersToSelectFrom, "cell 0 1,alignx left,growy")
         panelMovementOptions.minimumSize = Dimension(50, 10)
-        add(panelMovementOptions, "cell 1 0,grow")
+        add(panelMovementOptions, "cell 1 1,grow")
         panelMovementOptions.layout = MigLayout("al center center, wrap, gapy 20")
         btnSelect.name = "Select"
         btnSelect.icon =
             ImageIcon(AbstractPlayerSelector::class.java.getResource("/buttons/rightArrow.png"))
         btnSelect.preferredSize = Dimension(40, 40)
-        panelMovementOptions.add(btnSelect, "cell 0 0,alignx left,aligny top")
+        panelMovementOptions.add(btnSelect, "cell 0 1,alignx left,aligny top")
         btnUnselect.name = "Unselect"
         btnUnselect.icon =
             ImageIcon(AbstractPlayerSelector::class.java.getResource("/buttons/leftArrow.png"))
         btnUnselect.preferredSize = Dimension(40, 40)
-        panelMovementOptions.add(btnUnselect, "cell 0 1,alignx left,aligny top")
-        add(tablePlayersSelected, "cell 2 0,alignx left,growy")
+        panelMovementOptions.add(btnUnselect, "cell 0 2,alignx left,aligny top")
+
+        add(lblSelected, "cell 2 0, alignx center")
+        add(tablePlayersSelected, "cell 2 1,alignx left,growy")
 
         tablePlayersSelected.addDoubleClickListener(this)
         tablePlayersToSelectFrom.addDoubleClickListener(this)

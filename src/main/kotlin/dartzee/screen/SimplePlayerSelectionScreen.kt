@@ -1,16 +1,25 @@
 package dartzee.screen
 
 import dartzee.bean.GameSetupPlayerSelector
+import dartzee.core.util.setFontSize
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.game.X01_PARTY_CONFIG
 import dartzee.utils.InjectedThings.gameLauncher
 import java.awt.BorderLayout
+import javax.swing.JLabel
+import javax.swing.border.EmptyBorder
 
 class SimplePlayerSelectionScreen : EmbeddedScreen() {
+    private val lblTitle = JLabel()
     private val playerSelector = GameSetupPlayerSelector()
 
     init {
+        lblTitle.setFontSize(32)
+        lblTitle.border = EmptyBorder(40, 10, 10, 10)
+        lblTitle.horizontalAlignment = JLabel.CENTER
+        lblTitle.text = "Select Players"
+        add(lblTitle, BorderLayout.NORTH)
         add(playerSelector, BorderLayout.CENTER)
     }
 
