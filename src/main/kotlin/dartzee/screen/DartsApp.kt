@@ -11,6 +11,7 @@ import dartzee.logging.KEY_CURRENT_SCREEN
 import dartzee.logging.LoggingCode
 import dartzee.main.exitApplication
 import dartzee.`object`.DartsClient
+import dartzee.screen.game.TutorialWindow
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
@@ -172,6 +173,9 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
             logger.error(LoggingCode("test"), "Testing stack trace")
         } else if (cmd == CMD_TEST) {
             val window = TestWindow()
+            window.isVisible = true
+        } else if (cmd == "tutorial") {
+            val window = TutorialWindow()
             window.isVisible = true
         }
 
