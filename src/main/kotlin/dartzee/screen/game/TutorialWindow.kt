@@ -34,6 +34,7 @@ class TutorialWindow : JFrame(), ActionListener, DartboardListener {
     private val btnConfirm = JButton("")
     private val btnReset = JButton("")
     private val btnResign = JButton("")
+    private val btnStartGame = JButton("I'm ready - let's play!")
 
     private val lblRemaining = JLabel("301")
     private val lblScored = JLabel("0")
@@ -49,41 +50,45 @@ class TutorialWindow : JFrame(), ActionListener, DartboardListener {
         panelWest.preferredSize = Dimension(500, 50)
         contentPane.add(panelWest, BorderLayout.WEST)
 
-        val lblRules = JLabel("The Rules")
-        lblRules.border = EmptyBorder(10, 10, 10, 0)
-        lblRules.horizontalAlignment = SwingConstants.CENTER
-        lblRules.setFontSize(30)
+        val lblRules = makeTitleLabel("The Rules")
         panelWest.add(lblRules, "cell 0 0, growx")
 
         panelWest.add(makeDivider(), "cell 0 1, alignx center")
         panelWest.add(makeRulesPane(), "cell 0 2")
         panelWest.add(makeDivider(), "cell 0 3, alignx center")
 
-        val panelLeaving = JPanel()
-        panelLeaving.layout = BorderLayout(0, 0)
         val lblLeaving = makeTextPane()
-        lblLeaving.append("Need to leave? Use this button to remove the current player.")
-        lblLeaving.setFontSize(24)
-        panelLeaving.add(lblLeaving, BorderLayout.CENTER)
-        panelLeaving.add(btnResign, BorderLayout.EAST)
-
-        panelWest.add(panelLeaving, "cell 0 4")
-
-        val lblQuitting = makeTextPane()
-        lblQuitting.setFontSize(24)
-        lblQuitting.append("To abandon the game completely, just close this window.")
-        panelWest.add(lblQuitting, "cell 0 5")
-        panelWest.add(makeDivider(), "cell 0 6, alignx center")
-
+        lblLeaving.append("Someone need to leave? Use this button to remove the current player.")
+        panelWest.add(lblLeaving, "cell 0 4, alignx center")
         btnResign.preferredSize = Dimension(80, 80)
         btnResign.icon = ImageIcon(javaClass.getResource("/buttons/resign.png"))
         btnResign.toolTipText = "Resign"
+        panelWest.add(btnResign, "cell 0 5, alignx center")
+
+        val lblQuitting = makeTextPane()
+        lblQuitting.append("To abandon the game completely, just close this window.")
+        panelWest.add(lblQuitting, "cell 0 6, alignx center")
+        panelWest.add(makeDivider(), "cell 0 7, alignx center")
+
+        btnStartGame.icon = ImageIcon(javaClass.getResource("/buttons/newGame.png"))
+        btnStartGame.preferredSize = Dimension(300, 150)
+        btnStartGame.setFontSize(30)
+        panelWest.add(btnStartGame, "cell 0 8, alignx center")
 
         // Center Pane - Dartboard etc
         val panelCenter = JPanel()
         panelCenter.layout = BorderLayout(0, 0)
         contentPane.add(panelCenter, BorderLayout.CENTER)
         panelCenter.add(dartboard, BorderLayout.CENTER)
+
+        // Center-North - Give it a Try! title
+        val panelNorth = JPanel()
+        panelCenter.add(panelNorth, BorderLayout.NORTH)
+        panelNorth.layout = MigLayout("al center top")
+
+        val lblGiveItATry = makeTitleLabel("\uD83C\uDFB2 Give it a try!")
+        panelNorth.add(lblGiveItATry, "cell 0 0, growx")
+        panelNorth.add(makeDivider(), "cell 0 1, alignx center")
 
         // Center-South - Dartboard buttons
         val panelSouth = JPanel()
@@ -132,14 +137,21 @@ class TutorialWindow : JFrame(), ActionListener, DartboardListener {
             putClientProperty("Nimbus.Overrides.InheritDefaults", false)
             background = null
             isEditable = false
+            font = ResourceCache.UNICODE_FONT
+            setFontSize(24)
+            border = EmptyBorder(10, 5, 20, 5)
+        }
+
+    private fun makeTitleLabel(text: String) =
+        JLabel(text).apply {
+            font = ResourceCache.UNICODE_FONT
+            border = EmptyBorder(10, 10, 10, 0)
+            horizontalAlignment = SwingConstants.CENTER
+            setFontSize(30)
         }
 
     private fun makeRulesPane() =
         makeTextPane().apply {
-            border = EmptyBorder(10, 0, 20, 0)
-            font = ResourceCache.UNICODE_FONT
-            setFontSize(24)
-
             append("\uD83D\uDCC9 Score down from 301. First to hit 0 wins.")
             append("\n\n")
             append("\uD83C\uDFAF You must finish")
@@ -151,8 +163,6 @@ class TutorialWindow : JFrame(), ActionListener, DartboardListener {
             )
             append("\n\n")
             append("❎ Use the reset button if you mis-click.")
-            append("\n\n")
-            append("\uD83C\uDFB2 Give it a try using this screen!")
         }
 
     private fun makeDivider() =
