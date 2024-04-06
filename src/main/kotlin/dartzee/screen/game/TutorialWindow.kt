@@ -9,12 +9,10 @@ import dartzee.utils.ResourceCache
 import dartzee.utils.sumScore
 import java.awt.BorderLayout
 import java.awt.Dimension
-import java.awt.Frame
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.ImageIcon
 import javax.swing.JButton
-import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JSeparator
@@ -25,7 +23,8 @@ import javax.swing.border.EmptyBorder
 import javax.swing.border.EtchedBorder
 import net.miginfocom.swing.MigLayout
 
-class TutorialWindow : JFrame(), ActionListener, DartboardListener {
+class TutorialWindow(private val parent: DartsGameScreen) :
+    JPanel(), ActionListener, DartboardListener {
     private val dartsThrown = mutableListOf<Dart>()
     private var scoreRemaining = 301
 
@@ -40,15 +39,14 @@ class TutorialWindow : JFrame(), ActionListener, DartboardListener {
     private val lblScored = JLabel("0")
 
     init {
-        contentPane.layout = BorderLayout(0, 0)
-        extendedState = Frame.MAXIMIZED_BOTH
+        layout = BorderLayout(0, 0)
 
         // West Pane - the rules
         val panelWest = JPanel()
         panelWest.border = EtchedBorder(EtchedBorder.RAISED, null, null)
         panelWest.layout = MigLayout("al center top")
         panelWest.preferredSize = Dimension(500, 50)
-        contentPane.add(panelWest, BorderLayout.WEST)
+        add(panelWest, BorderLayout.WEST)
 
         val lblRules = makeTitleLabel("The Rules")
         panelWest.add(lblRules, "cell 0 0, growx")
@@ -78,7 +76,7 @@ class TutorialWindow : JFrame(), ActionListener, DartboardListener {
         // Center Pane - Dartboard etc
         val panelCenter = JPanel()
         panelCenter.layout = BorderLayout(0, 0)
-        contentPane.add(panelCenter, BorderLayout.CENTER)
+        add(panelCenter, BorderLayout.CENTER)
         panelCenter.add(dartboard, BorderLayout.CENTER)
 
         // Center-North - Give it a Try! title
@@ -107,7 +105,7 @@ class TutorialWindow : JFrame(), ActionListener, DartboardListener {
         // Center-East - Score indicators
         val panelEast = JPanel()
         panelEast.preferredSize = Dimension(160, 50)
-        contentPane.add(panelEast, BorderLayout.EAST)
+        add(panelEast, BorderLayout.EAST)
         panelEast.layout = MigLayout("al center center")
         val lblRemainingText = JLabel("Remaining:")
         lblRemainingText.horizontalAlignment = SwingConstants.CENTER
@@ -125,6 +123,7 @@ class TutorialWindow : JFrame(), ActionListener, DartboardListener {
         lblScored.setFontSize(18)
 
         dartboard.addDartboardListener(this)
+        btnStartGame.addActionListener(this)
         btnConfirm.addActionListener(this)
         btnReset.addActionListener(this)
     }
@@ -173,6 +172,7 @@ class TutorialWindow : JFrame(), ActionListener, DartboardListener {
 
     override fun actionPerformed(e: ActionEvent?) {
         when (e?.source) {
+            btnStartGame -> parent.tutorialFinished()
             btnReset -> clearDarts()
             btnConfirm -> confirmScore()
         }

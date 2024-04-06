@@ -13,16 +13,20 @@ class TestDartsGameScreen : AbstractTest() {
     @Test
     fun `Should initialise correctly`() {
         val game = insertGame()
-        val scrn = DartsGameScreen(game, 4)
+        val scrn =
+            DartsGameScreen(
+                game,
+                listOf(makeSingleParticipant(), makeSingleParticipant(), makeSingleParticipant())
+            )
 
         ScreenCache.getDartsGameScreen(game.rowId) shouldBe scrn
-        scrn.title shouldBe "Game #${game.localId} (501 - 4 players)"
+        scrn.title shouldBe "Game #${game.localId} (501 - 3 players)"
     }
 
     @Test
     fun `Should pass through to its gamePanel`() {
         val game = insertGame()
-        val scrn = DartsGameScreen(game, 4)
+        val scrn = DartsGameScreen(game, listOf(makeSingleParticipant()))
 
         scrn.gamePanel = mockk(relaxed = true)
 

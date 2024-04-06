@@ -25,12 +25,12 @@ class TestResignationE2E : AbstractE2ETest() {
                 gameParams = X01Config(501, FinishType.Doubles).toJson()
             )
 
-        val (gamePanel) = setUpGamePanel(game, 3)
-
         val (winner, loser) = createPlayers()
         val resignee = insertPlayer(strategy = "")
 
-        val (ptWinner, ptResignee, ptLoser) = gamePanel.startGame(listOf(winner, resignee, loser))
+        val (gamePanel, _, participants) =
+            setUpGamePanelAndStartGame(game, listOf(winner, resignee, loser))
+        val (ptWinner, ptResignee, ptLoser) = participants
 
         gamePanel.awaitTurn(ptResignee)
         gamePanel.throwHumanDart(20, SegmentType.OUTER_SINGLE)
@@ -52,12 +52,12 @@ class TestResignationE2E : AbstractE2ETest() {
     fun `Resigning mid-game - Golf`() {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "9")
 
-        val (gamePanel) = setUpGamePanel(game, 3)
-
         val (winner, loser) = createPlayers()
         val resignee = insertPlayer(strategy = "")
 
-        val (ptWinner, ptResignee, ptLoser) = gamePanel.startGame(listOf(winner, resignee, loser))
+        val (gamePanel, _, participants) =
+            setUpGamePanelAndStartGame(game, listOf(winner, resignee, loser))
+        val (ptWinner, ptResignee, ptLoser) = participants
 
         gamePanel.awaitTurn(ptResignee)
         gamePanel.throwHumanDart(1, SegmentType.OUTER_SINGLE)

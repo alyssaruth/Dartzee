@@ -2,11 +2,16 @@ package dartzee.screen.game
 
 import dartzee.achievements.AbstractAchievement
 import dartzee.db.GameEntity
+import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings
+import java.awt.Frame
 
 /** DartsGameScreen Simple screen which wraps up a single game panel */
-class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameScreen() {
-    var gamePanel: DartsGamePanel<*, *> = DartsGamePanel.factory(this, game, totalPlayers)
+class DartsGameScreen(game: GameEntity, private val participants: List<IWrappedParticipant>) :
+    AbstractDartsGameScreen() {
+    private val tutorialPanel = TutorialWindow(this)
+    var gamePanel: DartsGamePanel<*, *> = DartsGamePanel.factory(this, game, participants.size)
     override val windowName = gamePanel.gameTitle
 
     init {
@@ -16,8 +21,26 @@ class DartsGameScreen(game: GameEntity, totalPlayers: Int) : AbstractDartsGameSc
 
         title = gamePanel.gameTitle
 
-        // Add the single game tab and set visible
+        if (InjectedThings.partyMode) {
+            contentPane.add(tutorialPanel)
+            extendedState = Frame.MAXIMIZED_BOTH
+        } else {
+            contentPane.add(gamePanel)
+        }
+    }
+
+    fun startNewGame() {
+        if (!InjectedThings.partyMode) {
+            gamePanel.startNewGame(participants)
+        }
+    }
+
+    fun tutorialFinished() {
+        contentPane.remove(tutorialPanel)
         contentPane.add(gamePanel)
+        repaint()
+
+        gamePanel.startNewGame(participants)
     }
 
     override fun fireAppearancePreferencesChanged() {

@@ -76,7 +76,6 @@ class TestGolfE2E : AbstractE2ETest() {
     @Test
     fun `E2E - Golf - Gambler, stop threshold`() {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "9")
-        val (gamePanel, listener) = setUpGamePanel(game)
 
         val expectedRounds =
             listOf(
@@ -99,7 +98,7 @@ class TestGolfE2E : AbstractE2ETest() {
         val aiModel = predictableDartsModel(aimDarts)
 
         val player = makePlayerWithModel(aiModel)
-        gamePanel.startGame(listOf(player))
+        val (gamePanel, listener) = setUpGamePanelAndStartGame(game, listOf(player))
         awaitGameFinish(game)
 
         verifyState(gamePanel, listener, expectedRounds, finalScore = 25, expectedScorerRows = 10)
@@ -124,7 +123,6 @@ class TestGolfE2E : AbstractE2ETest() {
     @Test
     fun `E2E - 9 holes - Team of 2`() {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "9")
-        val (gamePanel, listener) = setUpGamePanel(game)
 
         val p1Rounds =
             listOf(
@@ -167,6 +165,7 @@ class TestGolfE2E : AbstractE2ETest() {
         val p2 = makePlayerWithModel(p2Model, name = "Lynn", image = "BaboTwo")
 
         val participants = prepareParticipants(game.rowId, listOf(p1, p2), true)
+        val (gamePanel, listener) = setUpGamePanel(game, participants)
         gamePanel.startNewGame(participants)
         awaitGameFinish(game)
 

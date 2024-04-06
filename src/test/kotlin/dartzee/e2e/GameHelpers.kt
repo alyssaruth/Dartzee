@@ -82,26 +82,26 @@ fun closeOpenGames() {
     ScreenCache.getDartsGameScreens().forEach { it.dispose() }
 }
 
-data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *>, val listener: DartboardListener)
+data class GamePanelTestSetup(
+    val gamePanel: DartsGamePanel<*, *>,
+    val listener: DartboardListener,
+    val participants: List<IWrappedParticipant>
+)
 
-fun setUpGamePanelAndStartGame(game: GameEntity, players: List<PlayerEntity>) =
-    setUpGamePanel(game).also { it.gamePanel.startGame(players) }
+fun setUpGamePanelAndStartGame(game: GameEntity, players: List<PlayerEntity>): GamePanelTestSetup {
+    val participants = prepareParticipants(game.rowId, players, false)
+    return setUpGamePanel(game, participants).also { it.gamePanel.startNewGame(participants) }
+}
 
-fun setUpGamePanel(game: GameEntity, totalPlayers: Int = 1): GamePanelTestSetup {
-    val parentWindow = DartsGameScreen(game, totalPlayers)
+fun setUpGamePanel(game: GameEntity, participants: List<IWrappedParticipant>): GamePanelTestSetup {
+    val parentWindow = DartsGameScreen(game, participants)
     parentWindow.isVisible = true
     val gamePanel = parentWindow.gamePanel
 
     val listener = mockk<DartboardListener>(relaxed = true)
     gamePanel.dartboard.addDartboardListener(listener)
 
-    return GamePanelTestSetup(gamePanel, listener)
-}
-
-fun DartsGamePanel<*, *>.startGame(players: List<PlayerEntity>): List<IWrappedParticipant> {
-    val participants = prepareParticipants(gameEntity.rowId, players, false)
-    startNewGame(participants)
-    return participants
+    return GamePanelTestSetup(gamePanel, listener, participants)
 }
 
 fun GameSetupPlayerSelector.selectTopPlayer() {

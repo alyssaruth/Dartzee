@@ -97,8 +97,6 @@ class TestX01E2E : AbstractE2ETest() {
                 gameParams = X01Config(101, FinishType.Any).toJson()
             )
 
-        val (gamePanel) = setUpGamePanel(game, 2)
-
         val p1Rounds =
             listOf(
                 listOf(makeDart(20, 3), makeDart(20, 1), makeDart(20, 1)), // 1
@@ -119,7 +117,8 @@ class TestX01E2E : AbstractE2ETest() {
         val p2Model = predictableDartsModel(p2Rounds.flatten().map { it.toAimDart() })
         val p2 = makePlayerWithModel(p2Model, "Jeff")
 
-        val (pt1, pt2) = gamePanel.startGame(listOf(p1, p2))
+        val (_, _, participants) = setUpGamePanelAndStartGame(game, listOf(p1, p2))
+        val (pt1, pt2) = participants
         awaitGameFinish(game)
         waitForAssertion { pt2.participant.finalScore shouldBeGreaterThan -1 }
 
@@ -169,8 +168,6 @@ class TestX01E2E : AbstractE2ETest() {
                 gameParams = X01Config(301, FinishType.Doubles).toJson()
             )
 
-        val (gamePanel, listener) = setUpGamePanel(game)
-
         val expectedRounds =
             listOf(
                 listOf(makeDart(20, 3), makeDart(20, 3), makeDart(20, 3)), // 121
@@ -186,7 +183,7 @@ class TestX01E2E : AbstractE2ETest() {
         val aiModel = predictableDartsModel(aimDarts, mercyThreshold = 7)
 
         val player = makePlayerWithModel(aiModel)
-        gamePanel.startGame(listOf(player))
+        val (gamePanel, listener) = setUpGamePanelAndStartGame(game, listOf(player))
         awaitGameFinish(game)
 
         verifyState(gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 19)
@@ -206,7 +203,6 @@ class TestX01E2E : AbstractE2ETest() {
     @Test
     fun `E2E - 501 - Team of 2`() {
         val game = insertGame(gameType = GameType.X01, gameParams = DEFAULT_X01_CONFIG.toJson())
-        val (gamePanel, listener) = setUpGamePanel(game)
 
         val p1Rounds =
             listOf(
@@ -239,6 +235,7 @@ class TestX01E2E : AbstractE2ETest() {
         val p2 = makePlayerWithModel(p2Model, name = "Lynn", image = "BaboTwo")
 
         val participants = prepareParticipants(game.rowId, listOf(p1, p2), true)
+        val (gamePanel, listener) = setUpGamePanel(game, participants)
         gamePanel.startNewGame(participants)
         awaitGameFinish(game)
 

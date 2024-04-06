@@ -61,6 +61,8 @@ class TestPartyModeE2E : AbstractE2ETest() {
             }
         }
 
+        gameWindow.clickButton(text = "I'm ready - let's play!")
+
         val gamePanel = gameWindow.getChild<DartsGamePanel<*, *>>()
         gamePanel.throwHumanRound(drtOuterTwenty(), drtTrebleTwenty(), drtOuterTwenty()) // 201
         gamePanel.throwHumanRound(drtOuterNineteen(), drtOuterNineteen(), drtInnerSeven()) // 256

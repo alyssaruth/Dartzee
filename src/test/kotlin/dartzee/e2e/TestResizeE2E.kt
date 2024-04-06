@@ -18,10 +18,9 @@ class TestResizeE2E : AbstractE2ETest() {
         val aiModel = beastDartsModel()
         val player = insertPlayer(model = aiModel)
 
-        val (gamePanel, listener) = setUpGamePanel(game)
+        val (gamePanel, listener) = setUpGamePanelAndStartGame(game, listOf(player))
         gamePanel.setSize(300, 675)
         gamePanel.preferredSize = Dimension(300, 675)
-        gamePanel.startGame(listOf(player))
 
         awaitGameFinish(game)
 
