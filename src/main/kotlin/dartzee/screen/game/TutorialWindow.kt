@@ -1,12 +1,15 @@
 package dartzee.screen.game
 
+import dartzee.core.util.append
 import dartzee.core.util.setFontSize
 import dartzee.listener.DartboardListener
 import dartzee.`object`.Dart
 import dartzee.screen.GameplayDartboard
+import dartzee.utils.ResourceCache
 import dartzee.utils.sumScore
 import java.awt.BorderLayout
 import java.awt.Dimension
+import java.awt.Frame
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.ImageIcon
@@ -14,7 +17,12 @@ import javax.swing.JButton
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JPanel
+import javax.swing.JSeparator
+import javax.swing.JTextPane
 import javax.swing.SwingConstants
+import javax.swing.UIDefaults
+import javax.swing.border.EmptyBorder
+import javax.swing.border.EtchedBorder
 import net.miginfocom.swing.MigLayout
 
 class TutorialWindow : JFrame(), ActionListener, DartboardListener {
@@ -32,19 +40,40 @@ class TutorialWindow : JFrame(), ActionListener, DartboardListener {
 
     init {
         contentPane.layout = BorderLayout(0, 0)
-        size = Dimension(1000, 800)
-        preferredSize = Dimension(1000, 800)
+        extendedState = Frame.MAXIMIZED_BOTH
 
         // West Pane - the rules
         val panelWest = JPanel()
+        panelWest.border = EtchedBorder(EtchedBorder.RAISED, null, null)
         panelWest.layout = MigLayout("al center top")
-        panelWest.preferredSize = Dimension(300, 50)
+        panelWest.preferredSize = Dimension(500, 50)
         contentPane.add(panelWest, BorderLayout.WEST)
 
         val lblRules = JLabel("The Rules")
+        lblRules.border = EmptyBorder(10, 10, 10, 0)
         lblRules.horizontalAlignment = SwingConstants.CENTER
         lblRules.setFontSize(30)
         panelWest.add(lblRules, "cell 0 0, growx")
+
+        panelWest.add(makeDivider(), "cell 0 1, alignx center")
+        panelWest.add(makeRulesPane(), "cell 0 2")
+        panelWest.add(makeDivider(), "cell 0 3, alignx center")
+
+        val panelLeaving = JPanel()
+        panelLeaving.layout = BorderLayout(0, 0)
+        val lblLeaving = makeTextPane()
+        lblLeaving.append("Need to leave? Use this button to remove the current player.")
+        lblLeaving.setFontSize(24)
+        panelLeaving.add(lblLeaving, BorderLayout.CENTER)
+        panelLeaving.add(btnResign, BorderLayout.EAST)
+
+        panelWest.add(panelLeaving, "cell 0 4")
+
+        val lblQuitting = makeTextPane()
+        lblQuitting.setFontSize(24)
+        lblQuitting.append("To abandon the game completely, just close this window.")
+        panelWest.add(lblQuitting, "cell 0 5")
+        panelWest.add(makeDivider(), "cell 0 6, alignx center")
 
         btnResign.preferredSize = Dimension(80, 80)
         btnResign.icon = ImageIcon(javaClass.getResource("/buttons/resign.png"))
@@ -94,6 +123,43 @@ class TutorialWindow : JFrame(), ActionListener, DartboardListener {
         btnConfirm.addActionListener(this)
         btnReset.addActionListener(this)
     }
+
+    private fun makeTextPane() =
+        JTextPane().apply {
+            val uiDefault = UIDefaults()
+            uiDefault["EditorPane[Enabled].backgroundPainter"] = null
+            putClientProperty("Nimbus.Overrides", uiDefault)
+            putClientProperty("Nimbus.Overrides.InheritDefaults", false)
+            background = null
+            isEditable = false
+        }
+
+    private fun makeRulesPane() =
+        makeTextPane().apply {
+            border = EmptyBorder(10, 0, 20, 0)
+            font = ResourceCache.UNICODE_FONT
+            setFontSize(24)
+
+            append("\uD83D\uDCC9 Score down from 301. First to hit 0 wins.")
+            append("\n\n")
+            append("\uD83C\uDFAF You must finish")
+            append(" exactly", bold = true)
+            append(" - score too much and you'll lose your score for the round!")
+            append("\n\n")
+            append(
+                "\uD83D\uDDB1\uFE0F Input your score by clicking on the Dartboard. Use the ✅ to confirm."
+            )
+            append("\n\n")
+            append("❎ Use the reset button if you mis-click.")
+            append("\n\n")
+            append("\uD83C\uDFB2 Give it a try using this screen!")
+        }
+
+    private fun makeDivider() =
+        JSeparator(SwingConstants.HORIZONTAL).apply {
+            border = EmptyBorder(10, 0, 10, 0)
+            preferredSize = Dimension(200, 2)
+        }
 
     override fun actionPerformed(e: ActionEvent?) {
         when (e?.source) {
