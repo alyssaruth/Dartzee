@@ -23,7 +23,7 @@ import javax.swing.border.EmptyBorder
 import javax.swing.border.EtchedBorder
 import net.miginfocom.swing.MigLayout
 
-class TutorialWindow(private val parent: DartsGameScreen) :
+class TutorialPanel(private val parent: DartsGameScreen) :
     JPanel(), ActionListener, DartboardListener {
     private val dartsThrown = mutableListOf<Dart>()
     private var scoreRemaining = 301

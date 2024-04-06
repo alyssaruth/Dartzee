@@ -10,7 +10,7 @@ import java.awt.Frame
 /** DartsGameScreen Simple screen which wraps up a single game panel */
 class DartsGameScreen(game: GameEntity, private val participants: List<IWrappedParticipant>) :
     AbstractDartsGameScreen() {
-    private val tutorialPanel = TutorialWindow(this)
+    private val tutorialPanel = TutorialPanel(this)
     var gamePanel: DartsGamePanel<*, *> = DartsGamePanel.factory(this, game, participants.size)
     override val windowName = gamePanel.gameTitle
 
