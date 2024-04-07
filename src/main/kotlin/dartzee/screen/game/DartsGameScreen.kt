@@ -23,6 +23,7 @@ class DartsGameScreen(game: GameEntity, private val participants: List<IWrappedP
 
         if (InjectedThings.partyMode) {
             contentPane.add(tutorialPanel)
+            pack()
             extendedState = Frame.MAXIMIZED_BOTH
         } else {
             contentPane.add(gamePanel)

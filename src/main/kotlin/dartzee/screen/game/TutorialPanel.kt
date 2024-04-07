@@ -5,9 +5,11 @@ import dartzee.core.util.setFontSize
 import dartzee.listener.DartboardListener
 import dartzee.`object`.Dart
 import dartzee.screen.GameplayDartboard
+import dartzee.utils.DartsColour
 import dartzee.utils.ResourceCache
 import dartzee.utils.sumScore
 import java.awt.BorderLayout
+import java.awt.Color
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -104,7 +106,7 @@ class TutorialPanel(private val parent: DartsGameScreen) :
 
         // Center-East - Score indicators
         val panelEast = JPanel()
-        panelEast.preferredSize = Dimension(160, 50)
+        panelEast.preferredSize = Dimension(200, 50)
         add(panelEast, BorderLayout.EAST)
         panelEast.layout = MigLayout("al center center")
         val lblRemainingText = JLabel("Remaining:")
@@ -181,7 +183,7 @@ class TutorialPanel(private val parent: DartsGameScreen) :
     private fun confirmScore() {
         if (!isBust()) {
             scoreRemaining -= sumScore(dartsThrown)
-            lblRemaining.text = scoreRemaining.toString()
+            lblRemaining.text = if (scoreRemaining > 0) "$scoreRemaining" else "You win!"
         }
 
         clearDarts()
@@ -192,17 +194,20 @@ class TutorialPanel(private val parent: DartsGameScreen) :
         dartsThrown.clear()
 
         lblScored.text = "0"
+        lblScored.foreground = Color.BLACK
 
         btnReset.isEnabled = false
         btnConfirm.isEnabled = false
 
-        dartboard.ensureListening()
+        if (scoreRemaining > 0) {
+            dartboard.ensureListening()
+        }
     }
 
     override fun dartThrown(dart: Dart) {
         dartsThrown.add(dart)
 
-        lblScored.text = sumScore(dartsThrown).toString()
+        lblScored.text = getScoredDesc()
 
         btnReset.isEnabled = true
         btnConfirm.isEnabled = true
@@ -210,7 +215,20 @@ class TutorialPanel(private val parent: DartsGameScreen) :
         if (dartsThrown.size == 3 || sumScore(dartsThrown) >= scoreRemaining) {
             dartboard.stopListening()
         }
+
+        if (isBust()) {
+            lblScored.foreground = DartsColour.DARK_RED
+        } else if (sumScore(dartsThrown) == scoreRemaining) {
+            lblScored.foreground = DartsColour.DARK_GREEN
+        }
     }
+
+    private fun getScoredDesc() =
+        if (dartsThrown.size > 1) {
+            "${dartsThrown.joinToString(" + ")} = ${sumScore(dartsThrown)}"
+        } else {
+            sumScore(dartsThrown).toString()
+        }
 
     private fun isBust(): Boolean = (scoreRemaining - sumScore(dartsThrown)) < 0
 }

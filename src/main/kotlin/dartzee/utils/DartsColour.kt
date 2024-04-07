@@ -30,6 +30,8 @@ object DartsColour {
         Color.getHSBColor(242.toFloat() / 360, 0.48.toFloat(), 0.8.toFloat())
     val PURPLE = Color(138, 43, 226)
     val ORANGE = Color(255, 140, 0)
+    val DARK_GREEN = Color(1, 75, 32)
+    val DARK_RED = Color(139, 0, 0)
 
     val FIRST_COLOURS = Pair(Color.YELLOW, COLOUR_GOLD_TEXT)
     val SECOND_COLOURS = Pair(Color.GRAY, COLOUR_SILVER_TEXT)
