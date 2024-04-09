@@ -24,6 +24,9 @@ import javax.swing.UIDefaults
 import javax.swing.border.EmptyBorder
 import javax.swing.border.EtchedBorder
 import net.miginfocom.swing.MigLayout
+import javax.swing.JScrollPane
+import javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+import javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
 
 class TutorialPanel(private val parent: DartsGameScreen) :
     JPanel(), ActionListener, DartboardListener {
@@ -45,10 +48,12 @@ class TutorialPanel(private val parent: DartsGameScreen) :
 
         // West Pane - the rules
         val panelWest = JPanel()
+        val scrollPane = JScrollPane(panelWest, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_NEVER)
+        scrollPane.setViewportView(panelWest)
         panelWest.border = EtchedBorder(EtchedBorder.RAISED, null, null)
         panelWest.layout = MigLayout("al center top")
-        panelWest.preferredSize = Dimension(500, 50)
-        add(panelWest, BorderLayout.WEST)
+        panelWest.preferredSize = Dimension(500, 1000)
+        add(scrollPane, BorderLayout.WEST)
 
         val lblRules = makeTitleLabel("The Rules")
         panelWest.add(lblRules, "cell 0 0, growx")

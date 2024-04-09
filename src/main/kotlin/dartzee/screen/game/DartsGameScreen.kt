@@ -5,6 +5,7 @@ import dartzee.db.GameEntity
 import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
+import java.awt.Dimension
 import java.awt.Frame
 
 /** DartsGameScreen Simple screen which wraps up a single game panel */
@@ -23,7 +24,7 @@ class DartsGameScreen(game: GameEntity, private val participants: List<IWrappedP
 
         if (InjectedThings.partyMode) {
             contentPane.add(tutorialPanel)
-            pack()
+            size = Dimension(1000, 600)
             extendedState = Frame.MAXIMIZED_BOTH
         } else {
             contentPane.add(gamePanel)
