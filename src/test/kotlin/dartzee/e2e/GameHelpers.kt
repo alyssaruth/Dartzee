@@ -48,6 +48,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.mockk
 import io.mockk.verifySequence
 import javax.swing.JButton
+import javax.swing.JPanel
 import javax.swing.JToggleButton
 import javax.swing.border.LineBorder
 
@@ -109,13 +110,13 @@ fun GameSetupPlayerSelector.selectTopPlayer() {
     clickButton("Select")
 }
 
-fun DartsGamePanel<*, *>.throwHumanRound(vararg darts: Dart) {
+fun JPanel.throwHumanRound(vararg darts: Dart) {
     darts.forEach { throwHumanDart(it.score, it.segmentType) }
 
     confirmRound()
 }
 
-fun DartsGamePanel<*, *>.throwHumanDart(score: Int, segmentType: SegmentType) {
+fun JPanel.throwHumanDart(score: Int, segmentType: SegmentType) {
     val computedPt =
         if (segmentType == SegmentType.MISS) AI_DARTBOARD.getDeliberateMissPoint()
         else {
@@ -126,7 +127,7 @@ fun DartsGamePanel<*, *>.throwHumanDart(score: Int, segmentType: SegmentType) {
     getChild<GameplayDartboard>().dartThrown(computedPt)
 }
 
-fun DartsGamePanel<*, *>.confirmRound() {
+fun JPanel.confirmRound() {
     clickChild<JButton> { it.toolTipText == "Confirm round" }
 }
 

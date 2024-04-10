@@ -128,6 +128,8 @@ class TutorialPanel(private val parent: DartsGameScreen) :
         lblScoredText.setFontSize(24)
         lblRemaining.setFontSize(18)
         lblScored.setFontSize(18)
+        lblRemaining.name = "RemainingLabel"
+        lblScored.name = "ScoredLabel"
 
         dartboard.addDartboardListener(this)
         btnStartGame.addActionListener(this)
