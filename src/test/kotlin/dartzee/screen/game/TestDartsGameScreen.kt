@@ -15,8 +15,8 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.awt.Frame
+import org.junit.jupiter.api.Test
 
 class TestDartsGameScreen : AbstractTest() {
     @Test
