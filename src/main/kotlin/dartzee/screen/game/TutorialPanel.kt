@@ -53,7 +53,7 @@ class TutorialPanel(private val parent: DartsGameScreen) :
         scrollPane.setViewportView(panelWest)
         panelWest.border = EtchedBorder(EtchedBorder.RAISED, null, null)
         panelWest.layout = MigLayout("al center top")
-        panelWest.preferredSize = Dimension(500, 1000)
+        panelWest.preferredSize = Dimension(500, 950)
         add(scrollPane, BorderLayout.WEST)
 
         val lblRules = makeTitleLabel("The Rules")
@@ -92,7 +92,8 @@ class TutorialPanel(private val parent: DartsGameScreen) :
         panelCenter.add(panelNorth, BorderLayout.NORTH)
         panelNorth.layout = MigLayout("al center top")
 
-        val lblGiveItATry = makeTitleLabel("\uD83C\uDFB2 Give it a try!")
+        val lblGiveItATry = makeTitleLabel(" Give it a try!")
+        lblGiveItATry.icon = ImageIcon(javaClass.getResource("/buttons/dice.png"))
         panelNorth.add(lblGiveItATry, "cell 0 0, growx")
         panelNorth.add(makeDivider(), "cell 0 1, alignx center")
 
