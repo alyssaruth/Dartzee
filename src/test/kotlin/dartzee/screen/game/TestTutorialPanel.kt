@@ -4,8 +4,13 @@ import com.github.alyssaburlton.swingtest.findAll
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeDisabled
 import com.github.alyssaburlton.swingtest.shouldBeEnabled
-import dartzee.*
 import dartzee.bean.DartLabel
+import dartzee.clickButton
+import dartzee.drtDoubleTwenty
+import dartzee.drtOuterOne
+import dartzee.drtOuterTwenty
+import dartzee.drtOuterTwo
+import dartzee.drtTrebleTwenty
 import dartzee.e2e.throwHumanDart
 import dartzee.e2e.throwHumanRound
 import dartzee.helper.AbstractTest
