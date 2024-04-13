@@ -102,6 +102,10 @@ fun Component.setFontSize(size: Int) {
     font = Font(font.name, font.style, size)
 }
 
+fun Component.setBold() {
+    font = font.deriveFont(Font.BOLD)
+}
+
 fun JComponent.setMargins(margin: Int) {
     setMargins(margin, margin, margin, margin)
 }

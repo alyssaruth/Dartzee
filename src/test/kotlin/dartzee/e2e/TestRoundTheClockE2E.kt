@@ -85,8 +85,6 @@ class TestRoundTheClockE2E : AbstractE2ETest() {
                 gameParams = RoundTheClockConfig(ClockType.Standard, false).toJson()
             )
 
-        val (gamePanel, listener) = setUpGamePanel(game)
-
         val expectedRounds =
             listOf(
                 listOf(
@@ -124,7 +122,7 @@ class TestRoundTheClockE2E : AbstractE2ETest() {
         val aiModel = predictableDartsModel(aimDarts, mercyThreshold = 7)
 
         val player = makePlayerWithModel(aiModel)
-        gamePanel.startGame(listOf(player))
+        val (gamePanel, listener) = setUpGamePanelAndStartGame(game, listOf(player))
         awaitGameFinish(game)
 
         verifyState(gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 24)
@@ -145,7 +143,6 @@ class TestRoundTheClockE2E : AbstractE2ETest() {
                 gameType = GameType.ROUND_THE_CLOCK,
                 gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson()
             )
-        val (gamePanel, listener) = setUpGamePanel(game)
 
         val p1Rounds =
             listOf(
@@ -191,6 +188,7 @@ class TestRoundTheClockE2E : AbstractE2ETest() {
         val p2 = makePlayerWithModel(p2Model, name = "Lynn", image = "BaboTwo")
 
         val participants = prepareParticipants(game.rowId, listOf(p1, p2), true)
+        val (gamePanel, listener) = setUpGamePanel(game, participants)
         gamePanel.startNewGame(participants)
         awaitGameFinish(game)
 

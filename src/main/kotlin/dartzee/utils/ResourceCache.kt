@@ -88,6 +88,9 @@ object ResourceCache {
     val BASE_FONT: Font =
         Font.createFont(Font.TRUETYPE_FONT, javaClass.getResourceAsStream("/trebuc.ttf"))
 
+    val UNICODE_FONT: Font =
+        Font.createFont(Font.TRUETYPE_FONT, javaClass.getResourceAsStream("/arialunicode.ttf"))
+
     private val wavPoolLock = Any()
     private val hmWavToInputStreams = HashMapList<String, AudioInputStream>()
 

@@ -3,6 +3,7 @@ package dartzee.screen.game
 import dartzee.achievements.AbstractAchievement
 import dartzee.screen.FocusableWindow
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings
 import java.awt.Frame
 import java.awt.event.WindowEvent
 import java.awt.event.WindowListener
@@ -10,7 +11,7 @@ import javax.swing.WindowConstants
 
 abstract class AbstractDartsGameScreen : FocusableWindow(), WindowListener {
     var haveLostFocus = false
-    protected var shouldPack = true
+    protected var shouldPack = !InjectedThings.partyMode
 
     init {
         defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE

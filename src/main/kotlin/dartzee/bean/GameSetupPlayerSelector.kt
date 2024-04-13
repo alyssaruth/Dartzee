@@ -2,6 +2,7 @@ package dartzee.bean
 
 import dartzee.core.bean.ScrollTableOrdered
 import dartzee.core.util.DialogUtil
+import dartzee.core.util.setMargins
 import dartzee.db.MAX_PLAYERS
 import java.awt.event.ActionEvent
 import javax.swing.ImageIcon
@@ -17,6 +18,7 @@ class GameSetupPlayerSelector : AbstractPlayerSelector<ScrollTableOrdered>() {
         btnPairs.icon = ImageIcon(javaClass.getResource("/buttons/teams.png"))
         btnPairs.toolTipText = "Play in pairs"
         tablePlayersSelected.addButtonToOrderingPanel(btnPairs, 3)
+        lblSelected.setMargins(0, 0, 0, 60)
 
         btnPairs.addActionListener(this)
     }

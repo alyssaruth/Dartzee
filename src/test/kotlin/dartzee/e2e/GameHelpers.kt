@@ -48,6 +48,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.mockk
 import io.mockk.verifySequence
 import javax.swing.JButton
+import javax.swing.JPanel
 import javax.swing.JToggleButton
 import javax.swing.border.LineBorder
 
@@ -82,26 +83,26 @@ fun closeOpenGames() {
     ScreenCache.getDartsGameScreens().forEach { it.dispose() }
 }
 
-data class GamePanelTestSetup(val gamePanel: DartsGamePanel<*, *>, val listener: DartboardListener)
+data class GamePanelTestSetup(
+    val gamePanel: DartsGamePanel<*, *>,
+    val listener: DartboardListener,
+    val participants: List<IWrappedParticipant>
+)
 
-fun setUpGamePanelAndStartGame(game: GameEntity, players: List<PlayerEntity>) =
-    setUpGamePanel(game).also { it.gamePanel.startGame(players) }
+fun setUpGamePanelAndStartGame(game: GameEntity, players: List<PlayerEntity>): GamePanelTestSetup {
+    val participants = prepareParticipants(game.rowId, players, false)
+    return setUpGamePanel(game, participants).also { it.gamePanel.startNewGame(participants) }
+}
 
-fun setUpGamePanel(game: GameEntity, totalPlayers: Int = 1): GamePanelTestSetup {
-    val parentWindow = DartsGameScreen(game, totalPlayers)
+fun setUpGamePanel(game: GameEntity, participants: List<IWrappedParticipant>): GamePanelTestSetup {
+    val parentWindow = DartsGameScreen(game, participants)
     parentWindow.isVisible = true
     val gamePanel = parentWindow.gamePanel
 
     val listener = mockk<DartboardListener>(relaxed = true)
     gamePanel.dartboard.addDartboardListener(listener)
 
-    return GamePanelTestSetup(gamePanel, listener)
-}
-
-fun DartsGamePanel<*, *>.startGame(players: List<PlayerEntity>): List<IWrappedParticipant> {
-    val participants = prepareParticipants(gameEntity.rowId, players, false)
-    startNewGame(participants)
-    return participants
+    return GamePanelTestSetup(gamePanel, listener, participants)
 }
 
 fun GameSetupPlayerSelector.selectTopPlayer() {
@@ -109,13 +110,13 @@ fun GameSetupPlayerSelector.selectTopPlayer() {
     clickButton("Select")
 }
 
-fun DartsGamePanel<*, *>.throwHumanRound(vararg darts: Dart) {
+fun JPanel.throwHumanRound(vararg darts: Dart) {
     darts.forEach { throwHumanDart(it.score, it.segmentType) }
 
     confirmRound()
 }
 
-fun DartsGamePanel<*, *>.throwHumanDart(score: Int, segmentType: SegmentType) {
+fun JPanel.throwHumanDart(score: Int, segmentType: SegmentType) {
     val computedPt =
         if (segmentType == SegmentType.MISS) AI_DARTBOARD.getDeliberateMissPoint()
         else {
@@ -126,7 +127,7 @@ fun DartsGamePanel<*, *>.throwHumanDart(score: Int, segmentType: SegmentType) {
     getChild<GameplayDartboard>().dartThrown(computedPt)
 }
 
-fun DartsGamePanel<*, *>.confirmRound() {
+fun JPanel.confirmRound() {
     clickChild<JButton> { it.toolTipText == "Confirm round" }
 }
 

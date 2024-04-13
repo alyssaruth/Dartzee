@@ -47,9 +47,9 @@ class GameLauncher {
         val participants = insertNewGameEntities(game.rowId, params)
 
         // Construct the screen and factory a tab
-        val scrn = DartsGameScreen(game, params.teamCount())
+        val scrn = DartsGameScreen(game, participants)
         scrn.isVisible = true
-        scrn.gamePanel.startNewGame(participants)
+        scrn.startNewGame()
 
         logger.info(
             CODE_GAME_LAUNCHED,
@@ -93,7 +93,7 @@ class GameLauncher {
     private fun loadAndDisplaySingleGame(gameEntity: GameEntity) {
         // We've found a game, so construct a screen and initialise it
         val participants = loadParticipants(gameEntity.rowId)
-        val scrn = DartsGameScreen(gameEntity, participants.size)
+        val scrn = DartsGameScreen(gameEntity, participants)
         scrn.isVisible = true
 
         // Now try to load the game

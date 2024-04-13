@@ -65,8 +65,6 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), 
 
     protected abstract fun initImpl()
 
-    fun getTableOnly() = panelCenter
-
     fun init() {
         lblResult.text = ""
 

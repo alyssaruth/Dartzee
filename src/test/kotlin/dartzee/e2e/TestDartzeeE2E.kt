@@ -79,8 +79,6 @@ class TestDartzeeE2E : AbstractE2ETest() {
         val game = insertGame(gameType = GameType.DARTZEE)
         insertDartzeeRules(game.rowId, testRules)
 
-        val (gamePanel, listener) = setUpGamePanel(game)
-
         val p1Rounds =
             listOf(
                 listOf(makeDart(20, 1), makeDart(5, 1), makeDart(1, 1)), // Scoring round - 26
@@ -119,6 +117,7 @@ class TestDartzeeE2E : AbstractE2ETest() {
         val p2 = makePlayerWithModel(p2Model, name = "Lynn", image = "BaboTwo")
 
         val participants = prepareParticipants(game.rowId, listOf(p1, p2), true)
+        val (gamePanel, listener) = setUpGamePanel(game, participants)
         gamePanel.startNewGame(participants)
 
         awaitGameFinish(game)

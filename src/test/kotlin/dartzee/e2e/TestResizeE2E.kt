@@ -1,6 +1,7 @@
 package dartzee.e2e
 
 import dartzee.game.GameType
+import dartzee.game.prepareParticipants
 import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.beastDartsModel
 import dartzee.helper.insertGame
@@ -18,10 +19,11 @@ class TestResizeE2E : AbstractE2ETest() {
         val aiModel = beastDartsModel()
         val player = insertPlayer(model = aiModel)
 
-        val (gamePanel, listener) = setUpGamePanel(game)
+        val participants = prepareParticipants(game.rowId, listOf(player), false)
+        val (gamePanel, listener) = setUpGamePanel(game, participants)
         gamePanel.setSize(300, 675)
         gamePanel.preferredSize = Dimension(300, 675)
-        gamePanel.startGame(listOf(player))
+        gamePanel.startNewGame(participants)
 
         awaitGameFinish(game)
 
