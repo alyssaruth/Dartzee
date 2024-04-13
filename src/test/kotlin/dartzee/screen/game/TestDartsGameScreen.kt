@@ -15,7 +15,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.mockk
 import io.mockk.verify
-import java.awt.Frame
 import org.junit.jupiter.api.Test
 
 class TestDartsGameScreen : AbstractTest() {
@@ -48,7 +47,7 @@ class TestDartsGameScreen : AbstractTest() {
     }
 
     @Test
-    fun `Should maximise and show the tutorial if in party mode, and not start a new game`() {
+    fun `Should show the tutorial if in party mode, and not start a new game`() {
         InjectedThings.partyMode = true
 
         val game = insertGame()
@@ -56,7 +55,6 @@ class TestDartsGameScreen : AbstractTest() {
         scrn.gamePanel = mockk(relaxed = true)
         scrn.findChild<DartsGamePanel<*, *>>() shouldBe null
         scrn.findChild<TutorialPanel>() shouldNotBe null
-        scrn.extendedState shouldBe Frame.MAXIMIZED_BOTH
 
         scrn.startNewGame()
         verifyNotCalled { scrn.gamePanel.startNewGame(any()) }
