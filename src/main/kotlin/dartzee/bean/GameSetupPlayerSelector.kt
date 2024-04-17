@@ -19,7 +19,7 @@ class GameSetupPlayerSelector : AbstractPlayerSelector<ScrollTableOrdered>() {
         super.render()
 
         if (InjectedThings.partyMode) {
-            val font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 24f)
+            val font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 20f)
             tablePlayersToSelectFrom.setTableFont(font)
             tablePlayersSelected.setTableFont(font)
         }

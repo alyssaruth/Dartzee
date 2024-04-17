@@ -37,7 +37,7 @@ abstract class AbstractPlayerSelector<S : ScrollTable> :
     protected val lblSelected = JLabel("Selected")
 
     protected fun render() {
-        layout = MigLayout("al center center", "[452px][100px][452px]", "[20px][407px]")
+        layout = MigLayout("al center center", "[grow][100px][grow]", "[20px][grow]")
 
         tablePlayersToSelectFrom.name = "TableUnselected"
 
@@ -48,7 +48,7 @@ abstract class AbstractPlayerSelector<S : ScrollTable> :
 
         val panelMovementOptions = JPanel()
         add(lblAvailable, "cell 0 0, alignx center")
-        add(tablePlayersToSelectFrom, "cell 0 1,alignx left,growy")
+        add(tablePlayersToSelectFrom, "cell 0 1,alignx left,grow")
         panelMovementOptions.minimumSize = Dimension(50, 10)
         add(panelMovementOptions, "cell 1 1,grow")
         panelMovementOptions.layout = MigLayout("al center center, wrap, gapy 20")
@@ -64,7 +64,7 @@ abstract class AbstractPlayerSelector<S : ScrollTable> :
         panelMovementOptions.add(btnUnselect, "cell 0 2,alignx left,aligny top")
 
         add(lblSelected, "cell 2 0, alignx center")
-        add(tablePlayersSelected, "cell 2 1,alignx left,growy")
+        add(tablePlayersSelected, "cell 2 1,alignx left,grow")
 
         tablePlayersSelected.addDoubleClickListener(this)
         tablePlayersToSelectFrom.addDoubleClickListener(this)
