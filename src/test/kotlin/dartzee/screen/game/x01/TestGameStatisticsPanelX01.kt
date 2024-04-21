@@ -1,5 +1,7 @@
 package dartzee.screen.game.x01
 
+import com.github.alyssaburlton.swingtest.findChild
+import dartzee.core.bean.NumberField
 import dartzee.game.FinishType
 import dartzee.game.X01Config
 import dartzee.game.state.X01PlayerState
@@ -11,6 +13,8 @@ import dartzee.`object`.Dart
 import dartzee.screen.game.AbstractGameStatisticsPanelTest
 import dartzee.screen.game.getRowIndex
 import dartzee.screen.game.getValueForRow
+import dartzee.utils.InjectedThings
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
@@ -31,6 +35,14 @@ class TestGameStatisticsPanelX01 :
 
         val panelTwo = factoryStatsPanel(301)
         panelTwo.nfSetupThreshold.getMaximum() shouldBe 300
+    }
+
+    @Test
+    fun `Should not add setup threshold to screen in party mode`() {
+        InjectedThings.partyMode = true
+
+        val panel = factoryStatsPanel()
+        panel.findChild<NumberField>().shouldBeNull()
     }
 
     @Test
