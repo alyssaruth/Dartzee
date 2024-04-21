@@ -10,12 +10,12 @@ import dartzee.`object`.Dart
 import dartzee.screen.GameplayDartboard
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.dartzeeCalculator
+import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -57,7 +57,7 @@ class DartzeeRuleVerificationPanel : JPanel(), DartboardListener, ActionListener
         tfResult.isEditable = false
 
         btnReset.preferredSize = Dimension(60, 60)
-        btnReset.icon = ImageIcon(javaClass.getResource("/buttons/Reset.png"))
+        btnReset.icon = ResourceCache.ICON_RESET
         btnReset.toolTipText = "Reset darts"
 
         btnReset.addActionListener(this)

@@ -52,10 +52,11 @@ class TutorialPanel(private val parent: DartsGameScreen) :
         scrollPane.setViewportView(panelWest)
         panelWest.border = EtchedBorder(EtchedBorder.RAISED, null, null)
         panelWest.layout = MigLayout("al center top")
-        panelWest.preferredSize = Dimension(500, 950)
+        panelWest.preferredSize = Dimension(525, 950)
         add(scrollPane, BorderLayout.WEST)
 
         val lblRules = makeTitleLabel("The Rules")
+        lblRules.icon = ImageIcon(javaClass.getResource("/buttons/gameReport.png"))
         panelWest.add(lblRules, "cell 0 0, growx")
 
         panelWest.add(makeDivider(), "cell 0 1, alignx center")
@@ -102,10 +103,10 @@ class TutorialPanel(private val parent: DartsGameScreen) :
         panelSouth.add(btnConfirm)
         panelSouth.add(btnReset)
         btnConfirm.preferredSize = Dimension(80, 80)
-        btnConfirm.icon = ImageIcon(javaClass.getResource("/buttons/Confirm.png"))
+        btnConfirm.icon = ResourceCache.ICON_CONFIRM
         btnConfirm.toolTipText = "Confirm round"
         btnReset.preferredSize = Dimension(80, 80)
-        btnReset.icon = ImageIcon(javaClass.getResource("/buttons/Reset.png"))
+        btnReset.icon = ResourceCache.ICON_RESET
         btnReset.toolTipText = "Reset round"
         btnConfirm.isEnabled = false
         btnReset.isEnabled = false
@@ -140,14 +141,14 @@ class TutorialPanel(private val parent: DartsGameScreen) :
 
     private fun makeTextPane() =
         makeTransparentTextPane().apply {
-            font = ResourceCache.UNICODE_FONT
+            font = ResourceCache.BASE_FONT
             setFontSize(24)
             border = EmptyBorder(10, 5, 20, 5)
         }
 
     private fun makeTitleLabel(text: String) =
         JLabel(text).apply {
-            font = ResourceCache.UNICODE_FONT
+            font = ResourceCache.BASE_FONT
             border = EmptyBorder(10, 10, 10, 0)
             horizontalAlignment = SwingConstants.CENTER
             setFontSize(30)
@@ -155,23 +156,29 @@ class TutorialPanel(private val parent: DartsGameScreen) :
 
     private fun makeRulesPane() =
         makeTextPane().apply {
-            append("\uD83D\uDCC9 Score down from 301. First to hit 0 wins.")
+            insertComponent(makeIconLabel(ResourceCache.ICON_GRAPH_DECREASING))
+            append(" Score down from 301. First to hit 0 wins.")
             append("\n\n")
-            append("\uD83C\uDFAF You must finish")
+            insertComponent(makeIconLabel(ResourceCache.ICON_CALCULATOR))
+            append(" You must finish")
             append(" exactly", bold = true)
             append(" - score too much and you'll lose your score for the round!")
             append("\n\n")
-            append(
-                "\uD83D\uDDB1\uFE0F Input your score by clicking on the Dartboard. Use the ✅ to confirm."
-            )
+            insertComponent(makeIconLabel(ResourceCache.ICON_DARTBOARD))
+            append(" Input your score by clicking on the Dartboard. Use the ")
+            insertComponent(makeIconLabel(ResourceCache.ICON_CONFIRM))
+            append(" to confirm.")
             append("\n\n")
-            append("❎ Use the reset button if you mis-click.")
+            insertComponent(makeIconLabel(ResourceCache.ICON_RESET))
+            append(" Use the reset button if you mis-click.")
         }
+
+    private fun makeIconLabel(icon: ImageIcon) = JLabel(icon).also { it.alignmentY = 0.65f }
 
     private fun makeDivider() =
         JSeparator(SwingConstants.HORIZONTAL).apply {
-            border = EmptyBorder(10, 0, 10, 0)
-            preferredSize = Dimension(200, 2)
+            border = EmptyBorder(10, 0, 5, 0)
+            preferredSize = Dimension(240, 2)
         }
 
     override fun actionPerformed(e: ActionEvent?) {

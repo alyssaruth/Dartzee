@@ -36,6 +36,7 @@ import dartzee.screen.game.x01.GamePanelX01
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.preferenceService
+import dartzee.utils.ResourceCache
 import dartzee.utils.ResourceCache.ICON_STATS_LARGE
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getQuotedIdStr
@@ -145,11 +146,11 @@ abstract class DartsGamePanel<
         panelSouth.add(panelAiSlider, BorderLayout.NORTH)
         panelSouth.add(panelButtons, BorderLayout.CENTER)
         btnConfirm.preferredSize = Dimension(80, 80)
-        btnConfirm.icon = ImageIcon(javaClass.getResource("/buttons/Confirm.png"))
+        btnConfirm.icon = ResourceCache.ICON_CONFIRM
         btnConfirm.toolTipText = "Confirm round"
         panelButtons.add(btnConfirm)
         btnReset.preferredSize = Dimension(80, 80)
-        btnReset.icon = ImageIcon(javaClass.getResource("/buttons/Reset.png"))
+        btnReset.icon = ResourceCache.ICON_RESET
         btnReset.toolTipText = "Reset round"
         panelButtons.add(btnReset)
         btnResign.preferredSize = Dimension(80, 80)
