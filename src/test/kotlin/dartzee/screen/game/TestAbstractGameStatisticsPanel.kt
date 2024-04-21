@@ -1,5 +1,7 @@
 package dartzee.screen.game
 
+import com.github.alyssaburlton.swingtest.findChild
+import dartzee.core.util.getSqlDateNow
 import dartzee.core.util.maxOrZero
 import dartzee.game.state.X01PlayerState
 import dartzee.helper.AbstractTest
@@ -9,8 +11,12 @@ import dartzee.helper.makeDart
 import dartzee.helper.makeX01PlayerState
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
+import dartzee.utils.InjectedThings
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import javax.swing.JComponent
+import javax.swing.JTextPane
 import org.junit.jupiter.api.Test
 
 class TestAbstractGameStatisticsPanel : AbstractTest() {
@@ -265,6 +271,56 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
         panel.getCellComponent(0, 2).shouldHaveColours(DartsColour.FIRST_COLOURS)
         panel.getCellComponent(0, 3).shouldHaveColours(DartsColour.SECOND_COLOURS)
         panel.getCellComponent(0, 4).shouldHaveColours(DartsColour.FOURTH_COLOURS)
+    }
+
+    @Test
+    fun `Should add game over text in party mode`() {
+        InjectedThings.partyMode = true
+
+        val alice = insertPlayer(name = "Alice")
+        val pt =
+            insertParticipant(
+                playerId = alice.rowId,
+                dtFinished = getSqlDateNow(),
+                finishingPosition = 1
+            )
+
+        val state1 =
+            makeX01PlayerState(
+                player = alice,
+                participant = pt,
+                completedRound = listOf(makeDart(), makeDart(), makeDart())
+            )
+        val state2 =
+            makeX01PlayerState(
+                player = insertPlayer(name = "Bob"),
+                completedRound = listOf(makeDart())
+            )
+
+        val panel = FakeGameStatisticsPanel()
+        panel.showStats(listOf(state1, state2))
+        panel.findChild<JTextPane> { it.text == "Game Over!" }.shouldNotBeNull()
+        panel.findChild<JTextPane> { it.text.contains("Congrats to Alice") }.shouldNotBeNull()
+    }
+
+    @Test
+    fun `Should not game over text in party mode if game is not finished yet`() {
+        InjectedThings.partyMode = true
+
+        val state1 =
+            makeX01PlayerState(
+                player = insertPlayer(name = "Alice"),
+                completedRound = listOf(makeDart(), makeDart(), makeDart())
+            )
+        val state2 =
+            makeX01PlayerState(
+                player = insertPlayer(name = "Bob"),
+                completedRound = listOf(makeDart())
+            )
+
+        val panel = FakeGameStatisticsPanel()
+        panel.showStats(listOf(state1, state2))
+        panel.findChild<JTextPane> { it.text == "Game Over!" }.shouldBeNull()
     }
 }
 

@@ -1,15 +1,21 @@
 package dartzee.screen.game
 
 import dartzee.core.bean.ScrollTable
+import dartzee.core.bean.makeTransparentTextPane
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.TableUtil
 import dartzee.core.util.addUnique
+import dartzee.core.util.alignCentrally
+import dartzee.core.util.append
+import dartzee.core.util.setFontSize
 import dartzee.game.UniqueParticipantName
 import dartzee.game.state.AbstractPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.`object`.Dart
+import dartzee.utils.InjectedThings
 import java.awt.BorderLayout
 import java.awt.Color
+import java.awt.Dimension
 import javax.swing.JPanel
 import javax.swing.UIManager
 import javax.swing.border.EmptyBorder
@@ -67,6 +73,40 @@ abstract class AbstractGameStatisticsPanel<PlayerState : AbstractPlayerState<Pla
         if (isSufficientData()) {
             buildTableModel()
         }
+
+        val activeCount = playerStates.count { it.wrappedParticipant.participant.isActive() }
+        if (InjectedThings.partyMode && activeCount <= 1) {
+            addGameOverMessage(playerStates)
+        }
+    }
+
+    private fun addGameOverMessage(playerStates: List<PlayerState>) {
+        val winner = playerStates.first { it.wrappedParticipant.participant.finishingPosition == 1 }
+        val heading =
+            makeTransparentTextPane().apply {
+                border = EmptyBorder(10, 0, 20, 0)
+                alignCentrally()
+                setFontSize(36)
+                append("Game Over!")
+            }
+
+        heading.preferredSize = Dimension(100, 65)
+        add(heading, BorderLayout.NORTH)
+
+        val textPane =
+            makeTransparentTextPane().apply {
+                alignCentrally()
+                setFontSize(18)
+
+                append("Congrats to ")
+                append(winner.wrappedParticipant.getParticipantName(), true)
+                append(" on the win!")
+                append("\n\n")
+                append("When you're done looking at the stats, this window can be closed.")
+            }
+
+        textPane.preferredSize = Dimension(100, 250)
+        add(textPane, BorderLayout.SOUTH)
     }
 
     private fun isSufficientData(): Boolean {

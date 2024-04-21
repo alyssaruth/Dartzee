@@ -9,16 +9,11 @@ import dartzee.bean.ScrollTableDartsGame
 import dartzee.clickButton
 import dartzee.drtDoubleTwenty
 import dartzee.drtInnerFourteen
-import dartzee.drtInnerOne
 import dartzee.drtInnerSeven
-import dartzee.drtMissTwelve
 import dartzee.drtOuterFive
 import dartzee.drtOuterFourteen
 import dartzee.drtOuterNineteen
 import dartzee.drtOuterOne
-import dartzee.drtOuterSeven
-import dartzee.drtOuterSixteen
-import dartzee.drtOuterTwelve
 import dartzee.drtOuterTwenty
 import dartzee.drtTrebleFive
 import dartzee.drtTrebleNineteen
@@ -31,11 +26,14 @@ import dartzee.screen.DartsApp
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGamePanel
 import dartzee.screen.game.DartsGameScreen
+import dartzee.screen.game.x01.GameStatisticsPanelX01
 import dartzee.waitForAssertionWithReturn
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import javax.swing.JButton
+import javax.swing.JTextPane
 import javax.swing.SwingUtilities
 import org.junit.jupiter.api.Test
 
@@ -73,13 +71,14 @@ class TestPartyModeE2E : AbstractE2ETest() {
         gamePanel.throwHumanRound(drtTrebleNineteen(), drtInnerFourteen(), drtOuterFourteen()) // 36
         gamePanel.throwHumanRound(drtOuterTwenty(), drtDoubleTwenty(), drtOuterTwenty()) // 0
 
-        gamePanel.clickChild<JButton> { it.isVisible && it.toolTipText == "Resume throwing" }
-        gamePanel.throwHumanRound(drtOuterSixteen(), drtInnerOne(), drtOuterSeven()) // 12
-        gamePanel.throwHumanRound(drtMissTwelve(), drtOuterTwelve()) // 0
-
         // Check game outcome
         gameWindow.getScorer("Alice").lblResult.text shouldBe "12 Darts"
-        gameWindow.getScorer("Bob").lblResult.text shouldBe "14 Darts"
+        gameWindow.getScorer("Bob").lblResult.text shouldBe "Unfinished"
+
+        val statsPane = gameWindow.getChild<GameStatisticsPanelX01>()
+        statsPane.shouldBeVisible()
+        val extraMessage = statsPane.getChild<JTextPane> { it.text.contains("Congrats") }
+        extraMessage.text.shouldContain("Congrats to Alice on the win!")
         gameWindow.dispose()
 
         // Check leaderboard
@@ -90,7 +89,7 @@ class TestPartyModeE2E : AbstractE2ETest() {
         leaderboardTable
             .getRows()
             .map { it.filterIndexed { index: Int, _ -> index != 1 } }
-            .shouldContainExactly(arrayOf(1, "Alice", 1L, 12), arrayOf(2, "Bob", 1L, 14))
+            .shouldContainExactly(arrayOf(1, "Alice", 1L, 12))
 
         // Reload the game
         SwingUtilities.invokeAndWait { GameLauncher().loadAndDisplayGame(gamePanel.getGameId()) }
@@ -98,7 +97,7 @@ class TestPartyModeE2E : AbstractE2ETest() {
         val loadedWindow = ScreenCache.getDartsGameScreen(gamePanel.getGameId())!!
         loadedWindow.shouldBeVisible()
         loadedWindow.getScorer("Alice").lblResult.text shouldBe "12 Darts"
-        loadedWindow.getScorer("Bob").lblResult.text shouldBe "14 Darts"
+        loadedWindow.getScorer("Bob").lblResult.text shouldBe "Unfinished"
     }
 
     private fun launchApp(): DartsApp {

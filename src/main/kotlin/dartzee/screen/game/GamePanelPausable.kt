@@ -5,6 +5,7 @@ import dartzee.db.GameEntity
 import dartzee.game.state.AbstractPlayerState
 import dartzee.preferences.Preferences
 import dartzee.screen.game.scorer.AbstractDartsScorerPausable
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import javax.swing.SwingUtilities
 
@@ -77,6 +78,10 @@ abstract class GamePanelPausable<
             !getCurrentPlayerState().isHuman() && preferenceService.get(Preferences.aiAutoContinue)
         ) {
             getCurrentScorer().toggleResume()
+        }
+
+        if (InjectedThings.partyMode) {
+            allPlayersFinished()
         }
     }
 
