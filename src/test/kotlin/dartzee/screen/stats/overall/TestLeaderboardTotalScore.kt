@@ -3,12 +3,14 @@ package dartzee.screen.stats.overall
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.bean.GameParamFilterPanel
 import dartzee.bean.GameParamFilterPanelRoundTheClock
 import dartzee.bean.GameParamFilterPanelX01
 import dartzee.bean.PlayerTypeFilterPanel
 import dartzee.bean.SpinnerX01
 import dartzee.core.bean.ScrollTable
+import dartzee.db.PlayerEntity
 import dartzee.game.ClockType
 import dartzee.game.FinishType
 import dartzee.game.GameType
@@ -17,19 +19,23 @@ import dartzee.game.X01Config
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertFinishedParticipant
 import dartzee.helper.insertFinishedTeam
+import dartzee.helper.insertPlayerImage
 import dartzee.preferences.Preferences
+import dartzee.toLabel
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.shouldBe
+import javax.swing.ImageIcon
 import javax.swing.JCheckBox
 import javax.swing.JRadioButton
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
 class TestLeaderboardTotalScore : AbstractTest() {
     @Test
     fun `should extract the right data into rows`() {
-        val gAlice = insertFinishedParticipant("Alice", GameType.X01, 50)
-        val gBob = insertFinishedParticipant("Bob", GameType.X01, 35)
+        val gAlice = insertFinishedParticipant("Alice", GameType.X01, 50, ai = true)
+        val gBob = insertFinishedParticipant("Bob", GameType.X01, 35, ai = false)
         val gTeam = insertFinishedTeam("Clive", "Daisy", GameType.X01, 52)
 
         val leaderboard = LeaderboardTotalScore(GameType.X01)
@@ -37,16 +43,47 @@ class TestLeaderboardTotalScore : AbstractTest() {
         leaderboard.rowCount() shouldBe 3
 
         leaderboard.getNameAt(0) shouldBe "Bob"
+        leaderboard.getIconAt(0) shouldBe PlayerEntity.ICON_HUMAN
         leaderboard.getScoreAt(0) shouldBe 35
         leaderboard.getGameIdAt(0) shouldBe gBob.localId
 
         leaderboard.getNameAt(1) shouldBe "Alice"
+        leaderboard.getIconAt(1) shouldBe PlayerEntity.ICON_AI
         leaderboard.getScoreAt(1) shouldBe 50
         leaderboard.getGameIdAt(1) shouldBe gAlice.localId
 
         leaderboard.getNameAt(2) shouldBe "Clive & Daisy"
         leaderboard.getScoreAt(2) shouldBe 52
         leaderboard.getGameIdAt(2) shouldBe gTeam.localId
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should display avatars in party mode`() {
+        InjectedThings.partyMode = true
+
+        insertFinishedParticipant("Alice", GameType.X01, 29)
+        insertFinishedTeam("Yoshi", "Wage", GameType.X01, 35)
+
+        PlayerEntity.retrieveForName("Yoshi")!!.run {
+            playerImageId = insertPlayerImage("yoshi").rowId
+            saveToDatabase()
+        }
+
+        PlayerEntity.retrieveForName("Wage")!!.run {
+            playerImageId = insertPlayerImage("wage").rowId
+            saveToDatabase()
+        }
+
+        val leaderboard = LeaderboardTotalScore(GameType.X01)
+        leaderboard.buildTable()
+        leaderboard.rowCount() shouldBe 2
+
+        val aliceImg = leaderboard.getIconAt(0)
+        aliceImg.toLabel().shouldMatchImage("individualAvatar")
+
+        val teamImg = leaderboard.getIconAt(1)
+        teamImg.toLabel().shouldMatchImage("teamAvatar")
     }
 
     @Test
@@ -190,6 +227,8 @@ class TestLeaderboardTotalScore : AbstractTest() {
     }
 
     private fun LeaderboardTotalScore.rowCount() = table().rowCount
+
+    private fun LeaderboardTotalScore.getIconAt(row: Int) = table().getValueAt(row, 1) as ImageIcon
 
     private fun LeaderboardTotalScore.getNameAt(row: Int) = table().getValueAt(row, 2)
 

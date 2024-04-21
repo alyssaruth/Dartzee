@@ -7,7 +7,6 @@ import com.github.alyssaburlton.swingtest.shouldBeVisible
 import dartzee.bean.GameSetupPlayerSelector
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.clickButton
-import dartzee.db.PlayerEntity.Companion.ICON_HUMAN
 import dartzee.drtDoubleTwenty
 import dartzee.drtInnerFourteen
 import dartzee.drtInnerOne
@@ -88,10 +87,8 @@ class TestPartyModeE2E : AbstractE2ETest() {
         val leaderboardTable = app.getChild<ScrollTableDartsGame>()
         leaderboardTable
             .getRows()
-            .shouldContainExactly(
-                arrayOf(1, ICON_HUMAN, "Alice", 1L, 12),
-                arrayOf(2, ICON_HUMAN, "Bob", 1L, 14)
-            )
+            .map { it.filterIndexed { index: Int, _ -> index != 1 } }
+            .shouldContainExactly(arrayOf(1, "Alice", 1L, 12), arrayOf(2, "Bob", 1L, 14))
     }
 
     private fun launchApp(): DartsApp {

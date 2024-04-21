@@ -33,13 +33,14 @@ class DartsGameScreen(game: GameEntity, private val participants: List<IWrappedP
         if (!InjectedThings.partyMode) {
             gamePanel.startNewGame(participants)
         } else {
-            contentPane.remove(gamePanel)
+            contentPane.removeAll()
             contentPane.add(tutorialPanel)
+            repaint()
         }
     }
 
     fun tutorialFinished() {
-        contentPane.remove(tutorialPanel)
+        contentPane.removeAll()
         contentPane.add(gamePanel)
         repaint()
 

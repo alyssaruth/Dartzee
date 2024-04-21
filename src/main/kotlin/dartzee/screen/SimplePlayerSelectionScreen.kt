@@ -32,7 +32,6 @@ class SimplePlayerSelectionScreen : EmbeddedScreen() {
 
         val textPane =
             makeTransparentTextPane().apply {
-                // editorKit = HTMLEditorKit()
                 alignCentrally()
                 setFontSize(18)
                 border = EmptyBorder(0, 0, 25, 0)
