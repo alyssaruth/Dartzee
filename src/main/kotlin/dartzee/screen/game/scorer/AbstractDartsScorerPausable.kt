@@ -6,6 +6,7 @@ import dartzee.game.state.IWrappedParticipant
 import dartzee.logging.CODE_PLAYER_PAUSED
 import dartzee.logging.CODE_PLAYER_UNPAUSED
 import dartzee.screen.game.GamePanelPausable
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.ICON_PAUSE
 import dartzee.utils.ResourceCache.ICON_RESUME
@@ -24,7 +25,10 @@ abstract class AbstractDartsScorerPausable<PlayerState : AbstractPlayerState<Pla
 
     init {
         btnResume.preferredSize = Dimension(30, 30)
-        panelSouth.add(btnResume, BorderLayout.EAST)
+        if (!InjectedThings.partyMode) {
+            panelSouth.add(btnResume, BorderLayout.EAST)
+        }
+
         btnResume.isVisible = false
         btnResume.icon = ICON_RESUME
         btnResume.toolTipText = "Resume throwing"

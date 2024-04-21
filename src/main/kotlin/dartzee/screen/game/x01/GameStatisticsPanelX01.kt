@@ -9,6 +9,7 @@ import dartzee.game.X01Config
 import dartzee.game.state.X01PlayerState
 import dartzee.`object`.Dart
 import dartzee.screen.game.AbstractGameStatisticsPanel
+import dartzee.utils.InjectedThings
 import dartzee.utils.calculateThreeDartAverage
 import dartzee.utils.getScoringDarts
 import dartzee.utils.isCheckoutDart
@@ -27,10 +28,12 @@ open class GameStatisticsPanelX01(gameParams: String) :
     val nfSetupThreshold = NumberField()
 
     init {
-        add(panel, BorderLayout.NORTH)
-        panel.add(lblSetupThreshold)
+        if (!InjectedThings.partyMode) {
+            add(panel, BorderLayout.NORTH)
+            panel.add(lblSetupThreshold)
+            panel.add(nfSetupThreshold)
+        }
 
-        panel.add(nfSetupThreshold)
         nfSetupThreshold.columns = 10
 
         nfSetupThreshold.value = 100
