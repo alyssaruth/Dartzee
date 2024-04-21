@@ -10,11 +10,16 @@ import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.partyMode
 import dartzee.utils.InjectedThings.preferenceService
+import dartzee.utils.ResourceCache
 import dartzee.utils.combinePlayerFlags
 import dartzee.utils.doesHighestWin
 import dartzee.utils.getFilterPanel
+import dartzee.utils.getImageForTableRow
+import dartzee.utils.getRawImageForTableRow
+import dartzee.utils.splitAvatar
 import java.awt.BorderLayout
 import java.awt.Dimension
+import java.awt.Font
 import java.awt.event.ActionListener
 import javax.swing.JPanel
 import javax.swing.JRadioButton
@@ -88,6 +93,14 @@ class LeaderboardTotalScore(private val gameType: GameType, gameParams: String? 
         model.addRows(rows)
 
         table.model = model
+
+        if (partyMode) {
+            table.setRowHeight(50)
+
+            val font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 20f)
+            table.setTableFont(font)
+        }
+
         table.setColumnWidths("35;50")
         table.sortBy(0, false)
     }
@@ -109,7 +122,7 @@ class LeaderboardTotalScore(private val gameType: GameType, gameParams: String? 
         val playerWhereSql = panelPlayerFilters.getWhereSql()
 
         val sb = StringBuilder()
-        sb.append("SELECT p.Strategy, p.Name, g.LocalId, pt.FinalScore")
+        sb.append("SELECT p.Strategy, p.Name, p.PlayerImageId, g.LocalId, pt.FinalScore")
         sb.append(" FROM Participant pt, Game g, Player p")
         sb.append(" WHERE pt.GameId = g.RowId")
         sb.append(" AND pt.PlayerId = p.RowId")
@@ -129,7 +142,10 @@ class LeaderboardTotalScore(private val gameType: GameType, gameParams: String? 
             val localId = rs.getLong("LocalId")
             val score = rs.getInt("FinalScore")
 
-            val flag = PlayerEntity.getPlayerFlag(strategy.isEmpty())
+            val flag =
+                if (partyMode) getImageForTableRow(rs.getString("PlayerImageId"))
+                else PlayerEntity.getPlayerFlag(strategy.isEmpty())
+
             LeaderboardEntry(score, listOf(flag, playerName, localId, score))
         }
     }
@@ -140,7 +156,8 @@ class LeaderboardTotalScore(private val gameType: GameType, gameParams: String? 
 
         val sb = StringBuilder()
         sb.append(
-            "SELECT p1.Strategy, p2.Strategy AS Strategy2, p1.Name, p2.Name as Name2, g.LocalId, t.FinalScore"
+            "SELECT p1.Strategy, p2.Strategy AS Strategy2, p1.Name, p2.Name as Name2, " +
+                "p1.PlayerImageId, p2.PlayerImageId as PlayerImageId2, g.LocalId, t.FinalScore"
         )
         sb.append(" FROM Team t, Participant pt1, Participant pt2, Game g, Player p1, Player p2")
         sb.append(" WHERE t.GameId = g.RowId")
@@ -169,12 +186,23 @@ class LeaderboardTotalScore(private val gameType: GameType, gameParams: String? 
             val localId = rs.getLong("LocalId")
             val score = rs.getInt("FinalScore")
 
-            val playerFlag = PlayerEntity.getPlayerFlag(strategy.isEmpty())
-            val playerFlag2 = PlayerEntity.getPlayerFlag(strategy2.isEmpty())
-            val combinedFlag = combinePlayerFlags(playerFlag, playerFlag2)
+            val icon =
+                if (partyMode) {
+                    val imageIdOne = rs.getString("PlayerImageId")
+                    val imageIdTwo = rs.getString("PlayerImageId2")
+
+                    val imgOne = getRawImageForTableRow(imageIdOne)
+                    val imgTwo = getRawImageForTableRow(imageIdTwo)
+                    splitAvatar(imgOne, imgTwo, null, true)
+                } else {
+                    val playerFlag = PlayerEntity.getPlayerFlag(strategy.isEmpty())
+                    val playerFlag2 = PlayerEntity.getPlayerFlag(strategy2.isEmpty())
+                    combinePlayerFlags(playerFlag, playerFlag2)
+                }
+
             val playerName = "$playerName1 & $playerName2"
 
-            LeaderboardEntry(score, listOf(combinedFlag, playerName, localId, score))
+            LeaderboardEntry(score, listOf(icon, playerName, localId, score))
         }
     }
 
