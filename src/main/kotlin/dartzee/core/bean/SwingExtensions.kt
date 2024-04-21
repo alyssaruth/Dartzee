@@ -16,7 +16,9 @@ import javax.swing.JComponent
 import javax.swing.JScrollPane
 import javax.swing.JTable
 import javax.swing.JTextField
+import javax.swing.JTextPane
 import javax.swing.KeyStroke
+import javax.swing.UIDefaults
 import javax.swing.text.JTextComponent
 
 fun <K> JComboBox<K>.items() = (0 until model.size).map { model.getElementAt(it) }
@@ -94,3 +96,13 @@ fun JScrollPane.scrollToBottom() {
     val vertical = verticalScrollBar
     vertical.value = vertical.maximum
 }
+
+fun makeTransparentTextPane() =
+    JTextPane().apply {
+        val uiDefault = UIDefaults()
+        uiDefault["EditorPane[Enabled].backgroundPainter"] = null
+        putClientProperty("Nimbus.Overrides", uiDefault)
+        putClientProperty("Nimbus.Overrides.InheritDefaults", false)
+        background = null
+        isEditable = false
+    }

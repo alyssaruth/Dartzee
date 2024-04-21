@@ -4,8 +4,10 @@ import dartzee.core.bean.ScrollTableOrdered
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.setMargins
 import dartzee.db.MAX_PLAYERS
+import dartzee.utils.InjectedThings
+import dartzee.utils.ResourceCache
+import java.awt.Font
 import java.awt.event.ActionEvent
-import javax.swing.ImageIcon
 import javax.swing.JToggleButton
 
 class GameSetupPlayerSelector : AbstractPlayerSelector<ScrollTableOrdered>() {
@@ -15,7 +17,13 @@ class GameSetupPlayerSelector : AbstractPlayerSelector<ScrollTableOrdered>() {
     init {
         super.render()
 
-        btnPairs.icon = ImageIcon(javaClass.getResource("/buttons/teams.png"))
+        if (InjectedThings.partyMode) {
+            val font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 20f)
+            tablePlayersToSelectFrom.setTableFont(font)
+            tablePlayersSelected.setTableFont(font)
+        }
+
+        btnPairs.icon = ResourceCache.ICON_TEAMS
         btnPairs.toolTipText = "Play in pairs"
         tablePlayersSelected.addButtonToOrderingPanel(btnPairs, 3)
         lblSelected.setMargins(0, 0, 0, 60)

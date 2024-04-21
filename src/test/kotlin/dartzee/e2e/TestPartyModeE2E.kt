@@ -7,7 +7,6 @@ import com.github.alyssaburlton.swingtest.shouldBeVisible
 import dartzee.bean.GameSetupPlayerSelector
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.clickButton
-import dartzee.db.PlayerEntity.Companion.ICON_HUMAN
 import dartzee.drtDoubleTwenty
 import dartzee.drtInnerFourteen
 import dartzee.drtInnerOne
@@ -25,6 +24,7 @@ import dartzee.drtTrebleFive
 import dartzee.drtTrebleNineteen
 import dartzee.drtTrebleSeven
 import dartzee.drtTrebleTwenty
+import dartzee.game.GameLauncher
 import dartzee.getRows
 import dartzee.helper.preparePlayers
 import dartzee.screen.DartsApp
@@ -36,6 +36,7 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import javax.swing.JButton
+import javax.swing.SwingUtilities
 import org.junit.jupiter.api.Test
 
 class TestPartyModeE2E : AbstractE2ETest() {
@@ -88,10 +89,16 @@ class TestPartyModeE2E : AbstractE2ETest() {
         val leaderboardTable = app.getChild<ScrollTableDartsGame>()
         leaderboardTable
             .getRows()
-            .shouldContainExactly(
-                arrayOf(1, ICON_HUMAN, "Alice", 1L, 12),
-                arrayOf(2, ICON_HUMAN, "Bob", 1L, 14)
-            )
+            .map { it.filterIndexed { index: Int, _ -> index != 1 } }
+            .shouldContainExactly(arrayOf(1, "Alice", 1L, 12), arrayOf(2, "Bob", 1L, 14))
+
+        // Reload the game
+        SwingUtilities.invokeAndWait { GameLauncher().loadAndDisplayGame(gamePanel.getGameId()) }
+
+        val loadedWindow = ScreenCache.getDartsGameScreen(gamePanel.getGameId())!!
+        loadedWindow.shouldBeVisible()
+        loadedWindow.getScorer("Alice").lblResult.text shouldBe "12 Darts"
+        loadedWindow.getScorer("Bob").lblResult.text shouldBe "14 Darts"
     }
 
     private fun launchApp(): DartsApp {

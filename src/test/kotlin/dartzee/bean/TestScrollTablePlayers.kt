@@ -1,12 +1,17 @@
 package dartzee.bean
 
+import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.core.bean.ScrollTable
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
+import dartzee.toLabel
+import dartzee.utils.InjectedThings
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
+import javax.swing.ImageIcon
 import javax.swing.ListSelectionModel
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
 class TestScrollTablePlayers : AbstractTest() {
@@ -28,6 +33,19 @@ class TestScrollTablePlayers : AbstractTest() {
 
         table.getValueAt(1, 0) shouldBe PlayerEntity.ICON_AI
         table.getValueAt(1, 1) shouldBe robot
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should render with player avatars in party mode`() {
+        InjectedThings.partyMode = true
+
+        val table = ScrollTable()
+        val bob = insertPlayer(name = "Bob")
+        table.initPlayerTableModel(listOf(bob))
+
+        val icon = table.getValueAt(0, 0) as ImageIcon
+        icon.toLabel().shouldMatchImage("tableAvatar")
     }
 
     @Test

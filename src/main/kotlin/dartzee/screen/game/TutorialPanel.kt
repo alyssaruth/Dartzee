@@ -1,5 +1,6 @@
 package dartzee.screen.game
 
+import dartzee.core.bean.makeTransparentTextPane
 import dartzee.core.util.append
 import dartzee.core.util.setFontSize
 import dartzee.listener.DartboardListener
@@ -19,11 +20,9 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JSeparator
-import javax.swing.JTextPane
 import javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
 import javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
 import javax.swing.SwingConstants
-import javax.swing.UIDefaults
 import javax.swing.border.EmptyBorder
 import javax.swing.border.EtchedBorder
 import net.miginfocom.swing.MigLayout
@@ -140,13 +139,7 @@ class TutorialPanel(private val parent: DartsGameScreen) :
     }
 
     private fun makeTextPane() =
-        JTextPane().apply {
-            val uiDefault = UIDefaults()
-            uiDefault["EditorPane[Enabled].backgroundPainter"] = null
-            putClientProperty("Nimbus.Overrides", uiDefault)
-            putClientProperty("Nimbus.Overrides.InheritDefaults", false)
-            background = null
-            isEditable = false
+        makeTransparentTextPane().apply {
             font = ResourceCache.UNICODE_FONT
             setFontSize(24)
             border = EmptyBorder(10, 5, 20, 5)

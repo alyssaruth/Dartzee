@@ -21,24 +21,26 @@ class DartsGameScreen(game: GameEntity, private val participants: List<IWrappedP
         ScreenCache.addDartsGameScreen(gameId, this)
 
         title = gamePanel.gameTitle
+        contentPane.add(gamePanel)
 
         if (InjectedThings.partyMode) {
-            contentPane.add(tutorialPanel)
             size = Dimension(1000, 600)
             extendedState = Frame.MAXIMIZED_BOTH
-        } else {
-            contentPane.add(gamePanel)
         }
     }
 
     fun startNewGame() {
         if (!InjectedThings.partyMode) {
             gamePanel.startNewGame(participants)
+        } else {
+            contentPane.removeAll()
+            contentPane.add(tutorialPanel)
+            repaint()
         }
     }
 
     fun tutorialFinished() {
-        contentPane.remove(tutorialPanel)
+        contentPane.removeAll()
         contentPane.add(gamePanel)
         repaint()
 

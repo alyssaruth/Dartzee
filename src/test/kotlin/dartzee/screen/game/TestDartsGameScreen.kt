@@ -53,10 +53,10 @@ class TestDartsGameScreen : AbstractTest() {
         val game = insertGame()
         val scrn = DartsGameScreen(game, listOf(makeSingleParticipant()))
         scrn.gamePanel = mockk(relaxed = true)
+        scrn.startNewGame()
+
         scrn.findChild<DartsGamePanel<*, *>>() shouldBe null
         scrn.findChild<TutorialPanel>() shouldNotBe null
-
-        scrn.startNewGame()
         verifyNotCalled { scrn.gamePanel.startNewGame(any()) }
     }
 
@@ -69,6 +69,7 @@ class TestDartsGameScreen : AbstractTest() {
         val game = insertGame()
         val scrn = DartsGameScreen(game, participants)
         scrn.gamePanel = mockk(relaxed = true)
+        scrn.startNewGame()
 
         scrn.getChild<TutorialPanel>().clickButton(text = "I'm ready - let's play!")
         verify { scrn.gamePanel.startNewGame(participants) }

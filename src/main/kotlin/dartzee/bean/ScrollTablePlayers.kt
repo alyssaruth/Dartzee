@@ -3,6 +3,8 @@ package dartzee.bean
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.TableUtil
 import dartzee.db.PlayerEntity
+import dartzee.utils.InjectedThings
+import dartzee.utils.getImageForTableRow
 
 fun ScrollTable.getSelectedPlayer(): PlayerEntity? {
     val row = table.selectedRow
@@ -22,8 +24,13 @@ fun ScrollTable.initPlayerTableModel(players: List<PlayerEntity> = listOf()) {
 
     this.model = model
 
-    setRowHeight(23)
-    setColumnWidths("25")
+    if (InjectedThings.partyMode) {
+        setRowHeight(50)
+        setColumnWidths("50")
+    } else {
+        setRowHeight(23)
+        setColumnWidths("25")
+    }
 
     addPlayers(players)
 
@@ -34,7 +41,9 @@ fun ScrollTable.initPlayerTableModel(players: List<PlayerEntity> = listOf()) {
 fun ScrollTable.addPlayers(players: List<PlayerEntity>) = players.forEach(::addPlayer)
 
 private fun ScrollTable.addPlayer(player: PlayerEntity) {
-    val flag = player.getFlag()
+    val flag =
+        if (InjectedThings.partyMode) getImageForTableRow(player.playerImageId)
+        else player.getFlag()
     val row = arrayOf(flag, player)
 
     addRow(row)

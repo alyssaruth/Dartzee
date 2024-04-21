@@ -3,7 +3,6 @@ package dartzee.core.bean
 import java.awt.Color
 import java.awt.Component
 import java.awt.Cursor
-import java.awt.Font
 import java.awt.event.MouseEvent
 import java.awt.font.TextAttribute
 import javax.swing.JTable
@@ -96,7 +95,7 @@ abstract class ScrollTableHyperlink(private val linkColumnName: String, testId: 
         }
 
         override fun getTableCellRendererComponent(
-            table: JTable?,
+            table: JTable,
             value: Any?,
             isSelected: Boolean,
             hasFocus: Boolean,
@@ -119,7 +118,8 @@ abstract class ScrollTableHyperlink(private val linkColumnName: String, testId: 
 
             val fontAttributes = HashMap<TextAttribute, Int>()
             fontAttributes[TextAttribute.UNDERLINE] = TextAttribute.UNDERLINE_ON
-            val hyperlinkFont = Font("Tahoma", Font.BOLD, 12).deriveFont(fontAttributes)
+            fontAttributes[TextAttribute.SIZE] = table.font.size
+            val hyperlinkFont = table.font.deriveFont(fontAttributes)
 
             font = hyperlinkFont
 
