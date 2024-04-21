@@ -1,5 +1,6 @@
 package dartzee.screen.game
 
+import dartzee.core.util.alignCentrally
 import java.awt.Color
 import java.awt.Component
 import java.awt.Font
@@ -7,15 +8,10 @@ import javax.swing.JTable
 import javax.swing.JTextPane
 import javax.swing.border.MatteBorder
 import javax.swing.table.TableCellRenderer
-import javax.swing.text.SimpleAttributeSet
-import javax.swing.text.StyleConstants
 
 class GameStatisticsHeaderRenderer : JTextPane(), TableCellRenderer {
     init {
-        val doc = this.styledDocument
-        val center = SimpleAttributeSet()
-        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER)
-        doc.setParagraphAttributes(0, doc.length, center, false)
+        alignCentrally()
     }
 
     override fun getTableCellRendererComponent(

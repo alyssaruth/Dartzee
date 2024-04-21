@@ -69,6 +69,9 @@ abstract class AbstractPlayerSelector<S : ScrollTable> :
         tablePlayersSelected.addDoubleClickListener(this)
         tablePlayersToSelectFrom.addDoubleClickListener(this)
 
+        tablePlayersToSelectFrom.setShowRowCount(false)
+        tablePlayersSelected.setShowRowCount(false)
+
         btnSelect.addActionListener(this)
         btnUnselect.addActionListener(this)
 

@@ -30,6 +30,7 @@ object ResourceCache {
     val ICON_RESUME = ImageIcon(javaClass.getResource("/buttons/resume.png"))
     val ICON_PAUSE = ImageIcon(javaClass.getResource("/buttons/pause.png"))
     val ICON_STATS_LARGE = ImageIcon(javaClass.getResource("/buttons/stats_large.png"))
+    val ICON_TEAMS = ImageIcon(javaClass.getResource("/buttons/teams.png"))
 
     val AVATAR_UNSET = ImageIcon(PlayerAvatar::class.java.getResource("/avatars/Unset.png"))
 

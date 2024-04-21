@@ -102,6 +102,12 @@ fun Component.setFontSize(size: Int) {
     font = Font(font.name, font.style, size)
 }
 
+fun JTextPane.alignCentrally() {
+    val center = SimpleAttributeSet()
+    StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER)
+    styledDocument.setParagraphAttributes(0, styledDocument.length, center, false)
+}
+
 fun Component.setBold() {
     font = font.deriveFont(Font.BOLD)
 }
