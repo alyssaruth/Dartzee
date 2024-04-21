@@ -1,3 +1,9 @@
+--------- v7.1.1 ---------
+
++ Tutorial for party mode
+= Other party mode tweaks
+= 93.6% test coverage (14349 / 15330 lines covered by 2447 tests)
+
 --------- v7.1.0 ---------
 
 + Option to not have to finish on a double in X01

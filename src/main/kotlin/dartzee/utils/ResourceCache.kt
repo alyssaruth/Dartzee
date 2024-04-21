@@ -31,6 +31,11 @@ object ResourceCache {
     val ICON_PAUSE = ImageIcon(javaClass.getResource("/buttons/pause.png"))
     val ICON_STATS_LARGE = ImageIcon(javaClass.getResource("/buttons/stats_large.png"))
     val ICON_TEAMS = ImageIcon(javaClass.getResource("/buttons/teams.png"))
+    val ICON_RESET = ImageIcon(javaClass.getResource("/buttons/Reset.png"))
+    val ICON_CONFIRM = ImageIcon(javaClass.getResource("/buttons/Confirm.png"))
+    val ICON_GRAPH_DECREASING = ImageIcon(javaClass.getResource("/icons/graph_decreasing.png"))
+    val ICON_DARTBOARD = ImageIcon(javaClass.getResource("/icons/dartboard.png"))
+    val ICON_CALCULATOR = ImageIcon(javaClass.getResource("/icons/calculator_large.png"))
 
     val AVATAR_UNSET = ImageIcon(PlayerAvatar::class.java.getResource("/avatars/Unset.png"))
 
@@ -88,9 +93,6 @@ object ResourceCache {
 
     val BASE_FONT: Font =
         Font.createFont(Font.TRUETYPE_FONT, javaClass.getResourceAsStream("/trebuc.ttf"))
-
-    val UNICODE_FONT: Font =
-        Font.createFont(Font.TRUETYPE_FONT, javaClass.getResourceAsStream("/arialunicode.ttf"))
 
     private val wavPoolLock = Any()
     private val hmWavToInputStreams = HashMapList<String, AudioInputStream>()
