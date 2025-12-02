@@ -44,7 +44,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
                 AchievementType.X01_SUCH_BAD_LUCK,
                 getCurrentPlayerId(),
                 getGameId(),
-                count
+                count,
             )
         }
 
@@ -64,7 +64,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
                 AchievementEntity.insertAchievement(
                     AchievementType.X01_SHANGHAI,
                     getCurrentPlayerId(),
-                    getGameId()
+                    getGameId(),
                 )
             }
 
@@ -75,7 +75,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
                 AchievementType.X01_BEST_THREE_DART_SCORE,
                 getCurrentPlayerId(),
                 getGameId(),
-                total
+                total,
             )
         } else {
             val startingScoreForRound =
@@ -84,7 +84,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
                 AchievementType.X01_HIGHEST_BUST,
                 getCurrentPlayerId(),
                 getGameId(),
-                startingScoreForRound
+                startingScoreForRound,
             )
         }
 
@@ -93,7 +93,10 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
 
     private fun updateForUniqueScore(achievementType: AchievementType, enforceThreeDarts: Boolean) {
         // Need to have thrown 3 darts, all of which didn't miss.
-        if (enforceThreeDarts && (getDartsThrown().any { d -> d.multiplier == 0 } || dartsThrownCount() < 3)) {
+        if (
+            enforceThreeDarts &&
+                (getDartsThrown().any { d -> d.multiplier == 0 } || dartsThrownCount() < 3)
+        ) {
             return
         }
 
@@ -105,7 +108,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
                 achievementType,
                 getCurrentPlayerId(),
                 getGameId(),
-                methodStr
+                methodStr,
             )
         }
     }
@@ -130,7 +133,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
                 playerId,
                 getGameId(),
                 method,
-                sum
+                sum,
             )
         }
 
@@ -138,7 +141,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
             AchievementType.X01_BEST_FINISH,
             playerId,
             getGameId(),
-            sum
+            sum,
         )
 
         // Insert into the X01Finishes table for the leaderboard
@@ -150,7 +153,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
             playerId,
             getGameId(),
             checkout,
-            ""
+            "",
         )
 
         if (sum in listOf(3, 5, 7, 9) && config.finishType == FinishType.Doubles) {
@@ -158,7 +161,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
                 AchievementType.X01_NO_MERCY,
                 playerId,
                 getGameId(),
-                "$sum"
+                "$sum",
             )
         }
 

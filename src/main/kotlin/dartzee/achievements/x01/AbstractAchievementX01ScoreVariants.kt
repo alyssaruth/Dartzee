@@ -106,9 +106,15 @@ abstract class AbstractAchievementX01ScoreVariants(private val enforceThreeDarts
         sb.append(" AND highestDart.PlayerId = mediumDart.PlayerId")
         sb.append(" AND highestDart.RoundNumber = mediumDart.RoundNumber")
         sb.append(" AND (${getDartHigherThanSql("highestDart", "mediumDart")})")
-        sb.append(" AND (lowestDart.Ordinal = 1 OR mediumDart.Ordinal = 1 OR highestDart.Ordinal = 1)")
-        sb.append(" AND (lowestDart.Ordinal = 2 OR mediumDart.Ordinal = 2 OR highestDart.Ordinal = 2)")
-        sb.append(" AND (lowestDart.Ordinal = highestDart.DartCount OR mediumDart.Ordinal = highestDart.DartCount OR highestDart.Ordinal = highestDart.DartCount)")
+        sb.append(
+            " AND (lowestDart.Ordinal = 1 OR mediumDart.Ordinal = 1 OR highestDart.Ordinal = 1)"
+        )
+        sb.append(
+            " AND (lowestDart.Ordinal = 2 OR mediumDart.Ordinal = 2 OR highestDart.Ordinal = 2)"
+        )
+        sb.append(
+            " AND (lowestDart.Ordinal = highestDart.DartCount OR mediumDart.Ordinal = highestDart.DartCount OR highestDart.Ordinal = highestDart.DartCount)"
+        )
         sb.append(
             " GROUP BY highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()}"
         )

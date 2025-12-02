@@ -71,7 +71,6 @@ class TestAchievementX01Chucklevision :
         a.achievementDetail shouldBe "T20, T3"
     }
 
-
     @Test
     fun `Should ignore rounds that bust the player`() {
         val p = insertPlayer()
@@ -108,7 +107,7 @@ class TestAchievementX01Chucklevision :
             p,
             listOf(Dart(20, 3), Dart(3, 3), Dart(1, 1)),
             participant = pt,
-            roundNumber = 1
+            roundNumber = 1,
         )
 
         insertDartsForPlayer(g, p, makeChucklevisionDarts(), participant = pt, roundNumber = 2)
@@ -161,14 +160,14 @@ class TestAchievementX01Chucklevision :
 
         methods.shouldContainExactlyInAnyOrder(
             getSortedDartStr(validOne),
-            getSortedDartStr(validTwo)
+            getSortedDartStr(validTwo),
         )
     }
 
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         insertStandardChucklevision(p, g, database)
     }
@@ -176,7 +175,7 @@ class TestAchievementX01Chucklevision :
     private fun insertStandardChucklevision(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ) {
         insertDartsForPlayer(g, p, makeChucklevisionDarts(), database = database)
     }
@@ -188,7 +187,7 @@ class TestAchievementX01Chucklevision :
         startingScore: Int = 501,
         database: Database = mainDatabase,
         participant: ParticipantEntity? = null,
-        roundNumber: Int = 1
+        roundNumber: Int = 1,
     ) {
         val pt =
             participant
@@ -203,7 +202,7 @@ class TestAchievementX01Chucklevision :
                 ordinal = ix + 1,
                 startingScore = currentScore,
                 roundNumber = roundNumber,
-                database = database
+                database = database,
             )
             currentScore -= drt.getTotal()
         }
