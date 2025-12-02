@@ -8,7 +8,8 @@ import dartzee.db.AchievementEntity
 import dartzee.game.GameType
 import dartzee.utils.Database
 
-abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement() {
+abstract class AbstractAchievementX01ScoreVariants(private val enforceThreeDarts: Boolean) :
+    AbstractMultiRowAchievement() {
     abstract val targetScore: Int
 
     override val gameType = GameType.X01
@@ -24,7 +25,7 @@ abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement
         val roundWithTargetScore =
             database.createTempTable(
                 "RoundsScored$targetScore",
-                "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), RoundNumber INT"
+                "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), RoundNumber INT",
             )
 
         var sb = StringBuilder()
@@ -32,7 +33,11 @@ abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement
         sb.append(" SELECT PlayerId, ParticipantId, GameId, RoundNumber")
         sb.append(" FROM $X01_ROUNDS_TABLE")
         sb.append(" WHERE StartingScore - RemainingScore = $targetScore")
-        sb.append(" AND TotalDartsThrown = 3")
+
+        if (enforceThreeDarts) {
+            sb.append(" AND TotalDartsThrown = 3")
+        }
+
         sb.append(" AND (RemainingScore > 1 OR RemainingScore = 0 AND LastDartMultiplier = 2)")
 
         if (!database.executeUpdate(sb)) return
@@ -40,36 +45,39 @@ abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement
         val tempTable =
             database.createTempTable(
                 "RoundsScored${targetScore}NoMisses",
-                "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundNumber INT, DtCreation TIMESTAMP"
+                "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundNumber INT, DartCount INT, DtCreation TIMESTAMP",
             )
         tempTable ?: return
 
         sb = StringBuilder()
         sb.append(" INSERT INTO $tempTable")
         sb.append(
-            " SELECT zz.PlayerId, zz.ParticipantId, zz.GameId, d.Ordinal, d.Score, d.Multiplier, d.RoundNumber, d.DtCreation"
+            " SELECT zz.PlayerId, zz.ParticipantId, zz.GameId, d.Ordinal, d.Score, d.Multiplier, d.RoundNumber, CASE WHEN drtThird.Multiplier IS NULL THEN 2 ELSE 3 END, d.DtCreation"
         )
-        sb.append(
-            " FROM Dart d, Dart drtFirst, Dart drtSecond, Dart drtLast, $roundWithTargetScore zz"
-        )
+        sb.append(" FROM Dart d, Dart drtFirst, Dart drtSecond, $roundWithTargetScore zz")
+        sb.append(" LEFT OUTER JOIN Dart drtThird ON (")
+        sb.append(" drtThird.ParticipantId = zz.ParticipantId")
+        sb.append(" AND drtThird.PlayerId = zz.PlayerId")
+        sb.append(" AND drtThird.RoundNumber = zz.RoundNumber")
+        sb.append(" AND drtThird.Ordinal = 3")
+        sb.append(")")
         sb.append(" WHERE drtFirst.ParticipantId = zz.ParticipantId")
         sb.append(" AND drtFirst.PlayerId = zz.PlayerId")
         sb.append(" AND drtFirst.RoundNumber = zz.RoundNumber")
         sb.append(" AND drtSecond.ParticipantId = zz.ParticipantId")
         sb.append(" AND drtSecond.PlayerId = zz.PlayerId")
         sb.append(" AND drtSecond.RoundNumber = zz.RoundNumber")
-        sb.append(" AND drtLast.ParticipantId = zz.ParticipantId")
-        sb.append(" AND drtLast.PlayerId = zz.PlayerId")
-        sb.append(" AND drtLast.RoundNumber = zz.RoundNumber")
         sb.append(" AND d.RoundNumber = zz.RoundNumber")
         sb.append(" AND d.ParticipantId = zz.ParticipantId")
         sb.append(" AND d.PlayerId = zz.PlayerId")
         sb.append(" AND drtFirst.Ordinal = 1")
         sb.append(" AND drtSecond.Ordinal = 2")
-        sb.append(" AND drtLast.Ordinal = 3")
-        sb.append(" AND drtFirst.Multiplier > 0")
-        sb.append(" AND drtSecond.Multiplier > 0")
-        sb.append(" AND drtLast.Multiplier > 0")
+
+        if (enforceThreeDarts) {
+            sb.append(" AND drtFirst.Multiplier > 0")
+            sb.append(" AND drtSecond.Multiplier > 0")
+            sb.append(" AND drtThird.Multiplier > 0")
+        }
 
         if (!database.executeUpdate(sb)) return
 
@@ -79,7 +87,7 @@ abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement
         val tempTableTwo =
             database.createTempTable(
                 "RoundsScored${targetScore}Flat",
-                "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Method VARCHAR(100)"
+                "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Method VARCHAR(100)",
             )
 
         sb = StringBuilder()
@@ -87,15 +95,26 @@ abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement
         sb.append(
             " SELECT highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()} AS Method"
         )
-        sb.append(" FROM $tempTable highestDart, $tempTable mediumDart, $tempTable lowestDart")
+        sb.append(" FROM $tempTable highestDart, $tempTable mediumDart")
+        sb.append(" LEFT OUTER JOIN $tempTable lowestDart ON (")
+        sb.append(" mediumDart.ParticipantId = lowestDart.ParticipantId")
+        sb.append(" AND mediumDart.PlayerId = lowestDart.PlayerId")
+        sb.append(" AND mediumDart.RoundNumber = lowestDart.RoundNumber")
+        sb.append(" AND (${getDartHigherThanSql("mediumDart", "lowestDart")})")
+        sb.append(" )")
         sb.append(" WHERE highestDart.ParticipantId = mediumDart.ParticipantId")
         sb.append(" AND highestDart.PlayerId = mediumDart.PlayerId")
         sb.append(" AND highestDart.RoundNumber = mediumDart.RoundNumber")
-        sb.append(" AND mediumDart.ParticipantId = lowestDart.ParticipantId")
-        sb.append(" AND mediumDart.PlayerId = lowestDart.PlayerId")
-        sb.append(" AND mediumDart.RoundNumber = lowestDart.RoundNumber")
         sb.append(" AND (${getDartHigherThanSql("highestDart", "mediumDart")})")
-        sb.append(" AND (${getDartHigherThanSql("mediumDart", "lowestDart")})")
+        sb.append(
+            " AND (lowestDart.Ordinal = 1 OR mediumDart.Ordinal = 1 OR highestDart.Ordinal = 1)"
+        )
+        sb.append(
+            " AND (lowestDart.Ordinal = 2 OR mediumDart.Ordinal = 2 OR highestDart.Ordinal = 2)"
+        )
+        sb.append(
+            " AND (lowestDart.Ordinal = highestDart.DartCount OR mediumDart.Ordinal = highestDart.DartCount OR highestDart.Ordinal = highestDart.DartCount)"
+        )
         sb.append(
             " GROUP BY highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()}"
         )
@@ -119,7 +138,7 @@ abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement
                 rs,
                 database,
                 achievementType,
-                achievementDetailFn = { rs.getString("Method") }
+                achievementDetailFn = { rs.getString("Method") },
             )
         }
     }
@@ -141,9 +160,14 @@ abstract class AbstractAchievementX01ScoreVariants : AbstractMultiRowAchievement
     }
 
     private fun getThreeDartMethodSqlStr() =
-        "${getDartStrSql("highestDart")} || ', ' || ${getDartStrSql("mediumDart")} || ', ' || ${getDartStrSql("lowestDart")}"
+        "${getDartStrSql("highestDart")} || ', ' || ${getDartStrSql("mediumDart")} || ${getDartStrSql("lowestDart", true)}"
 
-    private fun getDartStrSql(alias: String) =
+    private fun getDartStrSql(alias: String, nullable: Boolean = false) =
+        if (nullable)
+            "CASE WHEN $alias.Multiplier IS NULL THEN '' WHEN $alias.Multiplier = 0 THEN '' ELSE ', ' || ${dartStrSql(alias)} END"
+        else dartStrSql(alias)
+
+    private fun dartStrSql(alias: String) =
         "${getDartMultiplierStrSql(alias)} || ${getDartScoreStrSql(alias)}"
 
     private fun getDartMultiplierStrSql(alias: String) =

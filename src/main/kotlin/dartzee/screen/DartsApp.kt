@@ -1,6 +1,7 @@
 package dartzee.screen
 
 import dartzee.achievements.convertEmptyAchievements
+import dartzee.achievements.x01.AchievementX01Chucklevision
 import dartzee.core.bean.AbstractDevScreen
 import dartzee.core.bean.CheatBar
 import dartzee.core.util.DialogUtil
@@ -75,6 +76,9 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         // Pop up the change log if we've just updated
         if (DartsClient.justUpdated) {
             convertEmptyAchievements()
+
+            // TODO - Remove before next release
+            AchievementX01Chucklevision().runConversion(emptyList())
 
             val dialog = ChangeLog()
             dialog.isVisible = true

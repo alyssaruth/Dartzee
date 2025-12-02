@@ -10,6 +10,7 @@ import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertTeam
+import dartzee.helper.retrieveAchievement
 import dartzee.`object`.Dart
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
@@ -39,7 +40,7 @@ class TestAchievementX01Chucklevision :
     }
 
     @Test
-    fun `Should ignore rounds that contain any misses`() {
+    fun `Should include rounds with misses`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -49,7 +50,25 @@ class TestAchievementX01Chucklevision :
 
         runConversion()
 
-        getAchievementCount() shouldBe 0
+        getAchievementCount() shouldBe 1
+
+        val a = retrieveAchievement()
+        a.achievementDetail shouldBe "T20, T3"
+    }
+
+    @Test
+    fun `Should include rounds where only two darts were thrown`() {
+        val p = insertPlayer()
+        val g = insertRelevantGame()
+
+        insertDartsForPlayer(g, p, listOf(Dart(20, 3), Dart(3, 3)))
+
+        runConversion()
+
+        getAchievementCount() shouldBe 1
+
+        val a = retrieveAchievement()
+        a.achievementDetail shouldBe "T20, T3"
     }
 
     @Test
@@ -88,7 +107,7 @@ class TestAchievementX01Chucklevision :
             p,
             listOf(Dart(20, 3), Dart(3, 3), Dart(1, 1)),
             participant = pt,
-            roundNumber = 1
+            roundNumber = 1,
         )
 
         insertDartsForPlayer(g, p, makeChucklevisionDarts(), participant = pt, roundNumber = 2)
@@ -96,18 +115,6 @@ class TestAchievementX01Chucklevision :
         runConversion()
 
         getAchievementCount() shouldBe 1
-    }
-
-    @Test
-    fun `Should ignore rounds that contain fewer than 3 darts`() {
-        val p = insertPlayer()
-        val g = insertRelevantGame()
-
-        insertDartsForPlayer(g, p, listOf(Dart(20, 3), Dart(3, 3)))
-
-        runConversion()
-
-        getAchievementCount() shouldBe 0
     }
 
     @Test
@@ -153,14 +160,14 @@ class TestAchievementX01Chucklevision :
 
         methods.shouldContainExactlyInAnyOrder(
             getSortedDartStr(validOne),
-            getSortedDartStr(validTwo)
+            getSortedDartStr(validTwo),
         )
     }
 
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         insertStandardChucklevision(p, g, database)
     }
@@ -168,7 +175,7 @@ class TestAchievementX01Chucklevision :
     private fun insertStandardChucklevision(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ) {
         insertDartsForPlayer(g, p, makeChucklevisionDarts(), database = database)
     }
@@ -180,7 +187,7 @@ class TestAchievementX01Chucklevision :
         startingScore: Int = 501,
         database: Database = mainDatabase,
         participant: ParticipantEntity? = null,
-        roundNumber: Int = 1
+        roundNumber: Int = 1,
     ) {
         val pt =
             participant
@@ -195,7 +202,7 @@ class TestAchievementX01Chucklevision :
                 ordinal = ix + 1,
                 startingScore = currentScore,
                 roundNumber = roundNumber,
-                database = database
+                database = database,
             )
             currentScore -= drt.getTotal()
         }
