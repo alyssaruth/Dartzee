@@ -45,14 +45,14 @@ abstract class AbstractAchievementX01ScoreVariants(private val enforceThreeDarts
         val tempTable =
             database.createTempTable(
                 "RoundsScored${targetScore}NoMisses",
-                "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundNumber INT, DtCreation TIMESTAMP",
+                "PlayerId VARCHAR(36), ParticipantId VARCHAR(36), GameId VARCHAR(36), Ordinal INT, Score INT, Multiplier INT, RoundNumber INT, DartCount INT, DtCreation TIMESTAMP",
             )
         tempTable ?: return
 
         sb = StringBuilder()
         sb.append(" INSERT INTO $tempTable")
         sb.append(
-            " SELECT zz.PlayerId, zz.ParticipantId, zz.GameId, d.Ordinal, d.Score, d.Multiplier, d.RoundNumber, d.DtCreation"
+            " SELECT zz.PlayerId, zz.ParticipantId, zz.GameId, d.Ordinal, d.Score, d.Multiplier, d.RoundNumber, CASE WHEN drtThird.Multiplier IS NULL THEN 2 ELSE 3 END, d.DtCreation"
         )
         sb.append(" FROM Dart d, Dart drtFirst, Dart drtSecond, $roundWithTargetScore zz")
         sb.append(" LEFT OUTER JOIN Dart drtThird ON (")
@@ -106,6 +106,9 @@ abstract class AbstractAchievementX01ScoreVariants(private val enforceThreeDarts
         sb.append(" AND highestDart.PlayerId = mediumDart.PlayerId")
         sb.append(" AND highestDart.RoundNumber = mediumDart.RoundNumber")
         sb.append(" AND (${getDartHigherThanSql("highestDart", "mediumDart")})")
+        sb.append(" AND (lowestDart.Ordinal = 1 OR mediumDart.Ordinal = 1 OR highestDart.Ordinal = 1)")
+        sb.append(" AND (lowestDart.Ordinal = 2 OR mediumDart.Ordinal = 2 OR highestDart.Ordinal = 2)")
+        sb.append(" AND (lowestDart.Ordinal = highestDart.DartCount OR mediumDart.Ordinal = highestDart.DartCount OR highestDart.Ordinal = highestDart.DartCount)")
         sb.append(
             " GROUP BY highestDart.PlayerId, highestDart.GameId, highestDart.DtCreation, ${getThreeDartMethodSqlStr()}"
         )
@@ -155,7 +158,7 @@ abstract class AbstractAchievementX01ScoreVariants(private val enforceThreeDarts
 
     private fun getDartStrSql(alias: String, nullable: Boolean = false) =
         if (nullable)
-            "CASE WHEN $alias.Multiplier IS NULL THEN '' ELSE ', ' || ${dartStrSql(alias)} END"
+            "CASE WHEN $alias.Multiplier IS NULL THEN '' WHEN $alias.Multiplier = 0 THEN '' ELSE ', ' || ${dartStrSql(alias)} END"
         else dartStrSql(alias)
 
     private fun dartStrSql(alias: String) =

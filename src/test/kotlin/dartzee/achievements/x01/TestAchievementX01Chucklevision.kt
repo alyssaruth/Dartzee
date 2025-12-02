@@ -10,6 +10,7 @@ import dartzee.helper.insertDart
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertTeam
+import dartzee.helper.retrieveAchievement
 import dartzee.`object`.Dart
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
@@ -39,7 +40,7 @@ class TestAchievementX01Chucklevision :
     }
 
     @Test
-    fun `Should ignore rounds that contain any misses`() {
+    fun `Should include rounds with misses`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
 
@@ -49,8 +50,27 @@ class TestAchievementX01Chucklevision :
 
         runConversion()
 
-        getAchievementCount() shouldBe 0
+        getAchievementCount() shouldBe 1
+
+        val a = retrieveAchievement()
+        a.achievementDetail shouldBe "T20, T3"
     }
+
+    @Test
+    fun `Should include rounds where only two darts were thrown`() {
+        val p = insertPlayer()
+        val g = insertRelevantGame()
+
+        insertDartsForPlayer(g, p, listOf(Dart(20, 3), Dart(3, 3)))
+
+        runConversion()
+
+        getAchievementCount() shouldBe 1
+
+        val a = retrieveAchievement()
+        a.achievementDetail shouldBe "T20, T3"
+    }
+
 
     @Test
     fun `Should ignore rounds that bust the player`() {
@@ -96,18 +116,6 @@ class TestAchievementX01Chucklevision :
         runConversion()
 
         getAchievementCount() shouldBe 1
-    }
-
-    @Test
-    fun `Should ignore rounds that contain fewer than 3 darts`() {
-        val p = insertPlayer()
-        val g = insertRelevantGame()
-
-        insertDartsForPlayer(g, p, listOf(Dart(20, 3), Dart(3, 3)))
-
-        runConversion()
-
-        getAchievementCount() shouldBe 0
     }
 
     @Test

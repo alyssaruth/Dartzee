@@ -265,16 +265,34 @@ class TestGamePanelX01 : AbstractTest() {
             }
         chucklevisionRows.shouldContainExactlyInAnyOrder(
             AchievementSummary(AchievementType.X01_CHUCKLEVISION, -1, gameId, "T20, 5, 4"),
-            AchievementSummary(AchievementType.X01_CHUCKLEVISION, -1, gameId, "T19, 7, 5")
+            AchievementSummary(AchievementType.X01_CHUCKLEVISION, -1, gameId, "T19, 7, 5"),
+            AchievementSummary(AchievementType.X01_CHUCKLEVISION, -1, gameId, "T20, T3"),
         )
     }
 
     @Test
-    fun `Should not update chucklevision achievement if board is missed, or player is bust`() {
+    fun `Should update the chucklevision achievement even if board is missed`() {
+        val playerId = randomGuid()
+        val panel = makeX01GamePanel(playerId)
+        val gameId = panel.gameEntity.rowId
+
+        panel.addCompletedRound(listOf(Dart(20, 3), Dart(9, 1), Dart(3, 0)))
+
+        val chucklevisionRows =
+            retrieveAchievementsForPlayer(playerId).filter {
+                it.achievementType == AchievementType.X01_CHUCKLEVISION
+            }
+        chucklevisionRows.shouldContainExactly(
+            AchievementSummary(AchievementType.X01_CHUCKLEVISION, -1, gameId, "T20, 9"),
+        )
+    }
+
+    @Test
+    fun `Should not update chucklevision achievement if player is bust`() {
         val playerId = randomGuid()
         val panel = makeX01GamePanel(playerId, gameParams = X01Config(101, FinishType.Doubles))
 
-        panel.addCompletedRound(listOf(Dart(20, 3), Dart(3, 3), Dart(19, 0)))
+        panel.addCompletedRound(listOf(Dart(20, 3), Dart(3, 3), Dart(1, 1)))
         panel.addCompletedRound(listOf(Dart(5, 1), Dart(4, 1), Dart(20, 3)))
 
         val chucklevisionRows =
