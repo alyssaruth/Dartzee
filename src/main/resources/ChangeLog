@@ -1,3 +1,8 @@
+--------- v7.1.2 ---------
+
+= Updated Chucklevision achievement to allow misses / 2 dart combos
+= 93.6% test coverage (14349 / 15330 lines covered by 2448 tests)
+
 --------- v7.1.1 ---------
 
 + Tutorial for party mode
