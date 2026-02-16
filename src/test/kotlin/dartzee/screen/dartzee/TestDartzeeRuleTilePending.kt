@@ -65,7 +65,7 @@ class TestDartzeeRuleTilePending : AbstractTest() {
                 makeScoreRule(20),
                 makeScoreRule(18),
                 makeScoreRule(19),
-                inOrder = true
+                inOrder = true,
             )
         val tile = DartzeeRuleTilePending(rule, 2)
 

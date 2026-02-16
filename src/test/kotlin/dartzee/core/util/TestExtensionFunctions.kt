@@ -52,7 +52,7 @@ class TestExtensionFunctions : AbstractTest() {
                 listOf(2, 1, 3),
                 listOf(2, 3, 1),
                 listOf(3, 1, 2),
-                listOf(3, 2, 1)
+                listOf(3, 2, 1),
             )
     }
 

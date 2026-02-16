@@ -7,7 +7,7 @@ enum class SyncStage {
     UPDATE_ACHIEVEMENTS,
     PUSH_TO_REMOTE,
     PUSH_BACKUP_TO_REMOTE,
-    OVERWRITE_LOCAL
+    OVERWRITE_LOCAL,
 }
 
 fun SyncStage.desc() =

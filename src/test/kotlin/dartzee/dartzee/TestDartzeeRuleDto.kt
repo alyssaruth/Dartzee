@@ -87,7 +87,7 @@ class TestDartzeeRuleDto : AbstractTest() {
                 DartzeeDartRuleEven(),
                 DartzeeDartRuleOdd(),
                 DartzeeDartRuleEven(),
-                inOrder = true
+                inOrder = true,
             )
         rule.generateRuleDescription() shouldBe "Even → Odd → Even"
     }
@@ -99,7 +99,7 @@ class TestDartzeeRuleDto : AbstractTest() {
                 DartzeeDartRuleInner(),
                 DartzeeDartRuleOuter(),
                 DartzeeDartRuleOuter(),
-                inOrder = false
+                inOrder = false,
             )
         rule.generateRuleDescription() shouldBe "{ 2x Outer, 1x Inner }"
     }
@@ -111,7 +111,7 @@ class TestDartzeeRuleDto : AbstractTest() {
                 DartzeeDartRuleInner(),
                 DartzeeDartRuleOuter(),
                 DartzeeDartRuleAny(),
-                inOrder = false
+                inOrder = false,
             )
         rule.generateRuleDescription() shouldBe "{ 1x Inner, 1x Outer }"
     }
@@ -129,14 +129,14 @@ class TestDartzeeRuleDto : AbstractTest() {
                 DartzeeDartRuleAny(),
                 DartzeeDartRuleAny(),
                 DartzeeDartRuleAny(),
-                inOrder = false
+                inOrder = false,
             )
         val orderedRule =
             makeDartzeeRuleDto(
                 DartzeeDartRuleAny(),
                 DartzeeDartRuleAny(),
                 DartzeeDartRuleAny(),
-                inOrder = false
+                inOrder = false,
             )
 
         unorderedRule.generateRuleDescription() shouldBe "Anything"
@@ -216,7 +216,7 @@ class TestDartzeeRuleDto : AbstractTest() {
                 DartzeeTotalRulePrime(),
                 true,
                 false,
-                "foobar"
+                "foobar",
             )
         rule.runStrengthCalculation()
 
@@ -286,7 +286,7 @@ class TestDartzeeRuleDto : AbstractTest() {
         val dto =
             makeDartzeeRuleDto(
                 makeColourRule(red = true),
-                aggregateRule = DartzeeAggregateRuleRepeats()
+                aggregateRule = DartzeeAggregateRuleRepeats(),
             )
         val darts = listOf(makeDart(20, 1), makeDart(20, 3), makeDart(18, 3))
         dto.getSuccessTotal(darts) shouldBe 60

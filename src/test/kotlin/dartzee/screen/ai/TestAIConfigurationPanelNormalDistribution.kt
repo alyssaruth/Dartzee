@@ -46,7 +46,7 @@ class TestAIConfigurationPanelNormalDistribution : AbstractTest() {
                 standardDeviation = 100.0,
                 standardDeviationDoubles = 17.5,
                 standardDeviationCentral = 5.2,
-                maxRadius = 270
+                maxRadius = 270,
             )
 
         val panel = AIConfigurationPanelNormalDistribution()
@@ -69,7 +69,7 @@ class TestAIConfigurationPanelNormalDistribution : AbstractTest() {
                 standardDeviation = 100.0,
                 standardDeviationDoubles = null,
                 standardDeviationCentral = null,
-                maxRadius = 250
+                maxRadius = 250,
             )
 
         val panel = AIConfigurationPanelNormalDistribution()

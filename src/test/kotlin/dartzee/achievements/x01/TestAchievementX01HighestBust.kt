@@ -22,7 +22,7 @@ class TestAchievementX01HighestBust : AbstractAchievementTest<AchievementX01High
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
@@ -32,7 +32,7 @@ class TestAchievementX01HighestBust : AbstractAchievementTest<AchievementX01High
             startingScore = 181,
             score = 20,
             multiplier = 3,
-            database = database
+            database = database,
         )
         insertDart(
             pt,
@@ -40,7 +40,7 @@ class TestAchievementX01HighestBust : AbstractAchievementTest<AchievementX01High
             startingScore = 121,
             score = 20,
             multiplier = 3,
-            database = database
+            database = database,
         )
         insertDart(
             pt,
@@ -48,7 +48,7 @@ class TestAchievementX01HighestBust : AbstractAchievementTest<AchievementX01High
             startingScore = 61,
             score = 20,
             multiplier = 3,
-            database = database
+            database = database,
         )
     }
 
@@ -121,7 +121,7 @@ class TestAchievementX01HighestBust : AbstractAchievementTest<AchievementX01High
         val g =
             insertGame(
                 gameType = GameType.X01,
-                gameParams = X01Config(501, FinishType.Any).toJson()
+                gameParams = X01Config(501, FinishType.Any).toJson(),
             )
 
         val pt = insertParticipant(playerId = insertPlayer().rowId, gameId = g.rowId)
@@ -137,7 +137,7 @@ class TestAchievementX01HighestBust : AbstractAchievementTest<AchievementX01High
         val g =
             insertGame(
                 gameType = GameType.X01,
-                gameParams = X01Config(501, FinishType.Any).toJson()
+                gameParams = X01Config(501, FinishType.Any).toJson(),
             )
 
         val pt = insertParticipant(playerId = insertPlayer().rowId, gameId = g.rowId)
@@ -173,7 +173,7 @@ class TestAchievementX01HighestBust : AbstractAchievementTest<AchievementX01High
             roundNumber = 1,
             startingScore = 45,
             score = 25,
-            multiplier = 2
+            multiplier = 2,
         )
         insertDart(
             ptTwo,
@@ -181,7 +181,7 @@ class TestAchievementX01HighestBust : AbstractAchievementTest<AchievementX01High
             roundNumber = 1,
             startingScore = 50,
             score = 20,
-            multiplier = 3
+            multiplier = 3,
         )
         insertDart(
             ptThree,
@@ -189,7 +189,7 @@ class TestAchievementX01HighestBust : AbstractAchievementTest<AchievementX01High
             roundNumber = 1,
             startingScore = 30,
             score = 20,
-            multiplier = 3
+            multiplier = 3,
         )
 
         runConversion()
@@ -209,7 +209,7 @@ class TestAchievementX01HighestBust : AbstractAchievementTest<AchievementX01High
             roundNumber = 1,
             startingScore = 100,
             score = 20,
-            multiplier = 3
+            multiplier = 3,
         )
         insertDart(pt, ordinal = 2, roundNumber = 1, startingScore = 40, score = 20, multiplier = 1)
         insertDart(pt, ordinal = 3, roundNumber = 1, startingScore = 20, score = 15, multiplier = 2)

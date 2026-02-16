@@ -21,7 +21,7 @@ import org.apache.commons.math3.distribution.NormalDistribution
 
 enum class DartzeePlayStyle {
     CAUTIOUS,
-    AGGRESSIVE
+    AGGRESSIVE,
 }
 
 val DELIBERATE_MISS = Point(Int.MAX_VALUE, Int.MAX_VALUE)
@@ -35,7 +35,7 @@ data class DartsAiModel(
     val mercyThreshold: Int?,
     val hmDartNoToSegmentType: Map<Int, SegmentType>,
     val hmDartNoToStopThreshold: Map<Int, Int>,
-    val dartzeePlayStyle: DartzeePlayStyle
+    val dartzeePlayStyle: DartzeePlayStyle,
 ) {
     // Modelling
     private val mean = 0
@@ -90,7 +90,7 @@ data class DartsAiModel(
             InjectedThings.dartzeeAimCalculator.getPointToAimFor(
                 AI_DARTBOARD,
                 segmentStatuses,
-                aggressive
+                aggressive,
             )
         return throwDartAtPoint(ptToAimAt)
     }
@@ -199,7 +199,7 @@ data class DartsAiModel(
                 null,
                 hmDartNoToSegmentType,
                 hmDartNoToStopThreshold,
-                DartzeePlayStyle.CAUTIOUS
+                DartzeePlayStyle.CAUTIOUS,
             )
         }
     }

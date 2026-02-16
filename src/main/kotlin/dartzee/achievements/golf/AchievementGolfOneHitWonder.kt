@@ -28,7 +28,7 @@ class AchievementGolfOneHitWonder : AbstractAchievement() {
         val tempTable =
             database.createTempTable(
                 "GameHolesInOne",
-                "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, HoleInOneCount INT"
+                "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, HoleInOneCount INT",
             ) ?: return
 
         var sb = StringBuilder()
@@ -63,7 +63,7 @@ class AchievementGolfOneHitWonder : AbstractAchievement() {
                 rs,
                 database,
                 achievementType,
-                achievementCounterFn = { rs.getInt("HoleInOneCount") }
+                achievementCounterFn = { rs.getInt("HoleInOneCount") },
             )
         }
     }

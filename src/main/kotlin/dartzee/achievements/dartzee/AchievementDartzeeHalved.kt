@@ -44,7 +44,7 @@ class AchievementDartzeeHalved : AbstractAchievement() {
                 database,
                 achievementType,
                 oneRowPerPlayer = true,
-                achievementCounterFn = { rs.getInt("Score") }
+                achievementCounterFn = { rs.getInt("Score") },
             )
         }
     }

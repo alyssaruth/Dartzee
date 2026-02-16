@@ -27,7 +27,7 @@ class Logger(private val destinations: List<ILogDestination>) {
         genericStatement: String,
         duration: Long,
         rowCount: Int,
-        dbName: String
+        dbName: String,
     ) {
         info(
             CODE_SQL,
@@ -37,7 +37,7 @@ class Logger(private val destinations: List<ILogDestination>) {
             KEY_SQL to sqlStatement,
             KEY_ROW_COUNT to rowCount,
             KEY_DATABASE_NAME to dbName,
-            KEY_STATEMENT_TYPE to SqlStatementType.fromStatement(sqlStatement).name
+            KEY_STATEMENT_TYPE to SqlStatementType.fromStatement(sqlStatement).name,
         )
     }
 
@@ -45,7 +45,7 @@ class Logger(private val destinations: List<ILogDestination>) {
         code: LoggingCode,
         workDone: Long,
         workToDo: Long,
-        percentageToLogAt: Int = 10
+        percentageToLogAt: Int = 10,
     ) {
         // Convert 1 to 0.01, 50 to 0.5, etc.
         val percentageAsDecimal = percentageToLogAt.toDouble() / 100
@@ -74,21 +74,21 @@ class Logger(private val destinations: List<ILogDestination>) {
         code: LoggingCode,
         message: String,
         errorObject: Throwable = Throwable(message),
-        vararg keyValuePairs: Pair<String, Any?>
+        vararg keyValuePairs: Pair<String, Any?>,
     ) {
         log(
             Severity.ERROR,
             code,
             message,
             errorObject,
-            mapOf(*keyValuePairs, KEY_EXCEPTION_MESSAGE to errorObject.message)
+            mapOf(*keyValuePairs, KEY_EXCEPTION_MESSAGE to errorObject.message),
         )
     }
 
     fun logSqlException(
         sqlStatement: String,
         genericStatement: String,
-        sqlException: SQLException
+        sqlException: SQLException,
     ) {
         error(
             CODE_SQL_EXCEPTION,
@@ -97,7 +97,7 @@ class Logger(private val destinations: List<ILogDestination>) {
             KEY_SQL to sqlStatement,
             KEY_GENERIC_SQL to genericStatement,
             KEY_ERROR_CODE to sqlException.errorCode,
-            KEY_SQL_STATE to sqlException.sqlState
+            KEY_SQL_STATE to sqlException.sqlState,
         )
     }
 
@@ -106,7 +106,7 @@ class Logger(private val destinations: List<ILogDestination>) {
         code: LoggingCode,
         message: String,
         errorObject: Throwable?,
-        keyValuePairs: Map<String, Any?>
+        keyValuePairs: Map<String, Any?>,
     ) {
         val timestamp = InjectedThings.clock.instant()
         val logRecord =
@@ -116,7 +116,7 @@ class Logger(private val destinations: List<ILogDestination>) {
                 code,
                 message,
                 errorObject,
-                loggingContext + keyValuePairs
+                loggingContext + keyValuePairs,
             )
 
         val runnable = Runnable { destinations.forEach { it.log(logRecord) } }

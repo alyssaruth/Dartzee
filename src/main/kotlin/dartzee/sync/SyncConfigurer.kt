@@ -7,7 +7,7 @@ class SyncConfigurer(private val dbStore: IRemoteDatabaseStore) {
         val remoteName =
             DialogUtil.showInput<String>(
                 "Sync Setup",
-                "Enter a unique name for the shared database (case-sensitive)"
+                "Enter a unique name for the shared database (case-sensitive)",
             )
         if (remoteName.isNullOrBlank()) {
             return null
@@ -19,7 +19,7 @@ class SyncConfigurer(private val dbStore: IRemoteDatabaseStore) {
                 DialogUtil.showOption(
                     "Database found",
                     "Shared database '$remoteName' already exists. How would you like to proceed?",
-                    options
+                    options,
                 )
 
             if (response == null || response == "Cancel") {
@@ -36,7 +36,7 @@ class SyncConfigurer(private val dbStore: IRemoteDatabaseStore) {
                 DialogUtil.showOption(
                     "Database not found",
                     "No shared database found called '$remoteName'. Would you like to create it?",
-                    options
+                    options,
                 )
 
             if (response == null || response == "Cancel") {

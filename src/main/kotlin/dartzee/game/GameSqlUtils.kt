@@ -15,7 +15,7 @@ import dartzee.utils.insertDartzeeRules
 fun prepareParticipants(
     gameId: String,
     players: List<PlayerEntity>,
-    pairMode: Boolean
+    pairMode: Boolean,
 ): List<IWrappedParticipant> {
     return if (pairMode) {
         val groups = players.chunked(2)
@@ -31,7 +31,7 @@ fun prepareParticipants(
 private fun addTeam(
     gameId: String,
     players: List<PlayerEntity>,
-    ordinal: Int
+    ordinal: Int,
 ): IWrappedParticipant {
     val team = TeamEntity.factoryAndSave(gameId, ordinal)
     val pts =
@@ -45,7 +45,7 @@ private fun addTeam(
 private fun addSinglePlayer(
     gameId: String,
     player: PlayerEntity,
-    ordinal: Int
+    ordinal: Int,
 ): IWrappedParticipant {
     val participant = ParticipantEntity.factoryAndSave(gameId, player, ordinal)
     return SingleParticipant(participant)
@@ -74,7 +74,7 @@ private fun loadTeam(team: TeamEntity): TeamParticipant {
 fun prepareNextEntities(
     firstGame: GameEntity,
     firstGameParticipants: List<IWrappedParticipant>,
-    matchOrdinal: Int
+    matchOrdinal: Int,
 ): Pair<GameEntity, List<IWrappedParticipant>> {
     val nextGame = GameEntity.factory(firstGame.gameType, firstGame.gameParams)
     nextGame.dartsMatchId = firstGame.dartsMatchId
@@ -90,7 +90,7 @@ fun prepareNextEntities(
 
 private fun prepareNextParticipants(
     firstGameParticipants: List<IWrappedParticipant>,
-    newGame: GameEntity
+    newGame: GameEntity,
 ): List<IWrappedParticipant> {
     val templateParticipants = shuffleForNewGame(firstGameParticipants, newGame.matchOrdinal)
     return templateParticipants.mapIndexed { ordinal, pt -> copyForNewGame(ordinal, pt, newGame) }
@@ -99,7 +99,7 @@ private fun prepareNextParticipants(
 private fun copyForNewGame(
     participantOrdinal: Int,
     template: IWrappedParticipant,
-    newGame: GameEntity
+    newGame: GameEntity,
 ) =
     when (template) {
         is SingleParticipant ->

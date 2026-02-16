@@ -37,7 +37,7 @@ class TestX01E2E : AbstractE2ETest() {
             listOf(
                 listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
                 listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
-                listOf(Dart(20, 3), Dart(19, 3), Dart(12, 2))
+                listOf(Dart(20, 3), Dart(19, 3), Dart(12, 2)),
             )
 
         verifyState(panel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 9)
@@ -52,8 +52,8 @@ class TestX01E2E : AbstractE2ETest() {
                     AchievementType.X01_STYLISH_FINISH,
                     141,
                     game.rowId,
-                    "T20, T19, D12"
-                )
+                    "T20, T19, D12",
+                ),
             )
 
         checkAchievementConversions(player.rowId)
@@ -64,7 +64,7 @@ class TestX01E2E : AbstractE2ETest() {
         val game =
             insertGame(
                 gameType = GameType.X01,
-                gameParams = X01Config(501, FinishType.Any).toJson()
+                gameParams = X01Config(501, FinishType.Any).toJson(),
             )
 
         val player = insertPlayer(model = beastDartsModel())
@@ -76,14 +76,14 @@ class TestX01E2E : AbstractE2ETest() {
             listOf(
                 listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
                 listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
-                listOf(Dart(20, 3), Dart(20, 3), Dart(7, 3))
+                listOf(Dart(20, 3), Dart(20, 3), Dart(7, 3)),
             )
 
         verifyState(panel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 9)
 
         retrieveAchievementsForPlayer(player.rowId)
             .shouldContainExactlyInAnyOrder(
-                AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 180, game.rowId),
+                AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 180, game.rowId)
             )
 
         checkAchievementConversions(player.rowId)
@@ -94,7 +94,7 @@ class TestX01E2E : AbstractE2ETest() {
         val game =
             insertGame(
                 gameType = GameType.X01,
-                gameParams = X01Config(101, FinishType.Any).toJson()
+                gameParams = X01Config(101, FinishType.Any).toJson(),
             )
 
         val p1Rounds =
@@ -108,7 +108,7 @@ class TestX01E2E : AbstractE2ETest() {
             listOf(
                 listOf(makeDart(20, 1), makeDart(5, 1), makeDart(1, 1)), // 75
                 listOf(makeDart(20, 3), makeDart(5, 1), makeDart(20, 2)), // 75 (bust)
-                listOf(makeDart(20, 3), makeDart(5, 1), makeDart(5, 2)) // 0
+                listOf(makeDart(20, 3), makeDart(5, 1), makeDart(5, 2)), // 0
             )
 
         val p1Model = predictableDartsModel(p1Rounds.flatten().map { it.toAimDart() })
@@ -141,19 +141,19 @@ class TestX01E2E : AbstractE2ETest() {
                         AchievementType.X01_HOTEL_INSPECTOR,
                         -1,
                         game.rowId,
-                        "20, 5, 1"
+                        "20, 5, 1",
                     ),
                     AchievementSummary(AchievementType.X01_BEST_FINISH, 75, game.rowId),
                     AchievementSummary(
                         AchievementType.X01_STYLISH_FINISH,
                         75,
                         game.rowId,
-                        "T20, 5, D5"
+                        "T20, 5, D5",
                     ),
                     AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 75, game.rowId),
                     AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 5, game.rowId),
                     AchievementSummary(AchievementType.X01_HIGHEST_BUST, 75, game.rowId),
-                    AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, game.rowId)
+                    AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, game.rowId),
                 )
         }
 
@@ -165,7 +165,7 @@ class TestX01E2E : AbstractE2ETest() {
         val game =
             insertGame(
                 gameType = GameType.X01,
-                gameParams = X01Config(301, FinishType.Doubles).toJson()
+                gameParams = X01Config(301, FinishType.Doubles).toJson(),
             )
 
         val expectedRounds =
@@ -176,7 +176,7 @@ class TestX01E2E : AbstractE2ETest() {
                 listOf(makeDart(10, 1), makeDart(5, 1), makeDart(5, 0)), //  5
                 listOf(makeDart(5, 0), makeDart(5, 0), makeDart(5, 0)), //  5
                 listOf(makeDart(1, 1)), //  4 (mercy)
-                listOf(makeDart(2, 2)) //  0
+                listOf(makeDart(2, 2)), //  0
             )
 
         val aimDarts = expectedRounds.flatten().map { it.toAimDart() }
@@ -194,7 +194,7 @@ class TestX01E2E : AbstractE2ETest() {
                 AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 180, game.rowId),
                 AchievementSummary(AchievementType.X01_CHECKOUT_COMPLETENESS, 2, game.rowId),
                 AchievementSummary(AchievementType.X01_HIGHEST_BUST, 20, game.rowId),
-                AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, game.rowId)
+                AchievementSummary(AchievementType.X01_SUCH_BAD_LUCK, 1, game.rowId),
             )
 
         checkAchievementConversions(player.rowId)
@@ -220,7 +220,7 @@ class TestX01E2E : AbstractE2ETest() {
                 listOf(makeDart(19, 3), makeDart(17, 1), makeDart(7, 3)), // 84
                 listOf(makeDart(17, 1), makeDart(14, 0), makeDart(9, 1)), // 19
                 listOf(makeDart(3, 1)), // 16, mercied
-                listOf(makeDart(8, 0), makeDart(8, 0), makeDart(7, 1)) // 9
+                listOf(makeDart(8, 0), makeDart(8, 0), makeDart(7, 1)), // 9
             )
 
         val expectedRounds = p1Rounds.zipDartRounds(p2Rounds)
@@ -245,7 +245,7 @@ class TestX01E2E : AbstractE2ETest() {
             expectedRounds,
             scoreSuffix = " Darts",
             finalScore = 33,
-            pt = retrieveTeam()
+            pt = retrieveTeam(),
         )
 
         retrieveAchievementsForPlayer(p1.rowId)
@@ -260,7 +260,7 @@ class TestX01E2E : AbstractE2ETest() {
 
         retrieveAchievementsForPlayer(p2.rowId)
             .shouldContainExactlyInAnyOrder(
-                AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 95, game.rowId),
+                AchievementSummary(AchievementType.X01_BEST_THREE_DART_SCORE, 95, game.rowId)
             )
 
         checkAchievementConversions(listOf(p1.rowId, p2.rowId))

@@ -162,7 +162,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore) {
     private fun checkAllGamesStillExist(
         startingGameIds: Set<String>,
         resultingGameIds: Set<String>,
-        deletedGameIds: Set<String>
+        deletedGameIds: Set<String>,
     ) {
         val missingGames = startingGameIds - resultingGameIds - deletedGameIds
         if (missingGames.isNotEmpty()) {

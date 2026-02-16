@@ -11,7 +11,7 @@ import javax.swing.SwingUtilities
 
 abstract class GamePanelPausable<
     S : AbstractDartsScorerPausable<PlayerState>,
-    PlayerState : AbstractPlayerState<PlayerState>
+    PlayerState : AbstractPlayerState<PlayerState>,
 >(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
     DartsGamePanel<S, PlayerState>(parent, game, totalPlayers) {
     private var aiShouldPause = false

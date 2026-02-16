@@ -30,7 +30,7 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String) : IRemoteDatab
         logger.info(
             CODE_FETCHING_DATABASE,
             "Fetching database $remoteName",
-            KEY_REMOTE_NAME to remoteName
+            KEY_REMOTE_NAME to remoteName,
         )
 
         val downloadPath = File("$SYNC_DIR/original.zip")
@@ -40,14 +40,14 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String) : IRemoteDatab
         logger.info(
             CODE_FETCHED_DATABASE,
             "Fetched database $remoteName - saved to $downloadPath. Last modified remotely: ${s3Obj.lastModified}",
-            KEY_REMOTE_NAME to remoteName
+            KEY_REMOTE_NAME to remoteName,
         )
 
         val resultingDb = Database(DartsDatabaseUtil.OTHER_DATABASE_NAME)
         ZipFile(downloadPath).extractAll(resultingDb.getDirectoryStr())
         logger.info(
             CODE_UNZIPPED_DATABASE,
-            "Unzipped database $remoteName to ${resultingDb.getDirectory()}"
+            "Unzipped database $remoteName to ${resultingDb.getDirectory()}",
         )
         return FetchDatabaseResult(resultingDb, s3Obj.lastModified)
     }
@@ -58,7 +58,7 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String) : IRemoteDatab
         logger.info(
             CODE_PUSHING_DATABASE,
             "Pushing database to $remoteName",
-            KEY_REMOTE_NAME to remoteName
+            KEY_REMOTE_NAME to remoteName,
         )
 
         lastModified?.let { verifyLastModifiedNotChanged(remoteName, lastModified) }
@@ -71,14 +71,14 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String) : IRemoteDatab
 
         logger.info(
             CODE_ZIPPED_DATABASE,
-            "Zipped up database to push to $remoteName - $zipFilePath"
+            "Zipped up database to push to $remoteName - $zipFilePath",
         )
 
         s3Client.putObject(bucketName, getCurrentDatabaseKey(remoteName), zip.file)
         logger.info(
             CODE_PUSHED_DATABASE,
             "Pushed database to ${getCurrentDatabaseKey(remoteName)}",
-            KEY_REMOTE_NAME to remoteName
+            KEY_REMOTE_NAME to remoteName,
         )
 
         SyncProgressDialog.progressToStage(SyncStage.PUSH_BACKUP_TO_REMOTE)
@@ -89,12 +89,12 @@ class AmazonS3RemoteDatabaseStore(private val bucketName: String) : IRemoteDatab
             bucketName,
             getCurrentDatabaseKey(remoteName),
             bucketName,
-            "$remoteName/backups/$backupName"
+            "$remoteName/backups/$backupName",
         )
         logger.info(
             CODE_PUSHED_DATABASE_BACKUP,
             "Copied backup to $remoteName/backups/$backupName",
-            KEY_REMOTE_NAME to remoteName
+            KEY_REMOTE_NAME to remoteName,
         )
     }
 

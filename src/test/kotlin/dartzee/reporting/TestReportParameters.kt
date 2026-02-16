@@ -74,7 +74,7 @@ class TestReportParameters : AbstractTest() {
         resultsAll.shouldContainExactlyInAnyOrder(
             gameOne.localId,
             gameTwo.localId,
-            gameThree.localId
+            gameThree.localId,
         )
 
         val rpAfter = makeReportParametersGame(dtStartFrom = Timestamp(1000))
@@ -97,7 +97,7 @@ class TestReportParameters : AbstractTest() {
         resultsAll.shouldContainExactlyInAnyOrder(
             gameOne.localId,
             gameTwo.localId,
-            gameThree.localId
+            gameThree.localId,
         )
 
         val rpAfter = makeReportParametersGame(dtFinishFrom = Timestamp(1000))
@@ -191,7 +191,7 @@ class TestReportParameters : AbstractTest() {
             gAliceAndBob.localId,
             gAliceCliveDaisy.localId,
             gBobAndDaisy.localId,
-            gCliveDaisy.localId
+            gCliveDaisy.localId,
         )
 
         val rpExcludeAlice = makeReportParametersPlayers(excludedPlayers = listOf(alice))
@@ -236,7 +236,7 @@ class TestReportParameters : AbstractTest() {
         resultsAlice.shouldContainExactlyInAnyOrder(
             gAllPlayers.localId,
             gAliceAndBob.localId,
-            gAliceCliveDaisy.localId
+            gAliceCliveDaisy.localId,
         )
 
         val rpIncludeAliceAndBob =
@@ -244,7 +244,7 @@ class TestReportParameters : AbstractTest() {
                 includedPlayers =
                     mapOf(
                         alice to makeIncludedPlayerParameters(),
-                        bob to makeIncludedPlayerParameters()
+                        bob to makeIncludedPlayerParameters(),
                     )
             )
         val resultsAliceAndBob = runReportForTest(player = rpIncludeAliceAndBob)
@@ -266,7 +266,7 @@ class TestReportParameters : AbstractTest() {
         insertTeamAndParticipants(
             gameId = gAliceCliveDaisy.rowId,
             playerOne = alice,
-            playerTwo = clive
+            playerTwo = clive,
         )
         insertParticipant(playerId = daisy.rowId, gameId = gAliceCliveDaisy.rowId)
 
@@ -284,7 +284,7 @@ class TestReportParameters : AbstractTest() {
         resultsAlice.shouldContainExactlyInAnyOrder(
             gAllPlayers.localId,
             gAliceAndBob.localId,
-            gAliceCliveDaisy.localId
+            gAliceCliveDaisy.localId,
         )
 
         val rpIncludeAliceAndBob =
@@ -292,7 +292,7 @@ class TestReportParameters : AbstractTest() {
                 includedPlayers =
                     mapOf(
                         alice to makeIncludedPlayerParameters(),
-                        bob to makeIncludedPlayerParameters()
+                        bob to makeIncludedPlayerParameters(),
                     )
             )
         val resultsAliceAndBob = runReportForTest(player = rpIncludeAliceAndBob)
@@ -330,7 +330,7 @@ class TestReportParameters : AbstractTest() {
 
     private fun runReportForTest(
         game: ReportParametersGame = makeReportParametersGame(),
-        player: ReportParametersPlayers = makeReportParametersPlayers()
+        player: ReportParametersPlayers = makeReportParametersPlayers(),
     ): List<Long> {
         val wrappers = runReport(ReportParameters(game, player))
         return wrappers.map { it.localId }.toList()

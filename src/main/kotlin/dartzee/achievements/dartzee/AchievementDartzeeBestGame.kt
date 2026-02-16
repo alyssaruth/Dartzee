@@ -33,7 +33,7 @@ class AchievementDartzeeBestGame : AbstractAchievement() {
         val allScores =
             database.createTempTable(
                 "DartzeeScores",
-                "PlayerId VARCHAR(36), DtAchieved TIMESTAMP, GameId VARCHAR(36), ComputedScore INT"
+                "PlayerId VARCHAR(36), DtAchieved TIMESTAMP, GameId VARCHAR(36), ComputedScore INT",
             )
 
         var sb = StringBuilder()
@@ -58,7 +58,7 @@ class AchievementDartzeeBestGame : AbstractAchievement() {
                 database,
                 achievementType,
                 oneRowPerPlayer = true,
-                achievementCounterFn = { rs.getInt("ComputedScore") }
+                achievementCounterFn = { rs.getInt("ComputedScore") },
             )
         }
     }

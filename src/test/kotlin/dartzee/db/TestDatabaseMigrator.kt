@@ -105,7 +105,7 @@ class TestDatabaseMigrator : AbstractTest() {
             val map =
                 mapOf(
                     DATABASE_VERSION - 2 to listOf(migration1a, migration1b),
-                    DATABASE_VERSION - 1 to listOf(migration2)
+                    DATABASE_VERSION - 1 to listOf(migration2),
                 )
 
             val migrator = DatabaseMigrator(map)
@@ -119,7 +119,7 @@ class TestDatabaseMigrator : AbstractTest() {
                 .map { it.message }
                 .shouldContainExactly(
                     "Upgrading Test database to V${DATABASE_VERSION - 1} (2 migrations)",
-                    "Upgrading Test database to V${DATABASE_VERSION} (1 migrations)"
+                    "Upgrading Test database to V${DATABASE_VERSION} (1 migrations)",
                 )
 
             // Should be on latest version and have expected metadata

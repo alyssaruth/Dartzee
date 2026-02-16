@@ -36,7 +36,7 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement() {
             a.localGameIdEarned,
             a.achievementDetail.toInt(),
             a.achievementCounter,
-            a.dtAchieved
+            a.dtAchieved,
         )
 
     override fun useCounter() = true
@@ -79,7 +79,7 @@ class AchievementGolfPointsRisked : AbstractMultiRowAchievement() {
                 database,
                 achievementType,
                 achievementCounterFn = { rs.getInt("PointsRisked") },
-                achievementDetailFn = { rs.getInt("RoundNumber").toString() }
+                achievementDetailFn = { rs.getInt("RoundNumber").toString() },
             )
         }
     }

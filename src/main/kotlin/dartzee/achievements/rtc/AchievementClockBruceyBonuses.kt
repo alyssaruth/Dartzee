@@ -54,7 +54,7 @@ class AchievementClockBruceyBonuses : AbstractMultiRowAchievement() {
                 rs,
                 database,
                 achievementType,
-                achievementDetailFn = { rs.getInt("RoundNumber").toString() }
+                achievementDetailFn = { rs.getInt("RoundNumber").toString() },
             )
         }
     }

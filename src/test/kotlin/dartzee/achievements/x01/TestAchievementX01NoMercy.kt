@@ -17,14 +17,14 @@ class TestAchievementX01NoMercy : AbstractMultiRowAchievementTest<AchievementX01
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         val pt =
             insertParticipant(
                 playerId = p.rowId,
                 gameId = g.rowId,
                 finalScore = 21,
-                database = database
+                database = database,
             )
 
         insertDart(pt, roundNumber = 7, startingScore = 7, ordinal = 1, database = database)

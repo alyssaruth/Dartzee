@@ -22,7 +22,7 @@ abstract class AbstractDartsGameScreen : FocusableWindow(), WindowListener {
     abstract fun achievementUnlocked(
         gameId: String,
         playerId: String,
-        achievement: AbstractAchievement
+        achievement: AbstractAchievement,
     )
 
     abstract fun fireAppearancePreferencesChanged()

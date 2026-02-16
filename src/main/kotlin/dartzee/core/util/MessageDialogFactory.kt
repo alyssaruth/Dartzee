@@ -18,7 +18,7 @@ class MessageDialogFactory : IMessageDialogFactory {
         title: String,
         message: String,
         options: Array<K>?,
-        defaultOption: K?
+        defaultOption: K?,
     ): K? =
         JOptionPane.showInputDialog(
             null,
@@ -27,7 +27,7 @@ class MessageDialogFactory : IMessageDialogFactory {
             JOptionPane.PLAIN_MESSAGE,
             null,
             options,
-            defaultOption
+            defaultOption,
         ) as K?
 
     override fun showError(text: String) {
@@ -45,7 +45,7 @@ class MessageDialogFactory : IMessageDialogFactory {
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 typedArray,
-                options.first()
+                options.first(),
             )
         return if (selection > -1) typedArray[selection] else null
     }
@@ -58,7 +58,7 @@ class MessageDialogFactory : IMessageDialogFactory {
             text,
             "Question",
             option,
-            JOptionPane.QUESTION_MESSAGE
+            JOptionPane.QUESTION_MESSAGE,
         )
     }
 

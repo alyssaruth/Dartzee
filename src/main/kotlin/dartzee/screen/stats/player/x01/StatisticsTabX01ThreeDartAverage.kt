@@ -96,7 +96,7 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab() {
                 null,
                 nfOtherThreeDartAvg,
                 nfOtherMissPercent,
-                " (Other)"
+                " (Other)",
             )
         }
 
@@ -112,7 +112,7 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab() {
         model: DefaultModel?,
         nfThreeDartAverage: JTextField,
         nfMissPercent: JTextField,
-        graphSuffix: String
+        graphSuffix: String,
     ) {
         // Filter out unfinished games, then sort by start date
         val sortedGames = filteredGames.sortedBy { it.dtStart }

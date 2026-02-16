@@ -37,12 +37,12 @@ abstract class AbstractAchievementTest<E : AbstractAchievement> : AbstractTest()
     abstract fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     )
 
     protected fun runConversion(
         playerIds: List<String> = emptyList(),
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ) {
         factoryAchievement().populateForConversion(playerIds, database)
     }
@@ -59,18 +59,18 @@ abstract class AbstractAchievementTest<E : AbstractAchievement> : AbstractTest()
 
     open fun insertRelevantGame(
         dtLastUpdate: Timestamp = getSqlDateNow(),
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ) =
         insertGame(
             gameType = factoryAchievement().gameType!!,
             dtLastUpdate = dtLastUpdate,
-            database = database
+            database = database,
         )
 
     fun insertRelevantParticipant(
         player: PlayerEntity = insertPlayer(),
         finalScore: Int = -1,
-        team: Boolean = false
+        team: Boolean = false,
     ): ParticipantEntity {
         val g = insertRelevantGame()
         val teamEntity = if (team) insertTeam(gameId = g.rowId, finalScore = finalScore) else null
@@ -80,7 +80,7 @@ abstract class AbstractAchievementTest<E : AbstractAchievement> : AbstractTest()
             playerId = player.rowId,
             gameId = g.rowId,
             finalScore = ptFinalScore,
-            teamId = teamEntity?.rowId.orEmpty()
+            teamId = teamEntity?.rowId.orEmpty(),
         )
     }
 

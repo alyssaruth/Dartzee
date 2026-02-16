@@ -13,7 +13,7 @@ val DEFAULT_COLOUR_WRAPPER =
         Color.GREEN,
         Color.GREEN,
         Color.RED,
-        Color.GREEN
+        Color.GREEN,
     )
 
 val WIREFRAME_COLOUR_WRAPPER =
@@ -36,7 +36,7 @@ data class ColourWrapper(
     private val oddTrebleColour: Color,
     private val innerBullColour: Color,
     private val outerBullColour: Color,
-    var outerDartboardColour: Color = Color.black
+    var outerDartboardColour: Color = Color.black,
 ) {
     var missedBoardColour: Color = DartsColour.TRANSPARENT
     var edgeColour: Color? = null
@@ -52,7 +52,7 @@ data class ColourWrapper(
         singleColour,
         singleColour,
         singleColour,
-        singleColour
+        singleColour,
     )
 
     /** Helpers */

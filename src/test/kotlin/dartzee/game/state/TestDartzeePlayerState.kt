@@ -35,7 +35,7 @@ class TestDartzeePlayerState : AbstractTest() {
             makeDartzeePlayerState(
                 completedRounds =
                     listOf(scoringRound, emptyList(), emptyList(), emptyList(), emptyList()),
-                roundResults = listOf(resultTwo, resultThree, resultFour, resultFive)
+                roundResults = listOf(resultTwo, resultThree, resultFour, resultFive),
             )
 
         state.getCumulativeScore(1) shouldBe 60
@@ -79,7 +79,7 @@ class TestDartzeePlayerState : AbstractTest() {
             playerId = p.rowId,
             type = AchievementType.DARTZEE_HALVED,
             gameIdEarned = randomGuid(),
-            achievementCounter = 50
+            achievementCounter = 50,
         )
 
         val pt = insertParticipant(playerId = p.rowId)
@@ -99,7 +99,7 @@ class TestDartzeePlayerState : AbstractTest() {
             playerId = p.rowId,
             type = AchievementType.DARTZEE_HALVED,
             gameIdEarned = randomGuid(),
-            achievementCounter = 50
+            achievementCounter = 50,
         )
 
         val pt = insertParticipant(playerId = p.rowId)

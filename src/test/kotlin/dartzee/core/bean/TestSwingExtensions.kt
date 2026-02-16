@@ -137,7 +137,7 @@ class TestSwingExtensions : AbstractTest() {
             Point(0, 1),
             Point(1, 1),
             Point(0, 2),
-            Point(1, 2)
+            Point(1, 2),
         )
     }
 }

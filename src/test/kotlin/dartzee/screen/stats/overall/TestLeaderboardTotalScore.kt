@@ -115,7 +115,7 @@ class TestLeaderboardTotalScore : AbstractTest() {
             "Bob",
             GameType.X01,
             70,
-            X01Config(701, FinishType.Doubles).toJson()
+            X01Config(701, FinishType.Doubles).toJson(),
         )
 
         val leaderboard = LeaderboardTotalScore(GameType.X01)
@@ -208,7 +208,7 @@ class TestLeaderboardTotalScore : AbstractTest() {
         val leaderboard =
             LeaderboardTotalScore(
                 GameType.ROUND_THE_CLOCK,
-                RoundTheClockConfig(ClockType.Trebles, false).toJson()
+                RoundTheClockConfig(ClockType.Trebles, false).toJson(),
             )
 
         val filterPanel = leaderboard.getChild<GameParamFilterPanelRoundTheClock>()

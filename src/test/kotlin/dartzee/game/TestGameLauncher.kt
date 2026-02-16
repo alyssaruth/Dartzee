@@ -43,7 +43,7 @@ class TestGameLauncher : AbstractTest() {
     fun `Should launch a new game of RTC successfully`() {
         testNewGameLaunch<GamePanelRoundTheClock>(
             GameType.ROUND_THE_CLOCK,
-            RoundTheClockConfig(ClockType.Standard, true).toJson()
+            RoundTheClockConfig(ClockType.Standard, true).toJson(),
         )
     }
 
@@ -62,7 +62,7 @@ class TestGameLauncher : AbstractTest() {
     private inline fun <reified T : DartsGamePanel<*, *>> testNewGameLaunch(
         gameType: GameType,
         gameParams: String,
-        dartzeeDtos: List<DartzeeRuleDto> = emptyList()
+        dartzeeDtos: List<DartzeeRuleDto> = emptyList(),
     ) {
         val p = insertPlayer(strategy = "")
         val params = GameLaunchParams(listOf(p), gameType, gameParams, false, dartzeeDtos)

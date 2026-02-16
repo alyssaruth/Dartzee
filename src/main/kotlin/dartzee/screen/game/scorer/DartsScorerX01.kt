@@ -12,7 +12,7 @@ import javax.swing.SwingConstants
 class DartsScorerX01(
     parent: GamePanelPausable<*, *>,
     target: Int,
-    participant: IWrappedParticipant
+    participant: IWrappedParticipant,
 ) : AbstractDartsScorerPausable<X01PlayerState>(parent, participant) {
     private val lblStartingScore = JLabel(target.toString())
 

@@ -16,5 +16,5 @@ enum class EntityName {
     SyncAudit,
     Version,
     X01Finish,
-    Team
+    Team,
 }

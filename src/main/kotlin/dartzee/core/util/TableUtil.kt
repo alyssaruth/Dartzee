@@ -24,7 +24,7 @@ object TableUtil {
             isSelected: Boolean,
             hasFocus: Boolean,
             row: Int,
-            column: Int
+            column: Int,
         ): Component {
             val component =
                 super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)

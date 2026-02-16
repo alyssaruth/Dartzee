@@ -9,7 +9,7 @@ import javax.swing.ImageIcon
 
 class PlayerAchievementsButton(
     private val player: PlayerEntity,
-    private val achievementRows: List<AchievementEntity>
+    private val achievementRows: List<AchievementEntity>,
 ) : PlayerSummaryButton() {
     override val defaultText = makeDefaultText()
     override val hoverText = "<html><h3>Achievements &gt;</h3></html>"

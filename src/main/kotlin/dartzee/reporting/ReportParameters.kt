@@ -104,5 +104,5 @@ data class ReportParameters(val game: ReportParametersGame, val players: ReportP
 enum class MatchFilter {
     MATCHES_ONLY,
     GAMES_ONLY,
-    BOTH
+    BOTH,
 }

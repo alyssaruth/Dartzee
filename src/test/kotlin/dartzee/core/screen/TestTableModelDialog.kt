@@ -8,7 +8,6 @@ import dartzee.helper.AbstractTest
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
-import io.mockk.spyk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 

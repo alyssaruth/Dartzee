@@ -30,6 +30,6 @@ class HoleBreakdownWrapper {
             getCount(3),
             getCount(4),
             getCount(5),
-            getAverage()
+            getAverage(),
         )
 }

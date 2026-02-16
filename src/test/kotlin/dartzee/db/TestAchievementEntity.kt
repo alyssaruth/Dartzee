@@ -130,7 +130,7 @@ class TestAchievementEntity : AbstractEntityTest<AchievementEntity>() {
             type = ref,
             playerId = playerId,
             gameIdEarned = oldGameId,
-            achievementCounter = 100
+            achievementCounter = 100,
         )
 
         AchievementEntity.updateAchievement(ref, playerId, newGameId, 99)
@@ -159,7 +159,7 @@ class TestAchievementEntity : AbstractEntityTest<AchievementEntity>() {
             type = ref,
             playerId = playerId,
             gameIdEarned = oldGameId,
-            achievementCounter = oldValue
+            achievementCounter = oldValue,
         )
 
         AchievementEntity.updateAchievement(ref, playerId, newGameId, newValue)
@@ -184,7 +184,7 @@ class TestAchievementEntity : AbstractEntityTest<AchievementEntity>() {
             type = ref,
             playerId = playerId,
             gameIdEarned = oldGameId,
-            achievementCounter = 100
+            achievementCounter = 100,
         )
 
         AchievementEntity.updateAchievement(ref, playerId, newGameId, 101)
@@ -213,7 +213,7 @@ class TestAchievementEntity : AbstractEntityTest<AchievementEntity>() {
             type = ref,
             playerId = playerId,
             gameIdEarned = oldGameId,
-            achievementCounter = oldValue
+            achievementCounter = oldValue,
         )
 
         AchievementEntity.updateAchievement(ref, playerId, newGameId, newValue)
@@ -304,7 +304,7 @@ class TestAchievementEntity : AbstractEntityTest<AchievementEntity>() {
             type = ref,
             playerId = playerId,
             achievementCounter = 6,
-            achievementDetail = "2"
+            achievementDetail = "2",
         )
 
         val scrn = FakeDartsScreen()
@@ -372,7 +372,7 @@ class TestAchievementEntity : AbstractEntityTest<AchievementEntity>() {
             newValue,
             achievement,
             randomGuid(),
-            gameId
+            gameId,
         )
 
         scrn.achievementType shouldBe null
@@ -394,7 +394,7 @@ class TestAchievementEntity : AbstractEntityTest<AchievementEntity>() {
             newValue,
             achievement,
             randomGuid(),
-            gameId
+            gameId,
         )
 
         scrn.achievementType shouldBe achievement.achievementType

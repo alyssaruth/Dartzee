@@ -17,7 +17,7 @@ class TestAchievementX01Btbf : AbstractMultiRowAchievementTest<AchievementX01Btb
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         insertSuccessfulParticipant(g, p, database)
     }
@@ -76,14 +76,14 @@ class TestAchievementX01Btbf : AbstractMultiRowAchievementTest<AchievementX01Btb
     private fun insertSuccessfulParticipant(
         game: GameEntity,
         player: PlayerEntity,
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ) {
         val pt =
             insertParticipant(
                 gameId = game.rowId,
                 playerId = player.rowId,
                 finalScore = 3,
-                database = database
+                database = database,
             )
         insertDart(
             pt,
@@ -91,7 +91,7 @@ class TestAchievementX01Btbf : AbstractMultiRowAchievementTest<AchievementX01Btb
             startingScore = 2,
             score = 1,
             multiplier = 2,
-            database = database
+            database = database,
         )
     }
 }

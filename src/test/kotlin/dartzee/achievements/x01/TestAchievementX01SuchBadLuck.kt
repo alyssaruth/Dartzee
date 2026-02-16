@@ -19,7 +19,7 @@ class TestAchievementX01SuchBadLuck : AbstractAchievementTest<AchievementX01Such
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
@@ -29,7 +29,7 @@ class TestAchievementX01SuchBadLuck : AbstractAchievementTest<AchievementX01Such
             startingScore = 2,
             score = 20,
             multiplier = 2,
-            database = database
+            database = database,
         )
     }
 
@@ -106,7 +106,7 @@ class TestAchievementX01SuchBadLuck : AbstractAchievementTest<AchievementX01Such
             startingScore = 2,
             score = 20,
             multiplier = 2,
-            dtLastUpdate = Timestamp(500)
+            dtLastUpdate = Timestamp(500),
         )
         insertDart(
             pt1,
@@ -114,7 +114,7 @@ class TestAchievementX01SuchBadLuck : AbstractAchievementTest<AchievementX01Such
             startingScore = 2,
             score = 18,
             multiplier = 2,
-            dtLastUpdate = Timestamp(800)
+            dtLastUpdate = Timestamp(800),
         )
 
         // Scores 3 in second game
@@ -124,7 +124,7 @@ class TestAchievementX01SuchBadLuck : AbstractAchievementTest<AchievementX01Such
             startingScore = 2,
             score = 20,
             multiplier = 2,
-            dtLastUpdate = Timestamp(200)
+            dtLastUpdate = Timestamp(200),
         )
         insertDart(
             pt2,
@@ -132,7 +132,7 @@ class TestAchievementX01SuchBadLuck : AbstractAchievementTest<AchievementX01Such
             startingScore = 2,
             score = 18,
             multiplier = 2,
-            dtLastUpdate = Timestamp(250)
+            dtLastUpdate = Timestamp(250),
         )
 
         runConversion()

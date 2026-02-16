@@ -5,7 +5,7 @@ const val COMPARATOR_SCORE_UNSET = "is unset"
 data class IncludedPlayerParameters(
     val finishingPositions: List<Int>,
     val finalScoreComparator: String,
-    val finalScore: Int?
+    val finalScore: Int?,
 ) {
     fun generateExtraWhereSql(alias: String): String {
         val sb = StringBuilder()

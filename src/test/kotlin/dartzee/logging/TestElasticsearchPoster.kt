@@ -165,6 +165,6 @@ class TestElasticsearchPoster : AbstractTest() {
         credentials: BasicAWSCredentials? = AwsUtils.readCredentials("AWS_LOGS"),
         url: String = ELASTICSEARCH_URL,
         index: String = "unittest",
-        client: RestClient? = null
+        client: RestClient? = null,
     ) = ElasticsearchPoster(credentials, url, index, client)
 }

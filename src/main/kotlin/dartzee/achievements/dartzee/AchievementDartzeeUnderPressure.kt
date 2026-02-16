@@ -33,7 +33,7 @@ class AchievementDartzeeUnderPressure : AbstractMultiRowAchievement() {
         val dartzeeGamesHardestRule =
             database.createTempTable(
                 "DartzeeGamesHardestRule",
-                "GameId VARCHAR(36), RuleId VARCHAR(36), RuleNumber INT"
+                "GameId VARCHAR(36), RuleId VARCHAR(36), RuleNumber INT",
             )
 
         var sb = StringBuilder()
@@ -75,7 +75,7 @@ class AchievementDartzeeUnderPressure : AbstractMultiRowAchievement() {
                 database,
                 achievementType,
                 achievementCounterFn = { rs.getInt("Score") },
-                achievementDetailFn = { extractAchievementDetail(database, rs) }
+                achievementDetailFn = { extractAchievementDetail(database, rs) },
             )
         }
     }

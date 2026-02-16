@@ -51,7 +51,7 @@ abstract class AbstractDartsSimulation(val player: PlayerEntity, val model: Dart
                 totalScore,
                 false,
                 totalRounds,
-                hmRoundNumberToDarts
+                hmRoundNumberToDarts,
             )
 
         if (DartsClient.devMode) {

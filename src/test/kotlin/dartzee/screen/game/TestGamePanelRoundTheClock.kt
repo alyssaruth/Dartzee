@@ -111,12 +111,12 @@ class TestGamePanelRoundTheClock : AbstractTest() {
 
         retrieveAchievementsForPlayer(p1.rowId)
             .shouldContainExactlyInAnyOrder(
-                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, gameId, "1"),
+                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, gameId, "1")
             )
 
         retrieveAchievementsForPlayer(p2.rowId)
             .shouldContainExactlyInAnyOrder(
-                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, gameId, "2"),
+                AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, gameId, "2")
             )
     }
 

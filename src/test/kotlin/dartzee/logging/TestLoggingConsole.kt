@@ -55,7 +55,7 @@ class TestLoggingConsole : AbstractTest() {
             makeLogRecord(
                 severity = Severity.ERROR,
                 message = "Failed to load screen",
-                errorObject = t
+                errorObject = t,
             )
         console.log(errorLog)
 
@@ -74,7 +74,7 @@ class TestLoggingConsole : AbstractTest() {
             makeLogRecord(
                 severity = Severity.INFO,
                 message = "AWT Thread",
-                keyValuePairs = mapOf(KEY_STACK to "at Foo.bar(58)")
+                keyValuePairs = mapOf(KEY_STACK to "at Foo.bar(58)"),
             )
         console.log(threadStackLock)
 
@@ -125,7 +125,7 @@ class TestLoggingConsole : AbstractTest() {
             makeLogRecord(
                 loggingCode = CODE_SQL,
                 message = "DELETE FROM Game",
-                keyValuePairs = mapOf(KEY_DATABASE_NAME to "otherDb")
+                keyValuePairs = mapOf(KEY_DATABASE_NAME to "otherDb"),
             )
         console.log(record)
 

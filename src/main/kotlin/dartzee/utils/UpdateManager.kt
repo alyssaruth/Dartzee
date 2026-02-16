@@ -49,7 +49,7 @@ object UpdateManager {
                 logger.error(
                     CODE_UPDATE_ERROR,
                     "Received non-success HTTP status: ${response.status} - ${response.statusText}",
-                    KEY_RESPONSE_BODY to response.body
+                    KEY_RESPONSE_BODY to response.body,
                 )
                 DialogUtil.showError("Failed to check for updates (unable to connect).")
                 return null
@@ -83,7 +83,7 @@ object UpdateManager {
         val answer =
             DialogUtil.showQuestion(
                 "An update is available (${metadata.version}). Would you like to download it now?",
-                false
+                false,
             )
         return answer == JOptionPane.YES_OPTION
     }
@@ -117,7 +117,7 @@ object UpdateManager {
                 CODE_PARSE_ERROR,
                 "Error parsing update response",
                 t,
-                KEY_RESPONSE_BODY to responseJson
+                KEY_RESPONSE_BODY to responseJson,
             )
             null
         }
@@ -154,7 +154,7 @@ data class UpdateMetadata(
     val version: String,
     val assetId: Long,
     val fileName: String,
-    val size: Long
+    val size: Long,
 ) {
     fun getArgs() = "$size $version $fileName $assetId"
 }

@@ -32,7 +32,7 @@ class TestThreeDartScoreWrapper : AbstractTest() {
             .map { it.toList() }
             .shouldContainExactlyInAnyOrder(
                 listOf("20, 5, 1", 2, 100L),
-                listOf("20, 3, 3", 1, 102L)
+                listOf("20, 3, 3", 1, 102L),
             )
     }
 }

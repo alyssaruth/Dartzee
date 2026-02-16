@@ -19,7 +19,7 @@ abstract class AbstractTableRenderer<E> : DefaultTableCellRenderer() {
         isSelected: Boolean,
         hasFocus: Boolean,
         row: Int,
-        column: Int
+        column: Int,
     ): Component {
         try {
             @Suppress("UNCHECKED_CAST") val typedValue = value as E?
@@ -45,7 +45,7 @@ abstract class AbstractTableRenderer<E> : DefaultTableCellRenderer() {
             logger.error(
                 CODE_RENDER_ERROR,
                 "Error rendering row [$row], col [$column]. Value [$value]",
-                t
+                t,
             )
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
         }
@@ -58,7 +58,7 @@ abstract class AbstractTableRenderer<E> : DefaultTableCellRenderer() {
             if (!allowNulls()) {
                 logger.error(
                     CODE_RENDER_ERROR,
-                    "NULL element in table at row [$row] and column [$column]"
+                    "NULL element in table at row [$row] and column [$column]",
                 )
             }
 

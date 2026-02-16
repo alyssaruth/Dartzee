@@ -39,7 +39,7 @@ class AIConfigurationSubPanelX01 : AbstractAIConfigurationSubPanel(), ActionList
         return model.copy(
             scoringDart = spinnerScoringDart.value as Int,
             mercyThreshold =
-                if (chckbxMercyRule.isSelected) spinnerMercyThreshold.value as Int else null
+                if (chckbxMercyRule.isSelected) spinnerMercyThreshold.value as Int else null,
         )
     }
 

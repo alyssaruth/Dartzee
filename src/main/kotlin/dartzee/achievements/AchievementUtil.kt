@@ -59,7 +59,7 @@ fun getAchievementMaximum() = getAllAchievements().size * MAX_ACHIEVEMENT_SCORE
 
 fun getPlayerAchievementScore(
     allAchievementRows: List<AchievementEntity>,
-    player: PlayerEntity
+    player: PlayerEntity,
 ): Int {
     val myAchievementRows = allAchievementRows.filter { it.playerId == player.rowId }
 
@@ -81,7 +81,7 @@ fun convertEmptyAchievements() {
 fun runConversionsWithProgressBar(
     achievements: List<AbstractAchievement>,
     playerIds: List<String>,
-    database: Database = mainDatabase
+    database: Database = mainDatabase,
 ): Thread {
     val r = Runnable { runConversionsInOtherThread(achievements, playerIds, database) }
     val t = Thread(r, "Conversion thread")
@@ -92,13 +92,13 @@ fun runConversionsWithProgressBar(
 private fun runConversionsInOtherThread(
     achievements: List<AbstractAchievement>,
     playerIds: List<String>,
-    database: Database
+    database: Database,
 ) {
     val dlg =
         ProgressDialog.factory(
             "Populating Achievements",
             "achievements remaining",
-            achievements.size
+            achievements.size,
         )
     dlg.setVisibleLater()
 
@@ -107,7 +107,7 @@ private fun runConversionsInOtherThread(
         CODE_ACHIEVEMENT_CONVERSION_STARTED,
         "Regenerating ${achievements.size} achievements for $playerCount players",
         KEY_PLAYER_IDS to playerIds,
-        KEY_ACHIEVEMENT_TYPES to achievements.map { it.achievementType }
+        KEY_ACHIEVEMENT_TYPES to achievements.map { it.achievementType },
     )
 
     val timings = mutableMapOf<String, Long>()
@@ -132,7 +132,7 @@ private fun runConversionsInOtherThread(
     logger.info(
         CODE_ACHIEVEMENT_CONVERSION_FINISHED,
         "Done in $totalTime",
-        KEY_ACHIEVEMENT_TIMINGS to timings
+        KEY_ACHIEVEMENT_TIMINGS to timings,
     )
 
     dlg.disposeLater()
@@ -183,7 +183,7 @@ fun getAllAchievements() =
         AchievementX01Chucklevision(),
         AchievementGolfOneHitWonder(),
         AchievementGolfInBounds(),
-        AchievementX01StylishFinish()
+        AchievementX01StylishFinish(),
     )
 
 fun getAchievementForType(achievementType: AchievementType) =
@@ -210,14 +210,14 @@ fun unlockThreeDartAchievement(
     x01RoundWhereSql: String,
     achievementScoreSql: String,
     achievementType: AchievementType,
-    database: Database
+    database: Database,
 ) {
     ensureX01RoundsTableExists(playerIds, database)
 
     val tempTable =
         database.createTempTable(
             "PlayerResults",
-            "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT"
+            "PlayerId VARCHAR(36), GameId VARCHAR(36), DtAchieved TIMESTAMP, Score INT",
         )
 
     var sb = StringBuilder()
@@ -252,7 +252,7 @@ fun unlockThreeDartAchievement(
             database,
             achievementType,
             oneRowPerPlayer = true,
-            achievementCounterFn = { rs.getInt("Score") }
+            achievementCounterFn = { rs.getInt("Score") },
         )
     }
 }
@@ -260,7 +260,7 @@ fun unlockThreeDartAchievement(
 fun retrieveAchievementForDetail(
     achievementType: AchievementType,
     playerId: String,
-    achievementDetail: String
+    achievementDetail: String,
 ): AchievementEntity? {
     val whereSql =
         "AchievementType = '$achievementType' AND PlayerId = '$playerId' AND AchievementDetail = '$achievementDetail'"
@@ -279,7 +279,7 @@ fun paintMedalCommon(
     g: Graphics2D,
     achievement: AbstractAchievement,
     size: Int,
-    highlighted: Boolean
+    highlighted: Boolean,
 ) {
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
@@ -297,7 +297,7 @@ fun paintMedalCommon(
         achievement,
         size,
         DartsColour.COLOUR_ACHIEVEMENT_ORANGE,
-        achievement.orangeThreshold
+        achievement.orangeThreshold,
     )
     markThreshold(g, achievement, size, Color.RED, achievement.redThreshold)
 
@@ -316,7 +316,7 @@ private fun markThreshold(
     achievement: AbstractAchievement,
     size: Int,
     color: Color,
-    threshold: Int
+    threshold: Int,
 ) {
     g.color = color
     val thresholdAngle = achievement.getAngle(threshold)

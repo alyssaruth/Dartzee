@@ -3,7 +3,6 @@ import kotlinx.kover.api.KoverTaskExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "2.3.0"
@@ -11,7 +10,7 @@ plugins {
     id("com.github.ben-manes.versions") version "0.44.0"
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.kotlinx.kover") version "0.6.1"
-    id("com.ncorti.ktfmt.gradle") version "0.15.1"
+    id("com.ncorti.ktfmt.gradle") version "0.25.0"
 }
 
 repositories {
@@ -105,13 +104,17 @@ tasks.withType<Test> {
     minHeapSize = "1024m"
     maxHeapSize = "1024m"
 
-    jvmArgs("-Dcom.sun.management.jmxremote",
+    jvmArgs(
+        "-Dcom.sun.management.jmxremote",
         "-Dcom.sun.management.jmxremote.port=9010",
         "-Dcom.sun.management.jmxremote.authenticate=false",
         "-Dcom.sun.management.jmxremote.ssl=false",
         "-Djava.rmi.server.hostname=localhost",
-        "--add-opens", "java.desktop/sun.awt=ALL-UNNAMED",
-        "--add-opens", "java.desktop/java.awt=ALL-UNNAMED")
+        "--add-opens",
+        "java.desktop/sun.awt=ALL-UNNAMED",
+        "--add-opens",
+        "java.desktop/java.awt=ALL-UNNAMED",
+    )
 
     extensions.configure<KoverTaskExtension> { isDisabled.set(name != "unitTest") }
 

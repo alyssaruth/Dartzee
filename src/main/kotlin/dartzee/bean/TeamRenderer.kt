@@ -13,7 +13,7 @@ import javax.swing.table.TableCellRenderer
 
 class TeamRenderer(
     private val baseRenderer: TableCellRenderer,
-    private val teamsEnabled: () -> Boolean
+    private val teamsEnabled: () -> Boolean,
 ) : TableCellRenderer {
     private val colors =
         listOf(
@@ -22,7 +22,7 @@ class TeamRenderer(
             Color.CYAN,
             Color.YELLOW,
             DartsColour.PURPLE,
-            DartsColour.ORANGE
+            DartsColour.ORANGE,
         )
 
     override fun getTableCellRendererComponent(
@@ -31,7 +31,7 @@ class TeamRenderer(
         isSelected: Boolean,
         hasFocus: Boolean,
         row: Int,
-        column: Int
+        column: Int,
     ): Component {
         val c =
             baseRenderer.getTableCellRendererComponent(
@@ -40,7 +40,7 @@ class TeamRenderer(
                 isSelected,
                 hasFocus,
                 row,
-                column
+                column,
             ) as JComponent
 
         val inBounds = row / 2 < colors.size

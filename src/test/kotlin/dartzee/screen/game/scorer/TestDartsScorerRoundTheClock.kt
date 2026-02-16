@@ -107,13 +107,13 @@ class TestDartsScorerRoundTheClock : AbstractTest() {
 
     private fun factoryScorer(
         clockType: ClockType = ClockType.Standard,
-        inOrder: Boolean = true
+        inOrder: Boolean = true,
     ): DartsScorerRoundTheClock {
         val scorer =
             DartsScorerRoundTheClock(
                 mockk(relaxed = true),
                 RoundTheClockConfig(clockType, inOrder),
-                makeSingleParticipant()
+                makeSingleParticipant(),
             )
         scorer.init()
         return scorer

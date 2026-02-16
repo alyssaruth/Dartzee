@@ -97,7 +97,7 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
                 oddDouble,
                 oddTreble,
                 evenDouble,
-                oddDouble
+                oddDouble,
             )
 
         panelCenter.remove(dartboard)

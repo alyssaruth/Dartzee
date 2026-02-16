@@ -294,7 +294,7 @@ class TestDartzeeTemplateSetupScreen : AbstractTest() {
             .map { (it as DartzeeRuleDto).generateRuleDescription() }
             .shouldContainExactly(
                 ruleOne.generateRuleDescription(),
-                ruleTwo.generateRuleDescription()
+                ruleTwo.generateRuleDescription(),
             )
     }
 

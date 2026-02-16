@@ -54,7 +54,7 @@ class DartsGameScreen(game: GameEntity, private val participants: List<IWrappedP
     override fun achievementUnlocked(
         gameId: String,
         playerId: String,
-        achievement: AbstractAchievement
+        achievement: AbstractAchievement,
     ) {
         gamePanel.achievementUnlocked(playerId, achievement)
     }

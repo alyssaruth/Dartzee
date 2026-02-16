@@ -42,7 +42,7 @@ class TestGameWrapperGolfUtils : AbstractTest() {
 
     private fun getDataRowForHole(
         optimalHoleMap: MutableMap<Int, OptimalHoleStat>,
-        hole: Int
+        hole: Int,
     ): List<Any> {
         val stat = optimalHoleMap.getValue(hole)
 

@@ -203,7 +203,7 @@ class DartzeeRuleCreationDialog(
                 totalRule,
                 cbInOrder.isSelected,
                 cbAllowMisses.isSelected,
-                ruleName
+                ruleName,
             )
         } else {
             val dart1Rule = if (rdbtnAtLeastOne.isSelected) targetSelector.getSelection() else null
@@ -214,7 +214,7 @@ class DartzeeRuleCreationDialog(
                 totalRule,
                 false,
                 cbAllowMisses.isSelected,
-                ruleName
+                ruleName,
             )
         }
     }

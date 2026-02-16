@@ -27,7 +27,7 @@ class AIConfigurationSubPanelGolf : AbstractAIConfigurationSubPanel() {
 
         return model.copy(
             hmDartNoToSegmentType = hmDartNoToSegmentType.toMap(),
-            hmDartNoToStopThreshold = hmDartNoToStopThreshold.toMap()
+            hmDartNoToStopThreshold = hmDartNoToStopThreshold.toMap(),
         )
     }
 

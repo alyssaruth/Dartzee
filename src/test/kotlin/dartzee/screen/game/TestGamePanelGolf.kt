@@ -54,7 +54,7 @@ class TestGamePanelGolf : AbstractTest() {
             listOf(
                 Dart(1, 0, segmentType = SegmentType.MISS),
                 Dart(20, 3, segmentType = SegmentType.TREBLE),
-                Dart(1, 1, segmentType = SegmentType.OUTER_SINGLE)
+                Dart(1, 1, segmentType = SegmentType.OUTER_SINGLE),
             )
 
         panel.addCompletedRound(darts)
@@ -72,7 +72,7 @@ class TestGamePanelGolf : AbstractTest() {
             listOf(
                 Dart(1, 3, segmentType = SegmentType.TREBLE),
                 Dart(1, 3, segmentType = SegmentType.OUTER_SINGLE),
-                Dart(1, 1, segmentType = SegmentType.TREBLE)
+                Dart(1, 1, segmentType = SegmentType.TREBLE),
             )
 
         panel.addCompletedRound(darts)
@@ -90,7 +90,7 @@ class TestGamePanelGolf : AbstractTest() {
         val darts =
             listOf(
                 Dart(1, 1, segmentType = SegmentType.OUTER_SINGLE),
-                Dart(1, 1, segmentType = SegmentType.INNER_SINGLE)
+                Dart(1, 1, segmentType = SegmentType.INNER_SINGLE),
             )
 
         panel.addCompletedRound(darts)
@@ -144,7 +144,7 @@ class TestGamePanelGolf : AbstractTest() {
         val darts =
             listOf(
                 Dart(1, 2, segmentType = SegmentType.DOUBLE),
-                Dart(1, 3, segmentType = SegmentType.TREBLE)
+                Dart(1, 3, segmentType = SegmentType.TREBLE),
             )
         panel.addCompletedRound(darts)
 
@@ -159,7 +159,7 @@ class TestGamePanelGolf : AbstractTest() {
         insertAchievement(
             playerId = playerId,
             type = AchievementType.GOLF_COURSE_MASTER,
-            achievementDetail = "2"
+            achievementDetail = "2",
         )
 
         val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE))
@@ -182,7 +182,7 @@ class TestGamePanelGolf : AbstractTest() {
             insertAchievement(
                 playerId = playerId,
                 type = AchievementType.GOLF_COURSE_MASTER,
-                achievementDetail = "1"
+                achievementDetail = "1",
             )
 
         val darts = listOf(Dart(1, 2, segmentType = SegmentType.DOUBLE))
@@ -203,7 +203,7 @@ class TestGamePanelGolf : AbstractTest() {
                 playerId = playerId,
                 type = AchievementType.GOLF_ONE_HIT_WONDER,
                 gameIdEarned = otherGameId,
-                achievementCounter = 2
+                achievementCounter = 2,
             )
 
         val roundOne = listOf(drtDoubleOne())
@@ -245,13 +245,13 @@ class TestGamePanelGolf : AbstractTest() {
                 AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 2, gameId, "3"),
                 AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, gameId, "1"),
                 AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, gameId, "3"),
-                AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 2, gameId)
+                AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 2, gameId),
             )
 
         retrieveAchievementsForPlayer(p2.rowId)
             .shouldContainExactlyInAnyOrder(
                 AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, gameId, "2"),
-                AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 1, gameId)
+                AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 1, gameId),
             )
     }
 
@@ -427,12 +427,12 @@ class TestGamePanelGolf : AbstractTest() {
         val (p1, p2, p3, p4) = players
         AchievementEntity.retrieveAchievement(
             AchievementType.GOLF_TEAM_GAMES_WON,
-            p1.rowId
+            p1.rowId,
         ) shouldBe null
 
         AchievementEntity.retrieveAchievement(
             AchievementType.GOLF_TEAM_GAMES_WON,
-            p2.rowId
+            p2.rowId,
         ) shouldBe null
 
         val a =

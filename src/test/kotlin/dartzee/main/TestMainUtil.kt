@@ -95,7 +95,7 @@ class TestMainUtil : AbstractTest() {
                 KEY_DEVICE_ID to "some.device",
                 KEY_OPERATING_SYSTEM to "Windows 10",
                 KEY_APP_VERSION to DARTS_VERSION_NUMBER,
-                KEY_DEV_MODE to true
+                KEY_DEV_MODE to true,
             )
 
         logger.loggingContext.shouldContainAll(expectedContextFields)

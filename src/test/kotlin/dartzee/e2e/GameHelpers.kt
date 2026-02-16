@@ -86,7 +86,7 @@ fun closeOpenGames() {
 data class GamePanelTestSetup(
     val gamePanel: DartsGamePanel<*, *>,
     val listener: DartboardListener,
-    val participants: List<IWrappedParticipant>
+    val participants: List<IWrappedParticipant>,
 )
 
 fun setUpGamePanelAndStartGame(game: GameEntity, players: List<PlayerEntity>): GamePanelTestSetup {
@@ -148,7 +148,7 @@ fun awaitGameFinish(game: GameEntity) {
 fun makePlayerWithModel(
     model: DartsAiModel,
     name: String = "Clive",
-    image: String = "BaboOne"
+    image: String = "BaboOne",
 ): PlayerEntity {
     val playerImage = insertPlayerImage(resource = image)
 
@@ -163,7 +163,7 @@ fun verifyState(
     finalScore: Int,
     scoreSuffix: String = "",
     expectedScorerRows: Int = dartRounds.size,
-    pt: IParticipant = retrieveParticipant()
+    pt: IParticipant = retrieveParticipant(),
 ) {
     // ParticipantEntity on the database
     pt.finalScore shouldBe finalScore

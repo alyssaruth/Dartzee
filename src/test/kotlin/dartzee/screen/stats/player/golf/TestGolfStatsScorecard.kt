@@ -27,8 +27,8 @@ class TestGolfStatsScorecard : AbstractTest() {
                 2,
                 listOf(
                     Dart(2, 0, segmentType = SegmentType.MISS),
-                    Dart(2, 1, segmentType = SegmentType.OUTER_SINGLE)
-                )
+                    Dart(2, 1, segmentType = SegmentType.OUTER_SINGLE),
+                ),
             )
 
         val gameIds = listOf(50L, 350L)
@@ -38,7 +38,7 @@ class TestGolfStatsScorecard : AbstractTest() {
         val rows = scorer.tableScores.getRows()
         rows.shouldContainExactlyInAnyOrder(
             listOf(1) + roundOne + listOf<Any?>(null, null, 2, 50L),
-            listOf(2) + roundTwo + listOf<Any?>(null, 4, 350L)
+            listOf(2) + roundTwo + listOf<Any?>(null, 4, 350L),
         )
     }
 
@@ -68,7 +68,7 @@ class TestGolfStatsScorecard : AbstractTest() {
         val rows = scorer.tableScores.getRows()
         rows.shouldContainExactlyInAnyOrder(
             listOf(10) + roundOne + listOf<Any?>(null, 1),
-            listOf(11) + roundTwo + listOf<Any?>(null, 2)
+            listOf(11) + roundTwo + listOf<Any?>(null, 2),
         )
     }
 

@@ -69,6 +69,6 @@ class TestTeamRenderer : AbstractTest() {
         isSelected: Boolean = false,
         hasFocus: Boolean = false,
         row: Int = 0,
-        column: Int = 0
+        column: Int = 0,
     ) = getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JComponent
 }

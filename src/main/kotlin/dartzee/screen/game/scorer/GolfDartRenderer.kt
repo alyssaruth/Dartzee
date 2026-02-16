@@ -20,7 +20,7 @@ class GolfDartRenderer(private val showGameId: Boolean) : DefaultTableCellRender
         isSelected: Boolean,
         hasFocus: Boolean,
         row: Int,
-        column: Int
+        column: Int,
     ): Component {
         val newValue = getReplacementValue(table, value, row)
         val cell =

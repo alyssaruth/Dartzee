@@ -25,19 +25,19 @@ class TestPlayerAchievementsButton : AbstractTest() {
             insertAchievement(
                 playerId = player.rowId,
                 type = AchievementType.X01_BEST_GAME,
-                achievementCounter = AchievementX01BestGame().pinkThreshold
+                achievementCounter = AchievementX01BestGame().pinkThreshold,
             )
         val a2 =
             insertAchievement(
                 playerId = player.rowId,
                 type = AchievementType.GOLF_BEST_GAME,
-                achievementCounter = AchievementGolfBestGame().redThreshold
+                achievementCounter = AchievementGolfBestGame().redThreshold,
             )
         val a3 =
             insertAchievement(
                 playerId = player.rowId,
                 type = AchievementType.CLOCK_BEST_GAME,
-                achievementCounter = AchievementClockBestGame().redThreshold + 1
+                achievementCounter = AchievementClockBestGame().redThreshold + 1,
             )
 
         val button = PlayerAchievementsButton(player, listOf(a1, a2, a3))

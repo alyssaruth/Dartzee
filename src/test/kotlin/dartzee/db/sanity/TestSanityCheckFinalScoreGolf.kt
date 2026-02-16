@@ -24,21 +24,21 @@ class TestSanityCheckFinalScoreGolf : AbstractTest() {
             roundNumber = 1,
             ordinal = 1,
             score = 1,
-            segmentType = SegmentType.OUTER_SINGLE
+            segmentType = SegmentType.OUTER_SINGLE,
         )
         insertDart(
             pt,
             roundNumber = 1,
             ordinal = 2,
             score = 1,
-            segmentType = SegmentType.INNER_SINGLE
+            segmentType = SegmentType.INNER_SINGLE,
         )
         insertDart(
             pt,
             roundNumber = 1,
             ordinal = 3,
             score = 1,
-            segmentType = SegmentType.OUTER_SINGLE
+            segmentType = SegmentType.OUTER_SINGLE,
         )
 
         val results = SanityCheckFinalScoreGolf().runCheck()
@@ -64,14 +64,14 @@ class TestSanityCheckFinalScoreGolf : AbstractTest() {
             roundNumber = 1,
             ordinal = 1,
             score = 1,
-            segmentType = SegmentType.OUTER_SINGLE
+            segmentType = SegmentType.OUTER_SINGLE,
         )
         insertDart(
             pt,
             roundNumber = 2,
             ordinal = 1,
             score = 2,
-            segmentType = SegmentType.INNER_SINGLE
+            segmentType = SegmentType.INNER_SINGLE,
         )
 
         val results = SanityCheckFinalScoreGolf().runCheck()
@@ -96,7 +96,7 @@ class TestSanityCheckFinalScoreGolf : AbstractTest() {
             roundNumber = 1,
             ordinal = 1,
             score = 1,
-            segmentType = SegmentType.OUTER_SINGLE
+            segmentType = SegmentType.OUTER_SINGLE,
         )
 
         val results = SanityCheckFinalScoreGolf().runCheck()
@@ -123,7 +123,7 @@ class TestSanityCheckFinalScoreGolf : AbstractTest() {
         return insertParticipant(
             gameId = game.rowId,
             playerId = player.rowId,
-            finalScore = finalScore
+            finalScore = finalScore,
         )
     }
 }

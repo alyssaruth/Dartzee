@@ -24,7 +24,7 @@ import javax.swing.event.ChangeListener
 
 abstract class DartsMatchScreen<PlayerState : AbstractPlayerState<PlayerState>>(
     private val matchPanel: MatchSummaryPanel<PlayerState>,
-    val match: DartsMatchEntity
+    val match: DartsMatchEntity,
 ) : AbstractDartsGameScreen(), ChangeListener {
     override val windowName = match.getMatchDesc()
 
@@ -43,7 +43,7 @@ abstract class DartsMatchScreen<PlayerState : AbstractPlayerState<PlayerState>>(
     abstract fun factoryGamePanel(
         parent: AbstractDartsGameScreen,
         game: GameEntity,
-        totalPlayers: Int
+        totalPlayers: Int,
     ): DartsGamePanel<*, PlayerState>
 
     fun addGameToMatch(game: GameEntity, totalPlayers: Int): DartsGamePanel<*, *> {
@@ -78,7 +78,7 @@ abstract class DartsMatchScreen<PlayerState : AbstractPlayerState<PlayerState>>(
                 CODE_MATCH_FINISHED,
                 "Match #${match.localId} finished.",
                 KEY_MATCH_ID to match.rowId,
-                KEY_MATCH_LOCAL_ID to match.localId
+                KEY_MATCH_LOCAL_ID to match.localId,
             )
             match.dtFinish = getSqlDateNow()
             match.saveToDatabase()
@@ -94,7 +94,7 @@ abstract class DartsMatchScreen<PlayerState : AbstractPlayerState<PlayerState>>(
             prepareNextEntities(
                 firstGamePanel.gameEntity,
                 firstGameParticipants,
-                hmGameIdToTab.size + 1
+                hmGameIdToTab.size + 1,
             )
 
         logger.info(
@@ -104,7 +104,7 @@ abstract class DartsMatchScreen<PlayerState : AbstractPlayerState<PlayerState>>(
             KEY_MATCH_LOCAL_ID to match.localId,
             KEY_GAME_ID to nextGame.rowId,
             KEY_GAME_LOCAL_ID to nextGame.localId,
-            KEY_FROM_MATCH to true
+            KEY_FROM_MATCH to true,
         )
 
         val panel = addGameToMatch(nextGame, nextParticipants.size)
@@ -119,7 +119,7 @@ abstract class DartsMatchScreen<PlayerState : AbstractPlayerState<PlayerState>>(
     override fun achievementUnlocked(
         gameId: String,
         playerId: String,
-        achievement: AbstractAchievement
+        achievement: AbstractAchievement,
     ) {
         val tab = hmGameIdToTab[gameId]!!
         tab.achievementUnlocked(playerId, achievement)

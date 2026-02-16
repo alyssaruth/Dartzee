@@ -56,7 +56,7 @@ class TestGameStatisticsPanelX01 :
                 Dart(1, 1),
                 Dart(20, 3),
                 Dart(20, 1),
-                Dart(20, 1)
+                Dart(20, 1),
             )
 
         // Bob - 19, 40
@@ -68,18 +68,18 @@ class TestGameStatisticsPanelX01 :
                 Dart(19, 0),
                 Dart(17, 2),
                 Dart(3, 1),
-                Dart(3, 1)
+                Dart(3, 1),
             )
 
         val aliceState =
             makeX01PlayerStateWithRounds(
                 player = insertPlayer(name = "Alice"),
-                completedRounds = aliceDarts
+                completedRounds = aliceDarts,
             )
         val bobState =
             makeX01PlayerStateWithRounds(
                 player = insertPlayer(name = "Bob"),
-                completedRounds = bobDarts
+                completedRounds = bobDarts,
             )
 
         val statsPanel = factoryStatsPanel()
@@ -105,12 +105,12 @@ class TestGameStatisticsPanelX01 :
                 Dart(20, 1),
                 Dart(20, 3),
                 Dart(20, 3),
-                Dart(1, 0)
+                Dart(1, 0),
             )
         val aliceState =
             makeX01PlayerStateWithRounds(
                 player = insertPlayer(name = "Alice"),
-                completedRounds = aliceDarts
+                completedRounds = aliceDarts,
             )
 
         val statsPanel = factoryStatsPanel()
@@ -172,7 +172,7 @@ class TestGameStatisticsPanelX01 :
                 "60 - 79" to 1,
                 "40 - 59" to 1,
                 "0 - 19" to 1,
-                "100 - 139" to 1
+                "100 - 139" to 1,
             )
         )
 
@@ -183,7 +183,7 @@ class TestGameStatisticsPanelX01 :
                 "60 - 79" to 1,
                 "40 - 59" to 1,
                 "0 - 19" to 1,
-                "100 - 139" to 0
+                "100 - 139" to 0,
             )
         )
     }

@@ -78,7 +78,7 @@ class TestDartzeeRuleCarousel : AbstractTest() {
         val results =
             makeRoundResultEntities(
                 DartzeeRoundResult(3, true, 36),
-                DartzeeRoundResult(1, false, -38)
+                DartzeeRoundResult(1, false, -38),
             )
         carousel.update(results, emptyList(), 38)
 
@@ -106,7 +106,7 @@ class TestDartzeeRuleCarousel : AbstractTest() {
             listOf(
                 makeDart(18, 1, SegmentType.INNER_SINGLE),
                 makeDart(20, 1, SegmentType.OUTER_SINGLE),
-                makeDart(1, 1, SegmentType.INNER_SINGLE)
+                makeDart(1, 1, SegmentType.INNER_SINGLE),
             )
 
         carousel.update(emptyList(), darts, 50)
@@ -175,7 +175,7 @@ class TestDartzeeRuleCarousel : AbstractTest() {
         val results =
             makeRoundResultEntities(
                 DartzeeRoundResult(3, true, 36),
-                DartzeeRoundResult(1, false, -38)
+                DartzeeRoundResult(1, false, -38),
             )
         carousel.update(results, emptyList(), 38)
 
@@ -197,7 +197,7 @@ class TestDartzeeRuleCarousel : AbstractTest() {
         val results =
             makeRoundResultEntities(
                 DartzeeRoundResult(3, true, 36),
-                DartzeeRoundResult(1, false, -38)
+                DartzeeRoundResult(1, false, -38),
             )
         carousel.update(results, emptyList(), 38)
 
@@ -315,7 +315,7 @@ class TestDartzeeRuleCarousel : AbstractTest() {
             listOf(
                 makeDart(18, 1, SegmentType.INNER_SINGLE),
                 makeDart(20, 1, SegmentType.OUTER_SINGLE),
-                makeDart(1, 1, SegmentType.INNER_SINGLE)
+                makeDart(1, 1, SegmentType.INNER_SINGLE),
             )
 
         carousel.update(emptyList(), darts, 50)
@@ -345,7 +345,7 @@ class TestDartzeeRuleCarousel : AbstractTest() {
             listOf(
                 makeDart(18, 1, SegmentType.INNER_SINGLE),
                 makeDart(20, 1, SegmentType.OUTER_SINGLE),
-                makeDart(1, 1, SegmentType.INNER_SINGLE)
+                makeDart(1, 1, SegmentType.INNER_SINGLE),
             )
 
         carousel.update(emptyList(), darts, 50)
@@ -382,7 +382,7 @@ class TestDartzeeRuleCarousel : AbstractTest() {
 
     private fun makeCarousel(
         listener: IDartzeeCarouselListener = mockk(relaxed = true),
-        dtos: List<DartzeeRuleDto> = this.dtos
+        dtos: List<DartzeeRuleDto> = this.dtos,
     ) = DartzeeRuleCarousel(dtos).also { it.listener = listener }
 
     private fun DartzeeRuleCarousel.getPendingRules() = getAvailableRuleTiles().map { it.dto }

@@ -143,7 +143,7 @@ class TestAbstractPlayerState : AbstractTest() {
             insertParticipant(
                 dtFinished = DateStatics.END_OF_TIME,
                 finalScore = -1,
-                finishingPosition = -1
+                finishingPosition = -1,
             )
         val state = TestPlayerState(participant)
 
@@ -164,7 +164,7 @@ class TestAbstractPlayerState : AbstractTest() {
             insertParticipant(
                 dtFinished = DateStatics.END_OF_TIME,
                 finalScore = -1,
-                finishingPosition = -1
+                finishingPosition = -1,
             )
         val state = TestPlayerState(participant)
         state.hasResigned() shouldBe false
@@ -189,7 +189,7 @@ class TestAbstractPlayerState : AbstractTest() {
             insertParticipant(
                 dtFinished = DateStatics.END_OF_TIME,
                 finalScore = -1,
-                finishingPosition = -1
+                finishingPosition = -1,
             )
         val state = TestPlayerState(participant)
 
@@ -290,7 +290,7 @@ data class TestPlayerState(
     override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
     override val currentRound: MutableList<Dart> = mutableListOf(),
     override var isActive: Boolean = false,
-    private val scoreSoFar: Int = -1
+    private val scoreSoFar: Int = -1,
 ) : AbstractPlayerState<TestPlayerState>() {
     override val wrappedParticipant = SingleParticipant(participant)
 
@@ -302,7 +302,7 @@ data class TestTeamState(
     override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
     override val currentRound: MutableList<Dart> = mutableListOf(),
     override var isActive: Boolean = false,
-    private val scoreSoFar: Int = -1
+    private val scoreSoFar: Int = -1,
 ) : AbstractPlayerState<TestTeamState>() {
     override val wrappedParticipant = TeamParticipant(insertTeam(), participants)
 

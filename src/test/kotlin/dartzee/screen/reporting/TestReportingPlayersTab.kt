@@ -124,7 +124,7 @@ class TestReportingPlayersTab : AbstractTest() {
             .shouldContainExactly(
                 mapOf(
                     playerOne to IncludedPlayerParameters(listOf(), "=", 3),
-                    playerTwo to makeIncludedPlayerParameters()
+                    playerTwo to makeIncludedPlayerParameters(),
                 )
             )
     }

@@ -25,14 +25,14 @@ class TestAchievementDartzeeUnderPressure :
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         val pt =
             insertParticipant(
                 gameId = g.rowId,
                 playerId = p.rowId,
                 finalScore = 275,
-                database = database
+                database = database,
             )
         insertValidRoundResult(pt, testRules, database)
     }
@@ -123,7 +123,7 @@ class TestAchievementDartzeeUnderPressure :
     private fun insertValidRoundResult(
         participant: ParticipantEntity,
         rules: List<DartzeeRuleDto>,
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ): DartzeeRoundResultEntity {
         insertDartzeeRules(participant.gameId, rules, database)
         val roundResult = getHardestRulePass(rules)
@@ -131,7 +131,7 @@ class TestAchievementDartzeeUnderPressure :
             roundResult,
             participant,
             rules.size + 1,
-            database
+            database,
         )
     }
 

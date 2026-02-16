@@ -100,7 +100,7 @@ abstract class ScrollTableHyperlink(private val linkColumnName: String, testId: 
             isSelected: Boolean,
             hasFocus: Boolean,
             row: Int,
-            column: Int
+            column: Int,
         ): Component {
             if (value == null) {
                 super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
@@ -113,7 +113,7 @@ abstract class ScrollTableHyperlink(private val linkColumnName: String, testId: 
                 isSelected,
                 hasFocus,
                 row,
-                column
+                column,
             )
 
             val fontAttributes = HashMap<TextAttribute, Int>()

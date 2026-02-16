@@ -34,7 +34,7 @@ class SimulationRunner {
     private fun runSimulationThreadily(
         sim: AbstractDartsSimulation,
         numberOfGames: Int,
-        modal: Boolean
+        modal: Boolean,
     ) {
         val dialog = ProgressDialog.factory("Simulating games...", "games remaining", numberOfGames)
         dialog.showCancel(true)
@@ -42,7 +42,7 @@ class SimulationRunner {
 
         InjectedThings.logger.info(
             CODE_SIMULATION_STARTED,
-            "Starting simulation for $numberOfGames games"
+            "Starting simulation for $numberOfGames games",
         )
         val timer = DurationTimer()
 
@@ -56,7 +56,7 @@ class SimulationRunner {
                 InjectedThings.logger.logProgress(
                     CODE_SIMULATION_PROGRESS,
                     i.toLong(),
-                    numberOfGames.toLong()
+                    numberOfGames.toLong(),
                 )
 
                 if (dialog.cancelPressed()) {
@@ -70,7 +70,7 @@ class SimulationRunner {
                 InjectedThings.logger.error(
                     CODE_SIMULATION_ERROR,
                     "Caught $t running simulation",
-                    t
+                    t,
                 )
                 DialogUtil.showErrorLater("A serious problem has occurred with the simulation.")
             }
@@ -78,7 +78,7 @@ class SimulationRunner {
 
         InjectedThings.logger.info(
             CODE_SIMULATION_FINISHED,
-            "Simulation completed in ${timer.getDuration()} millis"
+            "Simulation completed in ${timer.getDuration()} millis",
         )
         dialog.disposeLater()
 
@@ -91,7 +91,7 @@ class SimulationRunner {
     private fun simulationFinished(
         hmGameIdToWrapper: Map<Long, GameWrapper>,
         sim: AbstractDartsSimulation,
-        modal: Boolean
+        modal: Boolean,
     ) {
         if (DartsClient.devMode) {
             val ans = DialogUtil.showQuestionOLD("Save real entities?")

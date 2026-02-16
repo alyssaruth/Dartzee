@@ -65,7 +65,7 @@ class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, 
                 AchievementType.CLOCK_BRUCEY_BONUSES,
                 getCurrentPlayerId(),
                 getGameId(),
-                "$currentRoundNumber"
+                "$currentRoundNumber",
             )
         }
 
@@ -85,7 +85,7 @@ class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, 
                 AchievementType.CLOCK_BEST_STREAK,
                 getCurrentPlayerId(),
                 getGameId(),
-                longestStreakThisGame
+                longestStreakThisGame,
             )
         }
     }
@@ -102,7 +102,7 @@ class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, 
         DartsScorerRoundTheClock(
             this,
             RoundTheClockConfig.fromJson(gameEntity.gameParams),
-            participant
+            participant,
         )
 
     override fun factoryStatsPanel(gameParams: String) =

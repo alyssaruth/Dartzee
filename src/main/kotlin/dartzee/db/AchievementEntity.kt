@@ -75,7 +75,7 @@ class AchievementEntity(database: Database = mainDatabase) :
             achievementType: AchievementType,
             playerId: String,
             gameId: String,
-            counter: Int
+            counter: Int,
         ) {
             val existingAchievement = retrieveAchievement(achievementType, playerId)
 
@@ -103,7 +103,7 @@ class AchievementEntity(database: Database = mainDatabase) :
                         counter,
                         achievementType,
                         playerId,
-                        gameId
+                        gameId,
                     )
                 }
             }
@@ -114,7 +114,7 @@ class AchievementEntity(database: Database = mainDatabase) :
             playerId: String,
             gameId: String,
             detail: String = "",
-            counter: Int = -1
+            counter: Int = -1,
         ) {
             val sql =
                 "SELECT COUNT(1) FROM Achievement WHERE PlayerId = '$playerId' AND AchievementType = '$achievementType'"
@@ -129,7 +129,7 @@ class AchievementEntity(database: Database = mainDatabase) :
             playerId: String,
             gameId: String,
             detail: String,
-            counter: Int
+            counter: Int,
         ) {
             val sql =
                 "SELECT SUM(AchievementCounter) FROM Achievement WHERE PlayerId = '$playerId' AND AchievementType = '$achievementType'"
@@ -144,7 +144,7 @@ class AchievementEntity(database: Database = mainDatabase) :
             playerId: String,
             gameId: String,
             counter: Int,
-            detail: String
+            detail: String,
         ) {
             val whereSql = "PlayerId = '$playerId' AND AchievementType = '$achievementType'"
 
@@ -160,7 +160,7 @@ class AchievementEntity(database: Database = mainDatabase) :
                     achievementType,
                     playerId,
                     gameId,
-                    allRows
+                    allRows,
                 )
             }
         }
@@ -171,7 +171,7 @@ class AchievementEntity(database: Database = mainDatabase) :
             achievementType: AchievementType,
             playerId: String,
             gameId: String,
-            achievementRows: List<AchievementEntity>? = null
+            achievementRows: List<AchievementEntity>? = null,
         ) {
             val achievementTemplate = getAchievementForType(achievementType) ?: return
             achievementRows?.let { achievementTemplate.initialiseFromDb(achievementRows, null) }
@@ -183,7 +183,7 @@ class AchievementEntity(database: Database = mainDatabase) :
             newValue: Int,
             achievementTemplate: AbstractAchievement,
             playerId: String,
-            gameId: String
+            gameId: String,
         ) {
             // Work out if the threshold has changed
             achievementTemplate.attainedValue = oldValue
@@ -206,7 +206,7 @@ class AchievementEntity(database: Database = mainDatabase) :
             counter: Int,
             achievementDetail: String,
             dtAchieved: Timestamp,
-            database: Database = mainDatabase
+            database: Database = mainDatabase,
         ): AchievementEntity {
             val ae = AchievementEntity(database)
             ae.assignRowId()
@@ -226,7 +226,7 @@ class AchievementEntity(database: Database = mainDatabase) :
             counter: Int,
             achievementDetail: String = "",
             dtAchieved: Timestamp = getSqlDateNow(),
-            database: Database = mainDatabase
+            database: Database = mainDatabase,
         ): AchievementEntity {
             val ae =
                 factory(
@@ -236,7 +236,7 @@ class AchievementEntity(database: Database = mainDatabase) :
                     counter,
                     achievementDetail,
                     dtAchieved,
-                    database
+                    database,
                 )
             ae.saveToDatabase()
             return ae

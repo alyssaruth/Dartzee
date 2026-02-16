@@ -83,7 +83,7 @@ class TestPresentationDartboard : AbstractTest() {
                 Color.YELLOW.darker(),
                 Color.YELLOW.darker(),
                 Color.PINK,
-                Color.YELLOW.darker()
+                Color.YELLOW.darker(),
             )
 
         val dartboard = PresentationDartboard(colourWrapper)

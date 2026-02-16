@@ -38,7 +38,7 @@ class AchievementX01Shanghai : AbstractMultiRowAchievement() {
         val tempTable =
             database.createTempTable(
                 "Shanghai",
-                "RoundNumber INT, ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)"
+                "RoundNumber INT, ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36)",
             )
 
         var sb = StringBuilder()

@@ -24,7 +24,7 @@ class TestGameParamFilterPanelDartzee : AbstractTest() {
             .shouldContainExactly(
                 ComboBoxItem(null, "Custom"),
                 ComboBoxItem(null, "-----", false),
-                ComboBoxItem(null, "No templates configured", false)
+                ComboBoxItem(null, "No templates configured", false),
             )
     }
 

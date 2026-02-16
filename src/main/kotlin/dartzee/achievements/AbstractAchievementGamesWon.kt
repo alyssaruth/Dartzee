@@ -30,7 +30,7 @@ abstract class AbstractAchievementGamesWon : AbstractMultiRowAchievement() {
                 rs,
                 database,
                 achievementType,
-                achievementDetailFn = { rs.getInt("Score").toString() }
+                achievementDetailFn = { rs.getInt("Score").toString() },
             )
         }
     }

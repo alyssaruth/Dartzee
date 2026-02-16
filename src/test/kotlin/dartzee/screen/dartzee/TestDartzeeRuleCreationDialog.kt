@@ -98,7 +98,7 @@ class TestDartzeeRuleAmendment : AbstractTest() {
                 makeScoreRule(13),
                 makeColourRule(red = true, green = true),
                 DartzeeDartRuleOdd(),
-                inOrder = false
+                inOrder = false,
             )
 
         val dlg = DartzeeRuleCreationDialog()
@@ -125,7 +125,7 @@ class TestDartzeeRuleAmendment : AbstractTest() {
                 DartzeeDartRuleEven(),
                 DartzeeDartRuleOdd(),
                 DartzeeDartRuleEven(),
-                inOrder = true
+                inOrder = true,
             )
 
         val dlg = DartzeeRuleCreationDialog()
@@ -461,7 +461,7 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest() {
         children.shouldContainExactlyInAnyOrder(
             dlg.dartOneSelector,
             dlg.dartTwoSelector,
-            dlg.dartThreeSelector
+            dlg.dartThreeSelector,
         )
         children.shouldNotContain(dlg.targetSelector)
 
@@ -474,7 +474,7 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest() {
         children.shouldContainExactlyInAnyOrder(
             dlg.dartOneSelector,
             dlg.dartTwoSelector,
-            dlg.dartThreeSelector
+            dlg.dartThreeSelector,
         )
         children.shouldNotContain(dlg.targetSelector)
 

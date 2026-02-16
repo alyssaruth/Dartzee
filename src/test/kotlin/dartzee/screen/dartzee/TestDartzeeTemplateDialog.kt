@@ -68,12 +68,12 @@ class TestDartzeeTemplateDialog : AbstractTest() {
         val tenPercentRule =
             makeDartzeeRuleDto(
                 DartzeeDartRuleEven(),
-                calculationResult = makeDartzeeRuleCalculationResult(10)
+                calculationResult = makeDartzeeRuleCalculationResult(10),
             )
         val twentyPercentRule =
             makeDartzeeRuleDto(
                 DartzeeDartRuleOdd(),
-                calculationResult = makeDartzeeRuleCalculationResult(20)
+                calculationResult = makeDartzeeRuleCalculationResult(20),
             )
 
         dialog.rulePanel.addRulesToTable(listOf(twentyPercentRule, tenPercentRule))

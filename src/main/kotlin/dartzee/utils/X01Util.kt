@@ -30,7 +30,7 @@ fun shouldStopForMercyRule(
     model: DartsAiModel,
     startingScore: Int,
     currentScore: Int,
-    finishType: FinishType
+    finishType: FinishType,
 ): Boolean {
     if (finishType == FinishType.Any) {
         return false

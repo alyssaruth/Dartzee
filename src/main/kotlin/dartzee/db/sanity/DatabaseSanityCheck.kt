@@ -31,7 +31,7 @@ private fun getAllSanityChecks(): List<ISanityCheck> {
             SanityCheckFinalScoreGolf(),
             SanityCheckFinalScoreRtc(),
             SanityCheckPlayerIdMismatch(),
-            SanityCheckX01Finishes()
+            SanityCheckX01Finishes(),
         )
 
     val genericChecks: List<ISanityCheck> =
@@ -46,7 +46,7 @@ object DatabaseSanityCheck {
     fun runSanityCheck(checks: List<ISanityCheck> = getAllSanityChecks()) {
         logger.info(
             CODE_SANITY_CHECK_STARTED,
-            "Running ${getAllSanityChecks().size} sanity checks..."
+            "Running ${getAllSanityChecks().size} sanity checks...",
         )
 
         runAllChecks(checks)
@@ -82,7 +82,7 @@ object DatabaseSanityCheck {
     private fun sanityCheckComplete(sanityErrors: List<AbstractSanityCheckResult>) {
         logger.info(
             CODE_SANITY_CHECK_COMPLETED,
-            "Completed sanity check and found ${sanityErrors.size} issues"
+            "Completed sanity check and found ${sanityErrors.size} issues",
         )
 
         sanityErrors.forEach {
@@ -90,7 +90,7 @@ object DatabaseSanityCheck {
                 CODE_SANITY_CHECK_RESULT,
                 "${it.getCount()} ${it.getDescription()}",
                 KEY_SANITY_DESCRIPTION to it.getDescription(),
-                KEY_SANITY_COUNT to it.getCount()
+                KEY_SANITY_COUNT to it.getCount(),
             )
         }
 

@@ -34,7 +34,7 @@ class TestRoundTheClockUtil : AbstractTest() {
                 factoryClockHit(5),
                 Dart(0, 0),
                 factoryClockHit(6),
-                factoryClockHit(7)
+                factoryClockHit(7),
             )
 
         val streak = getLongestStreak(darts)
@@ -53,7 +53,7 @@ class TestRoundTheClockUtil : AbstractTest() {
                 factoryClockHit(4),
                 Dart(20, 1),
                 factoryClockHit(6),
-                factoryClockHit(7)
+                factoryClockHit(7),
             )
 
         val streak = getLongestStreak(darts)

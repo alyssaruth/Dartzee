@@ -51,7 +51,7 @@ object CheckoutSuggester {
     private fun addCheckoutsToMap(
         score: Int,
         darts: List<DartHint>,
-        map: MutableMap<String, List<DartHint>>
+        map: MutableMap<String, List<DartHint>>,
     ) {
         val currentCheckout = darts.toMutableList()
         var currentScore = score

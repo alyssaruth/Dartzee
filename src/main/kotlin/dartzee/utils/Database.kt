@@ -30,7 +30,7 @@ val DATABASE_FILE_PATH: String = "${System.getProperty("user.dir")}/Databases"
 /** Generic derby helper methods */
 class Database(
     val dbName: String = DartsDatabaseUtil.DATABASE_NAME,
-    private val inMemory: Boolean = false
+    private val inMemory: Boolean = false,
 ) {
     val localIdGenerator = LocalIdGenerator(this)
 
@@ -68,7 +68,7 @@ class Database(
         val connection = DriverManager.getConnection(getDbStringForNewConnection(), getProps())
         logger.info(
             CODE_NEW_CONNECTION,
-            "Created new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}"
+            "Created new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}",
         )
         return connection
     }
@@ -261,7 +261,7 @@ class Database(
             logger.error(
                 CODE_TEST_CONNECTION_ERROR,
                 "Failed to establish test connection for path ${getDirectory()}",
-                t
+                t,
             )
             return false
         }

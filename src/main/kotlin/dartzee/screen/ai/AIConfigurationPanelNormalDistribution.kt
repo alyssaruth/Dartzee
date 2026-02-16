@@ -66,7 +66,7 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
             standardDeviation = sd,
             standardDeviationDoubles = sdDoubles,
             standardDeviationCentral = sdCentral,
-            maxRadius = slider.value
+            maxRadius = slider.value,
         )
     }
 

@@ -59,7 +59,7 @@ class StatisticsTabFinishBreakdown : AbstractStatisticsTab(), RowSelectionListen
 
     private fun buildFavouriteDoublesData(
         table: ScrollTable,
-        filteredGames: List<GameWrapper>
+        filteredGames: List<GameWrapper>,
     ): DefaultPieDataset<String> {
         val model = DefaultModel()
         model.addColumn("Double")
@@ -73,7 +73,7 @@ class StatisticsTabFinishBreakdown : AbstractStatisticsTab(), RowSelectionListen
 
     private fun populateFavouriteDoubles(
         model: DefaultModel,
-        filteredGames: List<GameWrapper>
+        filteredGames: List<GameWrapper>,
     ): DefaultPieDataset<String> {
         val scores =
             filteredGames.filter { it.isFinished() }.map { it.getDartsForFinalRound().last().score }

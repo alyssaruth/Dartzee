@@ -21,7 +21,7 @@ import kotlin.math.max
 enum class GolfMode {
     FRONT_9,
     BACK_9,
-    FULL_18
+    FULL_18,
 }
 
 /** Wraps up an entire game of darts from a single player's perspective */
@@ -88,7 +88,7 @@ class GameWrapper(
     /** Three dart scores */
     fun populateThreeDartScoreMap(
         hmScoreToBreakdownWrapper: MutableMap<Int, ThreeDartScoreWrapper>,
-        scoreThreshold: Int
+        scoreThreshold: Int,
     ) {
         val dartRounds = hmRoundNumberToDarts.values.toList()
         val scoringRounds = getScoringRounds(dartRounds, scoreThreshold)
@@ -182,7 +182,7 @@ class GameWrapper(
         hole: Int,
         dartsNew: List<Dart>,
         currentGameId: Long,
-        dartsCurrent: List<Dart>
+        dartsCurrent: List<Dart>,
     ): Boolean {
         if (currentGameId == -1L) {
             return true

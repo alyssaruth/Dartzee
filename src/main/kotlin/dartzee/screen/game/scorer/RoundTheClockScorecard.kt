@@ -28,7 +28,7 @@ class RoundTheClockScorecard : ScrollTable() {
     private fun makeClockResult(
         target: Int,
         state: ClockPlayerState,
-        paused: Boolean
+        paused: Boolean,
     ): ClockResult {
         val hit = state.hasHitTarget(target)
         val isCurrentTarget = state.findCurrentTarget() == target && state.isActive && !paused

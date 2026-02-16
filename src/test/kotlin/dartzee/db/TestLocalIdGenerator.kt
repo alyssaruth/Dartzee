@@ -87,7 +87,7 @@ class TestLocalIdGenerator : AbstractTest() {
 
     private class IdGeneratorRunnable(
         val generator: LocalIdGenerator,
-        val list: MutableList<Long>
+        val list: MutableList<Long>,
     ) : Runnable {
         override fun run() {
             repeat(20) {

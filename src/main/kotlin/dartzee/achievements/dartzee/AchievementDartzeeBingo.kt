@@ -31,7 +31,7 @@ class AchievementDartzeeBingo : AbstractMultiRowAchievement() {
         val playerBingos =
             database.createTempTable(
                 "PlayerBingos",
-                "PlayerId VARCHAR(36), BingoScore INT, Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP"
+                "PlayerId VARCHAR(36), BingoScore INT, Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP",
             ) ?: return
 
         var sb = StringBuilder()
@@ -64,7 +64,7 @@ class AchievementDartzeeBingo : AbstractMultiRowAchievement() {
                 database,
                 achievementType,
                 achievementCounterFn = { rs.getInt("BingoScore") },
-                achievementDetailFn = { rs.getInt("Score").toString() }
+                achievementDetailFn = { rs.getInt("Score").toString() },
             )
         }
     }

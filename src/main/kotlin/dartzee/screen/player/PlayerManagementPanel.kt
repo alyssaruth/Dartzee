@@ -119,7 +119,7 @@ class PlayerManagementPanel : JPanel(), ActionListener {
         player: PlayerEntity,
         gameCounts: HashMapCount<GameType>,
         achievements: List<AchievementEntity>,
-        gameType: GameType
+        gameType: GameType,
     ): PlayerStatsButton {
         val gamesPlayed = gameCounts.getCount(gameType)
 
@@ -154,7 +154,7 @@ class PlayerManagementPanel : JPanel(), ActionListener {
         val option =
             DialogUtil.showQuestionOLD(
                 "Are you sure you want to delete ${selectedPlayer.name}?",
-                false
+                false,
             )
         if (option == JOptionPane.YES_OPTION) {
             selectedPlayer.dtDeleted = getSqlDateNow()

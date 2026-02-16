@@ -116,7 +116,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
                     loggingDialog.isVisible = true
                     loggingDialog.toFront()
                 }
-            }
+            },
         )
     }
 

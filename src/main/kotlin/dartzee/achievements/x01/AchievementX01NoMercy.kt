@@ -48,7 +48,7 @@ class AchievementX01NoMercy : AbstractMultiRowAchievement() {
                 rs,
                 database,
                 achievementType,
-                achievementDetailFn = { rs.getInt("StartingScore").toString() }
+                achievementDetailFn = { rs.getInt("StartingScore").toString() },
             )
         }
     }

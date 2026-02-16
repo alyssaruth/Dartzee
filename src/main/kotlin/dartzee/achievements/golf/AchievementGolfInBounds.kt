@@ -33,7 +33,7 @@ class AchievementGolfInBounds : AbstractMultiRowAchievement() {
         val relevantParticipants =
             database.createTempTable(
                 "GolfParticipants",
-                "ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36), DtFinished TIMESTAMP, FinalScore INT"
+                "ParticipantId VARCHAR(36), PlayerId VARCHAR(36), GameId VARCHAR(36), DtFinished TIMESTAMP, FinalScore INT",
             ) ?: return
 
         database.executeUpdate(
@@ -54,7 +54,7 @@ class AchievementGolfInBounds : AbstractMultiRowAchievement() {
         val rounds =
             database.createTempTable(
                 "GolfRounds",
-                "ParticipantId VARCHAR(36), RoundNumber INT, LastDartOrdinal INT"
+                "ParticipantId VARCHAR(36), RoundNumber INT, LastDartOrdinal INT",
             ) ?: return
 
         database.executeUpdate(
@@ -76,7 +76,7 @@ class AchievementGolfInBounds : AbstractMultiRowAchievement() {
         val roundScores =
             database.createTempTable(
                 "GolfRoundScores",
-                "ParticipantId VARCHAR(36), RoundNumber INT, Hit BOOLEAN"
+                "ParticipantId VARCHAR(36), RoundNumber INT, Hit BOOLEAN",
             ) ?: return
 
         database.executeUpdate(
@@ -112,7 +112,7 @@ class AchievementGolfInBounds : AbstractMultiRowAchievement() {
                     rs,
                     database,
                     achievementType,
-                    achievementDetailFn = { rs.getInt("FinalScore").toString() }
+                    achievementDetailFn = { rs.getInt("FinalScore").toString() },
                 )
             }
     }

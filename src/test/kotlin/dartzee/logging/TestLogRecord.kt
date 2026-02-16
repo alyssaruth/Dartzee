@@ -34,7 +34,7 @@ class TestLogRecord : AbstractTest() {
         val record =
             makeLogRecord(
                 loggingCode = LoggingCode("someEvent"),
-                keyValuePairs = mapOf("devMode" to true, "currentScreen" to null)
+                keyValuePairs = mapOf("devMode" to true, "currentScreen" to null),
             )
 
         val str = record.toJsonString()

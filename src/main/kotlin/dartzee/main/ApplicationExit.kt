@@ -13,7 +13,7 @@ fun exitApplication() {
         val ans =
             DialogUtil.showQuestionOLD(
                 "Are you sure you want to exit? There are $size game window(s) still open.",
-                false
+                false,
             )
         if (ans == JOptionPane.NO_OPTION) {
             return

@@ -5,7 +5,7 @@ class ParticipantWrapper(
     var playerName: String,
     val finishingPosition: Int,
     private val resigned: Boolean,
-    val teamId: String?
+    val teamId: String?,
 ) {
     override fun toString() = "$playerName (${getPositionDesc()})"
 

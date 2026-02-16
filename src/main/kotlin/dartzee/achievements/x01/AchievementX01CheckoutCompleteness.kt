@@ -47,7 +47,7 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement() {
         val tempTable =
             database.createTempTable(
                 "PlayerCheckouts",
-                "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP"
+                "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP",
             ) ?: return
 
         var sb = StringBuilder()
@@ -76,7 +76,7 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement() {
                 rs,
                 database,
                 achievementType,
-                achievementCounterFn = { rs.getInt("Score") }
+                achievementCounterFn = { rs.getInt("Score") },
             )
         }
     }

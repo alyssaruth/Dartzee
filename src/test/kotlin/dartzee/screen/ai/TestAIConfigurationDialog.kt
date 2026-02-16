@@ -56,8 +56,8 @@ class TestAIConfigurationDialog : AbstractTest() {
                     mapOf(
                         1 to SegmentType.INNER_SINGLE,
                         2 to SegmentType.INNER_SINGLE,
-                        3 to SegmentType.INNER_SINGLE
-                    )
+                        3 to SegmentType.INNER_SINGLE,
+                    ),
             )
 
         val player = insertPlayer(name = "Robot", strategy = strategy.toJson())

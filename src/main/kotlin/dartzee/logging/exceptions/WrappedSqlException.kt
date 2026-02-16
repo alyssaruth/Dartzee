@@ -5,5 +5,5 @@ import java.sql.SQLException
 data class WrappedSqlException(
     val sqlStatement: String,
     val genericStatement: String,
-    val sqlException: SQLException
+    val sqlException: SQLException,
 ) : Exception()

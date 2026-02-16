@@ -21,14 +21,14 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(5, 1, startingScore = 1),
                 makeDart(1, 1, startingScore = 1),
-                makeDart(2, 3, startingScore = 2)
+                makeDart(2, 3, startingScore = 2),
             )
         val roundTwo =
             listOf(
                 makeDart(3, 1, startingScore = 3),
                 makeDart(4, 1, startingScore = 4),
                 makeDart(5, 1, startingScore = 5),
-                makeDart(6, 0, startingScore = 6)
+                makeDart(6, 0, startingScore = 6),
             )
 
         return makeClockPlayerState(completedRounds = listOf(roundOne, roundTwo))
@@ -40,7 +40,7 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(5, 1, startingScore = 1),
                 makeDart(1, 1, startingScore = 1),
-                makeDart(3, 1, startingScore = 2)
+                makeDart(3, 1, startingScore = 2),
             )
 
         val state = makeClockPlayerState(completedRounds = listOf(roundOne))
@@ -53,7 +53,7 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(15, 1, startingScore = 2),
                 makeDart(17, 1, startingScore = 2),
-                makeDart(2, 0, startingScore = 2)
+                makeDart(2, 0, startingScore = 2),
             )
         )
         statsPanel.showStats(listOf(state))
@@ -66,13 +66,13 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(5, 1, startingScore = 1),
                 makeDart(1, 0, startingScore = 1),
-                makeDart(1, 3, startingScore = 1)
+                makeDart(1, 3, startingScore = 1),
             )
         val roundOneOther =
             listOf(
                 makeDart(1, 1, startingScore = 1),
                 makeDart(2, 0, startingScore = 2),
-                makeDart(17, 1, startingScore = 2)
+                makeDart(17, 1, startingScore = 2),
             )
 
         val player = insertPlayer()
@@ -94,7 +94,7 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(5, 1, startingScore = 1),
                 makeDart(1, 0, startingScore = 1),
-                makeDart(20, 3, startingScore = 1)
+                makeDart(20, 3, startingScore = 1),
             )
 
         val state = makeClockPlayerState(completedRounds = listOf(roundOne))
@@ -110,7 +110,7 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(1, 1, startingScore = 1),
                 makeDart(2, 0, startingScore = 2),
-                makeDart(17, 1, startingScore = 2)
+                makeDart(17, 1, startingScore = 2),
             )
         )
         statsPanel.showStats(listOf(state))
@@ -122,7 +122,7 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(2, 1, startingScore = 2),
                 makeDart(3, 0, startingScore = 3),
-                makeDart(3, 1, startingScore = 3)
+                makeDart(3, 1, startingScore = 3),
             )
         )
         statsPanel.showStats(listOf(state))
@@ -134,7 +134,7 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(4, 1, startingScore = 4),
                 makeDart(5, 0, startingScore = 5),
-                makeDart(5, 1, startingScore = 5)
+                makeDart(5, 1, startingScore = 5),
             )
         )
         statsPanel.showStats(listOf(state))
@@ -148,7 +148,7 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(5, 1, startingScore = 1),
                 makeDart(1, 0, startingScore = 1),
-                makeDart(20, 3, startingScore = 1)
+                makeDart(20, 3, startingScore = 1),
             )
 
         val state = makeClockPlayerState(completedRounds = listOf(roundOne))
@@ -163,7 +163,7 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(1, 1, startingScore = 1),
                 makeDart(2, 0, startingScore = 2),
-                makeDart(2, 1, startingScore = 2)
+                makeDart(2, 1, startingScore = 2),
             )
         )
         statsPanel.showStats(listOf(state))
@@ -174,7 +174,7 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(3, 1, startingScore = 3),
                 makeDart(4, 1, startingScore = 4),
-                makeDart(5, 0, startingScore = 5)
+                makeDart(5, 0, startingScore = 5),
             )
         )
         statsPanel.showStats(listOf(state))
@@ -186,7 +186,7 @@ class TestGameStatisticsPanelRoundTheClock :
                 makeDart(5, 1, startingScore = 5),
                 makeDart(6, 1, startingScore = 6),
                 makeDart(7, 1, startingScore = 7),
-                makeDart(8, 1, startingScore = 8)
+                makeDart(8, 1, startingScore = 8),
             )
         )
         statsPanel.showStats(listOf(state))
@@ -199,7 +199,7 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(1, 1, startingScore = 1),
                 makeDart(1, 2, startingScore = 1),
-                makeDart(2, 1, startingScore = 2)
+                makeDart(2, 1, startingScore = 2),
             )
 
         val state = makeClockPlayerState(completedRounds = listOf(roundOne))
@@ -215,7 +215,7 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(2, 2, startingScore = 2),
                 makeDart(3, 2, startingScore = 3),
-                makeDart(4, 3, startingScore = 4)
+                makeDart(4, 3, startingScore = 4),
             )
         )
         statsPanel.showStats(listOf(state))
@@ -228,7 +228,7 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(5, 1, startingScore = 1),
                 makeDart(1, 1, startingScore = 1),
-                makeDart(17, 3, startingScore = 2)
+                makeDart(17, 3, startingScore = 2),
             )
 
         val state = makeClockPlayerState(completedRounds = listOf(roundOne))
@@ -245,7 +245,7 @@ class TestGameStatisticsPanelRoundTheClock :
                 makeDart(2, 1, startingScore = 2),
                 makeDart(3, 1, startingScore = 3),
                 makeDart(4, 1, startingScore = 4),
-                makeDart(20, 1, startingScore = 5)
+                makeDart(20, 1, startingScore = 5),
             )
         )
         statsPanel.showStats(listOf(state))
@@ -258,7 +258,7 @@ class TestGameStatisticsPanelRoundTheClock :
                 makeDart(5, 1, startingScore = 5),
                 makeDart(6, 1, startingScore = 6),
                 makeDart(7, 1, startingScore = 7),
-                makeDart(8, 1, startingScore = 8)
+                makeDart(8, 1, startingScore = 8),
             )
         )
         statsPanel.showStats(listOf(state))
@@ -272,13 +272,13 @@ class TestGameStatisticsPanelRoundTheClock :
             listOf(
                 makeDart(5, 1, startingScore = 1),
                 makeDart(1, 0, startingScore = 1),
-                makeDart(20, 1, startingScore = 1)
+                makeDart(20, 1, startingScore = 1),
             )
         val hitRound =
             listOf(
                 makeDart(5, 1, startingScore = 1),
                 makeDart(1, 0, startingScore = 1),
-                makeDart(1, 1, startingScore = 1)
+                makeDart(1, 1, startingScore = 1),
             )
 
         // 3
@@ -323,7 +323,7 @@ class TestGameStatisticsPanelRoundTheClock :
                         missRound,
                         missRound,
                         missRound,
-                        hitRound
+                        hitRound,
                     )
             )
         statsPanel.showStats(listOf(state))

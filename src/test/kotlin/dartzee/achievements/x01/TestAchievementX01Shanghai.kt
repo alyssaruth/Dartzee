@@ -17,7 +17,7 @@ class TestAchievementX01Shanghai : AbstractMultiRowAchievementTest<AchievementX0
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
@@ -27,7 +27,7 @@ class TestAchievementX01Shanghai : AbstractMultiRowAchievementTest<AchievementX0
             multiplier = 2,
             ordinal = 1,
             startingScore = 400,
-            database = database
+            database = database,
         )
         insertDart(
             pt,
@@ -35,7 +35,7 @@ class TestAchievementX01Shanghai : AbstractMultiRowAchievementTest<AchievementX0
             multiplier = 3,
             ordinal = 2,
             startingScore = 360,
-            database = database
+            database = database,
         )
         insertDart(
             pt,
@@ -43,7 +43,7 @@ class TestAchievementX01Shanghai : AbstractMultiRowAchievementTest<AchievementX0
             multiplier = 1,
             ordinal = 3,
             startingScore = 300,
-            database = database
+            database = database,
         )
     }
 

@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 class LogDestinationElasticsearch(
     private val poster: ElasticsearchPoster?,
-    private val scheduler: ScheduledExecutorService
+    private val scheduler: ScheduledExecutorService,
 ) : ILogDestination {
     private val pendingLogs = ConcurrentHashMap.newKeySet<String>()
 

@@ -7,5 +7,5 @@ data class SimulationWrapper(
     val missPercent: Double,
     val finishPercent: Double,
     val treblePercent: Double,
-    val hmPointToCount: Map<Point, Int>
+    val hmPointToCount: Map<Point, Int>,
 )

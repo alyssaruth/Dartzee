@@ -13,7 +13,7 @@ import java.awt.BorderLayout
 class DartzeeRuleSetupScreen(
     private val match: DartsMatchEntity?,
     private val players: List<PlayerEntity>,
-    private val pairMode: Boolean
+    private val pairMode: Boolean,
 ) : EmbeddedScreen() {
     private val dartzeeRulePanel = DartzeeRuleSetupPanel()
 

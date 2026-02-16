@@ -22,20 +22,20 @@ abstract class TestAbstractAchievementBestGame<E : AbstractAchievementBestGame> 
             gameType = factoryAchievement().gameType!!,
             gameParams = factoryAchievement().gameParams,
             dtLastUpdate = dtLastUpdate,
-            database = database
+            database = database,
         )
     }
 
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         insertParticipant(
             gameId = g.rowId,
             playerId = p.rowId,
             finalScore = 30,
-            database = database
+            database = database,
         )
     }
 
@@ -62,7 +62,7 @@ abstract class TestAbstractAchievementBestGame<E : AbstractAchievementBestGame> 
             gameId = game.rowId,
             playerId = alice.rowId,
             finalScore = 20,
-            teamId = team.rowId
+            teamId = team.rowId,
         )
 
         runConversion()
@@ -125,13 +125,13 @@ abstract class TestAbstractAchievementBestGame<E : AbstractAchievementBestGame> 
             gameId = game.rowId,
             playerId = alice.rowId,
             finalScore = 15,
-            dtFinished = Timestamp(1000)
+            dtFinished = Timestamp(1000),
         )
         insertParticipant(
             gameId = game.rowId,
             playerId = alice.rowId,
             finalScore = 12,
-            dtFinished = Timestamp(1500)
+            dtFinished = Timestamp(1500),
         )
 
         runConversion()
@@ -151,19 +151,19 @@ abstract class TestAbstractAchievementBestGame<E : AbstractAchievementBestGame> 
             gameId = game.rowId,
             playerId = alice.rowId,
             finalScore = 12,
-            dtFinished = Timestamp(1000)
+            dtFinished = Timestamp(1000),
         )
         insertParticipant(
             gameId = game.rowId,
             playerId = alice.rowId,
             finalScore = 12,
-            dtFinished = Timestamp(800)
+            dtFinished = Timestamp(800),
         )
         insertParticipant(
             gameId = game.rowId,
             playerId = alice.rowId,
             finalScore = 12,
-            dtFinished = Timestamp(1500)
+            dtFinished = Timestamp(1500),
         )
 
         runConversion()
@@ -184,7 +184,7 @@ abstract class TestAbstractAchievementBestGame<E : AbstractAchievementBestGame> 
             gameId = game.rowId,
             playerId = alice.rowId,
             finalScore = 12,
-            dtFinished = Timestamp(1000)
+            dtFinished = Timestamp(1000),
         )
 
         runConversion()

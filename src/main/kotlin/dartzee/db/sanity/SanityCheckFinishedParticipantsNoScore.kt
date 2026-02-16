@@ -17,7 +17,7 @@ class SanityCheckFinishedParticipantsNoScore : ISanityCheck {
             return listOf(
                 SanityCheckResultEntitiesSimple(
                     participants,
-                    "Participants marked as finished but with no final score"
+                    "Participants marked as finished but with no final score",
                 )
             )
         }

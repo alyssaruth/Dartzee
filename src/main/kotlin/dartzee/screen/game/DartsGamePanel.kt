@@ -53,11 +53,11 @@ import javax.swing.JToggleButton
 
 abstract class DartsGamePanel<
     S : AbstractDartsScorer<PlayerState>,
-    PlayerState : AbstractPlayerState<PlayerState>
+    PlayerState : AbstractPlayerState<PlayerState>,
 >(
     protected val parentWindow: AbstractDartsGameScreen,
     val gameEntity: GameEntity,
-    protected val totalPlayers: Int
+    protected val totalPlayers: Int,
 ) : PanelWithScorers<S>(), DartboardListener, ActionListener {
     private val hmPlayerNumberToState = mutableMapOf<Int, PlayerState>()
     private val hmPlayerNumberToScorer = mutableMapOf<Int, S>()
@@ -426,7 +426,7 @@ abstract class DartsGamePanel<
                 aa.achievementType,
                 playerId,
                 gameEntity.rowId,
-                score
+                score,
             )
         }
     }
@@ -506,7 +506,7 @@ abstract class DartsGamePanel<
         val a =
             DialogUtil.showQuestion(
                 "Are you sure you want to resign $name from this game? They will not be able to return.",
-                parent = parentWindow
+                parent = parentWindow,
             )
 
         if (a == JOptionPane.NO_OPTION) {
@@ -661,7 +661,7 @@ abstract class DartsGamePanel<
         fun constructGamePanelDartzee(
             parent: AbstractDartsGameScreen,
             game: GameEntity,
-            totalPlayers: Int
+            totalPlayers: Int,
         ): GamePanelDartzee {
             val dtos = DartzeeRuleEntity().retrieveForGame(game.rowId).map { it.toDto() }
             val summaryPanel = DartzeeRuleSummaryPanel(DartzeeRuleCarousel(dtos))

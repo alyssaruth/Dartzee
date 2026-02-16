@@ -70,7 +70,7 @@ abstract class AbstractAchievement {
         if (achievementRows.size > 1) {
             logger.error(
                 CODE_SQL_EXCEPTION,
-                "Got ${achievementRows.size} rows (expected 1) for achievement $achievementType and player ${achievementRows.first().playerId}"
+                "Got ${achievementRows.size} rows (expected 1) for achievement $achievementType and player ${achievementRows.first().playerId}",
             )
         }
 

@@ -46,7 +46,7 @@ class TestAbstractScorer : AbstractTest() {
 
     private class TestScorer(
         participant: IWrappedParticipant = makeSingleParticipant(),
-        val columnCount: Int = 4
+        val columnCount: Int = 4,
     ) : AbstractScorer(participant) {
         var initted = false
 

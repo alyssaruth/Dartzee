@@ -94,8 +94,8 @@ class TestGameStatisticsPanelGolf :
                 listOf(
                     makeDart(1, 1, segmentType = SegmentType.INNER_SINGLE),
                     makeDart(20, 1),
-                    makeDart(1, 1)
-                )
+                    makeDart(1, 1),
+                ),
             )
         val state = makeGolfPlayerState(completedRounds = listOf(roundOne))
 
@@ -126,7 +126,7 @@ class TestGameStatisticsPanelGolf :
         val roundOne =
             makeGolfRound(
                 1,
-                listOf(makeDart(1, 1), makeDart(1, 1, SegmentType.INNER_SINGLE), makeDart(1, 3))
+                listOf(makeDart(1, 1), makeDart(1, 1, SegmentType.INNER_SINGLE), makeDart(1, 3)),
             )
         val state = makeGolfPlayerState(completedRounds = listOf(roundOne))
         val statsPanel = factoryStatsPanel()
@@ -137,7 +137,7 @@ class TestGameStatisticsPanelGolf :
         val roundTwo =
             makeGolfRound(
                 2,
-                listOf(makeDart(2, 0), makeDart(2, 1), makeDart(2, 1, SegmentType.INNER_SINGLE))
+                listOf(makeDart(2, 0), makeDart(2, 1), makeDart(2, 1, SegmentType.INNER_SINGLE)),
             )
         state.addCompletedRound(roundTwo)
         statsPanel.showStats(listOf(state))
@@ -147,7 +147,7 @@ class TestGameStatisticsPanelGolf :
         val roundThree =
             makeGolfRound(
                 3,
-                listOf(makeDart(3, 1, SegmentType.INNER_SINGLE), makeDart(3, 0), makeDart(3, 3))
+                listOf(makeDart(3, 1, SegmentType.INNER_SINGLE), makeDart(3, 0), makeDart(3, 3)),
             )
         state.addCompletedRound(roundThree)
         statsPanel.showStats(listOf(state))
@@ -169,7 +169,7 @@ class TestGameStatisticsPanelGolf :
         val roundSix =
             makeGolfRound(
                 6,
-                listOf(makeDart(6, 1), makeDart(6, 3), makeDart(6, 1, SegmentType.INNER_SINGLE))
+                listOf(makeDart(6, 1), makeDart(6, 3), makeDart(6, 1, SegmentType.INNER_SINGLE)),
             )
         state.addCompletedRound(roundSix)
         statsPanel.showStats(listOf(state))

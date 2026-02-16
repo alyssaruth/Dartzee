@@ -38,7 +38,7 @@ import kotlin.math.roundToInt
 
 open class PresentationDartboard(
     private val colourWrapper: ColourWrapper = getColourWrapperFromPrefs(),
-    private val renderScoreLabels: Boolean = false
+    private val renderScoreLabels: Boolean = false,
 ) : JComponent(), IDartboard {
     var segmentStatuses: SegmentStatuses? = null
     private val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
@@ -119,7 +119,7 @@ open class PresentationDartboard(
                 logger.warn(
                     CODE_SLOW_DARTBOARD_RENDER,
                     "Rendered dartboard[$width, $height] in ${duration}ms",
-                    KEY_DURATION to duration
+                    KEY_DURATION to duration,
                 )
             }
         }
@@ -203,14 +203,14 @@ open class PresentationDartboard(
                 center.x - outerRadius,
                 center.y - outerRadius,
                 outerRadius + outerRadius,
-                outerRadius + outerRadius
+                outerRadius + outerRadius,
             )
         val inner: Ellipse2D =
             Ellipse2D.Double(
                 center.x - outerRadius + thickness,
                 center.y - outerRadius + thickness,
                 outerRadius + outerRadius - (2 * thickness),
-                outerRadius + outerRadius - (2 * thickness)
+                outerRadius + outerRadius - (2 * thickness),
             )
         val area = Area(outer)
         area.subtract(Area(inner))

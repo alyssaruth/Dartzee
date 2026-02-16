@@ -74,7 +74,7 @@ class TestValidSegments : AbstractTest() {
                 DartzeeDartRuleEven(),
                 DartzeeDartRuleOdd(),
                 DartzeeDartRuleOuter(),
-                inOrder = true
+                inOrder = true,
             )
 
         val expectedSegments =
@@ -92,7 +92,7 @@ class TestValidSegments : AbstractTest() {
                 DartzeeDartRuleEven(),
                 DartzeeDartRuleOdd(),
                 DartzeeDartRuleOuter(),
-                inOrder = true
+                inOrder = true,
             )
 
         val expectedSegments =
@@ -111,13 +111,13 @@ class TestValidSegments : AbstractTest() {
                 DartzeeDartRuleEven(),
                 DartzeeDartRuleOdd(),
                 DartzeeDartRuleOuter(),
-                inOrder = true
+                inOrder = true,
             )
 
         val dartsThrown =
             listOf(
                 makeDart(2, 1, SegmentType.OUTER_SINGLE),
-                makeDart(3, 1, SegmentType.INNER_SINGLE)
+                makeDart(3, 1, SegmentType.INNER_SINGLE),
             )
         val expectedSegments =
             getAllNonMissSegments().filter { DartzeeDartRuleOuter().isValidSegment(it) }
@@ -133,7 +133,7 @@ class TestValidSegments : AbstractTest() {
                 DartzeeDartRuleEven(),
                 DartzeeDartRuleOdd(),
                 DartzeeDartRuleOuter(),
-                inOrder = true
+                inOrder = true,
             )
 
         val secondSegments =
@@ -145,7 +145,7 @@ class TestValidSegments : AbstractTest() {
         val invalidSecondDart =
             listOf(
                 makeDart(2, 1, SegmentType.OUTER_SINGLE),
-                makeDart(2, 1, SegmentType.OUTER_SINGLE)
+                makeDart(2, 1, SegmentType.OUTER_SINGLE),
             )
         val thirdSegments = DartzeeCalculator().getValidSegments(rule, invalidSecondDart)
         thirdSegments.validSegments.shouldBeEmpty()
@@ -159,14 +159,14 @@ class TestValidSegments : AbstractTest() {
                 DartzeeDartRuleEven(),
                 DartzeeDartRuleOdd(),
                 DartzeeDartRuleOuter(),
-                inOrder = true
+                inOrder = true,
             )
 
         val dartsThrown =
             listOf(
                 makeDart(2, 1, SegmentType.DOUBLE),
                 makeDart(19, 3, SegmentType.TREBLE),
-                makeDart(20, 0, SegmentType.MISS)
+                makeDart(20, 0, SegmentType.MISS),
             )
         val result = DartzeeCalculator().getValidSegments(rule, dartsThrown)
 
@@ -183,14 +183,14 @@ class TestValidSegments : AbstractTest() {
                 DartzeeDartRuleEven(),
                 DartzeeDartRuleOdd(),
                 DartzeeDartRuleOuter(),
-                inOrder = true
+                inOrder = true,
             )
 
         val dartsThrown =
             listOf(
                 makeDart(2, 1, SegmentType.DOUBLE),
                 makeDart(19, 3, SegmentType.TREBLE),
-                makeDart(20, 2, SegmentType.DOUBLE)
+                makeDart(20, 2, SegmentType.DOUBLE),
             )
         val result = DartzeeCalculator().getValidSegments(rule, dartsThrown)
 
@@ -205,7 +205,7 @@ class TestValidSegments : AbstractTest() {
                 makeScoreRule(20),
                 makeScoreRule(19),
                 makeScoreRule(18),
-                inOrder = false
+                inOrder = false,
             )
 
         val expectedSegments =
@@ -233,7 +233,7 @@ class TestValidSegments : AbstractTest() {
                 DartzeeDartRuleAny(),
                 DartzeeDartRuleAny(),
                 inOrder = true,
-                allowMisses = true
+                allowMisses = true,
             )
 
         val result = DartzeeCalculator().getValidSegments(rule, listOf())
@@ -253,7 +253,7 @@ class TestValidSegments : AbstractTest() {
                 DartzeeDartRuleEven(),
                 DartzeeDartRuleEven(),
                 makeTotalScoreRule<DartzeeTotalRuleLessThan>(20),
-                true
+                true,
             )
 
         val segments = DartzeeCalculator().getValidSegments(rule, listOf())
@@ -269,14 +269,14 @@ class TestValidSegments : AbstractTest() {
                 makeScoreRule(20),
                 makeScoreRule(19),
                 makeScoreRule(18),
-                inOrder = false
+                inOrder = false,
             )
         val ruleTwo =
             makeDartzeeRuleDto(
                 makeScoreRule(1),
                 makeScoreRule(2),
                 makeScoreRule(3),
-                inOrder = false
+                inOrder = false,
             )
 
         val calculator = DartzeeCalculator()
@@ -343,7 +343,7 @@ class TestValidCombinations : AbstractTest() {
                 makeScoreRule(20),
                 makeScoreRule(19),
                 makeScoreRule(18),
-                inOrder = false
+                inOrder = false,
             )
 
         val segments = listOf(doubleNineteen, singleTwenty, singleEighteen)
@@ -360,7 +360,7 @@ class TestValidCombinations : AbstractTest() {
                 makeScoreRule(20),
                 makeScoreRule(19),
                 makeScoreRule(18),
-                inOrder = true
+                inOrder = true,
             )
 
         val orderedSegments = listOf(singleTwenty, singleNineteen, singleEighteen)
@@ -380,7 +380,7 @@ class TestValidCombinations : AbstractTest() {
                 makeScoreRule(19),
                 makeScoreRule(18),
                 DartzeeTotalRuleEven(),
-                true
+                true,
             )
 
         DartzeeCalculator()
@@ -389,7 +389,7 @@ class TestValidCombinations : AbstractTest() {
         DartzeeCalculator()
             .isValidCombination(
                 listOf(singleEighteen, singleEighteen, singleEighteen),
-                rule
+                rule,
             ) shouldBe false
         DartzeeCalculator()
             .isValidCombination(listOf(singleTwenty, doubleNineteen, singleEighteen), rule) shouldBe
@@ -412,7 +412,7 @@ class TestValidCombinations : AbstractTest() {
         DartzeeCalculator()
             .isValidCombination(
                 listOf(singleNineteen, singleNineteen, singleNineteen),
-                rule
+                rule,
             ) shouldBe false
     }
 

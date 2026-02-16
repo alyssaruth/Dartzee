@@ -28,7 +28,7 @@ class TestAchievementGolfPointsRisked :
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) = insertRiskedDart(p.rowId, g.rowId, database = database)
 
     @Test
@@ -52,7 +52,7 @@ class TestAchievementGolfPointsRisked :
             ordinal = 1,
             score = 1,
             multiplier = 1,
-            segmentType = SegmentType.DOUBLE
+            segmentType = SegmentType.DOUBLE,
         )
 
         runConversion()
@@ -74,7 +74,7 @@ class TestAchievementGolfPointsRisked :
         val achievementRows = retrieveAchievementsForPlayer(p.rowId)
         achievementRows.shouldContainExactlyInAnyOrder(
             AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 2, g.rowId, "1"),
-            AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 1, g.rowId, "2")
+            AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 1, g.rowId, "2"),
         )
     }
 
@@ -90,7 +90,7 @@ class TestAchievementGolfPointsRisked :
             score = 1,
             multiplier = 3,
             segmentType = SegmentType.TREBLE,
-            dtCreation = Timestamp(500)
+            dtCreation = Timestamp(500),
         )
         insertDart(
             pt,
@@ -99,7 +99,7 @@ class TestAchievementGolfPointsRisked :
             score = 1,
             multiplier = 1,
             segmentType = SegmentType.INNER_SINGLE,
-            dtCreation = Timestamp(1000)
+            dtCreation = Timestamp(1000),
         )
         insertDart(
             pt,
@@ -108,7 +108,7 @@ class TestAchievementGolfPointsRisked :
             score = 1,
             multiplier = 2,
             segmentType = SegmentType.DOUBLE,
-            dtCreation = Timestamp(1500)
+            dtCreation = Timestamp(1500),
         )
 
         runConversion()
@@ -148,7 +148,7 @@ class TestAchievementGolfPointsRisked :
         segmentType: SegmentType = SegmentType.OUTER_SINGLE,
         roundNumber: Int = 1,
         dtCreation: Timestamp = getSqlDateNow(),
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ) {
         val pt = insertParticipant(playerId = playerId, gameId = gameId, database = database)
         insertRiskedDart(pt, segmentType, roundNumber, dtCreation, database)
@@ -159,7 +159,7 @@ class TestAchievementGolfPointsRisked :
         segmentType: SegmentType = SegmentType.OUTER_SINGLE,
         roundNumber: Int = 1,
         dtCreation: Timestamp = getSqlDateNow(),
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ) {
         insertDart(
             pt,
@@ -169,7 +169,7 @@ class TestAchievementGolfPointsRisked :
             multiplier = 1,
             segmentType = segmentType,
             dtCreation = dtCreation,
-            database = database
+            database = database,
         )
         insertDart(
             pt,
@@ -179,7 +179,7 @@ class TestAchievementGolfPointsRisked :
             multiplier = 2,
             segmentType = SegmentType.DOUBLE,
             dtCreation = dtCreation,
-            database = database
+            database = database,
         )
     }
 }

@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  */
 class MatchSummaryPanel<PlayerState : AbstractPlayerState<PlayerState>>(
     val match: DartsMatchEntity,
-    private val statsPanel: AbstractGameStatisticsPanel<PlayerState>
+    private val statsPanel: AbstractGameStatisticsPanel<PlayerState>,
 ) : PanelWithScorers<MatchScorer>(), PlayerStateListener<PlayerState> {
     private val gameTabs = CopyOnWriteArrayList<DartsGamePanel<*, PlayerState>>()
 

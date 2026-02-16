@@ -29,7 +29,7 @@ class TestDartsSimulationX01 : AbstractTest() {
             Dart(20, 3),
             Dart(20, 3),
             Dart(19, 3),
-            Dart(12, 2)
+            Dart(12, 2),
         )
 
         result.getCheckoutTotal() shouldBe 141
@@ -51,7 +51,7 @@ class TestDartsSimulationX01 : AbstractTest() {
                 AimDart(20, 3),
                 AimDart(18, 1), //  3
                 AimDart(1, 1), //  2 (mercy)
-                AimDart(1, 2) //  0
+                AimDart(1, 2), //  0
             )
 
         val model = predictableDartsModel(aimDarts, mercyThreshold = 7)
@@ -77,7 +77,7 @@ class TestDartsSimulationX01 : AbstractTest() {
                 AimDart(20, 3),
                 AimDart(1, 1), // 20
                 AimDart(15, 2), // 20 (bust)
-                AimDart(10, 2) //  0
+                AimDart(10, 2), //  0
             )
 
         val model = predictableDartsModel(aimDarts, mercyThreshold = 7)

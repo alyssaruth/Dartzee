@@ -62,7 +62,7 @@ class TestStatisticsTabX01ThreeDartAverage : AbstractTest() {
                 501,
                 listOf(drtTrebleTwenty(), drtOuterFive(), drtOuterOne()), // 66
                 listOf(drtInnerNineteen(), drtOuterSeven(), drtOuterThree()), // 29
-                listOf(drtMissTwenty(), drtDoubleTwenty(), drtInnerTwenty()) // 60
+                listOf(drtMissTwenty(), drtDoubleTwenty(), drtInnerTwenty()), // 60
             )
         val gameMine = makeGameWrapper(dartRounds = roundsMine)
 
@@ -70,7 +70,7 @@ class TestStatisticsTabX01ThreeDartAverage : AbstractTest() {
             makeX01RoundsMap(
                 501,
                 listOf(drtOuterFive(), drtOuterOne(), drtTrebleOne()), // 9
-                listOf(drtOuterOne(), drtOuterOne(), drtMissOne()) // 2
+                listOf(drtOuterOne(), drtOuterOne(), drtMissOne()), // 2
             )
         val gameOther = makeGameWrapper(dartRounds = roundsOther)
 
@@ -93,7 +93,7 @@ class TestStatisticsTabX01ThreeDartAverage : AbstractTest() {
             makeX01RoundsMap(
                 501,
                 listOf(drtTrebleTwenty(), drtOuterFive(), drtOuterOne()), // 66
-                listOf(drtInnerNineteen(), drtOuterSeven(), drtOuterThree()) // 29
+                listOf(drtInnerNineteen(), drtOuterSeven(), drtOuterThree()), // 29
             )
 
         val dartRoundsTwo =
@@ -116,7 +116,7 @@ class TestStatisticsTabX01ThreeDartAverage : AbstractTest() {
             .getRows()
             .shouldContainExactly(
                 listOf(1, 47.5, 501, g1.localId),
-                listOf(2, 67.0, 501, g2.localId)
+                listOf(2, 67.0, 501, g2.localId),
             )
 
         val plot = tab.chart()
@@ -133,23 +133,23 @@ class TestStatisticsTabX01ThreeDartAverage : AbstractTest() {
                 listOf(
                     drtOuterFourteen(),
                     drtInnerEleven(),
-                    drtTrebleFourteen()
+                    drtTrebleFourteen(),
                 ), // 67 | 234 remaining
                 listOf(
                     drtInnerNineteen(),
                     drtOuterNineteen(),
-                    drtOuterFifteen()
+                    drtOuterFifteen(),
                 ), // 53 | 181 remaining
                 listOf(drtOuterTwenty(), drtOuterTwenty(), drtOuterOne()), // 41 | 140 remaining
                 listOf(drtOuterTwenty(), drtTrebleOne(), drtInnerFive()), // 28 | 112 remaining
                 listOf(drtTrebleTwenty(), drtOuterTwenty(), drtMissSixteen()), // 80 |  32 remaining
-                listOf(drtDoubleSixteen()) // Fin.
+                listOf(drtDoubleSixteen()), // Fin.
             )
 
         val g =
             makeGameWrapper(
                 gameParams = X01Config(301, FinishType.Doubles).toJson(),
-                dartRounds = rounds
+                dartRounds = rounds,
             )
         val tab = StatisticsTabX01ThreeDartAverage()
         tab.setFilteredGames(listOf(g), emptyList())

@@ -18,13 +18,13 @@ abstract class TestAbstractAchievementGamesWon<E : AbstractAchievementGamesWon> 
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         insertParticipant(
             gameId = g.rowId,
             playerId = p.rowId,
             finishingPosition = 1,
-            database = database
+            database = database,
         )
     }
 
@@ -48,7 +48,7 @@ abstract class TestAbstractAchievementGamesWon<E : AbstractAchievementGamesWon> 
             gameId = game.rowId,
             playerId = alice.rowId,
             finishingPosition = 1,
-            teamId = team.rowId
+            teamId = team.rowId,
         )
 
         runConversion()
@@ -67,7 +67,7 @@ abstract class TestAbstractAchievementGamesWon<E : AbstractAchievementGamesWon> 
                 playerId = alice.rowId,
                 finishingPosition = 1,
                 dtFinished = Timestamp(500),
-                finalScore = 20
+                finalScore = 20,
             )
         val pt2 =
             insertParticipant(
@@ -75,7 +75,7 @@ abstract class TestAbstractAchievementGamesWon<E : AbstractAchievementGamesWon> 
                 playerId = alice.rowId,
                 finishingPosition = 1,
                 dtFinished = Timestamp(1500),
-                finalScore = 45
+                finalScore = 45,
             )
         val pt3 =
             insertParticipant(
@@ -83,20 +83,20 @@ abstract class TestAbstractAchievementGamesWon<E : AbstractAchievementGamesWon> 
                 playerId = alice.rowId,
                 finishingPosition = 1,
                 dtFinished = Timestamp(1000),
-                finalScore = 26
+                finalScore = 26,
             )
 
         insertParticipant(
             gameId = insertRelevantGame().rowId,
             playerId = bob.rowId,
             finishingPosition = 1,
-            dtFinished = Timestamp(2000)
+            dtFinished = Timestamp(2000),
         )
         insertParticipant(
             gameId = insertRelevantGame().rowId,
             playerId = bob.rowId,
             finishingPosition = 1,
-            dtFinished = Timestamp(1000)
+            dtFinished = Timestamp(1000),
         )
 
         runConversion()
@@ -109,7 +109,7 @@ abstract class TestAbstractAchievementGamesWon<E : AbstractAchievementGamesWon> 
         gameIdAndScore.shouldContainExactlyInAnyOrder(
             Pair(pt1.gameId, "20"),
             Pair(pt2.gameId, "45"),
-            Pair(pt3.gameId, "26")
+            Pair(pt3.gameId, "26"),
         )
 
         val bobRow = achievementRows.filter { it.playerId == bob.rowId }

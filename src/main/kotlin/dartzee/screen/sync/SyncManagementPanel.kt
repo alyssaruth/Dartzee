@@ -80,7 +80,7 @@ class SyncManagementPanel : JPanel(), ActionListener {
                 "Other options",
                 TitledBorder.LEADING,
                 TitledBorder.DEFAULT_POSITION,
-                ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 20f)
+                ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 20f),
             )
 
         val buttons = getAllChildComponentsForType<AbstractButton>()

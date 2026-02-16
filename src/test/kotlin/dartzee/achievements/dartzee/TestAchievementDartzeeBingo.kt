@@ -20,13 +20,13 @@ class TestAchievementDartzeeBingo : AbstractMultiRowAchievementTest<AchievementD
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         insertParticipant(
             gameId = g.rowId,
             playerId = p.rowId,
             finalScore = 275,
-            database = database
+            database = database,
         )
         insertDartzeeRules(g.rowId, testRules, database)
     }
@@ -74,19 +74,19 @@ class TestAchievementDartzeeBingo : AbstractMultiRowAchievementTest<AchievementD
             gameId = g1.rowId,
             playerId = p.rowId,
             finalScore = 107,
-            dtFinished = Timestamp(500)
+            dtFinished = Timestamp(500),
         )
         insertParticipant(
             gameId = g2.rowId,
             playerId = p.rowId,
             finalScore = 7,
-            dtFinished = Timestamp(1000)
+            dtFinished = Timestamp(1000),
         )
         insertParticipant(
             gameId = g3.rowId,
             playerId = p.rowId,
             finalScore = 307,
-            dtFinished = Timestamp(100)
+            dtFinished = Timestamp(100),
         )
 
         runConversion()
@@ -114,19 +114,19 @@ class TestAchievementDartzeeBingo : AbstractMultiRowAchievementTest<AchievementD
             gameId = g1.rowId,
             playerId = p.rowId,
             finalScore = 6,
-            dtFinished = Timestamp(500)
+            dtFinished = Timestamp(500),
         )
         insertParticipant(
             gameId = g2.rowId,
             playerId = p.rowId,
             finalScore = 36,
-            dtFinished = Timestamp(1000)
+            dtFinished = Timestamp(1000),
         )
         insertParticipant(
             gameId = g3.rowId,
             playerId = p.rowId,
             finalScore = 247,
-            dtFinished = Timestamp(100)
+            dtFinished = Timestamp(100),
         )
 
         runConversion()

@@ -23,7 +23,7 @@ class TestLoggerUncaughtExceptionHandler : AbstractTest() {
         log.message shouldBe "Suppressing uncaught exception: $ex"
         log.shouldContainKeyValues(
             KEY_THREAD to Thread.currentThread().toString(),
-            KEY_EXCEPTION_MESSAGE to message
+            KEY_EXCEPTION_MESSAGE to message,
         )
     }
 
@@ -38,7 +38,7 @@ class TestLoggerUncaughtExceptionHandler : AbstractTest() {
         log.errorObject shouldBe ex
         log.shouldContainKeyValues(
             KEY_THREAD to Thread.currentThread().toString(),
-            KEY_EXCEPTION_MESSAGE to null
+            KEY_EXCEPTION_MESSAGE to null,
         )
         log.message shouldContain "Uncaught exception: $ex"
     }
@@ -81,7 +81,7 @@ class TestLoggerUncaughtExceptionHandler : AbstractTest() {
             WrappedSqlException(
                 "SELECT * FROM Foo WHERE Id = 'id'",
                 "SELECT * FROM Foo WHERE Id = ?",
-                sqle
+                sqle,
             )
         handler.uncaughtException(t, ex)
 
@@ -92,7 +92,7 @@ class TestLoggerUncaughtExceptionHandler : AbstractTest() {
             KEY_SQL to "SELECT * FROM Foo WHERE Id = 'id'",
             KEY_SQL_STATE to "State.ROLLBACK",
             KEY_ERROR_CODE to 403,
-            KEY_EXCEPTION_MESSAGE to "Unable to select from table FOO"
+            KEY_EXCEPTION_MESSAGE to "Unable to select from table FOO",
         )
     }
 }

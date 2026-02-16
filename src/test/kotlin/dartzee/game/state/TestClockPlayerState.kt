@@ -36,7 +36,7 @@ class TestClockPlayerState : AbstractTest() {
             listOf(
                 makeDart(1, 1, startingScore = 1),
                 makeDart(2, 0, startingScore = 2),
-                makeDart(2, 3, startingScore = 2)
+                makeDart(2, 3, startingScore = 2),
             )
 
         val state = makeClockPlayerState(completedRounds = listOf(roundOne))
@@ -76,7 +76,7 @@ class TestClockPlayerState : AbstractTest() {
             listOf(
                 makeDart(1, 1, startingScore = 1),
                 makeDart(2, 0, startingScore = 2),
-                makeDart(2, 3, startingScore = 2)
+                makeDart(2, 3, startingScore = 2),
             )
 
         val state = makeClockPlayerState(completedRounds = listOf(roundOne))
@@ -129,7 +129,7 @@ class TestClockPlayerState : AbstractTest() {
             listOf(
                 makeDart(1, 0, startingScore = 1),
                 makeDart(1, 1, startingScore = 1),
-                makeDart(2, 1, startingScore = 2)
+                makeDart(2, 1, startingScore = 2),
             )
         val state = makeClockPlayerState(completedRounds = listOf(roundOne))
         state.getLongestStreak() shouldBe 2

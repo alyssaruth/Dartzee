@@ -80,7 +80,7 @@ fun golfFrontNine22(localId: Long = 1L, dtStart: Timestamp = Timestamp(1000)): G
         gameParams = "9",
         expectedScore = 22,
         dartRounds = rounds,
-        dtStart = dtStart
+        dtStart = dtStart,
     )
 }
 
@@ -110,7 +110,7 @@ fun golfFrontNine29(localId: Long = 1L, dtStart: Timestamp = Timestamp(1000)): G
         gameParams = "9",
         expectedScore = 29,
         dartRounds = rounds,
-        dtStart = dtStart
+        dtStart = dtStart,
     )
 }
 
@@ -143,7 +143,7 @@ fun golfFull31_22(localId: Long = 1L, dtStart: Timestamp = Timestamp(1000)): Gam
         gameParams = "18",
         expectedScore = 53,
         dartRounds = rounds,
-        dtStart = dtStart
+        dtStart = dtStart,
     )
 }
 
@@ -176,7 +176,7 @@ fun golfFull28_29(localId: Long = 1L, dtStart: Timestamp = Timestamp(1000)): Gam
         gameParams = "18",
         expectedScore = 57,
         dartRounds = rounds,
-        dtStart = dtStart
+        dtStart = dtStart,
     )
 }
 

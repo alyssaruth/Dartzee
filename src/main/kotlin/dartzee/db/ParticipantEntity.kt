@@ -70,7 +70,7 @@ class ParticipantEntity(database: Database = mainDatabase) :
             gameId: String,
             player: PlayerEntity,
             ordinal: Int,
-            teamId: String = ""
+            teamId: String = "",
         ): ParticipantEntity {
             val gp = ParticipantEntity()
             gp.assignRowId()

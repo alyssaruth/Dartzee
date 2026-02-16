@@ -49,7 +49,7 @@ class TestDartzeeE2E : AbstractE2ETest() {
             listOf(
                 listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)), // Scoring round
                 listOf(Dart(20, 1), Dart(20, 1), Dart(20, 1)), // All Twenties
-                listOf(Dart(18, 1), Dart(18, 1), Dart(25, 2)) // Score Eighteens
+                listOf(Dart(18, 1), Dart(18, 1), Dart(25, 2)), // Score Eighteens
             )
 
         verifyState(panel, listener, expectedRounds, finalScore = 276)
@@ -85,7 +85,7 @@ class TestDartzeeE2E : AbstractE2ETest() {
                 listOf(
                     makeDart(18, 1),
                     makeDart(19, 1),
-                    makeDart(18, 1)
+                    makeDart(18, 1),
                 ), // Score 18s & 2B1W, picks 2B1W - 107
                 listOf(makeDart(20, 1), makeDart(18, 1), makeDart(12, 1)), // Total is 50 - 175
             )
@@ -95,7 +95,7 @@ class TestDartzeeE2E : AbstractE2ETest() {
                 listOf(
                     makeDart(20, 1, SegmentType.INNER_SINGLE),
                     makeDart(5, 1, SegmentType.OUTER_SINGLE),
-                    makeDart(1, 1, SegmentType.INNER_SINGLE)
+                    makeDart(1, 1, SegmentType.INNER_SINGLE),
                 ), // IOI - 52
                 listOf(makeDart(18, 1), makeDart(20, 1), makeDart(5, 1)), // Score 18s - 125
             )
@@ -109,7 +109,7 @@ class TestDartzeeE2E : AbstractE2ETest() {
             predictableDartsModel(
                 p1AimDarts,
                 mercyThreshold = 7,
-                dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE
+                dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE,
             )
         val p2Model = predictableDartsModel(p2AimDarts, mercyThreshold = 20)
 
@@ -129,7 +129,7 @@ class TestDartzeeE2E : AbstractE2ETest() {
                     AchievementType.DARTZEE_UNDER_PRESSURE,
                     50,
                     game.rowId,
-                    totalIsFifty.getDisplayName()
+                    totalIsFifty.getDisplayName(),
                 )
             )
 

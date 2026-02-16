@@ -20,7 +20,7 @@ class TestAchievementGolfCourseMaster :
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
@@ -29,7 +29,7 @@ class TestAchievementGolfCourseMaster :
             score = 1,
             roundNumber = 1,
             segmentType = SegmentType.DOUBLE,
-            database = database
+            database = database,
         )
     }
 
@@ -51,14 +51,14 @@ class TestAchievementGolfCourseMaster :
             dtCreation = Timestamp(1000),
             score = 1,
             roundNumber = 1,
-            segmentType = SegmentType.DOUBLE
+            segmentType = SegmentType.DOUBLE,
         )
         insertDart(
             pt,
             dtCreation = Timestamp(500),
             score = 1,
             roundNumber = 1,
-            segmentType = SegmentType.DOUBLE
+            segmentType = SegmentType.DOUBLE,
         )
 
         runConversion()

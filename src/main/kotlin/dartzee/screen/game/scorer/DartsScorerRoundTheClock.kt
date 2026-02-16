@@ -10,7 +10,7 @@ import java.awt.BorderLayout
 class DartsScorerRoundTheClock(
     parent: GamePanelPausable<*, *>,
     private val clockConfig: RoundTheClockConfig,
-    participant: IWrappedParticipant
+    participant: IWrappedParticipant,
 ) : AbstractDartsScorerPausable<ClockPlayerState>(parent, participant) {
     private val tableRemaining = RoundTheClockScorecard()
 

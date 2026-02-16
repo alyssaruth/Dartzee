@@ -18,7 +18,7 @@ data class DartzeeRuleDto(
     val aggregateRule: AbstractDartzeeAggregateRule?,
     val inOrder: Boolean,
     val allowMisses: Boolean,
-    val ruleName: String?
+    val ruleName: String?,
 ) {
     var calculationResult: DartzeeRuleCalculationResult? = null
 
@@ -53,7 +53,7 @@ data class DartzeeRuleDto(
     /** If this is a "Score X" rule, return the relevant segments */
     fun getScoringSegments(
         dartsSoFar: List<Dart>,
-        validSegments: List<DartboardSegment>
+        validSegments: List<DartboardSegment>,
     ): List<DartboardSegment> {
         val scoringSegments = getScoringSegmentsForAggregateRule(dartsSoFar, validSegments)
         if (dart1Rule == null || dart2Rule != null) {
@@ -65,7 +65,7 @@ data class DartzeeRuleDto(
 
     private fun getScoringSegmentsForAggregateRule(
         dartsSoFar: List<Dart>,
-        validSegments: List<DartboardSegment>
+        validSegments: List<DartboardSegment>,
     ): List<DartboardSegment> {
         if (dartsSoFar.size == 2 && aggregateRule != null) {
             return validSegments.filter { segment ->
@@ -134,7 +134,7 @@ data class DartzeeRuleDto(
         ordinal: Int,
         entityName: EntityName,
         entityId: String,
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ): DartzeeRuleEntity {
         val entity = DartzeeRuleEntity(database)
         entity.assignRowId()

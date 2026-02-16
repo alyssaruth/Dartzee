@@ -28,7 +28,7 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
         val cliveState1 =
             makeX01PlayerState(
                 player = clive,
-                completedRound = listOf(makeDart(), makeDart(), makeDart())
+                completedRound = listOf(makeDart(), makeDart(), makeDart()),
             )
         val aliceState1 = makeX01PlayerState(player = alice, completedRound = listOf(makeDart()))
         val aliceState2 =
@@ -36,7 +36,7 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
         val cliveState2 =
             makeX01PlayerState(
                 player = clive,
-                completedRound = listOf(makeDart(), makeDart(), makeDart(), makeDart(), makeDart())
+                completedRound = listOf(makeDart(), makeDart(), makeDart(), makeDart(), makeDart()),
             )
 
         val panel = FakeGameStatisticsPanel()
@@ -59,12 +59,7 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
         val activeState =
             makeX01PlayerState(
                 player = winner,
-                completedRound =
-                    listOf(
-                        makeDart(),
-                        makeDart(),
-                        makeDart(),
-                    )
+                completedRound = listOf(makeDart(), makeDart(), makeDart()),
             )
         val resignedState = makeX01PlayerState(player = coward, completedRound = listOf(makeDart()))
 
@@ -90,7 +85,7 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
         val cliveState1 =
             makeX01PlayerState(
                 player = clive,
-                completedRound = listOf(makeDart(), makeDart(), makeDart())
+                completedRound = listOf(makeDart(), makeDart(), makeDart()),
             )
 
         val panel = FakeGameStatisticsPanel()
@@ -125,32 +120,32 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
             makeX01PlayerState(
                 player = alice,
                 participant = insertParticipant(playerId = alice.rowId, finalScore = 50),
-                completedRound = listOf(makeDart())
+                completedRound = listOf(makeDart()),
             )
         val aliceState2 =
             makeX01PlayerState(
                 player = alice,
                 participant = insertParticipant(playerId = alice.rowId, finalScore = 35),
-                completedRound = listOf(makeDart())
+                completedRound = listOf(makeDart()),
             )
 
         val bobState1 =
             makeX01PlayerState(
                 player = bob,
                 participant = insertParticipant(playerId = bob.rowId, finalScore = 28),
-                completedRound = listOf(makeDart())
+                completedRound = listOf(makeDart()),
             )
         val bobState2 =
             makeX01PlayerState(
                 player = bob,
                 participant = insertParticipant(playerId = bob.rowId, finalScore = 70),
-                completedRound = listOf(makeDart())
+                completedRound = listOf(makeDart()),
             )
         val bobState3 =
             makeX01PlayerState(
                 player = bob,
                 participant = insertParticipant(playerId = bob.rowId, finalScore = -1),
-                completedRound = listOf(makeDart())
+                completedRound = listOf(makeDart()),
             )
 
         val panel = FakeGameStatisticsPanel()
@@ -169,26 +164,26 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
             makeX01PlayerState(
                 player = alice,
                 participant = insertParticipant(playerId = alice.rowId, finalScore = 50),
-                completedRound = listOf(makeDart())
+                completedRound = listOf(makeDart()),
             )
         val aliceState2 =
             makeX01PlayerState(
                 player = alice,
                 participant = insertParticipant(playerId = alice.rowId, finalScore = 35),
-                completedRound = listOf(makeDart())
+                completedRound = listOf(makeDart()),
             )
 
         val bobState1 =
             makeX01PlayerState(
                 player = bob,
                 participant = insertParticipant(playerId = bob.rowId, finalScore = 28),
-                completedRound = listOf(makeDart())
+                completedRound = listOf(makeDart()),
             )
         val bobState2 =
             makeX01PlayerState(
                 player = bob,
                 participant = insertParticipant(playerId = bob.rowId, finalScore = 70),
-                completedRound = listOf(makeDart())
+                completedRound = listOf(makeDart()),
             )
 
         val panel = FakeGameStatisticsPanel()
@@ -214,22 +209,22 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
         val state1 =
             makeX01PlayerState(
                 player = insertPlayer(name = "Alice"),
-                completedRound = listOf(makeDart(), makeDart(), makeDart())
+                completedRound = listOf(makeDart(), makeDart(), makeDart()),
             )
         val state2 =
             makeX01PlayerState(
                 player = insertPlayer(name = "Bob"),
-                completedRound = listOf(makeDart())
+                completedRound = listOf(makeDart()),
             )
         val state3 =
             makeX01PlayerState(
                 player = insertPlayer(name = "Clive"),
-                completedRound = listOf(makeDart(), makeDart())
+                completedRound = listOf(makeDart(), makeDart()),
             )
         val state4 =
             makeX01PlayerState(
                 player = insertPlayer(name = "Derek"),
-                completedRound = listOf(makeDart(), makeDart(), makeDart(), makeDart())
+                completedRound = listOf(makeDart(), makeDart(), makeDart(), makeDart()),
             )
 
         val panel = FakeGameStatisticsPanel(highestWins = listOf("Darts Thrown"))
@@ -246,22 +241,22 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
         val state1 =
             makeX01PlayerState(
                 player = insertPlayer(name = "Alice"),
-                completedRound = listOf(makeDart(), makeDart(), makeDart())
+                completedRound = listOf(makeDart(), makeDart(), makeDart()),
             )
         val state2 =
             makeX01PlayerState(
                 player = insertPlayer(name = "Bob"),
-                completedRound = listOf(makeDart())
+                completedRound = listOf(makeDart()),
             )
         val state3 =
             makeX01PlayerState(
                 player = insertPlayer(name = "Clive"),
-                completedRound = listOf(makeDart(), makeDart())
+                completedRound = listOf(makeDart(), makeDart()),
             )
         val state4 =
             makeX01PlayerState(
                 player = insertPlayer(name = "Derek"),
-                completedRound = listOf(makeDart(), makeDart(), makeDart(), makeDart())
+                completedRound = listOf(makeDart(), makeDart(), makeDart(), makeDart()),
             )
 
         val panel = FakeGameStatisticsPanel(lowestWins = listOf("Darts Thrown"))
@@ -282,19 +277,19 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
             insertParticipant(
                 playerId = alice.rowId,
                 dtFinished = getSqlDateNow(),
-                finishingPosition = 1
+                finishingPosition = 1,
             )
 
         val state1 =
             makeX01PlayerState(
                 player = alice,
                 participant = pt,
-                completedRound = listOf(makeDart(), makeDart(), makeDart())
+                completedRound = listOf(makeDart(), makeDart(), makeDart()),
             )
         val state2 =
             makeX01PlayerState(
                 player = insertPlayer(name = "Bob"),
-                completedRound = listOf(makeDart())
+                completedRound = listOf(makeDart()),
             )
 
         val panel = FakeGameStatisticsPanel()
@@ -310,12 +305,12 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
         val state1 =
             makeX01PlayerState(
                 player = insertPlayer(name = "Alice"),
-                completedRound = listOf(makeDart(), makeDart(), makeDart())
+                completedRound = listOf(makeDart(), makeDart(), makeDart()),
             )
         val state2 =
             makeX01PlayerState(
                 player = insertPlayer(name = "Bob"),
-                completedRound = listOf(makeDart())
+                completedRound = listOf(makeDart()),
             )
 
         val panel = FakeGameStatisticsPanel()
@@ -326,7 +321,7 @@ class TestAbstractGameStatisticsPanel : AbstractTest() {
 
 private class FakeGameStatisticsPanel(
     private val highestWins: List<String> = emptyList(),
-    private val lowestWins: List<String> = emptyList()
+    private val lowestWins: List<String> = emptyList(),
 ) : AbstractGameStatisticsPanel<X01PlayerState>() {
     override fun getRankedRowsHighestWins() = highestWins
 

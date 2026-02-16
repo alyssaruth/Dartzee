@@ -27,19 +27,19 @@ class TestReportingUtil : AbstractTest() {
             gameId = g1.rowId,
             playerId = alice.rowId,
             finishingPosition = 1,
-            ordinal = 2
+            ordinal = 2,
         )
         insertParticipant(
             gameId = g1.rowId,
             playerId = bob.rowId,
             finishingPosition = 3,
-            ordinal = 0
+            ordinal = 0,
         )
         insertParticipant(
             gameId = g1.rowId,
             playerId = clive.rowId,
             finishingPosition = 2,
-            ordinal = 1
+            ordinal = 1,
         )
 
         val results = runReport(makeReportParameters())
@@ -54,7 +54,7 @@ class TestReportingUtil : AbstractTest() {
                 "Bob (3), Clive (2), Alice (1)",
                 g1.dtCreation,
                 g1.dtFinish,
-                "#7 (Game 1)"
+                "#7 (Game 1)",
             )
     }
 
@@ -69,7 +69,7 @@ class TestReportingUtil : AbstractTest() {
             gameId = g1.rowId,
             playerId = alice.rowId,
             finishingPosition = 1,
-            ordinal = 1
+            ordinal = 1,
         )
         insertTeamAndParticipants(
             gameId = g1.rowId,
@@ -146,7 +146,7 @@ class TestReportingUtil : AbstractTest() {
                 "Alice (-)",
                 dartzeeGameWithTemplate.dtCreation,
                 dartzeeGameWithTemplate.dtFinish,
-                ""
+                "",
             )
         rows[1] shouldBe
             arrayOf(
@@ -155,7 +155,7 @@ class TestReportingUtil : AbstractTest() {
                 "Bob (-)",
                 dartzeeGameStandalone.dtCreation,
                 dartzeeGameStandalone.dtFinish,
-                ""
+                "",
             )
         rows[2] shouldBe
             arrayOf(x01Game.localId, "501", "Clive (-)", x01Game.dtCreation, x01Game.dtFinish, "")

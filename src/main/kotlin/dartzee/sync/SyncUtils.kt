@@ -16,7 +16,7 @@ const val SYNC_BUCKET_NAME = "dartzee-databases"
 enum class SyncMode {
     CREATE_REMOTE,
     OVERWRITE_LOCAL,
-    NORMAL_SYNC
+    NORMAL_SYNC,
 }
 
 data class SyncConfig(val mode: SyncMode, val remoteName: String)

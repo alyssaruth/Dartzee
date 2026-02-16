@@ -54,7 +54,7 @@ fun makeDart(
     segmentType: SegmentType = getSegmentTypeForMultiplier(multiplier),
     startingScore: Int = -1,
     golfHole: Int = -1,
-    clockTargets: List<Int> = emptyList()
+    clockTargets: List<Int> = emptyList(),
 ): Dart {
     val dart = Dart(score, multiplier, segmentType)
     dart.startingScore = startingScore
@@ -145,7 +145,7 @@ fun makeClockPlayerState(
     player: PlayerEntity = insertPlayer(),
     participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
     completedRounds: List<List<Dart>> = emptyList(),
-    currentRound: List<Dart> = emptyList()
+    currentRound: List<Dart> = emptyList(),
 ): ClockPlayerState {
     val config = RoundTheClockConfig(clockType, inOrder)
     completedRounds.flatten().forEach { it.participantId = participant.rowId }
@@ -154,7 +154,7 @@ fun makeClockPlayerState(
         SingleParticipant(participant),
         completedRounds.toMutableList(),
         currentRound.toMutableList(),
-        isActive
+        isActive,
     )
 }
 
@@ -162,12 +162,12 @@ fun makeX01PlayerState(
     startingScore: Int = 501,
     player: PlayerEntity = insertPlayer(),
     participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
-    completedRound: List<Dart> = listOf()
+    completedRound: List<Dart> = listOf(),
 ): X01PlayerState =
     X01PlayerState(
         X01Config(startingScore, FinishType.Doubles),
         SingleParticipant(participant),
-        mutableListOf(completedRound)
+        mutableListOf(completedRound),
     )
 
 fun makeX01PlayerStateWithRounds(
@@ -176,7 +176,7 @@ fun makeX01PlayerStateWithRounds(
     participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
     completedRounds: List<List<Dart>> = emptyList(),
     isActive: Boolean = false,
-    finishType: FinishType = FinishType.Doubles
+    finishType: FinishType = FinishType.Doubles,
 ): X01PlayerState {
     completedRounds.flatten().forEach { it.participantId = participant.rowId }
     return X01PlayerState(
@@ -184,7 +184,7 @@ fun makeX01PlayerStateWithRounds(
         SingleParticipant(participant),
         completedRounds.toMutableList(),
         mutableListOf(),
-        isActive
+        isActive,
     )
 }
 
@@ -192,13 +192,13 @@ fun makeGolfPlayerState(
     player: PlayerEntity = insertPlayer(),
     participant: ParticipantEntity = insertParticipant(playerId = player.rowId),
     completedRounds: List<List<Dart>> = emptyList(),
-    currentRound: List<Dart> = emptyList()
+    currentRound: List<Dart> = emptyList(),
 ): GolfPlayerState {
     completedRounds.flatten().forEach { it.participantId = participant.rowId }
     return GolfPlayerState(
         SingleParticipant(participant),
         completedRounds.toMutableList(),
-        currentRound.toMutableList()
+        currentRound.toMutableList(),
     )
 }
 
@@ -210,7 +210,7 @@ fun makeGameWrapper(
     finalScore: Int = -1,
     dartRounds: HashMapList<Int, Dart> = HashMapList(),
     totalRounds: Int = dartRounds.size,
-    teamGame: Boolean = false
+    teamGame: Boolean = false,
 ) =
     GameWrapper(
         localId,
@@ -220,7 +220,7 @@ fun makeGameWrapper(
         finalScore,
         teamGame,
         totalRounds,
-        dartRounds
+        dartRounds,
     )
 
 fun makeGolfGameWrapper(
@@ -228,7 +228,7 @@ fun makeGolfGameWrapper(
     gameParams: String = "18",
     dartRounds: List<List<Dart>>,
     expectedScore: Int,
-    dtStart: Timestamp = Timestamp(1000)
+    dtStart: Timestamp = Timestamp(1000),
 ): GameWrapper {
     val golfRounds = makeGolfRounds(dartRounds)
 
@@ -240,7 +240,7 @@ fun makeGolfGameWrapper(
             localId = localId,
             gameParams = gameParams,
             finalScore = score,
-            dtStart = dtStart
+            dtStart = dtStart,
         )
     golfRounds.flatten().forEach(wrapper::addDart)
     return wrapper
@@ -254,7 +254,7 @@ fun makeClockGameWrapper(
     config: RoundTheClockConfig = RoundTheClockConfig(ClockType.Standard, true),
     dartRounds: List<Dart> = emptyList(),
     finalScore: Int = -1,
-    dtStart: Timestamp = Timestamp(1000)
+    dtStart: Timestamp = Timestamp(1000),
 ): GameWrapper {
     val rounds = makeClockRounds(config.inOrder, *dartRounds.toTypedArray())
 
@@ -263,7 +263,7 @@ fun makeClockGameWrapper(
             localId = localId,
             gameParams = config.toJson(),
             finalScore = finalScore,
-            dtStart = dtStart
+            dtStart = dtStart,
         )
     rounds.forEach(wrapper::addDart)
     return wrapper
@@ -271,7 +271,7 @@ fun makeClockGameWrapper(
 
 fun makeReportParameters(
     game: ReportParametersGame = makeReportParametersGame(),
-    players: ReportParametersPlayers = makeReportParametersPlayers()
+    players: ReportParametersPlayers = makeReportParametersPlayers(),
 ) = ReportParameters(game, players)
 
 fun makeReportParametersGame(
@@ -283,7 +283,7 @@ fun makeReportParametersGame(
     dtFinishFrom: Timestamp? = null,
     dtFinishTo: Timestamp? = null,
     partOfMatch: MatchFilter = MatchFilter.BOTH,
-    pendingChanges: Boolean? = null
+    pendingChanges: Boolean? = null,
 ) =
     ReportParametersGame(
         gameType,
@@ -294,17 +294,17 @@ fun makeReportParametersGame(
         dtFinishFrom,
         dtFinishTo,
         partOfMatch,
-        pendingChanges
+        pendingChanges,
     )
 
 fun makeReportParametersPlayers(
     includedPlayers: Map<PlayerEntity, IncludedPlayerParameters> = emptyMap(),
     excludedPlayers: List<PlayerEntity> = emptyList(),
-    excludeOnlyAi: Boolean = false
+    excludeOnlyAi: Boolean = false,
 ) = ReportParametersPlayers(includedPlayers, excludedPlayers, excludeOnlyAi)
 
 fun makeIncludedPlayerParameters(
     finishingPositions: List<Int> = emptyList(),
     finalScoreComparator: String = "",
-    finalScore: Int? = null
+    finalScore: Int? = null,
 ) = IncludedPlayerParameters(finishingPositions, finalScoreComparator, finalScore)

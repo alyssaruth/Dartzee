@@ -78,7 +78,7 @@ class TestLogger : AbstractTest() {
             LoggingCode("bad.thing"),
             "An exception happened!",
             throwable,
-            "other.info" to 60
+            "other.info" to 60,
         )
         logger.waitUntilLoggingFinished()
 
@@ -113,7 +113,7 @@ class TestLogger : AbstractTest() {
             KEY_SQL to sql,
             KEY_ROW_COUNT to 20,
             KEY_DATABASE_NAME to "some_database",
-            KEY_STATEMENT_TYPE to "INSERT"
+            KEY_STATEMENT_TYPE to "INSERT",
         )
     }
 
@@ -141,7 +141,7 @@ class TestLogger : AbstractTest() {
             KEY_SQL to sql,
             KEY_SQL_STATE to "State.ROLLBACK",
             KEY_ERROR_CODE to 403,
-            KEY_EXCEPTION_MESSAGE to "Unable to drop table FOO"
+            KEY_EXCEPTION_MESSAGE to "Unable to drop table FOO",
         )
     }
 

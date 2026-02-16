@@ -98,7 +98,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
             logger.error(
                 CODE_INSTANTIATION_ERROR,
                 "Failed to instantiate ${javaClass.simpleName}",
-                t
+                t,
             )
             null
         }
@@ -116,7 +116,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
             logger.error(
                 CODE_SQL_EXCEPTION,
                 "Retrieved ${entities.size} rows from ${getTableName()}. Expected 1. WhereSQL [$whereSql]",
-                KEY_SQL to whereSql
+                KEY_SQL to whereSql,
             )
         }
 
@@ -147,7 +147,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
             logger.error(
                 CODE_SQL_EXCEPTION,
                 "Failed to find ${getTableName()} for ID [$rowId]",
-                KEY_SQL to "RowId = '$rowId'"
+                KEY_SQL to "RowId = '$rowId'",
             )
         }
 
@@ -168,7 +168,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         if (includeInSync()) {
             logger.error(
                 CODE_DELETE_ERROR,
-                "Wiping of ${getTableName()} will not be audited. This will break the sync!"
+                "Wiping of ${getTableName()} will not be audited. This will break the sync!",
             )
         }
 
@@ -219,7 +219,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
             factory(otherDatabase)
                 ?: throw ApplicationFault(
                     CODE_MERGE_ERROR,
-                    "Failed to factory ${getTableName()} dao"
+                    "Failed to factory ${getTableName()} dao",
                 )
         val existingRow = otherDao.retrieveForId(rowId, false)
         if (existingRow == null) {
@@ -256,14 +256,14 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
                     genericUpdate,
                     timer.getDuration(),
                     updateCount,
-                    db.dbName
+                    db.dbName,
                 )
 
                 if (updateCount == 0) {
                     logger.error(
                         CODE_SQL_EXCEPTION,
                         "0 rows updated for statement $updateQuery",
-                        KEY_SQL to updateQuery
+                        KEY_SQL to updateQuery,
                     )
                 }
             }
@@ -300,7 +300,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
                     genericInsert,
                     timer.getDuration(),
                     psInsert.updateCount,
-                    db.dbName
+                    db.dbName,
                 )
 
                 // Set this so we can call save() again on the same object and get the right
@@ -317,7 +317,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
     fun writeValuesToInsertStatement(
         emptyStatement: String,
         psInsert: PreparedStatement,
-        entityNumber: Int = 0
+        entityNumber: Int = 0,
     ): String {
         val adjustment = entityNumber * getColumnCount()
 
@@ -331,7 +331,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
     private fun writeValuesToStatement(
         ps: PreparedStatement,
         startIx: Int,
-        emptyStatement: String
+        emptyStatement: String,
     ): String {
         var ix = startIx
         var statementStr = emptyStatement
@@ -410,7 +410,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         ps: PreparedStatement,
         ix: Int,
         value: Long,
-        statementStr: String
+        statementStr: String,
     ): String {
         ps.setLong(ix, value)
         return swapInValue(statementStr, value)
@@ -425,7 +425,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         ps: PreparedStatement,
         ix: Int,
         value: Double,
-        statementStr: String
+        statementStr: String,
     ): String {
         ps.setDouble(ix, value)
         return swapInValue(statementStr, value)
@@ -435,7 +435,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         ps: PreparedStatement,
         ix: Int,
         value: String,
-        statementStr: String
+        statementStr: String,
     ): String {
         ps.setString(ix, value)
         return swapInValue(statementStr, "'$value'")
@@ -445,7 +445,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         ps: PreparedStatement,
         ix: Int,
         value: Timestamp,
-        statementStr: String
+        statementStr: String,
     ): String {
         ps.setTimestamp(ix, value)
         return swapInValue(statementStr, "'$value'")
@@ -455,7 +455,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         ps: PreparedStatement,
         ix: Int,
         value: Blob,
-        statementStr: String
+        statementStr: String,
     ): String {
         ps.setBlob(ix, value)
         val blobStr = "Blob (dataLength: " + value.length() + ")"
@@ -466,7 +466,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         ps: PreparedStatement,
         ix: Int,
         value: Boolean,
-        statementStr: String
+        statementStr: String,
     ): String {
         ps.setBoolean(ix, value)
         return swapInValue(statementStr, value)
@@ -479,7 +479,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         ps: PreparedStatement,
         ix: Int,
         columnName: String,
-        statementStr: String
+        statementStr: String,
     ): String {
         val value =
             getField(columnName)

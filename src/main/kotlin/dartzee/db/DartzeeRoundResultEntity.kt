@@ -35,7 +35,7 @@ class DartzeeRoundResultEntity(database: Database = mainDatabase) :
             dto: DartzeeRoundResult,
             pt: ParticipantEntity,
             roundNumber: Int,
-            database: Database = mainDatabase
+            database: Database = mainDatabase,
         ): DartzeeRoundResultEntity {
             val entity = DartzeeRoundResultEntity(database)
             entity.assignRowId()

@@ -8,7 +8,7 @@ import javax.swing.JTextField
 
 abstract class AbstractPlayerConfigurationDialog(
     protected val saveCallback: (player: PlayerEntity) -> Unit,
-    protected val player: PlayerEntity
+    protected val player: PlayerEntity,
 ) : SimpleDialog() {
     // Components
     protected val avatar = PlayerAvatar()

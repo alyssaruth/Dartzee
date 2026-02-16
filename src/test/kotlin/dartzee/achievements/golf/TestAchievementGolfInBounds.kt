@@ -52,20 +52,20 @@ class TestAchievementGolfInBounds : AbstractAchievementTest<AchievementGolfInBou
             gameType = factoryAchievement().gameType,
             gameParams = "18",
             dtLastUpdate = dtLastUpdate,
-            database = database
+            database = database,
         )
 
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         val pt =
             insertParticipant(
                 playerId = p.rowId,
                 gameId = g.rowId,
                 finalScore = 54,
-                database = database
+                database = database,
             )
         setUpDartsForParticipant(pt, database)
     }

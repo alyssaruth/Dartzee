@@ -9,7 +9,7 @@ import javax.swing.JOptionPane
 class SanityCheckResultDanglingIdFields(
     private val idColumn: String,
     private val referencedEntity: EntityName,
-    entities: List<AbstractEntity<*>>
+    entities: List<AbstractEntity<*>>,
 ) : AbstractSanityCheckResultEntities(entities) {
     override fun getDescription() =
         "$entityName rows where the $idColumn points at a non-existent $referencedEntity"

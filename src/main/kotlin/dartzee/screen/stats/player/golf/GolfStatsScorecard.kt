@@ -15,7 +15,7 @@ import javax.swing.JPanel
 class GolfStatsScorecard(
     override val fudgeFactor: Int,
     private val showGameId: Boolean,
-    val testId: String = ""
+    val testId: String = "",
 ) : JPanel(), IGolfScorerTable {
     override val model = TableUtil.DefaultModel()
 

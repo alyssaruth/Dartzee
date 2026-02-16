@@ -75,7 +75,7 @@ class DartsMatchEntity(database: Database = mainDatabase) :
             third: Int,
             fourth: Int,
             fifth: Int,
-            sixth: Int
+            sixth: Int,
         ): String {
             val map =
                 mapOf(1 to first, 2 to second, 3 to third, 4 to fourth, 5 to fifth, 6 to sixth)
@@ -91,7 +91,7 @@ class DartsMatchEntity(database: Database = mainDatabase) :
         private fun factoryAndSave(
             games: Int,
             mode: MatchMode,
-            matchParams: String
+            matchParams: String,
         ): DartsMatchEntity {
             val matchEntity = DartsMatchEntity()
             matchEntity.assignRowId()

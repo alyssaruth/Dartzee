@@ -37,7 +37,7 @@ abstract class AbstractAchievementBestGame : AbstractAchievement() {
                 rs,
                 database,
                 achievementType,
-                achievementCounterFn = { rs.getInt("FinalScore") }
+                achievementCounterFn = { rs.getInt("FinalScore") },
             )
         }
     }

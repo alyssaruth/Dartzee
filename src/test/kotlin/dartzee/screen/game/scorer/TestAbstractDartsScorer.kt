@@ -26,7 +26,7 @@ class TestAbstractDartsScorer : AbstractTest() {
         val state =
             TestPlayerState(
                 insertParticipant(),
-                completedRounds = mutableListOf(roundOne, roundTwo)
+                completedRounds = mutableListOf(roundOne, roundTwo),
             )
 
         val scorer = TestDartsScorer()
@@ -57,7 +57,7 @@ class TestAbstractDartsScorer : AbstractTest() {
         val state =
             TestPlayerState(
                 insertParticipant(finishingPosition = 3, resigned = true),
-                scoreSoFar = 30
+                scoreSoFar = 30,
             )
 
         val scorer = TestDartsScorer()

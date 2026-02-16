@@ -147,7 +147,7 @@ class ReportingGameTab : JPanel(), ActionListener {
             dtFinishFrom,
             dtFinishTo,
             enforceMatch,
-            pendingChanges
+            pendingChanges,
         )
     }
 

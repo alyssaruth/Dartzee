@@ -38,7 +38,7 @@ class AchievementX01BestFinish : AbstractAchievement() {
                 database,
                 achievementType,
                 oneRowPerPlayer = true,
-                achievementCounterFn = { rs.getInt("Finish") }
+                achievementCounterFn = { rs.getInt("Finish") },
             )
         }
     }

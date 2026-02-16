@@ -112,7 +112,7 @@ class TestGameSetupScreen : AbstractTest() {
                 GameType.X01,
                 X01Config(701, FinishType.Doubles).toJson(),
                 false,
-                null
+                null,
             )
         verify { gameLauncher.launchNewGame(expectedParams) }
     }

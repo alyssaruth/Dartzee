@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 
 abstract class AbstractGameStatisticsPanelTest<
     PlayerState : AbstractPlayerState<PlayerState>,
-    S : AbstractGameStatisticsPanel<PlayerState>
+    S : AbstractGameStatisticsPanel<PlayerState>,
 > : AbstractTest() {
     abstract fun factoryStatsPanel(): S
 

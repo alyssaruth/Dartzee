@@ -149,7 +149,7 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>) :
         val statuses = pendingTiles.map { it.getSegmentStatus(dartsThrown) }
         return SegmentStatuses(
             statuses.flatMap { it.scoringSegments },
-            statuses.flatMap { it.validSegments }
+            statuses.flatMap { it.validSegments },
         )
     }
 

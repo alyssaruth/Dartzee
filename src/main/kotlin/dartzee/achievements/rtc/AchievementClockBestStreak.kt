@@ -76,7 +76,7 @@ class AchievementClockBestStreak : AbstractAchievement() {
                 streak.size,
                 "",
                 lastDart.dtThrown,
-                database
+                database,
             )
         }
     }

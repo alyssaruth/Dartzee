@@ -8,7 +8,7 @@ import javax.swing.table.DefaultTableModel
 
 class SanityCheckResultFinalScoreMismatch(
     private val gameType: GameType,
-    private val hmParticipantToFinalScore: MutableMap<ParticipantEntity, Int>
+    private val hmParticipantToFinalScore: MutableMap<ParticipantEntity, Int>,
 ) : AbstractSanityCheckResult() {
     override fun getDescription() =
         "FinalScores that don't match the raw data (${gameType.getDescription()})"

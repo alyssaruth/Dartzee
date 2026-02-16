@@ -20,7 +20,7 @@ abstract class AbstractSanityCheckResultEntities(val entities: List<AbstractEnti
             val ans =
                 DialogUtil.showQuestionOLD(
                     "Are you sure you want to delete ${rows.size} row(s) from $entityName?",
-                    false
+                    false,
                 )
             if (ans == JOptionPane.YES_OPTION) {
                 val success = deleteSelectedRows(t, rows)

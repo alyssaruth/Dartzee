@@ -96,7 +96,7 @@ class TestStatisticsTabGolfOptimalScorecard : AbstractTest() {
     private fun StatisticsTabGolfOptimalScorecard.scorecardShouldMatch(
         game: GameWrapper,
         gameIds: List<Long>,
-        testId: String = "scorecardMine"
+        testId: String = "scorecardMine",
     ) {
         val expected =
             GolfStatsScorecard(0, true).also {

@@ -9,7 +9,7 @@ import kong.unirest.json.JSONObject
 enum class Severity {
     INFO,
     WARN,
-    ERROR
+    ERROR,
 }
 
 data class LogRecord(
@@ -18,7 +18,7 @@ data class LogRecord(
     val loggingCode: LoggingCode,
     val message: String,
     val errorObject: Throwable?,
-    val keyValuePairs: Map<String, Any?>
+    val keyValuePairs: Map<String, Any?>,
 ) {
     private val dateStr =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")

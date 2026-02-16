@@ -32,7 +32,7 @@ fun factoryHighScoreResult(darts: List<Dart>) =
 fun insertDartzeeRules(
     gameId: String,
     dartzeeDtos: List<DartzeeRuleDto>? = null,
-    database: Database = mainDatabase
+    database: Database = mainDatabase,
 ) {
     dartzeeDtos ?: return
 
@@ -59,7 +59,7 @@ fun saveDartzeeTemplate(name: String, dtos: List<DartzeeRuleDto>): DartzeeTempla
 
 fun generateDartzeeTemplateFromGame(
     game: GameEntity,
-    dtos: List<DartzeeRuleDto>
+    dtos: List<DartzeeRuleDto>,
 ): DartzeeTemplateEntity? {
     val templateName =
         DialogUtil.showInput<String>("Template Name", "Please enter a name for the template")

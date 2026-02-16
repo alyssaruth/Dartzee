@@ -12,6 +12,6 @@ class GolfMatchScreen(match: DartsMatchEntity) :
     override fun factoryGamePanel(
         parent: AbstractDartsGameScreen,
         game: GameEntity,
-        totalPlayers: Int
+        totalPlayers: Int,
     ) = GamePanelGolf(parent, game, totalPlayers)
 }

@@ -289,7 +289,7 @@ class TestGamePanelDartzee : AbstractTest() {
             retrieveAchievementForDetail(
                 AchievementType.DARTZEE_UNDER_PRESSURE,
                 player.rowId,
-                totalIsFifty.getDisplayName()
+                totalIsFifty.getDisplayName(),
             )!!
         achievement.achievementCounter shouldBe 50
         achievement.achievementDetail shouldBe totalIsFifty.getDisplayName()
@@ -623,7 +623,7 @@ class TestGamePanelDartzee : AbstractTest() {
                     AchievementType.DARTZEE_UNDER_PRESSURE,
                     50,
                     game.rowId,
-                    totalIsFifty.getDisplayName()
+                    totalIsFifty.getDisplayName(),
                 )
             )
 
@@ -693,7 +693,7 @@ class TestGamePanelDartzee : AbstractTest() {
     private fun setUpDartzeeGameOnDatabase(
         rounds: Int,
         player: PlayerEntity = insertPlayer(),
-        results: List<DartzeeRoundResult> = ruleResults
+        results: List<DartzeeRoundResult> = ruleResults,
     ): GameEntity {
         val dtFinish = if (rounds > 4) getSqlDateNow() else DateStatics.END_OF_TIME
         val game = insertGame(gameType = GameType.DARTZEE, dtFinish = dtFinish)
@@ -715,21 +715,21 @@ class TestGamePanelDartzee : AbstractTest() {
                 roundNumber = 2,
                 ordinal = 1,
                 score = 18,
-                multiplier = 1
+                multiplier = 1,
             )
             insertDart(
                 participant = participant,
                 roundNumber = 2,
                 ordinal = 2,
                 score = 12,
-                multiplier = 1
+                multiplier = 1,
             )
             insertDart(
                 participant = participant,
                 roundNumber = 2,
                 ordinal = 3,
                 score = 20,
-                multiplier = 1
+                multiplier = 1,
             )
 
             DartzeeRoundResultEntity.factoryAndSave(results[0], participant, 2)
@@ -741,7 +741,7 @@ class TestGamePanelDartzee : AbstractTest() {
                 roundNumber = 3,
                 ordinal = 1,
                 score = 20,
-                multiplier = 0
+                multiplier = 0,
             )
             DartzeeRoundResultEntity.factoryAndSave(results[1], participant, 3)
         }
@@ -752,21 +752,21 @@ class TestGamePanelDartzee : AbstractTest() {
                 roundNumber = 4,
                 ordinal = 1,
                 score = 18,
-                multiplier = 1
+                multiplier = 1,
             )
             insertDart(
                 participant = participant,
                 roundNumber = 4,
                 ordinal = 2,
                 score = 4,
-                multiplier = 1
+                multiplier = 1,
             )
             insertDart(
                 participant = participant,
                 roundNumber = 4,
                 ordinal = 3,
                 score = 13,
-                multiplier = 1
+                multiplier = 1,
             )
             DartzeeRoundResultEntity.factoryAndSave(results[2], participant, 4)
         }
@@ -777,21 +777,21 @@ class TestGamePanelDartzee : AbstractTest() {
                 roundNumber = 5,
                 ordinal = 1,
                 score = 20,
-                multiplier = 1
+                multiplier = 1,
             )
             insertDart(
                 participant = participant,
                 roundNumber = 5,
                 ordinal = 2,
                 score = 20,
-                multiplier = 0
+                multiplier = 0,
             )
             insertDart(
                 participant = participant,
                 roundNumber = 5,
                 ordinal = 3,
                 score = 15,
-                multiplier = 0
+                multiplier = 0,
             )
             DartzeeRoundResultEntity.factoryAndSave(results[3], participant, 5)
         }
@@ -804,6 +804,6 @@ class TestGamePanelDartzee : AbstractTest() {
         summaryPanel: DartzeeRuleSummaryPanel = mockk(relaxed = true),
         game: GameEntity = insertGame(),
         totalPlayers: Int = 1,
-        parentWindow: AbstractDartsGameScreen = mockk(relaxed = true)
+        parentWindow: AbstractDartsGameScreen = mockk(relaxed = true),
     ) = GamePanelDartzee(parentWindow, game, totalPlayers, dtos, summaryPanel)
 }

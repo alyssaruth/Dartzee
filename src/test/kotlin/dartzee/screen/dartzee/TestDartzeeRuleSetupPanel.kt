@@ -40,17 +40,17 @@ class TestDartzeeRuleSetupPanel : AbstractTest() {
         val tenPercentRule =
             makeDartzeeRuleDto(
                 DartzeeDartRuleEven(),
-                calculationResult = makeDartzeeRuleCalculationResult(10)
+                calculationResult = makeDartzeeRuleCalculationResult(10),
             )
         val twentyPercentRule =
             makeDartzeeRuleDto(
                 DartzeeDartRuleOdd(),
-                calculationResult = makeDartzeeRuleCalculationResult(20)
+                calculationResult = makeDartzeeRuleCalculationResult(20),
             )
         val thirtyPercentRule =
             makeDartzeeRuleDto(
                 DartzeeDartRuleOuter(),
-                calculationResult = makeDartzeeRuleCalculationResult(30)
+                calculationResult = makeDartzeeRuleCalculationResult(30),
             )
 
         val panel = DartzeeRuleSetupPanel()

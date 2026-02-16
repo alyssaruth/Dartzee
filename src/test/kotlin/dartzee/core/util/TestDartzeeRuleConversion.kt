@@ -25,7 +25,7 @@ class TestDartzeeRuleConversion : AbstractTest() {
                 makeScoreRule(20),
                 makeScoreRule(19),
                 makeScoreRule(18),
-                inOrder = true
+                inOrder = true,
             )
         dartzeeRule.calculationResult!!.validSegments.shouldBeEmpty()
 
@@ -52,7 +52,7 @@ class TestDartzeeRuleConversion : AbstractTest() {
                 makeScoreRule(20),
                 makeScoreRule(19),
                 makeScoreRule(18),
-                inOrder = true
+                inOrder = true,
             )
         dartzeeRule.calculationResult!!.validSegments.shouldBeEmpty()
 

@@ -74,7 +74,7 @@ class PlayerSelectDialog(selectionMode: Int) : SimpleDialog(), IDoubleClickListe
 
         private fun selectPlayers(
             playersToExclude: List<PlayerEntity>,
-            selectionMode: Int
+            selectionMode: Int,
         ): List<PlayerEntity> {
             val dialog = PlayerSelectDialog(selectionMode)
             dialog.playersToExclude = playersToExclude
