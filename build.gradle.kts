@@ -37,7 +37,8 @@ dependencies {
     implementation("org.jfree:jfreechart:1.5.4")
     implementation("com.konghq:unirest-java:3.14.2")
     implementation("com.github.lgooddatepicker:LGoodDatePicker:11.2.1")
-    implementation("org.apache.derby:derby:10.14.2.0")
+    implementation("org.apache.derby:derby:10.17.1.0")
+    implementation("org.apache.derby:derbytools:10.17.1.0")
     implementation("com.amazonaws:aws-java-sdk-elasticsearch:1.12.396")
     implementation("com.amazonaws:aws-java-sdk-s3:1.12.396")
     implementation("com.github.awslabs:aws-request-signing-apache-interceptor:b3772780da")
@@ -115,7 +116,7 @@ tasks.withType<Test> {
         "--add-opens",
         "java.desktop/java.awt=ALL-UNNAMED",
         "--add-opens",
-        "java.desktop/javax.sound=ALL_UNNAMED"
+        "java.desktop/javax.sound=ALL_UNNAMED",
     )
 
     extensions.configure<KoverTaskExtension> { isDisabled.set(name != "unitTest") }

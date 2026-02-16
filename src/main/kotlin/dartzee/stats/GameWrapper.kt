@@ -57,8 +57,7 @@ class GameWrapper(
         hmRoundNumberToDarts.putInList(dart.roundNumber, dart)
     }
 
-    private fun getDartsForRound(roundNumber: Int) =
-        hmRoundNumberToDarts[roundNumber].orEmpty()
+    private fun getDartsForRound(roundNumber: Int) = hmRoundNumberToDarts[roundNumber].orEmpty()
 
     private fun getScoreForRound(roundNumber: Int): Int {
         val darts = getDartsForRound(roundNumber)

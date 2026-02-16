@@ -106,9 +106,7 @@ open class ScrollTable(val testId: String = "") :
             }
             // Initialise our footer model in preparation
             val footerModel = DefaultModel()
-            repeat (model.columnCount) {
-                footerModel.addColumn("")
-            }
+            repeat(model.columnCount) { footerModel.addColumn("") }
             tableFooter.model = footerModel
             refreshRowCount()
         }
