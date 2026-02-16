@@ -1,5 +1,6 @@
 package dartzee.screen.preference
 
+import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.toBufferedImage
 import com.github.alyssaburlton.swingtest.waitForAssertion
@@ -44,6 +45,8 @@ class TestPreferencesPanelDartboard : AbstractPreferencePanelTest<PreferencesPan
             dartboard.isShowing shouldBe true
             dartboard.width shouldBeGreaterThan 0
         }
+
+        flushEdt()
 
         val center = dartboard.computeCenter()
         val oldRgb = dartboard.toBufferedImage().getRGB(center.x, center.y)

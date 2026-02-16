@@ -16,8 +16,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
-          distribution: zulu
-          java-version: 11
+          distribution: temurin
+          java-version: 17.0.15
       - name: Build JAR
         env:
           AWS_SYNC: ${{ secrets.AWS_SYNC }}

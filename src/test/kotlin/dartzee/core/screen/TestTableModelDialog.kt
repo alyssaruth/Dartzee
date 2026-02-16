@@ -1,5 +1,7 @@
 package dartzee.core.screen
 
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
@@ -36,10 +38,10 @@ class TestTableModelDialog : AbstractTest() {
     @Test
     fun `Should dispose when Ok is pressed`() {
         val tmd = TableModelDialog("Test", ScrollTable())
+        tmd.isVisible = true
 
-        val spy = spyk(tmd)
-        spy.okPressed()
+        tmd.clickOk()
 
-        verify { spy.dispose() }
+        tmd.shouldNotBeVisible()
     }
 }

@@ -181,10 +181,10 @@ class TestDartsMatchScreen : AbstractTest() {
 
         val firstPanel = scrn.addGameToMatchOnEdt(firstGame)
         every { firstPanel.getPlayerStates() } returns gameOneStates
-        scrn.size = Dimension(1000, 1000)
+        scrn.size = Dimension(1000, 950)
 
         scrn.startNextGameIfNecessaryOnEdt()
-        scrn.size.shouldBe(Dimension(1000, 1000))
+        scrn.size.shouldBe(Dimension(1000, 950))
     }
 
     private fun setUpMatchScreen(

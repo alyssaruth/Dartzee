@@ -2,13 +2,14 @@ import java.net.URI
 import kotlinx.kover.api.KoverTaskExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "2.3.0"
     id("java-library")
     id("com.github.ben-manes.versions") version "0.44.0"
-    id("io.gitlab.arturbosch.detekt") version "1.23.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.kotlinx.kover") version "0.6.1"
     id("com.ncorti.ktfmt.gradle") version "0.15.1"
 }
@@ -57,24 +58,14 @@ kotlin { sourceSets.all { languageSettings { languageVersion = "2.0" } } }
 
 project.setProperty("mainClassName", "dartzee.main.DartsMainKt")
 
-val compileKotlin: KotlinCompile by tasks
-val compileTestKotlin: KotlinCompile by tasks
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_1_8)
 
-compileKotlin.kotlinOptions {
-    jvmTarget = "11"
-
-    java {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-}
-
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "11"
-
-    java {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        java {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
     }
 }
 
@@ -114,14 +105,13 @@ tasks.withType<Test> {
     minHeapSize = "1024m"
     maxHeapSize = "1024m"
 
-    jvmArgs =
-        listOf(
-            "-Dcom.sun.management.jmxremote",
-            "-Dcom.sun.management.jmxremote.port=9010",
-            "-Dcom.sun.management.jmxremote.authenticate=false",
-            "-Dcom.sun.management.jmxremote.ssl=false",
-            "-Djava.rmi.server.hostname=localhost"
-        )
+    jvmArgs("-Dcom.sun.management.jmxremote",
+        "-Dcom.sun.management.jmxremote.port=9010",
+        "-Dcom.sun.management.jmxremote.authenticate=false",
+        "-Dcom.sun.management.jmxremote.ssl=false",
+        "-Djava.rmi.server.hostname=localhost",
+        "--add-opens", "java.desktop/sun.awt=ALL-UNNAMED",
+        "--add-opens", "java.desktop/java.awt=ALL-UNNAMED")
 
     extensions.configure<KoverTaskExtension> { isDisabled.set(name != "unitTest") }
 

@@ -21,7 +21,7 @@ class TestLoggingUtils : AbstractTest() {
 
         stackTrace shouldContain "java.lang.Throwable: Boom."
         stackTrace shouldContain
-            "\tat dartzee.logging.TestLoggingUtils\$Should extract stack trace\$runnable\$1.invoke"
+            "\tat dartzee.logging.TestLoggingUtils.Should_extract_stack_trace"
     }
 
     @Test
