@@ -114,6 +114,8 @@ tasks.withType<Test> {
         "java.desktop/sun.awt=ALL-UNNAMED",
         "--add-opens",
         "java.desktop/java.awt=ALL-UNNAMED",
+        "--add-opens",
+        "java.desktop/javax.sound.sampled=ALL_UNNAMED"
     )
 
     extensions.configure<KoverTaskExtension> { isDisabled.set(name != "unitTest") }
