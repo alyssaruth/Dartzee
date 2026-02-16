@@ -37,5 +37,5 @@ class NumberField constructor(min: Int? = null, max: Int? = null, val testId: St
         nf.minimum = min
     }
 
-    fun getMaximum() = (formatter as NumberFormatter).maximum
+    fun getMaximum(): Comparable<*> = (formatter as NumberFormatter).maximum
 }

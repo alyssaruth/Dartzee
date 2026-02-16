@@ -93,8 +93,8 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement() {
             return
         }
 
-        img.paint {
-            val current = Color(img.getRGB(it.x, it.y), true)
+        img.paint { pt ->
+            val current = Color(img.getRGB(pt.x, pt.y), true)
             when {
                 current == Color.BLACK -> newColor.darker()
                 hitDoubles.contains(current.red) -> newColor

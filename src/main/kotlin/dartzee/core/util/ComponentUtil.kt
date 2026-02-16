@@ -45,16 +45,16 @@ fun <T> addComponents(ret: MutableList<T>, components: Array<Component>, desired
 
 fun Container.addActionListenerToAllChildren(listener: ActionListener) {
     val children = getAllChildComponentsForType<JComponent>()
-    children.forEach {
-        if (it is JComboBox<*>) {
-            if (!it.actionListeners.contains(listener)) {
-                it.addActionListener(listener)
+    children.forEach { child ->
+        if (child is JComboBox<*>) {
+            if (!child.actionListeners.contains(listener)) {
+                child.addActionListener(listener)
             }
         }
 
-        if (it is AbstractButton) {
-            if (!it.actionListeners.contains(listener)) {
-                it.addActionListener(listener)
+        if (child is AbstractButton) {
+            if (!child.actionListeners.contains(listener)) {
+                child.addActionListener(listener)
             }
         }
     }
@@ -62,10 +62,10 @@ fun Container.addActionListenerToAllChildren(listener: ActionListener) {
 
 fun Container.addChangeListenerToAllChildren(listener: ChangeListener) {
     val children = getAllChildComponentsForType<JComponent>()
-    children.forEach {
-        if (it is JSpinner) {
-            if (!it.changeListeners.contains(listener)) {
-                it.addChangeListener(listener)
+    children.forEach { child ->
+        if (child is JSpinner) {
+            if (!child.changeListeners.contains(listener)) {
+                child.addChangeListener(listener)
             }
         }
     }

@@ -85,12 +85,12 @@ object DatabaseSanityCheck {
             "Completed sanity check and found ${sanityErrors.size} issues",
         )
 
-        sanityErrors.forEach {
+        sanityErrors.forEach { error ->
             logger.info(
                 CODE_SANITY_CHECK_RESULT,
-                "${it.getCount()} ${it.getDescription()}",
-                KEY_SANITY_DESCRIPTION to it.getDescription(),
-                KEY_SANITY_COUNT to it.getCount(),
+                "${error.getCount()} ${error.getDescription()}",
+                KEY_SANITY_DESCRIPTION to error.getDescription(),
+                KEY_SANITY_COUNT to error.getCount(),
             )
         }
 

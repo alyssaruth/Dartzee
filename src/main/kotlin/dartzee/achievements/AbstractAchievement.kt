@@ -174,8 +174,8 @@ abstract class AbstractAchievement {
     }
 
     protected open fun changeIconColor(img: BufferedImage, newColor: Color) {
-        img.paint {
-            val current = Color(img.getRGB(it.x, it.y), true)
+        img.paint { pt ->
+            val current = Color(img.getRGB(pt.x, pt.y), true)
             if (current.red == current.blue && current.blue == current.green && current.red < 255) {
                 val alpha = if (current.alpha == 255) 255 - current.red else current.alpha
                 Color(newColor.red, newColor.green, newColor.blue, alpha)

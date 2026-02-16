@@ -276,7 +276,7 @@ class Database(
         try {
             DriverManager.getConnection(command, getProps())
         } catch (sqle: SQLException) {
-            val msg = sqle.message ?: ""
+            val msg = sqle.message.orEmpty()
             if (msg.contains("shutdown")) {
                 return true
             }
