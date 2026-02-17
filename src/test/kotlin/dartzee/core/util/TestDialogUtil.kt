@@ -20,17 +20,19 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
-import io.mockk.mockk
+import io.mockk.spyk
 import io.mockk.verifySequence
+import org.junit.jupiter.api.Test
 import java.io.File
 import javax.swing.SwingUtilities
-import org.junit.jupiter.api.Test
 
 class TestDialogUtil : AbstractTest() {
-    var factoryMock = mockk<TestMessageDialogFactory>(relaxed = true)
+    var factoryMock = spyk<TestMessageDialogFactory>()
 
     @Test
     fun `Should pass method calls on to implementation`() {
+        factoryMock.optionSequence.add("1")
+
         DialogUtil.init(factoryMock)
 
         DialogUtil.showInfoOLD("Info")
@@ -45,6 +47,7 @@ class TestDialogUtil : AbstractTest() {
         DialogUtil.chooseDirectory(null)
 
         verifySequence {
+            factoryMock.optionSequence
             factoryMock.showInfo("Info")
             factoryMock.showLoading("Loading...")
             factoryMock.showQuestion("Q", false)
@@ -74,7 +77,7 @@ class TestDialogUtil : AbstractTest() {
         runAsync { DialogUtil.showInfo("Something useful") }
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
-            "Info dialog shown: Something useful"
+                "Info dialog shown: Something useful"
 
         getInfoDialog().clickOk()
         flushEdt()
@@ -86,7 +89,7 @@ class TestDialogUtil : AbstractTest() {
         runAsync { DialogUtil.showError("Something bad") }
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
-            "Error dialog shown: Something bad"
+                "Error dialog shown: Something bad"
         getErrorDialog().clickOk()
         flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Error dialog closed"
@@ -106,33 +109,33 @@ class TestDialogUtil : AbstractTest() {
     fun `Should log for QUESTION dialogs, with the correct selection`() {
         runAsync { DialogUtil.showQuestion("Do you like cheese?") }
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
-            "Question dialog shown: Do you like cheese?"
+                "Question dialog shown: Do you like cheese?"
         getQuestionDialog().clickYes()
         flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
-            "Question dialog closed - selected Yes"
+                "Question dialog closed - selected Yes"
 
         clearLogs()
         purgeWindows()
 
         runAsync { DialogUtil.showQuestion("Do you like mushrooms?") }
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
-            "Question dialog shown: Do you like mushrooms?"
+                "Question dialog shown: Do you like mushrooms?"
         getQuestionDialog().clickNo()
         flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
-            "Question dialog closed - selected No"
+                "Question dialog closed - selected No"
 
         clearLogs()
         purgeWindows()
 
         runAsync { DialogUtil.showQuestion("Do you want to delete all data?", true) }
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
-            "Question dialog shown: Do you want to delete all data?"
+                "Question dialog shown: Do you want to delete all data?"
         getQuestionDialog().clickCancel()
         flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
-            "Question dialog closed - selected Cancel"
+                "Question dialog closed - selected Cancel"
     }
 
     @Test
@@ -140,7 +143,7 @@ class TestDialogUtil : AbstractTest() {
         DialogUtil.showLoadingDialog("One moment...")
         flushEdt()
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
-            "Loading dialog shown: One moment..."
+                "Loading dialog shown: One moment..."
 
         DialogUtil.dismissLoadingDialog()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Loading dialog closed"
@@ -158,9 +161,9 @@ class TestDialogUtil : AbstractTest() {
 
         DialogUtil.showOption("Free Pizza", "Free pizza?", listOf("Yes please", "No thanks"))
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
-            "Option dialog shown: Free pizza?"
+                "Option dialog shown: Free pizza?"
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
-            "Option dialog closed - selected Yes please"
+                "Option dialog closed - selected Yes please"
     }
 
     @Test
@@ -169,9 +172,9 @@ class TestDialogUtil : AbstractTest() {
         DialogUtil.showInput<String>("Cheezoid", "Enter your favourite cheese")
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
-            "Input dialog shown: Enter your favourite cheese"
+                "Input dialog shown: Enter your favourite cheese"
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
-            "Input dialog closed - selected Camembert"
+                "Input dialog closed - selected Camembert"
     }
 
     @Test
@@ -193,6 +196,6 @@ class TestDialogUtil : AbstractTest() {
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "File selector dialog shown: "
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
-            "File selector dialog closed - selected ${f.absolutePath}"
+                "File selector dialog closed - selected ${f.absolutePath}"
     }
 }

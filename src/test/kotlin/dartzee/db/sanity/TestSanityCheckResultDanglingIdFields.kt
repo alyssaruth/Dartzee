@@ -47,25 +47,21 @@ class TestSanityCheckResultDanglingIdFields : AbstractTest() {
 
         val i = getInfoDialog()
         i.getDialogMessage() shouldBe
-            "Rows deleted successfully. You should re-run the sanity check."
+                "Rows deleted successfully. You should re-run the sanity check."
     }
 
     @Test
     fun `Should show an error if something goes wrong`() {
-        val mockEntityName = mockk<EntityName>()
-        every { mockEntityName.name } returns "Foo"
-        every { mockEntityName.toString() } returns "Foo"
-
         val g = mockk<GameEntity>(relaxed = true)
         every { g.rowId } returns randomGuid()
-        every { g.getTableName() } returns mockEntityName
+        every { g.getTableNameStr() } returns "Foo"
 
         val result =
             SanityCheckResultDanglingIdFields("dartsMatchId", EntityName.DartsMatch, listOf(g))
         runAsync { result.autoFix() }
 
         val q = getQuestionDialog()
-        q.getDialogMessage() shouldBe "Are you sure you want to delete 1 rows from Foo?"
+        q.getDialogMessage() shouldBe "Are you sure you want to delete 1 rows from null?"
         q.clickYes(async = true)
 
         val e = getErrorDialog()

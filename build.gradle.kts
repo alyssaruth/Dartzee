@@ -58,7 +58,7 @@ kotlin {
         jvmTarget.set(JvmTarget.JVM_1_8)
 
         java {
-            sourceCompatibility = JavaVersion.VERSION_25
+            sourceCompatibility = JavaVersion.VERSION_21
             targetCompatibility = JavaVersion.VERSION_1_8
         }
     }

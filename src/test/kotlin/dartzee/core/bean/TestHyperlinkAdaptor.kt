@@ -4,13 +4,13 @@ import com.github.alyssaburlton.swingtest.makeMouseEvent
 import dartzee.helper.AbstractTest
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import io.mockk.mockk
+import io.mockk.spyk
 import io.mockk.verifySequence
+import org.junit.jupiter.api.Test
 import java.awt.Cursor
 import java.awt.event.MouseEvent
 import javax.swing.JButton
 import javax.swing.JPanel
-import org.junit.jupiter.api.Test
 
 private val mouseEventOverLink = makeMouseEvent(JButton())
 private val mouseEventNotOverLink = makeMouseEvent(JButton())
@@ -23,7 +23,7 @@ class TestHyperlinkAdaptor : AbstractTest() {
 
     @Test
     fun `Should respond to mouse clicks`() {
-        val listener = mockk<TestHyperlinkListener>(relaxed = true)
+        val listener = spyk<TestHyperlinkListener>()
 
         val adaptor = HyperlinkAdaptor(listener)
         adaptor.mouseClicked(mouseEventOverLink)

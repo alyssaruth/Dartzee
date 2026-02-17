@@ -3,12 +3,11 @@ package dartzee.core.screen
 import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.core.bean.ScrollTable
+import dartzee.core.util.TableUtil
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
-import io.mockk.mockk
-import io.mockk.verify
 import org.junit.jupiter.api.Test
 
 class TestTableModelDialog : AbstractTest() {
@@ -25,13 +24,16 @@ class TestTableModelDialog : AbstractTest() {
 
     @Test
     fun `Should pass through column widths to the ScrollTable`() {
-        val st = mockk<ScrollTable>(relaxed = true)
+        val st = ScrollTable()
+        val model = TableUtil.DefaultModel()
+        model.addColumn("")
+        st.model = model
 
         val tmd = TableModelDialog("Test", st)
 
-        tmd.setColumnWidths("foo")
+        tmd.setColumnWidths("53")
 
-        verify { st.setColumnWidths("foo") }
+        st.getColumn(0).width shouldBe 53
     }
 
     @Test

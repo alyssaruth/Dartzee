@@ -2,6 +2,7 @@ package dartzee.core.screen
 
 import dartzee.core.bean.IColourSelector
 import dartzee.screen.ScreenCache
+import dartzee.utils.InjectedThings
 import java.awt.Color
 import java.awt.event.ActionListener
 import javax.swing.JColorChooser
@@ -17,7 +18,7 @@ class ColourChooserDialog : SimpleDialog(), ActionListener, IColourSelector {
         title = "Choose Colour"
         setSize(660, 450)
         contentPane.add(colourChooser)
-        isModal = true
+        isModal = InjectedThings.allowModalDialogs
 
         btnOk.addActionListener(this)
         btnCancel.addActionListener(this)

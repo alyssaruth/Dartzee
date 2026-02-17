@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 25.0.2
+          java-version: 21.0.10
       - name: Build JAR
         env:
           AWS_SYNC: ${{ secrets.AWS_SYNC }}
