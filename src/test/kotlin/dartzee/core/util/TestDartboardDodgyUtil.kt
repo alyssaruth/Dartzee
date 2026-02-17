@@ -17,6 +17,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioInputStream
 import javax.sound.sampled.AudioSystem
@@ -27,15 +28,24 @@ import javax.sound.sampled.LineEvent
 import javax.sound.sampled.LineListener
 import javax.swing.JLabel
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class TestDartboardDodgyUtil : AbstractTest() {
+    @BeforeEach
+    fun before() {
+        mockkStatic(AudioSystem::class)
+    }
+
+    @AfterEach
+    fun after() {
+        unmockkStatic(AudioSystem::class)
+    }
 
     @Test
     fun `should not play a sound if preference is disabled`() {
-        mockkStatic(AudioSystem::class)
-
         preferenceService.save(Preferences.showAnimations, false)
         val dartboard = GameplayDartboard()
         dartboard.playDodgySound("60")
@@ -45,8 +55,6 @@ class TestDartboardDodgyUtil : AbstractTest() {
 
     @Test
     fun `should do nothing if invalid sound is requested`() {
-        mockkStatic(AudioSystem::class)
-
         val dartboard = GameplayDartboard()
         dartboard.playDodgySound("invalid")
 
@@ -102,7 +110,6 @@ class TestDartboardDodgyUtil : AbstractTest() {
 
     private fun captureClip(throwError: Boolean = false): HackedClip {
         val clip = HackedClip(throwError)
-        mockkStatic(AudioSystem::class)
         every { AudioSystem.getLine(any()) } returns clip
         return clip
     }
