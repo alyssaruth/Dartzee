@@ -83,7 +83,7 @@ class TestAchievementX01CheckoutCompleteness :
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         insertCheckout(p, g, 1, database = database)
     }
@@ -93,7 +93,7 @@ class TestAchievementX01CheckoutCompleteness :
         g: GameEntity,
         score: Int = 1,
         dtCreation: Timestamp = getSqlDateNow(),
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ) {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
@@ -103,7 +103,7 @@ class TestAchievementX01CheckoutCompleteness :
             score = score,
             multiplier = 2,
             dtCreation = dtCreation,
-            database = database
+            database = database,
         )
     }
 }

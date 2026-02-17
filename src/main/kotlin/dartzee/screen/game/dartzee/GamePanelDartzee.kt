@@ -32,7 +32,7 @@ class GamePanelDartzee(
     game: GameEntity,
     totalPlayers: Int,
     private val dtos: List<DartzeeRuleDto>,
-    private val summaryPanel: DartzeeRuleSummaryPanel
+    private val summaryPanel: DartzeeRuleSummaryPanel,
 ) :
     GamePanelFixedLength<DartsScorerDartzee, DartzeePlayerState>(parent, game, totalPlayers),
     IDartzeeCarouselListener {
@@ -170,7 +170,7 @@ class GamePanelDartzee(
                 AchievementType.DARTZEE_BEST_GAME,
                 playerId,
                 gameEntity.rowId,
-                scorePerRound
+                scorePerRound,
             )
 
             if (playerState.roundResults.all { it.success }) {
@@ -180,7 +180,7 @@ class GamePanelDartzee(
                     playerId,
                     gameEntity.rowId,
                     templateName,
-                    score
+                    score,
                 )
             }
 
@@ -189,7 +189,7 @@ class GamePanelDartzee(
                 playerId,
                 gameEntity.rowId,
                 score % 100,
-                "$score"
+                "$score",
             )
         }
 
@@ -201,7 +201,7 @@ class GamePanelDartzee(
                 playerId,
                 gameEntity.rowId,
                 ruleDescription,
-                lastRoundResult.score
+                lastRoundResult.score,
             )
         }
     }

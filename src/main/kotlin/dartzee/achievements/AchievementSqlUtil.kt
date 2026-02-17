@@ -29,7 +29,7 @@ fun getGolfSegmentCases(): String {
 fun getPlayerSql(
     playerIds: List<String>,
     alias: String? = "pt",
-    whereOrAnd: String = "AND"
+    whereOrAnd: String = "AND",
 ): String {
     if (playerIds.isEmpty()) {
         return ""
@@ -44,7 +44,7 @@ fun appendPlayerSql(
     sb: StringBuilder,
     playerIds: List<String>,
     alias: String? = "pt",
-    whereOrAnd: String = "AND"
+    whereOrAnd: String = "AND",
 ) {
     sb.append(" ${getPlayerSql(playerIds, alias, whereOrAnd)}")
 }
@@ -54,7 +54,7 @@ fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database) {
         database.createTableIfNotExists(
             X01_ROUNDS_TABLE,
             "PlayerId VARCHAR(36), GameId VARCHAR(36), GameParams VARCHAR(255), ParticipantId VARCHAR(36), StartingScore INT, RoundNumber INT, " +
-                "TotalDartsThrown INT, RemainingScore INT, LastDartScore INT, LastDartMultiplier INT, DtRoundFinished TIMESTAMP"
+                "TotalDartsThrown INT, RemainingScore INT, LastDartScore INT, LastDartMultiplier INT, DtRoundFinished TIMESTAMP",
         )
 
     if (!created) {
@@ -64,7 +64,7 @@ fun ensureX01RoundsTableExists(playerIds: List<String>, database: Database) {
     val tmp1 =
         database.createTempTable(
             "X01RoundsPt1",
-            "PlayerId VARCHAR(36), GameId VARCHAR(36), GameParams VARCHAR(255), ParticipantId VARCHAR(36), StartingScore INT, RoundNumber INT, LastDartOrdinal INT"
+            "PlayerId VARCHAR(36), GameId VARCHAR(36), GameParams VARCHAR(255), ParticipantId VARCHAR(36), StartingScore INT, RoundNumber INT, LastDartOrdinal INT",
         )
 
     database.executeUpdate(
@@ -115,7 +115,7 @@ fun buildQualifyingDartzeeGamesTable(database: Database): String? {
     val dartzeeGames =
         database.createTempTable(
             "DartzeeGames",
-            "GameId VARCHAR(36), RoundCount INT, TemplateName VARCHAR(1000)"
+            "GameId VARCHAR(36), RoundCount INT, TemplateName VARCHAR(1000)",
         )
 
     val sb = StringBuilder()
@@ -140,7 +140,7 @@ fun bulkInsertFromResultSet(
     achievementType: AchievementType,
     achievementDetailFn: (() -> String)? = null,
     achievementCounterFn: (() -> Int)? = null,
-    oneRowPerPlayer: Boolean = false
+    oneRowPerPlayer: Boolean = false,
 ) {
     val playerIdsSeen = mutableSetOf<String>()
 
@@ -161,7 +161,7 @@ fun bulkInsertFromResultSet(
                     counter,
                     detail,
                     dtAchieved,
-                    database
+                    database,
                 )
             )
         }

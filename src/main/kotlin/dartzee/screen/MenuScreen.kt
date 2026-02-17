@@ -148,7 +148,7 @@ class MenuScreen : EmbeddedScreen() {
         button: JButton,
         screenHeight: Int,
         left: Boolean,
-        index: Int
+        index: Int,
     ) {
         val yGapSpace = (screenHeight - (4 * BUTTON_HEIGHT))
 

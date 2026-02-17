@@ -9,7 +9,7 @@ import java.sql.Timestamp
 open class Dart(
     override val score: Int,
     override val multiplier: Int,
-    val segmentType: SegmentType = SegmentType.MISS
+    val segmentType: SegmentType = SegmentType.MISS,
 ) : IDart {
     var ordinal = -1
 

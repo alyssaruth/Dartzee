@@ -46,19 +46,19 @@ class TestLeaderboardAchievements : AbstractTest() {
         insertAchievement(
             type = AchievementType.X01_BEST_FINISH,
             achievementCounter = bestFinish.pinkThreshold,
-            playerId = alice.rowId
+            playerId = alice.rowId,
         )
 
         insertAchievement(
             type = AchievementType.GOLF_BEST_GAME,
             achievementCounter = bestGolfGame.blueThreshold,
-            playerId = alice.rowId
+            playerId = alice.rowId,
         )
 
         insertAchievement(
             type = AchievementType.X01_BEST_FINISH,
             achievementCounter = bestFinish.greenThreshold,
-            playerId = bob.rowId
+            playerId = bob.rowId,
         )
 
         val leaderboard = LeaderboardAchievements()
@@ -83,13 +83,13 @@ class TestLeaderboardAchievements : AbstractTest() {
         insertAchievement(
             type = AchievementType.X01_BEST_FINISH,
             achievementCounter = bestFinish.pinkThreshold,
-            playerId = alice.rowId
+            playerId = alice.rowId,
         )
 
         insertAchievement(
             type = AchievementType.X01_BEST_FINISH,
             achievementCounter = bestFinish.greenThreshold,
-            playerId = bob.rowId
+            playerId = bob.rowId,
         )
 
         val leaderboard = LeaderboardAchievements()
@@ -115,19 +115,19 @@ class TestLeaderboardAchievements : AbstractTest() {
         insertAchievement(
             type = AchievementType.X01_BEST_FINISH,
             achievementCounter = bestFinish.pinkThreshold,
-            playerId = alice.rowId
+            playerId = alice.rowId,
         )
 
         insertAchievement(
             type = AchievementType.X01_BEST_FINISH,
             achievementCounter = bestFinish.greenThreshold,
-            playerId = bob.rowId
+            playerId = bob.rowId,
         )
 
         insertAchievement(
             type = AchievementType.X01_BEST_FINISH,
             achievementCounter = bestFinish.pinkThreshold,
-            playerId = clive.rowId
+            playerId = clive.rowId,
         )
 
         val leaderboard = LeaderboardAchievements()

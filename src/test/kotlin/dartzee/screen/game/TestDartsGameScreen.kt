@@ -24,7 +24,7 @@ class TestDartsGameScreen : AbstractTest() {
         val scrn =
             DartsGameScreen(
                 game,
-                listOf(makeSingleParticipant(), makeSingleParticipant(), makeSingleParticipant())
+                listOf(makeSingleParticipant(), makeSingleParticipant(), makeSingleParticipant()),
             )
 
         ScreenCache.getDartsGameScreen(game.rowId) shouldBe scrn

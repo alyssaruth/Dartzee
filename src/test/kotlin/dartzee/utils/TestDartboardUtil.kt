@@ -43,7 +43,7 @@ class TestDartboardUtil : AbstractTest() {
             Point(1, 0),
             Point(2, 0),
             Point(1, 3),
-            Point(2, 3)
+            Point(2, 3),
         )
 
         // Inner points

@@ -64,7 +64,7 @@ object DartsDatabaseUtil {
             PendingLogsEntity(database),
             SyncAuditEntity(database),
             DeletionAuditEntity(database),
-            TeamEntity(database)
+            TeamEntity(database),
         )
     }
 

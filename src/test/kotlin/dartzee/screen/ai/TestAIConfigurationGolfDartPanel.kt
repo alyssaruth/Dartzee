@@ -52,7 +52,7 @@ class TestAIConfigurationGolfDartPanel : AbstractTest() {
         val model =
             makeDartsModel(
                 hmDartNoToSegmentType = hmDartNoToSegmentType,
-                hmDartNoToStopThreshold = hmDartNoToStopThreshold
+                hmDartNoToStopThreshold = hmDartNoToStopThreshold,
             )
 
         val dartOnePanel = AIConfigurationGolfDartPanel(1)

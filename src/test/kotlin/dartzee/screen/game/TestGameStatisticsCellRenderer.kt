@@ -16,7 +16,7 @@ class TestGameStatisticsCellRenderer : AbstractTest() {
         sectionStarts: List<String> = emptyList(),
         highestWins: List<String> = emptyList(),
         lowestWins: List<String> = emptyList(),
-        histogramRows: List<String> = emptyList()
+        histogramRows: List<String> = emptyList(),
     ) = GameStatisticsCellRenderer(sectionStarts, highestWins, lowestWins, histogramRows)
 
     private fun GameStatisticsCellRenderer.apply(tm: DefaultTableModel, row: Int, col: Int) =

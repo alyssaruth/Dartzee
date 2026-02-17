@@ -20,7 +20,7 @@ class GameStatisticsHeaderRenderer : JTextPane(), TableCellRenderer {
         isSelected: Boolean,
         hasFocus: Boolean,
         row: Int,
-        column: Int
+        column: Int,
     ): Component {
         text = value as String
         font = Font("Trebuchet MS", Font.BOLD, 15)

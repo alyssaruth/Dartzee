@@ -67,7 +67,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
                     AchievementType.GOLF_IN_BOUNDS,
                     getCurrentPlayerId(),
                     getGameId(),
-                    "$score"
+                    "$score",
                 )
             }
         }
@@ -84,7 +84,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
                 getCurrentPlayerId(),
                 gameEntity.rowId,
                 "$currentRoundNumber",
-                pointsRisked
+                pointsRisked,
             )
         }
 
@@ -93,14 +93,14 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
                 retrieveAchievementForDetail(
                     AchievementType.GOLF_COURSE_MASTER,
                     getCurrentPlayerId(),
-                    "$currentRoundNumber"
+                    "$currentRoundNumber",
                 ) == null
             ) {
                 AchievementEntity.insertAchievement(
                     AchievementType.GOLF_COURSE_MASTER,
                     getCurrentPlayerId(),
                     getGameId(),
-                    "$currentRoundNumber"
+                    "$currentRoundNumber",
                 )
             }
 
@@ -109,7 +109,7 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
                 AchievementType.GOLF_ONE_HIT_WONDER,
                 getCurrentPlayerId(),
                 getGameId(),
-                holeInOneCount
+                holeInOneCount,
             )
         }
     }

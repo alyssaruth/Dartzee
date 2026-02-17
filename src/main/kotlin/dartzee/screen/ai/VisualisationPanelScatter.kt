@@ -59,7 +59,7 @@ class VisualisationPanelScatter : AbstractVisualisationPanel() {
                 oddDouble,
                 oddTreble,
                 evenDouble,
-                oddDouble
+                oddDouble,
             )
         wrapper.missedBoardColour = Color.WHITE
         wrapper.outerDartboardColour = Color.WHITE

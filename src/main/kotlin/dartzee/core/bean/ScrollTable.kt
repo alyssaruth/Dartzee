@@ -106,9 +106,7 @@ open class ScrollTable(val testId: String = "") :
             }
             // Initialise our footer model in preparation
             val footerModel = DefaultModel()
-            for (i in 0 until model.columnCount) {
-                footerModel.addColumn("")
-            }
+            repeat(model.columnCount) { footerModel.addColumn("") }
             tableFooter.model = footerModel
             refreshRowCount()
         }
@@ -157,10 +155,6 @@ open class ScrollTable(val testId: String = "") :
 
     fun setShowRowCount(show: Boolean) {
         panelRowCount.isVisible = show
-    }
-
-    fun setRowCountAlignment(alignment: Int) {
-        lblRowCount.horizontalAlignment = alignment
     }
 
     val rowCount: Int
@@ -228,9 +222,9 @@ open class ScrollTable(val testId: String = "") :
 
     /** Helpers */
     fun sortBy(columnIndex: Int, desc: Boolean) {
-        rowSorter?.let {
-            it.toggleSortOrder(columnIndex)
-            if (desc) it.toggleSortOrder(columnIndex)
+        rowSorter?.run {
+            toggleSortOrder(columnIndex)
+            if (desc) toggleSortOrder(columnIndex)
         }
     }
 

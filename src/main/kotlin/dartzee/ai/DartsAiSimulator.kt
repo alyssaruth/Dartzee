@@ -39,7 +39,7 @@ object DartsAiSimulator {
             missPercent,
             doublePercent,
             treblePercent,
-            hmPointToCount
+            hmPointToCount,
         )
     }
 

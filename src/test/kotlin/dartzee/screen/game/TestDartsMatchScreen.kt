@@ -181,16 +181,16 @@ class TestDartsMatchScreen : AbstractTest() {
 
         val firstPanel = scrn.addGameToMatchOnEdt(firstGame)
         every { firstPanel.getPlayerStates() } returns gameOneStates
-        scrn.size = Dimension(1000, 1000)
+        scrn.size = Dimension(1000, 950)
 
         scrn.startNextGameIfNecessaryOnEdt()
-        scrn.size.shouldBe(Dimension(1000, 1000))
+        scrn.size.shouldBe(Dimension(1000, 950))
     }
 
     private fun setUpMatchScreen(
         match: DartsMatchEntity = insertDartsMatch(gameParams = DEFAULT_X01_CONFIG.toJson()),
         matchSummaryPanel: MatchSummaryPanel<X01PlayerState> =
-            MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams))
+            MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams)),
     ): FakeMatchScreen {
         PlayerImageEntity().createPresets()
         return FakeMatchScreen(match, matchSummaryPanel)
@@ -199,12 +199,12 @@ class TestDartsMatchScreen : AbstractTest() {
 
 private class FakeMatchScreen(
     match: DartsMatchEntity,
-    matchSummaryPanel: MatchSummaryPanel<X01PlayerState>
+    matchSummaryPanel: MatchSummaryPanel<X01PlayerState>,
 ) : DartsMatchScreen<X01PlayerState>(matchSummaryPanel, match) {
     override fun factoryGamePanel(
         parent: AbstractDartsGameScreen,
         game: GameEntity,
-        totalPlayers: Int
+        totalPlayers: Int,
     ): GamePanelX01 {
         val panel = mockk<GamePanelX01>(relaxed = true)
         every { panel.gameEntity } returns game

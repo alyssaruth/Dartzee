@@ -141,7 +141,7 @@ class SyncE2E : AbstractE2ETest() {
                 listOf(winner, loser),
                 GameType.X01,
                 DEFAULT_X01_CONFIG.toJson(),
-                false
+                false,
             )
         GameLauncher().launchNewGame(params)
 

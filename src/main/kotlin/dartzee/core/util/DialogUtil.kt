@@ -35,7 +35,7 @@ object DialogUtil {
             parent,
             infoText,
             "Information",
-            JOptionPane.INFORMATION_MESSAGE
+            JOptionPane.INFORMATION_MESSAGE,
         )
         logDialogClosed("Info", null)
     }
@@ -46,7 +46,7 @@ object DialogUtil {
             parent,
             message,
             "Information",
-            JOptionPane.INFORMATION_MESSAGE
+            JOptionPane.INFORMATION_MESSAGE,
         )
         logDialogClosed("CustomInfo", null)
     }
@@ -83,7 +83,7 @@ object DialogUtil {
     fun showQuestion(
         message: String,
         allowCancel: Boolean = false,
-        parent: Component = ScreenCache.mainScreen
+        parent: Component = ScreenCache.mainScreen,
     ): Int {
         logDialogShown("Question", "Question", message)
         val option =
@@ -94,7 +94,7 @@ object DialogUtil {
                 message,
                 "Question",
                 option,
-                JOptionPane.QUESTION_MESSAGE
+                JOptionPane.QUESTION_MESSAGE,
             )
         logDialogClosed("Question", selection)
         return selection
@@ -139,7 +139,7 @@ object DialogUtil {
         title: String,
         message: String,
         options: Array<K>? = null,
-        defaultOption: K? = null
+        defaultOption: K? = null,
     ): K? {
         logDialogShown("Input", title, message)
         val selection = dialogFactory.showInput(title, message, options, defaultOption)
@@ -160,7 +160,7 @@ object DialogUtil {
             "$type dialog shown: $message",
             KEY_DIALOG_TYPE to type,
             KEY_DIALOG_TITLE to title,
-            KEY_DIALOG_MESSAGE to message
+            KEY_DIALOG_MESSAGE to message,
         )
     }
 
@@ -172,7 +172,7 @@ object DialogUtil {
             CODE_DIALOG_CLOSED,
             message,
             KEY_DIALOG_TYPE to type,
-            KEY_DIALOG_SELECTION to selection
+            KEY_DIALOG_SELECTION to selection,
         )
     }
 

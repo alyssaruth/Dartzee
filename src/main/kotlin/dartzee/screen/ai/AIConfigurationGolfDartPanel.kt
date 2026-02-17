@@ -74,7 +74,7 @@ class AIConfigurationGolfDartPanel(private val dartNo: Int) : JPanel(), ChangeLi
 
     fun populateMaps(
         hmDartNoToSegmentType: MutableMap<Int, SegmentType>,
-        hmDartNoToStopThreshold: MutableMap<Int, Int>
+        hmDartNoToStopThreshold: MutableMap<Int, Int>,
     ) {
         val item = comboBox.selectedItemTyped()
         val segmentType = item.hiddenData

@@ -25,7 +25,7 @@ class TestStatisticsTabRoundTheClockHitRate :
         val tab = factoryTab()
         tab.setFilteredGames(
             listOf(GAME_WRAPPER_RTC_IN_ORDER, GAME_WRAPPER_RTC_OUT_OF_ORDER),
-            emptyList()
+            emptyList(),
         )
         tab.populateStats()
 
@@ -39,7 +39,7 @@ class TestStatisticsTabRoundTheClockHitRate :
         val tab = factoryTab()
         tab.setFilteredGames(
             listOf(GAME_WRAPPER_RTC_IN_ORDER, GAME_WRAPPER_RTC_IN_ORDER_2),
-            emptyList()
+            emptyList(),
         )
         tab.populateStats()
 

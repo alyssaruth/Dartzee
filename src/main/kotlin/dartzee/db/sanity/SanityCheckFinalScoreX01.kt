@@ -11,7 +11,7 @@ class SanityCheckFinalScoreX01 : AbstractSanityCheckFinalScore() {
         val tempTable1 =
             mainDatabase.createTempTable(
                 "ParticipantToRoundCount",
-                "ParticipantId VARCHAR(36), PlayerId VARCHAR(36), RoundCount INT, FinalRoundNumber INT"
+                "ParticipantId VARCHAR(36), PlayerId VARCHAR(36), RoundCount INT, FinalRoundNumber INT",
             ) ?: return
 
         var sb = StringBuilder()

@@ -13,7 +13,7 @@ class LoggerUncaughtExceptionHandler : UncaughtExceptionHandler {
                 CODE_UNCAUGHT_EXCEPTION,
                 "Suppressing uncaught exception: $arg1",
                 KEY_THREAD to arg0.toString(),
-                KEY_EXCEPTION_MESSAGE to arg1.message
+                KEY_EXCEPTION_MESSAGE to arg1.message,
             )
         } else if (arg1 is WrappedSqlException) {
             logger.logSqlException(arg1.sqlStatement, arg1.genericStatement, arg1.sqlException)
@@ -22,14 +22,14 @@ class LoggerUncaughtExceptionHandler : UncaughtExceptionHandler {
                 arg1.loggingCode,
                 "Uncaught exception: ${arg1.message}",
                 arg1,
-                KEY_THREAD to arg0.toString()
+                KEY_THREAD to arg0.toString(),
             )
         } else {
             logger.error(
                 CODE_UNCAUGHT_EXCEPTION,
                 "Uncaught exception: $arg1 in thread $arg0",
                 arg1,
-                KEY_THREAD to arg0.toString()
+                KEY_THREAD to arg0.toString(),
             )
         }
     }

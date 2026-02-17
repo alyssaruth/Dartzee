@@ -68,7 +68,7 @@ class TestDartsAiModel : AbstractTest() {
             17,
             hmDartNoToSegmentType,
             hmDartNoToThreshold,
-            DartzeePlayStyle.CAUTIOUS
+            DartzeePlayStyle.CAUTIOUS,
         )
     }
 
@@ -375,7 +375,7 @@ class TestDartsAiModel : AbstractTest() {
         val segmentStatuses =
             SegmentStatuses(
                 listOf(DartboardSegment(SegmentType.TREBLE, 20)),
-                getAllNonMissSegments()
+                getAllNonMissSegments(),
             )
         val pt1 = model.throwDartzeeDart(0, segmentStatuses)
         pt1.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
@@ -394,7 +394,7 @@ class TestDartsAiModel : AbstractTest() {
         val segmentStatuses =
             SegmentStatuses(
                 listOf(DartboardSegment(SegmentType.TREBLE, 20)),
-                getAllNonMissSegments()
+                getAllNonMissSegments(),
             )
         val pt1 = model.throwDartzeeDart(0, segmentStatuses)
         pt1.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)

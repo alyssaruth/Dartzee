@@ -37,7 +37,7 @@ class GameLauncher {
             CODE_MATCH_LAUNCHED,
             "Launched ${scrn.windowName}",
             KEY_MATCH_ID to match.rowId,
-            KEY_MATCH_LOCAL_ID to match.localId
+            KEY_MATCH_LOCAL_ID to match.localId,
         )
     }
 
@@ -56,13 +56,13 @@ class GameLauncher {
             "Launched ${scrn.windowName}",
             KEY_GAME_ID to game.rowId,
             KEY_GAME_LOCAL_ID to game.localId,
-            KEY_FROM_MATCH to false
+            KEY_FROM_MATCH to false,
         )
     }
 
     private fun insertNewGameEntities(
         gameId: String,
-        params: GameLaunchParams
+        params: GameLaunchParams,
     ): List<IWrappedParticipant> {
         insertDartzeeRules(gameId, params.dartzeeDtos)
         return prepareParticipants(gameId, params.players, params.pairMode)

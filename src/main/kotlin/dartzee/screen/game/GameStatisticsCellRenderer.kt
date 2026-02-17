@@ -14,7 +14,7 @@ class GameStatisticsCellRenderer(
     private val sectionStarts: List<String>,
     private val highestWins: List<String>,
     private val lowestWins: List<String>,
-    private val histogramRows: List<String>
+    private val histogramRows: List<String>,
 ) : DefaultTableCellRenderer() {
     override fun getTableCellRendererComponent(
         table: JTable?,
@@ -22,7 +22,7 @@ class GameStatisticsCellRenderer(
         isSelected: Boolean,
         hasFocus: Boolean,
         row: Int,
-        column: Int
+        column: Int,
     ): Component {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
         table ?: return this
@@ -96,7 +96,7 @@ class GameStatisticsCellRenderer(
         tm: TableModel,
         row: Int,
         col: Int,
-        highestWins: Boolean
+        highestWins: Boolean,
     ): Int {
         if (tm.getValueAt(row, col) is String || tm.columnCount == 2) {
             return -1

@@ -56,7 +56,7 @@ class TestDartsSimulationGolf : AbstractTest() {
             Dart(3, 2),
             Dart(4, 1),
             Dart(4, 1),
-            Dart(4, 1)
+            Dart(4, 1),
         )
     }
 }

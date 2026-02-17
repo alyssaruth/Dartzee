@@ -31,7 +31,7 @@ sealed interface IWrappedParticipant {
 
     fun getParticipantNameHtml(
         active: Boolean,
-        currentParticipant: ParticipantEntity? = null
+        currentParticipant: ParticipantEntity? = null,
     ): String {
         val contents =
             individuals.joinToString(" &#38; ") { pt ->
@@ -69,7 +69,7 @@ class SingleParticipant(override val participant: ParticipantEntity) : IWrappedP
 
 class TeamParticipant(
     override val participant: TeamEntity,
-    override val individuals: List<ParticipantEntity>
+    override val individuals: List<ParticipantEntity>,
 ) : IWrappedParticipant {
     private val teamSize = individuals.size
 
@@ -81,7 +81,7 @@ class TeamParticipant(
             individuals[0].getPlayer(),
             individuals[1].getPlayer(),
             selectedPlayer,
-            gameFinished
+            gameFinished,
         )
     }
 }

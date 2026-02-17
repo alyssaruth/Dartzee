@@ -39,7 +39,7 @@ class DartEntity(database: Database = mainDatabase) : AbstractEntity<DartEntity>
             playerId: String,
             participantId: String,
             roundNumber: Int,
-            ordinal: Int
+            ordinal: Int,
         ): DartEntity {
             val de = DartEntity()
             de.assignRowId()

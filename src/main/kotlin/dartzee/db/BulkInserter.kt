@@ -21,7 +21,7 @@ object BulkInserter {
         entities: List<AbstractEntity<*>>,
         rowsPerThread: Int = 5000,
         rowsPerStatement: Int = 100,
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ) {
         if (entities.isEmpty()) {
             return
@@ -31,7 +31,7 @@ object BulkInserter {
         if (entities.any { it.retrievedFromDb }) {
             logger.error(
                 CODE_SQL_EXCEPTION,
-                "Attempting to bulk insert $tableName entities, but some are already in the database"
+                "Attempting to bulk insert $tableName entities, but some are already in the database",
             )
             return
         }
@@ -50,7 +50,7 @@ object BulkInserter {
         batch: List<AbstractEntity<*>>,
         entityName: EntityName,
         rowsPerInsert: Int,
-        database: Database
+        database: Database,
     ): Thread {
         return Thread {
             batch.chunked(rowsPerInsert).forEach { entities ->
@@ -76,7 +76,7 @@ object BulkInserter {
                                 genericInsert,
                                 timer.getDuration(),
                                 ps.updateCount,
-                                database.dbName
+                                database.dbName,
                             )
                         }
                     }
@@ -93,13 +93,13 @@ object BulkInserter {
         threads: List<Thread>,
         entityName: EntityName,
         rowCount: Int,
-        rowsPerStatement: Int
+        rowsPerStatement: Int,
     ) {
         if (rowCount > 100) {
             logInserts = false
             logger.info(
                 CODE_BULK_SQL,
-                "Inserting $rowCount rows into $entityName (${threads.size} threads @ $rowsPerStatement rows per insert)"
+                "Inserting $rowCount rows into $entityName (${threads.size} threads @ $rowsPerStatement rows per insert)",
             )
         }
 

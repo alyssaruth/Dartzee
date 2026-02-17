@@ -189,7 +189,7 @@ class TestGameSqlUtils : AbstractTest() {
         gameId: String,
         ordinal: Int,
         p1: PlayerEntity,
-        p2: PlayerEntity
+        p2: PlayerEntity,
     ) {
         team.shouldBeInstanceOf<TeamParticipant>()
         val teamEntity = team.participant
@@ -215,7 +215,7 @@ class TestGameSqlUtils : AbstractTest() {
         pt: IWrappedParticipant,
         gameId: String,
         ordinal: Int,
-        player: PlayerEntity
+        player: PlayerEntity,
     ) {
         pt.shouldBeInstanceOf<SingleParticipant>()
         pt.participant.gameId shouldBe gameId

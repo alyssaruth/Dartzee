@@ -20,7 +20,7 @@ class ElasticsearchPoster(
     private val credentials: AWSCredentials?,
     private val url: String,
     private val indexPath: String,
-    client: RestClient? = null
+    client: RestClient? = null,
 ) {
     private val client: RestClient? by lazy { client ?: createClient() }
 
@@ -36,7 +36,7 @@ class ElasticsearchPoster(
                 AWSRequestSigningApacheInterceptor(
                     signer.serviceName,
                     signer,
-                    AWSStaticCredentialsProvider(credentials)
+                    AWSStaticCredentialsProvider(credentials),
                 )
             return RestClient.builder(HttpHost.create(url))
                 .setHttpClientConfigCallback { it.addInterceptorLast(interceptor) }
@@ -45,7 +45,7 @@ class ElasticsearchPoster(
             logger.error(
                 CODE_ELASTICSEARCH_ERROR,
                 "Failed to set up RestClient - won't post logs to ES",
-                t
+                t,
             )
             return null
         }
@@ -89,7 +89,7 @@ class ElasticsearchPoster(
                 is IOException ->
                     logger.warn(
                         CODE_ELASTICSEARCH_ERROR,
-                        "Caught $t trying to post to elasticsearch"
+                        "Caught $t trying to post to elasticsearch",
                     )
                 else -> logger.error(CODE_ELASTICSEARCH_ERROR, "Failed to post log to ES", t)
             }
@@ -106,14 +106,14 @@ class ElasticsearchPoster(
                 logger.warn(
                     CODE_ELASTICSEARCH_ERROR,
                     "Elasticsearch currently unavailable - got $statusCode response",
-                    KEY_RESPONSE_BODY to t.response
+                    KEY_RESPONSE_BODY to t.response,
                 )
             else ->
                 logger.error(
                     CODE_ELASTICSEARCH_ERROR,
                     "Received status code $statusCode trying to post to ES",
                     t,
-                    KEY_RESPONSE_BODY to t.response
+                    KEY_RESPONSE_BODY to t.response,
                 )
         }
     }

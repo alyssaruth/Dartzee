@@ -15,7 +15,7 @@ import dartzee.`object`.SegmentType
 class FakeDartzeeCalculator : IDartzeeCalculator {
     override fun getValidSegments(
         rule: DartzeeRuleDto,
-        dartsSoFar: List<Dart>
+        dartsSoFar: List<Dart>,
     ): DartzeeRuleCalculationResult {
         val segments = mutableListOf<DartboardSegment>()
         if (isValidSoFar(dartsSoFar)) {
@@ -33,7 +33,7 @@ class FakeDartzeeCalculator : IDartzeeCalculator {
             segments.size,
             10,
             1.0 + dartsSoFar.size,
-            10.0
+            10.0,
         )
     }
 

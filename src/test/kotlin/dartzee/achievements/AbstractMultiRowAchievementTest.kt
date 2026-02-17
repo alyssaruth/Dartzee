@@ -17,12 +17,12 @@ abstract class AbstractMultiRowAchievementTest<E : AbstractMultiRowAchievement> 
 
     private fun insertAchievementRow(
         dtAchieved: Timestamp = getSqlDateNow(),
-        achievementCounter: Int = -1
+        achievementCounter: Int = -1,
     ) =
         insertAchievement(
             dtAchieved = dtAchieved,
             achievementCounter = achievementCounter,
-            achievementDetail = "10"
+            achievementDetail = "10",
         )
 
     @Test
@@ -51,9 +51,9 @@ abstract class AbstractMultiRowAchievementTest<E : AbstractMultiRowAchievement> 
                 listOf(
                     insertAchievementRow(achievementCounter = 1),
                     insertAchievementRow(achievementCounter = 2),
-                    insertAchievementRow(achievementCounter = 4)
+                    insertAchievementRow(achievementCounter = 4),
                 ),
-                null
+                null,
             )
             a.attainedValue shouldBe 7
 
@@ -62,7 +62,7 @@ abstract class AbstractMultiRowAchievementTest<E : AbstractMultiRowAchievement> 
         } else {
             a.initialiseFromDb(
                 listOf(insertAchievementRow(), insertAchievementRow(), insertAchievementRow()),
-                null
+                null,
             )
             a.attainedValue shouldBe 3
 
@@ -81,7 +81,7 @@ abstract class AbstractMultiRowAchievementTest<E : AbstractMultiRowAchievement> 
         val a = factoryAchievement()
         a.initialiseFromDb(
             listOf(achievementTwo, achievementFour, achievementThree, achievementOne),
-            null
+            null,
         )
 
         a.dtLatestUpdate shouldBe Timestamp(2000)

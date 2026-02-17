@@ -173,7 +173,7 @@ class TestLogDestinationElasticsearch : AbstractTest() {
 
     private fun makeLogDestination(
         poster: ElasticsearchPoster?,
-        scheduler: ScheduledExecutorService = mockk(relaxed = true)
+        scheduler: ScheduledExecutorService = mockk(relaxed = true),
     ) = LogDestinationElasticsearch(poster, scheduler)
 
     private fun mockPoster(success: Boolean = true, online: Boolean = true): ElasticsearchPoster {

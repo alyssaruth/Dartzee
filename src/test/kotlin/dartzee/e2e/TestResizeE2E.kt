@@ -33,7 +33,7 @@ class TestResizeE2E : AbstractE2ETest() {
             listOf(
                 listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
                 listOf(Dart(20, 3), Dart(20, 3), Dart(20, 3)),
-                listOf(Dart(20, 3), Dart(19, 3), Dart(12, 2))
+                listOf(Dart(20, 3), Dart(19, 3), Dart(12, 2)),
             )
 
         verifyState(gamePanel, listener, expectedRounds, scoreSuffix = " Darts", finalScore = 9)

@@ -8,7 +8,7 @@ class DartzeeRuleTileComplete(
     dto: DartzeeRuleDto,
     ruleNumber: Int,
     success: Boolean,
-    val score: Int
+    val score: Int,
 ) : DartzeeRuleTile(dto, ruleNumber) {
     init {
         model = SoftDisableButtonModel()

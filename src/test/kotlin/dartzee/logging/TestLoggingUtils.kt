@@ -20,8 +20,7 @@ class TestLoggingUtils : AbstractTest() {
         thread.join()
 
         stackTrace shouldContain "java.lang.Throwable: Boom."
-        stackTrace shouldContain
-            "\tat dartzee.logging.TestLoggingUtils\$Should extract stack trace\$runnable\$1.invoke"
+        stackTrace shouldContain "\tat dartzee.logging.TestLoggingUtils.Should_extract_stack_trace"
     }
 
     @Test
@@ -53,7 +52,7 @@ class TestLoggingUtils : AbstractTest() {
         val stackTrace =
             arrayOf(
                 StackTraceElement("SomeClass", "doStuff", "SomeClass.kt", 58),
-                StackTraceElement("SomeClass", "maybeDoStuff", "SomeClass.kt", 40)
+                StackTraceElement("SomeClass", "maybeDoStuff", "SomeClass.kt", 40),
             )
 
         val result = extractThreadStack(stackTrace)

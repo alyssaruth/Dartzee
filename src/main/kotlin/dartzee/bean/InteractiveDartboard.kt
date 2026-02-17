@@ -40,7 +40,7 @@ class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPr
             hoveredSegment = newHoveredSegment
             overrideSegmentColour(
                 newHoveredSegment,
-                getHighlightedColour(defaultColourForSegment(newHoveredSegment))
+                getHighlightedColour(defaultColourForSegment(newHoveredSegment)),
             )
         } else {
             hoveredSegment = null

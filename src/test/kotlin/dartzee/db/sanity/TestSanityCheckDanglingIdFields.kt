@@ -58,7 +58,7 @@ class TestSanityCheckDanglingIdFields : AbstractTest() {
             .map { it.getDescription() }
             .shouldContainExactlyInAnyOrder(
                 "DartzeeRule rows where the EntityId points at a non-existent Game",
-                "DartzeeRule rows where the EntityId points at a non-existent Player"
+                "DartzeeRule rows where the EntityId points at a non-existent Player",
             )
     }
 

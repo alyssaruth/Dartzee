@@ -70,7 +70,7 @@ fun insertFinishedTeam(
     finalScore: Int,
     gameParams: String = DEFAULT_X01_CONFIG.toJson(),
     p1Ai: Boolean = true,
-    p2Ai: Boolean = true
+    p2Ai: Boolean = true,
 ): GameEntity {
     val p = insertPlayer(name = name1, strategy = if (p1Ai) DartsAiModel.new().toJson() else "")
     val p2 = insertPlayer(name = name2, strategy = if (p2Ai) DartsAiModel.new().toJson() else "")
@@ -96,7 +96,7 @@ fun insertDartsMatch(
     mode: MatchMode = MatchMode.FIRST_TO,
     dtFinish: Timestamp = DateStatics.END_OF_TIME,
     matchParams: String = "",
-    gameParams: String = ""
+    gameParams: String = "",
 ): DartsMatchEntity {
     val m = DartsMatchEntity(database)
     m.rowId = uuid
@@ -115,14 +115,14 @@ fun insertGameForPlayer(
     player: PlayerEntity,
     gameType: GameType = GameType.X01,
     finalScore: Int = -1,
-    dtFinished: Timestamp = DateStatics.END_OF_TIME
+    dtFinished: Timestamp = DateStatics.END_OF_TIME,
 ) {
     val game = insertGame(gameType = gameType)
     insertParticipant(
         playerId = player.rowId,
         gameId = game.rowId,
         finalScore = finalScore,
-        dtFinished = dtFinished
+        dtFinished = dtFinished,
     )
 }
 
@@ -135,7 +135,7 @@ fun insertPlayer(
     strategy: String = "",
     dtDeleted: Timestamp = DateStatics.END_OF_TIME,
     playerImageId: String? = null,
-    database: Database = mainDatabase
+    database: Database = mainDatabase,
 ): PlayerEntity {
     val p = PlayerEntity(database)
     p.rowId = uuid
@@ -163,7 +163,7 @@ fun insertFinishForPlayer(
     finish: Int,
     dtCreation: Timestamp = getSqlDateNow(),
     game: GameEntity = insertGame(gameType = GameType.X01),
-    database: Database = mainDatabase
+    database: Database = mainDatabase,
 ): GameEntity {
     val entity = X01FinishEntity(database)
     entity.assignRowId()
@@ -185,7 +185,7 @@ fun insertParticipant(
     dtFinished: Timestamp = DateStatics.END_OF_TIME,
     teamId: String = "",
     resigned: Boolean = false,
-    database: Database = mainDatabase
+    database: Database = mainDatabase,
 ): ParticipantEntity {
     val pe = ParticipantEntity(database)
     pe.rowId = uuid
@@ -211,7 +211,7 @@ fun insertTeamAndParticipants(
     dtFinished: Timestamp = DateStatics.END_OF_TIME,
     playerOne: PlayerEntity = insertPlayer(),
     playerTwo: PlayerEntity = insertPlayer(),
-    database: Database = mainDatabase
+    database: Database = mainDatabase,
 ): TeamEntity {
     val t =
         insertTeam(
@@ -220,7 +220,7 @@ fun insertTeamAndParticipants(
             finishingPosition = finishingPosition,
             finalScore = finalScore,
             dtFinished = dtFinished,
-            database = database
+            database = database,
         )
 
     insertParticipant(
@@ -228,7 +228,7 @@ fun insertTeamAndParticipants(
         playerId = playerOne.rowId,
         teamId = t.rowId,
         ordinal = 0,
-        database = database
+        database = database,
     )
 
     insertParticipant(
@@ -236,7 +236,7 @@ fun insertTeamAndParticipants(
         playerId = playerTwo.rowId,
         teamId = t.rowId,
         ordinal = 1,
-        database = database
+        database = database,
     )
 
     return t
@@ -249,7 +249,7 @@ fun insertTeam(
     finishingPosition: Int = -1,
     finalScore: Int = -1,
     dtFinished: Timestamp = DateStatics.END_OF_TIME,
-    database: Database = mainDatabase
+    database: Database = mainDatabase,
 ): TeamEntity {
     val t = TeamEntity(database)
     t.rowId = uuid
@@ -268,7 +268,7 @@ fun insertDart(
     participant: ParticipantEntity,
     dart: Dart,
     dtCreation: Timestamp = getSqlDateNow(),
-    database: Database = mainDatabase
+    database: Database = mainDatabase,
 ) {
     insertDart(
         participant,
@@ -280,7 +280,7 @@ fun insertDart(
         dart.multiplier,
         dart.segmentType,
         dtCreation = dtCreation,
-        database = database
+        database = database,
     )
 }
 
@@ -295,7 +295,7 @@ fun insertDart(
     segmentType: SegmentType = getSegmentTypeForMultiplier(multiplier),
     dtCreation: Timestamp = getSqlDateNow(),
     dtLastUpdate: Timestamp = getSqlDateNow(),
-    database: Database = mainDatabase
+    database: Database = mainDatabase,
 ): DartEntity {
     val drt = DartEntity(database)
     drt.dtCreation = dtCreation
@@ -338,7 +338,7 @@ fun insertDartzeeRoundResult(
     roundNumber: Int = 2,
     ruleNumber: Int = 2,
     dtCreation: Timestamp = getSqlDateNow(),
-    database: Database = mainDatabase
+    database: Database = mainDatabase,
 ): DartzeeRoundResultEntity {
     val drr = DartzeeRoundResultEntity(database)
     drr.rowId = uuid
@@ -363,7 +363,7 @@ fun insertGameForReport(
     dartsMatchId: String = "",
     matchOrdinal: Int = -1,
     dtCreation: Timestamp = getSqlDateNow(),
-    dtLastUpdate: Timestamp = getSqlDateNow()
+    dtLastUpdate: Timestamp = getSqlDateNow(),
 ): GameEntity {
     val game =
         insertGame(
@@ -376,7 +376,7 @@ fun insertGameForReport(
             dartsMatchId,
             matchOrdinal,
             dtCreation,
-            dtLastUpdate
+            dtLastUpdate,
         )
     val player = insertPlayer()
     insertParticipant(gameId = game.rowId, playerId = player.rowId)
@@ -394,7 +394,7 @@ fun insertGame(
     dartsMatchId: String = "",
     matchOrdinal: Int = -1,
     dtCreation: Timestamp = getSqlDateNow(),
-    dtLastUpdate: Timestamp = getSqlDateNow()
+    dtLastUpdate: Timestamp = getSqlDateNow(),
 ): GameEntity {
     val ge = GameEntity(database)
     ge.rowId = uuid
@@ -418,7 +418,7 @@ fun insertDartzeeRule(
     ordinal: Int = 1,
     calculationResult: DartzeeRuleCalculationResult = makeDartzeeRuleCalculationResult(),
     dtCreation: Timestamp = getSqlDateNow(),
-    dtLastUpdate: Timestamp = getSqlDateNow()
+    dtLastUpdate: Timestamp = getSqlDateNow(),
 ): DartzeeRuleEntity {
     val de = DartzeeRuleEntity()
     de.rowId = uuid
@@ -437,7 +437,7 @@ fun insertDartzeeTemplate(
     uuid: String = randomGuid(),
     name: String = "Template",
     dtCreation: Timestamp = getSqlDateNow(),
-    dtLastUpdate: Timestamp = getSqlDateNow()
+    dtLastUpdate: Timestamp = getSqlDateNow(),
 ): DartzeeTemplateEntity {
     val de = DartzeeTemplateEntity()
     de.rowId = uuid
@@ -464,7 +464,7 @@ fun insertAchievement(
     achievementCounter: Int = -1,
     achievementDetail: String = "",
     dtAchieved: Timestamp = getSqlDateNow(),
-    database: Database = mainDatabase
+    database: Database = mainDatabase,
 ): AchievementEntity {
     val a = AchievementEntity(database)
     a.rowId = uuid
@@ -482,7 +482,7 @@ fun insertAchievement(
 
 fun insertPlayerImage(
     resource: String = "BaboOne",
-    database: Database = mainDatabase
+    database: Database = mainDatabase,
 ): PlayerImageEntity {
     val fileBytes = FileUtil.getByteArrayForResource("/avatars/$resource.png")
     val pi = PlayerImageEntity(database)
@@ -534,7 +534,7 @@ data class AchievementSummary(
     val achievementType: AchievementType,
     val achievementCounter: Int,
     val gameIdEarned: String,
-    val achievementDetail: String = ""
+    val achievementDetail: String = "",
 )
 
 fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary> {
@@ -544,7 +544,7 @@ fun retrieveAchievementsForPlayer(playerId: String): List<AchievementSummary> {
             it.achievementType,
             it.achievementCounter,
             it.gameIdEarned,
-            it.achievementDetail
+            it.achievementDetail,
         )
     }
 }
@@ -555,7 +555,7 @@ private fun makeInMemoryDatabase(dbName: String = UUID.randomUUID().toString()) 
 fun usingInMemoryDatabase(
     dbName: String = UUID.randomUUID().toString(),
     withSchema: Boolean = false,
-    testBlock: (inMemoryDatabase: Database) -> Unit
+    testBlock: (inMemoryDatabase: Database) -> Unit,
 ) {
     val db = makeInMemoryDatabase(dbName)
     try {

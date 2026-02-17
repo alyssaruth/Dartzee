@@ -18,7 +18,7 @@ import javax.swing.JButton
 
 abstract class AbstractDartsScorerPausable<PlayerState : AbstractPlayerState<PlayerState>>(
     private val parent: GamePanelPausable<*, *>,
-    participant: IWrappedParticipant
+    participant: IWrappedParticipant,
 ) : AbstractDartsScorer<PlayerState>(participant), ActionListener {
     private val btnResume = JButton("")
     private var latestState: PlayerState? = null
@@ -47,14 +47,14 @@ abstract class AbstractDartsScorerPausable<PlayerState : AbstractPlayerState<Pla
         if (btnResume.icon === ICON_PAUSE) {
             logger.info(
                 CODE_PLAYER_PAUSED,
-                "Paused player ${participant.getUniqueParticipantName()}"
+                "Paused player ${participant.getUniqueParticipantName()}",
             )
             btnResume.icon = ICON_RESUME
             btnResume.toolTipText = "Resume throwing"
         } else {
             logger.info(
                 CODE_PLAYER_UNPAUSED,
-                "Unpaused player ${participant.getUniqueParticipantName()}"
+                "Unpaused player ${participant.getUniqueParticipantName()}",
             )
             btnResume.icon = ICON_PAUSE
             btnResume.toolTipText = "Pause throwing"

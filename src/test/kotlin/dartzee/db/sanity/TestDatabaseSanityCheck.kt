@@ -46,7 +46,7 @@ class TestDatabaseSanityCheck : AbstractTest() {
         val checks =
             listOf(
                 DummySanityCheckBadGames(listOf(game)),
-                DummySanityCheckMultipleThings(listOf(p1, p2))
+                DummySanityCheckMultipleThings(listOf(p1, p2)),
             )
         DatabaseSanityCheck.runSanityCheck(checks)
 
@@ -57,7 +57,7 @@ class TestDatabaseSanityCheck : AbstractTest() {
         rows.shouldContainExactly(
             listOf("Games where something's wrong", 1, "View Results >", "Auto-fix"),
             listOf("Players with thing one wrong", 2, "View Results >", "Auto-fix"),
-            listOf("Players with thing two wrong", 2, "View Results >", "Auto-fix")
+            listOf("Players with thing two wrong", 2, "View Results >", "Auto-fix"),
         )
     }
 
@@ -116,7 +116,7 @@ private class DummySanityCheckMultipleThings(private val players: List<PlayerEnt
     override fun runCheck(): List<AbstractSanityCheckResult> {
         return listOf(
             SanityCheckResultEntitiesSimple(players, "Players with thing one wrong"),
-            SanityCheckResultEntitiesSimple(players, "Players with thing two wrong")
+            SanityCheckResultEntitiesSimple(players, "Players with thing two wrong"),
         )
     }
 }

@@ -64,7 +64,7 @@ class PlayerImageEntity(database: Database = mainDatabase) :
                 "Goomba",
                 "Minion",
                 "Sid",
-                "dibble"
+                "dibble",
             )
 
         // Image cache, to prevent us hitting the DB too often
@@ -77,7 +77,7 @@ class PlayerImageEntity(database: Database = mainDatabase) :
             filepath: String,
             fileBytes: ByteArray?,
             preset: Boolean,
-            database: Database
+            database: Database,
         ): PlayerImageEntity? {
             return try {
                 val pi = PlayerImageEntity(database)
@@ -95,7 +95,7 @@ class PlayerImageEntity(database: Database = mainDatabase) :
                 logger.logSqlException(
                     "Instantiating SerialBlob for bytes of length " + fileBytes!!.size,
                     "",
-                    se
+                    se,
                 )
                 null
             }

@@ -83,7 +83,7 @@ class TestGolfE2E : AbstractE2ETest() {
                 listOf(
                     drtOuterFifteen(),
                     drtTrebleSeventeen(),
-                    drtOuterSeventeen()
+                    drtOuterSeventeen(),
                 ), // 8, 1 gambled
                 listOf(drtInnerThree(), drtOuterThree(), drtDoubleThree()), // 9, 4 gambled, OHW: 1
                 listOf(drtTrebleFour()), // 11, 4 gambled (tests first stopThreshold)
@@ -112,7 +112,7 @@ class TestGolfE2E : AbstractE2ETest() {
                 AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 3, game.rowId, "3"),
                 AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 2, game.rowId, "6"),
                 AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 1, game.rowId, "7"),
-                AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 3, game.rowId)
+                AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 3, game.rowId),
             )
 
         retrieveAchievementsForPlayer(player.rowId)
@@ -129,7 +129,7 @@ class TestGolfE2E : AbstractE2ETest() {
                 listOf(
                     drtMissOne(),
                     drtOuterOne(),
-                    drtOuterOne()
+                    drtOuterOne(),
                 ), // Gambled 1 in round 1. Total: 4
                 listOf(drtMissThree(), drtDoubleThree()), // CM: 3, OHW: 1, Total: 9
                 listOf(drtDoubleFive()), // CM: 5, OHW: 2, Total: 13
@@ -137,7 +137,7 @@ class TestGolfE2E : AbstractE2ETest() {
                 listOf(
                     drtOuterNine(),
                     drtOuterNine(),
-                    drtDoubleNine()
+                    drtDoubleNine(),
                 ), // Gambled 2, CM: 9, OHW: 3, Total: 23
             )
 
@@ -147,10 +147,10 @@ class TestGolfE2E : AbstractE2ETest() {
                 listOf(
                     drtOuterFour(),
                     drtMissFour(),
-                    drtInnerFour()
+                    drtInnerFour(),
                 ), // Gambled 1 in round 4, Total: 12
                 listOf(drtDoubleSix()), // CM: 6, OHW: 1, Total: 14
-                listOf(drtDoubleSixteen(), drtDoubleEleven(), drtMissEight()) // Total: 22
+                listOf(drtDoubleSixteen(), drtDoubleEleven(), drtMissEight()), // Total: 22
             )
 
         val expectedRounds: List<List<Dart>> = p1Rounds.zipDartRounds(p2Rounds)
@@ -175,7 +175,7 @@ class TestGolfE2E : AbstractE2ETest() {
             expectedRounds,
             finalScore = 23,
             pt = retrieveTeam(),
-            expectedScorerRows = 10
+            expectedScorerRows = 10,
         )
 
         retrieveAchievementsForPlayer(p1.rowId)
@@ -185,14 +185,14 @@ class TestGolfE2E : AbstractE2ETest() {
                 AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "3"),
                 AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "5"),
                 AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "9"),
-                AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 3, game.rowId)
+                AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 3, game.rowId),
             )
 
         retrieveAchievementsForPlayer(p2.rowId)
             .shouldContainExactlyInAnyOrder(
                 AchievementSummary(AchievementType.GOLF_POINTS_RISKED, 1, game.rowId, "4"),
                 AchievementSummary(AchievementType.GOLF_COURSE_MASTER, -1, game.rowId, "6"),
-                AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 1, game.rowId)
+                AchievementSummary(AchievementType.GOLF_ONE_HIT_WONDER, 1, game.rowId),
             )
 
         checkAchievementConversions(listOf(p1.rowId, p2.rowId))

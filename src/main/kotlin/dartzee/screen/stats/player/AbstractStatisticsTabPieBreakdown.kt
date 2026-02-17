@@ -67,7 +67,7 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
     private fun populateHoleBreakdown(
         table: ScrollTable,
         chartPanel: ChartPanel,
-        games: List<GameWrapper>
+        games: List<GameWrapper>,
     ) {
         val filteredGames = applyAdditionalFilters(games)
         val model = TableUtil.DefaultModel()
@@ -115,7 +115,7 @@ abstract class AbstractStatisticsTabPieBreakdown : AbstractStatisticsTab(), RowS
         ranges.forEachIndexed { ix, range ->
             dataset.setValue(
                 range.getDescription(),
-                (table.getNonNullValueAt(selectedRow, ix + 1) as Int)
+                (table.getNonNullValueAt(selectedRow, ix + 1) as Int),
             )
 
             val col = getColorForRange(range)

@@ -20,7 +20,7 @@ fun dumpThreadStacks() {
             logger.info(
                 CODE_THREAD_STACK,
                 "${thread.name} ($state)",
-                KEY_STACK to extractThreadStack(stack)
+                KEY_STACK to extractThreadStack(stack),
             )
         }
     }

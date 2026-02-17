@@ -59,7 +59,7 @@ class GameEntity(database: Database = mainDatabase) : AbstractEntity<GameEntity>
     companion object {
         fun factoryAndSave(
             launchParams: GameLaunchParams,
-            match: DartsMatchEntity? = null
+            match: DartsMatchEntity? = null,
         ): GameEntity {
             val game = factory(launchParams.gameType, launchParams.gameParams)
             match?.let {

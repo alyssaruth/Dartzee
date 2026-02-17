@@ -21,7 +21,7 @@ class TestAchievementX01StylishFinish :
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
         val round = makeX01Round(101, 1, Dart(19, 3), Dart(4, 1), Dart(20, 2))
@@ -94,7 +94,7 @@ class TestAchievementX01StylishFinish :
 
     private fun insertParticipantAndDarts(
         startingScore: Int,
-        vararg darts: Dart
+        vararg darts: Dart,
     ): ParticipantEntity {
         val pt = insertRelevantParticipant()
         val round = makeX01Round(startingScore, 1, *darts)

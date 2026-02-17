@@ -21,7 +21,7 @@ class DartzeeCalculator : IDartzeeCalculator {
     fun isValidCombination(
         combination: List<DartboardSegment>,
         rule: DartzeeRuleDto,
-        cachedResults: MutableMap<List<DartboardSegment>, Boolean> = mutableMapOf()
+        cachedResults: MutableMap<List<DartboardSegment>, Boolean> = mutableMapOf(),
     ): Boolean {
         return isValidCombinationForAggregateRule(combination, rule.aggregateRule) &&
             isValidFromMisses(combination, rule) &&
@@ -29,13 +29,13 @@ class DartzeeCalculator : IDartzeeCalculator {
                 combination,
                 rule.getDartRuleList(),
                 rule.inOrder,
-                cachedResults
+                cachedResults,
             )
     }
 
     override fun getValidSegments(
         rule: DartzeeRuleDto,
-        dartsSoFar: List<Dart>
+        dartsSoFar: List<Dart>,
     ): DartzeeRuleCalculationResult {
         if (dartsSoFar.size == 3) {
             val valid = isValidDartCombination(dartsSoFar, rule)
@@ -61,7 +61,7 @@ class DartzeeCalculator : IDartzeeCalculator {
             validCombinations.size,
             allPossibilities.size,
             validPixelPossibility,
-            allProbabilities
+            allProbabilities,
         )
     }
 
@@ -70,7 +70,7 @@ class DartzeeCalculator : IDartzeeCalculator {
 
     private fun isValidCombinationForAggregateRule(
         combination: List<DartboardSegment>,
-        aggregateRule: AbstractDartzeeAggregateRule?
+        aggregateRule: AbstractDartzeeAggregateRule?,
     ): Boolean {
         if (aggregateRule == null) {
             return true
@@ -83,7 +83,7 @@ class DartzeeCalculator : IDartzeeCalculator {
         combination: List<DartboardSegment>,
         dartRules: List<AbstractDartzeeDartRule>?,
         inOrder: Boolean,
-        cachedResults: MutableMap<List<DartboardSegment>, Boolean> = mutableMapOf()
+        cachedResults: MutableMap<List<DartboardSegment>, Boolean> = mutableMapOf(),
     ): Boolean {
         if (dartRules == null) {
             return true
@@ -113,7 +113,7 @@ class DartzeeCalculator : IDartzeeCalculator {
 
     private fun isValidCombinationForOrderedDartRule(
         rules: List<AbstractDartzeeDartRule>,
-        combination: List<DartboardSegment>
+        combination: List<DartboardSegment>,
     ) = rules.allIndexed { ix, rule -> rule.isValidSegment(combination[ix]) }
 
     private fun mapCombinationToProbability(combination: List<DartboardSegment>): Double {
@@ -155,7 +155,7 @@ class DartzeeCalculator : IDartzeeCalculator {
 
     private fun addAnotherLayer(
         allPossibilities: List<List<DartboardSegment>>,
-        segments: List<DartboardSegment>
+        segments: List<DartboardSegment>,
     ): List<List<DartboardSegment>> {
         val ret = mutableListOf<List<DartboardSegment>>()
         for (possibility in allPossibilities) {

@@ -49,7 +49,7 @@ class TestAbstractDartsScorerPausable : AbstractTest() {
         val state =
             TestPlayerState(
                 insertParticipant(finishingPosition = 2, dtFinished = getSqlDateNow()),
-                scoreSoFar = 30
+                scoreSoFar = 30,
             )
         scorer.stateChanged(state)
 
@@ -66,9 +66,9 @@ class TestAbstractDartsScorerPausable : AbstractTest() {
                 insertParticipant(
                     finishingPosition = 2,
                     resigned = true,
-                    dtFinished = getSqlDateNow()
+                    dtFinished = getSqlDateNow(),
                 ),
-                scoreSoFar = 30
+                scoreSoFar = 30,
             )
         scorer.stateChanged(state)
 
@@ -83,7 +83,7 @@ class TestAbstractDartsScorerPausable : AbstractTest() {
         val state =
             TestPlayerState(
                 insertParticipant(finishingPosition = 2, dtFinished = DateStatics.END_OF_TIME),
-                scoreSoFar = 30
+                scoreSoFar = 30,
             )
         scorer.stateChanged(state)
 
@@ -100,7 +100,7 @@ class TestAbstractDartsScorerPausable : AbstractTest() {
         val state =
             TestPlayerState(
                 insertParticipant(finishingPosition = 2, dtFinished = DateStatics.END_OF_TIME),
-                scoreSoFar = 30
+                scoreSoFar = 30,
             )
         scorer.stateChanged(state)
 
@@ -122,7 +122,7 @@ class TestAbstractDartsScorerPausable : AbstractTest() {
         val state =
             TestPlayerState(
                 insertParticipant(finishingPosition = 2, dtFinished = DateStatics.END_OF_TIME),
-                scoreSoFar = 30
+                scoreSoFar = 30,
             )
         scorer.stateChanged(state)
 

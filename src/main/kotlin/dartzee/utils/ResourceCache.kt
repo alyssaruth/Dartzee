@@ -124,7 +124,7 @@ object ResourceCache {
             "badLuck2.wav",
             "chucklevision1.wav",
             "chucklevision2.wav",
-            "chucklevision3.wav"
+            "chucklevision3.wav",
         )
     }
 
@@ -162,7 +162,7 @@ object ResourceCache {
             if (streams.isEmpty()) {
                 logger.warn(
                     CODE_NO_STREAMS,
-                    "No streams left for WAV [$wavName], will spawn another"
+                    "No streams left for WAV [$wavName], will spawn another",
                 )
 
                 val ais = getAudioInputStream(wavFile)

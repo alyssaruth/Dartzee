@@ -103,7 +103,7 @@ abstract class AbstractPlayerSelector<S : ScrollTable> :
     private fun moveRows(
         source: ScrollTable,
         destination: ScrollTable,
-        selectedPlayers: List<PlayerEntity>
+        selectedPlayers: List<PlayerEntity>,
     ) {
         destination.addPlayers(selectedPlayers)
 
@@ -139,7 +139,7 @@ abstract class AbstractPlayerSelector<S : ScrollTable> :
             else ->
                 InjectedThings.logger.error(
                     CODE_SWING_ERROR,
-                    "Unexpected actionPerformed: ${e.source}"
+                    "Unexpected actionPerformed: ${e.source}",
                 )
         }
     }

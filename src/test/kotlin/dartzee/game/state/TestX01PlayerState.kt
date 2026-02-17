@@ -58,7 +58,7 @@ class TestX01PlayerState : AbstractTest() {
         val state =
             makeX01PlayerStateWithRounds(
                 completedRounds = listOf(roundOne, roundTwo, roundThree),
-                finishType = FinishType.Any
+                finishType = FinishType.Any,
             )
         state.getScoreSoFar() shouldBe 8
     }
@@ -118,7 +118,7 @@ class TestX01PlayerState : AbstractTest() {
         val state =
             X01PlayerState(
                 X01Config(301, FinishType.Doubles),
-                SingleParticipant(insertParticipant())
+                SingleParticipant(insertParticipant()),
             )
         state.dartThrown(makeDart(20, 3))
         state.dartThrown(makeDart(20, 3))
@@ -163,7 +163,7 @@ class TestX01PlayerState : AbstractTest() {
             listOf(
                 makeDart(startingScore = 40, score = 5, multiplier = 2), // bad luck
                 makeDart(startingScore = 30, score = 10, multiplier = 1),
-                makeDart(startingScore = 20, score = 15, multiplier = 0)
+                makeDart(startingScore = 20, score = 15, multiplier = 0),
             )
 
         val roundTwo = listOf(makeDart(startingScore = 20, score = 17, multiplier = 2))
@@ -194,7 +194,7 @@ class TestX01PlayerState : AbstractTest() {
         val state =
             X01PlayerState(
                 X01Config(101, FinishType.Doubles),
-                TeamParticipant(team, listOf(pt1, pt2))
+                TeamParticipant(team, listOf(pt1, pt2)),
             )
 
         val roundOne = listOf(drtTrebleTwenty(), drtOuterOne(), drtMissTwenty()) // Get down to 40
@@ -203,7 +203,7 @@ class TestX01PlayerState : AbstractTest() {
             listOf(
                 drtDoubleFive(), // bad luck
                 drtOuterTen(),
-                drtMissFifteen()
+                drtMissFifteen(),
             )
 
         val roundThree = listOf(drtDoubleSeventeen())
@@ -243,7 +243,7 @@ class TestX01PlayerState : AbstractTest() {
         val state =
             X01PlayerState(
                 X01Config(301, FinishType.Doubles),
-                SingleParticipant(insertParticipant())
+                SingleParticipant(insertParticipant()),
             )
 
         val dartOne = makeDart(20, 1)
@@ -289,7 +289,7 @@ class TestX01PlayerState : AbstractTest() {
 
     private fun stateWithCurrentRound(
         darts: List<Dart>,
-        finishType: FinishType = FinishType.Doubles
+        finishType: FinishType = FinishType.Doubles,
     ): X01PlayerState {
         val state =
             X01PlayerState(X01Config(101, finishType), SingleParticipant(insertParticipant()))

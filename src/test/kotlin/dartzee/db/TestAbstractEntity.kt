@@ -53,7 +53,7 @@ class TestAbstractEntity : AbstractTest() {
                     rowId = rowId,
                     testString = "thisistoolong",
                     dtCreation = dtCreation,
-                    dtLastUpdate = dtLastUpdate
+                    dtLastUpdate = dtLastUpdate,
                 )
             }
 
@@ -145,13 +145,13 @@ class TestAbstractEntity : AbstractTest() {
                 insertFakeEntity(
                     testString = "carrot",
                     dtLastUpdate = Timestamp(500),
-                    database = mainDatabase
+                    database = mainDatabase,
                 )
             insertFakeEntity(
                 rowId = localEntity.rowId,
                 testString = "banana",
                 dtLastUpdate = Timestamp(499),
-                database = otherDatabase
+                database = otherDatabase,
             )
 
             localEntity.mergeIntoDatabase(otherDatabase)
@@ -171,13 +171,13 @@ class TestAbstractEntity : AbstractTest() {
                 insertFakeEntity(
                     testString = "carrot",
                     dtLastUpdate = Timestamp(500),
-                    database = mainDatabase
+                    database = mainDatabase,
                 )
             insertFakeEntity(
                 rowId = localEntity.rowId,
                 testString = "banana",
                 dtLastUpdate = Timestamp(501),
-                database = otherDatabase
+                database = otherDatabase,
             )
 
             localEntity.mergeIntoDatabase(otherDatabase)
@@ -194,7 +194,7 @@ class TestAbstractEntity : AbstractTest() {
         testString: String = "",
         dtCreation: Timestamp = getSqlDateNow(),
         dtLastUpdate: Timestamp = getSqlDateNow(),
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ): FakeEntity {
         val entity = FakeEntity(database)
         entity.rowId = rowId

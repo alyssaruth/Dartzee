@@ -16,7 +16,7 @@ class DartzeeAimCalculator {
     fun getPointToAimFor(
         dartboard: ComputationalDartboard,
         segmentStatuses: SegmentStatuses,
-        aggressive: Boolean
+        aggressive: Boolean,
     ): Point {
         val scoringSegments = segmentStatuses.scoringSegments.filter { !it.isMiss() }
         val validSegments = segmentStatuses.validSegments.filter { !it.isMiss() }
@@ -64,7 +64,7 @@ class DartzeeAimCalculator {
      */
     private fun getMaxCirclePoints(
         validPointSet: Set<Point>,
-        potentialPointsToAimFor: List<AimPoint>
+        potentialPointsToAimFor: List<AimPoint>,
     ): List<AimPoint> {
         var currentMax = 1
         val maxPoints = mutableListOf<AimPoint>()

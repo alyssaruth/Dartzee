@@ -13,7 +13,7 @@ abstract class AbstractSanityCheckFinalScore : ISanityCheck {
         val tempTable =
             mainDatabase.createTempTable(
                 "ParticipantToFinalScore_$gameType",
-                "ParticipantId VARCHAR(36), FinalScoreCalculated INT"
+                "ParticipantId VARCHAR(36), FinalScoreCalculated INT",
             )
         tempTable ?: return listOf()
 

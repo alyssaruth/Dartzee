@@ -10,11 +10,11 @@ import dartzee.screen.game.MatchSummaryPanel
 class RoundTheClockMatchScreen(match: DartsMatchEntity) :
     DartsMatchScreen<ClockPlayerState>(
         MatchSummaryPanel(match, MatchStatisticsPanelRoundTheClock(match.gameParams)),
-        match
+        match,
     ) {
     override fun factoryGamePanel(
         parent: AbstractDartsGameScreen,
         game: GameEntity,
-        totalPlayers: Int
+        totalPlayers: Int,
     ) = GamePanelRoundTheClock(parent, game, totalPlayers)
 }

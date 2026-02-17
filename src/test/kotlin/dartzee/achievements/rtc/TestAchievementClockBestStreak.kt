@@ -66,7 +66,7 @@ class TestAchievementClockBestStreak : AbstractAchievementTest<AchievementClockB
         val achievement =
             AchievementEntity.retrieveAchievement(
                 factoryAchievement().achievementType,
-                pt.playerId
+                pt.playerId,
             )!!
         achievement.achievementCounter shouldBe 5
         achievement.gameIdEarned shouldBe pt.gameId
@@ -75,7 +75,7 @@ class TestAchievementClockBestStreak : AbstractAchievementTest<AchievementClockB
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         insertOpeningStreak(p, g, database)
     }
@@ -83,7 +83,7 @@ class TestAchievementClockBestStreak : AbstractAchievementTest<AchievementClockB
     private fun insertOpeningStreak(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ) {
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, database = database)
         insertOpeningStreak(pt, database)
@@ -97,7 +97,7 @@ class TestAchievementClockBestStreak : AbstractAchievementTest<AchievementClockB
             startingScore = 1,
             score = 1,
             multiplier = 1,
-            database = database
+            database = database,
         )
         insertDart(
             pt,
@@ -106,7 +106,7 @@ class TestAchievementClockBestStreak : AbstractAchievementTest<AchievementClockB
             startingScore = 2,
             score = 2,
             multiplier = 1,
-            database = database
+            database = database,
         )
         insertDart(
             pt,
@@ -115,7 +115,7 @@ class TestAchievementClockBestStreak : AbstractAchievementTest<AchievementClockB
             startingScore = 3,
             score = 3,
             multiplier = 1,
-            database = database
+            database = database,
         )
     }
 }

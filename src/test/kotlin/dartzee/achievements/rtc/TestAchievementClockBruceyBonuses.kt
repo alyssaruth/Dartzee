@@ -28,7 +28,7 @@ class TestAchievementClockBruceyBonuses :
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
@@ -38,7 +38,7 @@ class TestAchievementClockBruceyBonuses :
             startingScore = 4,
             score = 4,
             multiplier = 1,
-            database = database
+            database = database,
         )
     }
 
@@ -47,7 +47,7 @@ class TestAchievementClockBruceyBonuses :
             gameType = factoryAchievement().gameType,
             gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson(),
             dtLastUpdate = dtLastUpdate,
-            database = database
+            database = database,
         )
     }
 
@@ -94,7 +94,7 @@ class TestAchievementClockBruceyBonuses :
         achievements.shouldContainExactlyInAnyOrder(
             AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, g.rowId, "1"),
             AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, g.rowId, "4"),
-            AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, g.rowId, "8")
+            AchievementSummary(AchievementType.CLOCK_BRUCEY_BONUSES, -1, g.rowId, "8"),
         )
     }
 
@@ -104,7 +104,7 @@ class TestAchievementClockBruceyBonuses :
         val g =
             insertGame(
                 gameType = GameType.ROUND_THE_CLOCK,
-                gameParams = RoundTheClockConfig(ClockType.Doubles, true).toJson()
+                gameParams = RoundTheClockConfig(ClockType.Doubles, true).toJson(),
             )
 
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
@@ -122,7 +122,7 @@ class TestAchievementClockBruceyBonuses :
         val g =
             insertGame(
                 gameType = GameType.ROUND_THE_CLOCK,
-                gameParams = RoundTheClockConfig(ClockType.Trebles, true).toJson()
+                gameParams = RoundTheClockConfig(ClockType.Trebles, true).toJson(),
             )
 
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
@@ -154,7 +154,7 @@ class TestAchievementClockBruceyBonuses :
         val g =
             insertGame(
                 gameType = GameType.ROUND_THE_CLOCK,
-                gameParams = RoundTheClockConfig(ClockType.Doubles, true).toJson()
+                gameParams = RoundTheClockConfig(ClockType.Doubles, true).toJson(),
             )
 
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
@@ -174,7 +174,7 @@ class TestAchievementClockBruceyBonuses :
         val g =
             insertGame(
                 gameType = GameType.ROUND_THE_CLOCK,
-                gameParams = RoundTheClockConfig(ClockType.Trebles, true).toJson()
+                gameParams = RoundTheClockConfig(ClockType.Trebles, true).toJson(),
             )
 
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId)
@@ -215,7 +215,7 @@ class TestAchievementClockBruceyBonuses :
             startingScore = 4,
             score = 4,
             multiplier = 1,
-            dtCreation = Timestamp(500)
+            dtCreation = Timestamp(500),
         )
         insertDart(
             pt,
@@ -223,7 +223,7 @@ class TestAchievementClockBruceyBonuses :
             startingScore = 3,
             score = 3,
             multiplier = 1,
-            dtCreation = Timestamp(2000)
+            dtCreation = Timestamp(2000),
         )
         insertDart(
             pt,
@@ -231,7 +231,7 @@ class TestAchievementClockBruceyBonuses :
             startingScore = 9,
             score = 9,
             multiplier = 1,
-            dtCreation = Timestamp(1500)
+            dtCreation = Timestamp(1500),
         )
 
         runConversion()
@@ -241,7 +241,7 @@ class TestAchievementClockBruceyBonuses :
         dtLastUpdates.shouldContainExactlyInAnyOrder(
             Timestamp(500),
             Timestamp(2000),
-            Timestamp(1500)
+            Timestamp(1500),
         )
     }
 }

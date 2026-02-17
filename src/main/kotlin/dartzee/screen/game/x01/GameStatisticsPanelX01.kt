@@ -56,7 +56,7 @@ open class GameStatisticsPanelX01(gameParams: String) :
             "60 - 79",
             "40 - 59",
             "20 - 39",
-            "0 - 19"
+            "0 - 19",
         )
 
     override fun getStartOfSectionRows() = listOf("180", "Top Darts", "Checkout %", "Best Game")
@@ -129,7 +129,7 @@ open class GameStatisticsPanelX01(gameParams: String) :
         sortedEntries: MutableList<Map.Entry<Int, List<Dart>>>,
         row: Array<Any?>,
         i: Int,
-        totalDarts: Int
+        totalDarts: Int,
     ) {
         if (sortedEntries.isEmpty()) {
             row[i + 1] = "N/A [0%]"

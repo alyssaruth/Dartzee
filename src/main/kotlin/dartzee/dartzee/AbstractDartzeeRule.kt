@@ -73,7 +73,7 @@ fun getAllDartRules(): List<AbstractDartzeeDartRule> {
         DartzeeDartRuleColour(),
         DartzeeDartRuleScore(),
         DartzeeDartRuleCustom(),
-        DartzeeDartRuleMiss()
+        DartzeeDartRuleMiss(),
     )
 }
 
@@ -91,7 +91,7 @@ fun getAllAggregateRules(): List<AbstractDartzeeAggregateRule> {
         DartzeeAggregateRuleSpread(),
         DartzeeAggregateRuleCluster(),
         DartzeeAggregateRuleDistinctScores(),
-        DartzeeAggregateRuleRepeats()
+        DartzeeAggregateRuleRepeats(),
     )
 }
 

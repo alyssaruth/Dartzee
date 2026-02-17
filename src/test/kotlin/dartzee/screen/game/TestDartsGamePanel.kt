@@ -103,8 +103,8 @@ class TestDartsGamePanel : AbstractTest() {
                     AchievementType.X01_TEAM_GAMES_WON,
                     -1,
                     panel.gameEntity.rowId,
-                    "50"
-                ),
+                    "50",
+                )
             )
 
         retrieveAchievementsForPlayer(p2.rowId)
@@ -113,8 +113,8 @@ class TestDartsGamePanel : AbstractTest() {
                     AchievementType.X01_TEAM_GAMES_WON,
                     -1,
                     panel.gameEntity.rowId,
-                    "50"
-                ),
+                    "50",
+                )
             )
     }
 
@@ -158,7 +158,7 @@ class TestDartsGamePanel : AbstractTest() {
 
         retrieveAchievementsForPlayer(pt.participant.playerId)
             .shouldContainExactlyInAnyOrder(
-                AchievementSummary(AchievementType.X01_BEST_GAME, 50, panel.gameEntity.rowId),
+                AchievementSummary(AchievementType.X01_BEST_GAME, 50, panel.gameEntity.rowId)
             )
     }
 
@@ -170,7 +170,7 @@ class TestDartsGamePanel : AbstractTest() {
         val ai =
             makeSingleParticipant(
                 insertPlayer(strategy = DartsAiModel.new().toJson()),
-                panel.gameEntity.rowId
+                panel.gameEntity.rowId,
             )
 
         panel.startNewGame(listOf(human, ai))
@@ -271,12 +271,12 @@ class TestDartsGamePanel : AbstractTest() {
 
     class TestGamePanel(
         private val config: X01Config = X01Config(501, FinishType.Doubles),
-        totalPlayers: Int = 1
+        totalPlayers: Int = 1,
     ) :
         GamePanelPausable<DartsScorerX01, X01PlayerState>(
             FakeDartsScreen(),
             insertGame(gameType = GameType.X01, gameParams = config.toJson()),
-            totalPlayers
+            totalPlayers,
         ) {
         override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(config, pt)
 

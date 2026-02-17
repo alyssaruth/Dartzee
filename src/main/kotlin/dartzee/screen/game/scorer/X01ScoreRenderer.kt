@@ -18,7 +18,7 @@ class X01ScoreRenderer : DefaultTableCellRenderer() {
         isSelected: Boolean,
         hasFocus: Boolean,
         row: Int,
-        column: Int
+        column: Int,
     ): Component {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
         horizontalAlignment = SwingConstants.CENTER

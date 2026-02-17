@@ -228,7 +228,7 @@ class TestGamePanelX01 : AbstractTest() {
             }
         hotelInspectorRows.shouldContainExactlyInAnyOrder(
             AchievementSummary(AchievementType.X01_HOTEL_INSPECTOR, -1, gameId, "20, 5, 1"),
-            AchievementSummary(AchievementType.X01_HOTEL_INSPECTOR, -1, gameId, "20, 3, 3")
+            AchievementSummary(AchievementType.X01_HOTEL_INSPECTOR, -1, gameId, "20, 3, 3"),
         )
     }
 
@@ -283,7 +283,7 @@ class TestGamePanelX01 : AbstractTest() {
                 it.achievementType == AchievementType.X01_CHUCKLEVISION
             }
         chucklevisionRows.shouldContainExactly(
-            AchievementSummary(AchievementType.X01_CHUCKLEVISION, -1, gameId, "T20, 9"),
+            AchievementSummary(AchievementType.X01_CHUCKLEVISION, -1, gameId, "T20, 9")
         )
     }
 
@@ -326,7 +326,7 @@ class TestGamePanelX01 : AbstractTest() {
                 AchievementType.X01_STYLISH_FINISH,
                 20,
                 panel.gameEntity.rowId,
-                finalRound.joinToString()
+                finalRound.joinToString(),
             )
         )
     }

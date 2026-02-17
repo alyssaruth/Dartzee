@@ -40,7 +40,7 @@ class TestDialogUtil : AbstractTest() {
         DialogUtil.showOption(
             "Free Pizza",
             "Would you like some?",
-            listOf("Yes please", "No thanks")
+            listOf("Yes please", "No thanks"),
         )
         DialogUtil.chooseDirectory(null)
 
@@ -52,7 +52,7 @@ class TestDialogUtil : AbstractTest() {
             factoryMock.showOption(
                 "Free Pizza",
                 "Would you like some?",
-                listOf("Yes please", "No thanks")
+                listOf("Yes please", "No thanks"),
             )
             factoryMock.chooseDirectory(null)
         }

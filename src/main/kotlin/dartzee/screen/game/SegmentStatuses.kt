@@ -5,16 +5,16 @@ import dartzee.`object`.DartboardSegment
 enum class SegmentStatus {
     SCORING,
     VALID,
-    INVALID
+    INVALID,
 }
 
 data class SegmentStatuses(
     val scoringSegments: Set<DartboardSegment>,
-    val validSegments: Set<DartboardSegment>
+    val validSegments: Set<DartboardSegment>,
 ) {
     constructor(
         scoringSegments: List<DartboardSegment>,
-        validSegments: List<DartboardSegment>
+        validSegments: List<DartboardSegment>,
     ) : this(scoringSegments.toSet(), validSegments.toSet())
 
     fun allowsMissing() = validSegments.any { it.isMiss() }

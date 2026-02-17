@@ -37,7 +37,7 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement() {
         val tempTable =
             database.createTempTable(
                 "PlayerHolesInOne",
-                "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP"
+                "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP",
             ) ?: return
 
         var sb = StringBuilder()
@@ -71,7 +71,7 @@ class AchievementGolfCourseMaster : AbstractMultiRowAchievement() {
                 rs,
                 database,
                 achievementType,
-                achievementDetailFn = { rs.getInt("Score").toString() }
+                achievementDetailFn = { rs.getInt("Score").toString() },
             )
         }
     }

@@ -64,7 +64,7 @@ object FileUtil {
         } else {
             logger.error(
                 CODE_FILE_ERROR,
-                "No reader found for file extension: ${file.extension} (full path: ${file.absolutePath})"
+                "No reader found for file extension: ${file.extension} (full path: ${file.absolutePath})",
             )
         }
 

@@ -4,7 +4,7 @@ import dartzee.core.util.TableUtil.DefaultModel
 
 open class SanityCheckResultSimpleTableModel(
     private val model: DefaultModel,
-    private val desc: String
+    private val desc: String,
 ) : AbstractSanityCheckResult() {
     override fun getDescription() = desc
 

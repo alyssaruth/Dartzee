@@ -63,7 +63,7 @@ fun computePointsForSegment(segment: DartboardSegment, centre: Point, radius: Do
             radius,
             startAngle.toDouble() - 0.1 to endAngle.toDouble() + 0.1,
             angleStep,
-            radii
+            radii,
         )
     }
 }
@@ -81,7 +81,7 @@ private fun generateSegment(
     radius: Double,
     angleRange: Pair<Double, Double>,
     angleStep: Double,
-    radiusRange: Pair<Double, Double>
+    radiusRange: Pair<Double, Double>,
 ): Set<Point> {
     val allPts =
         angleRange
@@ -193,7 +193,7 @@ fun getPotentialAimPoints(centerPt: Point, radius: Double): Set<AimPoint> {
                 centerPt,
                 radius,
                 angle,
-                (LOWER_BOUND_TRIPLE_RATIO + UPPER_BOUND_TRIPLE_RATIO) / 2
+                (LOWER_BOUND_TRIPLE_RATIO + UPPER_BOUND_TRIPLE_RATIO) / 2,
             )
         )
         points.add(
@@ -201,7 +201,7 @@ fun getPotentialAimPoints(centerPt: Point, radius: Double): Set<AimPoint> {
                 centerPt,
                 radius,
                 angle,
-                (UPPER_BOUND_TRIPLE_RATIO + LOWER_BOUND_DOUBLE_RATIO) / 2
+                (UPPER_BOUND_TRIPLE_RATIO + LOWER_BOUND_DOUBLE_RATIO) / 2,
             )
         )
         points.add(
@@ -209,7 +209,7 @@ fun getPotentialAimPoints(centerPt: Point, radius: Double): Set<AimPoint> {
                 centerPt,
                 radius,
                 angle,
-                (LOWER_BOUND_DOUBLE_RATIO + UPPER_BOUND_DOUBLE_RATIO) / 2
+                (LOWER_BOUND_DOUBLE_RATIO + UPPER_BOUND_DOUBLE_RATIO) / 2,
             )
         )
     }
@@ -239,7 +239,7 @@ fun getColourWrapperFromPrefs(): ColourWrapper {
             oddDouble,
             oddTreble,
             evenDouble,
-            oddDouble
+            oddDouble,
         )
 
     return colourWrapperFromPrefs!!

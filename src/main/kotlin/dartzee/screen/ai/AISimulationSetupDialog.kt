@@ -21,7 +21,7 @@ import net.miginfocom.swing.MigLayout
 class AISimulationSetupDialog(
     private val player: PlayerEntity,
     private val model: DartsAiModel,
-    private val modal: Boolean = false
+    private val modal: Boolean = false,
 ) : SimpleDialog() {
     private val panelCenter = JPanel()
     private val lblGameMode = JLabel("Game Mode")

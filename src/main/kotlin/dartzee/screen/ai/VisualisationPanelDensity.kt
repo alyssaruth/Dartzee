@@ -35,8 +35,8 @@ class VisualisationPanelDensity : AbstractVisualisationPanel() {
 
         val divisor = model.computeProbabilityDensityDivisor()
 
-        overlayImg.paint {
-            val radius = it.distance(centerPt)
+        overlayImg.paint { pt ->
+            val radius = pt.distance(centerPt)
             val probability = model.getProbabilityWithinRadius(radius)
             getColorForProbability(probability?.div(divisor))
         }
@@ -45,8 +45,8 @@ class VisualisationPanelDensity : AbstractVisualisationPanel() {
     }
 
     override fun paintKey() {
-        keyImg.paint {
-            val probability: Double = it.y.toDouble() / height.toDouble()
+        keyImg.paint { pt ->
+            val probability: Double = pt.y.toDouble() / height.toDouble()
             getColorForProbability(probability)
         }
 

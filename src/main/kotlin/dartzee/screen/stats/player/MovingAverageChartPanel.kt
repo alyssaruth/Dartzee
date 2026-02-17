@@ -106,7 +106,7 @@ class MovingAverageChartPanel(private val parentTab: AbstractStatisticsTab) :
                 collection,
                 " (moving)",
                 avgThreshold,
-                avgThreshold - 1
+                avgThreshold - 1,
             )
         return (movingAvgCollection as XYSeriesCollection).getSeries(0)
     }

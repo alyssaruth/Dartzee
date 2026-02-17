@@ -170,12 +170,12 @@ class TestPlayerManagementPanel : AbstractTest() {
         insertAchievement(
             playerId = player.rowId,
             type = AchievementType.X01_BEST_GAME,
-            achievementCounter = 25
+            achievementCounter = 25,
         )
         insertAchievement(
             playerId = player.rowId,
             type = AchievementType.GOLF_BEST_GAME,
-            achievementCounter = 55
+            achievementCounter = 55,
         )
 
         val panel = PlayerManagementPanel()
@@ -199,12 +199,12 @@ class TestPlayerManagementPanel : AbstractTest() {
         insertAchievement(
             playerId = player.rowId,
             type = AchievementType.X01_BEST_GAME,
-            achievementCounter = AchievementX01BestGame().pinkThreshold
+            achievementCounter = AchievementX01BestGame().pinkThreshold,
         )
         insertAchievement(
             playerId = player.rowId,
             type = AchievementType.GOLF_BEST_GAME,
-            achievementCounter = AchievementGolfBestGame().greenThreshold
+            achievementCounter = AchievementGolfBestGame().greenThreshold,
         )
 
         val panel = PlayerManagementPanel()

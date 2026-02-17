@@ -158,7 +158,7 @@ class TestMathsUtil : AbstractTest() {
             4.6,
             4.7,
             4.8,
-            4.9
+            4.9,
         )
     }
 }

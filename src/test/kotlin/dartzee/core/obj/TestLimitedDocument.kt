@@ -12,7 +12,7 @@ class TestLimitedDocument : AbstractTest() {
         limitedDocument.insertString(
             0,
             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            null
+            null,
         ) // 40 chars
         limitedDocument.insertString(0, null, null) // Should do nothing
         limitedDocument.insertString(0, "bbbbbbbbbbb", null) // 11 chars - too many

@@ -61,14 +61,14 @@ class StatisticsTabX01CheckoutPercent : AbstractStatisticsTab() {
             val darts = hmDoubleToDartsThrown[checkout] ?: mutableListOf()
 
             val opportunities = darts.size
-            val hits = darts.filter { drt -> drt.isDouble() && drt.getTotal() == checkout }.size
+            val hits = darts.count { drt -> drt.isDouble() && drt.getTotal() == checkout }
 
             val row =
                 arrayOf(
                     checkout / 2,
                     opportunities,
                     hits,
-                    MathsUtil.getPercentage(hits, opportunities.toDouble())
+                    MathsUtil.getPercentage(hits, opportunities.toDouble()),
                 )
             model.addRow(row)
 
@@ -83,7 +83,7 @@ class StatisticsTabX01CheckoutPercent : AbstractStatisticsTab() {
                 "",
                 totalOpportunities,
                 totalHits,
-                MathsUtil.getPercentage(totalHits, totalOpportunities.toDouble())
+                MathsUtil.getPercentage(totalHits, totalOpportunities.toDouble()),
             )
         table.addFooterRow(totalsRow)
 

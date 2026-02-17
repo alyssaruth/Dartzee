@@ -90,7 +90,7 @@ class StatisticsTabX01ThreeDartScores : AbstractStatisticsTab(), RowSelectionLis
         for (game in sortedGames) {
             game.populateThreeDartScoreMap(
                 hmScoreToThreeDartBreakdown,
-                nfScoreThreshold.getNumber()
+                nfScoreThreshold.getNumber(),
             )
         }
 
@@ -119,7 +119,7 @@ class StatisticsTabX01ThreeDartScores : AbstractStatisticsTab(), RowSelectionLis
 
     private fun populateBreakdownTable(
         table: ScrollTableDartsGame,
-        wrapper: ThreeDartScoreWrapper
+        wrapper: ThreeDartScoreWrapper,
     ) {
         val model = DefaultModel()
         model.addColumn("Method")

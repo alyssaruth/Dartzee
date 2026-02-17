@@ -101,7 +101,7 @@ class TestDartsScorerDartzee : AbstractTest() {
             makeDartzeePlayerState(
                 insertParticipant(),
                 listOf(roundOne, roundTwo, roundThree),
-                listOf(resultOne, resultTwo)
+                listOf(resultOne, resultTwo),
             )
         scorer.stateChanged(state)
 
@@ -109,7 +109,7 @@ class TestDartsScorerDartzee : AbstractTest() {
         rows.shouldContainExactly(
             roundOne + factoryHighScoreResult(roundOne) + 120,
             roundTwo + resultOne + 60,
-            roundThree + resultTwo + 110
+            roundThree + resultTwo + 110,
         )
     }
 
@@ -126,7 +126,7 @@ class TestDartsScorerDartzee : AbstractTest() {
         val rows = scorer.tableScores.getRows()
         rows.shouldContainExactly(
             roundOne + factoryHighScoreResult(roundOne) + 120,
-            listOf(Dart(5, 1), Dart(10, 1), null, null, null)
+            listOf(Dart(5, 1), Dart(10, 1), null, null, null),
         )
     }
 
@@ -142,7 +142,7 @@ class TestDartsScorerDartzee : AbstractTest() {
             makeDartzeePlayerState(
                 insertParticipant(),
                 listOf(roundOne, roundTwo),
-                listOf(resultOne)
+                listOf(resultOne),
             )
         scorer.stateChanged(state)
         scorer.getRendererMaximum() shouldBe 120
@@ -152,7 +152,7 @@ class TestDartsScorerDartzee : AbstractTest() {
             makeDartzeePlayerState(
                 insertParticipant(),
                 listOf(roundOne, roundTwo),
-                listOf(otherResult)
+                listOf(otherResult),
             )
         scorer.stateChanged(improvedState)
         scorer.getRendererMaximum() shouldBe 180
@@ -184,7 +184,7 @@ class TestDartsScorerDartzee : AbstractTest() {
 
     private fun makeScorer(
         parent: GamePanelDartzee = mockk(),
-        participant: IWrappedParticipant = makeSingleParticipant()
+        participant: IWrappedParticipant = makeSingleParticipant(),
     ) = DartsScorerDartzee(parent, participant).also { it.init() }
 
     private fun DartsScorerDartzee.getRendererMaximum(): Int {

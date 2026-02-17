@@ -84,7 +84,7 @@ object DartsColour {
         value: Double,
         total: Int,
         multiplier: Double,
-        brightness: Double
+        brightness: Double,
     ): Color {
         val hue = (value * multiplier).toFloat() / total
         return Color.getHSBColor(hue, 1f, brightness.toFloat())

@@ -154,7 +154,7 @@ class PlayerStatisticsScreen : EmbeddedScreen() {
 
     private fun populateFilteredGames(
         hmGameIdToWrapper: Map<Long, GameWrapper>,
-        filterPanel: PlayerStatisticsFilterPanel
+        filterPanel: PlayerStatisticsFilterPanel,
     ): List<GameWrapper> {
         val allGames = hmGameIdToWrapper.values
         if (!filterPanel.isVisible) {

@@ -17,7 +17,7 @@ class ForeignDatabaseValidator(private val migrator: DatabaseMigrator) {
         if (remoteVersion == null) {
             logger.error(
                 CODE_MERGE_ERROR,
-                "Unable to ascertain $desc database version (but could connect) - this is unexpected."
+                "Unable to ascertain $desc database version (but could connect) - this is unexpected.",
             )
             DialogUtil.showErrorOLD("An error occurred connecting to the $desc database.")
             return false

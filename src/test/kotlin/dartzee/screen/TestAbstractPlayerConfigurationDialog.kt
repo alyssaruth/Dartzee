@@ -129,7 +129,7 @@ class TestAbstractPlayerConfigurationDialog : AbstractTest() {
 
     class DummyPlayerConfigurationDialog(
         callback: (player: PlayerEntity) -> Unit = mockk(relaxed = true),
-        player: PlayerEntity = PlayerEntity.factoryCreate()
+        player: PlayerEntity = PlayerEntity.factoryCreate(),
     ) : AbstractPlayerConfigurationDialog(callback, player) {
         init {
             add(avatar)

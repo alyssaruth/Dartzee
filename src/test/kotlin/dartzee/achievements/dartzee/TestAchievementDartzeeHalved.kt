@@ -18,7 +18,7 @@ class TestAchievementDartzeeHalved : AbstractAchievementTest<AchievementDartzeeH
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId, database = database)
         insertDartzeeRoundResult(pt, success = false, score = -100, database = database)

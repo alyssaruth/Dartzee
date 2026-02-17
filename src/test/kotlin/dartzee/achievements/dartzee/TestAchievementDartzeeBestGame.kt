@@ -19,13 +19,13 @@ class TestAchievementDartzeeBestGame : AbstractAchievementTest<AchievementDartze
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         insertParticipant(
             gameId = g.rowId,
             playerId = p.rowId,
             finalScore = 127,
-            database = database
+            database = database,
         )
 
         insertDartzeeRules(g.rowId, testRules, database)
@@ -101,7 +101,7 @@ class TestAchievementDartzeeBestGame : AbstractAchievementTest<AchievementDartze
             playerId = player.rowId,
             gameId = g.rowId,
             finalScore = finalScore,
-            dtFinished = dtFinished
+            dtFinished = dtFinished,
         )
         insertDartzeeRules(g.rowId, testRules)
 

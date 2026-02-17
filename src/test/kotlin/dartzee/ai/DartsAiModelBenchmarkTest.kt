@@ -23,7 +23,7 @@ class DartsAiModelBenchmarkTest : AbstractTest() {
             18,
             mapOf(1 to SegmentType.DOUBLE, 2 to SegmentType.DOUBLE, 3 to SegmentType.DOUBLE),
             mapOf(1 to 3, 2 to 4),
-            DartzeePlayStyle.CAUTIOUS
+            DartzeePlayStyle.CAUTIOUS,
         )
 
     private val bruceForsyth =
@@ -37,10 +37,10 @@ class DartsAiModelBenchmarkTest : AbstractTest() {
             mapOf(
                 1 to SegmentType.INNER_SINGLE,
                 2 to SegmentType.INNER_SINGLE,
-                3 to SegmentType.OUTER_SINGLE
+                3 to SegmentType.OUTER_SINGLE,
             ),
             mapOf(1 to 3, 2 to 4),
-            DartzeePlayStyle.CAUTIOUS
+            DartzeePlayStyle.CAUTIOUS,
         )
 
     @Test

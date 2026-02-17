@@ -7,7 +7,7 @@ import dartzee.core.util.jsonMapper
 enum class ClockType {
     Standard,
     Doubles,
-    Trebles
+    Trebles,
 }
 
 @JsonIgnoreProperties("description", "orderStr")

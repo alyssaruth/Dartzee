@@ -34,7 +34,7 @@ abstract class AbstractProgressBarRenderer : JProgressBar(), TableCellRenderer {
         isSelected: Boolean,
         hasFocus: Boolean,
         row: Int,
-        column: Int
+        column: Int,
     ): Component {
         val score = getScoreForValue(value)
         string = getScoreDescForValue(value)

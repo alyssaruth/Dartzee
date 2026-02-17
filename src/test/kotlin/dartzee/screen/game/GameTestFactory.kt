@@ -45,14 +45,14 @@ fun makeGolfGamePanel(currentPlayerId: String = randomGuid(), gameParams: String
     GamePanelGolf(
             FakeDartsScreen(),
             insertGame(gameType = GameType.GOLF, gameParams = gameParams),
-            1
+            1,
         )
         .apply { testInit(currentPlayerId) }
 
 fun makeGolfGamePanel(
     players: List<PlayerEntity>,
     teamMode: Boolean,
-    gameParams: String
+    gameParams: String,
 ): GamePanelGolf {
     val g = insertGame(gameType = GameType.GOLF, gameParams = gameParams)
     val participants = prepareParticipants(g.rowId, players, teamMode)
@@ -64,12 +64,12 @@ fun makeGolfGamePanel(
 
 fun makeX01GamePanel(
     currentPlayerId: String = randomGuid(),
-    gameParams: X01Config = DEFAULT_X01_CONFIG
+    gameParams: X01Config = DEFAULT_X01_CONFIG,
 ) =
     GamePanelX01(
             FakeDartsScreen(),
             insertGame(gameType = GameType.X01, gameParams = gameParams.toJson()),
-            1
+            1,
         )
         .apply { testInit(currentPlayerId) }
 
@@ -77,7 +77,7 @@ fun makeX01GamePanel(pt: IWrappedParticipant, gameParams: X01Config = DEFAULT_X0
     GamePanelX01(
             FakeDartsScreen(),
             insertGame(gameType = GameType.X01, gameParams = gameParams.toJson()),
-            1
+            1,
         )
         .apply { testInit(pt) }
 
@@ -86,9 +86,9 @@ fun makeRoundTheClockGamePanel(playerId: String = randomGuid()) =
             FakeDartsScreen(),
             insertGame(
                 gameType = GameType.ROUND_THE_CLOCK,
-                gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson()
+                gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson(),
             ),
-            1
+            1,
         )
         .apply { testInit(playerId) }
 
@@ -97,9 +97,9 @@ fun makeRoundTheClockGamePanel(pt: IWrappedParticipant) =
             FakeDartsScreen(),
             insertGame(
                 gameType = GameType.ROUND_THE_CLOCK,
-                gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson()
+                gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson(),
             ),
-            1
+            1,
         )
         .apply { testInit(pt) }
 
@@ -141,7 +141,7 @@ fun DartsGamePanel<*, *>.doAiTurn(model: DartsAiModel) {
 
 fun makeMatchSummaryPanel(
     match: DartsMatchEntity = insertDartsMatch(),
-    statsPanel: GameStatisticsPanelX01 = GameStatisticsPanelX01(DEFAULT_X01_CONFIG.toJson())
+    statsPanel: GameStatisticsPanelX01 = GameStatisticsPanelX01(DEFAULT_X01_CONFIG.toJson()),
 ) = MatchSummaryPanel(match, statsPanel)
 
 class FakeDartsScreen : AbstractDartsGameScreen() {
@@ -155,7 +155,7 @@ class FakeDartsScreen : AbstractDartsGameScreen() {
     override fun achievementUnlocked(
         gameId: String,
         playerId: String,
-        achievement: AbstractAchievement
+        achievement: AbstractAchievement,
     ) {
         this.gameId = gameId
         this.playerId = playerId

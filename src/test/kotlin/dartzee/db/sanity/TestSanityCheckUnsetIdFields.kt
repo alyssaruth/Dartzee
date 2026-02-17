@@ -27,7 +27,7 @@ class TestSanityCheckUnsetIdFields : AbstractTest() {
             .map { it.getDescription() }
             .shouldContainExactlyInAnyOrder(
                 "Participant rows where GameId is unset",
-                "Participant rows where PlayerId is unset"
+                "Participant rows where PlayerId is unset",
             )
     }
 }

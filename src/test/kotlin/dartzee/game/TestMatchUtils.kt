@@ -52,7 +52,7 @@ class TestMatchUtils : AbstractTest() {
 
     private fun insertWinningParticipants(
         player: PlayerEntity,
-        count: Int
+        count: Int,
     ): List<SingleParticipant> =
         (1..count).map {
             val pt = insertParticipant(playerId = player.rowId, finishingPosition = 1)

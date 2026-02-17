@@ -19,7 +19,7 @@ fun splitAvatar(
     playerOne: PlayerEntity,
     playerTwo: PlayerEntity,
     selectedPlayer: PlayerEntity?,
-    gameFinished: Boolean
+    gameFinished: Boolean,
 ): ImageIcon {
     val firstImg = getAvatarImage(playerOne.playerImageId)
     val secondImg = getAvatarImage(playerTwo.playerImageId)
@@ -38,7 +38,7 @@ fun splitAvatar(
     firstImg: BufferedImage,
     secondImg: BufferedImage,
     selectedImg: BufferedImage?,
-    gameFinished: Boolean
+    gameFinished: Boolean,
 ): ImageIcon {
     val diagonalOffset =
         if (gameFinished) 1.0
@@ -82,7 +82,7 @@ fun combinePlayerFlags(flagOne: ImageIcon, flagTwo: ImageIcon): ImageIcon {
         BufferedImage(
             flagOne.iconWidth + flagTwo.iconWidth,
             flagOne.iconHeight,
-            BufferedImage.TYPE_INT_ARGB
+            BufferedImage.TYPE_INT_ARGB,
         )
 
     newImage.paint { pt ->

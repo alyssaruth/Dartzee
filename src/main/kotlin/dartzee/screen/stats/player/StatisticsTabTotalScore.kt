@@ -84,7 +84,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
             "",
             ImageIcon(javaClass.getResource("/icons/bar chart.png")),
             panelBar,
-            null
+            null,
         )
         panelBar.layout = BorderLayout(0, 0)
         panelBar.add(panel, BorderLayout.CENTER)
@@ -104,7 +104,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
             "",
             ImageIcon(javaClass.getResource("/icons/line chart.png")),
             panelLine,
-            null
+            null,
         )
         panelLine.layout = BorderLayout(0, 0)
         panelLine.add(lineChartPanel, BorderLayout.CENTER)
@@ -118,7 +118,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
             "",
             ImageIcon(javaClass.getResource("/icons/boxAndWhisker.png")),
             panelBoxAndWhisker,
-            null
+            null,
         )
         panelBoxAndWhisker.layout = BorderLayout(0, 0)
         panelBoxAndWhisker.add(boxAndWhiskerChartPanel, BorderLayout.CENTER)
@@ -242,7 +242,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
                 PlotOrientation.VERTICAL,
                 true,
                 true,
-                false
+                false,
             )
 
         val plot = barChart.categoryPlot
@@ -261,7 +261,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
                 "",
                 "",
                 boxDataset,
-                true
+                true,
             )
 
         val renderer = BoxAndWhiskerRenderer()
@@ -338,7 +338,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
     /** Get the minimum and maximum number of darts for the graph */
     private fun adjustGraphMinAndMax(
         gamesToGraph: List<GameWrapper>,
-        gamesToGraphOther: List<GameWrapper>
+        gamesToGraphOther: List<GameWrapper>,
     ) {
         val combined = (gamesToGraph + gamesToGraphOther).filter { it.isFinished() }
 
@@ -351,7 +351,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
         gamesToGraph: List<GameWrapper>,
         legendKey: String,
         nfMedian: NumberField,
-        nfMean: NumberField
+        nfMean: NumberField,
     ) {
         // Build up counts for each game finish value
         val suffix = " ($legendKey)"
@@ -431,7 +431,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
             isSelected: Boolean,
             hasFocus: Boolean,
             row: Int,
-            column: Int
+            column: Int,
         ): Component {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
 

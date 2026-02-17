@@ -27,7 +27,7 @@ open class GameStatisticsPanelDartzee : AbstractGameStatisticsPanel<DartzeePlaye
             "Lowest Round",
             "Longest Streak",
             "Hardest Rule",
-            "Peak Score"
+            "Peak Score",
         )
 
     override fun getRankedRowsLowestWins() = emptyList<String>()

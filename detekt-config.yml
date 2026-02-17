@@ -61,9 +61,6 @@ style:
     active: true
 
 potential-bugs:
-  CastNullableToNonNullableType:
-    active: true
-    excludes: '**/src/test/**/*.kt'
   MissingPackageDeclaration:
     active: true
     excludes:

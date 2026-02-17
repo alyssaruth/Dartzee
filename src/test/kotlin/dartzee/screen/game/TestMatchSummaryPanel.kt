@@ -50,7 +50,7 @@ class TestMatchSummaryPanel : AbstractTest() {
 
     private fun MatchSummaryPanel<X01PlayerState>.addParticipant(
         localId: Long,
-        participant: IWrappedParticipant
+        participant: IWrappedParticipant,
     ) {
         addParticipant(localId, X01PlayerState(DEFAULT_X01_CONFIG, participant))
     }

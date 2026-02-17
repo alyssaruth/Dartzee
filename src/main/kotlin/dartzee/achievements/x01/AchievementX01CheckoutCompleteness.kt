@@ -47,7 +47,7 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement() {
         val tempTable =
             database.createTempTable(
                 "PlayerCheckouts",
-                "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP"
+                "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP",
             ) ?: return
 
         var sb = StringBuilder()
@@ -76,7 +76,7 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement() {
                 rs,
                 database,
                 achievementType,
-                achievementCounterFn = { rs.getInt("Score") }
+                achievementCounterFn = { rs.getInt("Score") },
             )
         }
     }
@@ -93,8 +93,8 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement() {
             return
         }
 
-        img.paint {
-            val current = Color(img.getRGB(it.x, it.y), true)
+        img.paint { pt ->
+            val current = Color(img.getRGB(pt.x, pt.y), true)
             when {
                 current == Color.BLACK -> newColor.darker()
                 hitDoubles.contains(current.red) -> newColor

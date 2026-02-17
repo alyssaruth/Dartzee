@@ -2,15 +2,15 @@ import java.net.URI
 import kotlinx.kover.api.KoverTaskExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "2.3.0"
     id("java-library")
     id("com.github.ben-manes.versions") version "0.44.0"
-    id("io.gitlab.arturbosch.detekt") version "1.23.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jetbrains.kotlinx.kover") version "0.6.1"
-    id("com.ncorti.ktfmt.gradle") version "0.15.1"
+    id("com.ncorti.ktfmt.gradle") version "0.25.0"
 }
 
 repositories {
@@ -37,7 +37,8 @@ dependencies {
     implementation("org.jfree:jfreechart:1.5.4")
     implementation("com.konghq:unirest-java:3.14.2")
     implementation("com.github.lgooddatepicker:LGoodDatePicker:11.2.1")
-    implementation("org.apache.derby:derby:10.14.2.0")
+    implementation("org.apache.derby:derby:10.16.1.1")
+    implementation("org.apache.derby:derbytools:10.16.1.1")
     implementation("com.amazonaws:aws-java-sdk-elasticsearch:1.12.396")
     implementation("com.amazonaws:aws-java-sdk-s3:1.12.396")
     implementation("com.github.awslabs:aws-request-signing-apache-interceptor:b3772780da")
@@ -57,24 +58,14 @@ kotlin { sourceSets.all { languageSettings { languageVersion = "2.0" } } }
 
 project.setProperty("mainClassName", "dartzee.main.DartsMainKt")
 
-val compileKotlin: KotlinCompile by tasks
-val compileTestKotlin: KotlinCompile by tasks
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_1_8)
 
-compileKotlin.kotlinOptions {
-    jvmTarget = "11"
-
-    java {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-}
-
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "11"
-
-    java {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        java {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
     }
 }
 
@@ -114,14 +105,17 @@ tasks.withType<Test> {
     minHeapSize = "1024m"
     maxHeapSize = "1024m"
 
-    jvmArgs =
-        listOf(
-            "-Dcom.sun.management.jmxremote",
-            "-Dcom.sun.management.jmxremote.port=9010",
-            "-Dcom.sun.management.jmxremote.authenticate=false",
-            "-Dcom.sun.management.jmxremote.ssl=false",
-            "-Djava.rmi.server.hostname=localhost"
-        )
+    jvmArgs(
+        "-Dcom.sun.management.jmxremote",
+        "-Dcom.sun.management.jmxremote.port=9010",
+        "-Dcom.sun.management.jmxremote.authenticate=false",
+        "-Dcom.sun.management.jmxremote.ssl=false",
+        "-Djava.rmi.server.hostname=localhost",
+        "--add-opens",
+        "java.desktop/sun.awt=ALL-UNNAMED",
+        "--add-opens",
+        "java.desktop/java.awt=ALL-UNNAMED",
+    )
 
     extensions.configure<KoverTaskExtension> { isDisabled.set(name != "unitTest") }
 

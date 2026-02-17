@@ -11,7 +11,7 @@ data class ClockPlayerState(
     override val wrappedParticipant: IWrappedParticipant,
     override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
     override val currentRound: MutableList<Dart> = mutableListOf(),
-    override var isActive: Boolean = false
+    override var isActive: Boolean = false,
 ) : AbstractPlayerState<ClockPlayerState>() {
     fun findCurrentTarget() = getRemainingTargets().firstOrNull()
 

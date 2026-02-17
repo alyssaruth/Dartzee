@@ -36,7 +36,7 @@ class TestIncludedPlayerParameters : AbstractTest() {
         insertParticipant(
             playerId = player.rowId,
             finishingPosition = -1,
-            gameId = unfinishedGameId
+            gameId = unfinishedGameId,
         )
 
         val ipp = makeIncludedPlayerParameters(finishingPositions = listOf(1, 3))
@@ -60,32 +60,32 @@ class TestIncludedPlayerParameters : AbstractTest() {
             playerId = player.rowId,
             finishingPosition = 1,
             finalScore = 40,
-            gameId = g40
+            gameId = g40,
         )
         insertParticipant(
             playerId = player.rowId,
             finishingPosition = 2,
             finalScore = 30,
-            gameId = g30
+            gameId = g30,
         )
         insertParticipant(
             playerId = player.rowId,
             finishingPosition = 3,
             finalScore = 25,
-            gameId = g25
+            gameId = g25,
         )
         insertParticipant(
             playerId = player.rowId,
             finishingPosition = -1,
             finalScore = -1,
-            gameId = gUnfinished
+            gameId = gUnfinished,
         )
 
         // Greater than 25
         val ippGt25 =
             makeIncludedPlayerParameters(
                 finalScore = 25,
-                finalScoreComparator = ComboBoxNumberComparison.FILTER_MODE_GREATER_THAN
+                finalScoreComparator = ComboBoxNumberComparison.FILTER_MODE_GREATER_THAN,
             )
 
         var results = runReport(makeReportParameters(player, ippGt25))
@@ -94,7 +94,7 @@ class TestIncludedPlayerParameters : AbstractTest() {
         val ippEq25 =
             makeIncludedPlayerParameters(
                 finalScore = 25,
-                finalScoreComparator = ComboBoxNumberComparison.FILTER_MODE_EQUAL_TO
+                finalScoreComparator = ComboBoxNumberComparison.FILTER_MODE_EQUAL_TO,
             )
         results = runReport(makeReportParameters(player, ippEq25))
         results.map { it.localId }.shouldContainExactlyInAnyOrder(4)
@@ -108,7 +108,7 @@ class TestIncludedPlayerParameters : AbstractTest() {
         val ippLt31 =
             makeIncludedPlayerParameters(
                 finalScore = 31,
-                finalScoreComparator = ComboBoxNumberComparison.FILTER_MODE_LESS_THAN
+                finalScoreComparator = ComboBoxNumberComparison.FILTER_MODE_LESS_THAN,
             )
         results = runReport(makeReportParameters(player, ippLt31))
         results.map { it.localId }.shouldContainExactlyInAnyOrder(2, 4)
@@ -116,7 +116,7 @@ class TestIncludedPlayerParameters : AbstractTest() {
 
     private fun makeReportParameters(
         player: PlayerEntity,
-        ipp: IncludedPlayerParameters
+        ipp: IncludedPlayerParameters,
     ): ReportParameters {
         val rpPlayers = makeReportParametersPlayers(includedPlayers = mapOf(player to ipp))
         return ReportParameters(makeReportParametersGame(), rpPlayers)

@@ -15,7 +15,7 @@ fun List<Int>.maxOrZero() = maxOrNull() ?: 0
 
 inline fun <T, R : Comparable<R>> Iterable<T>.sortedBy(
     descending: Boolean,
-    crossinline selector: (T) -> R?
+    crossinline selector: (T) -> R?,
 ) = if (descending) this.sortedByDescending(selector) else this.sortedBy(selector)
 
 fun IntRange.getDescription(): String {

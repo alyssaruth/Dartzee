@@ -69,7 +69,7 @@ open class GameStatisticsPanelRoundTheClock(gameParams: String) :
     private fun getDartsPerNumber(
         desc: String,
         includeUnfinished: Boolean,
-        fn: (stream: List<Int>) -> Any?
+        fn: (stream: List<Int>) -> Any?,
     ) =
         prepareRow(desc) { playerName ->
             val dartsGrouped = getDartsGroupedByParticipantAndNumber(playerName)

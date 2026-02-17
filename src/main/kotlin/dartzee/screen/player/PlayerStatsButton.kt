@@ -11,7 +11,7 @@ class PlayerStatsButton(
     private val player: PlayerEntity,
     private val gameType: GameType,
     played: Int,
-    highScore: Int
+    highScore: Int,
 ) : PlayerSummaryButton() {
     private val iconUrl = getGamesWonIcon(gameType)
     override val defaultText = makeStatsText(played, highScore)

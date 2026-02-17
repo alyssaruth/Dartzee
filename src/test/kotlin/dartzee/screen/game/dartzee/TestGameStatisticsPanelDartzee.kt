@@ -26,7 +26,7 @@ class TestGameStatisticsPanelDartzee :
 
         return makeDartzeePlayerStateForName(
             completedRounds = listOf(firstRound, secondRound, thirdRound),
-            roundResults = listOf(secondResult, thirdResult)
+            roundResults = listOf(secondResult, thirdResult),
         )
     }
 

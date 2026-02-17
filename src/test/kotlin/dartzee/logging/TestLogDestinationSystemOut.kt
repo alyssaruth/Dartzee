@@ -33,7 +33,7 @@ class TestLogDestinationSystemOut : AbstractTest() {
             makeLogRecord(
                 severity = Severity.INFO,
                 loggingCode = LoggingCode("some.event"),
-                message = "blah"
+                message = "blah",
             )
         dest.log(record)
 
@@ -51,7 +51,7 @@ class TestLogDestinationSystemOut : AbstractTest() {
                 severity = Severity.ERROR,
                 loggingCode = LoggingCode("some.event"),
                 message = "blah",
-                errorObject = error
+                errorObject = error,
             )
         dest.log(record)
 
@@ -69,7 +69,7 @@ class TestLogDestinationSystemOut : AbstractTest() {
                 severity = Severity.INFO,
                 loggingCode = LoggingCode("some.event"),
                 message = "blah",
-                keyValuePairs = mapOf(KEY_STACK to "at Something.blah")
+                keyValuePairs = mapOf(KEY_STACK to "at Something.blah"),
             )
         dest.log(record)
 

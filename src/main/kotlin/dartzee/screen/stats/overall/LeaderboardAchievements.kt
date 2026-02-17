@@ -87,7 +87,7 @@ class LeaderboardAchievements : AbstractLeaderboard() {
 
         table.setComparator(
             ACHIEVEMENT_COLUMN_IX,
-            compareBy<AbstractAchievement> { it.attainedValue }
+            compareBy<AbstractAchievement> { it.attainedValue },
         )
         val renderer = AchievementProgressBarRenderer()
         renderer.minimum = 0

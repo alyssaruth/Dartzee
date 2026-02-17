@@ -180,7 +180,7 @@ class GameSetupScreen : EmbeddedScreen() {
                 gameTypeComboBox.getGameType(),
                 getGameParams(),
                 playerSelector.pairMode(),
-                rules
+                rules,
             )
 
         if (match == null) {
@@ -217,7 +217,7 @@ class GameSetupScreen : EmbeddedScreen() {
             spinners[2].value as Int,
             spinners[3].value as Int,
             spinners[4].value as Int,
-            spinners[5].value as Int
+            spinners[5].value as Int,
         )
     }
 

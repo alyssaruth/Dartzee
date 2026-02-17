@@ -40,7 +40,7 @@ class CheatBar : JTextField(), ActionListener {
                         EventQueue.invokeLater { grabFocus() }
                     }
                 }
-            }
+            },
         )
     }
 

@@ -9,7 +9,7 @@ data class Quadrant(
     val minimumAngle: Int,
     val maximumAngle: Int,
     val xIsPositive: Boolean,
-    val yIsPositive: Boolean
+    val yIsPositive: Boolean,
 ) {
     val sinForX = xIsPositive xor yIsPositive
 }

@@ -47,7 +47,7 @@ class TestStatsSqlUtil : AbstractTest() {
             listOf(
                 listOf(Dart(1, 0), Dart(1, 3)),
                 listOf(Dart(17, 1), Dart(15, 1), Dart(15, 2)),
-                listOf(Dart(3, 2))
+                listOf(Dart(3, 2)),
             )
         rounds.insertIntoDatabase(player, pt)
 
@@ -75,7 +75,7 @@ class TestStatsSqlUtil : AbstractTest() {
             listOf(
                 listOf(Dart(1, 0), Dart(1, 3)),
                 listOf(Dart(17, 1), Dart(15, 1), Dart(15, 2)),
-                listOf(Dart(3, 2))
+                listOf(Dart(3, 2)),
             )
         rounds.insertIntoDatabase(player, pt)
 

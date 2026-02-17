@@ -61,7 +61,7 @@ class TestSanityCheckX01Finishes : AbstractTest() {
         val pt =
             insertParticipant(
                 gameId = insertGame(gameType = GameType.X01).rowId,
-                playerId = p.rowId
+                playerId = p.rowId,
             )
 
         insertFinishForPlayer(p, 60, game = g)
@@ -131,7 +131,7 @@ class TestSanityCheckX01Finishes : AbstractTest() {
         val rows = result.getResultsModel().getRows()
         rows.shouldContainExactlyInAnyOrder(
             listOf("MISSING", p.rowId, g.rowId, 55),
-            listOf("EXTRA", p.rowId, g.rowId, 60)
+            listOf("EXTRA", p.rowId, g.rowId, 60),
         )
     }
 

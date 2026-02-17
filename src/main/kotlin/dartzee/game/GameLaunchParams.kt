@@ -8,7 +8,7 @@ data class GameLaunchParams(
     val gameType: GameType,
     val gameParams: String,
     val pairMode: Boolean,
-    val dartzeeDtos: List<DartzeeRuleDto>? = null
+    val dartzeeDtos: List<DartzeeRuleDto>? = null,
 ) {
     fun teamCount(): Int = if (pairMode) players.chunked(2).size else players.size
 }

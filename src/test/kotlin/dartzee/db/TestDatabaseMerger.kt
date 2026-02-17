@@ -154,7 +154,7 @@ class TestDatabaseMerger : AbstractTest() {
                     localId = 4,
                     dtFinish = DateStatics.END_OF_TIME,
                     dtLastUpdate = getPastTime(dtLastSync),
-                    database = remoteDatabase
+                    database = remoteDatabase,
                 )
             insertGame(localId = 7, database = remoteDatabase)
 
@@ -163,7 +163,7 @@ class TestDatabaseMerger : AbstractTest() {
                 uuid = oldGame.rowId,
                 localId = 4,
                 dtFinish = getSqlDateNow(),
-                dtLastUpdate = getFutureTime(dtLastSync)
+                dtLastUpdate = getFutureTime(dtLastSync),
             )
 
             val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
@@ -183,7 +183,7 @@ class TestDatabaseMerger : AbstractTest() {
         insertAchievement(
             playerId = playerId,
             type = AchievementType.X01_BEST_THREE_DART_SCORE,
-            achievementCounter = 60
+            achievementCounter = 60,
         )
 
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
@@ -207,7 +207,7 @@ class TestDatabaseMerger : AbstractTest() {
         insertAchievement(
             playerId = playerId,
             type = AchievementType.X01_BEST_THREE_DART_SCORE,
-            achievementCounter = 60
+            achievementCounter = 60,
         )
 
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
@@ -216,7 +216,7 @@ class TestDatabaseMerger : AbstractTest() {
                 playerId = remotePlayer.rowId,
                 type = AchievementType.X01_BEST_THREE_DART_SCORE,
                 database = remoteDatabase,
-                achievementCounter = 25
+                achievementCounter = 25,
             )
 
             val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
@@ -240,7 +240,7 @@ class TestDatabaseMerger : AbstractTest() {
         insertAchievement(
             playerId = playerId,
             type = AchievementType.X01_BEST_FINISH,
-            achievementCounter = 60
+            achievementCounter = 60,
         )
 
         usingInMemoryDatabase(withSchema = true) { remoteDatabase ->
@@ -261,7 +261,7 @@ class TestDatabaseMerger : AbstractTest() {
                 playerId = remotePlayer.rowId,
                 type = AchievementType.GOLF_BEST_GAME,
                 database = remoteDatabase,
-                achievementCounter = 18
+                achievementCounter = 18,
             )
 
             val merger = makeDatabaseMerger(mainDatabase, remoteDatabase)
@@ -289,7 +289,7 @@ class TestDatabaseMerger : AbstractTest() {
             roundNumber = 1,
             ordinal = 1,
             score = 20,
-            multiplier = 3
+            multiplier = 3,
         )
         insertDart(
             pt,
@@ -297,7 +297,7 @@ class TestDatabaseMerger : AbstractTest() {
             roundNumber = 1,
             ordinal = 2,
             score = 20,
-            multiplier = 3
+            multiplier = 3,
         )
         insertDart(
             pt,
@@ -305,7 +305,7 @@ class TestDatabaseMerger : AbstractTest() {
             roundNumber = 1,
             ordinal = 3,
             score = 20,
-            multiplier = 1
+            multiplier = 1,
         )
 
         return Pair(p.rowId, g.rowId)
@@ -319,6 +319,6 @@ class TestDatabaseMerger : AbstractTest() {
     private fun makeDatabaseMerger(
         localDatabase: Database = mainDatabase,
         remoteDatabase: Database,
-        remoteName: String = "Goomba"
+        remoteName: String = "Goomba",
     ) = DatabaseMerger(localDatabase, remoteDatabase, remoteName)
 }

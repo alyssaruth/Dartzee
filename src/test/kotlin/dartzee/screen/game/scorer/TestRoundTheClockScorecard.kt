@@ -57,7 +57,7 @@ class TestRoundTheClockScorecard : AbstractTest() {
                 makeClockResult(1, hit = true),
                 makeClockResult(2, hit = false),
                 makeClockResult(3, hit = false),
-                makeClockResult(4, hit = true)
+                makeClockResult(4, hit = true),
             )
     }
 }

@@ -22,7 +22,7 @@ class TestResignationE2E : AbstractE2ETest() {
         val game =
             insertGame(
                 gameType = GameType.X01,
-                gameParams = X01Config(501, FinishType.Doubles).toJson()
+                gameParams = X01Config(501, FinishType.Doubles).toJson(),
             )
 
         val (winner, loser) = createPlayers()
@@ -75,7 +75,7 @@ class TestResignationE2E : AbstractE2ETest() {
     private fun verifyFinishingPositions(
         winner: IWrappedParticipant,
         loser: IWrappedParticipant,
-        resignee: IWrappedParticipant
+        resignee: IWrappedParticipant,
     ) {
         winner.participant.finishingPosition shouldBe 1
         winner.participant.resigned shouldBe false

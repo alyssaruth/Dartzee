@@ -166,13 +166,13 @@ class TestPlayerAchievementsScreen : AbstractTest() {
             AchievementType.X01_BEST_FINISH,
             player.rowId,
             g.rowId,
-            AchievementX01BestFinish().blueThreshold
+            AchievementX01BestFinish().blueThreshold,
         )
         AchievementEntity.updateAchievement(
             AchievementType.X01_HIGHEST_BUST,
             player.rowId,
             g.rowId,
-            AchievementX01HighestBust().pinkThreshold
+            AchievementX01HighestBust().pinkThreshold,
         )
     }
 }

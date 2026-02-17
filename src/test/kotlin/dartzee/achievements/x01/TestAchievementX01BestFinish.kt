@@ -21,13 +21,13 @@ class TestAchievementX01BestFinish : AbstractAchievementTest<AchievementX01BestF
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         insertParticipant(
             playerId = p.rowId,
             gameId = g.rowId,
             dtFinished = getSqlDateNow(),
-            database = database
+            database = database,
         )
         insertFinishForPlayer(p, 60, game = g, database = database)
     }

@@ -61,7 +61,7 @@ class TestDatabase : AbstractTest() {
         val updates =
             listOf(
                 "CREATE TABLE zzUpdateTest(str VARCHAR(50))",
-                "INSERT INTO zzUpdateTest VALUES ('5')"
+                "INSERT INTO zzUpdateTest VALUES ('5')",
             )
         mainDatabase.executeUpdates(updates) shouldBe true
 
@@ -99,7 +99,7 @@ class TestDatabase : AbstractTest() {
             listOf(
                 "CREATE TABLE zzQueryTest(str VARCHAR(50))",
                 "INSERT INTO zzQueryTest VALUES ('RowOne')",
-                "INSERT INTO zzQueryTest VALUES ('RowTwo')"
+                "INSERT INTO zzQueryTest VALUES ('RowTwo')",
             )
 
         mainDatabase.executeUpdates(updates)

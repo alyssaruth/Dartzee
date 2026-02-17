@@ -25,7 +25,7 @@ import javax.swing.border.TitledBorder
 
 class AIConfigurationDialog(
     saveCallback: (PlayerEntity) -> Unit,
-    player: PlayerEntity = PlayerEntity.factoryCreate()
+    player: PlayerEntity = PlayerEntity.factoryCreate(),
 ) : AbstractPlayerConfigurationDialog(saveCallback, player) {
     private val panelScreen = JPanel()
     private val panelNorth = JPanel()

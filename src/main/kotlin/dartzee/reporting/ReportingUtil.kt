@@ -38,7 +38,7 @@ private fun makeParticipantTempTable(): String? {
         mainDatabase.createTempTable(
             "reportParticipants",
             "GameId VARCHAR(36), PlayerId VARCHAR(36), FinishingPosition INT, FinalScore INT, " +
-                "TeamId VARCHAR(36), Resigned BOOLEAN, TeamOrdinal INT, Ordinal INT"
+                "TeamId VARCHAR(36), Resigned BOOLEAN, TeamOrdinal INT, Ordinal INT",
         ) ?: return null
 
     mainDatabase.executeUpdate(
@@ -104,7 +104,7 @@ data class ReportResultWrapper(
     val dtFinish: Timestamp,
     val localMatchId: Long,
     val matchOrdinal: Int,
-    val templateName: String?
+    val templateName: String?,
 ) {
     private val participants = mutableListOf<ParticipantWrapper>()
 

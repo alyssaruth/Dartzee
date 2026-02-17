@@ -61,7 +61,7 @@ class TestBulkInserter : AbstractTest() {
     private fun checkInsertBatching(
         rows: List<GameEntity>,
         rowsPerInsert: Int,
-        expectedNumberOfBatches: Int
+        expectedNumberOfBatches: Int,
     ) {
         wipeTable(EntityName.Game)
         clearLogs()

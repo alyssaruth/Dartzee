@@ -52,7 +52,7 @@ class AchievementDartzeeFlawless : AbstractMultiRowAchievement() {
                 database,
                 achievementType,
                 achievementCounterFn = { rs.getInt("FinalScore") },
-                achievementDetailFn = { rs.getString("TemplateName") }
+                achievementDetailFn = { rs.getString("TemplateName") },
             )
         }
     }

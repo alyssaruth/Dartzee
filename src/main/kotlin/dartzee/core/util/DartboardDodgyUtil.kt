@@ -77,7 +77,7 @@ private fun GameplayDartboard.doDodgyOnEdt(
     ii: ImageIcon,
     width: Int,
     height: Int,
-    soundName: String
+    soundName: String,
 ) {
     removeDodgyLabels()
 
@@ -110,7 +110,7 @@ fun GameplayDartboard.playDodgySound(soundName: String) {
         } else {
             logger.warn(
                 CODE_RESOURCE_CACHE_NOT_INITIALISED,
-                "Not playing [$soundName] - ResourceCache not initialised"
+                "Not playing [$soundName] - ResourceCache not initialised",
             )
         }
     } catch (e: Throwable) {
@@ -129,7 +129,7 @@ private fun GameplayDartboard.playDodgySoundCached(soundName: String) {
 
 private fun GameplayDartboard.initialiseAudioClip(
     stream: AudioInputStream,
-    soundName: String
+    soundName: String,
 ): Clip {
     val myClip = AudioSystem.getLine(Line.Info(Clip::class.java)) as Clip
 

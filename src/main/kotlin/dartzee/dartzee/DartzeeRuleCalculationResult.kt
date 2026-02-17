@@ -16,7 +16,7 @@ enum class DartzeeRuleDifficulty(val desc: String) {
     HARD("Hard"),
     MODERATE("Moderate"),
     EASY("Easy"),
-    VERY_EASY("Very Easy")
+    VERY_EASY("Very Easy"),
 }
 
 val INVALID_CALCULATION_RESULT = DartzeeRuleCalculationResult(listOf(), listOf(), 0, 0, 0.0, 1.0)
@@ -28,7 +28,7 @@ val INVALID_CALCULATION_RESULT = DartzeeRuleCalculationResult(listOf(), listOf()
     "segmentStatus",
     "foreground",
     "background",
-    "difficulty"
+    "difficulty",
 )
 data class DartzeeRuleCalculationResult(
     val scoringSegments: List<DartboardSegment>,
@@ -36,7 +36,7 @@ data class DartzeeRuleCalculationResult(
     val validCombinations: Int,
     val allCombinations: Int,
     val validCombinationProbability: Double,
-    val allCombinationsProbability: Double
+    val allCombinationsProbability: Double,
 ) {
     val percentage =
         MathsUtil.getPercentage(validCombinationProbability, allCombinationsProbability)

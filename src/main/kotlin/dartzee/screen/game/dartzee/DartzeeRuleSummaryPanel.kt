@@ -35,7 +35,7 @@ class DartzeeRuleSummaryPanel(private val carousel: DartzeeRuleCarousel) : JPane
         results: List<DartzeeRoundResultEntity>,
         darts: List<Dart>,
         currentScore: Int,
-        roundNumber: Int
+        roundNumber: Int,
     ) {
         if (roundNumber == 1) {
             swapInComponentIfNecessary(panelHighScore)

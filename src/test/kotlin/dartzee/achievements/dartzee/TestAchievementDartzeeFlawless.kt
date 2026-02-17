@@ -28,14 +28,14 @@ class TestAchievementDartzeeFlawless :
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         val pt =
             insertParticipant(
                 gameId = g.rowId,
                 playerId = p.rowId,
                 finalScore = 275,
-                database = database
+                database = database,
             )
 
         insertSuccessRoundResults(pt, testRules, database)
@@ -115,7 +115,7 @@ class TestAchievementDartzeeFlawless :
     private fun insertSuccessRoundResults(
         participant: ParticipantEntity,
         rules: List<DartzeeRuleDto>,
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ) {
         insertDartzeeRules(participant.gameId, rules, database)
 

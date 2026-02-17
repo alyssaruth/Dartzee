@@ -30,7 +30,7 @@ class AchievementX01BestThreeDarts : AbstractAchievement() {
             dartSql,
             "StartingScore - RemainingScore",
             achievementType,
-            database
+            database,
         )
     }
 

@@ -99,7 +99,7 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen() {
     private fun addAchievementTab(
         gameType: GameType,
         index: Int,
-        achievementRows: List<AchievementEntity>
+        achievementRows: List<AchievementEntity>,
     ) {
         val achievementTypes = getAchievementsForGameType(gameType).map { it.achievementType }
         val max = achievementTypes.size * MAX_ACHIEVEMENT_SCORE
@@ -135,7 +135,7 @@ class PlayerAchievementsScreen(val player: PlayerEntity) : EmbeddedScreen() {
     private fun addAchievement(
         aa: AbstractAchievement,
         achievementRows: List<AchievementEntity>,
-        panel: JPanel
+        panel: JPanel,
     ) {
         val type = aa.achievementType
         val achievementRowsFiltered = achievementRows.filter { a -> a.achievementType == type }

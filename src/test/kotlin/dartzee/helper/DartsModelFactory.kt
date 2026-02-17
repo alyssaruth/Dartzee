@@ -26,7 +26,7 @@ fun beastDartsModel(
         DartsAiModel.DEFAULT_GOLF_SEGMENT_TYPES.toMutableMap(),
     hmDartNoToStopThreshold: Map<Int, Int> =
         DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(),
-    dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
+    dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS,
 ): DartsAiModel {
     return DartsAiModel(
         0.1,
@@ -37,7 +37,7 @@ fun beastDartsModel(
         mercyThreshold,
         hmDartNoToSegmentType,
         hmDartNoToStopThreshold,
-        dartzeePlayStyle
+        dartzeePlayStyle,
     )
 }
 
@@ -52,7 +52,7 @@ fun makeDartsModel(
         DartsAiModel.DEFAULT_GOLF_SEGMENT_TYPES.toMutableMap(),
     hmDartNoToStopThreshold: Map<Int, Int> =
         DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(),
-    dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS
+    dartzeePlayStyle: DartzeePlayStyle = DartzeePlayStyle.CAUTIOUS,
 ): DartsAiModel {
     return DartsAiModel(
         standardDeviation,
@@ -63,7 +63,7 @@ fun makeDartsModel(
         mercyThreshold,
         hmDartNoToSegmentType,
         hmDartNoToStopThreshold,
-        dartzeePlayStyle
+        dartzeePlayStyle,
     )
 }
 
@@ -109,7 +109,7 @@ private fun ComputationalDartboard.getMissPoint(score: Int): ComputedPoint {
         translatePoint(
             computeCenter(),
             computeRadius() * (UPPER_BOUND_DOUBLE_RATIO + UPPER_BOUND_OUTSIDE_BOARD_RATIO) / 2.0,
-            getAnglesForScore(score).let { (it.first + it.second) / 2.0 }
+            getAnglesForScore(score).let { (it.first + it.second) / 2.0 },
         )
     return toComputedPoint(pt)
 }
@@ -119,7 +119,7 @@ data class ScoreAndSegmentType(val score: Int, val segmentType: SegmentType)
 fun predictableGolfModel(
     hmDartNoToStopThreshold: Map<Int, Int> =
         DartsAiModel.DEFAULT_GOLF_STOP_THRESHOLDS.toMutableMap(),
-    fn: (hole: Int, dartNo: Int) -> ScoreAndSegmentType
+    fn: (hole: Int, dartNo: Int) -> ScoreAndSegmentType,
 ): DartsAiModel {
     val model = mockk<DartsAiModel>(relaxed = true)
     val stopThresholdSlot = slot<Int>()

@@ -19,7 +19,7 @@ class TestAchievementX01BestThreeDarts : AbstractAchievementTest<AchievementX01B
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
@@ -29,7 +29,7 @@ class TestAchievementX01BestThreeDarts : AbstractAchievementTest<AchievementX01B
             startingScore = 501,
             score = 20,
             multiplier = 3,
-            database = database
+            database = database,
         )
         insertDart(
             pt,
@@ -37,7 +37,7 @@ class TestAchievementX01BestThreeDarts : AbstractAchievementTest<AchievementX01B
             startingScore = 441,
             score = 20,
             multiplier = 3,
-            database = database
+            database = database,
         )
         insertDart(
             pt,
@@ -45,7 +45,7 @@ class TestAchievementX01BestThreeDarts : AbstractAchievementTest<AchievementX01B
             startingScore = 381,
             score = 20,
             multiplier = 3,
-            database = database
+            database = database,
         )
     }
 
@@ -99,7 +99,7 @@ class TestAchievementX01BestThreeDarts : AbstractAchievementTest<AchievementX01B
             startingScore = 381,
             score = 20,
             multiplier = 3,
-            dtCreation = Timestamp(1000)
+            dtCreation = Timestamp(1000),
         )
 
         val pt2 = setUpParticipant(p)
@@ -111,7 +111,7 @@ class TestAchievementX01BestThreeDarts : AbstractAchievementTest<AchievementX01B
             startingScore = 381,
             score = 20,
             multiplier = 3,
-            dtCreation = Timestamp(500)
+            dtCreation = Timestamp(500),
         )
 
         runConversion()

@@ -123,7 +123,7 @@ class TestDartzeeAimCalculator : AbstractTest() {
     private fun verifyAim(
         segmentStatuses: SegmentStatuses,
         screenshotName: String,
-        aggressive: Boolean = false
+        aggressive: Boolean = false,
     ) {
         val dartboard = ComputationalDartboard(400, 400)
         val pt = calculator.getPointToAimFor(dartboard, segmentStatuses, aggressive)

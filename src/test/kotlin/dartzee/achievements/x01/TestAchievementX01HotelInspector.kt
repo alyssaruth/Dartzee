@@ -88,7 +88,7 @@ class TestAchievementX01HotelInspector :
             p,
             listOf(Dart(20, 1), Dart(5, 1), Dart(2, 1)),
             participant = pt,
-            roundNumber = 1
+            roundNumber = 1,
         )
 
         insertDartsForPlayer(
@@ -96,7 +96,7 @@ class TestAchievementX01HotelInspector :
             p,
             listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)),
             participant = pt,
-            roundNumber = 2
+            roundNumber = 2,
         )
 
         runConversion()
@@ -160,14 +160,14 @@ class TestAchievementX01HotelInspector :
 
         methods.shouldContainExactlyInAnyOrder(
             getSortedDartStr(validOne),
-            getSortedDartStr(validTwo)
+            getSortedDartStr(validTwo),
         )
     }
 
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         insertStandardBurltonConstant(p, g, database)
     }
@@ -175,7 +175,7 @@ class TestAchievementX01HotelInspector :
     private fun insertStandardBurltonConstant(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database = mainDatabase
+        database: Database = mainDatabase,
     ) {
         insertDartsForPlayer(g, p, listOf(Dart(20, 1), Dart(5, 1), Dart(1, 1)), database = database)
     }
@@ -187,7 +187,7 @@ class TestAchievementX01HotelInspector :
         startingScore: Int = 501,
         database: Database = mainDatabase,
         participant: ParticipantEntity? = null,
-        roundNumber: Int = 1
+        roundNumber: Int = 1,
     ) {
         val pt =
             participant
@@ -202,7 +202,7 @@ class TestAchievementX01HotelInspector :
                 ordinal = ix + 1,
                 startingScore = currentScore,
                 roundNumber = roundNumber,
-                database = database
+                database = database,
             )
             currentScore -= drt.getTotal()
         }

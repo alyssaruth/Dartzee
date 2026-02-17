@@ -32,7 +32,7 @@ class TestAchievementGolfOneHitWonder : AbstractAchievementTest<AchievementGolfO
     override fun setUpAchievementRowForPlayerAndGame(
         p: PlayerEntity,
         g: GameEntity,
-        database: Database
+        database: Database,
     ) {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
         val dartRounds =
@@ -41,9 +41,9 @@ class TestAchievementGolfOneHitWonder : AbstractAchievementTest<AchievementGolfO
                 makeGolfRound(2, listOf(drtOuterTwo(), drtInnerTwo())),
                 makeGolfRound(
                     3,
-                    listOf(drtOuterThree(), drtDoubleNineteen(), drtDoubleSeventeen())
+                    listOf(drtOuterThree(), drtDoubleNineteen(), drtDoubleSeventeen()),
                 ),
-                makeGolfRound(4, listOf(drtDoubleFour()))
+                makeGolfRound(4, listOf(drtDoubleFour())),
             )
 
         dartRounds.flatten().forEach { insertDart(pt, it, database = database) }
@@ -92,7 +92,7 @@ class TestAchievementGolfOneHitWonder : AbstractAchievementTest<AchievementGolfO
         val a =
             AchievementEntity.retrieveAchievement(
                 AchievementType.GOLF_ONE_HIT_WONDER,
-                player.rowId
+                player.rowId,
             )!!
         a.gameIdEarned shouldBe pt2.gameId
         a.dtAchieved shouldBe Timestamp(1000)
@@ -116,7 +116,7 @@ class TestAchievementGolfOneHitWonder : AbstractAchievementTest<AchievementGolfO
         val a =
             AchievementEntity.retrieveAchievement(
                 AchievementType.GOLF_ONE_HIT_WONDER,
-                player.rowId
+                player.rowId,
             )!!
         a.gameIdEarned shouldBe pt1.gameId
         a.dtAchieved shouldBe Timestamp(500)

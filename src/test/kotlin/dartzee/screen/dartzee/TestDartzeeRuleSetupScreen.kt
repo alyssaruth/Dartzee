@@ -61,7 +61,7 @@ class TestDartzeeRuleSetupScreen : AbstractTest() {
         val rules =
             listOf(
                 makeDartzeeRuleDto(DartzeeDartRuleOdd()),
-                makeDartzeeRuleDto(DartzeeDartRuleEven())
+                makeDartzeeRuleDto(DartzeeDartRuleEven()),
             )
 
         val scrn = makeDartzeeRuleSetupScreen(players, true)
@@ -77,6 +77,6 @@ class TestDartzeeRuleSetupScreen : AbstractTest() {
     private fun makeDartzeeRuleSetupScreen(
         players: List<PlayerEntity> = listOf(insertPlayer(), insertPlayer()),
         pairMode: Boolean = false,
-        match: DartsMatchEntity? = null
+        match: DartsMatchEntity? = null,
     ) = DartzeeRuleSetupScreen(match, players, pairMode)
 }

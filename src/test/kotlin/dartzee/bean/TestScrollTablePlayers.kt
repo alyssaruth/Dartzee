@@ -55,7 +55,7 @@ class TestScrollTablePlayers : AbstractTest() {
         val players =
             listOf(
                 insertPlayer(name = "Bob", strategy = ""),
-                insertPlayer(name = "Robot", strategy = "foo")
+                insertPlayer(name = "Robot", strategy = "foo"),
             )
         table.initPlayerTableModel(players)
 
@@ -69,7 +69,7 @@ class TestScrollTablePlayers : AbstractTest() {
         val players =
             listOf(
                 insertPlayer(name = "Bob", strategy = ""),
-                insertPlayer(name = "Robot", strategy = "foo")
+                insertPlayer(name = "Robot", strategy = "foo"),
             )
         table.initPlayerTableModel(players)
 

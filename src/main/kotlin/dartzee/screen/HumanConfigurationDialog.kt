@@ -8,7 +8,7 @@ import javax.swing.JPanel
 
 class HumanConfigurationDialog(
     saveCallback: (player: PlayerEntity) -> Unit,
-    player: PlayerEntity = PlayerEntity.factoryCreate()
+    player: PlayerEntity = PlayerEntity.factoryCreate(),
 ) : AbstractPlayerConfigurationDialog(saveCallback, player) {
     private val panel = JPanel()
 

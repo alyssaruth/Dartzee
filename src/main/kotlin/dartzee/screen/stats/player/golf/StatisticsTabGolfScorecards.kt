@@ -99,7 +99,7 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
     private fun addMode(
         modeDesc: String,
         mode: GolfMode,
-        model: DefaultComboBoxModel<ComboBoxItem<GolfMode>>
+        model: DefaultComboBoxModel<ComboBoxItem<GolfMode>>,
     ) {
         val validGames = filteredGames.filter { !it.teamGame && it.getRoundScore(mode) > -1 }
         if (validGames.isEmpty()) {

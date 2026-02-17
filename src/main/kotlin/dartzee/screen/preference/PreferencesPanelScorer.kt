@@ -42,7 +42,7 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener {
                 TitledBorder.LEADING,
                 TitledBorder.TOP,
                 null,
-                null
+                null,
             )
         panelX01Colours.preferredSize = Dimension(600, 160)
         panelX01Colours.layout = MigLayout("al center center, wrap, gapy 20")

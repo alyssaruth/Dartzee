@@ -16,7 +16,7 @@ import java.sql.Timestamp
 class DatabaseMerger(
     private val localDatabase: Database,
     private val remoteDatabase: Database,
-    private val remoteName: String
+    private val remoteName: String,
 ) {
     fun performMerge(): Database {
         SyncProgressDialog.progressToStage(SyncStage.MERGE_LOCAL_CHANGES)
@@ -51,7 +51,7 @@ class DatabaseMerger(
             CODE_MERGING_ENTITY,
             "Merging ${rows.size} rows from ${localDao.getTableName()}",
             KEY_TABLE_NAME to localDao.getTableName(),
-            KEY_ROW_COUNT to rows.size
+            KEY_ROW_COUNT to rows.size,
         )
 
         rows.forEach { it.mergeIntoDatabase(remoteDatabase) }

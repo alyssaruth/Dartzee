@@ -36,7 +36,7 @@ class SanityCheckPlayerIdMismatch : ISanityCheck {
             return listOf(
                 SanityCheckResultSimpleTableModel(
                     tm,
-                    "Darts where PlayerId doesn't match the Participant row"
+                    "Darts where PlayerId doesn't match the Participant row",
                 )
             )
         }

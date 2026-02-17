@@ -32,7 +32,7 @@ class TestReportingResultsScreen : AbstractTest() {
             insertGame(
                 localId = 1,
                 gameType = GameType.X01,
-                gameParams = X01Config(501, FinishType.Doubles).toJson()
+                gameParams = X01Config(501, FinishType.Doubles).toJson(),
             )
         insertPlayerForGame("Bob", gX01.rowId)
 
@@ -54,7 +54,7 @@ class TestReportingResultsScreen : AbstractTest() {
             insertGame(
                 localId = 1,
                 gameType = GameType.X01,
-                gameParams = X01Config(501, FinishType.Doubles).toJson()
+                gameParams = X01Config(501, FinishType.Doubles).toJson(),
             )
         insertPlayerForGame("Bob", gX01.rowId)
 

@@ -9,7 +9,7 @@ object DartzeeRandomiser {
         val dart1Rule: AbstractDartzeeDartRule,
         val dart2Rule: AbstractDartzeeDartRule?,
         val dart3Rule: AbstractDartzeeDartRule?,
-        val inOrder: Boolean
+        val inOrder: Boolean,
     )
 
     fun generateRandomRule(): DartzeeRuleDto {
@@ -32,7 +32,7 @@ object DartzeeRandomiser {
             totalRule,
             dartRule?.inOrder ?: false,
             allowMisses,
-            null
+            null,
         )
     }
 

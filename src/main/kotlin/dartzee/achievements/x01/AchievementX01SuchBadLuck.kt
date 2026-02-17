@@ -68,7 +68,7 @@ class AchievementX01SuchBadLuck : AbstractAchievement() {
                 database,
                 achievementType,
                 achievementCounterFn = { rs.getInt("GameTotal") },
-                oneRowPerPlayer = true
+                oneRowPerPlayer = true,
             )
         }
     }

@@ -146,7 +146,7 @@ class TestGameEntity : AbstractEntityTest<GameEntity>() {
             insertGame(
                     dartsMatchId = matchId,
                     matchOrdinal = 2,
-                    dtCreation = Timestamp(millis - 10)
+                    dtCreation = Timestamp(millis - 10),
                 )
                 .rowId
 

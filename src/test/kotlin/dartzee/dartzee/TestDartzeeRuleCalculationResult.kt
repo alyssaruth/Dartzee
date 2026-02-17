@@ -15,27 +15,27 @@ class TestDartzeeRuleCalculationResult : AbstractTest() {
     fun `Should calculate the correct percentage based on the passed in probabilities`() {
         makeDartzeeRuleCalculationResult(
                 validCombinationProbability = 20.0,
-                allCombinationsProbability = 50.0
+                allCombinationsProbability = 50.0,
             )
             .percentage shouldBe 40.0
         makeDartzeeRuleCalculationResult(
                 validCombinationProbability = 0.0,
-                allCombinationsProbability = 1.0
+                allCombinationsProbability = 1.0,
             )
             .percentage shouldBe 0.0
         makeDartzeeRuleCalculationResult(
                 validCombinationProbability = 0.9,
-                allCombinationsProbability = 1.0
+                allCombinationsProbability = 1.0,
             )
             .percentage shouldBe 90.0
         makeDartzeeRuleCalculationResult(
                 validCombinationProbability = 0.985,
-                allCombinationsProbability = 1.0
+                allCombinationsProbability = 1.0,
             )
             .percentage shouldBe 98.5
         makeDartzeeRuleCalculationResult(
                 validCombinationProbability = 27.0,
-                allCombinationsProbability = 27.0
+                allCombinationsProbability = 27.0,
             )
             .percentage shouldBe 100.0
     }
@@ -46,7 +46,7 @@ class TestDartzeeRuleCalculationResult : AbstractTest() {
             makeDartzeeRuleCalculationResult(
                 validCombinations = 256,
                 validCombinationProbability = 20.0,
-                allCombinationsProbability = 50.0
+                allCombinationsProbability = 50.0,
             )
         result.getCombinationsDesc() shouldBe "256 combinations (success%: 40.0%)"
     }
@@ -77,7 +77,7 @@ class TestDartzeeRuleCalculationResult : AbstractTest() {
                 10,
                 100,
                 5.7,
-                100.0
+                100.0,
             )
 
         val dbStr = result.toDbString()
@@ -91,7 +91,7 @@ class TestDartzeeRuleCalculationResult : AbstractTest() {
         newResult.validSegments.shouldContainExactlyInAnyOrder(
             doubleNineteen,
             singleTwenty,
-            outerBull
+            outerBull,
         )
     }
 
@@ -99,6 +99,6 @@ class TestDartzeeRuleCalculationResult : AbstractTest() {
         makeDartzeeRuleCalculationResult(
             validCombinations = validCombinations,
             validCombinationProbability = percentage,
-            allCombinationsProbability = 100.0
+            allCombinationsProbability = 100.0,
         )
 }

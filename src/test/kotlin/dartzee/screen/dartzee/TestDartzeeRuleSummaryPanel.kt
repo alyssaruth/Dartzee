@@ -39,7 +39,7 @@ class TestDartzeeRuleSummaryPanel : AbstractTest() {
             listOf(
                 makeDart(19, 1, SegmentType.OUTER_SINGLE),
                 makeDart(7, 1, SegmentType.DOUBLE),
-                makeDart(2, 1, SegmentType.INNER_SINGLE)
+                makeDart(2, 1, SegmentType.INNER_SINGLE),
             )
         summaryPanel.update(results, darts, 103, 2)
 

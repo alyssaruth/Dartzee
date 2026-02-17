@@ -42,7 +42,7 @@ val twoBlackOneWhite =
         calculationResult =
             makeDartzeeRuleCalculationResult(
                 getAllNonMissSegments().filter { it.getMultiplier() == 1 && it.score != 25 }
-            )
+            ),
     )
 
 val scoreEighteens =
@@ -51,8 +51,8 @@ val scoreEighteens =
         calculationResult =
             makeDartzeeRuleCalculationResult(
                 getAllNonMissSegments().filter { it.score == 18 },
-                getAllNonMissSegments()
-            )
+                getAllNonMissSegments(),
+            ),
     )
 
 val innerOuterInner =
@@ -61,13 +61,13 @@ val innerOuterInner =
         DartzeeDartRuleOuter(),
         DartzeeDartRuleInner(),
         inOrder = true,
-        calculationResult = makeDartzeeRuleCalculationResult(getInnerSegments())
+        calculationResult = makeDartzeeRuleCalculationResult(getInnerSegments()),
     )
 
 val totalIsFifty =
     makeDartzeeRuleDto(
         aggregateRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(50),
-        calculationResult = makeDartzeeRuleCalculationResult(getAllNonMissSegments())
+        calculationResult = makeDartzeeRuleCalculationResult(getAllNonMissSegments()),
     )
 
 val allTwenties =
@@ -77,7 +77,7 @@ val allTwenties =
         makeScoreRule(20),
         inOrder = true,
         calculationResult =
-            makeDartzeeRuleCalculationResult(getAllNonMissSegments().filter { it.score == 20 })
+            makeDartzeeRuleCalculationResult(getAllNonMissSegments().filter { it.score == 20 }),
     )
 
 val testRules = listOf(twoBlackOneWhite, innerOuterInner, scoreEighteens, totalIsFifty)
@@ -90,7 +90,7 @@ fun makeDartzeeRuleDto(
     inOrder: Boolean = false,
     allowMisses: Boolean = false,
     calculationResult: DartzeeRuleCalculationResult = makeDartzeeRuleCalculationResult(),
-    ruleName: String? = null
+    ruleName: String? = null,
 ): DartzeeRuleDto {
     val rule =
         DartzeeRuleDto(
@@ -100,7 +100,7 @@ fun makeDartzeeRuleDto(
             aggregateRule,
             inOrder,
             allowMisses,
-            ruleName
+            ruleName,
         )
     rule.calculationResult = calculationResult
     return rule
@@ -112,7 +112,7 @@ fun makeDartzeeRuleCalculationResult(
     validCombinations: Int = 10,
     allCombinations: Int = 50,
     validCombinationProbability: Double = 1.0,
-    allCombinationsProbability: Double = 6.0
+    allCombinationsProbability: Double = 6.0,
 ) =
     DartzeeRuleCalculationResult(
         scoringSegments,
@@ -120,7 +120,7 @@ fun makeDartzeeRuleCalculationResult(
         validCombinations,
         allCombinations,
         validCombinationProbability,
-        allCombinationsProbability
+        allCombinationsProbability,
     )
 
 fun makeDartzeeRuleCalculationResult(percentage: Int) =
@@ -130,7 +130,7 @@ fun makeDartzeeRuleCalculationResult(percentage: Int) =
         10,
         50,
         percentage.toDouble(),
-        100.toDouble()
+        100.toDouble(),
     )
 
 fun makeScoreRule(score: Int) = DartzeeDartRuleScore().also { it.score = score }
@@ -139,7 +139,7 @@ fun makeColourRule(
     red: Boolean = false,
     green: Boolean = false,
     black: Boolean = false,
-    white: Boolean = false
+    white: Boolean = false,
 ): DartzeeDartRuleColour {
     val rule = DartzeeDartRuleColour()
     rule.black = black
@@ -174,7 +174,7 @@ fun makeRoundResultEntities(
 fun makeDartzeePlayerStateForName(
     name: String = "Bob",
     completedRounds: List<List<Dart>> = emptyList(),
-    roundResults: List<DartzeeRoundResult> = emptyList()
+    roundResults: List<DartzeeRoundResult> = emptyList(),
 ): DartzeePlayerState {
     val p = insertPlayer(name = name)
     val pt = insertParticipant(playerId = p.rowId)
@@ -184,7 +184,7 @@ fun makeDartzeePlayerStateForName(
 fun makeDartzeePlayerState(
     participant: ParticipantEntity = insertParticipant(),
     completedRounds: List<List<Dart>> = emptyList(),
-    roundResults: List<DartzeeRoundResult> = emptyList()
+    roundResults: List<DartzeeRoundResult> = emptyList(),
 ): DartzeePlayerState {
     val resultEntities = makeRoundResultEntities(*roundResults.toTypedArray())
     return DartzeePlayerState(
@@ -192,13 +192,13 @@ fun makeDartzeePlayerState(
         completedRounds.toMutableList(),
         mutableListOf(),
         false,
-        resultEntities.toMutableList()
+        resultEntities.toMutableList(),
     )
 }
 
 fun makeSegmentStatuses(
     scoringSegments: List<DartboardSegment> = getAllPossibleSegments(),
-    validSegments: List<DartboardSegment> = scoringSegments
+    validSegments: List<DartboardSegment> = scoringSegments,
 ) = SegmentStatuses(scoringSegments, validSegments)
 
 fun PresentationDartboard.markPoints(points: List<Point>) = markPoints(toBufferedImage(), points)

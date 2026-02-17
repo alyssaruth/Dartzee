@@ -20,7 +20,7 @@ import net.miginfocom.swing.MigLayout
 class AchievementOverlay(
     private val parent: AbstractDartsScorer<*>,
     achievement: AbstractAchievement,
-    playerName: String?
+    playerName: String?,
 ) : JPanel(), ActionListener, IMouseListener {
     private val btnClose = JButton("X")
     private val fillColor = achievement.getColor(false).brighter()

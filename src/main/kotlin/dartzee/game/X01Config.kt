@@ -7,7 +7,7 @@ val X01_PARTY_CONFIG = X01Config(301, FinishType.Any)
 
 enum class FinishType {
     Any,
-    Doubles
+    Doubles,
 }
 
 data class X01Config(val target: Int, val finishType: FinishType) {

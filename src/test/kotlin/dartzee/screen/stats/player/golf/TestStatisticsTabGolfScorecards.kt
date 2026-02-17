@@ -58,7 +58,7 @@ class TestStatisticsTabGolfScorecards : AbstractTest() {
             .shouldContainExactly(
                 ComboBoxItem(GolfMode.FRONT_9, "Front 9"),
                 ComboBoxItem(GolfMode.BACK_9, "Back 9"),
-                ComboBoxItem(GolfMode.FULL_18, "Full 18")
+                ComboBoxItem(GolfMode.FULL_18, "Full 18"),
             )
     }
 
@@ -108,7 +108,7 @@ class TestStatisticsTabGolfScorecards : AbstractTest() {
                 listOf<Any>(1L, 22),
                 listOf<Any>(2L, 29),
                 listOf<Any>(3L, 31),
-                listOf<Any>(4L, 28)
+                listOf<Any>(4L, 28),
             )
         tab.scorecardShouldMatch(0, GolfMode.FRONT_9, gameOne)
 
@@ -160,7 +160,7 @@ class TestStatisticsTabGolfScorecards : AbstractTest() {
         fudgeFactor: Int,
         golfMode: GolfMode,
         game: GameWrapper,
-        testId: String = "scorecardMine"
+        testId: String = "scorecardMine",
     ) {
         val displayed = displayedScorecard(testId)
         val expected =

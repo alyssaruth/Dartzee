@@ -35,13 +35,13 @@ val inOrderGameDarts =
         Dart(17, 1),
         Dart(18, 2),
         Dart(19, 1),
-        Dart(20, 3)
+        Dart(20, 3),
     )
 
 val GAME_WRAPPER_RTC_IN_ORDER =
     makeGameWrapper(
             gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson(),
-            finalScore = inOrderGameDarts.size
+            finalScore = inOrderGameDarts.size,
         )
         .also { inOrderGameDarts.forEach(it::addDart) }
 
@@ -81,13 +81,13 @@ val inOrderGameDarts2 =
         Dart(18, 1),
         Dart(19, 1),
         Dart(20, 0),
-        Dart(20, 2)
+        Dart(20, 2),
     )
 
 val GAME_WRAPPER_RTC_IN_ORDER_2 =
     makeGameWrapper(
             gameParams = RoundTheClockConfig(ClockType.Standard, true).toJson(),
-            finalScore = inOrderGameDarts2.size
+            finalScore = inOrderGameDarts2.size,
         )
         .also { inOrderGameDarts2.forEach(it::addDart) }
 
@@ -116,12 +116,12 @@ val outOfOrderGameDarts =
         Dart(17, 1),
         Dart(2, 1),
         Dart(15, 1),
-        Dart(19, 1)
+        Dart(19, 1),
     )
 
 val GAME_WRAPPER_RTC_OUT_OF_ORDER =
     makeGameWrapper(
             gameParams = RoundTheClockConfig(ClockType.Standard, false).toJson(),
-            finalScore = 23
+            finalScore = 23,
         )
         .also { outOfOrderGameDarts.forEach(it::addDart) }

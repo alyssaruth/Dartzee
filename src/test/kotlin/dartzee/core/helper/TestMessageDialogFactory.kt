@@ -32,7 +32,7 @@ class TestMessageDialogFactory : IMessageDialogFactory {
         title: String,
         message: String,
         options: Array<K>?,
-        defaultOption: K?
+        defaultOption: K?,
     ): K? {
         inputsShown.add(title)
         inputOptionsPresented = options
@@ -41,7 +41,8 @@ class TestMessageDialogFactory : IMessageDialogFactory {
         selection ?: return null
 
         if (options == null || options.contains(inputSelection)) {
-            @Suppress("UNCHECKED_CAST") return inputSelection as K
+            @Suppress("UNCHECKED_CAST")
+            return inputSelection as K
         }
 
         throw Exception(

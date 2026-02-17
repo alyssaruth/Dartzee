@@ -35,7 +35,7 @@ class AchievementX01StylishFinish : AbstractMultiRowAchievement() {
         val tmp1 =
             database.createTempTable(
                 "MultiDartFinishes",
-                "PlayerId VARCHAR(36), GameId VARCHAR(36), ParticipantId VARCHAR(36), RoundNumber INT, DtAchieved TIMESTAMP"
+                "PlayerId VARCHAR(36), GameId VARCHAR(36), ParticipantId VARCHAR(36), RoundNumber INT, DtAchieved TIMESTAMP",
             ) ?: return
 
         database.executeUpdate(
@@ -58,7 +58,7 @@ class AchievementX01StylishFinish : AbstractMultiRowAchievement() {
         val drtTmp =
             database.createTempTable(
                 "RelevantDarts",
-                "StartingScore INT, Score INT, Multiplier INT, ParticipantId VARCHAR(36), RoundNumber INT, Ordinal INT"
+                "StartingScore INT, Score INT, Multiplier INT, ParticipantId VARCHAR(36), RoundNumber INT, Ordinal INT",
             ) ?: return
 
         database.executeUpdate(
@@ -101,7 +101,7 @@ class AchievementX01StylishFinish : AbstractMultiRowAchievement() {
                     database,
                     achievementType,
                     achievementCounterFn = { rs.getInt("StartingScore") },
-                    achievementDetailFn = { extractMethodStr(rs) }
+                    achievementDetailFn = { extractMethodStr(rs) },
                 )
             }
     }

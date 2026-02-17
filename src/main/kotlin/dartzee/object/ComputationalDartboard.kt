@@ -19,7 +19,7 @@ class ComputationalDartboard(private val width: Int, private val height: Int) : 
             translatePoint(
                 computeCenter(),
                 computeRadius() * UPPER_BOUND_OUTSIDE_BOARD_RATIO,
-                180.0
+                180.0,
             )
         return toComputedPoint(rawPoint)
     }

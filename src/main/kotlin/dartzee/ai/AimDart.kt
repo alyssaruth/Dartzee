@@ -35,7 +35,7 @@ interface IDart {
 data class AimDart(
     override val score: Int,
     override val multiplier: Int,
-    val segment: SegmentType? = null
+    val segment: SegmentType? = null,
 ) : IDart {
     fun getSegmentType() =
         segment

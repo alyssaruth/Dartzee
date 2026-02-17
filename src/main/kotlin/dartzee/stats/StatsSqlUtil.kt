@@ -61,7 +61,7 @@ fun retrieveGameData(playerId: String, gameType: GameType): Map<Long, GameWrappe
                             dtStart,
                             dtFinish,
                             numberOfDarts,
-                            teamId.isNotEmpty()
+                            teamId.isNotEmpty(),
                         )
                     }
 
@@ -85,7 +85,7 @@ private fun buildParticipantTable(playerId: String, gameType: GameType): String?
     val tmp =
         mainDatabase.createTempTable(
             "ParticipantsForStats",
-            "LocalId INT, GameParams VARCHAR(255), DtCreation TIMESTAMP, DtFinish TIMESTAMP, PlayerId VARCHAR(36), ParticipantId VARCHAR(36), FinalScore INT, TeamId VARCHAR(36)"
+            "LocalId INT, GameParams VARCHAR(255), DtCreation TIMESTAMP, DtFinish TIMESTAMP, PlayerId VARCHAR(36), ParticipantId VARCHAR(36), FinalScore INT, TeamId VARCHAR(36)",
         )
     tmp ?: return null
 

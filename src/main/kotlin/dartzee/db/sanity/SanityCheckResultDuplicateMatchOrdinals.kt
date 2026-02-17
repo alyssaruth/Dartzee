@@ -27,7 +27,7 @@ class SanityCheckResultDuplicateMatchOrdinals(entities: List<AbstractEntity<*>>)
         val ans =
             DialogUtil.showQuestionOLD(
                 "This will reset the ordinal for all games in ${matchIds.size} matches. Proceed?",
-                false
+                false,
             )
         if (ans == JOptionPane.NO_OPTION) {
             return

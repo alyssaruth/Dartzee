@@ -53,7 +53,7 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
         value: Any?,
         isSelected: Boolean,
         row: Int,
-        column: Int
+        column: Int,
     ): Component {
         when (value) {
             null -> editButton.clear()
@@ -79,7 +79,7 @@ class ButtonColumn(private val table: ScrollTable, private val action: Action, c
         isSelected: Boolean,
         hasFocus: Boolean,
         row: Int,
-        column: Int
+        column: Int,
     ): Component {
         if (isSelected) {
             renderButton.foreground = table.selectionForeground

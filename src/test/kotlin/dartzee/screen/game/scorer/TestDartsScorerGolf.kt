@@ -62,8 +62,8 @@ class TestDartsScorerGolf : AbstractTest() {
                 2,
                 listOf(
                     Dart(2, 0, segmentType = SegmentType.MISS),
-                    Dart(2, 1, segmentType = SegmentType.OUTER_SINGLE)
-                )
+                    Dart(2, 1, segmentType = SegmentType.OUTER_SINGLE),
+                ),
             )
         val roundThree =
             makeGolfRound(
@@ -71,14 +71,14 @@ class TestDartsScorerGolf : AbstractTest() {
                 listOf(
                     Dart(3, 0, segmentType = SegmentType.MISS),
                     Dart(3, 0, segmentType = SegmentType.MISS),
-                    Dart(3, 0, segmentType = SegmentType.MISS)
-                )
+                    Dart(3, 0, segmentType = SegmentType.MISS),
+                ),
             )
 
         val state =
             makeGolfPlayerState(
                 participant = pt,
-                completedRounds = listOf(roundOne, roundTwo, roundThree)
+                completedRounds = listOf(roundOne, roundTwo, roundThree),
             )
         scorer.stateChanged(state)
 
@@ -94,8 +94,8 @@ class TestDartsScorerGolf : AbstractTest() {
                 2,
                 listOf(
                     Dart(2, 0, segmentType = SegmentType.MISS),
-                    Dart(2, 1, segmentType = SegmentType.OUTER_SINGLE)
-                )
+                    Dart(2, 1, segmentType = SegmentType.OUTER_SINGLE),
+                ),
             )
         val roundThree =
             makeGolfRound(
@@ -103,8 +103,8 @@ class TestDartsScorerGolf : AbstractTest() {
                 listOf(
                     Dart(3, 0, segmentType = SegmentType.MISS),
                     Dart(3, 0, segmentType = SegmentType.MISS),
-                    Dart(3, 0, segmentType = SegmentType.MISS)
-                )
+                    Dart(3, 0, segmentType = SegmentType.MISS),
+                ),
             )
 
         val state = makeGolfPlayerState(completedRounds = listOf(roundOne, roundTwo, roundThree))
@@ -116,7 +116,7 @@ class TestDartsScorerGolf : AbstractTest() {
         rows.shouldContainExactlyInAnyOrder(
             listOf(1) + roundOne + listOf(null, null) + 2,
             listOf(2) + roundTwo + listOf(null) + 4,
-            listOf(3) + roundThree + 5
+            listOf(3) + roundThree + 5,
         )
     }
 
@@ -133,7 +133,7 @@ class TestDartsScorerGolf : AbstractTest() {
         val rows = scorer.tableScores.getRows()
         rows.shouldContainExactlyInAnyOrder(
             listOf(1) + roundOne + listOf(null, null) + 2,
-            listOf(2) + Dart(2, 0) + listOf(null, null, null)
+            listOf(2) + Dart(2, 0) + listOf(null, null, null),
         )
     }
 

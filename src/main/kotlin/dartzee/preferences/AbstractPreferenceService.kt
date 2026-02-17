@@ -53,7 +53,7 @@ abstract class AbstractPreferenceService {
             InjectedThings.logger.error(
                 CODE_PARSE_ERROR,
                 "Failed to reconstruct colour from string: $this",
-                t
+                t,
             )
             Color.BLACK
         }

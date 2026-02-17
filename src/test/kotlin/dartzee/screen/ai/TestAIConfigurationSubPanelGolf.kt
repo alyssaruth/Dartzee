@@ -20,13 +20,13 @@ class TestAIConfigurationSubPanelGolf : AbstractTest() {
             mapOf(
                 1 to SegmentType.TREBLE,
                 2 to SegmentType.INNER_SINGLE,
-                3 to SegmentType.OUTER_SINGLE
+                3 to SegmentType.OUTER_SINGLE,
             )
         val hmDartNoToStopThreshold = mapOf(1 to 2, 2 to 4)
         val model =
             makeDartsModel(
                 hmDartNoToSegmentType = hmDartNoToSegmentType,
-                hmDartNoToStopThreshold = hmDartNoToStopThreshold
+                hmDartNoToStopThreshold = hmDartNoToStopThreshold,
             )
 
         val panel = AIConfigurationSubPanelGolf()
@@ -76,7 +76,7 @@ class TestAIConfigurationSubPanelGolf : AbstractTest() {
 
     private fun AIConfigurationSubPanelGolf.selectSegmentType(
         dartNo: Int,
-        segmentType: SegmentType
+        segmentType: SegmentType,
     ) {
         val panel = getPanelForDartNo(dartNo)
         val comboBox = panel.getChild<JComboBox<ComboBoxItem<SegmentType>>>()

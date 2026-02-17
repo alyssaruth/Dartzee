@@ -33,7 +33,7 @@ class GameParamFilterPanelX01 : GameParamFilterPanel() {
     private fun constructGameParams() =
         X01Config(
             spinner.value as Int,
-            if (cbFinishOnDouble.isSelected) FinishType.Doubles else FinishType.Any
+            if (cbFinishOnDouble.isSelected) FinishType.Doubles else FinishType.Any,
         )
 
     override fun getFilterDesc() = "games of ${constructGameParams().description()}"

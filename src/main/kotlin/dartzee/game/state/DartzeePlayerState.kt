@@ -12,7 +12,7 @@ data class DartzeePlayerState(
     override val completedRounds: MutableList<List<Dart>> = mutableListOf(),
     override val currentRound: MutableList<Dart> = mutableListOf(),
     override var isActive: Boolean = false,
-    val roundResults: MutableList<DartzeeRoundResultEntity> = mutableListOf()
+    val roundResults: MutableList<DartzeeRoundResultEntity> = mutableListOf(),
 ) : AbstractPlayerState<DartzeePlayerState>() {
     fun saveRoundResult(result: DartzeeRoundResult) {
         val pt = currentIndividual()
@@ -23,7 +23,7 @@ data class DartzeePlayerState(
                 AchievementType.DARTZEE_HALVED,
                 pt.playerId,
                 pt.gameId,
-                -result.score
+                -result.score,
             )
         }
 

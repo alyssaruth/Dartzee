@@ -10,8 +10,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
-          distribution: zulu
-          java-version: 11.0.18
+          distribution: temurin
+          java-version: 17.0.15
           cache: 'gradle'
       - name: Verify tests
         run: |
@@ -30,8 +30,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
-          distribution: zulu
-          java-version: 11.0.18
+          distribution: temurin
+          java-version: 17.0.15
           cache: 'gradle'
       - name: Build & Unit Test
         run: |
@@ -75,8 +75,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
-          distribution: zulu
-          java-version: 11.0.18
+          distribution: temurin
+          java-version: 17.0.15
           cache: 'gradle'
       - name: Integration & E2E
         env:
@@ -95,8 +95,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
-          distribution: zulu
-          java-version: 11.0.18
+          distribution: temurin
+          java-version: 17.0.15
       - name: Build JAR
         run: ./gradlew jar --info
       - name: Export JAR

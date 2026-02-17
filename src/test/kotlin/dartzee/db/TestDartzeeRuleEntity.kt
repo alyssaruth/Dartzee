@@ -139,25 +139,25 @@ class TestDartzeeRuleEntity : AbstractEntityTest<DartzeeRuleEntity>() {
             insertDartzeeRule(
                 entityName = EntityName.DartzeeTemplate,
                 entityId = templateA.rowId,
-                ordinal = 3
+                ordinal = 3,
             )
         val ruleA1 =
             insertDartzeeRule(
                 entityName = EntityName.DartzeeTemplate,
                 entityId = templateA.rowId,
-                ordinal = 1
+                ordinal = 1,
             )
         val ruleA2 =
             insertDartzeeRule(
                 entityName = EntityName.DartzeeTemplate,
                 entityId = templateA.rowId,
-                ordinal = 2
+                ordinal = 2,
             )
 
         insertDartzeeRule(
             entityName = EntityName.DartzeeTemplate,
             entityId = templateB.rowId,
-            ordinal = 1
+            ordinal = 1,
         )
         insertDartzeeRule(entityName = EntityName.Game, entityId = templateA.rowId, ordinal = 4)
 
@@ -174,24 +174,24 @@ class TestDartzeeRuleEntity : AbstractEntityTest<DartzeeRuleEntity>() {
         insertDartzeeRule(
             entityName = EntityName.DartzeeTemplate,
             entityId = templateA.rowId,
-            ordinal = 3
+            ordinal = 3,
         )
         insertDartzeeRule(
             entityName = EntityName.DartzeeTemplate,
             entityId = templateA.rowId,
-            ordinal = 1
+            ordinal = 1,
         )
         insertDartzeeRule(
             entityName = EntityName.DartzeeTemplate,
             entityId = templateA.rowId,
-            ordinal = 2
+            ordinal = 2,
         )
 
         val ruleB1 =
             insertDartzeeRule(
                 entityName = EntityName.DartzeeTemplate,
                 entityId = templateB.rowId,
-                ordinal = 1
+                ordinal = 1,
             )
         val gameRule =
             insertDartzeeRule(entityName = EntityName.Game, entityId = templateA.rowId, ordinal = 4)
@@ -218,7 +218,7 @@ class TestDartzeeRuleEntity : AbstractEntityTest<DartzeeRuleEntity>() {
             insertDartzeeRule(
                 entityName = EntityName.DartzeeTemplate,
                 entityId = insertDartzeeTemplate().rowId,
-                ordinal = 1
+                ordinal = 1,
             )
 
         DartzeeRuleEntity().deleteForGame(gameA.rowId)
@@ -246,7 +246,7 @@ class TestDartzeeRuleEntity : AbstractEntityTest<DartzeeRuleEntity>() {
         insertDartzeeRule(
             entityName = EntityName.DartzeeTemplate,
             entityId = gameA.rowId,
-            ordinal = 4
+            ordinal = 4,
         )
 
         val rules = DartzeeRuleEntity().retrieveForGame(gameA.rowId)

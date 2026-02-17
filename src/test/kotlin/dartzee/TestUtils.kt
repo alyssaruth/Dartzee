@@ -91,7 +91,7 @@ fun makeLogRecord(
     loggingCode: LoggingCode = LoggingCode("log"),
     message: String = "A thing happened",
     errorObject: Throwable? = null,
-    keyValuePairs: Map<String, Any?> = mapOf()
+    keyValuePairs: Map<String, Any?> = mapOf(),
 ) = LogRecord(timestamp, severity, loggingCode, message, errorObject, keyValuePairs)
 
 fun Float.shouldBeBetween(a: Double, b: Double) {
@@ -290,7 +290,7 @@ fun confirmGameDeletion(localId: Long): String {
 /** TODO - Add to swing-test */
 inline fun <reified T : Component> JTabbedPane.selectTab(
     name: String,
-    noinline filterFn: ((T) -> Boolean)? = null
+    noinline filterFn: ((T) -> Boolean)? = null,
 ) {
     runOnEventThreadBlocking { selectedComponent = getChild<T>(name, filterFn = filterFn) }
 }

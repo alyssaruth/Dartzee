@@ -139,7 +139,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState : AbstractPlayerState<Pla
             getStartOfSectionRows(),
             getRankedRowsHighestWins(),
             getRankedRowsLowestWins(),
-            getHistogramRows()
+            getHistogramRows(),
         )
 
     protected fun addRow(row: Array<Any?>) {
@@ -178,7 +178,7 @@ abstract class AbstractGameStatisticsPanel<PlayerState : AbstractPlayerState<Pla
 
     protected fun prepareRow(
         name: String,
-        fn: (uniqueParticipantName: UniqueParticipantName) -> Any?
+        fn: (uniqueParticipantName: UniqueParticipantName) -> Any?,
     ): Array<Any?> {
         val row = factoryRow(name)
 

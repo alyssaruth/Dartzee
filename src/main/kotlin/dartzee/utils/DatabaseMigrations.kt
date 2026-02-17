@@ -18,8 +18,8 @@ object DatabaseMigrations {
                     ::convertX01GameParams,
                     ::dropHmScoreToDarts,
                     { db -> runScript(db, 23, "Participant.sql") },
-                    { db -> runScript(db, 23, "Team.sql") }
-                )
+                    { db -> runScript(db, 23, "Team.sql") },
+                ),
         )
     }
 

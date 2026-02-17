@@ -68,7 +68,7 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
                 TitledBorder.LEADING,
                 TitledBorder.TOP,
                 null,
-                Color(0, 0, 0)
+                Color(0, 0, 0),
             )
         panelUpload.add(scrollPaneUploaded, BorderLayout.CENTER)
         scrollPaneUploaded.setViewportView(panelPreviouslyUploaded)

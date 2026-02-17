@@ -120,7 +120,7 @@ class DartzeeTemplateSetupScreen : EmbeddedScreen(), RowSelectionListener {
     private fun addTemplateToTable(
         template: DartzeeTemplateEntity,
         rules: List<DartzeeRuleEntity>,
-        gameCount: Int
+        gameCount: Int,
     ) {
         val dtos = rules.sortedBy { it.ordinal }.map { it.toDto() }
 
