@@ -6,7 +6,7 @@ import dartzee.screen.sync.SyncManagementScreen
 import dartzee.sync.SYNC_DIR
 import dartzee.utils.Database
 import io.kotest.matchers.file.shouldNotExist
-import io.mockk.mockk
+import io.mockk.spyk
 import io.mockk.verify
 import java.io.File
 
@@ -14,7 +14,7 @@ const val REMOTE_NAME = "Goomba"
 const val REMOTE_NAME_2 = "Koopa"
 
 fun shouldUpdateSyncScreen(testFn: () -> Unit) {
-    val menuScreen = mockk<SyncManagementScreen>(relaxed = true)
+    val menuScreen = spyk<SyncManagementScreen>()
     ScreenCache.hmClassToScreen[SyncManagementScreen::class.java] = menuScreen
 
     testFn()

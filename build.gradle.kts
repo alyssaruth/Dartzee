@@ -53,8 +53,6 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-kotlin { sourceSets.all { languageSettings { languageVersion = "2.0" } } }
-
 kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_1_8)
@@ -109,7 +107,12 @@ tasks.register("integrationAndE2E", Test::class) {
     classpath = files(test.map { it.sources.runtimeClasspath })
 }
 
-tasks { named<Test>("test") { useJUnitPlatform() } }
+tasks {
+    named<Test>("test") {
+        useJUnitPlatform()
+        kover { isEnabled = false }
+    }
+}
 
 tasks.withType<Test> {
     minHeapSize = "1024m"

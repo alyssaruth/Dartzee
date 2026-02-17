@@ -34,8 +34,8 @@ class SanityCheckX01Finishes : ISanityCheck {
         model.addColumn("GameId")
         model.addColumn("Finish")
 
-        missing.forEach { model.addRow(arrayOf("MISSING", it.playerId, it.gameId, it.finish)) }
-        extra.forEach { model.addRow(arrayOf("EXTRA", it.playerId, it.gameId, it.finish)) }
+        missing.forEach { model.addRow(arrayOf<Any>("MISSING", it.playerId, it.gameId, it.finish)) }
+        extra.forEach { model.addRow(arrayOf<Any>("EXTRA", it.playerId, it.gameId, it.finish)) }
 
         if (model.rowCount > 0) {
             return listOf(SanityCheckResultSimpleTableModel(model, "X01 Finish mismatches"))

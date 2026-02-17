@@ -35,7 +35,7 @@ jobs:
           cache: 'gradle'
       - name: Build & Unit Test
         run: |
-          xvfb-run --auto-servernum ./gradlew koverReport
+          xvfb-run --auto-servernum ./gradlew koverHtmlReport
           zip -rg unit-test-results.zip build/reports/tests/unitTest
           zip -rq coverage-html.zip build/reports/kover/html
       - name: Export test results

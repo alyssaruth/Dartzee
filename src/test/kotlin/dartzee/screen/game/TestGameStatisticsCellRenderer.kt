@@ -34,7 +34,7 @@ class TestGameStatisticsCellRenderer : AbstractTest() {
     @Test
     fun `Should colour highest wins rows correctly`() {
         val tm = prepareTableModel(6)
-        tm.addRow(arrayOf("Example", 4, 2, 3, 5, 1, 0))
+        tm.addRow(arrayOf<Any>("Example", 4, 2, 3, 5, 1, 0))
 
         val renderer = makeGameStatisticsCellRenderer(highestWins = listOf("Example"))
 
@@ -49,7 +49,7 @@ class TestGameStatisticsCellRenderer : AbstractTest() {
     @Test
     fun `Should colour lowest wins rows correctly`() {
         val tm = prepareTableModel(6)
-        tm.addRow(arrayOf("Example", 4, 2, 3, 5, 1, 0))
+        tm.addRow(arrayOf<Any>("Example", 4, 2, 3, 5, 1, 0))
 
         val renderer = makeGameStatisticsCellRenderer(lowestWins = listOf("Example"))
 
@@ -64,7 +64,7 @@ class TestGameStatisticsCellRenderer : AbstractTest() {
     @Test
     fun `Should colour highest wins rows correctly when there is a tie`() {
         val tm = prepareTableModel(4)
-        tm.addRow(arrayOf("Example", 4, 2, 4, 5))
+        tm.addRow(arrayOf<Any>("Example", 4, 2, 4, 5))
 
         val renderer = makeGameStatisticsCellRenderer(highestWins = listOf("Example"))
 
@@ -77,8 +77,8 @@ class TestGameStatisticsCellRenderer : AbstractTest() {
     @Test
     fun `Should set correct edge borders`() {
         val tm = prepareTableModel(2)
-        tm.addRow(arrayOf("Row 0", 3, 1))
-        tm.addRow(arrayOf("Row 1", 2, 0))
+        tm.addRow(arrayOf<Any>("Row 0", 3, 1))
+        tm.addRow(arrayOf<Any>("Row 1", 2, 0))
 
         val renderer = makeGameStatisticsCellRenderer()
         renderer.apply(tm, 0, 0).shouldHaveBorderThickness(2, 1, 0, 0)
@@ -89,9 +89,9 @@ class TestGameStatisticsCellRenderer : AbstractTest() {
     @Test
     fun `Should additionally set top borders if row is start of section`() {
         val tm = prepareTableModel(2)
-        tm.addRow(arrayOf("Row 0", 3, 1))
-        tm.addRow(arrayOf("Row 1", 2, 0))
-        tm.addRow(arrayOf("Row 2", 5, 7))
+        tm.addRow(arrayOf<Any>("Row 0", 3, 1))
+        tm.addRow(arrayOf<Any>("Row 1", 2, 0))
+        tm.addRow(arrayOf<Any>("Row 2", 5, 7))
 
         val renderer = makeGameStatisticsCellRenderer(sectionStarts = listOf("Row 1"))
         renderer.apply(tm, 1, 0).shouldHaveBorderThickness(2, 1, 2, 0)
@@ -102,9 +102,9 @@ class TestGameStatisticsCellRenderer : AbstractTest() {
     @Test
     fun `Should additionally set bottom borders for the last row`() {
         val tm = prepareTableModel(2)
-        tm.addRow(arrayOf("Row 0", 3, 1))
-        tm.addRow(arrayOf("Row 1", 2, 0))
-        tm.addRow(arrayOf("Row 2", 5, 7))
+        tm.addRow(arrayOf<Any>("Row 0", 3, 1))
+        tm.addRow(arrayOf<Any>("Row 1", 2, 0))
+        tm.addRow(arrayOf<Any>("Row 2", 5, 7))
 
         val renderer = makeGameStatisticsCellRenderer()
         renderer.apply(tm, 2, 0).shouldHaveBorderThickness(2, 1, 0, 2)
@@ -115,7 +115,7 @@ class TestGameStatisticsCellRenderer : AbstractTest() {
     @Test
     fun `Should render the title column correctly`() {
         val tm = prepareTableModel(2)
-        tm.addRow(arrayOf("Row 0", 3, 1))
+        tm.addRow(arrayOf<Any>("Row 0", 3, 1))
 
         val renderer = makeGameStatisticsCellRenderer()
 
@@ -126,10 +126,10 @@ class TestGameStatisticsCellRenderer : AbstractTest() {
     @Test
     fun `Should colour histogram rows correctly`() {
         val tm = prepareTableModel(2)
-        tm.addRow(arrayOf("Irrelevant", 7, 8))
-        tm.addRow(arrayOf("Row 1", 2, 1))
-        tm.addRow(arrayOf("Row 2", 3, 3))
-        tm.addRow(arrayOf("Ignore me", 2, 5))
+        tm.addRow(arrayOf<Any>("Irrelevant", 7, 8))
+        tm.addRow(arrayOf<Any>("Row 1", 2, 1))
+        tm.addRow(arrayOf<Any>("Row 2", 3, 3))
+        tm.addRow(arrayOf<Any>("Ignore me", 2, 5))
 
         val renderer = makeGameStatisticsCellRenderer(histogramRows = listOf("Row 1", "Row 2"))
 

@@ -89,7 +89,7 @@ class TestPartyModeE2E : AbstractE2ETest() {
         leaderboardTable
             .getRows()
             .map { it.filterIndexed { index: Int, _ -> index != 1 } }
-            .shouldContainExactly(arrayOf(1, "Alice", 1L, 12))
+            .shouldContainExactly(arrayOf<Any>(1, "Alice", 1L, 12))
 
         // Reload the game
         SwingUtilities.invokeAndWait { GameLauncher().loadAndDisplayGame(gamePanel.getGameId()) }
