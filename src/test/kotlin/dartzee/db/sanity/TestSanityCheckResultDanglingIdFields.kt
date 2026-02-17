@@ -47,7 +47,7 @@ class TestSanityCheckResultDanglingIdFields : AbstractTest() {
 
         val i = getInfoDialog()
         i.getDialogMessage() shouldBe
-                "Rows deleted successfully. You should re-run the sanity check."
+            "Rows deleted successfully. You should re-run the sanity check."
     }
 
     @Test

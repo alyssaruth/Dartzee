@@ -6,11 +6,11 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.spyk
 import io.mockk.verifySequence
-import org.junit.jupiter.api.Test
 import java.awt.Cursor
 import java.awt.event.MouseEvent
 import javax.swing.JButton
 import javax.swing.JPanel
+import org.junit.jupiter.api.Test
 
 private val mouseEventOverLink = makeMouseEvent(JButton())
 private val mouseEventNotOverLink = makeMouseEvent(JButton())

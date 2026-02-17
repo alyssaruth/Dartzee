@@ -12,12 +12,12 @@ object DatabaseMigrations {
     fun getConversionsMap(): Map<Int, List<(database: Database) -> Any>> {
         return mapOf(
             22 to
-                    listOf(
-                        ::convertX01GameParams,
-                        ::dropHmScoreToDarts,
-                        { db -> runScript(db, 23, "Participant.sql") },
-                        { db -> runScript(db, 23, "Team.sql") },
-                    ),
+                listOf(
+                    ::convertX01GameParams,
+                    ::dropHmScoreToDarts,
+                    { db -> runScript(db, 23, "Participant.sql") },
+                    { db -> runScript(db, 23, "Team.sql") },
+                )
         )
     }
 

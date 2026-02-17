@@ -57,7 +57,10 @@ class TestGameWrapperX01Utils : AbstractTest() {
         val sixty = map.getValue(60)
         sixty
             .createRows()
-            .shouldContainExactly(arrayOf<Any>("20, 20, 20", 1, 1L), arrayOf<Any>("T12, 20, 4", 1, 2L))
+            .shouldContainExactly(
+                arrayOf<Any>("20, 20, 20", 1, 1L),
+                arrayOf<Any>("T12, 20, 4", 1, 2L),
+            )
 
         // Higher threshold - test rounds are knocked out
         val shorterMap = mutableMapOf<Int, ThreeDartScoreWrapper>()

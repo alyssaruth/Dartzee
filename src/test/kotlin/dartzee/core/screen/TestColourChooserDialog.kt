@@ -5,8 +5,8 @@ import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.Color
+import org.junit.jupiter.api.Test
 
 class TestColourChooserDialog : AbstractTest() {
     @Test

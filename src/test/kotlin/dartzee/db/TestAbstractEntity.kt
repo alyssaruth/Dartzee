@@ -11,11 +11,11 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import java.sql.Timestamp
+import java.util.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.sql.Timestamp
-import java.util.*
 
 class TestAbstractEntity : AbstractTest() {
     @BeforeEach
@@ -57,7 +57,7 @@ class TestAbstractEntity : AbstractTest() {
 
         ex.sqlException.message shouldContain "truncation error"
         ex.sqlStatement shouldBe
-                "INSERT INTO TestTable VALUES ('$rowId', '$dtCreation', '$dtLastUpdate', 'thisistoolong')"
+            "INSERT INTO TestTable VALUES ('$rowId', '$dtCreation', '$dtLastUpdate', 'thisistoolong')"
         ex.genericStatement shouldBe "INSERT INTO TestTable VALUES (?, ?, ?, ?)"
     }
 
@@ -70,9 +70,9 @@ class TestAbstractEntity : AbstractTest() {
 
         ex.sqlException.message shouldContain "truncation error"
         ex.sqlStatement shouldBe
-                "UPDATE TestTable SET DtCreation='${entity.dtCreation}', DtLastUpdate='${entity.dtLastUpdate}', TestString='thisistoolong' WHERE RowId='${entity.rowId}'"
+            "UPDATE TestTable SET DtCreation='${entity.dtCreation}', DtLastUpdate='${entity.dtLastUpdate}', TestString='thisistoolong' WHERE RowId='${entity.rowId}'"
         ex.genericStatement shouldBe
-                "UPDATE TestTable SET DtCreation=?, DtLastUpdate=?, TestString=? WHERE RowId=?"
+            "UPDATE TestTable SET DtCreation=?, DtLastUpdate=?, TestString=? WHERE RowId=?"
     }
 
     @Test
@@ -83,7 +83,7 @@ class TestAbstractEntity : AbstractTest() {
 
         ex.sqlException.message shouldContain "BUTTERFINGERS"
         ex.sqlStatement shouldBe
-                "SELECT RowId, DtCreation, DtLastUpdate, TestString FROM TestTable WHERE butterfingers"
+            "SELECT RowId, DtCreation, DtLastUpdate, TestString FROM TestTable WHERE butterfingers"
     }
 
     @Test

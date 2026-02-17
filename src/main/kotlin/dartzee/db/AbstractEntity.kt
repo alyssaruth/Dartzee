@@ -202,7 +202,9 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
 
     fun countWhere(whereSql: String): Int {
         val fullWhere = if (whereSql.isNotEmpty()) "WHERE $whereSql" else ""
-        return database.executeQueryAggregate("SELECT COUNT(1) FROM ${getTableNameStr()} $fullWhere")
+        return database.executeQueryAggregate(
+            "SELECT COUNT(1) FROM ${getTableNameStr()} $fullWhere"
+        )
     }
 
     /** Merge helpers */
@@ -287,7 +289,8 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
     }
 
     private fun insertIntoDatabase(db: Database = database) {
-        val genericInsert = "INSERT INTO ${getTableNameStr()} VALUES ${getInsertBlockForStatement()}"
+        val genericInsert =
+            "INSERT INTO ${getTableNameStr()} VALUES ${getInsertBlockForStatement()}"
         var insertQuery = genericInsert
 
         val conn = db.borrowConnection()
@@ -485,7 +488,9 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
     ): String {
         val value =
             getField(columnName)
-                ?: throw Exception("Attempted to write NULL value to ${getTableNameStr()}.$columnName")
+                ?: throw Exception(
+                    "Attempted to write NULL value to ${getTableNameStr()}.$columnName"
+                )
 
         return when (getFieldType(columnName)) {
             String::class.java -> writeString(ps, ix, value as String, statementStr)
