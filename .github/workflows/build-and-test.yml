@@ -56,6 +56,9 @@ jobs:
           path: |
             /home/runner/**/*.failed.png
             /home/runner/**/*.comparison.png
+      - name: Kover XML
+        if: github.ref == 'refs/heads/main'
+        run: ./gradlew koverXmlReport
       - name: Update coverage
         id: update-coverage
         if: github.ref == 'refs/heads/main'

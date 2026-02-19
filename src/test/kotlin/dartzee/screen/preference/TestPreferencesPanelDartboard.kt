@@ -1,6 +1,5 @@
 package dartzee.screen.preference
 
-import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.toBufferedImage
 import com.github.alyssaburlton.swingtest.waitForAssertion
@@ -30,6 +29,7 @@ class TestPreferencesPanelDartboard : AbstractPreferencePanelTest<PreferencesPan
             panel.refresh(true)
             frame.add(panel, BorderLayout.CENTER)
             frame.isVisible = true
+            frame.repaint()
         }
 
         verifyDartboardCenterColour(panel, Color.RED)
@@ -40,17 +40,15 @@ class TestPreferencesPanelDartboard : AbstractPreferencePanelTest<PreferencesPan
     }
 
     private fun verifyDartboardCenterColour(panel: PreferencesPanelDartboard, color: Color) {
-        val dartboard = panel.getChild<PresentationDartboard>()
         waitForAssertion {
+            val dartboard = panel.getChild<PresentationDartboard>()
             dartboard.isShowing shouldBe true
             dartboard.width shouldBeGreaterThan 0
+
+            val center = dartboard.computeCenter()
+            val oldRgb = dartboard.toBufferedImage().getRGB(center.x, center.y)
+            oldRgb shouldBe color.rgb
         }
-
-        flushEdt()
-
-        val center = dartboard.computeCenter()
-        val oldRgb = dartboard.toBufferedImage().getRGB(center.x, center.y)
-        oldRgb shouldBe color.rgb
     }
 
     override fun factory() = PreferencesPanelDartboard()
