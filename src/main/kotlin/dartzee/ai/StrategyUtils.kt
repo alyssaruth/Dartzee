@@ -23,13 +23,17 @@ fun getComputedPointForScore(score: Int, type: SegmentType): ComputedPoint =
     AI_DARTBOARD.getPointToAimAt(DartboardSegment(type, score))
 
 /** Get the application-wide default thing to aim for, which applies to any score of 60 or less */
-fun getX01AimDart(score: Int, finishType: FinishType) =
+fun getX01AimDart(score: Int, finishType: FinishType, dartsRemaining: Int) =
     when (finishType) {
-        FinishType.Doubles -> getX01AimDartDoublesMode(score)
+        FinishType.Doubles -> getX01AimDartDoublesMode(score, dartsRemaining)
         FinishType.Any -> getX01AimDartRelaxedMode(score)
     }
 
-private fun getX01AimDartDoublesMode(score: Int): AimDart {
+private fun getX01AimDartDoublesMode(score: Int, dartsRemaining: Int): AimDart {
+    if (score == 50 && dartsRemaining <= 2) {
+        return AimDart(25, 2)
+    }
+
     // Aim for the single that puts you on double top
     if (score > 40) {
         val single = score - 40

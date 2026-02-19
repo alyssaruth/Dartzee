@@ -121,7 +121,7 @@ class TestDartsAiModel : AbstractTest() {
 
         val pt = Point(0, 0)
         val hsAngles = HashSet<Double>()
-        for (i in 0..100000) {
+        repeat(100000) {
             val (_, theta) = model.calculateRadiusAndAngle(pt)
             theta.shouldBeBetween(0.0, 360.0, 0.0)
 
@@ -169,6 +169,19 @@ class TestDartsAiModel : AbstractTest() {
     }
 
     @Test
+    fun `Should checkout a 170`() {
+        val model = beastDartsModel()
+
+        val ptOne = model.throwX01Dart(170, FinishType.Doubles, 3)
+        val ptTwo = model.throwX01Dart(110, FinishType.Doubles, 2)
+        val ptThree = model.throwX01Dart(50, FinishType.Doubles, 1)
+
+        ptOne.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
+        ptTwo.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
+        ptThree.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
+    }
+
+    @Test
     fun `Should not use checkout suggestion in relaxed mode`() {
         val model = beastDartsModel()
 
@@ -180,7 +193,7 @@ class TestDartsAiModel : AbstractTest() {
     fun `Should aim for the scoring dart when the score is over 60`() {
         val model = beastDartsModel(scoringDart = 18)
 
-        FinishType.values().forEach { finishType ->
+        FinishType.entries.forEach { finishType ->
             val pt = model.throwX01Dart(61, finishType, 1)
             pt.segment shouldBe DartboardSegment(SegmentType.TREBLE, 18)
         }
@@ -195,13 +208,24 @@ class TestDartsAiModel : AbstractTest() {
     }
 
     @Test
-    fun `Should aim to reduce down to D20 when in the 41 - 60 range`() {
+    fun `Should aim to reduce down to D20 when in the 41 - 60 range and 3 darts remaining`() {
         val model = beastDartsModel(scoringDart = 25)
 
         for (i in 41..60) {
             val pt = model.throwX01Dart(i, FinishType.Doubles, 3)
             pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, i - 40)
         }
+    }
+
+    @Test
+    fun `Should aim for bullseye when on 50 and 2 or fewer darts remaining`() {
+        val model = beastDartsModel()
+
+        val pt = model.throwX01Dart(50, FinishType.Doubles, 2)
+        val pt2 = model.throwX01Dart(50, FinishType.Doubles, 1)
+
+        pt.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
+        pt2.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
     }
 
     @Test

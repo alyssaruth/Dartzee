@@ -53,7 +53,7 @@ data class DartsAiModel(
                 throwScoringDart()
             }
         } else {
-            val defaultDrt = getX01AimDart(score, finishType)
+            val defaultDrt = getX01AimDart(score, finishType, dartsRemaining)
             val ptToAimAt = getPointForScore(defaultDrt)
             throwDartAtPoint(ptToAimAt)
         }
