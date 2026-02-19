@@ -75,16 +75,28 @@ tasks.register("runDev", JavaExec::class) {
     )
 }
 
-kover { reports { filters { excludes { classes("dartzee.screen.TestWindow") } } } }
+kover {
+    currentProject {
+        instrumentation {
+            disabledForTestTasks.add("test")
+            disabledForTestTasks.add("updateScreenshots")
+            disabledForTestTasks.add("integrationAndE2E")
+        }
+    }
+
+    reports { filters { excludes { classes("dartzee.screen.TestWindow") } } }
+}
 
 val test by testing.suites.existing(JvmTestSuite::class)
+val derviedTestClassesDirs = files(test.map { it.sources.output.classesDirs })
+val derivedTestClasspath = files(test.map { it.sources.runtimeClasspath })
 
 tasks.register("unitTest", Test::class) {
     group = "verification"
     useJUnitPlatform { excludeTags = setOf("integration", "e2e") }
 
-    testClassesDirs = files(test.map { it.sources.output.classesDirs })
-    classpath = files(test.map { it.sources.runtimeClasspath })
+    testClassesDirs = derviedTestClassesDirs
+    classpath = derivedTestClasspath
 }
 
 tasks.register("updateScreenshots", Test::class) {
@@ -92,27 +104,20 @@ tasks.register("updateScreenshots", Test::class) {
     useJUnitPlatform { includeTags = setOf("screenshot") }
 
     jvmArgs = listOf("-DupdateSnapshots=true")
-    kover { isEnabled = false }
 
-    testClassesDirs = files(test.map { it.sources.output.classesDirs })
-    classpath = files(test.map { it.sources.runtimeClasspath })
+    testClassesDirs = derviedTestClassesDirs
+    classpath = derivedTestClasspath
 }
 
 tasks.register("integrationAndE2E", Test::class) {
     group = "verification"
     useJUnitPlatform { includeTags = setOf("integration", "e2e") }
-    kover { isEnabled = false }
 
-    testClassesDirs = files(test.map { it.sources.output.classesDirs })
-    classpath = files(test.map { it.sources.runtimeClasspath })
+    testClassesDirs = derviedTestClassesDirs
+    classpath = derivedTestClasspath
 }
 
-tasks {
-    named<Test>("test") {
-        useJUnitPlatform()
-        kover { isEnabled = false }
-    }
-}
+tasks { named<Test>("test") { useJUnitPlatform() } }
 
 tasks.withType<Test> {
     minHeapSize = "1024m"
