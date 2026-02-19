@@ -17,7 +17,6 @@ import javax.swing.JOptionPane
 import javax.swing.JPanel
 import kong.unirest.Unirest
 import kong.unirest.json.JSONObject
-import kotlin.system.exitProcess
 
 /**
  * Automatically check for and download updates using the Github API
@@ -138,7 +137,7 @@ object UpdateManager {
             return
         }
 
-        exitProcess(0)
+        InjectedThings.exiter.exit(0)
     }
 
     fun prepareBatchFile() {

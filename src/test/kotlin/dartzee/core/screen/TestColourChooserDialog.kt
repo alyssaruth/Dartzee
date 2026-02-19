@@ -2,17 +2,17 @@ package dartzee.core.screen
 
 import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
-import io.mockk.spyk
-import io.mockk.verify
 import java.awt.Color
 import org.junit.jupiter.api.Test
 
 class TestColourChooserDialog : AbstractTest() {
     @Test
     fun `Should update selectedColour and dispose on Ok`() {
-        val dlg = spyk<ColourChooserDialog>()
+        val dlg = ColourChooserDialog()
+        dlg.isVisible = true
         dlg.initialColour = Color.RED
         dlg.selectedColour = Color.BLACK
 
@@ -20,12 +20,13 @@ class TestColourChooserDialog : AbstractTest() {
         dlg.clickOk()
 
         dlg.selectedColour shouldBe Color.YELLOW
-        verify { dlg.dispose() }
+        dlg.shouldNotBeVisible()
     }
 
     @Test
     fun `Should set selectedColour back to initialColour and dispose on Cancel`() {
-        val dlg = spyk<ColourChooserDialog>()
+        val dlg = ColourChooserDialog()
+        dlg.isVisible = true
         dlg.initialColour = Color.RED
         dlg.selectedColour = Color.BLACK
 
@@ -33,6 +34,6 @@ class TestColourChooserDialog : AbstractTest() {
         dlg.clickCancel()
 
         dlg.selectedColour shouldBe Color.RED
-        verify { dlg.dispose() }
+        dlg.shouldNotBeVisible()
     }
 }

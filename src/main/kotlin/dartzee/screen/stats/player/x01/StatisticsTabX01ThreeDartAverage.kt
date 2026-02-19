@@ -134,7 +134,7 @@ class StatisticsTabX01ThreeDartAverage : AbstractStatisticsTab() {
 
             // Table row - only show the raw data for the actual player, not the comparison
             if (model != null) {
-                val row = arrayOf(ordinal, avg, startValue, gameId)
+                val row = arrayOf<Any>(ordinal, avg, startValue, gameId)
                 model.addRow(row)
             }
 

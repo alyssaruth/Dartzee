@@ -11,15 +11,13 @@ import dartzee.game.X01Config
 object DatabaseMigrations {
     fun getConversionsMap(): Map<Int, List<(database: Database) -> Any>> {
         return mapOf(
-            20 to listOf { db -> runScript(db, 21, "Dart.sql") },
-            21 to listOf { db -> runScript(db, 22, "Dart.sql") },
             22 to
                 listOf(
                     ::convertX01GameParams,
                     ::dropHmScoreToDarts,
                     { db -> runScript(db, 23, "Participant.sql") },
                     { db -> runScript(db, 23, "Team.sql") },
-                ),
+                )
         )
     }
 

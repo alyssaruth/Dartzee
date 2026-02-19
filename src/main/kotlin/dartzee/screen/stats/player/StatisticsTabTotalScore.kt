@@ -294,7 +294,7 @@ class StatisticsTabTotalScore(private val graphTitle: String, outlierMax: Int) :
                 finalScore = g.getAllDarts().size
             }
 
-            val row = arrayOf(i + 1, finalScore, g.localId, !g.isFinished())
+            val row = arrayOf<Any>(i + 1, finalScore, g.localId, !g.isFinished())
             model.addRow(row)
         }
 

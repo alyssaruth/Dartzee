@@ -64,7 +64,7 @@ class StatisticsTabX01CheckoutPercent : AbstractStatisticsTab() {
             val hits = darts.count { drt -> drt.isDouble() && drt.getTotal() == checkout }
 
             val row =
-                arrayOf(
+                arrayOf<Any>(
                     checkout / 2,
                     opportunities,
                     hits,
@@ -79,7 +79,7 @@ class StatisticsTabX01CheckoutPercent : AbstractStatisticsTab() {
         table.model = model
 
         val totalsRow =
-            arrayOf(
+            arrayOf<Any>(
                 "",
                 totalOpportunities,
                 totalHits,

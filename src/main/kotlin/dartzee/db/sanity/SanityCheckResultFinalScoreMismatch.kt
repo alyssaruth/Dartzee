@@ -36,7 +36,14 @@ class SanityCheckResultFinalScoreMismatch(
             val finalScoreRaw = hmParticipantToFinalScore[pt]!!
 
             val row =
-                arrayOf(participantId, playerId, gameId, dtLastUpdate, finalScore, finalScoreRaw)
+                arrayOf<Any>(
+                    participantId,
+                    playerId,
+                    gameId,
+                    dtLastUpdate,
+                    finalScore,
+                    finalScoreRaw,
+                )
             model.addRow(row)
         }
 

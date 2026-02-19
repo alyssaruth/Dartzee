@@ -13,6 +13,8 @@ import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.Logger
 import dartzee.logging.LoggerFactory
 import dartzee.logging.LoggingConsole
+import dartzee.main.DefaultExiter
+import dartzee.main.IExiter
 import dartzee.preferences.AbstractPreferenceService
 import dartzee.preferences.DefaultPreferenceService
 import dartzee.sync.AmazonS3RemoteDatabaseStore
@@ -43,4 +45,5 @@ object InjectedThings {
     var syncManager: SyncManager = SyncManager(remoteDatabaseStore)
     var preferenceService: AbstractPreferenceService = DefaultPreferenceService()
     var partyMode = false
+    var exiter: IExiter = DefaultExiter()
 }

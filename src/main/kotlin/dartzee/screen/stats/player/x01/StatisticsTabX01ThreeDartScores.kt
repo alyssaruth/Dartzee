@@ -132,7 +132,7 @@ class StatisticsTabX01ThreeDartScores : AbstractStatisticsTab(), RowSelectionLis
 
         table.setRenderer(1, SimpleRenderer(SwingConstants.LEFT, null))
 
-        val footerRow = arrayOf("Total", wrapper.getTotalCount(), "-")
+        val footerRow = arrayOf<Any>("Total", wrapper.getTotalCount(), "-")
         table.addFooterRow(footerRow)
 
         table.sortBy(1, true)

@@ -48,7 +48,7 @@ class TestReportingUtil : AbstractTest() {
 
         val row = wrapper.getTableRow()
         row shouldBe
-            arrayOf(
+            arrayOf<Any>(
                 g1.localId,
                 "501",
                 "Bob (3), Clive (2), Alice (1)",
@@ -85,7 +85,14 @@ class TestReportingUtil : AbstractTest() {
 
         val row = wrapper.getTableRow()
         row shouldBe
-            arrayOf(g1.localId, "501", "Clive & Bob (2), Alice (1)", g1.dtCreation, g1.dtFinish, "")
+            arrayOf<Any>(
+                g1.localId,
+                "501",
+                "Clive & Bob (2), Alice (1)",
+                g1.dtCreation,
+                g1.dtFinish,
+                "",
+            )
     }
 
     @Test
@@ -101,7 +108,7 @@ class TestReportingUtil : AbstractTest() {
 
         val row = wrapper.getTableRow()
         row shouldBe
-            arrayOf(g.localId, "Golf - 18 holes", "Alice (-)", g.dtCreation, g.dtFinish, "")
+            arrayOf<Any>(g.localId, "Golf - 18 holes", "Alice (-)", g.dtCreation, g.dtFinish, "")
     }
 
     @Test
@@ -117,8 +124,9 @@ class TestReportingUtil : AbstractTest() {
 
         val rows = ReportResultWrapper.getTableRowsFromWrappers(results)
         rows[0] shouldBe
-            arrayOf(gAlice.localId, "501", "Alice (-)", gAlice.dtCreation, gAlice.dtFinish, "")
-        rows[1] shouldBe arrayOf(gBob.localId, "501", "Bob (-)", gBob.dtCreation, gBob.dtFinish, "")
+            arrayOf<Any>(gAlice.localId, "501", "Alice (-)", gAlice.dtCreation, gAlice.dtFinish, "")
+        rows[1] shouldBe
+            arrayOf<Any>(gBob.localId, "501", "Bob (-)", gBob.dtCreation, gBob.dtFinish, "")
     }
 
     @Test
@@ -140,7 +148,7 @@ class TestReportingUtil : AbstractTest() {
 
         val rows = ReportResultWrapper.getTableRowsFromWrappers(results)
         rows[0] shouldBe
-            arrayOf(
+            arrayOf<Any>(
                 dartzeeGameWithTemplate.localId,
                 "Dartzee - BTBF's House Party",
                 "Alice (-)",
@@ -149,7 +157,7 @@ class TestReportingUtil : AbstractTest() {
                 "",
             )
         rows[1] shouldBe
-            arrayOf(
+            arrayOf<Any>(
                 dartzeeGameStandalone.localId,
                 "Dartzee",
                 "Bob (-)",
@@ -158,6 +166,13 @@ class TestReportingUtil : AbstractTest() {
                 "",
             )
         rows[2] shouldBe
-            arrayOf(x01Game.localId, "501", "Clive (-)", x01Game.dtCreation, x01Game.dtFinish, "")
+            arrayOf<Any>(
+                x01Game.localId,
+                "501",
+                "Clive (-)",
+                x01Game.dtCreation,
+                x01Game.dtFinish,
+                "",
+            )
     }
 }

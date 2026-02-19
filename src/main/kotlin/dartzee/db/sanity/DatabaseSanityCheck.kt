@@ -140,7 +140,12 @@ object DatabaseSanityCheck {
 
         for (result in sanityErrors) {
             val row =
-                arrayOf(result.getDescription(), result.getCount(), "View Results >", "Auto-fix")
+                arrayOf<Any>(
+                    result.getDescription(),
+                    result.getCount(),
+                    "View Results >",
+                    "Auto-fix",
+                )
             model.addRow(row)
         }
 

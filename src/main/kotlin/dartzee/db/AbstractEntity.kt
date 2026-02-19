@@ -342,7 +342,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         return statementStr
     }
 
-    fun getInsertBlockForStatement() = "(${getColumns().joinToString{"?"}})"
+    fun getInsertBlockForStatement() = "(${getColumns().joinToString { "?" }})"
 
     open fun createTable(): Boolean {
         val createdTable =

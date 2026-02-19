@@ -20,17 +20,22 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
-import io.mockk.mockk
+import io.mockk.spyk
 import io.mockk.verifySequence
 import java.io.File
 import javax.swing.SwingUtilities
 import org.junit.jupiter.api.Test
 
 class TestDialogUtil : AbstractTest() {
-    var factoryMock = mockk<TestMessageDialogFactory>(relaxed = true)
+    var factoryMock = spyk<TestMessageDialogFactory>()
 
     @Test
     fun `Should pass method calls on to implementation`() {
+        factoryMock.optionSequence.add("1")
+        factoryMock.directoryToSelect = File("/")
+
+        clearAllMocks()
+
         DialogUtil.init(factoryMock)
 
         DialogUtil.showInfoOLD("Info")

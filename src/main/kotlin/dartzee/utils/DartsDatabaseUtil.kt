@@ -35,7 +35,6 @@ import dartzee.utils.InjectedThings.mainDatabase
 import java.io.File
 import java.sql.DriverManager
 import javax.swing.JOptionPane
-import kotlin.system.exitProcess
 import org.apache.derby.jdbc.EmbeddedDriver
 
 /** Database helpers specific to Dartzee, e.g. first time initialisation */
@@ -103,7 +102,7 @@ object DartsDatabaseUtil {
     fun migrateDatabase(migrator: DatabaseMigrator, database: Database) {
         val result = migrator.migrateToLatest(database, "Your")
         if (result == MigrationResult.TOO_OLD) {
-            exitProcess(1)
+            InjectedThings.exiter.exit(1)
         }
 
         logger.addToContext(KEY_DB_VERSION, DATABASE_VERSION)

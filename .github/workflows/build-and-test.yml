@@ -7,11 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 17.0.15
+          java-version: 21.0.10
           cache: 'gradle'
       - name: Verify tests
         run: |
@@ -27,29 +27,29 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 17.0.15
+          java-version: 21.0.10
           cache: 'gradle'
       - name: Build & Unit Test
         run: |
-          xvfb-run --auto-servernum ./gradlew koverReport
+          xvfb-run --auto-servernum ./gradlew koverHtmlReport
           zip -rg unit-test-results.zip build/reports/tests/unitTest
           zip -rq coverage-html.zip build/reports/kover/html
       - name: Export test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: unit-test-results
           path: unit-test-results.zip
       - name: Export coverage stats
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: kover-report
           path: coverage-html.zip
       - name: Export snapshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: failed-snapshots
@@ -72,11 +72,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 17.0.15
+          java-version: 21.0.10
           cache: 'gradle'
       - name: Integration & E2E
         env:
@@ -84,7 +84,7 @@ jobs:
           AWS_LOGS: ${{ secrets.AWS_LOGS }}
         run: xvfb-run --auto-servernum ./gradlew integrationAndE2E --info
       - name: Export test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: integration-and-e2e-results
           path: /home/runner/work/Dartzee/Dartzee/build/reports/tests/integrationAndE2E/**/*.html
@@ -92,15 +92,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 17.0.15
+          java-version: 21.0.10
       - name: Build JAR
         run: ./gradlew jar --info
       - name: Export JAR
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: dartzee-jar
           path: /home/runner/work/Dartzee/Dartzee/build/libs/Dartzee.jar
@@ -111,12 +111,12 @@ jobs:
     needs: [ build ]
     strategy:
       matrix:
-        java-version: [ 8, 11 ]
+        java-version: [ 8, 11, 17, 21 ]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
-          distribution: zulu
+          distribution: temurin
           java-version: ${{ matrix.java-version }}
       - name: Download JAR
         uses: actions/download-artifact@v4
