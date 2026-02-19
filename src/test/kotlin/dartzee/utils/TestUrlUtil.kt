@@ -16,7 +16,7 @@ class TestUrlUtil : AbstractTest() {
         val runtime = mockk<Runtime>(relaxed = true)
         launchUrl("foo.bar", runtime)
 
-        verify { runtime.exec("xdg-open foo.bar") }
+        verify { runtime.exec(arrayOf("xdg-open", "foo.bar")) }
     }
 
     @Test
@@ -24,7 +24,7 @@ class TestUrlUtil : AbstractTest() {
         val error = IOException("Oops")
 
         val runtime = mockk<Runtime>()
-        every { runtime.exec(any<String>()) } throws error
+        every { runtime.exec(any<Array<String>>()) }.throws(error)
 
         launchUrl("foo.bar", runtime)
 

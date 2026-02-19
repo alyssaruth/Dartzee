@@ -4,7 +4,7 @@ import com.github.alyssaburlton.swingtest.makeMouseEvent
 import dartzee.helper.AbstractTest
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import io.mockk.spyk
+import io.mockk.mockk
 import io.mockk.verifySequence
 import java.awt.Cursor
 import java.awt.event.MouseEvent
@@ -23,7 +23,7 @@ class TestHyperlinkAdaptor : AbstractTest() {
 
     @Test
     fun `Should respond to mouse clicks`() {
-        val listener = spyk<TestHyperlinkListener>()
+        val listener = mockk<TestHyperlinkListener>(relaxed = true)
 
         val adaptor = HyperlinkAdaptor(listener)
         adaptor.mouseClicked(mouseEventOverLink)

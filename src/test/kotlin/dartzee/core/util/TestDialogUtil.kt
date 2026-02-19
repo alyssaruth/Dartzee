@@ -32,6 +32,9 @@ class TestDialogUtil : AbstractTest() {
     @Test
     fun `Should pass method calls on to implementation`() {
         factoryMock.optionSequence.add("1")
+        factoryMock.directoryToSelect = File("/")
+
+        clearAllMocks()
 
         DialogUtil.init(factoryMock)
 
@@ -47,7 +50,6 @@ class TestDialogUtil : AbstractTest() {
         DialogUtil.chooseDirectory(null)
 
         verifySequence {
-            factoryMock.optionSequence
             factoryMock.showInfo("Info")
             factoryMock.showLoading("Loading...")
             factoryMock.showQuestion("Q", false)

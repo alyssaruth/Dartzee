@@ -22,7 +22,6 @@ import java.sql.SQLException
 import java.util.*
 import javax.sql.rowset.CachedRowSet
 import javax.sql.rowset.RowSetProvider
-import kotlin.system.exitProcess
 
 const val TABLE_ALREADY_EXISTS = "X0Y32"
 val DATABASE_FILE_PATH: String = "${System.getProperty("user.dir")}/Databases"
@@ -194,7 +193,7 @@ class Database(
             ) {
                 logger.warn(CODE_DATABASE_IN_USE, "Failed multiple instance check, exiting.")
                 DialogUtil.showErrorOLD("Database already in use - Dartzee will now exit.")
-                exitProcess(1)
+                InjectedThings.exiter.exit(1)
             } else {
                 logger.logSqlException("", "", sqle)
             }

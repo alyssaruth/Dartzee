@@ -52,8 +52,6 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
     open fun includeInSync() = true
 
     /** Helpers */
-    open fun getTableNameStr() = getTableName().name
-
     private fun getColumnCount() = getColumns().size
 
     private fun getCreateTableColumnSql() =
@@ -72,7 +70,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         return columns
     }
 
-    fun getTableNameUpperCase() = getTableNameStr().uppercase()
+    fun getTableNameUpperCase() = getTableName().name.uppercase()
 
     fun factoryFromResultSet(rs: ResultSet): E {
         val ret = factory()!!
@@ -117,7 +115,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         if (entities.size > 1) {
             logger.error(
                 CODE_SQL_EXCEPTION,
-                "Retrieved ${entities.size} rows from ${getTableNameStr()}. Expected 1. WhereSQL [$whereSql]",
+                "Retrieved ${entities.size} rows from ${getTableName()}. Expected 1. WhereSQL [$whereSql]",
                 KEY_SQL to whereSql,
             )
         }
@@ -126,7 +124,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
     }
 
     fun retrieveEntities(whereSql: String = "", alias: String = ""): List<E> {
-        var queryWithFrom = "FROM ${getTableNameStr()}"
+        var queryWithFrom = "FROM ${getTableName()}"
         if (alias.isNotEmpty()) {
             queryWithFrom += " $alias"
         }
@@ -148,7 +146,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         if (entity == null && stackTraceIfNotFound) {
             logger.error(
                 CODE_SQL_EXCEPTION,
-                "Failed to find ${getTableNameStr()} for ID [$rowId]",
+                "Failed to find ${getTableName()} for ID [$rowId]",
                 KEY_SQL to "RowId = '$rowId'",
             )
         }
@@ -157,7 +155,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
     }
 
     fun deleteFromDatabase(): Boolean {
-        val sql = "DELETE FROM ${getTableNameStr()} WHERE RowId = '$rowId'"
+        val sql = "DELETE FROM ${getTableName()} WHERE RowId = '$rowId'"
         val success = database.executeUpdate(sql)
         if (success && includeInSync()) {
             DeletionAuditEntity.factoryAndSave(this)
@@ -170,16 +168,16 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         if (includeInSync()) {
             logger.error(
                 CODE_DELETE_ERROR,
-                "Wiping of ${getTableNameStr()} will not be audited. This will break the sync!",
+                "Wiping of ${getTableName()} will not be audited. This will break the sync!",
             )
         }
 
-        database.executeUpdate("DELETE FROM ${getTableNameStr()}")
+        database.executeUpdate("DELETE FROM ${getTableName()}")
     }
 
     fun deleteWhere(whereSql: String): Boolean {
         val audits = retrieveEntities(whereSql).map { DeletionAuditEntity.factory(it) }
-        val sql = "DELETE FROM ${getTableNameStr()} WHERE $whereSql"
+        val sql = "DELETE FROM ${getTableName()} WHERE $whereSql"
         val success = database.executeUpdate(sql)
         if (success && includeInSync()) {
             BulkInserter.insert(audits)
@@ -202,9 +200,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
 
     fun countWhere(whereSql: String): Int {
         val fullWhere = if (whereSql.isNotEmpty()) "WHERE $whereSql" else ""
-        return database.executeQueryAggregate(
-            "SELECT COUNT(1) FROM ${getTableNameStr()} $fullWhere"
-        )
+        return database.executeQueryAggregate("SELECT COUNT(1) FROM ${getTableName()} $fullWhere")
     }
 
     /** Merge helpers */
@@ -223,7 +219,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
             factory(otherDatabase)
                 ?: throw ApplicationFault(
                     CODE_MERGE_ERROR,
-                    "Failed to factory ${getTableNameStr()} dao",
+                    "Failed to factory ${getTableName()} dao",
                 )
         val existingRow = otherDao.retrieveForId(rowId, false)
         if (existingRow == null) {
@@ -285,12 +281,11 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         columns = columns.replace(",", "=?,")
         columns += "=?"
 
-        return "UPDATE ${getTableNameStr()} SET $columns WHERE RowId=?"
+        return "UPDATE ${getTableName()} SET $columns WHERE RowId=?"
     }
 
     private fun insertIntoDatabase(db: Database = database) {
-        val genericInsert =
-            "INSERT INTO ${getTableNameStr()} VALUES ${getInsertBlockForStatement()}"
+        val genericInsert = "INSERT INTO ${getTableName()} VALUES ${getInsertBlockForStatement()}"
         var insertQuery = genericInsert
 
         val conn = db.borrowConnection()
@@ -351,7 +346,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
 
     open fun createTable(): Boolean {
         val createdTable =
-            database.createTableIfNotExists(getTableNameStr(), getCreateTableColumnSql())
+            database.createTableIfNotExists(getTableName().name, getCreateTableColumnSql())
         if (createdTable) {
             createIndexes()
         }
@@ -371,7 +366,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
         val columnList = columns.joinToString()
         val indexName = columnList.replace(", ", "_")
 
-        val statement = "CREATE INDEX $indexName ON ${getTableNameStr()}($columnList)"
+        val statement = "CREATE INDEX $indexName ON ${getTableName()}($columnList)"
         database.executeUpdate(statement)
     }
 
@@ -488,9 +483,7 @@ abstract class AbstractEntity<E : AbstractEntity<E>>(
     ): String {
         val value =
             getField(columnName)
-                ?: throw Exception(
-                    "Attempted to write NULL value to ${getTableNameStr()}.$columnName"
-                )
+                ?: throw Exception("Attempted to write NULL value to ${getTableName()}.$columnName")
 
         return when (getFieldType(columnName)) {
             String::class.java -> writeString(ps, ix, value as String, statementStr)

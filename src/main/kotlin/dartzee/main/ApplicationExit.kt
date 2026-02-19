@@ -4,7 +4,6 @@ import dartzee.core.util.DialogUtil
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
 import javax.swing.JOptionPane
-import kotlin.system.exitProcess
 
 fun exitApplication() {
     val openGames = ScreenCache.getDartsGameScreens()
@@ -22,5 +21,5 @@ fun exitApplication() {
 
     InjectedThings.esDestination.shutDown()
 
-    exitProcess(0)
+    InjectedThings.exiter.exit(0)
 }

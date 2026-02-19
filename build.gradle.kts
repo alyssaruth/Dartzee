@@ -46,7 +46,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
     implementation("net.lingala.zip4j:zip4j:2.11.3")
 
-    testImplementation("io.mockk:mockk:1.13.4")
+    testImplementation("io.mockk:mockk:1.13.14")
     testImplementation("io.kotest:kotest-assertions-core:5.5.4")
     testImplementation("com.github.alexburlton:swing-test:4.0.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
