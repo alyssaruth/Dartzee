@@ -1,6 +1,5 @@
 package dartzee.game
 
-import dartzee.core.util.InjectedCore.collectionShuffler
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
@@ -111,10 +110,23 @@ private fun copyForNewGame(
         }
     }
 
-private fun <T : Any> shuffleForNewGame(things: List<T>, gameOrdinal: Int): List<T> {
-    if (things.size > 2) {
-        return collectionShuffler.shuffleCollection(things)
-    }
+/**
+ * Algorithm is:
+ * - Game 1: Original order
+ * - Game 2: Reversed order
+ * - Game 3: Original order shifted left 1 (ABCD -> BCDA)
+ * - Game 4: Game 3 reversed
+ * - Game 5: Original order shifted left 2 (ABCD -> CDAB)
+ * - Game 6: Game 5 reversed
+ *
+ * etc.
+ */
+fun <T : Any> shuffleForNewGame(things: List<T>, gameOrdinal: Int): List<T> {
+    val rotated =
+        if (things.size > 2) {
+            val rotateAmount = (gameOrdinal - 1) / 2
+            things.drop(rotateAmount) + things.take(rotateAmount)
+        } else things
 
-    return if (gameOrdinal % 2 == 1) things.toList() else things.reversed()
+    return if (gameOrdinal % 2 == 1) rotated.toList() else rotated.reversed()
 }
