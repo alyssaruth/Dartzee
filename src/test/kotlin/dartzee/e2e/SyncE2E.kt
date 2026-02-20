@@ -1,7 +1,9 @@
 package dartzee.e2e
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.AchievementType
 import dartzee.confirmGameDeletion
@@ -9,9 +11,12 @@ import dartzee.db.AchievementEntity
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
+import dartzee.findInfoDialog
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
 import dartzee.game.GameType
+import dartzee.getDialogMessage
+import dartzee.getInfoDialog
 import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.TEST_DB_DIRECTORY
 import dartzee.helper.TEST_ROOT
@@ -87,9 +92,6 @@ class SyncE2E : AbstractE2ETest() {
         GameEntity().retrieveForId(secondGameId)!!.localId shouldBe 2
         retrieveParticipant(gameId, loser.rowId).finalScore shouldBe losingPtScore
 
-        dialogFactory.infosShown.last() shouldBe
-            "Sync completed successfully!\n\nGames pushed: 1\nGames pulled: 1"
-
         val x01Wins =
             AchievementEntity()
                 .retrieveEntities(
@@ -117,10 +119,12 @@ class SyncE2E : AbstractE2ETest() {
         waitForAssertion { SyncProgressDialog.isVisible() shouldBe true }
         waitForAssertion { SyncProgressDialog.isVisible() shouldBe false }
 
-        waitForAssertion {
-            dialogFactory.infosShown.lastOrNull() shouldBe
-                "Sync completed successfully!\n\nGames pushed: 0\nGames pulled: 0"
-        }
+        waitForAssertion { findInfoDialog() shouldNotBe null }
+        val info = getInfoDialog()
+        info.getDialogMessage() shouldBe
+            "Sync completed successfully!\n\nGames pushed: 0\n\nGames pulled: 0"
+        info.clickOk(async = true)
+
         getCountFromTable(EntityName.Game) shouldBe 0
         getCountFromTable(EntityName.Dart) shouldBe 0
         getCountFromTable(EntityName.Participant) shouldBe 0
@@ -133,6 +137,7 @@ class SyncE2E : AbstractE2ETest() {
         dialogFactory.questionOption = JOptionPane.YES_OPTION
         mainScreen.clickChild<JButton>(text = "Delete Game", async = true)
         confirmGameDeletion(1)
+        purgeWindows()
     }
 
     private fun runGame(winner: PlayerEntity, loser: PlayerEntity): String {
@@ -167,6 +172,13 @@ class SyncE2E : AbstractE2ETest() {
     private fun performSync(mainScreen: DartsApp) {
         dialogFactory.optionSequence.add("Sync with local data")
         mainScreen.clickChild<JButton>(text = "Get Started > ")
+        waitForAssertion { findInfoDialog() shouldNotBe null }
+
+        val info = getInfoDialog()
+        info.getDialogMessage() shouldBe
+            "Sync completed successfully!\n\nGames pushed: 1\n\nGames pulled: 1"
+        info.clickOk(async = true)
+
         waitForAssertion { mainScreen.findChild<SyncManagementPanel>() shouldNotBe null }
     }
 

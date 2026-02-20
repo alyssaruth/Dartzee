@@ -22,13 +22,6 @@ object DialogUtil {
         dialogFactory = implementation
     }
 
-    @Deprecated("Use showInfo")
-    fun showInfoOLD(infoText: String) {
-        logDialogShown("Info", "Information", infoText)
-        dialogFactory.showInfo(infoText)
-        logDialogClosed("Info", null)
-    }
-
     fun showInfo(infoText: String, parent: Component = ScreenCache.mainScreen) {
         logDialogShown("Info", "Information", infoText)
         JOptionPane.showMessageDialog(

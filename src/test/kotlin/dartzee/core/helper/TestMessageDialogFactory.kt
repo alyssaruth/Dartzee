@@ -21,7 +21,6 @@ class TestMessageDialogFactory : IMessageDialogFactory {
     val optionSequence = mutableListOf<String?>()
     val optionsShown = mutableListOf<String>()
 
-    val infosShown = mutableListOf<String>()
     val errorsShown = mutableListOf<String>()
 
     override fun <K> showInput(
@@ -46,10 +45,6 @@ class TestMessageDialogFactory : IMessageDialogFactory {
         )
     }
 
-    override fun showInfo(text: String) {
-        infosShown.add(text)
-    }
-
     override fun showError(text: String) {
         errorsShown.add(text)
     }
@@ -70,7 +65,6 @@ class TestMessageDialogFactory : IMessageDialogFactory {
     fun reset() {
         inputsShown.clear()
         inputOptionsPresented = arrayOf<Any>()
-        infosShown.clear()
         errorsShown.clear()
         questionsShown.clear()
         optionSequence.clear()

@@ -4,8 +4,6 @@ import java.awt.Component
 import java.io.File
 
 interface IMessageDialogFactory {
-    fun showInfo(text: String)
-
     fun showError(text: String)
 
     fun showQuestion(text: String, allowCancel: Boolean = false): Int

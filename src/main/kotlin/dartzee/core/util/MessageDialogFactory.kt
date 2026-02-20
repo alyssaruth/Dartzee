@@ -6,10 +6,6 @@ import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 
 class MessageDialogFactory : IMessageDialogFactory {
-    override fun showInfo(text: String) {
-        JOptionPane.showMessageDialog(null, text, "Information", JOptionPane.INFORMATION_MESSAGE)
-    }
-
     @Suppress("UNCHECKED_CAST")
     override fun <K> showInput(
         title: String,
