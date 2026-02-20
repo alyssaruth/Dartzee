@@ -228,7 +228,7 @@ fun FileUploader.uploadFileFromResource(resourceName: String) {
     flushEdt()
 
     getChild<JTextField>().text shouldBe File(rsrcPath).path
-    clickChild<JButton>(text = "Upload")
+    clickChild<JButton>(text = "Upload", async = true)
     flushEdt()
 }
 

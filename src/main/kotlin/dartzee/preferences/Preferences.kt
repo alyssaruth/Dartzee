@@ -14,6 +14,7 @@ object Preferences {
     val evenTrebleColour = Preference("eventreb", DARTBOARD_RED)
 
     val deviceId = Preference("deviceId", "")
+    val imageUploadDirectory = Preference("imageUploadDirectory", "")
 
     val aiAutoContinue = Preference("aiauto", true)
     val checkForUpdates = Preference("chkupd", true)

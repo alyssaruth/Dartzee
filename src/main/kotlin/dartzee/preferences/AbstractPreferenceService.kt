@@ -1,7 +1,8 @@
 package dartzee.preferences
 
 import dartzee.logging.CODE_PARSE_ERROR
-import dartzee.utils.InjectedThings
+import dartzee.logging.CODE_PREFERENCE_SAVED
+import dartzee.utils.InjectedThings.logger
 import java.awt.Color
 
 abstract class AbstractPreferenceService {
@@ -12,7 +13,9 @@ abstract class AbstractPreferenceService {
     protected abstract fun <T : Any> saveRaw(preference: Preference<T>, value: String)
 
     fun <T : Any> save(preference: Preference<T>, value: T) {
-        saveRaw(preference, toRawValue(value))
+        val raw = toRawValue(value)
+        logger.info(CODE_PREFERENCE_SAVED, "Updated preference [${preference.name}] to $raw")
+        saveRaw(preference, raw)
     }
 
     fun <T : Any> find(preference: Preference<T>): T? =
@@ -50,11 +53,7 @@ abstract class AbstractPreferenceService {
             val colours = split(";").map(String::toInt)
             Color(colours[0], colours[1], colours[2], colours[3])
         } catch (t: Throwable) {
-            InjectedThings.logger.error(
-                CODE_PARSE_ERROR,
-                "Failed to reconstruct colour from string: $this",
-                t,
-            )
+            logger.error(CODE_PARSE_ERROR, "Failed to reconstruct colour from string: $this", t)
             Color.BLACK
         }
 }
