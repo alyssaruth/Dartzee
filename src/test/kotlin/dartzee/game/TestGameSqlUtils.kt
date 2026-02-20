@@ -1,8 +1,5 @@
 package dartzee.game
 
-import dartzee.core.helper.DeterministicCollectionShuffler
-import dartzee.core.util.CollectionShuffler
-import dartzee.core.util.InjectedCore
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.EntityName
 import dartzee.db.PlayerEntity
@@ -20,15 +17,9 @@ import dartzee.utils.insertDartzeeRules
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class TestGameSqlUtils : AbstractTest() {
-    @BeforeEach
-    fun beforeEach() {
-        InjectedCore.collectionShuffler = CollectionShuffler()
-    }
-
     @Test
     fun `Should prepare and load players for a non team game correctly`() {
         val players = preparePlayers(3)
@@ -125,8 +116,6 @@ class TestGameSqlUtils : AbstractTest() {
 
     @Test
     fun `Should prepare next participants correctly for a game with more than 2 teams`() {
-        InjectedCore.collectionShuffler = DeterministicCollectionShuffler()
-
         val match = insertDartsMatch()
         val g1 = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
         val players = preparePlayers(5)
@@ -136,13 +125,13 @@ class TestGameSqlUtils : AbstractTest() {
 
         val (g2, g2participants) = prepareNextEntities(g1, firstGameParticipants, 2)
         val (pt2_1, pt2_2, pt2_3) = g2participants
-        validateTeam(pt2_1, g2.rowId, 0, p4, p3)
-        validateSingleParticipant(pt2_2, g2.rowId, 1, p5)
+        validateSingleParticipant(pt2_1, g2.rowId, 0, p5)
+        validateTeam(pt2_2, g2.rowId, 1, p4, p3)
         validateTeam(pt2_3, g2.rowId, 2, p2, p1)
 
         val (loadedPt2_1, loadedPt2_2, loadedPt2_3) = loadParticipants(g2.rowId)
-        validateTeam(loadedPt2_1, g2.rowId, 0, p4, p3)
-        validateSingleParticipant(loadedPt2_2, g2.rowId, 1, p5)
+        validateSingleParticipant(loadedPt2_1, g2.rowId, 0, p5)
+        validateTeam(loadedPt2_2, g2.rowId, 1, p4, p3)
         validateTeam(loadedPt2_3, g2.rowId, 2, p2, p1)
 
         val (g3, g3participants) = prepareNextEntities(g1, firstGameParticipants, 3)
@@ -182,6 +171,66 @@ class TestGameSqlUtils : AbstractTest() {
         rules
             .map { it.toDto().generateRuleDescription() }
             .shouldContainExactly(originalRules.map { it.generateRuleDescription() })
+    }
+
+    @Test
+    fun `Should just keep flipping order for 2 players`() {
+        val original = listOf("A", "B")
+
+        shuffleForNewGame(original, 2) shouldBe original.reversed()
+        shuffleForNewGame(original, 3) shouldBe original
+        shuffleForNewGame(original, 4) shouldBe original.reversed()
+        shuffleForNewGame(original, 5) shouldBe original
+        shuffleForNewGame(original, 6) shouldBe original.reversed()
+        shuffleForNewGame(original, 7) shouldBe original
+    }
+
+    @Test
+    fun `Should follow deterministic shuffle order for 3 players`() {
+        val original = listOf("A", "B", "C")
+
+        shuffleForNewGame(original, 2) shouldBe listOf("C", "B", "A")
+        shuffleForNewGame(original, 3) shouldBe listOf("B", "C", "A")
+        shuffleForNewGame(original, 4) shouldBe listOf("A", "C", "B")
+        shuffleForNewGame(original, 5) shouldBe listOf("C", "A", "B")
+        shuffleForNewGame(original, 6) shouldBe listOf("B", "A", "C")
+        shuffleForNewGame(original, 7) shouldBe original
+    }
+
+    @Test
+    fun `Should follow deterministic shuffle order for 4 players`() {
+        val original = listOf("A", "B", "C", "D")
+
+        shuffleForNewGame(original, 2) shouldBe listOf("D", "C", "B", "A")
+        shuffleForNewGame(original, 3) shouldBe listOf("B", "C", "D", "A")
+        shuffleForNewGame(original, 4) shouldBe listOf("A", "D", "C", "B")
+        shuffleForNewGame(original, 5) shouldBe listOf("C", "D", "A", "B")
+        shuffleForNewGame(original, 6) shouldBe listOf("B", "A", "D", "C")
+        shuffleForNewGame(original, 7) shouldBe listOf("D", "A", "B", "C")
+        shuffleForNewGame(original, 8) shouldBe listOf("C", "B", "A", "D")
+        shuffleForNewGame(original, 9) shouldBe original
+    }
+
+    @Test
+    fun `Should produce 10 distinct orderings for 5 players`() {
+        val original = listOf("A", "B", "C", "D", "E")
+
+        val orders = (1..10).map { shuffleForNewGame(original, it) }
+
+        orders.distinct() shouldBe orders
+
+        shuffleForNewGame(original, 11) shouldBe original
+    }
+
+    @Test
+    fun `Should produce 12 distinct orderings for 6 players`() {
+        val original = listOf("A", "B", "C", "D", "E", "F")
+
+        val orders = (1..12).map { shuffleForNewGame(original, it) }
+
+        orders.distinct() shouldBe orders
+
+        shuffleForNewGame(original, 13) shouldBe original
     }
 
     private fun validateTeam(
