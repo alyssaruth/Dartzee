@@ -1,14 +1,11 @@
 package dartzee.core.util
 
-import dartzee.core.screen.LoadingDialog
 import java.awt.Component
 import java.io.File
 import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 
 class MessageDialogFactory : IMessageDialogFactory {
-    private val loadingDialog = LoadingDialog()
-
     override fun showInfo(text: String) {
         JOptionPane.showMessageDialog(null, text, "Information", JOptionPane.INFORMATION_MESSAGE)
     }
@@ -60,16 +57,6 @@ class MessageDialogFactory : IMessageDialogFactory {
             option,
             JOptionPane.QUESTION_MESSAGE,
         )
-    }
-
-    override fun showLoading(text: String) {
-        loadingDialog.showDialog(text)
-    }
-
-    override fun dismissLoading(): Boolean {
-        val wasVisible = loadingDialog.isVisible
-        loadingDialog.dismissDialog()
-        return wasVisible
     }
 
     override fun chooseDirectory(parent: Component?): File? {

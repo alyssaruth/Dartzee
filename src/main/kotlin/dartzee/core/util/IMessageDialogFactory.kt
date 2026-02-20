@@ -12,11 +12,7 @@ interface IMessageDialogFactory {
 
     fun showOption(title: String, message: String, options: List<String>): String?
 
-    fun showLoading(text: String)
-
     fun <K> showInput(title: String, message: String, options: Array<K>?, defaultOption: K?): K?
-
-    fun dismissLoading(): Boolean
 
     fun chooseDirectory(parent: Component?): File?
 }

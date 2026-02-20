@@ -53,8 +53,6 @@ object DialogUtil {
 
     @Deprecated("Use showError")
     fun showErrorOLD(errorText: String) {
-        dismissLoadingDialogOLD()
-
         logDialogShown("Error", "Error", errorText)
         dialogFactory.showError(errorText)
         logDialogClosed("Error", null)
@@ -100,12 +98,6 @@ object DialogUtil {
         return selection
     }
 
-    @Deprecated("Use showLoadingDialog / dismissLoadingDialog")
-    fun showLoadingDialogOLD(text: String) {
-        logDialogShown("Loading", "", text)
-        dialogFactory.showLoading(text)
-    }
-
     fun showLoadingDialog(text: String) {
         logDialogShown("Loading", "", text)
         loadingDialog = LoadingDialog()
@@ -116,14 +108,6 @@ object DialogUtil {
         val wasVisible = loadingDialog?.isVisible ?: false
         loadingDialog?.dismissDialog()
         if (wasVisible) {
-            logDialogClosed("Loading", null)
-        }
-    }
-
-    @Deprecated("Use showLoadingDialog / dismissLoadingDialog")
-    fun dismissLoadingDialogOLD() {
-        val dismissed = dialogFactory.dismissLoading()
-        if (dismissed) {
             logDialogClosed("Loading", null)
         }
     }

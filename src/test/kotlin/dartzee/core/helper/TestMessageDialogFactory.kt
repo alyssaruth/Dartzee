@@ -21,12 +21,8 @@ class TestMessageDialogFactory : IMessageDialogFactory {
     val optionSequence = mutableListOf<String?>()
     val optionsShown = mutableListOf<String>()
 
-    var loadingVisible = false
-
     val infosShown = mutableListOf<String>()
     val errorsShown = mutableListOf<String>()
-
-    val loadingsShown = mutableListOf<String>()
 
     override fun <K> showInput(
         title: String,
@@ -69,17 +65,6 @@ class TestMessageDialogFactory : IMessageDialogFactory {
         return selection
     }
 
-    override fun showLoading(text: String) {
-        loadingsShown.add(text)
-        loadingVisible = true
-    }
-
-    override fun dismissLoading(): Boolean {
-        val wasVisible = loadingVisible
-        loadingVisible = false
-        return wasVisible
-    }
-
     override fun chooseDirectory(parent: Component?) = directoryToSelect
 
     fun reset() {
@@ -88,8 +73,6 @@ class TestMessageDialogFactory : IMessageDialogFactory {
         infosShown.clear()
         errorsShown.clear()
         questionsShown.clear()
-        loadingsShown.clear()
-        loadingVisible = false
         optionSequence.clear()
         optionsShown.clear()
         directoryToSelect = null

@@ -39,9 +39,7 @@ class TestDialogUtil : AbstractTest() {
         DialogUtil.init(factoryMock)
 
         DialogUtil.showInfoOLD("Info")
-        DialogUtil.showLoadingDialogOLD("Loading...")
         DialogUtil.showQuestionOLD("Q")
-        DialogUtil.dismissLoadingDialogOLD()
         DialogUtil.showOption(
             "Free Pizza",
             "Would you like some?",
@@ -51,9 +49,7 @@ class TestDialogUtil : AbstractTest() {
 
         verifySequence {
             factoryMock.showInfo("Info")
-            factoryMock.showLoading("Loading...")
             factoryMock.showQuestion("Q", false)
-            factoryMock.dismissLoading()
             factoryMock.showOption(
                 "Free Pizza",
                 "Would you like some?",
@@ -66,10 +62,7 @@ class TestDialogUtil : AbstractTest() {
 
         DialogUtil.showErrorOLD("Test")
 
-        verifySequence {
-            factoryMock.dismissLoading()
-            factoryMock.showError("Test")
-        }
+        verifySequence { factoryMock.showError("Test") }
 
         clearAllMocks()
     }

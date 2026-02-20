@@ -1,5 +1,8 @@
 package dartzee.core.util
 
+import com.github.alyssaburlton.swingtest.findWindow
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
+import dartzee.core.screen.ProgressDialog
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.EntityName
@@ -63,6 +66,6 @@ class TestDartzeeRuleConversion : AbstractTest() {
         DartzeeRuleConversion.convertDartzeeRules()
 
         errorLogged() shouldBe true
-        dialogFactory.loadingVisible shouldBe false
+        findWindow<ProgressDialog>()!!.shouldNotBeVisible()
     }
 }
