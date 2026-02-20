@@ -229,6 +229,7 @@ fun FileUploader.uploadFileFromResource(resourceName: String) {
 
     getChild<JTextField>().text shouldBe File(rsrcPath).path
     clickChild<JButton>(text = "Upload", async = true)
+    flushEdt()
 }
 
 fun getInfoDialog() = getOptionPaneDialog("Information")
