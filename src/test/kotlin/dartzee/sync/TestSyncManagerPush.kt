@@ -1,16 +1,24 @@
 package dartzee.sync
 
+import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.db.SyncAuditEntity
+import dartzee.findErrorDialog
+import dartzee.findLoadingDialog
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.shouldUpdateSyncScreen
 import dartzee.helper.syncDirectoryShouldNotExist
 import dartzee.logging.CODE_PUSH_ERROR
 import dartzee.logging.Severity
+import dartzee.runAsync
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import java.io.IOException
@@ -24,19 +32,22 @@ class TestSyncManagerPush : AbstractTest() {
         every { dbStore.pushDatabase(any(), any()) } throws exception
 
         val manager = SyncManager(dbStore)
-        val t = manager.doPush(REMOTE_NAME)
-        t.join()
-        flushEdt()
+        var t: Thread? = null
+        runAsync { t = manager.doPush(REMOTE_NAME) }
+        waitForAssertion { findErrorDialog() shouldNotBe null }
 
-        dialogFactory.loadingsShown.shouldContainExactly("Pushing $REMOTE_NAME...")
-        dialogFactory.loadingVisible shouldBe false
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "An unexpected error occurred - no data has been changed."
+        error.clickOk(async = true)
+
+        waitForAssertion { t shouldNotBe null }
+        t!!.join()
+
+        findLoadingDialog("Pushing $REMOTE_NAME...")!!.shouldNotBeVisible()
 
         val log = verifyLog(CODE_PUSH_ERROR, Severity.ERROR)
         log.errorObject shouldBe exception
 
-        dialogFactory.errorsShown.shouldContainExactly(
-            "An unexpected error occurred - no data has been changed."
-        )
         SyncAuditEntity.getLastSyncData(mainDatabase) shouldBe null
 
         syncDirectoryShouldNotExist()
@@ -51,8 +62,7 @@ class TestSyncManagerPush : AbstractTest() {
         t.join()
         flushEdt()
 
-        dialogFactory.loadingsShown.shouldContainExactly("Pushing $REMOTE_NAME...")
-        dialogFactory.loadingVisible shouldBe false
+        findLoadingDialog("Pushing $REMOTE_NAME...")!!.shouldNotBeVisible()
 
         store.fetchDatabase(REMOTE_NAME).database shouldBe mainDatabase
         val lastSyncData = SyncAuditEntity.getLastSyncData(mainDatabase)!!
@@ -69,8 +79,13 @@ class TestSyncManagerPush : AbstractTest() {
             every { dbStore.pushDatabase(any(), any()) } throws exception
 
             val manager = SyncManager(dbStore)
-            val t = manager.doPush(REMOTE_NAME)
-            t.join()
+            var t: Thread? = null
+            runAsync { t = manager.doPush(REMOTE_NAME) }
+            waitForAssertion { findErrorDialog() shouldNotBe null }
+
+            getErrorDialog().clickOk(async = true)
+            waitForAssertion { t != null }
+            t!!.join()
 
             errorLogged() shouldBe true
         }
