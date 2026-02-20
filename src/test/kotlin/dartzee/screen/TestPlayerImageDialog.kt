@@ -9,6 +9,8 @@ import dartzee.core.bean.FileUploader
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerImageEntity
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayerImage
 import dartzee.only
@@ -18,7 +20,6 @@ import dartzee.uploadFileFromResource
 import dartzee.utils.PLAYER_IMAGE_HEIGHT
 import dartzee.utils.PLAYER_IMAGE_WIDTH
 import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
@@ -47,9 +48,12 @@ class TestPlayerImageDialog : AbstractTest() {
     fun `Should show an error if no selection is made`() {
         val callback = makeCallback()
         val dlg = PlayerImageDialog(callback)
-        dlg.clickOk()
+        dlg.clickOk(async = true)
 
-        dialogFactory.errorsShown.shouldContainExactly("You must select an image.")
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "You must select an image."
+        error.clickOk()
+
         verifyNotCalled { callback(any()) }
     }
 
@@ -78,7 +82,10 @@ class TestPlayerImageDialog : AbstractTest() {
         dlg.getChild<JTabbedPane>().selectTab<JPanel>("uploadTab")
         dlg.uploadResource("/aiModel.json")
 
-        dialogFactory.errorsShown.shouldContainExactly("You must select a valid image file.")
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "You must select a valid image file."
+        error.clickOk()
+
         PlayerImageEntity().retrieveEntities().shouldBeEmpty()
     }
 
@@ -88,9 +95,10 @@ class TestPlayerImageDialog : AbstractTest() {
         dlg.getChild<JTabbedPane>().selectTab<JPanel>("uploadTab")
         dlg.uploadResource("/stats_large.png")
 
-        dialogFactory.errorsShown.shouldContainExactly(
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe
             "The image is too small - it must be at least $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px."
-        )
+        error.clickOk()
 
         dlg.getAllChildComponentsForType<PlayerImageRadio>().shouldBeEmpty()
         PlayerImageEntity().retrieveEntities().shouldBeEmpty()

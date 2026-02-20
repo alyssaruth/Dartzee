@@ -1,6 +1,8 @@
 package dartzee.core.bean
 
 import dartzee.core.util.DialogUtil
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -42,6 +44,9 @@ class FileUploader(ff: FileFilter) : JPanel(), ActionListener {
         panelEast.layout = BorderLayout(0, 0)
         panelEast.add(btnUpload, BorderLayout.CENTER)
 
+        fc.currentDirectory = preferenceService.find(Preferences.imageUploadDirectory)?.let(::File)
+        textField.text = fc.currentDirectory.absolutePath
+
         btnSelectFile.addActionListener(this)
         btnUpload.addActionListener(this)
     }
@@ -56,20 +61,25 @@ class FileUploader(ff: FileFilter) : JPanel(), ActionListener {
         if (returnVal == JFileChooser.APPROVE_OPTION && selectedFile != null) {
             this.selectedFile = fc.selectedFile
             textField.text = selectedFile.path
+
+            preferenceService.save(
+                Preferences.imageUploadDirectory,
+                selectedFile.absoluteFile.parent,
+            )
         }
     }
 
     private fun uploadPressed() {
         val file = selectedFile
         if (file == null) {
-            DialogUtil.showErrorOLD("You must select a file to upload.")
+            DialogUtil.showError("You must select a file to upload.")
             return
         }
 
         val success = listeners.all { it.fileUploaded(file) }
         if (success) {
             this.selectedFile = null
-            textField.text = ""
+            textField.text = fc.currentDirectory.absolutePath
         }
     }
 

@@ -104,7 +104,7 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
     override fun okPressed() {
         val playerImageId = getPlayerImageIdFromSelection()
         if (playerImageId == null) {
-            DialogUtil.showErrorOLD("You must select an image.")
+            DialogUtil.showError("You must select an image.")
             return
         }
 
@@ -115,13 +115,13 @@ class PlayerImageDialog(private val imageSelectedCallback: (String) -> Unit) :
     private fun validateFile(file: File): Boolean {
         val imageReaders = ImageIO.getImageReadersBySuffix(file.extension)
         if (!imageReaders.hasNext()) {
-            DialogUtil.showErrorOLD("You must select a valid image file.")
+            DialogUtil.showError("You must select a valid image file.")
             return false
         }
 
         val imgDim = FileUtil.getImageDim(file) ?: Dimension(Int.MAX_VALUE, Int.MAX_VALUE)
         if (imgDim.getWidth() < PLAYER_IMAGE_WIDTH || imgDim.getHeight() < PLAYER_IMAGE_HEIGHT) {
-            DialogUtil.showErrorOLD(
+            DialogUtil.showError(
                 "The image is too small - it must be at least $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px."
             )
             return false

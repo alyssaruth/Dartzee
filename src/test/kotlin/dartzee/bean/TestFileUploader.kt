@@ -2,15 +2,22 @@ package dartzee.bean
 
 import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.purgeWindows
 import dartzee.core.bean.FileUploader
 import dartzee.core.bean.IFileUploadListener
+import dartzee.core.bean.selectedItemTyped
 import dartzee.core.helper.verifyNotCalled
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.getFileChooser
 import dartzee.helper.AbstractTest
+import dartzee.preferences.Preferences
 import dartzee.uploadFileFromResource
-import io.kotest.matchers.collections.shouldContainExactly
+import dartzee.utils.InjectedThings
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -27,15 +34,19 @@ class TestFileUploader : AbstractTest() {
         val uploader = FileUploader(FileNameExtensionFilter("all", "*"))
         val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
+        uploader.clickChild<JButton>(text = "Upload", async = true)
 
-        uploader.clickChild<JButton>(text = "Upload")
+        val dlg = getErrorDialog()
+        dlg.getDialogMessage() shouldBe "You must select a file to upload."
+        dlg.clickOk()
+
         verifyNotCalled { listener.fileUploaded(any()) }
-        dialogFactory.errorsShown.shouldContainExactly("You must select a file to upload.")
     }
 
     @Test
-    fun `Should not pick a file if cancelled`() {
+    fun `Should not pick a file or update directory preference if cancelled`() {
         val uploader = FileUploader(FileNameExtensionFilter("all", "*"))
+        val originalPath = uploader.getChild<JTextField>().text
         val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
 
@@ -44,7 +55,8 @@ class TestFileUploader : AbstractTest() {
         val chooserDialog = getFileChooser()
         chooserDialog.clickCancel()
 
-        uploader.getChild<JTextField>().text shouldBe ""
+        InjectedThings.preferenceService.find(Preferences.imageUploadDirectory) shouldBe null
+        uploader.getChild<JTextField>().text shouldBe originalPath
         verifyNotCalled { listener.fileUploaded(any()) }
     }
 
@@ -58,12 +70,12 @@ class TestFileUploader : AbstractTest() {
         uploader.addFileUploadListener(listener)
 
         uploader.uploadFileFromResource("/outer-wilds.jpeg")
-        uploader.getChild<JTextField>().text shouldBe ""
+        uploader.getChild<JTextField>().text shouldBe File(rsrc.path).absoluteFile.parent
         verify { listener.fileUploaded(File(path)) }
     }
 
     @Test
-    fun `Should not clear text if file listener reports failure`() {
+    fun `Should not update text if file listener reports failure`() {
         val rsrc = javaClass.getResource("/outer-wilds.jpeg")!!
         val path = File(rsrc.path).path
 
@@ -92,6 +104,30 @@ class TestFileUploader : AbstractTest() {
             }
         combo.selectedItem.shouldBe(filter)
         combo.itemCount shouldBe 1
+    }
+
+    @Test
+    fun `Should store last uploaded directory and use it going forwards`() {
+        val rsrc = javaClass.getResource("/outer-wilds.jpeg")!!
+        val rsrcDirectory = File(rsrc.path).absoluteFile.parent
+
+        val uploaderOne = FileUploader(FileNameExtensionFilter("all", "*"))
+        uploaderOne.getChild<JTextField>().text shouldNotBe rsrcDirectory
+
+        uploaderOne.uploadFileFromResource("/outer-wilds.jpeg")
+        uploaderOne.getChild<JTextField>().text shouldBe File(rsrc.path).absoluteFile.parent
+        purgeWindows()
+
+        InjectedThings.preferenceService.get(Preferences.imageUploadDirectory) shouldBe
+            rsrcDirectory
+
+        val uploaderTwo = FileUploader(FileNameExtensionFilter("all", "*"))
+        uploaderTwo.getChild<JTextField>().text shouldBe rsrcDirectory
+
+        uploaderTwo.clickChild<JButton>(text = "...", async = true)
+        val chooser = getFileChooser()
+        val combo = chooser.getChild<JComboBox<File>> { it.selectedItem is File }
+        combo.selectedItemTyped() shouldBe File(rsrcDirectory)
     }
 
     private fun makeFileListener(success: Boolean = true): IFileUploadListener {
