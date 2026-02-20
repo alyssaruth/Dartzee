@@ -15,6 +15,7 @@ import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
+import java.util.Collections
 import javax.swing.ButtonGroup
 import javax.swing.ImageIcon
 import javax.swing.JPanel
@@ -31,8 +32,10 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>) :
     val toggleButtonComplete = JToggleButton()
 
     val dartsThrown = mutableListOf<Dart>()
-    val pendingTiles = mutableListOf<DartzeeRuleTilePending>()
-    val completeTiles = mutableListOf<DartzeeRuleTile>()
+    val pendingTiles: MutableList<DartzeeRuleTilePending> =
+        Collections.synchronizedList(mutableListOf<DartzeeRuleTilePending>())
+    val completeTiles: MutableList<DartzeeRuleTile> =
+        Collections.synchronizedList(mutableListOf<DartzeeRuleTile>())
 
     @Volatile var initialised = false
 
