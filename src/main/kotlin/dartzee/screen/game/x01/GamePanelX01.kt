@@ -1,142 +1,200 @@
 package dartzee.screen.game.x01
 
-import dartzee.`object`.Dart
-import dartzee.achievements.*
+import dartzee.achievements.AchievementType
+import dartzee.achievements.retrieveAchievementForDetail
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.doBadLuck
+import dartzee.core.util.doChucklevision
 import dartzee.core.util.doFawlty
 import dartzee.core.util.playDodgySound
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
-import dartzee.db.ParticipantEntity
 import dartzee.db.X01FinishEntity
+import dartzee.game.FinishType
+import dartzee.game.X01Config
+import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
-import dartzee.screen.Dartboard
+import dartzee.`object`.ComputedPoint
+import dartzee.`object`.Dart
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerX01
-import dartzee.utils.*
+import dartzee.utils.getSortedDartStr
+import dartzee.utils.isBust
+import dartzee.utils.isCheckoutScore
+import dartzee.utils.isNearMissDouble
+import dartzee.utils.isShanghai
+import dartzee.utils.shouldStopForMercyRule
+import dartzee.utils.sumScore
 
-open class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int):
-    GamePanelPausable<DartsScorerX01, Dartboard, X01PlayerState>(parent, game, totalPlayers)
-{
-    private val startingScore = Integer.parseInt(game.gameParams)
+class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
+    GamePanelPausable<DartsScorerX01, X01PlayerState>(parent, game, totalPlayers) {
+    private val config = X01Config.fromJson(game.gameParams)
 
-    override fun factoryState(pt: ParticipantEntity) = X01PlayerState(startingScore, pt)
-    override fun factoryDartboard() = Dartboard()
+    override fun factoryState(pt: IWrappedParticipant) = X01PlayerState(config, pt)
 
-    override fun saveDartsAndProceed()
-    {
-        //Finalise the scorer
+    override fun saveDartsAndProceed() {
+        // Finalise the scorer
         val lastDart = getDartsThrown().last()
-        val bust = isBust(lastDart)
+        val bust = isBust(lastDart, config.finishType)
 
         val count = getCurrentPlayerState().getBadLuckCount()
-        if (count > 0)
-        {
-            AchievementEntity.updateAchievement(AchievementType.X01_SUCH_BAD_LUCK, getCurrentPlayerId(), getGameId(), count)
+        if (count > 0) {
+            AchievementEntity.updateAchievement(
+                AchievementType.X01_SUCH_BAD_LUCK,
+                getCurrentPlayerId(),
+                getGameId(),
+                count,
+            )
         }
 
-        if (!bust)
-        {
+        if (!bust) {
             val totalScore = sumScore(getDartsThrown())
-            if (totalScore == 26)
-            {
-                dartboard.doFawlty()
-
-                updateHotelInspector()
+            if (totalScore == 69) {
+                dartboard.doChucklevision()
+                updateForUniqueScore(AchievementType.X01_CHUCKLEVISION, false)
             }
 
-            if (isShanghai(getDartsThrown()))
-            {
-                AchievementEntity.insertAchievement(AchievementType.X01_SHANGHAI, getCurrentPlayerId(), getGameId())
+            if (totalScore == 26) {
+                dartboard.doFawlty()
+                updateForUniqueScore(AchievementType.X01_HOTEL_INSPECTOR, true)
+            }
+
+            if (isShanghai(getDartsThrown())) {
+                AchievementEntity.insertAchievement(
+                    AchievementType.X01_SHANGHAI,
+                    getCurrentPlayerId(),
+                    getGameId(),
+                )
             }
 
             dartboard.playDodgySound("" + totalScore)
 
             val total = sumScore(getDartsThrown())
-            AchievementEntity.updateAchievement(AchievementType.X01_BEST_THREE_DART_SCORE, getCurrentPlayerId(), getGameId(), total)
-        }
-        else
-        {
-            val startingScoreForRound = getCurrentPlayerState().getRemainingScoreForRound(currentRoundNumber - 1)
-            AchievementEntity.updateAchievement(AchievementType.X01_HIGHEST_BUST, getCurrentPlayerId(), getGameId(), startingScoreForRound)
+            AchievementEntity.updateAchievement(
+                AchievementType.X01_BEST_THREE_DART_SCORE,
+                getCurrentPlayerId(),
+                getGameId(),
+                total,
+            )
+        } else {
+            val startingScoreForRound =
+                getCurrentPlayerState().getRemainingScoreForRound(currentRoundNumber - 1)
+            AchievementEntity.updateAchievement(
+                AchievementType.X01_HIGHEST_BUST,
+                getCurrentPlayerId(),
+                getGameId(),
+                startingScoreForRound,
+            )
         }
 
         super.saveDartsAndProceed()
     }
 
-    private fun updateHotelInspector()
-    {
-        //Need to have thrown 3 darts, all of which didn't miss.
-        if (getDartsThrown().any { d -> d.multiplier == 0 }
-          || dartsThrownCount() < 3)
-        {
+    private fun updateForUniqueScore(achievementType: AchievementType, enforceThreeDarts: Boolean) {
+        // Need to have thrown 3 darts, all of which didn't miss.
+        if (
+            enforceThreeDarts &&
+                (getDartsThrown().any { d -> d.multiplier == 0 } || dartsThrownCount() < 3)
+        ) {
             return
         }
 
-        val methodStr = getSortedDartStr(getDartsThrown())
-        val existingRow = retrieveAchievementForDetail(AchievementType.X01_HOTEL_INSPECTOR, getCurrentPlayerId(), methodStr)
-        if (existingRow == null)
-        {
-            AchievementEntity.insertAchievement(AchievementType.X01_HOTEL_INSPECTOR, getCurrentPlayerId(), getGameId(), methodStr)
+        val methodStr = getSortedDartStr(getDartsThrown().filterNot { it.multiplier == 0 })
+        val existingRow =
+            retrieveAchievementForDetail(achievementType, getCurrentPlayerId(), methodStr)
+        if (existingRow == null) {
+            AchievementEntity.insertAchievement(
+                achievementType,
+                getCurrentPlayerId(),
+                getGameId(),
+                methodStr,
+            )
         }
     }
 
     override fun currentPlayerHasFinished() = getCurrentPlayerState().getRemainingScore() == 0
 
-    override fun updateAchievementsForFinish(playerId: String, finishingPosition: Int, score: Int)
-    {
-        super.updateAchievementsForFinish(playerId, finishingPosition, score)
+    override fun updateAchievementsForFinish(playerState: X01PlayerState, score: Int) {
+        super.updateAchievementsForFinish(playerState, score)
 
+        val playerId = playerState.lastIndividual().playerId
         val finalRound = getCurrentPlayerState().getLastRound()
 
-        val sum = sumScore(finalRound)
-        AchievementEntity.updateAchievement(AchievementType.X01_BEST_FINISH, playerId, getGameId(), sum)
+        if (!finalRound.last().isDouble()) {
+            return
+        }
 
-        //Insert into the X01Finishes table for the leaderboard
+        val sum = sumScore(finalRound)
+        if (finalRound.count { it.multiplier > 1 } > 1) {
+            val method = finalRound.joinToString()
+            AchievementEntity.insertAchievement(
+                AchievementType.X01_STYLISH_FINISH,
+                playerId,
+                getGameId(),
+                method,
+                sum,
+            )
+        }
+
+        AchievementEntity.updateAchievement(
+            AchievementType.X01_BEST_FINISH,
+            playerId,
+            getGameId(),
+            sum,
+        )
+
+        // Insert into the X01Finishes table for the leaderboard
         X01FinishEntity.factoryAndSave(playerId, getGameId(), sum)
 
         val checkout = finalRound.last().score
-        insertForCheckoutCompleteness(playerId, getGameId(), checkout)
+        AchievementEntity.insertForUniqueCounter(
+            AchievementType.X01_CHECKOUT_COMPLETENESS,
+            playerId,
+            getGameId(),
+            checkout,
+            "",
+        )
 
-        if (sum in listOf(3, 5, 7, 9))
-        {
-            AchievementEntity.insertAchievement(AchievementType.X01_NO_MERCY, playerId, getGameId(), "$sum")
+        if (sum in listOf(3, 5, 7, 9) && config.finishType == FinishType.Doubles) {
+            AchievementEntity.insertAchievement(
+                AchievementType.X01_NO_MERCY,
+                playerId,
+                getGameId(),
+                "$sum",
+            )
         }
 
-        if (checkout == 1)
-        {
-            AchievementEntity.insertAchievement(AchievementType.X01_BTBF, getCurrentPlayerId(), getGameId())
+        if (checkout == 1) {
+            AchievementEntity.insertAchievement(AchievementType.X01_BTBF, playerId, getGameId())
         }
     }
 
-    override fun updateVariablesForDartThrown(dart: Dart)
-    {
-        if (isNearMissDouble(dart))
-        {
+    override fun updateVariablesForDartThrown(dart: Dart) {
+        if (isNearMissDouble(dart)) {
             dartboard.doBadLuck()
         }
     }
 
     override fun shouldStopAfterDartThrown() = getCurrentPlayerState().isCurrentRoundComplete()
 
-    override fun doAiTurn(model: DartsAiModel)
-    {
-        val startOfRoundScore = getCurrentPlayerState().getRemainingScoreForRound(currentRoundNumber - 1)
-        val currentScore = getCurrentPlayerState().getRemainingScore()
-        if (shouldStopForMercyRule(model, startOfRoundScore, currentScore))
-        {
+    override fun computeAiDart(model: DartsAiModel): ComputedPoint? {
+        val state = getCurrentPlayerState()
+        val startOfRoundScore = state.getRemainingScoreForRound(currentRoundNumber - 1)
+        val currentScore = state.getRemainingScore()
+        val dartsRemaining = 3 - dartsThrownCount()
+        return if (
+            shouldStopForMercyRule(model, startOfRoundScore, currentScore, config.finishType)
+        ) {
             stopThrowing()
+            null
+        } else {
+            model.throwX01Dart(currentScore, config.finishType, dartsRemaining)
         }
-        else
-        {
-            model.throwX01Dart(currentScore, dartboard)
-        }
-
     }
 
-    override fun factoryScorer() = DartsScorerX01(this, gameEntity.gameParams)
+    override fun factoryScorer(participant: IWrappedParticipant) =
+        DartsScorerX01(this, config.target, participant)
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelX01(gameParams)
 

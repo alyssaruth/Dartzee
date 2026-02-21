@@ -1,7 +1,7 @@
 package dartzee.screen.dartzee
 
-import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.bean.DartzeeAggregateRuleSelector
+import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.core.bean.RadioButtonPanel
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.DialogUtil
@@ -10,17 +10,25 @@ import dartzee.dartzee.DartzeeRandomiser
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.MAX_RULE_NAME
 import dartzee.screen.ScreenCache
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
-import javax.swing.*
+import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JCheckBox
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JRadioButton
+import javax.swing.JTextField
+import javax.swing.SwingUtilities
 import javax.swing.border.TitledBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
+import net.miginfocom.swing.MigLayout
 
-class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerificationPanel = DartzeeRuleVerificationPanel()): SimpleDialog(), ChangeListener
-{
+class DartzeeRuleCreationDialog(
+    private val verificationPanel: DartzeeRuleVerificationPanel = DartzeeRuleVerificationPanel()
+) : SimpleDialog(), ChangeListener {
     var dartzeeRule: DartzeeRuleDto? = null
 
     val lblDifficulty = JLabel()
@@ -47,8 +55,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
     private val cbRuleName = JCheckBox("Custom rule name")
     val tfRuleName = JTextField()
 
-    init
-    {
+    init {
         title = "Add Dartzee Rule"
         setSize(900, 640)
         setLocationRelativeTo(ScreenCache.mainScreen)
@@ -88,7 +95,7 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
         panelAllowMisses.layout = MigLayout("", "[]", "[]")
         panelAllowMisses.add(cbAllowMisses, "cell 0 0")
 
-        panelRuleDescription.layout = BorderLayout(0,0)
+        panelRuleDescription.layout = BorderLayout(0, 0)
         panelRuleDescription.border = TitledBorder("")
         panelRuleDescription.add(tfDescription, BorderLayout.CENTER)
         panelRuleDescription.add(btnRandom, BorderLayout.EAST)
@@ -117,31 +124,24 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
         updateComponents()
     }
 
-    fun amendRule(rule: DartzeeRuleDto)
-    {
+    fun amendRule(rule: DartzeeRuleDto) {
         title = "Amend Dartzee Rule"
         this.dartzeeRule = rule
 
         populate(rule)
     }
 
-    fun populate(rule: DartzeeRuleDto)
-    {
+    fun populate(rule: DartzeeRuleDto) {
         cbRuleName.isSelected = rule.ruleName != null
-        tfRuleName.text = rule.ruleName ?: ""
+        tfRuleName.text = rule.ruleName.orEmpty()
 
-        if (rule.dart1Rule == null)
-        {
+        if (rule.dart1Rule == null) {
             rdbtnNoDarts.isSelected = true
-        }
-        else if (rule.dart2Rule == null)
-        {
+        } else if (rule.dart2Rule == null) {
             rdbtnAtLeastOne.isSelected = true
 
             targetSelector.populate(rule.dart1Rule)
-        }
-        else
-        {
+        } else {
             rdbtnAllDarts.isSelected = true
             cbInOrder.isSelected = rule.inOrder
 
@@ -158,31 +158,22 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
         repaint()
     }
 
-    override fun stateChanged(e: ChangeEvent?)
-    {
+    override fun stateChanged(e: ChangeEvent?) {
         updateComponents()
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        if (arg0.source == btnRandom)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        if (arg0.source == btnRandom) {
             populate(DartzeeRandomiser.generateRandomRule())
-        }
-        else if (arg0.source !in listOf(btnOk, btnCancel))
-        {
+        } else if (arg0.source !in listOf(btnOk, btnCancel)) {
             updateComponents()
-        }
-        else
-        {
+        } else {
             super.actionPerformed(arg0)
         }
     }
 
-    override fun okPressed()
-    {
-        if (!valid())
-        {
+    override fun okPressed() {
+        if (!valid()) {
             return
         }
 
@@ -190,9 +181,8 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
 
         val calculationResult = rule.runStrengthCalculation()
         val combinations = calculationResult.validCombinations
-        if (combinations == 0)
-        {
-            DialogUtil.showError("This rule is impossible!")
+        if (combinations == 0) {
+            DialogUtil.showErrorOLD("This rule is impossible!")
             return
         }
 
@@ -201,77 +191,74 @@ class DartzeeRuleCreationDialog(private val verificationPanel: DartzeeRuleVerifi
         dispose()
     }
 
-    fun constructRuleFromComponents(): DartzeeRuleDto
-    {
+    fun constructRuleFromComponents(): DartzeeRuleDto {
         val totalRule = if (aggregateSelector.isEnabled) aggregateSelector.getSelection() else null
         val ruleName = if (cbRuleName.isSelected) tfRuleName.text else null
 
-        return if (rdbtnAllDarts.isSelected)
-        {
-            DartzeeRuleDto(dartOneSelector.getSelection(),
-                    dartTwoSelector.getSelection(), dartThreeSelector.getSelection(), totalRule, cbInOrder.isSelected, cbAllowMisses.isSelected, ruleName)
-        }
-        else
-        {
+        return if (rdbtnAllDarts.isSelected) {
+            DartzeeRuleDto(
+                dartOneSelector.getSelection(),
+                dartTwoSelector.getSelection(),
+                dartThreeSelector.getSelection(),
+                totalRule,
+                cbInOrder.isSelected,
+                cbAllowMisses.isSelected,
+                ruleName,
+            )
+        } else {
             val dart1Rule = if (rdbtnAtLeastOne.isSelected) targetSelector.getSelection() else null
-            DartzeeRuleDto(dart1Rule, null, null, totalRule, false, cbAllowMisses.isSelected, ruleName)
+            DartzeeRuleDto(
+                dart1Rule,
+                null,
+                null,
+                totalRule,
+                false,
+                cbAllowMisses.isSelected,
+                ruleName,
+            )
         }
     }
 
-    private fun valid(): Boolean
-    {
-        if (cbRuleName.isSelected)
-        {
+    private fun valid(): Boolean {
+        if (cbRuleName.isSelected) {
             val ruleName = tfRuleName.text
 
-            if (ruleName.isBlank())
-            {
-                DialogUtil.showError("You cannot have an empty rule name.")
+            if (ruleName.isBlank()) {
+                DialogUtil.showErrorOLD("You cannot have an empty rule name.")
                 return false
             }
 
-            if (ruleName.length > MAX_RULE_NAME)
-            {
-                DialogUtil.showError("Rule name cannot exceed $MAX_RULE_NAME characters.")
+            if (ruleName.length > MAX_RULE_NAME) {
+                DialogUtil.showErrorOLD("Rule name cannot exceed $MAX_RULE_NAME characters.")
                 return false
             }
         }
 
-        return if (rdbtnAtLeastOne.isSelected)
-        {
+        return if (rdbtnAtLeastOne.isSelected) {
             targetSelector.valid()
-        }
-        else
-        {
+        } else {
             dartOneSelector.valid() && dartTwoSelector.valid() && dartThreeSelector.valid()
         }
     }
 
-    private fun updateComponents()
-    {
+    private fun updateComponents() {
         tfRuleName.isEnabled = cbRuleName.isSelected
 
-        if (rdbtnAllDarts.isSelected)
-        {
+        if (rdbtnAllDarts.isSelected) {
             panelDarts.remove(targetSelector)
             panelDarts.add(dartOneSelector, "cell 0 1")
             panelDarts.add(dartTwoSelector, "cell 0 2")
             panelDarts.add(dartThreeSelector, "cell 0 3")
             panelDarts.add(cbInOrder, "cell 0 4")
-        }
-        else
-        {
+        } else {
             panelDarts.remove(dartOneSelector)
             panelDarts.remove(dartTwoSelector)
             panelDarts.remove(dartThreeSelector)
             panelDarts.remove(cbInOrder)
 
-            if (rdbtnAtLeastOne.isSelected)
-            {
+            if (rdbtnAtLeastOne.isSelected) {
                 panelDarts.add(targetSelector, "cell 0 1")
-            }
-            else
-            {
+            } else {
                 panelDarts.remove(targetSelector)
             }
         }

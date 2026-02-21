@@ -1,91 +1,62 @@
 package dartzee.screen.game
 
+import dartzee.core.util.runOnEventThread
 import dartzee.db.DartsMatchEntity
-import dartzee.db.ParticipantEntity
-import dartzee.db.PlayerEntity
 import dartzee.game.state.AbstractPlayerState
+import dartzee.game.state.IWrappedParticipant
+import dartzee.game.state.PlayerStateListener
 import dartzee.screen.game.scorer.MatchScorer
 import java.awt.BorderLayout
-import java.awt.Dimension
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
-import javax.swing.ImageIcon
-import javax.swing.JButton
-import javax.swing.JPanel
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
- * The first tab displayed for any match. Provides a summary of the players' overall scores with (hopefully) nice graphs and stuff
+ * The first tab displayed for any match. Provides a summary of the players' overall scores with
+ * (hopefully) nice graphs and stuff
  */
-class MatchSummaryPanel<PlayerState: AbstractPlayerState<PlayerState>>(
+class MatchSummaryPanel<PlayerState : AbstractPlayerState<PlayerState>>(
     val match: DartsMatchEntity,
-    private val statsPanel: AbstractGameStatisticsPanel<PlayerState>) : PanelWithScorers<MatchScorer>(), ActionListener
-{
-    private val hmPlayerIdToScorer = mutableMapOf<String, MatchScorer>()
-    private val gameTabs = mutableListOf<DartsGamePanel<*, *, PlayerState>>()
+    private val statsPanel: AbstractGameStatisticsPanel<PlayerState>,
+) : PanelWithScorers<MatchScorer>(), PlayerStateListener<PlayerState> {
+    private val gameTabs = CopyOnWriteArrayList<DartsGamePanel<*, PlayerState>>()
 
-    private val refreshPanel = JPanel()
-    private val btnRefresh = JButton()
-
-    init
-    {
-        refreshPanel.add(btnRefresh)
-        btnRefresh.addActionListener(this)
-        btnRefresh.preferredSize = Dimension(80, 80)
-        btnRefresh.icon = ImageIcon(javaClass.getResource("/buttons/refresh.png"))
-        btnRefresh.toolTipText = "Refresh stats"
-    }
-
-    fun init(playersInStartingOrder: List<PlayerEntity>)
-    {
+    init {
         panelCenter.add(statsPanel, BorderLayout.CENTER)
-        panelCenter.add(refreshPanel, BorderLayout.SOUTH)
-
-        val totalPlayers = playersInStartingOrder.size
-        initScorers(totalPlayers)
-
-        for (player in playersInStartingOrder)
-        {
-            val scorer = assignScorer(player)
-            hmPlayerIdToScorer[player.rowId] = scorer
-            scorer.setMatch(match)
-        }
     }
 
-    fun addParticipant(localId: Long, participant: ParticipantEntity)
-    {
-        val playerId = participant.playerId
-        val scorer = hmPlayerIdToScorer[playerId]!!
+    fun addParticipant(localId: Long, state: PlayerState) {
+        val participant = state.wrappedParticipant
+        val scorer = findOrAssignScorer(participant)
 
         val row = arrayOf(localId, participant, participant, participant)
         scorer.addRow(row)
+
+        state.addListener(this)
     }
 
-    fun updateTotalScores()
-    {
-        val scorers = hmPlayerIdToScorer.values
-        for (scorer in scorers)
-        {
-            scorer.updateResult()
-        }
-
-        updateStats()
+    fun getAllParticipants(): List<IWrappedParticipant> {
+        val states = gameTabs.map { it.getPlayerStates() }.flatten()
+        return states.map { it.wrappedParticipant }
     }
 
-    fun updateStats()
-    {
+    private fun findOrAssignScorer(participant: IWrappedParticipant) =
+        scorersOrdered.find {
+            it.participant.getUniqueParticipantName() == participant.getUniqueParticipantName()
+        } ?: assignScorer(participant)
+
+    private fun updateStats() {
+        scorersOrdered.forEach { it.updateResult() }
+
         val states = gameTabs.map { it.getPlayerStates() }.flatten()
         statsPanel.showStats(states)
     }
 
-    override fun factoryScorer() = MatchScorer()
+    override fun factoryScorer(participant: IWrappedParticipant) = MatchScorer(participant, match)
 
-    fun addGameTab(tab: DartsGamePanel<*, *, PlayerState>)
-    {
+    fun addGameTab(tab: DartsGamePanel<*, PlayerState>) {
         gameTabs.add(tab)
     }
 
-    override fun actionPerformed(e: ActionEvent)
-    {
-        updateStats()
+    override fun stateChanged(state: PlayerState) {
+        runOnEventThread { updateStats() }
     }
 }

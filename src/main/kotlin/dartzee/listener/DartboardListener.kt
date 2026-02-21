@@ -2,7 +2,6 @@ package dartzee.listener
 
 import dartzee.`object`.Dart
 
-interface DartboardListener
-{
+interface DartboardListener {
     fun dartThrown(dart: Dart)
 }

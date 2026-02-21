@@ -1,34 +1,39 @@
 package dartzee.screen.reporting
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.ScrollTable
+import dartzee.game.FinishType
 import dartzee.game.GameType
+import dartzee.game.X01Config
 import dartzee.getColumnNames
 import dartzee.getDisplayValueAt
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayerForGame
+import dartzee.helper.makeReportParameters
+import dartzee.helper.makeReportParametersGame
 import dartzee.logging.CODE_SQL
-import dartzee.reporting.ReportParameters
 import dartzee.screen.ScreenCache
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
-class TestReportingResultsScreen: AbstractTest()
-{
+class TestReportingResultsScreen : AbstractTest() {
     @Test
-    fun `Should initialise with results based on the report parameters`()
-    {
-        val rp = ReportParameters()
-        rp.gameType = GameType.X01
+    fun `Should initialise with results based on the report parameters`() {
+        val rp = makeReportParameters(game = makeReportParametersGame(gameType = GameType.X01))
 
-        val gX01 = insertGame(localId = 1, gameType = GameType.X01, gameParams = "501")
+        val gX01 =
+            insertGame(
+                localId = 1,
+                gameType = GameType.X01,
+                gameParams = X01Config(501, FinishType.Doubles).toJson(),
+            )
         insertPlayerForGame("Bob", gX01.rowId)
 
         val gDartzee = insertGame(localId = 2, gameType = GameType.DARTZEE, gameParams = "")
@@ -44,34 +49,38 @@ class TestReportingResultsScreen: AbstractTest()
     }
 
     @Test
-    fun `Should adjust columns based on the configure dialog, without rerunning SQL`()
-    {
-        val gX01 = insertGame(localId = 1, gameType = GameType.X01, gameParams = "501")
+    fun `Should adjust columns based on the configure dialog, without rerunning SQL`() {
+        val gX01 =
+            insertGame(
+                localId = 1,
+                gameType = GameType.X01,
+                gameParams = X01Config(501, FinishType.Doubles).toJson(),
+            )
         insertPlayerForGame("Bob", gX01.rowId)
 
         val dlg = mockk<ConfigureReportColumnsDialog>(relaxed = true)
         val scrn = ReportingResultsScreen(dlg)
 
         every { dlg.excludedColumns() } returns emptyList()
-        scrn.rp = ReportParameters()
+        scrn.rp = makeReportParameters()
         scrn.initialise()
 
         val table = scrn.getChild<ScrollTable>()
         table.rowCount shouldBe 1
-        table.getColumnNames() shouldBe listOf("Game", "Type", "Players", "Start Date", "Finish Date", "Match")
+        table.getColumnNames() shouldBe
+            listOf("Game", "Type", "Players", "Start Date", "Finish Date", "Match")
 
         clearLogs()
         every { dlg.excludedColumns() } returns listOf("Players", "Finish Date")
 
-        scrn.clickChild<JButton>("Configure Columns...")
+        scrn.clickChild<JButton>(text = "Configure Columns...")
         verifyNoLogs(CODE_SQL)
         table.rowCount shouldBe 1
         table.getColumnNames() shouldBe listOf("Game", "Type", "Start Date", "Match")
     }
 
     @Test
-    fun `Should sort by timestamps correctly`()
-    {
+    fun `Should sort by timestamps correctly`() {
         val g1 = insertGame(dtCreation = Timestamp.valueOf("2020-03-04 15:00:00"))
         val g2 = insertGame(dtCreation = Timestamp.valueOf("2020-01-01 00:00:00"))
         val g3 = insertGame(dtCreation = Timestamp.valueOf("2020-03-03 12:00:00"))
@@ -83,7 +92,7 @@ class TestReportingResultsScreen: AbstractTest()
         insertPlayerForGame("Bob", g4.rowId)
 
         val scrn = ReportingResultsScreen()
-        scrn.rp = ReportParameters()
+        scrn.rp = makeReportParameters()
         scrn.initialise()
 
         val table = scrn.getChild<ScrollTable>()
@@ -96,12 +105,10 @@ class TestReportingResultsScreen: AbstractTest()
     }
 
     @Test
-    fun `Should go back to setup screen`()
-    {
+    fun `Should go back to setup screen`() {
         val scrn = ReportingResultsScreen()
         scrn.btnBack.doClick()
 
         ScreenCache.currentScreen().shouldBeInstanceOf<ReportingSetupScreen>()
     }
-
 }

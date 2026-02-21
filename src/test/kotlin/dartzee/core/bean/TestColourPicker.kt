@@ -1,34 +1,33 @@
 package dartzee.core.bean
 
-import com.github.alexburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.doClick
+import com.github.alyssaburlton.swingtest.doHover
+import com.github.alyssaburlton.swingtest.doHoverAway
 import dartzee.core.helper.getIconImage
-import dartzee.core.helper.makeMouseEvent
+import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.InjectedDesktopCore
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.awt.Color
 import java.awt.Cursor
+import org.junit.jupiter.api.Test
 
-class TestColourPicker: AbstractTest()
-{
+class TestColourPicker : AbstractTest() {
     @Test
-    fun `Should change the cursor to a hand on hover`()
-    {
+    fun `Should change the cursor to a hand on hover`() {
         val cp = ColourPicker()
-        cp.mouseEntered(makeMouseEvent())
+        cp.doHover()
         cp.cursor.type shouldBe Cursor.HAND_CURSOR
 
-        cp.mouseExited(makeMouseEvent())
+        cp.doHoverAway()
         cp.cursor.type shouldBe Cursor.DEFAULT_CURSOR
     }
 
     @Test
-    fun `Should support updating the current colour`()
-    {
+    fun `Should support updating the current colour`() {
         val cp = ColourPicker()
         cp.updateSelectedColor(Color.RED)
 
@@ -38,8 +37,7 @@ class TestColourPicker: AbstractTest()
     }
 
     @Test
-    fun `Should update the colour on mouse click to whatever was selected in the dialog`()
-    {
+    fun `Should update the colour on mouse click to whatever was selected in the dialog`() {
         val mockSelector = mockk<IColourSelector>(relaxed = true)
         every { mockSelector.selectColour(any()) } returns Color.BLUE
 
@@ -57,8 +55,7 @@ class TestColourPicker: AbstractTest()
     }
 
     @Test
-    fun `Should notify its listener if a new colour is selected`()
-    {
+    fun `Should notify its listener if a new colour is selected`() {
         val mockSelector = mockk<IColourSelector>(relaxed = true)
         every { mockSelector.selectColour(any()) } returns Color.BLUE
         InjectedDesktopCore.colourSelector = mockSelector
@@ -69,6 +66,17 @@ class TestColourPicker: AbstractTest()
         cp.addColourSelectionListener(listener)
         cp.doClick()
 
-        verify { listener.colourSelected(Color.BLUE) }
+        verify(exactly = 1) { listener.colourSelected(Color.BLUE) }
+    }
+
+    @Test
+    fun `Should not notify its listener if told not to`() {
+        val listener = mockk<ColourSelectionListener>(relaxed = true)
+
+        val cp = ColourPicker()
+        cp.addColourSelectionListener(listener)
+        cp.updateSelectedColor(Color.BLUE, notify = false)
+
+        verifyNotCalled { listener.colourSelected(Color.BLUE) }
     }
 }

@@ -1,21 +1,19 @@
 package dartzee.screen.stats.overall
 
-import dartzee.helper.AbstractRegistryTest
+import com.github.alyssaburlton.swingtest.getChild
+import dartzee.core.bean.ScrollTable
+import dartzee.helper.AbstractTest
 import dartzee.helper.insertFinishForPlayer
 import dartzee.helper.insertPlayer
-import dartzee.utils.PREFERENCES_INT_LEADERBOARD_SIZE
-import dartzee.utils.PreferenceUtil
-import io.kotlintest.shouldBe
-import org.junit.jupiter.api.Test
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
+import io.kotest.matchers.shouldBe
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
-{
-    override fun getPreferencesAffected() = listOf(PREFERENCES_INT_LEADERBOARD_SIZE)
-
+class TestLeaderboardTopX01Finishes : AbstractTest() {
     @Test
-    fun `Should get the correct local game ids`()
-    {
+    fun `Should get the correct local game ids`() {
         val p = insertPlayer()
 
         val g1 = insertFinishForPlayer(p, 150)
@@ -29,9 +27,8 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
     }
 
     @Test
-    fun `Should respect the preference value for the number of rows to be returned`()
-    {
-        PreferenceUtil.saveInt(PREFERENCES_INT_LEADERBOARD_SIZE, 2)
+    fun `Should respect the preference value for the number of rows to be returned`() {
+        preferenceService.save(Preferences.leaderboardSize, 2)
 
         val p = insertPlayer()
 
@@ -46,15 +43,14 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
         leaderboard.getScoreAt(0) shouldBe 150
         leaderboard.getScoreAt(1) shouldBe 100
 
-        PreferenceUtil.saveInt(PREFERENCES_INT_LEADERBOARD_SIZE, 3)
+        preferenceService.save(Preferences.leaderboardSize, 3)
         leaderboard.buildTable()
 
         leaderboard.rowCount() shouldBe 3
     }
 
     @Test
-    fun `Should respond to changing player filters, and pull through player names`()
-    {
+    fun `Should respond to changing player filters, and pull through player names`() {
         val robot = insertPlayer(name = "Robot", strategy = "foo")
         val human = insertPlayer(name = "Human", strategy = "")
 
@@ -78,8 +74,7 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
     }
 
     @Test
-    fun `Should use dtCreation as a tie-breaker when there are multiple rows with the same score`()
-    {
+    fun `Should use dtCreation as a tie-breaker when there are multiple rows with the same score`() {
         val p = insertPlayer()
 
         val g1 = insertFinishForPlayer(p, 100, Timestamp(20))
@@ -94,10 +89,13 @@ class TestLeaderboardTopX01Finishes: AbstractRegistryTest()
         leaderboard.getGameIdAt(2) shouldBe g3.localId
     }
 
+    private fun LeaderboardTopX01Finishes.rowCount() = table().rowCount
 
+    private fun LeaderboardTopX01Finishes.getNameAt(row: Int) = table().getValueAt(row, 2)
 
-    private fun LeaderboardTopX01Finishes.rowCount() = tableTopFinishes.rowCount
-    private fun LeaderboardTopX01Finishes.getNameAt(row: Int) = tableTopFinishes.getValueAt(row, 2)
-    private fun LeaderboardTopX01Finishes.getGameIdAt(row: Int) = tableTopFinishes.getValueAt(row, 3)
-    private fun LeaderboardTopX01Finishes.getScoreAt(row: Int) = tableTopFinishes.getValueAt(row, 4)
+    private fun LeaderboardTopX01Finishes.getGameIdAt(row: Int) = table().getValueAt(row, 3)
+
+    private fun LeaderboardTopX01Finishes.getScoreAt(row: Int) = table().getValueAt(row, 4)
+
+    private fun LeaderboardTopX01Finishes.table() = getChild<ScrollTable>()
 }

@@ -1,27 +1,30 @@
 package dartzee.screen.player
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.clickCancel
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.findWindow
+import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.typeText
+import dartzee.bean.PlayerAvatar
 import dartzee.bean.getAllPlayers
-import dartzee.bean.getPlayerEntityForRow
 import dartzee.core.bean.ScrollTable
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
-import dartzee.player.PlayerManager
-import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
-import org.junit.jupiter.api.Test
+import dartzee.helper.randomGuid
+import dartzee.screen.HumanConfigurationDialog
+import dartzee.screen.ai.AIConfigurationDialog
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import javax.swing.JButton
+import javax.swing.JTextField
+import org.junit.jupiter.api.Test
 
-class TestPlayerManagementScreen: AbstractTest()
-{
+class TestPlayerManagementScreen : AbstractTest() {
     @Test
-    fun `Should load players from the database`()
-    {
+    fun `Should load players from the database`() {
         val p1 = insertPlayer()
         val p2 = insertPlayer()
 
@@ -33,8 +36,7 @@ class TestPlayerManagementScreen: AbstractTest()
     }
 
     @Test
-    fun `Should refresh the summary panel as rows are selected or deselected`()
-    {
+    fun `Should refresh the summary panel as rows are selected or deselected`() {
         insertPlayer(name = "Alex")
         insertPlayer(name = "Leah")
 
@@ -54,8 +56,7 @@ class TestPlayerManagementScreen: AbstractTest()
     }
 
     @Test
-    fun `Should reset the summary panel when reinitialised`()
-    {
+    fun `Should reset the summary panel when reinitialised`() {
         insertPlayer(name = "Alex")
 
         val scrn = PlayerManagementScreen()
@@ -68,64 +69,68 @@ class TestPlayerManagementScreen: AbstractTest()
     }
 
     @Test
-    fun `Should create a new human player and update the table`()
-    {
-        val playerManager = mockk<PlayerManager>()
-        every { playerManager.createNewPlayer(any()) } returns true
-        InjectedThings.playerManager = playerManager
-
+    fun `Should create a new human player and update the table`() {
         val scrn = PlayerManagementScreen()
         scrn.initialise()
 
-        val player = insertPlayer()
+        scrn.clickChild<JButton>("AddPlayer")
 
-        scrn.clickChild<JButton>("", "Add player")
-        verify { playerManager.createNewPlayer(true) }
+        val dlg = findWindow<HumanConfigurationDialog>()
+        dlg.shouldNotBeNull()
+
+        dlg.getChild<JTextField>("nameField").typeText("Bongo")
+        dlg.getChild<PlayerAvatar>().avatarId = randomGuid()
+        dlg.clickOk()
+        dlg.isVisible shouldBe false
+        flushEdt()
 
         val table = scrn.getChild<ScrollTable>()
-        table.getPlayerEntityForRow(0).rowId shouldBe player.rowId
+        table.rowCount shouldBe 1
     }
 
     @Test
-    fun `Should create a new AI player and update the table`()
-    {
-        val playerManager = mockk<PlayerManager>()
-        every { playerManager.createNewPlayer(any()) } returns true
-        InjectedThings.playerManager = playerManager
-
+    fun `Should create a new AI player and update the table`() {
         val scrn = PlayerManagementScreen()
         scrn.initialise()
 
-        val player = insertPlayer()
+        scrn.clickChild<JButton>("AddAi")
 
-        scrn.clickChild<JButton>("", "Add computer")
-        verify { playerManager.createNewPlayer(false) }
+        val dlg = findWindow<AIConfigurationDialog>()
+        dlg.shouldNotBeNull()
+
+        dlg.getChild<JTextField>("nameField").typeText("Bingo")
+        dlg.getChild<PlayerAvatar>().avatarId = randomGuid()
+        dlg.clickOk()
+        dlg.isVisible shouldBe false
+        flushEdt()
 
         val table = scrn.getChild<ScrollTable>()
-        table.getPlayerEntityForRow(0).rowId shouldBe player.rowId
+        table.rowCount shouldBe 1
     }
 
     @Test
-    fun `Should not reinitialise the table if player creation is cancelled`()
-    {
-        val playerManager = mockk<PlayerManager>()
-        every { playerManager.createNewPlayer(any()) } returns false
-        InjectedThings.playerManager = playerManager
-
+    fun `Should not reinitialise the table if player creation is cancelled`() {
         val scrn = PlayerManagementScreen()
         scrn.initialise()
 
         insertPlayer()
 
-        scrn.clickChild<JButton>("", "Add computer")
-        scrn.clickChild<JButton>("", "Add player")
+        scrn.clickChild<JButton>("AddAi")
+        val dlg = findWindow<AIConfigurationDialog>()
+        dlg.shouldNotBeNull()
+        dlg.clickCancel()
 
+        scrn.clickChild<JButton>("AddPlayer")
+        val humanDlg = findWindow<HumanConfigurationDialog>()
+        humanDlg.shouldNotBeNull()
+        humanDlg.clickCancel()
+
+        flushEdt()
         val table = scrn.getChild<ScrollTable>()
         table.rowCount shouldBe 0
     }
 
-    private fun PlayerManagementScreen.getSummaryPlayerName(): String
-    {
+    private fun PlayerManagementScreen.getSummaryPlayerName(): String {
         val summaryPanel = getChild<PlayerManagementPanel>()
         return summaryPanel.lblPlayerName.text
     }

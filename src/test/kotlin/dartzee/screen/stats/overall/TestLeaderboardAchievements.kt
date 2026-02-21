@@ -9,22 +9,19 @@ import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertPlayer
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestLeaderboardAchievements: AbstractTest()
-{
+class TestLeaderboardAchievements : AbstractTest() {
     @Test
-    fun `Combo box should be disabled by default`()
-    {
+    fun `Combo box should be disabled by default`() {
         val leaderboard = LeaderboardAchievements()
         leaderboard.cbSpecificAchievement.isSelected shouldBe false
         leaderboard.comboBox.isEnabled shouldBe false
     }
 
     @Test
-    fun `Should enable combo box based on checkbox`()
-    {
+    fun `Should enable combo box based on checkbox`() {
         val leaderboard = LeaderboardAchievements()
 
         leaderboard.cbSpecificAchievement.isSelected = true
@@ -33,33 +30,36 @@ class TestLeaderboardAchievements: AbstractTest()
     }
 
     @Test
-    fun `Should initialise combobox with all achievements`()
-    {
+    fun `Should initialise combobox with all achievements`() {
         val leaderboard = LeaderboardAchievements()
         leaderboard.comboBox.itemCount shouldBe getAllAchievements().size
     }
 
     @Test
-    fun `Should show overall achievement progress by default`()
-    {
+    fun `Should show overall achievement progress by default`() {
         val alice = insertPlayer(name = "Alice")
         val bob = insertPlayer(name = "Bob")
 
         val bestFinish = AchievementX01BestFinish()
         val bestGolfGame = AchievementGolfBestGame()
 
-        insertAchievement(type = AchievementType.X01_BEST_FINISH,
-                achievementCounter = bestFinish.pinkThreshold,
-                playerId = alice.rowId)
+        insertAchievement(
+            type = AchievementType.X01_BEST_FINISH,
+            achievementCounter = bestFinish.pinkThreshold,
+            playerId = alice.rowId,
+        )
 
-        insertAchievement(type = AchievementType.GOLF_BEST_GAME,
-                achievementCounter = bestGolfGame.blueThreshold,
-                playerId = alice.rowId)
+        insertAchievement(
+            type = AchievementType.GOLF_BEST_GAME,
+            achievementCounter = bestGolfGame.blueThreshold,
+            playerId = alice.rowId,
+        )
 
-        insertAchievement(type = AchievementType.X01_BEST_FINISH,
-                achievementCounter = bestFinish.greenThreshold,
-                playerId = bob.rowId)
-
+        insertAchievement(
+            type = AchievementType.X01_BEST_FINISH,
+            achievementCounter = bestFinish.greenThreshold,
+            playerId = bob.rowId,
+        )
 
         val leaderboard = LeaderboardAchievements()
         leaderboard.buildTable()
@@ -75,19 +75,22 @@ class TestLeaderboardAchievements: AbstractTest()
     }
 
     @Test
-    fun `Should respond to changing player filters`()
-    {
+    fun `Should respond to changing player filters`() {
         val alice = insertPlayer(name = "Alice", strategy = "")
         val bob = insertPlayer(name = "Bob", strategy = "foo")
 
         val bestFinish = AchievementX01BestFinish()
-        insertAchievement(type = AchievementType.X01_BEST_FINISH,
-                achievementCounter = bestFinish.pinkThreshold,
-                playerId = alice.rowId)
+        insertAchievement(
+            type = AchievementType.X01_BEST_FINISH,
+            achievementCounter = bestFinish.pinkThreshold,
+            playerId = alice.rowId,
+        )
 
-        insertAchievement(type = AchievementType.X01_BEST_FINISH,
-                achievementCounter = bestFinish.greenThreshold,
-                playerId = bob.rowId)
+        insertAchievement(
+            type = AchievementType.X01_BEST_FINISH,
+            achievementCounter = bestFinish.greenThreshold,
+            playerId = bob.rowId,
+        )
 
         val leaderboard = LeaderboardAchievements()
         leaderboard.buildTable()
@@ -103,24 +106,29 @@ class TestLeaderboardAchievements: AbstractTest()
     }
 
     @Test
-    fun `Should include rankings`()
-    {
+    fun `Should include rankings`() {
         val alice = insertPlayer(name = "Alice")
         val bob = insertPlayer(name = "Bob")
         val clive = insertPlayer(name = "Clive")
 
         val bestFinish = AchievementX01BestFinish()
-        insertAchievement(type = AchievementType.X01_BEST_FINISH,
+        insertAchievement(
+            type = AchievementType.X01_BEST_FINISH,
             achievementCounter = bestFinish.pinkThreshold,
-            playerId = alice.rowId)
+            playerId = alice.rowId,
+        )
 
-        insertAchievement(type = AchievementType.X01_BEST_FINISH,
+        insertAchievement(
+            type = AchievementType.X01_BEST_FINISH,
             achievementCounter = bestFinish.greenThreshold,
-            playerId = bob.rowId)
+            playerId = bob.rowId,
+        )
 
-        insertAchievement(type = AchievementType.X01_BEST_FINISH,
+        insertAchievement(
+            type = AchievementType.X01_BEST_FINISH,
             achievementCounter = bestFinish.pinkThreshold,
-            playerId = clive.rowId)
+            playerId = clive.rowId,
+        )
 
         val leaderboard = LeaderboardAchievements()
         leaderboard.buildTable()

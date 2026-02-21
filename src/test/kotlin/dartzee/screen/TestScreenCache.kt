@@ -3,30 +3,27 @@ package dartzee.screen
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractTest
 import dartzee.screen.game.DartsGameScreen
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.types.shouldBeSameInstanceAs
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.matchers.types.shouldNotBeSameInstanceAs
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
+import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class TestScreenCache: AbstractTest()
-{
+class TestScreenCache : AbstractTest() {
     @Test
-    fun `Should construct an instance and return it on subsequent calls`()
-    {
+    fun `Should construct an instance and return it on subsequent calls`() {
         val scrn = ScreenCache.get<MenuScreen>()
         scrn.shouldNotBeNull()
 
         val other = ScreenCache.get<MenuScreen>()
-        other shouldBeSameInstanceAs  scrn
+        other shouldBeSameInstanceAs scrn
     }
 
     @Test
-    fun `Should clear the cache`()
-    {
+    fun `Should clear the cache`() {
         ScreenCache.addDartsGameScreen("Game 1", mockk())
         val scrn = ScreenCache.get<MenuScreen>()
         ScreenCache.emptyCache()
@@ -37,8 +34,7 @@ class TestScreenCache: AbstractTest()
     }
 
     @Test
-    fun `Should switch the current screen to the new one and init it`()
-    {
+    fun `Should switch the current screen to the new one and init it`() {
         val scrn = mockk<EmbeddedScreen>(relaxed = true)
 
         ScreenCache.switch(scrn)
@@ -48,8 +44,7 @@ class TestScreenCache: AbstractTest()
     }
 
     @Test
-    fun `Should not init the switched screen if specified`()
-    {
+    fun `Should not init the switched screen if specified`() {
         val scrn = mockk<EmbeddedScreen>(relaxed = true)
 
         ScreenCache.switch(scrn, false)
@@ -59,8 +54,7 @@ class TestScreenCache: AbstractTest()
     }
 
     @Test
-    fun `Should support switching by type`()
-    {
+    fun `Should support switching by type`() {
         val scrn = ScreenCache.get<MenuScreen>()
         ScreenCache.switch<MenuScreen>()
 
@@ -68,8 +62,7 @@ class TestScreenCache: AbstractTest()
     }
 
     @Test
-    fun `Should return the unique count of darts game screens`()
-    {
+    fun `Should return the unique count of darts game screens`() {
         val screenOne = mockk<DartsGameScreen>(relaxed = true)
         val screenTwo = mockk<DartsGameScreen>(relaxed = true)
 
@@ -83,8 +76,7 @@ class TestScreenCache: AbstractTest()
     }
 
     @Test
-    fun `Should be able to get the screen for a particular GameId`()
-    {
+    fun `Should be able to get the screen for a particular GameId`() {
         ScreenCache.getDartsGameScreen("Game 1") shouldBe null
 
         val screenOne = mockk<DartsGameScreen>(relaxed = true)
@@ -93,8 +85,7 @@ class TestScreenCache: AbstractTest()
     }
 
     @Test
-    fun `Should be able to remove a screen`()
-    {
+    fun `Should be able to remove a screen`() {
         val screenOne = mockk<DartsGameScreen>(relaxed = true)
         val screenTwo = mockk<DartsGameScreen>(relaxed = true)
 

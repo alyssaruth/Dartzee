@@ -1,65 +1,25 @@
 package dartzee.helper
 
-import io.kotlintest.fail
-import io.kotlintest.shouldBe
-import java.security.Permission
+import dartzee.core.helper.verifyNotCalled
+import dartzee.main.IExiter
+import dartzee.utils.InjectedThings
+import io.mockk.mockk
+import io.mockk.verify
 
-private class ExitException(val status: Int): SecurityException("Nope")
-private class NoExitSecurityManager(val originalSecurityManager: SecurityManager?): SecurityManager()
-{
-    override fun checkPermission(perm: Permission?)
-    {
-        originalSecurityManager?.checkPermission(perm)
-    }
+fun assertExits(expectedStatus: Int, fn: () -> Unit) {
+    val exiter = mockk<IExiter>(relaxed = true)
+    InjectedThings.exiter = exiter
 
-    override fun checkPermission(perm: Permission?, context: Any?)
-    {
-        originalSecurityManager?.checkPermission(perm, context)
-    }
+    fn()
 
-    override fun checkExit(status: Int)
-    {
-        super.checkExit(status)
-        throw ExitException(status)
-    }
+    verify { exiter.exit(expectedStatus) }
 }
 
+fun assertDoesNotExit(fn: () -> Unit) {
+    val exiter = mockk<IExiter>(relaxed = true)
+    InjectedThings.exiter = exiter
 
-fun assertExits(expectedStatus: Int, fn: () -> Unit)
-{
-    val originalSecurityManager = System.getSecurityManager()
-    System.setSecurityManager(NoExitSecurityManager(originalSecurityManager))
+    fn()
 
-    try
-    {
-        fn()
-        fail("Expected exitProcess($expectedStatus), but it wasn't called")
-    }
-    catch (e: ExitException)
-    {
-        e.status shouldBe expectedStatus
-    }
-    finally
-    {
-        System.setSecurityManager(originalSecurityManager)
-    }
-}
-
-fun assertDoesNotExit(fn: () -> Unit)
-{
-    val originalSecurityManager = System.getSecurityManager()
-    System.setSecurityManager(NoExitSecurityManager(originalSecurityManager))
-
-    try
-    {
-        fn()
-    }
-    catch (e: ExitException)
-    {
-        fail("Called exitProcess(${e.status})")
-    }
-    finally
-    {
-        System.setSecurityManager(originalSecurityManager)
-    }
+    verifyNotCalled { exiter.exit(any()) }
 }

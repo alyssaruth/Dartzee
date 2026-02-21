@@ -1,23 +1,22 @@
 package dartzee.achievements.rtc
 
-import dartzee.`object`.Dart
-import dartzee.achievements.AchievementType
 import dartzee.achievements.AbstractAchievement
+import dartzee.achievements.AchievementType
 import dartzee.achievements.appendPlayerSql
 import dartzee.core.obj.HashMapList
 import dartzee.db.AchievementEntity
 import dartzee.game.GameType
+import dartzee.`object`.Dart
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache.URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 import dartzee.utils.getLongestStreak
-import java.net.URL
 
-class AchievementClockBestStreak: AbstractAchievement()
-{
+class AchievementClockBestStreak : AbstractAchievement() {
     override val achievementType = AchievementType.CLOCK_BEST_STREAK
     override val name = "Like Clockwork"
     override val desc = "Longest streak of hits in Round the Clock"
     override val gameType = GameType.ROUND_THE_CLOCK
+    override val allowedForTeams = false
 
     override val redThreshold = 2
     override val orangeThreshold = 3
@@ -27,15 +26,17 @@ class AchievementClockBestStreak: AbstractAchievement()
     override val pinkThreshold = 12
     override val maxValue = 20
 
-    override fun getIconURL(): URL = URL_ACHIEVEMENT_CLOCK_BEST_STREAK
+    override fun getIconURL() = URL_ACHIEVEMENT_CLOCK_BEST_STREAK
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
         val sb = StringBuilder()
-        sb.append(" SELECT pt.PlayerId, g.RowId AS GameId, pt.RowId AS ParticipantId, drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.DtLastUpdate")
+        sb.append(
+            " SELECT pt.PlayerId, g.RowId AS GameId, pt.RowId AS ParticipantId, drt.Ordinal, drt.Score, drt.Multiplier, drt.StartingScore, drt.DtLastUpdate"
+        )
         sb.append(" FROM Game g, Participant pt, Dart drt")
         sb.append(" WHERE g.GameType = '${GameType.ROUND_THE_CLOCK}'")
         sb.append(" AND pt.GameId = g.RowId")
+        sb.append(" AND pt.TeamId = ''")
         sb.append(" AND drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")
         appendPlayerSql(sb, playerIds)
@@ -43,8 +44,7 @@ class AchievementClockBestStreak: AbstractAchievement()
 
         val hmPlayerIdToDarts = HashMapList<String, Dart>()
         database.executeQuery(sb).use { rs ->
-            while (rs.next())
-            {
+            while (rs.next()) {
                 val playerId = rs.getString("PlayerId")
                 val gameId = rs.getString("GameId")
                 val participantId = rs.getString("ParticipantId")
@@ -65,11 +65,19 @@ class AchievementClockBestStreak: AbstractAchievement()
             }
         }
 
-        hmPlayerIdToDarts.forEach{ playerId, darts ->
+        hmPlayerIdToDarts.forEach { playerId, darts ->
             val streak = getLongestStreak(darts)
             val lastDart = streak.last()
 
-            AchievementEntity.factoryAndSave(achievementType, playerId, lastDart.gameId, streak.size, "", lastDart.dtThrown, database)
+            AchievementEntity.factoryAndSave(
+                achievementType,
+                playerId,
+                lastDart.gameId,
+                streak.size,
+                "",
+                lastDart.dtThrown,
+                database,
+            )
         }
     }
 }

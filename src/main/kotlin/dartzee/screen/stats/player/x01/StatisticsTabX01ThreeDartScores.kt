@@ -18,19 +18,19 @@ import javax.swing.JPanel
 import javax.swing.ListSelectionModel
 import javax.swing.SwingConstants
 
-class StatisticsTabX01ThreeDartScores : AbstractStatisticsTab(), RowSelectionListener
-{
+class StatisticsTabX01ThreeDartScores : AbstractStatisticsTab(), RowSelectionListener {
     private val panelTables = JPanel()
-    private val tableBreakdownMine = ScrollTableDartsGame("Example Game", testId = "PlayerBreakdown")
-    private val tableBreakdownOther = ScrollTableDartsGame("Example Game", testId = "OtherBreakdown")
+    private val tableBreakdownMine =
+        ScrollTableDartsGame("Example Game", testId = "PlayerBreakdown")
+    private val tableBreakdownOther =
+        ScrollTableDartsGame("Example Game", testId = "OtherBreakdown")
     private val panelConfig = JPanel()
     private val lblScoreThreshold = JLabel("Score Threshold")
     private val nfScoreThreshold = NumberField(62, 300)
     private val tableScoresMine = ScrollTable(testId = "PlayerScores")
     private val tableScoresOther = ScrollTable(testId = "OtherScores")
 
-    init
-    {
+    init {
         nfScoreThreshold.columns = 10
         layout = BorderLayout(0, 0)
 
@@ -55,47 +55,43 @@ class StatisticsTabX01ThreeDartScores : AbstractStatisticsTab(), RowSelectionLis
         tableScoresOther.addRowSelectionListener(this)
     }
 
-    override fun populateStats()
-    {
+    override fun populateStats() {
         setComponentVisibility()
 
         populateTable(tableScoresMine, filteredGames)
-        if (includeOtherComparison())
-        {
+        if (includeOtherComparison()) {
             populateTable(tableScoresOther, filteredGamesOther)
         }
     }
 
-    private fun setComponentVisibility()
-    {
+    private fun setComponentVisibility() {
         panelTables.removeAll()
 
-        if (includeOtherComparison())
-        {
+        if (includeOtherComparison()) {
             panelTables.layout = GridLayout(2, 2, 0, 0)
             panelTables.add(tableScoresMine)
             panelTables.add(tableScoresOther)
             panelTables.add(tableBreakdownMine)
             panelTables.add(tableBreakdownOther)
-        }
-        else
-        {
+        } else {
             panelTables.layout = GridLayout(2, 1, 0, 0)
             panelTables.add(tableScoresMine)
             panelTables.add(tableBreakdownMine)
         }
     }
 
-    private fun populateTable(table: ScrollTable, filteredGames: List<GameWrapper>)
-    {
-        //Sort by start date
+    private fun populateTable(table: ScrollTable, filteredGames: List<GameWrapper>) {
+        // Sort by start date
         val sortedGames = filteredGames.sortedBy { it.dtStart }
 
-        //Build up two maps, one of score to count (e.g. 20, 5, 1 -> 10) and the other of score to example game
+        // Build up two maps, one of score to count (e.g. 20, 5, 1 -> 10) and the other of score to
+        // example game
         val hmScoreToThreeDartBreakdown = mutableMapOf<Int, ThreeDartScoreWrapper>()
-        for (game in sortedGames)
-        {
-            game.populateThreeDartScoreMap(hmScoreToThreeDartBreakdown, nfScoreThreshold.getNumber())
+        for (game in sortedGames) {
+            game.populateThreeDartScoreMap(
+                hmScoreToThreeDartBreakdown,
+                nfScoreThreshold.getNumber(),
+            )
         }
 
         val model = DefaultModel()
@@ -103,9 +99,10 @@ class StatisticsTabX01ThreeDartScores : AbstractStatisticsTab(), RowSelectionLis
         model.addColumn("Count")
         model.addColumn("!Wrapper")
 
-        val rows = hmScoreToThreeDartBreakdown.entries.map { (score, wrapper)
-            -> arrayOf(score, wrapper.getTotalCount(), wrapper)
-        }
+        val rows =
+            hmScoreToThreeDartBreakdown.entries.map { (score, wrapper) ->
+                arrayOf(score, wrapper.getTotalCount(), wrapper)
+            }
 
         model.addRows(rows)
 
@@ -120,9 +117,10 @@ class StatisticsTabX01ThreeDartScores : AbstractStatisticsTab(), RowSelectionLis
         table.sortBy(0, false)
     }
 
-
-    private fun populateBreakdownTable(table: ScrollTableDartsGame, wrapper: ThreeDartScoreWrapper)
-    {
+    private fun populateBreakdownTable(
+        table: ScrollTableDartsGame,
+        wrapper: ThreeDartScoreWrapper,
+    ) {
         val model = DefaultModel()
         model.addColumn("Method")
         model.addColumn("Count")
@@ -134,24 +132,21 @@ class StatisticsTabX01ThreeDartScores : AbstractStatisticsTab(), RowSelectionLis
 
         table.setRenderer(1, SimpleRenderer(SwingConstants.LEFT, null))
 
-        val footerRow = arrayOf("Total", wrapper.getTotalCount(), "-")
+        val footerRow = arrayOf<Any>("Total", wrapper.getTotalCount(), "-")
         table.addFooterRow(footerRow)
 
         table.sortBy(1, true)
     }
 
-    override fun selectionChanged(src: ScrollTable)
-    {
+    override fun selectionChanged(src: ScrollTable) {
         val selectedRow = src.selectedModelRow
-        if (selectedRow == -1)
-        {
+        if (selectedRow == -1) {
             return
         }
 
-        val wrapper = src.getValueAt(selectedRow, 2) as ThreeDartScoreWrapper
+        val wrapper = src.getNonNullValueAt(selectedRow, 2) as ThreeDartScoreWrapper
 
-        when (src)
-        {
+        when (src) {
             tableScoresMine -> populateBreakdownTable(tableBreakdownMine, wrapper)
             tableScoresOther -> populateBreakdownTable(tableBreakdownOther, wrapper)
         }

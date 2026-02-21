@@ -1,21 +1,19 @@
 package dartzee.screen.reporting
 
 import dartzee.core.screen.SimpleDialog
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import javax.swing.JCheckBox
 import javax.swing.JPanel
+import net.miginfocom.swing.MigLayout
 
 private val CONFIGURABLE_COLUMNS = listOf("Type", "Players", "Start Date", "Finish Date", "Match")
 
-class ConfigureReportColumnsDialog: SimpleDialog()
-{
+class ConfigureReportColumnsDialog : SimpleDialog() {
     private val hmColumnNameToCheckBox = mutableMapOf<String, JCheckBox>()
 
     private val panel = JPanel()
 
-    init
-    {
+    init {
         setSize(301, 251)
         title = "Configure Columns"
         isModal = true
@@ -26,8 +24,7 @@ class ConfigureReportColumnsDialog: SimpleDialog()
         init()
     }
 
-    private fun init()
-    {
+    private fun init() {
         CONFIGURABLE_COLUMNS.forEachIndexed { ix, columnName ->
             val cb = JCheckBox(columnName)
             cb.isSelected = true
@@ -39,8 +36,7 @@ class ConfigureReportColumnsDialog: SimpleDialog()
 
     fun excludedColumns() = hmColumnNameToCheckBox.filterValues { !it.isSelected }.map { it.key }
 
-    override fun okPressed()
-    {
+    override fun okPressed() {
         dispose()
     }
 

@@ -1,36 +1,30 @@
 package dartzee.db
 
+import com.github.alyssaburlton.swingtest.shouldMatch
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.helper.makeDartsModel
-import dartzee.shouldMatch
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.string.shouldNotBeEmpty
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.matchers.types.shouldBeNull
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import javax.swing.ImageIcon
+import org.junit.jupiter.api.Test
 
-class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
-{
+class TestPlayerEntity : AbstractEntityTest<PlayerEntity>() {
     override fun factoryDao() = PlayerEntity()
 
     @Test
-    fun `Should have sensible string representation`()
-    {
+    fun `Should have sensible string representation`() {
         val player = PlayerEntity()
         player.name = "BTBF"
         "$player" shouldBe "BTBF"
     }
 
     @Test
-    fun `Should correctly identify human vs AI`()
-    {
+    fun `Should correctly identify human vs AI`() {
         val human = PlayerEntity()
         human.strategy = ""
 
@@ -47,8 +41,7 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
     }
 
     @Test
-    fun `Should correctly construct the AI model`()
-    {
+    fun `Should correctly construct the AI model`() {
         val model = makeDartsModel(scoringDart = 15)
 
         val player = PlayerEntity()
@@ -60,27 +53,18 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
     }
 
     @Test
-    fun `Should retrieve a player avatar`()
-    {
+    fun `Should retrieve a player avatar`() {
         val image = insertPlayerImage()
         val player = insertPlayer(playerImageId = image.rowId)
 
         val expected = ImageIcon(javaClass.getResource("/avatars/BaboOne.png"))
 
-        val imageIcon = player.getAvatar()!!
+        val imageIcon = player.getAvatar()
         imageIcon.shouldMatch(expected)
     }
 
     @Test
-    fun `Should return a null avatar for a player who does not have playerImageId set`()
-    {
-        val player = insertPlayer(playerImageId = "")
-        player.getAvatar().shouldBeNull()
-    }
-
-    @Test
-    fun `Should automatically exclude deleted players for custom queries`()
-    {
+    fun `Should automatically exclude deleted players for custom queries`() {
         insertPlayer(name = "Bob", dtDeleted = getSqlDateNow())
         val p2 = insertPlayer(name = "Bob", dtDeleted = DateStatics.END_OF_TIME)
         val p3 = insertPlayer(name = "Clive", dtDeleted = DateStatics.END_OF_TIME)
@@ -90,8 +74,7 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
     }
 
     @Test
-    fun `Should automatically exclude deleted players when retrieving by name`()
-    {
+    fun `Should automatically exclude deleted players when retrieving by name`() {
         insertPlayer(name = "Bob", dtDeleted = getSqlDateNow())
         val p2 = insertPlayer(name = "Bob", dtDeleted = DateStatics.END_OF_TIME)
         insertPlayer(name = "Clive", dtDeleted = getSqlDateNow())
@@ -99,19 +82,5 @@ class TestPlayerEntity: AbstractEntityTest<PlayerEntity>()
         PlayerEntity.retrieveForName("Bob")!!.rowId shouldBe p2.rowId
         PlayerEntity.retrieveForName("Clive") shouldBe null
         PlayerEntity.retrieveForName("ZZZZ") shouldBe null
-    }
-
-    @Test
-    fun `Should save a human player to the database`()
-    {
-        val p = PlayerEntity.factoryAndSaveHuman("Clive", "foo")
-
-        p.retrievedFromDb shouldBe true
-        p.rowId.shouldNotBeEmpty()
-        p.name shouldBe "Clive"
-        p.playerImageId shouldBe "foo"
-        p.strategy shouldBe ""
-
-        PlayerEntity().retrieveForId(p.rowId).shouldNotBeNull()
     }
 }

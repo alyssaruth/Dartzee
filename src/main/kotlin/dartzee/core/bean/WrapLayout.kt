@@ -6,47 +6,38 @@ import java.awt.FlowLayout
 import javax.swing.JScrollPane
 import javax.swing.SwingUtilities
 
-/**
- * FlowLayout subclass that fully supports wrapping of components.
- */
-class WrapLayout : FlowLayout()
-{
+/** FlowLayout subclass that fully supports wrapping of components. */
+class WrapLayout : FlowLayout() {
     /**
-     * Returns the preferred dimensions for this layout given the
-     * *visible* components in the specified target container.
+     * Returns the preferred dimensions for this layout given the *visible* components in the
+     * specified target container.
+     *
      * @param target the component which needs to be laid out
-     * @return the preferred dimensions to lay out the
-     * subcomponents of the specified container
+     * @return the preferred dimensions to lay out the subcomponents of the specified container
      */
-    override fun preferredLayoutSize(target: Container): Dimension
-    {
-        return layoutSize(target, true)
-    }
+    override fun preferredLayoutSize(target: Container) = layoutSize(target, true)
 
     /**
-     * Returns the minimum dimensions needed to layout the *visible*
-     * components contained in the specified target container.
+     * Returns the minimum dimensions needed to layout the *visible* components contained in the
+     * specified target container.
+     *
      * @param target the component which needs to be laid out
-     * @return the minimum dimensions to lay out the
-     * subcomponents of the specified container
+     * @return the minimum dimensions to lay out the subcomponents of the specified container
      */
-    override fun minimumLayoutSize(target: Container): Dimension
-    {
+    override fun minimumLayoutSize(target: Container): Dimension {
         val minimum = layoutSize(target, false)
         minimum.width -= hgap + 1
         return minimum
     }
 
     /**
-     * Returns the minimum or preferred dimension needed to layout the target
-     * container.
+     * Returns the minimum or preferred dimension needed to layout the target container.
      *
      * @param target target to get layout size for
      * @param preferred should preferred size be calculated
      * @return the dimension to layout the target container
      */
-    private fun layoutSize(target: Container, preferred: Boolean): Dimension
-    {
+    private fun layoutSize(target: Container, preferred: Boolean): Dimension {
         synchronized(target.treeLock) {
             //  Each row must fit with the width allocated to the containter.
             //  When the container width = 0, the preferred width of the container
@@ -94,9 +85,7 @@ class WrapLayout : FlowLayout()
             //  make sure the preferred size is less than the size of the
             //  target containter so shrinking the container size works
             //  correctly. Removing the horizontal gap is an easy way to do this.
-            val scrollPane = SwingUtilities.getAncestorOfClass(
-                JScrollPane::class.java, target
-            )
+            val scrollPane = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, target)
             if (scrollPane != null && target.isValid) {
                 dim.width -= hgap + 1
             }
@@ -105,15 +94,14 @@ class WrapLayout : FlowLayout()
     }
 
     /**
-     * A new row has been completed. Use the dimensions of this row
-     * to update the preferred size for the container.
+     * A new row has been completed. Use the dimensions of this row to update the preferred size for
+     * the container.
      *
      * @param dim update the width and height when appropriate
      * @param rowWidth the width of the row to add
      * @param rowHeight the height of the row to add
      */
-    private fun addRow(dim: Dimension, rowWidth: Int, rowHeight: Int)
-    {
+    private fun addRow(dim: Dimension, rowWidth: Int, rowHeight: Int) {
         dim.width = maxOf(dim.width, rowWidth)
         if (dim.height > 0) {
             dim.height += vgap

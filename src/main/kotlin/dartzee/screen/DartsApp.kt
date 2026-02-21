@@ -1,17 +1,17 @@
 package dartzee.screen
 
-import com.mashape.unirest.http.Unirest
-import dartzee.`object`.DartsClient
 import dartzee.achievements.convertEmptyAchievements
+import dartzee.achievements.x01.AchievementX01Chucklevision
 import dartzee.core.bean.AbstractDevScreen
 import dartzee.core.bean.CheatBar
 import dartzee.core.util.DialogUtil
 import dartzee.db.GameEntity
-import dartzee.db.sanity.DatabaseSanityCheck
 import dartzee.logging.CODE_SCREEN_LOAD_ERROR
+import dartzee.logging.CODE_SWITCHED_SCREEN
 import dartzee.logging.KEY_CURRENT_SCREEN
 import dartzee.logging.LoggingCode
 import dartzee.main.exitApplication
+import dartzee.`object`.DartsClient
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
@@ -22,26 +22,36 @@ import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Image
-import java.awt.event.*
+import java.awt.event.ActionEvent
+import java.awt.event.InputEvent
+import java.awt.event.KeyEvent
+import java.awt.event.WindowEvent
+import java.awt.event.WindowListener
 import java.util.*
-import javax.swing.*
+import javax.swing.AbstractAction
+import javax.swing.ImageIcon
+import javax.swing.JComponent
+import javax.swing.JPanel
+import javax.swing.KeyStroke
+import javax.swing.WindowConstants
 
 private const val CMD_PURGE_GAME = "purge "
 private const val CMD_LOAD_GAME = "load "
 private const val CMD_CLEAR_CONSOLE = "cls"
 private const val CMD_EMPTY_SCREEN_CACHE = "emptyscr"
-private const val CMD_SANITY = "sanity"
 private const val CMD_GUID = "guid"
+private const val CMD_TEST = "test"
 
-class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener
-{
+val APP_SIZE = Dimension(1000, 700)
+
+class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener {
     override val windowName = "Main Window"
     var currentScreen: EmbeddedScreen = ScreenCache.get<MenuScreen>()
 
-    init
-    {
+    init {
         title = "Darts"
-        setSize(800, 600)
+        size = APP_SIZE
+        minimumSize = APP_SIZE
         setLocationRelativeTo(null)
         contentPane.layout = BorderLayout(0, 0)
 
@@ -51,8 +61,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         addWindowListener(this)
     }
 
-    fun init()
-    {
+    fun init() {
         setIcon()
 
         ResourceCache.initialiseResources()
@@ -64,25 +73,25 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         addConsoleShortcut()
         switchScreen(ScreenCache.get<MenuScreen>())
 
-        //Pop up the change log if we've just updated
-        if (DartsClient.justUpdated)
-        {
+        // Pop up the change log if we've just updated
+        if (DartsClient.justUpdated) {
             convertEmptyAchievements()
+
+            // TODO - Remove before next release
+            AchievementX01Chucklevision().runConversion(emptyList())
 
             val dialog = ChangeLog()
             dialog.isVisible = true
         }
     }
 
-    private fun setIcon()
-    {
+    private fun setIcon() {
         val imageStr = "dartzee"
 
-        //Load the four images corresponding to 16px, 32px, 64px and 128px
+        // Load the four images corresponding to 16px, 32px, 64px and 128px
         val images = ArrayList<Image>()
         var i = 16
-        while (i < 256)
-        {
+        while (i < 256) {
             val ico = ImageIcon(javaClass.getResource("/icons/$imageStr$i.png")).image
             images.add(ico)
             i *= 2
@@ -91,8 +100,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         iconImages = images
     }
 
-    private fun addConsoleShortcut()
-    {
+    private fun addConsoleShortcut() {
         val triggerStroke = KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK)
         val content = contentPane as JPanel
 
@@ -100,32 +108,30 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         inputMap.put(triggerStroke, "showConsole")
 
         val actionMap = content.actionMap
-        actionMap.put("showConsole", object : AbstractAction()
-        {
-            override fun actionPerformed(e: ActionEvent)
-            {
-                val loggingDialog = InjectedThings.loggingConsole
-                loggingDialog.isVisible = true
-                loggingDialog.toFront()
-            }
-        })
+        actionMap.put(
+            "showConsole",
+            object : AbstractAction() {
+                override fun actionPerformed(e: ActionEvent) {
+                    val loggingDialog = InjectedThings.loggingConsole
+                    loggingDialog.isVisible = true
+                    loggingDialog.toFront()
+                }
+            },
+        )
     }
 
-    fun switchScreen(scrn: EmbeddedScreen, reInit: Boolean = true)
-    {
-        try
-        {
-            if (reInit)
-            {
+    fun switchScreen(scrn: EmbeddedScreen, reInit: Boolean = true) {
+        try {
+            if (reInit) {
                 scrn.initialise()
             }
-        }
-        catch (t: Throwable)
-        {
+        } catch (t: Throwable) {
             logger.error(CODE_SCREEN_LOAD_ERROR, "Failed to load screen ${scrn.getScreenName()}", t)
-            DialogUtil.showError("Error loading screen - " + scrn.getScreenName())
+            DialogUtil.showErrorOLD("Error loading screen - " + scrn.getScreenName())
             return
         }
+
+        logger.info(CODE_SWITCHED_SCREEN, "Switched to screen ${scrn.getScreenName()}")
 
         contentPane.remove(this.currentScreen)
 
@@ -137,94 +143,58 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
         logger.addToContext(KEY_CURRENT_SCREEN, scrn.getScreenName())
 
-        val desiredSize = scrn.getDesiredSize()
-        if (desiredSize != null)
-        {
-            size = desiredSize
-            minimumSize = desiredSize
-        }
-        else
-        {
-            minimumSize = Dimension(800, 600)
-            setSize(800, 600) //Revert to default
-        }
-
-        //Need pack() to ensure the dialog resizes correctly.
-        //Need repaint() in case we don't resize.
+        // Need repaint() in case we don't resize.
         pack()
         repaint()
 
         scrn.postInit()
     }
 
-    /**
-     * CheatListener
-     */
+    /** CheatListener */
     override fun commandsEnabled() = DartsClient.devMode
 
-    override fun processCommand(cmd: String): String
-    {
+    override fun processCommand(cmd: String): String {
         var textToShow = ""
-        if (cmd.startsWith(CMD_PURGE_GAME))
-        {
+        if (cmd.startsWith(CMD_PURGE_GAME)) {
             val gameIdentifier = cmd.substring(CMD_PURGE_GAME.length)
             val gameId = Integer.parseInt(gameIdentifier)
             DevUtilities.purgeGame(gameId.toLong())
-        }
-        else if (cmd.startsWith(CMD_LOAD_GAME))
-        {
+        } else if (cmd.startsWith(CMD_LOAD_GAME)) {
             val gameIdentifier = cmd.substring(CMD_LOAD_GAME.length)
             val localId = gameIdentifier.toLong()
             val gameId = GameEntity.getGameId(localId)
             gameId?.let { gameLauncher.loadAndDisplayGame(gameId) }
-        }
-        else if (cmd == CMD_CLEAR_CONSOLE)
-        {
+        } else if (cmd == CMD_CLEAR_CONSOLE) {
             InjectedThings.loggingConsole.clear()
-        }
-        else if (cmd == "dim")
-        {
+        } else if (cmd == "dim") {
             println("Current screen size: $size")
-        }
-        else if (cmd == CMD_EMPTY_SCREEN_CACHE)
-        {
+        } else if (cmd == CMD_EMPTY_SCREEN_CACHE) {
             ScreenCache.emptyCache()
-        }
-        else if (cmd == CMD_SANITY)
-        {
-            DatabaseSanityCheck.runSanityCheck()
-        }
-        else if (cmd == CMD_GUID)
-        {
+        } else if (cmd == CMD_GUID) {
             textToShow = UUID.randomUUID().toString()
-        }
-        else if (cmd == "git")
-        {
-            val response = Unirest.get("https://api.github.com/repos/alexburlton/DartzeeRelease/releases/latest").asJson()
-
-            println("Response tag: " + response.body.`object`.get("tag_name"))
-        }
-        else if (cmd == "load")
-        {
-            DialogUtil.showLoadingDialog("Testing")
-        }
-        else if (cmd == "stacktrace")
-        {
+        } else if (cmd == "stacktrace") {
             logger.error(LoggingCode("test"), "Testing stack trace")
+        } else if (cmd == CMD_TEST) {
+            val window = TestWindow()
+            window.isVisible = true
         }
 
         return textToShow
     }
 
     override fun windowActivated(arg0: WindowEvent) {}
+
     override fun windowClosed(arg0: WindowEvent) {}
+
     override fun windowDeactivated(arg0: WindowEvent) {}
+
     override fun windowDeiconified(arg0: WindowEvent) {}
+
     override fun windowIconified(arg0: WindowEvent) {}
+
     override fun windowOpened(arg0: WindowEvent) {}
 
-    override fun windowClosing(arg0: WindowEvent)
-    {
+    override fun windowClosing(arg0: WindowEvent) {
         exitApplication()
     }
 }

@@ -1,7 +1,7 @@
 package dartzee.screen.reporting
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.game.GameType
@@ -9,23 +9,21 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.makeInvalid
 import dartzee.screen.ScreenCache
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldNotBeEmpty
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldNotBeEmpty
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import javax.swing.JCheckBox
+import org.junit.jupiter.api.Test
 
-class TestReportingSetupScreen: AbstractTest()
-{
+class TestReportingSetupScreen : AbstractTest() {
     @Test
-    fun `Should not progress if game tab is invalid`()
-    {
+    fun `Should not progress if game tab is invalid`() {
         val scrn = ReportingSetupScreen()
         ScreenCache.switch(scrn)
 
         val gameTab = scrn.getChild<ReportingGameTab>()
-        gameTab.clickChild<JCheckBox>("Start Date")
+        gameTab.clickChild<JCheckBox>(text = "Start Date")
         gameTab.getStartDateFilterPanel().makeInvalid()
 
         scrn.btnNext.doClick()
@@ -35,8 +33,7 @@ class TestReportingSetupScreen: AbstractTest()
     }
 
     @Test
-    fun `Should not progress if players tab is invalid`()
-    {
+    fun `Should not progress if players tab is invalid`() {
         val scrn = ReportingSetupScreen()
         ScreenCache.switch(scrn)
 
@@ -48,28 +45,30 @@ class TestReportingSetupScreen: AbstractTest()
 
         scrn.btnNext.doClick()
         ScreenCache.currentScreen() shouldBe scrn
-        dialogFactory.errorsShown.shouldContainExactly("You must select at least one finishing position for player Alice")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "You must select at least one finishing position for player Alice"
+        )
     }
 
     @Test
-    fun `Should populate report parameters from both tabs and progress to results screen`()
-    {
+    fun `Should populate report parameters from both tabs and progress to results screen`() {
         val scrn = ReportingSetupScreen()
 
         val gameTab = scrn.getChild<ReportingGameTab>()
-        gameTab.clickChild<JCheckBox>("Game")
+        gameTab.clickChild<JCheckBox>(text = "Game")
 
         val playersTab = scrn.getChild<ReportingPlayersTab>()
-        playersTab.clickChild<JCheckBox>("Exclude games with only AI players")
+        playersTab.clickChild<JCheckBox>(text = "Exclude games with only AI players")
 
         scrn.btnNext.doClick()
 
         ScreenCache.currentScreen().shouldBeInstanceOf<ReportingResultsScreen>()
         val resultsScreen = ScreenCache.currentScreen() as ReportingResultsScreen
         val rp = resultsScreen.rp!!
-        rp.gameType shouldBe GameType.X01
-        rp.excludeOnlyAi shouldBe true
+        rp.game.gameType shouldBe GameType.X01
+        rp.players.excludeOnlyAi shouldBe true
     }
 
-    private fun ReportingGameTab.getStartDateFilterPanel() = getAllChildComponentsForType<DateFilterPanel>().first()
+    private fun ReportingGameTab.getStartDateFilterPanel() =
+        getAllChildComponentsForType<DateFilterPanel>().first()
 }

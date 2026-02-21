@@ -16,9 +16,7 @@ import javax.swing.JPanel
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-
-class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeListener
-{
+class PlayerStatisticsFilterDialog(gameType: GameType) : SimpleDialog(), ChangeListener {
     private var gameParams = ""
     private var filterByDate = false
 
@@ -30,8 +28,7 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
     private val chckbxDatePlayed = JCheckBox("Date")
     private val dateFilter = DateFilterPanel()
 
-    init
-    {
+    init {
         title = "Filters"
         setSize(473, 200)
         isModal = true
@@ -54,15 +51,11 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
         chckbxDatePlayed.addChangeListener(this)
     }
 
-    fun getFiltersDesc(): String
-    {
+    fun getFiltersDesc(): String {
         var desc = "Showing "
-        if (gameParams.isEmpty())
-        {
+        if (gameParams.isEmpty()) {
             desc += "all games"
-        }
-        else
-        {
+        } else {
             desc += filterPanel.getFilterDesc()
         }
 
@@ -71,33 +64,26 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
 
     fun getDateDesc() = if (filterByDate) dateFilter.getFilterDesc() else ""
 
-    fun resetFilters()
-    {
+    fun resetFilters() {
         gameParams = ""
         filterByDate = false
     }
 
-    private fun saveState()
-    {
-        if (cbType.isSelected)
-        {
+    private fun saveState() {
+        if (cbType.isSelected) {
             gameParams = filterPanel.getGameParams()
-        }
-        else
-        {
+        } else {
             gameParams = ""
         }
 
         filterByDate = chckbxDatePlayed.isSelected
     }
 
-    fun refresh()
-    {
+    fun refresh() {
         cbType.isSelected = !gameParams.isEmpty()
         filterPanel.isEnabled = cbType.isSelected
 
-        if (!gameParams.isEmpty())
-        {
+        if (!gameParams.isEmpty()) {
             filterPanel.setGameParams(gameParams)
         }
 
@@ -105,25 +91,18 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
         dateFilter.enableChildren(chckbxDatePlayed.isSelected)
     }
 
-    private fun valid():Boolean
-    {
-        return dateFilter.valid()
-    }
+    private fun valid() = dateFilter.valid()
 
-    fun includeGameBasedOnFilters(game:GameWrapper):Boolean
-    {
+    fun includeGameBasedOnFilters(game: GameWrapper): Boolean {
         val gameParamsToCheck = game.gameParams
-        if (!gameParams.isEmpty() && gameParamsToCheck != gameParams)
-        {
+        if (gameParams.isNotEmpty() && gameParamsToCheck != gameParams) {
             return false
         }
 
-        //Date filter
-        if (filterByDate)
-        {
+        // Date filter
+        if (filterByDate) {
             val dtStart = game.dtStart
-            if (!dateFilter.filterSqlDate(dtStart))
-            {
+            if (!dateFilter.filterSqlDate(dtStart)) {
                 return false
             }
         }
@@ -131,10 +110,8 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
         return true
     }
 
-    override fun okPressed()
-    {
-        if (valid())
-        {
+    override fun okPressed() {
+        if (valid()) {
             saveState()
             dispose()
 
@@ -143,15 +120,11 @@ class PlayerStatisticsFilterDialog(gameType: GameType): SimpleDialog(), ChangeLi
         }
     }
 
-    override fun stateChanged(arg0:ChangeEvent)
-    {
+    override fun stateChanged(arg0: ChangeEvent) {
         val src = arg0.source as Component
-        if (src === cbType)
-        {
+        if (src === cbType) {
             filterPanel.isEnabled = cbType.isSelected
-        }
-        else if (src === chckbxDatePlayed)
-        {
+        } else if (src === chckbxDatePlayed) {
             dateFilter.enableChildren(chckbxDatePlayed.isSelected)
         }
     }

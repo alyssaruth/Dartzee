@@ -2,26 +2,23 @@ package dartzee.bean
 
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.awt.event.ActionListener
+import org.junit.jupiter.api.Test
 
-class TestGameParamFilterPanelGolf: AbstractTest()
-{
+class TestGameParamFilterPanelGolf : AbstractTest() {
     @Test
-    fun `Should select 18 holes by default`()
-    {
+    fun `Should select 18 holes by default`() {
         val panel = GameParamFilterPanelGolf()
 
         panel.rdbtn18.isSelected shouldBe true
     }
 
     @Test
-    fun `Should return game params based on the radio selection`()
-    {
+    fun `Should return game params based on the radio selection`() {
         val panel = GameParamFilterPanelGolf()
 
         panel.rdbtn9.doClick()
@@ -34,8 +31,7 @@ class TestGameParamFilterPanelGolf: AbstractTest()
     }
 
     @Test
-    fun `Should support setting the selection by gameParams`()
-    {
+    fun `Should support setting the selection by gameParams`() {
         val panel = GameParamFilterPanelGolf()
 
         panel.setGameParams("9")
@@ -46,8 +42,7 @@ class TestGameParamFilterPanelGolf: AbstractTest()
     }
 
     @Test
-    fun `Should enable and disable its radio buttons correctly`()
-    {
+    fun `Should enable and disable its radio buttons correctly`() {
         val panel = GameParamFilterPanelGolf()
 
         panel.enableChildren(false)
@@ -60,8 +55,7 @@ class TestGameParamFilterPanelGolf: AbstractTest()
     }
 
     @Test
-    fun `Should add and remove action listeners on the radio button panel`()
-    {
+    fun `Should add and remove action listeners on the radio button panel`() {
         val panel = GameParamFilterPanelGolf()
 
         val listener = mockk<ActionListener>(relaxed = true)

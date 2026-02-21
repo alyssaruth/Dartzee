@@ -2,9 +2,11 @@ package dartzee.screen.game.scorer
 
 import dartzee.core.util.DateStatics
 import dartzee.game.state.AbstractPlayerState
+import dartzee.game.state.IWrappedParticipant
 import dartzee.logging.CODE_PLAYER_PAUSED
 import dartzee.logging.CODE_PLAYER_UNPAUSED
 import dartzee.screen.game.GamePanelPausable
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.ResourceCache.ICON_PAUSE
 import dartzee.utils.ResourceCache.ICON_RESUME
@@ -14,78 +16,85 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
 
-abstract class AbstractDartsScorerPausable<PlayerState: AbstractPlayerState<PlayerState>>(private val parent: GamePanelPausable<*, *, *>) : AbstractDartsScorer<PlayerState>(), ActionListener
-{
+abstract class AbstractDartsScorerPausable<PlayerState : AbstractPlayerState<PlayerState>>(
+    private val parent: GamePanelPausable<*, *>,
+    participant: IWrappedParticipant,
+) : AbstractDartsScorer<PlayerState>(participant), ActionListener {
     private val btnResume = JButton("")
     private var latestState: PlayerState? = null
 
-    init
-    {
+    init {
         btnResume.preferredSize = Dimension(30, 30)
-        panelSouth.add(btnResume, BorderLayout.EAST)
+        if (!InjectedThings.partyMode) {
+            panelSouth.add(btnResume, BorderLayout.EAST)
+        }
+
         btnResume.isVisible = false
         btnResume.icon = ICON_RESUME
+        btnResume.toolTipText = "Resume throwing"
 
         btnResume.addActionListener(this)
     }
 
     fun getPaused() = btnResume.icon === ICON_RESUME && btnResume.isVisible
 
-    override fun stateChanged(state: PlayerState)
-    {
+    override fun stateChanged(state: PlayerState) {
         super.stateChanged(state)
         latestState = state
     }
 
-    fun toggleResume()
-    {
-        if (btnResume.icon === ICON_PAUSE)
-        {
-            logger.info(CODE_PLAYER_PAUSED, "Paused player $playerId")
+    fun toggleResume() {
+        if (btnResume.icon === ICON_PAUSE) {
+            logger.info(
+                CODE_PLAYER_PAUSED,
+                "Paused player ${participant.getUniqueParticipantName()}",
+            )
             btnResume.icon = ICON_RESUME
-        }
-        else
-        {
-            logger.info(CODE_PLAYER_UNPAUSED, "Unpaused player $playerId")
+            btnResume.toolTipText = "Resume throwing"
+        } else {
+            logger.info(
+                CODE_PLAYER_UNPAUSED,
+                "Unpaused player ${participant.getUniqueParticipantName()}",
+            )
             btnResume.icon = ICON_PAUSE
+            btnResume.toolTipText = "Pause throwing"
             updateResultColourForPosition(-1)
         }
 
         latestState?.let(::stateChanged)
     }
 
-    protected fun finalisePlayerResult(state: PlayerState)
-    {
-        val dartCount = state.getScoreSoFar()
-        lblResult.text = "$dartCount Darts"
-
-        if (state.pt.finishingPosition == -1)
-        {
+    protected fun finalisePlayerResult(state: PlayerState) {
+        val participant = state.wrappedParticipant.participant
+        if (state.hasResigned()) {
+            lblResult.text = "RESIGNED"
+            updateResultColourForPosition(participant.finishingPosition)
             return
         }
 
-        val playerHasFinished = state.pt.dtFinished != DateStatics.END_OF_TIME
+        val dartCount = state.getScoreSoFar()
+        lblResult.text = "$dartCount Darts"
+
+        if (participant.finishingPosition == -1) {
+            return
+        }
+
+        val playerHasFinished = participant.dtFinished != DateStatics.END_OF_TIME
         btnResume.isVisible = !playerHasFinished
 
-        if (getPaused() && !playerHasFinished)
-        {
+        if (getPaused() && !playerHasFinished) {
             lblResult.text = "Unfinished"
         }
 
-        if (getPaused() || playerHasFinished)
-        {
-            updateResultColourForPosition(state.pt.finishingPosition)
+        if (getPaused() || playerHasFinished) {
+            updateResultColourForPosition(participant.finishingPosition)
         }
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        if (getPaused())
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        if (getPaused()) {
             parent.unpauseLastPlayer()
-        }
-        else
-        {
+        } else {
             parent.pauseLastPlayer()
         }
 

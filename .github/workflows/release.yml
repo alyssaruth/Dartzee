@@ -13,12 +13,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
-          java-version: 11
+          distribution: temurin
+          java-version: 21.0.10
       - name: Build JAR
-        run: ./gradlew jar --info
+        env:
+          AWS_SYNC: ${{ secrets.AWS_SYNC }}
+          AWS_LOGS: ${{ secrets.AWS_LOGS }}
+        run: |
+          echo -n $AWS_LOGS > src/main/resources/AWS_LOGS
+          echo -n $AWS_SYNC > src/main/resources/AWS_SYNC
+          ls src/main/resources
+          ./gradlew jar --info
       - name: Rename JAR
         run: |
           suffix="${{ github.event.inputs.version }}"
@@ -28,11 +36,11 @@ jobs:
           export CHANGELOG=$(awk "/--------- ${{ github.event.inputs.version }} ---------/,/coverage/" src/main/resources/ChangeLog)
           echo $CHANGELOG
       - name: Release
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1.12.0
         with:
           artifacts: "build/libs/*.jar"
-          commit: master
+          commit: main
           name: ${{ github.event.inputs.name }}
           tag: ${{ github.event.inputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          body: env.CHANGELOG
+          body: 'Automated release'

@@ -1,12 +1,10 @@
 provider "aws" {
-  profile    = "default"
   region     = var.aws_region
   access_key = var.aws_access_key_id
   secret_key = var.aws_secret_access_key
-  version    = "2.56"
 }
 
-data aws_caller_identity "current" {}
+data "aws_caller_identity" "current" {}
 
 resource "aws_elasticsearch_domain" "dartzee" {
   domain_name           = "dartzee"
@@ -55,6 +53,16 @@ data "aws_iam_policy_document" "elasticsearch_put" {
     resources = [
       "${aws_elasticsearch_domain.dartzee.arn}/dartzee/*",
       "${aws_elasticsearch_domain.dartzee.arn}/unittest/*"
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+
+    actions = ["es:ESHttpGet"]
+
+    resources = [
+      "${aws_elasticsearch_domain.dartzee.arn}/_cluster/health"
     ]
   }
 }

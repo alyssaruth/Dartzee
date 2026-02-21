@@ -1,31 +1,33 @@
 package dartzee.dartzee.dart
 
-import dartzee.*
 import dartzee.dartzee.AbstractDartzeeRuleTest
 import dartzee.dartzee.parseDartRule
+import dartzee.doubleTwenty
 import dartzee.helper.FakeDartzeeSegmentFactory
+import dartzee.outerBull
+import dartzee.singleTwenty
+import dartzee.trebleNineteen
+import dartzee.trebleTwenty
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.matchers.string.shouldBeEmpty
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.awt.event.ActionListener
+import org.junit.jupiter.api.Test
 
-class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>()
-{
+class TestDartzeeDartRuleCustom : AbstractDartzeeRuleTest<DartzeeDartRuleCustom>() {
     override val emptyIsValid = false
 
     override fun factory() = DartzeeDartRuleCustom()
 
     @Test
-    fun `a custom rule with at least one segment is valid`()
-    {
+    fun `a custom rule with at least one segment is valid`() {
         val rule = DartzeeDartRuleCustom()
         rule.segments.add(doubleTwenty)
 
@@ -33,8 +35,7 @@ class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>(
     }
 
     @Test
-    fun `description should return Custom or the specified name`()
-    {
+    fun `description should return Custom or the specified name`() {
         val rule = factory()
         rule.getDescription() shouldBe "Custom"
 
@@ -43,8 +44,7 @@ class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>(
     }
 
     @Test
-    fun `Should update the name variable when a new one is typed in`()
-    {
+    fun `Should update the name variable when a new one is typed in`() {
         val rule = factory()
         rule.tfName.text = "Foo"
 
@@ -53,8 +53,7 @@ class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>(
     }
 
     @Test
-    fun `segment validation`()
-    {
+    fun `segment validation`() {
         val rule = DartzeeDartRuleCustom()
         rule.segments.addAll(setOf(doubleTwenty, trebleNineteen))
 
@@ -64,8 +63,7 @@ class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>(
     }
 
     @Test
-    fun `Read and write XML`()
-    {
+    fun `Read and write XML`() {
         val rule = DartzeeDartRuleCustom()
 
         rule.segments.addAll(setOf(doubleTwenty, outerBull, trebleNineteen))
@@ -74,19 +72,17 @@ class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>(
         val xml = rule.toDbString()
         val parsedRule = parseDartRule(xml)
 
-        parsedRule.shouldBeInstanceOf<DartzeeDartRuleCustom> {
-            it.segments shouldHaveSize(3)
+        parsedRule.shouldBeInstanceOf<DartzeeDartRuleCustom>()
+        parsedRule.segments shouldHaveSize (3)
 
-            it.isValidSegment(doubleTwenty) shouldBe true
-            it.isValidSegment(singleTwenty) shouldBe false
-            it.name shouldBe "Foo"
-            it.tfName.text shouldBe "Foo"
-        }
+        parsedRule.isValidSegment(doubleTwenty) shouldBe true
+        parsedRule.isValidSegment(singleTwenty) shouldBe false
+        parsedRule.name shouldBe "Foo"
+        parsedRule.tfName.text shouldBe "Foo"
     }
 
     @Test
-    fun `Should propagate action events to other listeners`()
-    {
+    fun `Should propagate action events to other listeners`() {
         val rule = DartzeeDartRuleCustom()
         val listener = mockk<ActionListener>(relaxed = true)
 
@@ -98,8 +94,7 @@ class TestDartzeeDartRuleCustom: AbstractDartzeeRuleTest<DartzeeDartRuleCustom>(
     }
 
     @Test
-    fun `Should pop up segment selector and update accordingly`()
-    {
+    fun `Should pop up segment selector and update accordingly`() {
         val fakeFactory = FakeDartzeeSegmentFactory(hashSetOf(trebleTwenty, trebleNineteen))
         InjectedThings.dartzeeSegmentFactory = fakeFactory
 

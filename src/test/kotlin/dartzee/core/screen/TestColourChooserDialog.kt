@@ -1,39 +1,39 @@
 package dartzee.core.screen
 
+import com.github.alyssaburlton.swingtest.clickCancel
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
-import io.mockk.spyk
-import io.mockk.verify
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.shouldBe
 import java.awt.Color
+import org.junit.jupiter.api.Test
 
-class TestColourChooserDialog: AbstractTest()
-{
+class TestColourChooserDialog : AbstractTest() {
     @Test
-    fun `Should update selectedColour and dispose on Ok`()
-    {
-        val dlg = spyk<ColourChooserDialog>()
+    fun `Should update selectedColour and dispose on Ok`() {
+        val dlg = ColourChooserDialog()
+        dlg.isVisible = true
         dlg.initialColour = Color.RED
         dlg.selectedColour = Color.BLACK
 
         dlg.colourChooser.color = Color.YELLOW
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dlg.selectedColour shouldBe Color.YELLOW
-        verify { dlg.dispose() }
+        dlg.shouldNotBeVisible()
     }
 
     @Test
-    fun `Should set selectedColour back to initialColour and dispose on Cancel`()
-    {
-        val dlg = spyk<ColourChooserDialog>()
+    fun `Should set selectedColour back to initialColour and dispose on Cancel`() {
+        val dlg = ColourChooserDialog()
+        dlg.isVisible = true
         dlg.initialColour = Color.RED
         dlg.selectedColour = Color.BLACK
 
         dlg.colourChooser.color = Color.YELLOW
-        dlg.btnCancel.doClick()
+        dlg.clickCancel()
 
         dlg.selectedColour shouldBe Color.RED
-        verify { dlg.dispose() }
+        dlg.shouldNotBeVisible()
     }
 }

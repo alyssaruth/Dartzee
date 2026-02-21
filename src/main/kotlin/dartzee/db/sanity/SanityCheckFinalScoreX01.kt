@@ -3,20 +3,22 @@ package dartzee.db.sanity
 import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
 
-/**
- * Should be (totalRounds - 1) * 3 + (# darts in final round)
- */
-class SanityCheckFinalScoreX01: AbstractSanityCheckFinalScore()
-{
+/** Should be (totalRounds - 1) * 3 + (# darts in final round) */
+class SanityCheckFinalScoreX01 : AbstractSanityCheckFinalScore() {
     override val gameType = GameType.X01
 
-    override fun populateParticipantToFinalScoreTable(tempTable: String)
-    {
-        val tempTable1 = mainDatabase.createTempTable("ParticipantToRoundCount", "ParticipantId VARCHAR(36), PlayerId VARCHAR(36), RoundCount INT, FinalRoundNumber INT")
+    override fun populateParticipantToFinalScoreTable(tempTable: String) {
+        val tempTable1 =
+            mainDatabase.createTempTable(
+                "ParticipantToRoundCount",
+                "ParticipantId VARCHAR(36), PlayerId VARCHAR(36), RoundCount INT, FinalRoundNumber INT",
+            ) ?: return
 
         var sb = StringBuilder()
         sb.append("INSERT INTO $tempTable1")
-        sb.append(" SELECT pt.RowId, pt.PlayerId, COUNT(DISTINCT drt.RoundNumber), MAX(drt.RoundNumber)")
+        sb.append(
+            " SELECT pt.RowId, pt.PlayerId, COUNT(DISTINCT drt.RoundNumber), MAX(drt.RoundNumber)"
+        )
         sb.append(" FROM Dart drt, Participant pt, Game g")
         sb.append(" WHERE drt.ParticipantId = pt.RowId")
         sb.append(" AND drt.PlayerId = pt.PlayerId")

@@ -1,11 +1,17 @@
 package dartzee.screen.game.scorer
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.findChild
-import com.github.alexburlton.swingtest.getChild
-import dartzee.core.bean.SwingLabel
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.getChild
 import javax.swing.JButton
+import javax.swing.JLabel
 
-fun AbstractDartsScorer<*>.getAchievementOverlay() = findChild<AbstractDartsScorer<*>.AchievementOverlay>()
-fun AbstractDartsScorer<*>.AchievementOverlay.getAchievementName() = getChild<SwingLabel> { it.testId == "achievementName" }.text
-fun AbstractDartsScorer<*>.AchievementOverlay.close() = clickChild<JButton>("X")
+fun AbstractDartsScorer<*>.findAchievementOverlay() = findChild<AchievementOverlay>()
+
+fun AbstractDartsScorer<*>.getAchievementOverlay() = getChild<AchievementOverlay>()
+
+fun AchievementOverlay.getAchievementName(): String = getChild<JLabel>("achievementName").text
+
+fun AchievementOverlay.getPlayerName(): String = getChild<JLabel>("playerName").text
+
+fun AchievementOverlay.close() = clickChild<JButton>(text = "X")

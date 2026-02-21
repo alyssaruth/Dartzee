@@ -1,34 +1,31 @@
 package dartzee.logging
 
-import dartzee.`object`.DartsClient
 import dartzee.core.helper.verifyNotCalled
 import dartzee.db.PendingLogsEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.makeLogRecord
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotThrowAny
+import dartzee.`object`.DartsClient
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-class TestLogDestinationElasticsearch: AbstractTest()
-{
+class TestLogDestinationElasticsearch : AbstractTest() {
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         DartsClient.devMode = false
     }
 
     @Test
-    fun `Should not post logs in dev mode`()
-    {
+    fun `Should not post logs in dev mode`() {
         DartsClient.devMode = true
 
         val poster = mockPoster()
@@ -41,8 +38,7 @@ class TestLogDestinationElasticsearch: AbstractTest()
     }
 
     @Test
-    fun `Should queue up logs to be posted in the next run`()
-    {
+    fun `Should queue up logs to be posted in the next run`() {
         val poster = mockPoster()
         val dest = makeLogDestination(poster)
 
@@ -63,8 +59,7 @@ class TestLogDestinationElasticsearch: AbstractTest()
     }
 
     @Test
-    fun `Should remove a log from the queue if it is successful`()
-    {
+    fun `Should remove a log from the queue if it is successful`() {
         val poster = mockPoster()
         val dest = makeLogDestination(poster)
 
@@ -81,8 +76,7 @@ class TestLogDestinationElasticsearch: AbstractTest()
     }
 
     @Test
-    fun `Should leave a log on the queue to be reattempted if it fails`()
-    {
+    fun `Should leave a log on the queue to be reattempted if it fails`() {
         val poster = mockPoster(false)
         val dest = makeLogDestination(poster)
 
@@ -92,15 +86,26 @@ class TestLogDestinationElasticsearch: AbstractTest()
         dest.postPendingLogs()
         verify { poster.postLog(log.toJsonString()) }
 
-        clearAllMocks()
+        clearAllMocks(answers = false)
 
         dest.postPendingLogs()
         verify { poster.postLog(log.toJsonString()) }
     }
 
     @Test
-    fun `Should handle not having a poster if something goes wrong during startup`()
-    {
+    fun `Should not bother attempting to post any logs if not online`() {
+        val poster = mockPoster(online = false)
+        val dest = makeLogDestination(poster)
+        dest.log(makeLogRecord())
+        dest.log(makeLogRecord())
+
+        dest.postPendingLogs()
+
+        verifyNotCalled { poster.postLog(any()) }
+    }
+
+    @Test
+    fun `Should handle not having a poster if something goes wrong during startup`() {
         shouldNotThrowAny {
             val dest = makeLogDestination(null)
             dest.log(makeLogRecord())
@@ -109,8 +114,7 @@ class TestLogDestinationElasticsearch: AbstractTest()
     }
 
     @Test
-    fun `Should kick off posting logs immediately`()
-    {
+    fun `Should kick off posting logs immediately`() {
         val poster = mockPoster()
         val pool = Executors.newScheduledThreadPool(1)
         val dest = LogDestinationElasticsearch(poster, pool)
@@ -126,19 +130,17 @@ class TestLogDestinationElasticsearch: AbstractTest()
     }
 
     @Test
-    fun `Should schedule the posting of logs`()
-    {
+    fun `Should schedule the posting of logs`() {
         val scheduler = mockk<ScheduledExecutorService>(relaxed = true)
         val dest = LogDestinationElasticsearch(mockPoster(), scheduler)
 
         dest.startPosting()
 
-        verify { scheduler.scheduleAtFixedRate(any(), 0, 5, TimeUnit.SECONDS) }
+        verify { scheduler.scheduleAtFixedRate(any(), 0, 10, TimeUnit.SECONDS) }
     }
 
     @Test
-    fun `Should read in and delete from the pending logs table`()
-    {
+    fun `Should read in and delete from the pending logs table`() {
         val logJson = makeLogRecord().toJsonString()
         PendingLogsEntity.factory(logJson).saveToDatabase()
 
@@ -153,8 +155,7 @@ class TestLogDestinationElasticsearch: AbstractTest()
     }
 
     @Test
-    fun `Should shut down and write out unsent logs`()
-    {
+    fun `Should shut down and write out unsent logs`() {
         val scheduler = mockk<ScheduledExecutorService>(relaxed = true)
         val dest = makeLogDestination(mockPoster(), scheduler)
 
@@ -170,14 +171,15 @@ class TestLogDestinationElasticsearch: AbstractTest()
         pendingLogs.first().logJson shouldBe record.toJsonString()
     }
 
-    private fun makeLogDestination(poster: ElasticsearchPoster?,
-                                   scheduler: ScheduledExecutorService = mockk(relaxed = true)) =
-            LogDestinationElasticsearch(poster, scheduler)
+    private fun makeLogDestination(
+        poster: ElasticsearchPoster?,
+        scheduler: ScheduledExecutorService = mockk(relaxed = true),
+    ) = LogDestinationElasticsearch(poster, scheduler)
 
-    private fun mockPoster(success: Boolean = true): ElasticsearchPoster
-    {
+    private fun mockPoster(success: Boolean = true, online: Boolean = true): ElasticsearchPoster {
         val poster = mockk<ElasticsearchPoster>(relaxed = true)
         every { poster.postLog(any()) } returns success
+        every { poster.isOnline() } returns online
         return poster
     }
 }

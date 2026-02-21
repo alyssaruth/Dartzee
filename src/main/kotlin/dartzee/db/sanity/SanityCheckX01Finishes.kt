@@ -4,14 +4,11 @@ import dartzee.achievements.X01_ROUNDS_TABLE
 import dartzee.achievements.ensureX01RoundsTableExists
 import dartzee.core.util.TableUtil
 import dartzee.utils.InjectedThings.mainDatabase
-import java.sql.ResultSet
 
-class SanityCheckX01Finishes: AbstractSanityCheck()
-{
+class SanityCheckX01Finishes : ISanityCheck {
     data class X01Finish(val playerId: String, val gameId: String, val finish: Int)
 
-    override fun runCheck(): List<AbstractSanityCheckResult>
-    {
+    override fun runCheck(): List<AbstractSanityCheckResult> {
         ensureX01RoundsTableExists(emptyList(), mainDatabase)
 
         var sb = StringBuilder()
@@ -20,13 +17,13 @@ class SanityCheckX01Finishes: AbstractSanityCheck()
         sb.append(" WHERE RemainingScore = 0")
         sb.append(" AND LastDartMultiplier = 2")
 
-        val rawDataFinishes = mainDatabase.executeQuery(sb).use(::extractX01Finishes)
+        val rawDataFinishes = retrieveX01Finishes(sb)
 
         sb = StringBuilder()
         sb.append(" SELECT PlayerId, GameId, Finish")
         sb.append(" FROM X01Finish")
 
-        val denormalisedFinishes = mainDatabase.executeQuery(sb).use(::extractX01Finishes)
+        val denormalisedFinishes = retrieveX01Finishes(sb)
 
         val extra = denormalisedFinishes - rawDataFinishes
         val missing = rawDataFinishes - denormalisedFinishes
@@ -37,30 +34,21 @@ class SanityCheckX01Finishes: AbstractSanityCheck()
         model.addColumn("GameId")
         model.addColumn("Finish")
 
-        missing.forEach { model.addRow(arrayOf("MISSING", it.playerId, it.gameId, it.finish)) }
-        extra.forEach { model.addRow(arrayOf("EXTRA", it.playerId, it.gameId, it.finish)) }
+        missing.forEach { model.addRow(arrayOf<Any>("MISSING", it.playerId, it.gameId, it.finish)) }
+        extra.forEach { model.addRow(arrayOf<Any>("EXTRA", it.playerId, it.gameId, it.finish)) }
 
-        if (model.rowCount > 0)
-        {
+        if (model.rowCount > 0) {
             return listOf(SanityCheckResultSimpleTableModel(model, "X01 Finish mismatches"))
         }
 
         return emptyList()
     }
 
-    private fun extractX01Finishes(rs: ResultSet): List<X01Finish>
-    {
-        val finishes = mutableListOf<X01Finish>()
-        while (rs.next())
-        {
+    private fun retrieveX01Finishes(sb: StringBuilder) =
+        mainDatabase.retrieveAsList(sb) { rs ->
             val playerId = rs.getString("PlayerId")
             val gameId = rs.getString("GameId")
             val finish = rs.getInt("Finish")
-
-            finishes.add(X01Finish(playerId, gameId, finish))
+            X01Finish(playerId, gameId, finish)
         }
-
-        return finishes.toList()
-    }
-
 }

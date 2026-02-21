@@ -3,18 +3,16 @@ package dartzee.db
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDartzeeRoundResultEntity: AbstractEntityTest<DartzeeRoundResultEntity>()
-{
+class TestDartzeeRoundResultEntity : AbstractEntityTest<DartzeeRoundResultEntity>() {
     override fun factoryDao() = DartzeeRoundResultEntity()
 
     @Test
-    fun `Should be indexed on PlayerId_ParticipantId_RoundNumber`()
-    {
+    fun `Should be indexed on PlayerId_ParticipantId_RoundNumber`() {
         val indexes = mutableListOf<List<String>>()
         factoryDao().addListsOfColumnsForIndexes(indexes)
 
@@ -22,8 +20,7 @@ class TestDartzeeRoundResultEntity: AbstractEntityTest<DartzeeRoundResultEntity>
     }
 
     @Test
-    fun `Should convert to a DTO correctly`()
-    {
+    fun `Should convert to a DTO correctly`() {
         val entity = DartzeeRoundResultEntity()
         entity.roundNumber = 5
         entity.ruleNumber = 2
@@ -38,8 +35,7 @@ class TestDartzeeRoundResultEntity: AbstractEntityTest<DartzeeRoundResultEntity>
     }
 
     @Test
-    fun `Should save from a DTO correctly`()
-    {
+    fun `Should save from a DTO correctly`() {
         val dto = DartzeeRoundResult(5, false, -100)
 
         val player = insertPlayer()

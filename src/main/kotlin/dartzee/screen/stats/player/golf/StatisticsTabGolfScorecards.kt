@@ -5,35 +5,34 @@ import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.RowSelectionListener
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.TableUtil
-import dartzee.screen.game.scorer.DartsScorerGolf
 import dartzee.screen.stats.player.AbstractStatisticsTab
 import dartzee.stats.GameWrapper
-import dartzee.stats.MODE_BACK_9
-import dartzee.stats.MODE_FRONT_9
-import dartzee.stats.MODE_FULL_18
+import dartzee.stats.GolfMode
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.FlowLayout
 import java.awt.GridLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.DefaultComboBoxModel
+import javax.swing.JComboBox
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.ListSelectionModel
 
-class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, RowSelectionListener
-{
-    private var mode = -1
-    private val comboBoxMode = JComboBox<ComboBoxItem<Int>>()
+class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, RowSelectionListener {
+    private var mode: GolfMode = GolfMode.FULL_18
+    private val comboBoxMode = JComboBox<ComboBoxItem<GolfMode>>()
     private val panelCenter = JPanel()
     private val lblMode = JLabel("Mode")
     private val panelMine = JPanel()
     private val panelOther = JPanel()
-    private val scrollTableMine = ScrollTableDartsGame()
+    private val scrollTableMine = ScrollTableDartsGame(testId = "ScorecardsMine")
     private val panelMyScorecard = JPanel()
-    private val scrollTableOther = ScrollTableDartsGame()
+    private val scrollTableOther = ScrollTableDartsGame(testId = "ScorecardsOther")
     private val panelOtherScorecard = JPanel()
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
 
         val panelMode = JPanel()
@@ -64,49 +63,46 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
 
     override fun populateStats() = populateStats(true)
 
-    private fun populateStats(rebuildComboBox: Boolean)
-    {
-        if (rebuildComboBox)
-        {
+    private fun populateStats(rebuildComboBox: Boolean) {
+        if (rebuildComboBox) {
             initialiseComboBoxModel()
         }
 
-        //Hide or show the 'other' panel depending on whether there's a comparison
+        // Hide or show the 'other' panel depending on whether there's a comparison
         setOtherComponentVisibility(panelCenter, panelOther)
 
-        //Update the mode based on what's selected in the combo box
+        // Update the mode based on what's selected in the combo box
         val ix = comboBoxMode.selectedIndex
         val item = comboBoxMode.getItemAt(ix)
         mode = item.hiddenData
 
-        //And now populate the table(s)
+        // And now populate the table(s)
         populateTable(filteredGames, scrollTableMine)
-        if (includeOtherComparison())
-        {
+        if (includeOtherComparison()) {
             populateTable(filteredGamesOther, scrollTableOther)
         }
     }
 
-    private fun initialiseComboBoxModel()
-    {
-        val model = DefaultComboBoxModel<ComboBoxItem<Int>>()
-        addMode("Front 9", MODE_FRONT_9, model)
-        addMode("Back 9", MODE_BACK_9, model)
-        addMode("Full 18", MODE_FULL_18, model)
+    private fun initialiseComboBoxModel() {
+        val model = DefaultComboBoxModel<ComboBoxItem<GolfMode>>()
+        addMode("Front 9", GolfMode.FRONT_9, model)
+        addMode("Back 9", GolfMode.BACK_9, model)
+        addMode("Full 18", GolfMode.FULL_18, model)
 
-        if (model.size == 0)
-        {
-            model.addElement(ComboBoxItem(MODE_FULL_18, "N/A"))
+        if (model.size == 0) {
+            model.addElement(ComboBoxItem(GolfMode.FULL_18, "N/A"))
         }
 
         comboBoxMode.model = model
     }
 
-    private fun addMode(modeDesc: String, mode: Int, model: DefaultComboBoxModel<ComboBoxItem<Int>>)
-    {
-        val validGames = filteredGames.filter { it.getRoundScore(mode) > -1 }
-        if (validGames.isEmpty())
-        {
+    private fun addMode(
+        modeDesc: String,
+        mode: GolfMode,
+        model: DefaultComboBoxModel<ComboBoxItem<GolfMode>>,
+    ) {
+        val validGames = filteredGames.filter { !it.teamGame && it.getRoundScore(mode) > -1 }
+        if (validGames.isEmpty()) {
             return
         }
 
@@ -114,42 +110,41 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
         model.addElement(item)
     }
 
-
-    private fun populateTable(filteredGames: List<GameWrapper>, scrollTable: ScrollTableDartsGame)
-    {
-        //Filter out the -1's - these are games that haven't gone on long enough to have all the data
+    private fun populateTable(games: List<GameWrapper>, scrollTable: ScrollTableDartsGame) {
+        // Filter out the -1's - these are games that haven't gone on long enough to have all the
+        // data
+        val filteredGames = games.filter { !it.teamGame }
         val validGames = filteredGames.filter { it.getRoundScore(mode) > -1 }
 
-        //Populate the table from the wrappers
+        // Populate the table from the wrappers
         val model = TableUtil.DefaultModel()
         model.addColumn("Game")
         model.addColumn("Score")
         model.addColumn("!GameObject")
 
-        val rows = validGames.map{ arrayOf(it.localId, it.getRoundScore(mode), it) }
+        val rows = validGames.map { arrayOf(it.localId, it.getRoundScore(mode), it) }
         model.addRows(rows)
 
         scrollTable.model = model
         scrollTable.removeColumn(2)
         scrollTable.sortBy(1, false)
 
-        //Select a row so the scorecard automatically populates
-        if (!validGames.isEmpty())
-        {
+        // Select a row so the scorecard automatically populates
+        if (validGames.isNotEmpty()) {
             scrollTable.selectFirstRow()
         }
     }
 
-    private fun displayScorecard(game: GameWrapper, scorecardPanel: JPanel)
-    {
-        val scorer = DartsScorerGolf()
-        scorer.init(null)
-        if (mode == MODE_BACK_9)
-        {
-            scorer.fudgeFactor = 9
+    private fun displayScorecard(game: GameWrapper, scorecardPanel: JPanel, other: Boolean) {
+        val fudgeFactor = if (mode == GolfMode.BACK_9) 9 else 0
+        val testId = if (other) "scorecardOther" else "scorecardMine"
+        val scorer = GolfStatsScorecard(fudgeFactor, showGameId = false, testId = testId)
+        if (other) {
+            scorer.setTableForeground(Color.RED)
         }
 
-        game.populateScorer(scorer, mode)
+        val rounds = game.getGolfRounds(mode)
+        scorer.populateTable(rounds)
 
         scorecardPanel.removeAll()
         scorecardPanel.add(scorer, BorderLayout.CENTER)
@@ -159,19 +154,16 @@ class StatisticsTabGolfScorecards : AbstractStatisticsTab(), ActionListener, Row
 
     override fun actionPerformed(e: ActionEvent) = populateStats(false)
 
-    override fun selectionChanged(src: ScrollTable)
-    {
+    override fun selectionChanged(src: ScrollTable) {
         val row = src.selectedModelRow
-        if (row == -1)
-        {
+        if (row == -1) {
             return
         }
 
-        val game = src.getValueAt(row, 2) as GameWrapper
-        when (src)
-        {
-            scrollTableMine -> displayScorecard(game, panelMyScorecard)
-            scrollTableOther -> displayScorecard(game, panelOtherScorecard)
+        val game = src.getNonNullValueAt(row, 2) as GameWrapper
+        when (src) {
+            scrollTableMine -> displayScorecard(game, panelMyScorecard, false)
+            scrollTableOther -> displayScorecard(game, panelOtherScorecard, true)
         }
     }
 }

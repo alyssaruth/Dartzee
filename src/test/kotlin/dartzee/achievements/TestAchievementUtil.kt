@@ -8,17 +8,15 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.helper.retrieveAchievement
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContain
-import io.kotlintest.matchers.collections.shouldNotContain
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldNotContain
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestAchievementUtil: AbstractTest()
-{
+class TestAchievementUtil : AbstractTest() {
     @Test
-    fun `Running achievement conversion should not reuse old temp tables`()
-    {
+    fun `Running achievement conversion should not reuse old temp tables`() {
         ensureX01RoundsTableExists(listOf("foo"), mainDatabase)
 
         val g = insertGame(gameType = GameType.X01)
@@ -35,8 +33,7 @@ class TestAchievementUtil: AbstractTest()
     }
 
     @Test
-    fun `Running achievement conversion should leave no temp tables lying around`()
-    {
+    fun `Running achievement conversion should leave no temp tables lying around`() {
         val t = runConversionsWithProgressBar(getAllAchievements(), emptyList())
         t.join()
 
@@ -44,8 +41,7 @@ class TestAchievementUtil: AbstractTest()
     }
 
     @Test
-    fun `Should return the right achievements by game type`()
-    {
+    fun `Should return the right achievements by game type`() {
         val x01Refs = getAchievementsForGameType(GameType.X01).map { it.achievementType }
         val golfRefs = getAchievementsForGameType(GameType.GOLF).map { it.achievementType }
 

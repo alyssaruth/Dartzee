@@ -1,32 +1,38 @@
 package dartzee.screen.game
 
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.core.helper.verifyNotCalled
+import dartzee.core.util.DateStatics
 import dartzee.db.DartsMatchEntity
 import dartzee.db.GameEntity
-import dartzee.db.PlayerEntity
 import dartzee.db.PlayerImageEntity
+import dartzee.game.loadParticipants
 import dartzee.game.state.X01PlayerState
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.DEFAULT_X01_CONFIG
+import dartzee.helper.insertDartsMatch
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.makeX01PlayerState
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.screen.game.x01.MatchStatisticsPanelX01
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
+import java.awt.Dimension
 import javax.swing.JTabbedPane
 import javax.swing.SwingUtilities
+import org.junit.jupiter.api.Test
 
-class TestDartsMatchScreen: AbstractTest()
-{
+class TestDartsMatchScreen : AbstractTest() {
     @Test
-    fun `Should pop up achievement unlocks on the correct tab`()
-    {
+    fun `Should pop up achievement unlocks on the correct tab`() {
         val scrn = setUpMatchScreen()
 
         val g1 = insertGame()
@@ -41,10 +47,9 @@ class TestDartsMatchScreen: AbstractTest()
         verifyNotCalled { panelOne.achievementUnlocked(any(), any()) }
         verify { panelTwo.achievementUnlocked("player", achievement) }
     }
-    
+
     @Test
-    fun `Should add games to the tabbed pane, as well as the screen cache`()
-    {
+    fun `Should add games to the tabbed pane, as well as the screen cache`() {
         val scrn = setUpMatchScreen()
         val game = insertGame()
 
@@ -55,9 +60,8 @@ class TestDartsMatchScreen: AbstractTest()
     }
 
     @Test
-    fun `Should update title based on selected tab`()
-    {
-        val match = insertDartsMatch(gameParams = "501")
+    fun `Should update title based on selected tab`() {
+        val match = insertDartsMatch(gameParams = DEFAULT_X01_CONFIG.toJson())
         val scrn = setUpMatchScreen(match)
 
         val g1 = insertGame()
@@ -78,8 +82,7 @@ class TestDartsMatchScreen: AbstractTest()
     }
 
     @Test
-    fun `Should fire appearance updates to child tabs`()
-    {
+    fun `Should fire appearance updates to child tabs`() {
         val scrn = setUpMatchScreen()
 
         val g = insertGame()
@@ -90,8 +93,7 @@ class TestDartsMatchScreen: AbstractTest()
     }
 
     @Test
-    fun `Should flick to the correct tab when told to display a certain game`()
-    {
+    fun `Should flick to the correct tab when told to display a certain game`() {
         val scrn = setUpMatchScreen()
         val tabbedPane = scrn.getChild<JTabbedPane>()
 
@@ -108,91 +110,117 @@ class TestDartsMatchScreen: AbstractTest()
     }
 
     @Test
-    fun `Should pass certain fns through to the match summary panel`()
-    {
+    fun `Should pass certain fns through to the match summary panel`() {
         val matchSummaryPanel = mockk<MatchSummaryPanel<X01PlayerState>>(relaxed = true)
         val scrn = setUpMatchScreen(matchSummaryPanel = matchSummaryPanel)
 
-        scrn.updateTotalScores()
-        verify { matchSummaryPanel.updateTotalScores() }
+        val state = makeX01PlayerState()
+        scrn.addParticipant(500L, state)
+        verify { matchSummaryPanel.addParticipant(500L, state) }
 
-        val pt = insertParticipant()
-        scrn.addParticipant(500L, pt)
-        verify { matchSummaryPanel.addParticipant(500L, pt) }
+        scrn.finaliseParticipants()
+        verify { matchSummaryPanel.finaliseScorers(scrn) }
     }
 
     @Test
-    fun `Should update total scores one last time and mark the match as complete if no more games need to be played`()
-    {
-        val matchEntity = mockk<DartsMatchEntity>(relaxed = true)
-        every { matchEntity.isComplete() } returns true
+    fun `Should mark the match as complete if no more games need to be played`() {
+        val match = insertDartsMatch(games = 1, gameParams = DEFAULT_X01_CONFIG.toJson())
+        val scrn = setUpMatchScreen(match = match)
 
-        val matchSummaryPanel = mockk<MatchSummaryPanel<X01PlayerState>>(relaxed = true)
-        val scrn = setUpMatchScreen(match = matchEntity, matchSummaryPanel = matchSummaryPanel)
+        val firstGame = insertGame()
+        val firstPanel = scrn.addGameToMatchOnEdt(firstGame)
+
+        val pt = insertParticipant(finishingPosition = 1, playerId = insertPlayer().rowId)
+        val state = makeX01PlayerState(participant = pt)
+        every { firstPanel.getPlayerStates() } returns listOf(state)
+
         scrn.startNextGameIfNecessary()
 
-        verify { matchSummaryPanel.updateTotalScores() }
-        verify { matchEntity.dtFinish = any() }
-        verify { matchEntity.saveToDatabase(any()) }
+        match.dtFinish shouldNotBe DateStatics.END_OF_TIME
     }
 
     @Test
-    fun `Should start a new game if the match is not yet complete`()
-    {
-        val p1 = insertPlayer()
-        val p2 = insertPlayer()
+    fun `Should start a new game if the match is not yet complete`() {
+        val p1 = insertPlayer(name = "Amy")
+        val p2 = insertPlayer(name = "Billie")
+        val gameOneStates = listOf(p1, p2).map { makeX01PlayerState(player = it) }
 
-        val match = insertDartsMatch(gameParams = "501")
-        match.players = mutableListOf(p1, p2)
+        val match = insertDartsMatch(gameParams = DEFAULT_X01_CONFIG.toJson())
 
         val scrn = setUpMatchScreen(match = match)
-        val firstGame = insertGame()
-        scrn.addGameToMatchOnEdt(firstGame)
+        val firstGame = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
+
+        val firstPanel = scrn.addGameToMatchOnEdt(firstGame)
+        every { firstPanel.getPlayerStates() } returns gameOneStates
 
         scrn.startNextGameIfNecessaryOnEdt()
 
-        //Players should have been shuffled
-        match.players.shouldContainExactly(p2, p1)
-
-        //Game panel should have been added and had a game kicked off
+        // Game panel should have been added and had a game kicked off
         val gamePanel = scrn.getChild<GamePanelX01> { it.gameEntity != firstGame }
-        verify { gamePanel.startNewGame(listOf(p2, p1)) }
+        verify { gamePanel.startNewGame(any()) }
+
+        val gameTwo = gamePanel.gameEntity
+        gameTwo.matchOrdinal shouldBe 2
+        gameTwo.dartsMatchId shouldBe match.rowId
+
+        val participants = loadParticipants(gameTwo.rowId)
+        participants[0].getParticipantNameHtml(false) shouldBe "<html>Billie</html>"
+        participants[1].getParticipantNameHtml(false) shouldBe "<html>Amy</html>"
     }
 
-    private fun setUpMatchScreen(match: DartsMatchEntity = insertDartsMatch(gameParams = "501"),
-                                 matchSummaryPanel: MatchSummaryPanel<X01PlayerState> = MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams))): FakeMatchScreen
-    {
+    @Test
+    fun `Should not repack the screen when a new game is launched`() {
+        val p1 = insertPlayer(name = "Amy")
+        val p2 = insertPlayer(name = "Billie")
+        val gameOneStates = listOf(p1, p2).map { makeX01PlayerState(player = it) }
+
+        val match = insertDartsMatch(gameParams = DEFAULT_X01_CONFIG.toJson())
+
+        val scrn = setUpMatchScreen(match = match)
+        val firstGame = insertGame(dartsMatchId = match.rowId, matchOrdinal = 1)
+
+        val firstPanel = scrn.addGameToMatchOnEdt(firstGame)
+        every { firstPanel.getPlayerStates() } returns gameOneStates
+        scrn.size = Dimension(1000, 950)
+
+        scrn.startNextGameIfNecessaryOnEdt()
+        scrn.size.shouldBe(Dimension(1000, 950))
+    }
+
+    private fun setUpMatchScreen(
+        match: DartsMatchEntity = insertDartsMatch(gameParams = DEFAULT_X01_CONFIG.toJson()),
+        matchSummaryPanel: MatchSummaryPanel<X01PlayerState> =
+            MatchSummaryPanel(match, MatchStatisticsPanelX01(match.gameParams)),
+    ): FakeMatchScreen {
         PlayerImageEntity().createPresets()
-        return FakeMatchScreen(match, listOf(insertPlayer(), insertPlayer()), matchSummaryPanel)
+        return FakeMatchScreen(match, matchSummaryPanel)
     }
 }
 
-private class FakeMatchScreen(match: DartsMatchEntity,
-                              players: List<PlayerEntity>,
-                              matchSummaryPanel: MatchSummaryPanel<X01PlayerState>):
-        DartsMatchScreen<X01PlayerState>(matchSummaryPanel, match, players)
-{
-    override fun factoryGamePanel(parent: AbstractDartsGameScreen, game: GameEntity): GamePanelX01
-    {
+private class FakeMatchScreen(
+    match: DartsMatchEntity,
+    matchSummaryPanel: MatchSummaryPanel<X01PlayerState>,
+) : DartsMatchScreen<X01PlayerState>(matchSummaryPanel, match) {
+    override fun factoryGamePanel(
+        parent: AbstractDartsGameScreen,
+        game: GameEntity,
+        totalPlayers: Int,
+    ): GamePanelX01 {
         val panel = mockk<GamePanelX01>(relaxed = true)
         every { panel.gameEntity } returns game
         every { panel.gameTitle } returns "${game.localId}"
+        every { panel.startNewGame(any()) } answers { parent.packIfNecessary() }
         return panel
     }
 
-    fun addGameToMatchOnEdt(gameEntity: GameEntity): DartsGamePanel<*, *, *>
-    {
-        var panel: DartsGamePanel<*, *, *>? = null
-        SwingUtilities.invokeAndWait {
-            panel = addGameToMatch(gameEntity)
-        }
+    fun addGameToMatchOnEdt(gameEntity: GameEntity): DartsGamePanel<*, *> {
+        var panel: DartsGamePanel<*, *>? = null
+        SwingUtilities.invokeAndWait { panel = addGameToMatch(gameEntity, 2) }
 
         return panel!!
     }
 
-    fun startNextGameIfNecessaryOnEdt()
-    {
+    fun startNextGameIfNecessaryOnEdt() {
         SwingUtilities.invokeAndWait { startNextGameIfNecessary() }
     }
-
 }

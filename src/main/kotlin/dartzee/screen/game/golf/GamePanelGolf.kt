@@ -6,52 +6,43 @@ import dartzee.ai.DartsAiModel
 import dartzee.core.util.doGolfMiss
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
-import dartzee.db.ParticipantEntity
 import dartzee.game.state.GolfPlayerState
-import dartzee.screen.Dartboard
+import dartzee.game.state.IWrappedParticipant
+import dartzee.`object`.ComputedPoint
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
 import dartzee.screen.game.scorer.DartsScorerGolf
 
-open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
-        GamePanelFixedLength<DartsScorerGolf, Dartboard, GolfPlayerState>(parent, game, totalPlayers)
-{
-    //Number of rounds - 9 holes or 18?
+class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
+    GamePanelFixedLength<DartsScorerGolf, GolfPlayerState>(parent, game, totalPlayers) {
+    // Number of rounds - 9 holes or 18?
     override val totalRounds = Integer.parseInt(game.gameParams)
 
-    override fun factoryDartboard() = Dartboard()
-    override fun factoryState(pt: ParticipantEntity) = GolfPlayerState(pt)
+    override fun factoryState(pt: IWrappedParticipant) = GolfPlayerState(pt)
 
-    private fun getScoreForMostRecentDart() : Int
-    {
+    private fun getScoreForMostRecentDart(): Int {
         val lastDart = getDartsThrown().last()
 
         val targetHole = currentRoundNumber
         return lastDart.getGolfScore(targetHole)
     }
 
-    override fun doAiTurn(model: DartsAiModel)
-    {
+    override fun computeAiDart(model: DartsAiModel): ComputedPoint {
         val targetHole = currentRoundNumber
         val dartNo = dartsThrownCount() + 1
-        model.throwGolfDart(targetHole, dartNo, dartboard)
+        return model.throwGolfDart(targetHole, dartNo)
     }
 
-    override fun shouldStopAfterDartThrown(): Boolean
-    {
+    override fun shouldStopAfterDartThrown(): Boolean {
         val dartsThrownCount = dartsThrownCount()
-        if (dartsThrownCount == 3)
-        {
+        if (dartsThrownCount == 3) {
             return true
         }
 
         val score = getScoreForMostRecentDart()
-        if (getCurrentPlayerState().isHuman())
-        {
+        if (getCurrentPlayerState().isHuman()) {
             return score == 1
-        }
-        else
-        {
+        } else {
             val model = getCurrentPlayerStrategy()
             val stopThreshold = model.getStopThresholdForDartNo(dartsThrownCount)
 
@@ -59,38 +50,75 @@ open class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, tota
         }
     }
 
-    override fun saveDartsAndProceed()
-    {
+    override fun saveDartsAndProceed() {
         unlockAchievements()
         commitRound()
 
         finishRound()
     }
 
-    fun unlockAchievements()
-    {
-        val lastDart = getDartsThrown().last()
-        val dartsRisked = getDartsThrown() - lastDart
-        val pointsRisked = dartsRisked.map { 5 - it.getGolfScore(currentRoundNumber) }.sum()
+    override fun updateAchievementsForFinish(playerState: GolfPlayerState, score: Int) {
+        super.updateAchievementsForFinish(playerState, score)
 
-        if (pointsRisked > 0)
-        {
-            AchievementEntity.insertAchievementWithCounter(AchievementType.GOLF_POINTS_RISKED, getCurrentPlayerId(), gameEntity.rowId, "$currentRoundNumber", pointsRisked)
-        }
-
-        if (lastDart.getGolfScore(currentRoundNumber) == 1
-         && retrieveAchievementForDetail(AchievementType.GOLF_COURSE_MASTER, getCurrentPlayerId(), "$currentRoundNumber") == null)
-        {
-            AchievementEntity.insertAchievement(AchievementType.GOLF_COURSE_MASTER, getCurrentPlayerId(), getGameId(), "$currentRoundNumber")
+        if (!playerState.hasMultiplePlayers()) {
+            val scores = playerState.completedRounds.map { it.last().getGolfScore() }
+            if (scores.size == 18 && scores.none { it == 5 }) {
+                AchievementEntity.insertAchievement(
+                    AchievementType.GOLF_IN_BOUNDS,
+                    getCurrentPlayerId(),
+                    getGameId(),
+                    "$score",
+                )
+            }
         }
     }
 
-    override fun factoryScorer() = DartsScorerGolf()
+    private fun unlockAchievements() {
+        val size = getDartsThrown().size
+        val dartsRisked = getDartsThrown().subList(0, size - 1)
+        val pointsRisked = dartsRisked.sumOf { 5 - it.getGolfScore(currentRoundNumber) }
+
+        if (pointsRisked > 0) {
+            AchievementEntity.insertAchievementWithCounter(
+                AchievementType.GOLF_POINTS_RISKED,
+                getCurrentPlayerId(),
+                gameEntity.rowId,
+                "$currentRoundNumber",
+                pointsRisked,
+            )
+        }
+
+        if (getDartsThrown().last().getGolfScore(currentRoundNumber) == 1) {
+            if (
+                retrieveAchievementForDetail(
+                    AchievementType.GOLF_COURSE_MASTER,
+                    getCurrentPlayerId(),
+                    "$currentRoundNumber",
+                ) == null
+            ) {
+                AchievementEntity.insertAchievement(
+                    AchievementType.GOLF_COURSE_MASTER,
+                    getCurrentPlayerId(),
+                    getGameId(),
+                    "$currentRoundNumber",
+                )
+            }
+
+            val holeInOneCount = getCurrentPlayerState().countHoleInOnes()
+            AchievementEntity.updateAchievement(
+                AchievementType.GOLF_ONE_HIT_WONDER,
+                getCurrentPlayerId(),
+                getGameId(),
+                holeInOneCount,
+            )
+        }
+    }
+
+    override fun factoryScorer(participant: IWrappedParticipant) = DartsScorerGolf(participant)
 
     override fun shouldAIStop() = false
 
-    override fun doMissAnimation()
-    {
+    override fun doMissAnimation() {
         dartboard.doGolfMiss()
     }
 

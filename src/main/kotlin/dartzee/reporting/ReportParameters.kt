@@ -3,106 +3,76 @@ package dartzee.reporting
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getEndOfTimeSqlString
 import dartzee.core.util.getSqlString
-import dartzee.db.PlayerEntity
 import dartzee.db.SyncAuditEntity
-import dartzee.game.GameType
 import dartzee.utils.InjectedThings.mainDatabase
-import java.sql.Timestamp
-import java.util.*
 
-class ReportParameters
-{
-    var gameType: GameType? = null
-    var gameParams = ""
-    var unfinishedOnly = false
-    var dtStartFrom: Timestamp? = null
-    var dtStartTo: Timestamp? = null
-    var dtFinishFrom: Timestamp? = null
-    var dtFinishTo: Timestamp? = null
-    var hmIncludedPlayerToParms = mapOf<PlayerEntity, IncludedPlayerParameters>()
-    var excludedPlayers: List<PlayerEntity> = ArrayList()
-    var excludeOnlyAi: Boolean = false
-    var partOfMatch = MatchFilter.BOTH
-    var pendingChanges: Boolean? = null
+data class ReportParameters(val game: ReportParametersGame, val players: ReportParametersPlayers) {
 
-    fun getExtraWhereSql(): String
-    {
+    fun getExtraWhereSql(participantTempTable: String): String {
         val sb = StringBuilder()
 
-        if (gameType != null)
-        {
-            sb.append(" AND g.GameType = '$gameType'")
+        if (game.gameType != null) {
+            sb.append(" AND g.GameType = '${game.gameType}'")
         }
 
-        if (!gameParams.isEmpty())
-        {
-            sb.append(" AND g.GameParams = '$gameParams'")
+        if (game.gameParams.isNotEmpty()) {
+            sb.append(" AND g.GameParams = '${game.gameParams}'")
         }
 
-        if (dtStartFrom != null)
-        {
+        if (game.dtStartFrom != null) {
             sb.append(" AND g.DtCreation >= '")
-            sb.append(dtStartFrom)
+            sb.append(game.dtStartFrom)
             sb.append("'")
         }
 
-        if (dtStartTo != null)
-        {
+        if (game.dtStartTo != null) {
             sb.append(" AND g.DtCreation <= '")
-            sb.append(dtStartTo)
+            sb.append(game.dtStartTo)
             sb.append("'")
         }
 
-        if (dtFinishFrom != null)
-        {
+        if (game.dtFinishFrom != null) {
             sb.append(" AND g.DtFinish >= '")
-            sb.append(dtFinishFrom)
+            sb.append(game.dtFinishFrom)
             sb.append("'")
         }
 
-        if (dtFinishTo != null)
-        {
+        if (game.dtFinishTo != null) {
             sb.append(" AND g.DtFinish <= '")
-            sb.append(dtFinishTo)
+            sb.append(game.dtFinishTo)
             sb.append("'")
         }
 
-        if (unfinishedOnly)
-        {
+        if (game.unfinishedOnly) {
             sb.append(" AND g.DtFinish = ")
             sb.append(getEndOfTimeSqlString())
         }
 
-        if (partOfMatch == MatchFilter.GAMES_ONLY)
-        {
+        if (game.partOfMatch == MatchFilter.GAMES_ONLY) {
             sb.append(" AND g.DartsMatchId = ''")
-        }
-        else if (partOfMatch == MatchFilter.MATCHES_ONLY)
-        {
+        } else if (game.partOfMatch == MatchFilter.MATCHES_ONLY) {
             sb.append(" AND g.DartsMatchId <> ''")
         }
 
-        pendingChanges?.let { pendingChanges ->
-            val dtLastSynced = SyncAuditEntity.getLastSyncData(mainDatabase)?.lastSynced ?: DateStatics.START_OF_TIME
-            if (pendingChanges)
-            {
+        game.pendingChanges?.let { pendingChanges ->
+            val dtLastSynced =
+                SyncAuditEntity.getLastSyncData(mainDatabase)?.lastSynced
+                    ?: DateStatics.START_OF_TIME
+            if (pendingChanges) {
                 sb.append(" AND g.DtLastUpdate > ${dtLastSynced.getSqlString()}")
-            }
-            else
-            {
+            } else {
                 sb.append(" AND g.DtLastUpdate <= ${dtLastSynced.getSqlString()}")
             }
         }
 
-        val it = hmIncludedPlayerToParms.entries.iterator()
-        while (it.hasNext())
-        {
+        val it = players.includedPlayers.entries.iterator()
+        while (it.hasNext()) {
             val entry = it.next()
             val player = entry.key
             val parms = entry.value
 
             sb.append(" AND EXISTS (")
-            sb.append(" SELECT 1 FROM Participant z")
+            sb.append(" SELECT 1 FROM $participantTempTable z")
             sb.append(" WHERE z.PlayerId = '${player.rowId}'")
             sb.append(" AND z.GameId = g.RowId")
 
@@ -112,18 +82,16 @@ class ReportParameters
             sb.append(")")
         }
 
-        for (player in excludedPlayers)
-        {
+        for (player in players.excludedPlayers) {
             sb.append(" AND NOT EXISTS (")
-            sb.append(" SELECT 1 FROM Participant z")
+            sb.append(" SELECT 1 FROM $participantTempTable z")
             sb.append(" WHERE z.PlayerId = '${player.rowId}'")
             sb.append(" AND z.GameId = g.RowId)")
         }
 
-        if (excludeOnlyAi)
-        {
+        if (players.excludeOnlyAi) {
             sb.append(" AND EXISTS (")
-            sb.append(" SELECT 1 FROM Participant z, Player p")
+            sb.append(" SELECT 1 FROM $participantTempTable z, Player p")
             sb.append(" WHERE z.PlayerId = p.RowId")
             sb.append(" AND z.GameId = g.RowId")
             sb.append(" AND p.Strategy = '')")
@@ -131,21 +99,10 @@ class ReportParameters
 
         return sb.toString()
     }
-
-    override fun toString(): String
-    {
-        return "[$gameType, $gameParams, $dtStartFrom, $dtStartTo, $dtFinishFrom, $dtFinishTo]"
-    }
-
-    fun setEnforceMatch(matches: Boolean)
-    {
-        partOfMatch = if (matches) MatchFilter.MATCHES_ONLY else MatchFilter.GAMES_ONLY
-    }
 }
 
-enum class MatchFilter
-{
+enum class MatchFilter {
     MATCHES_ONLY,
     GAMES_ONLY,
-    BOTH
+    BOTH,
 }

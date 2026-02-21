@@ -1,26 +1,29 @@
 package dartzee.screen.dartzee
 
-import dartzee.`object`.Dart
 import dartzee.core.util.setFontSize
 import dartzee.core.util.setMargins
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.listener.DartboardListener
+import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
+import dartzee.`object`.Dart
+import dartzee.screen.GameplayDartboard
 import dartzee.utils.DartsColour
-import dartzee.utils.InjectedThings.dartboardSize
 import dartzee.utils.InjectedThings.dartzeeCalculator
+import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.JButton
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JTextField
 import javax.swing.border.EmptyBorder
 
-
-class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
-{
-    val dartboard = DartzeeDartboard(dartboardSize, dartboardSize)
+class DartzeeRuleVerificationPanel : JPanel(), DartboardListener, ActionListener {
+    val dartboard: GameplayDartboard = GameplayDartboard(DEFAULT_COLOUR_WRAPPER)
     val dartsThrown = mutableListOf<Dart>()
     private var dartzeeRule = DartzeeRuleDto(null, null, null, null, false, false, null)
 
@@ -29,15 +32,12 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
     val lblCombinations = JLabel()
     val tfResult = JTextField()
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
         preferredSize = Dimension(400, 400)
 
-        dartboard.renderScoreLabels = true
-        dartboard.paintDartboard()
+        dartboard.ensureListening()
         dartboard.addDartboardListener(this)
-        dartboard.renderDarts = true
         add(panelNorth, BorderLayout.NORTH)
         add(dartboard, BorderLayout.CENTER)
         add(lblCombinations, BorderLayout.SOUTH)
@@ -57,48 +57,40 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         tfResult.isEditable = false
 
         btnReset.preferredSize = Dimension(60, 60)
-        btnReset.icon = ImageIcon(javaClass.getResource("/buttons/Reset.png"))
+        btnReset.icon = ResourceCache.ICON_RESET
         btnReset.toolTipText = "Reset darts"
 
         btnReset.addActionListener(this)
     }
 
-    fun updateRule(rule: DartzeeRuleDto)
-    {
+    fun updateRule(rule: DartzeeRuleDto) {
         this.dartzeeRule = rule
 
         repaintDartboard()
     }
 
-    override fun dartThrown(dart: Dart)
-    {
+    override fun dartThrown(dart: Dart) {
         dartsThrown.add(dart)
 
-        if (dartsThrown.size == 3)
-        {
+        if (dartsThrown.size == 3) {
             dartboard.stopListening()
         }
 
         repaintDartboard()
     }
 
-    private fun repaintDartboard()
-    {
+    private fun repaintDartboard() {
         val calculationResult = runCalculationIfNecessary()
         val failed = calculationResult.validCombinations == 0
 
-        if (dartsThrown.size < 3)
-        {
+        if (dartsThrown.size < 3) {
             lblCombinations.text = calculationResult.getCombinationsDesc()
             dartboard.refreshValidSegments(calculationResult.getSegmentStatus())
-        }
-        else
-        {
+        } else {
             lblCombinations.text = ""
         }
 
-        when
-        {
+        when {
             failed -> setAllColours(Color.RED)
             dartsThrown.size == 3 -> setAllColours(Color.GREEN)
             else -> setAllColours(Color.WHITE, DartsColour.COLOUR_PASTEL_BLUE)
@@ -106,33 +98,29 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
 
         updateDartDesc(failed)
     }
-    private fun updateDartDesc(failed: Boolean)
-    {
+
+    private fun updateDartDesc(failed: Boolean) {
         val dartStrs = dartsThrown.map { it.toString() }.toMutableList()
         while (dartStrs.size < 3) {
             dartStrs.add("?")
         }
 
         val dartsStr = dartStrs.joinToString(" → ")
-        val total = if (failed) "Total: N/A" else "Total: ${dartzeeRule.getSuccessTotal(dartsThrown)}"
+        val total =
+            if (failed) "Total: N/A" else "Total: ${dartzeeRule.getSuccessTotal(dartsThrown)}"
 
         tfResult.text = "$dartsStr, $total"
     }
 
-    private fun runCalculationIfNecessary(): DartzeeRuleCalculationResult
-    {
-        return if (dartsThrown.isEmpty())
-        {
+    private fun runCalculationIfNecessary(): DartzeeRuleCalculationResult {
+        return if (dartsThrown.isEmpty()) {
             dartzeeRule.calculationResult!!
-        }
-        else
-        {
+        } else {
             dartzeeCalculator.getValidSegments(dartzeeRule, dartsThrown)
         }
     }
 
-    private fun setAllColours(fg: Color, bg: Color = DartsColour.getDarkenedColour(fg))
-    {
+    private fun setAllColours(fg: Color, bg: Color = DartsColour.getDarkenedColour(fg)) {
         tfResult.foreground = fg
         lblCombinations.foreground = fg
 
@@ -144,10 +132,8 @@ class DartzeeRuleVerificationPanel: JPanel(), DartboardListener, ActionListener
         lblCombinations.background = bg
     }
 
-    override fun actionPerformed(e: ActionEvent?)
-    {
-        if (dartsThrown.isNotEmpty())
-        {
+    override fun actionPerformed(e: ActionEvent?) {
+        if (dartsThrown.isNotEmpty()) {
             dartsThrown.clear()
             dartboard.clearDarts()
             dartboard.ensureListening()

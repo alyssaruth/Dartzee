@@ -2,10 +2,8 @@ package dartzee.db.sanity
 
 import dartzee.db.GameEntity
 
-class SanityCheckDuplicateMatchOrdinals: AbstractSanityCheck()
-{
-    override fun runCheck(): List<AbstractSanityCheckResult>
-    {
+class SanityCheckDuplicateMatchOrdinals : ISanityCheck {
+    override fun runCheck(): List<AbstractSanityCheckResult> {
         val sb = StringBuilder()
         sb.append(" g.MatchOrdinal > -1")
         sb.append(" AND EXISTS (")
@@ -19,8 +17,7 @@ class SanityCheckDuplicateMatchOrdinals: AbstractSanityCheck()
         val whereSql = sb.toString()
         val games = GameEntity().retrieveEntities(whereSql, "g")
         val count = games.size
-        if (count > 0)
-        {
+        if (count > 0) {
             return listOf(SanityCheckResultDuplicateMatchOrdinals(games))
         }
 

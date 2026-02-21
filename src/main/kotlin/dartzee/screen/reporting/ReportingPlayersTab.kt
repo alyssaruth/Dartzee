@@ -8,19 +8,23 @@ import dartzee.core.bean.RowSelectionListener
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.DialogUtil
 import dartzee.db.PlayerEntity
-import dartzee.reporting.ReportParameters
+import dartzee.reporting.ReportParametersPlayers
 import dartzee.screen.PlayerSelectDialog
 import dartzee.screen.ScreenCache
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JCheckBox
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JRadioButton
+import net.miginfocom.swing.MigLayout
 
-class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
-{
+class ReportingPlayersTab : JPanel(), ActionListener, RowSelectionListener {
     private val hmPlayerToParametersPanel = mutableMapOf<PlayerEntity, PlayerParametersPanel>()
 
     private val panelNorth = JPanel()
@@ -37,8 +41,7 @@ class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
 
     var includedPlayerPanel = PlayerParametersPanel().also { it.disableAll() }
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
 
         add(panelNorth, BorderLayout.NORTH)
@@ -54,9 +57,11 @@ class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
         val flowLayout = panelTableButtons.layout as FlowLayout
         flowLayout.alignment = FlowLayout.LEFT
         btnAddPlayer.preferredSize = Dimension(30, 30)
-        btnAddPlayer.icon = ImageIcon(ReportingSetupScreen::class.java.getResource("/buttons/addPlayer.png"))
+        btnAddPlayer.icon =
+            ImageIcon(ReportingSetupScreen::class.java.getResource("/buttons/addPlayer.png"))
         panelTableButtons.add(btnAddPlayer)
-        btnRemovePlayer.icon = ImageIcon(ReportingSetupScreen::class.java.getResource("/buttons/removePlayer.png"))
+        btnRemovePlayer.icon =
+            ImageIcon(ReportingSetupScreen::class.java.getResource("/buttons/removePlayer.png"))
         btnRemovePlayer.preferredSize = Dimension(30, 30)
         panelTableButtons.add(btnRemovePlayer)
         add(panelTable, BorderLayout.CENTER)
@@ -71,24 +76,19 @@ class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
         scrollTable.initPlayerTableModel(emptyList())
     }
 
-    override fun actionPerformed(e: ActionEvent?)
-    {
-        when (e?.source)
-        {
+    override fun actionPerformed(e: ActionEvent?) {
+        when (e?.source) {
             btnAddPlayer -> addPlayers()
             btnRemovePlayer -> removePlayers()
-            rdbtnInclude, rdbtnExclude -> togglePlayerParameters()
+            rdbtnInclude,
+            rdbtnExclude -> togglePlayerParameters()
         }
     }
 
-    private fun togglePlayerParameters()
-    {
-        if (rdbtnInclude.isSelected)
-        {
+    private fun togglePlayerParameters() {
+        if (rdbtnInclude.isSelected) {
             add(includedPlayerPanel, BorderLayout.SOUTH)
-        }
-        else
-        {
+        } else {
             remove(includedPlayerPanel)
         }
 
@@ -96,17 +96,14 @@ class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
         repaint()
     }
 
-    private fun addPlayers()
-    {
+    private fun addPlayers() {
         val allSelected = hmPlayerToParametersPanel.keys.toList()
         val players = PlayerSelectDialog.selectPlayers(allSelected)
         addPlayers(players)
     }
 
-    fun addPlayers(players: List<PlayerEntity>)
-    {
-        for (player in players)
-        {
+    fun addPlayers(players: List<PlayerEntity>) {
+        for (player in players) {
             hmPlayerToParametersPanel[player] = PlayerParametersPanel()
         }
 
@@ -114,12 +111,10 @@ class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
         scrollTable.selectFirstRow()
     }
 
-    private fun removePlayers()
-    {
+    private fun removePlayers() {
         val playersToRemove = scrollTable.getSelectedPlayers()
-        if (playersToRemove.isEmpty())
-        {
-            DialogUtil.showError("You must select player(s) to remove.")
+        if (playersToRemove.isEmpty()) {
+            DialogUtil.showErrorOLD("You must select player(s) to remove.")
             return
         }
 
@@ -127,22 +122,17 @@ class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
         scrollTable.initPlayerTableModel(hmPlayerToParametersPanel.keys.toList())
     }
 
-    override fun selectionChanged(src: ScrollTable)
-    {
+    override fun selectionChanged(src: ScrollTable) {
         remove(includedPlayerPanel)
 
         val player = scrollTable.getSelectedPlayer()
-        if (player == null)
-        {
+        if (player == null) {
             includedPlayerPanel = PlayerParametersPanel().also { it.disableAll() }
-        }
-        else
-        {
+        } else {
             includedPlayerPanel = hmPlayerToParametersPanel[player]!!
         }
 
-        if (rdbtnInclude.isSelected)
-        {
+        if (rdbtnInclude.isSelected) {
             add(includedPlayerPanel, BorderLayout.SOUTH)
         }
 
@@ -150,10 +140,8 @@ class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
         repaint()
     }
 
-    fun valid(): Boolean
-    {
-        if (rdbtnInclude.isSelected)
-        {
+    fun valid(): Boolean {
+        if (rdbtnInclude.isSelected) {
             val entries = hmPlayerToParametersPanel.entries
             return entries.all { it.value.valid(it.key) }
         }
@@ -161,17 +149,22 @@ class ReportingPlayersTab: JPanel(), ActionListener, RowSelectionListener
         return true
     }
 
-    fun populateReportParameters(rp: ReportParameters)
-    {
-        rp.excludeOnlyAi = checkBoxExcludeOnlyAi.isSelected
+    fun generateReportParameters(): ReportParametersPlayers {
+        val excludeOnlyAi = checkBoxExcludeOnlyAi.isSelected
+        val includedPlayers =
+            if (rdbtnInclude.isSelected) {
+                hmPlayerToParametersPanel.mapValues { it.value.generateParameters() }
+            } else {
+                emptyMap()
+            }
 
-        if (rdbtnInclude.isSelected)
-        {
-            rp.hmIncludedPlayerToParms = hmPlayerToParametersPanel.mapValues { entry -> entry.value.generateParameters() }
-        }
-        else
-        {
-            rp.excludedPlayers = hmPlayerToParametersPanel.keys.toList()
-        }
+        val excludedPlayers =
+            if (rdbtnExclude.isSelected) {
+                hmPlayerToParametersPanel.keys.toList()
+            } else {
+                emptyList()
+            }
+
+        return ReportParametersPlayers(includedPlayers, excludedPlayers, excludeOnlyAi)
     }
 }

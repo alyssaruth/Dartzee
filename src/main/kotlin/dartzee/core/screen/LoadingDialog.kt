@@ -1,14 +1,17 @@
 package dartzee.core.screen
 
+import javax.swing.JDialog
+import javax.swing.JLabel
+import javax.swing.JProgressBar
+import javax.swing.SwingConstants
+import javax.swing.SwingUtilities
+import javax.swing.WindowConstants
 import net.miginfocom.swing.MigLayout
-import javax.swing.*
 
-class LoadingDialog : JDialog()
-{
+class LoadingDialog : JDialog() {
     private val lblMessage = JLabel("Communicating with Server...")
 
-    init
-    {
+    init {
         layout = MigLayout("gapy 12px", "[grow]", "[]")
         setSize(250, 115)
         setLocationRelativeTo(null)
@@ -25,8 +28,7 @@ class LoadingDialog : JDialog()
         contentPane.add(progressBar, "cell 0 1, alignx center")
     }
 
-    fun showDialog(textToShow: String)
-    {
+    fun showDialog(textToShow: String) {
         val showRunnable = Runnable {
             lblMessage.text = textToShow
             isVisible = true
@@ -35,8 +37,7 @@ class LoadingDialog : JDialog()
         SwingUtilities.invokeLater(showRunnable)
     }
 
-    fun dismissDialog()
-    {
+    fun dismissDialog() {
         val hideRunnable = Runnable { isVisible = false }
 
         SwingUtilities.invokeLater(hideRunnable)

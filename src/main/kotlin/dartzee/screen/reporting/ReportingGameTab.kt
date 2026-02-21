@@ -8,9 +8,10 @@ import dartzee.core.bean.isSelectedAndEnabled
 import dartzee.core.util.addActionListenerToAllChildren
 import dartzee.core.util.createButtonGroup
 import dartzee.core.util.enableChildren
-import dartzee.reporting.ReportParameters
+import dartzee.reporting.MatchFilter
+import dartzee.reporting.ReportParametersGame
+import dartzee.reporting.grabIfSelected
 import dartzee.utils.getFilterPanel
-import net.miginfocom.swing.MigLayout
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -18,9 +19,9 @@ import javax.swing.Box
 import javax.swing.JCheckBox
 import javax.swing.JPanel
 import javax.swing.JRadioButton
+import net.miginfocom.swing.MigLayout
 
-class ReportingGameTab: JPanel(), ActionListener
-{
+class ReportingGameTab : JPanel(), ActionListener {
     private val checkBoxGameType = JCheckBox("Game")
     private val verticalStrut = Box.createVerticalStrut(20)
     private val horizontalStrut = Box.createHorizontalStrut(20)
@@ -42,8 +43,7 @@ class ReportingGameTab: JPanel(), ActionListener
     private val rdbtnSynced = JRadioButton("Synced")
     private val rdbtnPendingChanges = JRadioButton("Pending changes")
 
-    init
-    {
+    init {
         layout = MigLayout("hidemode 3", "[][][grow][]", "[][][][][][][][][][][][]")
 
         add(checkBoxGameType, "flowx,cell 0 0")
@@ -52,8 +52,8 @@ class ReportingGameTab: JPanel(), ActionListener
         add(panelGameParams, "cell 2 1")
         add(verticalStrut, "cell 0 2")
         add(cbStartDate, "cell 0 3,aligny center")
-        val fl_panelDtStart = dateFilterPanelStart.layout as FlowLayout
-        fl_panelDtStart.alignment = FlowLayout.LEFT
+        val fl = dateFilterPanelStart.layout as FlowLayout
+        fl.alignment = FlowLayout.LEFT
         add(dateFilterPanelStart, "cell 2 3,alignx left,aligny center")
         add(cbFinishDate, "cell 0 4")
         add(rdbtnUnfinished, "flowx,cell 2 5")
@@ -69,25 +69,29 @@ class ReportingGameTab: JPanel(), ActionListener
         add(rdbtnPendingChanges, "flowx,cell 2 7")
         add(rdbtnSynced, "cell 2 7")
 
+        checkBoxGameType.name = "filterGameType"
+        cbType.name = "filterGameParams"
+        cbStartDate.name = "filterStartDate"
+        cbFinishDate.name = "filterFinishDate"
+        cbPartOfMatch.name = "filterPartOfMatch"
+        cbSyncStatus.name = "filterSyncStatus"
+
         createButtonGroupsAndSelectDefaults()
         addListeners()
     }
 
-    private fun createButtonGroupsAndSelectDefaults()
-    {
+    private fun createButtonGroupsAndSelectDefaults() {
         createButtonGroup(rdbtnDtFinish, rdbtnUnfinished)
         createButtonGroup(rdbtnYes, rdbtnNo)
         createButtonGroup(rdbtnPendingChanges, rdbtnSynced)
     }
 
-    private fun addListeners()
-    {
+    private fun addListeners() {
         addActionListenerToAllChildren(this)
         toggleComponents()
     }
 
-    private fun toggleComponents()
-    {
+    private fun toggleComponents() {
         comboBox.isEnabled = checkBoxGameType.isSelected
         panelGameParams.isEnabled = cbType.isSelected
         dateFilterPanelStart.enableChildren(cbStartDate.isSelected)
@@ -102,12 +106,9 @@ class ReportingGameTab: JPanel(), ActionListener
         rdbtnSynced.isEnabled = cbSyncStatus.isSelected
     }
 
-    override fun actionPerformed(e: ActionEvent?)
-    {
-        when (e?.source)
-        {
-            comboBox ->
-            {
+    override fun actionPerformed(e: ActionEvent?) {
+        when (e?.source) {
+            comboBox -> {
                 remove(panelGameParams)
                 panelGameParams = getFilterPanel(comboBox.getGameType())
                 panelGameParams.isEnabled = cbType.isSelected
@@ -120,45 +121,36 @@ class ReportingGameTab: JPanel(), ActionListener
 
     fun valid() = dateFilterPanelStart.valid() && dateFilterPanelFinish.valid()
 
-    fun populateReportParameters(rp: ReportParameters)
-    {
-        if (checkBoxGameType.isSelected)
-        {
-            rp.gameType = comboBox.getGameType()
-        }
-
-        if (cbType.isSelected)
-        {
-            rp.gameParams = panelGameParams.getGameParams()
-        }
-
-        if (cbPartOfMatch.isSelected)
-        {
-            rp.setEnforceMatch(rdbtnYes.isSelected)
-        }
-
-        if (cbSyncStatus.isSelected)
-        {
-            rp.pendingChanges = rdbtnPendingChanges.isSelected
-        }
-
-        if (cbStartDate.isSelected)
-        {
-            rp.dtStartFrom = dateFilterPanelStart.getSqlDtFrom()
-            rp.dtStartTo = dateFilterPanelStart.getSqlDtTo()
-        }
-
-        if (cbFinishDate.isSelected)
-        {
-            if (rdbtnUnfinished.isSelected)
-            {
-                rp.unfinishedOnly = true
+    fun generateReportParameters(): ReportParametersGame {
+        val gameType = grabIfSelected(checkBoxGameType) { comboBox.getGameType() }
+        val gameParams = grabIfSelected(cbType) { panelGameParams.getGameParams() }.orEmpty()
+        val dtStartFrom = grabIfSelected(cbStartDate) { dateFilterPanelStart.getSqlDtFrom() }
+        val dtStartTo = grabIfSelected(cbStartDate) { dateFilterPanelStart.getSqlDtTo() }
+        val unfinishedOnly = grabIfSelected(cbFinishDate) { rdbtnUnfinished.isSelected } ?: false
+        val dtFinishFrom =
+            grabIfSelected(cbFinishDate) {
+                if (rdbtnUnfinished.isSelected) null else dateFilterPanelFinish.getSqlDtFrom()
             }
-            else
-            {
-                rp.dtFinishFrom = dateFilterPanelFinish.getSqlDtFrom()
-                rp.dtFinishTo = dateFilterPanelFinish.getSqlDtTo()
+        val dtFinishTo =
+            grabIfSelected(cbFinishDate) {
+                if (rdbtnUnfinished.isSelected) null else dateFilterPanelFinish.getSqlDtTo()
             }
-        }
+        val enforceMatch = grabIfSelected(cbPartOfMatch) { enforceMatch() } ?: MatchFilter.BOTH
+        val pendingChanges = grabIfSelected(cbSyncStatus) { rdbtnPendingChanges.isSelected }
+
+        return ReportParametersGame(
+            gameType,
+            gameParams,
+            dtStartFrom,
+            dtStartTo,
+            unfinishedOnly,
+            dtFinishFrom,
+            dtFinishTo,
+            enforceMatch,
+            pendingChanges,
+        )
     }
+
+    private fun enforceMatch() =
+        if (rdbtnYes.isSelected) MatchFilter.MATCHES_ONLY else MatchFilter.GAMES_ONLY
 }

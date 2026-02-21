@@ -4,61 +4,72 @@ import dartzee.achievements.AbstractAchievementTest
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.helper.*
+import dartzee.helper.getCountFromTable
+import dartzee.helper.insertDart
+import dartzee.helper.insertFinishForPlayer
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
+import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
-import io.kotlintest.shouldBe
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.shouldBe
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFinish>()
-{
+class TestAchievementX01BestFinish : AbstractAchievementTest<AchievementX01BestFinish>() {
     override fun factoryAchievement() = AchievementX01BestFinish()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
-    {
-        insertParticipant(playerId = p.rowId, gameId = g.rowId, dtFinished = getSqlDateNow(), database = database)
+    override fun setUpAchievementRowForPlayerAndGame(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database,
+    ) {
+        insertParticipant(
+            playerId = p.rowId,
+            gameId = g.rowId,
+            dtFinished = getSqlDateNow(),
+            database = database,
+        )
         insertFinishForPlayer(p, 60, game = g, database = database)
     }
 
     @Test
-    fun `Should ignore darts that are not doubles`()
-    {
+    fun `Should ignore darts that are not doubles`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, dtFinished = getSqlDateNow())
+        val pt =
+            insertParticipant(playerId = p.rowId, gameId = g.rowId, dtFinished = getSqlDateNow())
 
         insertDart(pt, ordinal = 1, startingScore = 40, score = 20, multiplier = 1)
         insertDart(pt, ordinal = 2, startingScore = 20, score = 20, multiplier = 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 0
     }
 
     @Test
-    fun `Should ignore doubles that are not finishes`()
-    {
+    fun `Should ignore doubles that are not finishes`() {
         val p = insertPlayer()
         val g = insertRelevantGame()
-        val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, dtFinished = getSqlDateNow())
+        val pt =
+            insertParticipant(playerId = p.rowId, gameId = g.rowId, dtFinished = getSqlDateNow())
 
         insertDart(pt, ordinal = 1, startingScore = 100, score = 20, multiplier = 1)
         insertDart(pt, ordinal = 2, startingScore = 80, score = 20, multiplier = 2)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 0
     }
 
     @Test
-    fun `Should take the earliest occurrence of a players best finish`()
-    {
+    fun `Should take the earliest occurrence of a players best finish`() {
         val p = insertPlayer()
 
         val game = insertFinishForPlayer(p, 30, dtCreation = Timestamp(500))
         insertFinishForPlayer(p, 30, dtCreation = Timestamp(2000))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 1
         val a = retrieveAchievement()
@@ -69,14 +80,13 @@ class TestAchievementX01BestFinish: AbstractAchievementTest<AchievementX01BestFi
     }
 
     @Test
-    fun `Should populate with the highest finish`()
-    {
+    fun `Should populate with the highest finish`() {
         val p = insertPlayer()
 
         insertFinishForPlayer(p, 55, dtCreation = Timestamp(500))
         val game = insertFinishForPlayer(p, 68, dtCreation = Timestamp(2000))
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getCountFromTable("Achievement") shouldBe 1
         val a = retrieveAchievement()

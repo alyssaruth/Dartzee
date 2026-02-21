@@ -9,66 +9,112 @@ import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.retrieveAchievement
 import dartzee.utils.Database
-import io.kotlintest.shouldBe
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.shouldBe
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01BestThreeDarts>()
-{
+class TestAchievementX01BestThreeDarts : AbstractAchievementTest<AchievementX01BestThreeDarts>() {
     override fun factoryAchievement() = AchievementX01BestThreeDarts()
 
-    override fun setUpAchievementRowForPlayerAndGame(p: PlayerEntity, g: GameEntity, database: Database)
-    {
+    override fun setUpAchievementRowForPlayerAndGame(
+        p: PlayerEntity,
+        g: GameEntity,
+        database: Database,
+    ) {
         val pt = insertParticipant(playerId = p.rowId, gameId = g.rowId, database = database)
 
-        insertDart(pt, ordinal = 1, startingScore = 501, score = 20, multiplier = 3, database = database)
-        insertDart(pt, ordinal = 2, startingScore = 441, score = 20, multiplier = 3, database = database)
-        insertDart(pt, ordinal = 3, startingScore = 381, score = 20, multiplier = 3, database = database)
+        insertDart(
+            pt,
+            ordinal = 1,
+            startingScore = 501,
+            score = 20,
+            multiplier = 3,
+            database = database,
+        )
+        insertDart(
+            pt,
+            ordinal = 2,
+            startingScore = 441,
+            score = 20,
+            multiplier = 3,
+            database = database,
+        )
+        insertDart(
+            pt,
+            ordinal = 3,
+            startingScore = 381,
+            score = 20,
+            multiplier = 3,
+            database = database,
+        )
     }
 
     @Test
-    fun `Should ignore busts`()
-    {
+    fun `Should include rounds that were thrown as part of a team`() {
+        val pt = insertRelevantParticipant(team = true)
+
+        insertDart(pt, ordinal = 1, startingScore = 501, score = 20, multiplier = 3)
+        insertDart(pt, ordinal = 2, startingScore = 441, score = 20, multiplier = 3)
+        insertDart(pt, ordinal = 3, startingScore = 381, score = 20, multiplier = 3)
+
+        runConversion()
+        getAchievementCount() shouldBe 1
+    }
+
+    @Test
+    fun `Should ignore busts`() {
         val pt = insertRelevantParticipant()
 
         insertDart(pt, ordinal = 1, startingScore = 100, score = 20, multiplier = 3)
         insertDart(pt, ordinal = 2, startingScore = 40, score = 20, multiplier = 1)
         insertDart(pt, ordinal = 3, startingScore = 20, score = 20, multiplier = 1)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 0
     }
 
     @Test
-    fun `Should ignore rounds of fewer than 3 darts`()
-    {
+    fun `Should ignore rounds of fewer than 3 darts`() {
         val pt = setUpParticipant()
 
         insertDart(pt, ordinal = 1, startingScore = 501, score = 20, multiplier = 3)
         insertDart(pt, ordinal = 2, startingScore = 441, score = 20, multiplier = 3)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 0
     }
 
     @Test
-    fun `Should pick the earliest instance of the same three dart score`()
-    {
+    fun `Should pick the earliest instance of the same three dart score`() {
         val p = insertPlayer()
 
         val pt = setUpParticipant(p)
         insertDart(pt, ordinal = 1, startingScore = 501, score = 20, multiplier = 3)
         insertDart(pt, ordinal = 2, startingScore = 441, score = 20, multiplier = 3)
-        insertDart(pt, ordinal = 3, startingScore = 381, score = 20, multiplier = 3, dtCreation = Timestamp(1000))
+        insertDart(
+            pt,
+            ordinal = 3,
+            startingScore = 381,
+            score = 20,
+            multiplier = 3,
+            dtCreation = Timestamp(1000),
+        )
 
         val pt2 = setUpParticipant(p)
         insertDart(pt2, ordinal = 1, startingScore = 501, score = 20, multiplier = 3)
         insertDart(pt2, ordinal = 2, startingScore = 441, score = 20, multiplier = 3)
-        insertDart(pt2, ordinal = 3, startingScore = 381, score = 20, multiplier = 3, dtCreation = Timestamp(500))
+        insertDart(
+            pt2,
+            ordinal = 3,
+            startingScore = 381,
+            score = 20,
+            multiplier = 3,
+            dtCreation = Timestamp(500),
+        )
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
 
@@ -81,29 +127,28 @@ class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01Be
     }
 
     @Test
-    fun `Should return the players highest three darts`()
-    {
+    fun `Should return the players highest three darts`() {
         val p = insertPlayer()
 
-        //140
+        // 140
         val pt = setUpParticipant(p)
         insertDart(pt, ordinal = 1, startingScore = 501, score = 20, multiplier = 3)
         insertDart(pt, ordinal = 2, startingScore = 441, score = 20, multiplier = 3)
         insertDart(pt, ordinal = 3, startingScore = 381, score = 20, multiplier = 1)
 
-        //101
+        // 101
         val pt2 = setUpParticipant(p)
         insertDart(pt2, ordinal = 1, startingScore = 501, score = 17, multiplier = 3)
         insertDart(pt2, ordinal = 2, startingScore = 450, score = 19, multiplier = 2)
         insertDart(pt2, ordinal = 3, startingScore = 412, score = 12, multiplier = 1)
 
-        //150
+        // 150
         val pt3 = setUpParticipant(p)
         insertDart(pt3, ordinal = 1, startingScore = 501, score = 25, multiplier = 2)
         insertDart(pt3, ordinal = 2, startingScore = 451, score = 25, multiplier = 2)
         insertDart(pt3, ordinal = 3, startingScore = 401, score = 25, multiplier = 2)
 
-        factoryAchievement().populateForConversion(emptyList())
+        runConversion()
 
         getAchievementCount() shouldBe 1
 
@@ -113,8 +158,7 @@ class TestAchievementX01BestThreeDarts: AbstractAchievementTest<AchievementX01Be
         a.playerId shouldBe p.rowId
     }
 
-    private fun setUpParticipant(p: PlayerEntity = insertPlayer()): ParticipantEntity
-    {
+    private fun setUpParticipant(p: PlayerEntity = insertPlayer()): ParticipantEntity {
         val g = insertRelevantGame()
 
         return insertParticipant(playerId = p.rowId, gameId = g.rowId)

@@ -11,10 +11,15 @@ import javax.swing.SwingConstants
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableModel
 
-class X01ScoreRenderer : DefaultTableCellRenderer()
-{
-    override fun getTableCellRendererComponent(table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
-    {
+class X01ScoreRenderer : DefaultTableCellRenderer() {
+    override fun getTableCellRendererComponent(
+        table: JTable,
+        value: Any?,
+        isSelected: Boolean,
+        hasFocus: Boolean,
+        row: Int,
+        column: Int,
+    ): Component {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
         horizontalAlignment = SwingConstants.CENTER
         font = Font("Trebuchet MS", Font.BOLD, 15)
@@ -24,12 +29,10 @@ class X01ScoreRenderer : DefaultTableCellRenderer()
         return this
     }
 
-    private fun setColours(table: JTable, modelRow: Int)
-    {
+    private fun setColours(table: JTable, modelRow: Int) {
         val tm = table.model
         val darts = getDartsForRow(tm, modelRow)
-        if (darts.isEmpty())
-        {
+        if (darts.isEmpty()) {
             foreground = null
             background = null
             return
@@ -44,14 +47,11 @@ class X01ScoreRenderer : DefaultTableCellRenderer()
         background = bg
     }
 
-    private fun getDartsForRow(tm: TableModel, row: Int): List<Dart>
-    {
+    private fun getDartsForRow(tm: TableModel, row: Int): List<Dart> {
         val ret = mutableListOf<Dart>()
-        for (i in 0 until DartsScorerX01.SCORE_COLUMN)
-        {
+        for (i in 0 until DartsScorerX01.SCORE_COLUMN) {
             val drt = tm.getValueAt(row, i) as Dart?
-            if (drt != null && drt !is DartHint)
-            {
+            if (drt != null && drt !is DartHint) {
                 ret.add(drt)
             }
         }

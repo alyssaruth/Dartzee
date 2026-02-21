@@ -11,10 +11,8 @@ import javax.swing.border.MatteBorder
 import javax.swing.plaf.basic.BasicProgressBarUI
 import javax.swing.table.TableCellRenderer
 
-abstract class AbstractProgressBarRenderer: JProgressBar(), TableCellRenderer
-{
-    init
-    {
+abstract class AbstractProgressBarRenderer : JProgressBar(), TableCellRenderer {
+    init {
         font = Font("Tahoma", Font.BOLD, 12)
         minimum = 0
         isStringPainted = true
@@ -27,18 +25,24 @@ abstract class AbstractProgressBarRenderer: JProgressBar(), TableCellRenderer
     }
 
     abstract fun getColorForValue(value: Any?): Color
+
     abstract fun getScoreForValue(value: Any?): Int
 
-    override fun getTableCellRendererComponent(table: JTable?, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component
-    {
+    override fun getTableCellRendererComponent(
+        table: JTable?,
+        value: Any?,
+        isSelected: Boolean,
+        hasFocus: Boolean,
+        row: Int,
+        column: Int,
+    ): Component {
         val score = getScoreForValue(value)
         string = getScoreDescForValue(value)
 
         setValue(score)
 
         var col = getColorForValue(value)
-        if (isSelected)
-        {
+        if (isSelected) {
             col = col.darker()
         }
 
@@ -50,16 +54,9 @@ abstract class AbstractProgressBarRenderer: JProgressBar(), TableCellRenderer
 
     open fun getScoreDescForValue(value: Any?) = "${getScoreForValue(value)}/$maximum"
 
-    private class AchievementProgressUI : BasicProgressBarUI()
-    {
-        override fun getSelectionBackground(): Color
-        {
-            return progressBar.foreground
-        }
+    private class AchievementProgressUI : BasicProgressBarUI() {
+        override fun getSelectionBackground(): Color = progressBar.foreground
 
-        override fun getSelectionForeground(): Color
-        {
-            return progressBar.foreground.darker()
-        }
+        override fun getSelectionForeground(): Color = progressBar.foreground.darker()
     }
 }

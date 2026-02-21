@@ -2,12 +2,9 @@ package dartzee.dartzee.aggregate
 
 import dartzee.`object`.DartboardSegment
 
-class DartzeeAggregateRuleDistinctScores: AbstractDartzeeAggregateRule()
-{
-    override fun isValidRound(segments: List<DartboardSegment>): Boolean
-    {
-        if (segments.any { it.isMiss() })
-        {
+class DartzeeAggregateRuleDistinctScores : AbstractDartzeeAggregateRule() {
+    override fun isValidRound(segments: List<DartboardSegment>): Boolean {
+        if (segments.any { it.isMiss() }) {
             return false
         }
 
@@ -15,5 +12,6 @@ class DartzeeAggregateRuleDistinctScores: AbstractDartzeeAggregateRule()
     }
 
     override fun getRuleIdentifier() = "DistinctScores"
+
     override fun toString() = "Darts are distinct"
 }

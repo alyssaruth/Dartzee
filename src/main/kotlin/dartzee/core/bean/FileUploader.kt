@@ -1,6 +1,8 @@
 package dartzee.core.bean
 
 import dartzee.core.util.DialogUtil
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -13,9 +15,8 @@ import javax.swing.JTextField
 import javax.swing.border.EmptyBorder
 import javax.swing.filechooser.FileFilter
 
-class FileUploader(ff: FileFilter, buttonName: String = "Upload") : JPanel(), ActionListener
-{
-    var selectedFile: File? = null
+class FileUploader(ff: FileFilter) : JPanel(), ActionListener {
+    private var selectedFile: File? = null
     private val listeners = mutableListOf<IFileUploadListener>()
 
     private val textField = JTextField("")
@@ -23,8 +24,7 @@ class FileUploader(ff: FileFilter, buttonName: String = "Upload") : JPanel(), Ac
     private val fc = JFileChooser()
     private val btnUpload = JButton("Upload")
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
 
         val filters = fc.choosableFileFilters
@@ -38,50 +38,53 @@ class FileUploader(ff: FileFilter, buttonName: String = "Upload") : JPanel(), Ac
         textField.isEditable = false
         panel.add(btnSelectFile, BorderLayout.EAST)
         btnSelectFile.preferredSize = Dimension(25, 20)
-        val panel_1 = JPanel()
-        panel_1.border = EmptyBorder(0, 5, 0, 5)
-        add(panel_1, BorderLayout.EAST)
-        panel_1.layout = BorderLayout(0, 0)
-        panel_1.add(btnUpload, BorderLayout.CENTER)
-        btnUpload.text = buttonName
+        val panelEast = JPanel()
+        panelEast.border = EmptyBorder(0, 5, 0, 5)
+        add(panelEast, BorderLayout.EAST)
+        panelEast.layout = BorderLayout(0, 0)
+        panelEast.add(btnUpload, BorderLayout.CENTER)
+
+        fc.currentDirectory = preferenceService.find(Preferences.imageUploadDirectory)?.let(::File)
+        textField.text = fc.currentDirectory.absolutePath
 
         btnSelectFile.addActionListener(this)
         btnUpload.addActionListener(this)
     }
 
-    fun addFileUploadListener(listener: IFileUploadListener)
-    {
+    fun addFileUploadListener(listener: IFileUploadListener) {
         listeners.add(listener)
     }
 
-    private fun selectFile()
-    {
+    private fun selectFile() {
         val returnVal = fc.showOpenDialog(this)
         val selectedFile = fc.selectedFile
-        if (returnVal == JFileChooser.APPROVE_OPTION && selectedFile != null)
-        {
+        if (returnVal == JFileChooser.APPROVE_OPTION && selectedFile != null) {
             this.selectedFile = fc.selectedFile
             textField.text = selectedFile.path
+
+            preferenceService.save(
+                Preferences.imageUploadDirectory,
+                selectedFile.absoluteFile.parent,
+            )
         }
     }
 
-    private fun uploadPressed()
-    {
+    private fun uploadPressed() {
         val file = selectedFile
-        if (file == null)
-        {
-            val btnText = btnUpload.text.toLowerCase()
-            DialogUtil.showError("You must select a file to $btnText.")
+        if (file == null) {
+            DialogUtil.showError("You must select a file to upload.")
             return
         }
 
-        listeners.forEach { it.fileUploaded(file) }
+        val success = listeners.all { it.fileUploaded(file) }
+        if (success) {
+            this.selectedFile = null
+            textField.text = fc.currentDirectory.absolutePath
+        }
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnSelectFile -> selectFile()
             btnUpload -> uploadPressed()
         }

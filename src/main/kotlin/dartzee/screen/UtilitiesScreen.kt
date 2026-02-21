@@ -1,23 +1,24 @@
 package dartzee.screen
 
-import dartzee.`object`.DartsClient
 import dartzee.core.util.dumpThreadStacks
 import dartzee.core.util.getAllChildComponentsForType
+import dartzee.core.util.runInOtherThread
 import dartzee.db.sanity.DatabaseSanityCheck
+import dartzee.logging.CODE_PARTY_MODE
+import dartzee.`object`.DartsClient
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.event.ActionEvent
 import javax.swing.AbstractButton
 import javax.swing.JButton
 import javax.swing.JPanel
+import net.miginfocom.swing.MigLayout
 
-class UtilitiesScreen : EmbeddedScreen()
-{
+class UtilitiesScreen : EmbeddedScreen() {
     private val btnDeleteGame = JButton("Delete Game")
     private val btnCreateBackup = JButton("Create backup")
     private val btnRestoreFromBackup = JButton("Restore from backup")
@@ -26,9 +27,9 @@ class UtilitiesScreen : EmbeddedScreen()
     private val btnViewLogs = JButton("View Logs")
     private val btnThreadStacks = JButton("Thread Stacks")
     private val btnAchievementConversion = JButton("Run Achievement Conversion")
+    private val btnPartyMode = JButton("Enter Party Mode")
 
-    init
-    {
+    init {
         val panel = JPanel()
         add(panel, BorderLayout.CENTER)
         panel.layout = MigLayout("", "[grow]", "[][][][][][][][][][][]")
@@ -40,40 +41,47 @@ class UtilitiesScreen : EmbeddedScreen()
         panel.add(btnCheckForUpdates, "cell 0 8,alignx center")
         panel.add(btnViewLogs, "cell 0 10,alignx center")
         panel.add(btnAchievementConversion, "cell 0 11,alignx center")
+        panel.add(btnPartyMode, "cell 0 12,alignx center")
 
         val buttons = panel.getAllChildComponentsForType<AbstractButton>()
-        for (button in buttons)
-        {
+        for (button in buttons) {
             button.font = Font("Tahoma", Font.PLAIN, 18)
             button.addActionListener(this)
         }
     }
 
-    override fun initialise()
-    {
-        //Nothing to do, it's just a placeholder for some buttons
+    override fun initialise() {
+        // Nothing to do, it's just a placeholder for some buttons
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnDeleteGame -> DevUtilities.purgeGame()
             btnCreateBackup -> DartsDatabaseUtil.backupCurrentDatabase()
             btnRestoreFromBackup -> DartsDatabaseUtil.restoreDatabase()
             btnPerformDatabaseCheck -> DatabaseSanityCheck.runSanityCheck()
-            btnCheckForUpdates -> DartsClient.updateManager.checkForUpdates(DARTS_VERSION_NUMBER)
-            btnViewLogs -> {val loggingDialog = InjectedThings.loggingConsole
-                            loggingDialog.isVisible = true
-                            loggingDialog.toFront()}
+            btnCheckForUpdates ->
+                runInOtherThread { DartsClient.updateManager.checkForUpdates(DARTS_VERSION_NUMBER) }
+            btnViewLogs -> {
+                val loggingDialog = InjectedThings.loggingConsole
+                loggingDialog.isVisible = true
+                loggingDialog.toFront()
+            }
             btnThreadStacks -> dumpThreadStacks()
             btnAchievementConversion -> runAchievementConversion()
+            btnPartyMode -> enterPartyMode()
             else -> super.actionPerformed(arg0)
         }
     }
 
-    private fun runAchievementConversion()
-    {
+    private fun enterPartyMode() {
+        InjectedThings.logger.info(CODE_PARTY_MODE, "Entering party mode!")
+        InjectedThings.partyMode = true
+
+        ScreenCache.switch<MenuScreen>()
+    }
+
+    private fun runAchievementConversion() {
         val dlg = AchievementConversionDialog()
         dlg.setLocationRelativeTo(ScreenCache.mainScreen)
         dlg.isVisible = true

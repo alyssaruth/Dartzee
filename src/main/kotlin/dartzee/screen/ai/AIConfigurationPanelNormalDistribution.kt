@@ -2,7 +2,6 @@ package dartzee.screen.ai
 
 import dartzee.ai.DartsAiModel
 import dartzee.core.bean.NumberField
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -13,9 +12,9 @@ import javax.swing.JPanel
 import javax.swing.JSlider
 import javax.swing.border.EmptyBorder
 import javax.swing.border.TitledBorder
+import net.miginfocom.swing.MigLayout
 
-class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel(), ActionListener
-{
+class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel(), ActionListener {
     private val panelNorth = JPanel()
     private val lblStandardDeviation = JLabel("Standard Deviation")
     val nfStandardDeviation = NumberField(1)
@@ -26,10 +25,10 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
     private val lblConsistent = JLabel("Max radius")
     private val slider = JSlider()
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
-        panelNorth.border = TitledBorder(null, "Variables", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+        panelNorth.border =
+            TitledBorder(null, "Variables", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         add(panelNorth, BorderLayout.CENTER)
         panelNorth.layout = MigLayout("", "[125px,grow][100px,grow]", "[25px][][][][grow]")
         lblStandardDeviation.border = EmptyBorder(0, 5, 0, 0)
@@ -54,50 +53,46 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
         cbCenterBias.addActionListener(this)
     }
 
-    fun initialiseModel(): DartsAiModel
-    {
+    fun initialiseModel(): DartsAiModel {
         val model = DartsAiModel.new()
 
         val sd = nfStandardDeviation.getDouble()
-        val sdDoubles = if (cbStandardDeviationDoubles.isSelected) nfStandardDeviationDoubles.getDouble() else null
+        val sdDoubles =
+            if (cbStandardDeviationDoubles.isSelected) nfStandardDeviationDoubles.getDouble()
+            else null
         val sdCentral = if (cbCenterBias.isSelected) nfCentralBias.getDouble() else null
 
-        return model.copy(standardDeviation = sd,
+        return model.copy(
+            standardDeviation = sd,
             standardDeviationDoubles = sdDoubles,
             standardDeviationCentral = sdCentral,
-            maxRadius = slider.value)
+            maxRadius = slider.value,
+        )
     }
 
     override fun populateModel(model: DartsAiModel) = model
 
-    override fun initialiseFromModel(model: DartsAiModel)
-    {
+    override fun initialiseFromModel(model: DartsAiModel) {
         val standardDeviation = model.standardDeviation
         nfStandardDeviation.value = standardDeviation
 
         val standardDeviationDoubles = model.standardDeviationDoubles
-        if (standardDeviationDoubles != null)
-        {
+        if (standardDeviationDoubles != null) {
             cbStandardDeviationDoubles.isSelected = true
             nfStandardDeviationDoubles.isEnabled = true
             nfStandardDeviationDoubles.value = standardDeviationDoubles
-        }
-        else
-        {
+        } else {
             cbStandardDeviationDoubles.isSelected = false
             nfStandardDeviationDoubles.isEnabled = false
             nfStandardDeviationDoubles.value = 50
         }
 
         val sdCentral = model.standardDeviationCentral
-        if (sdCentral != null)
-        {
+        if (sdCentral != null) {
             cbCenterBias.isSelected = true
             nfCentralBias.isEnabled = true
             nfCentralBias.value = sdCentral
-        }
-        else
-        {
+        } else {
             cbCenterBias.isSelected = false
             nfCentralBias.isEnabled = false
             nfCentralBias.value = 50
@@ -106,13 +101,11 @@ class AIConfigurationPanelNormalDistribution : AbstractAIConfigurationSubPanel()
         slider.value = model.maxRadius
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
-            cbStandardDeviationDoubles -> nfStandardDeviationDoubles.isEnabled = cbStandardDeviationDoubles.isSelected
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
+            cbStandardDeviationDoubles ->
+                nfStandardDeviationDoubles.isEnabled = cbStandardDeviationDoubles.isSelected
             cbCenterBias -> nfCentralBias.isEnabled = cbCenterBias.isSelected
         }
     }
-
 }

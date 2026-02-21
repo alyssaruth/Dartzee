@@ -1,36 +1,53 @@
 package dartzee.screen.dartzee
 
-import com.github.alexburlton.swingtest.*
+import com.github.alyssaburlton.swingtest.clickCancel
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.makeActionEvent
+import com.github.alyssaburlton.swingtest.shouldBeDisabled
+import com.github.alyssaburlton.swingtest.shouldBeEnabled
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.core.bean.selectByClass
-import dartzee.core.helper.makeActionEvent
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.dartzee.DartzeeCalculator
-import dartzee.dartzee.dart.*
 import dartzee.dartzee.aggregate.DartzeeTotalRuleEqualTo
 import dartzee.dartzee.aggregate.DartzeeTotalRuleOdd
 import dartzee.dartzee.aggregate.DartzeeTotalRulePrime
-import dartzee.helper.*
+import dartzee.dartzee.dart.DartzeeDartRuleAny
+import dartzee.dartzee.dart.DartzeeDartRuleColour
+import dartzee.dartzee.dart.DartzeeDartRuleCustom
+import dartzee.dartzee.dart.DartzeeDartRuleEven
+import dartzee.dartzee.dart.DartzeeDartRuleInner
+import dartzee.dartzee.dart.DartzeeDartRuleOdd
+import dartzee.dartzee.dart.DartzeeDartRuleOuter
+import dartzee.dartzee.dart.DartzeeDartRuleScore
+import dartzee.helper.AbstractTest
+import dartzee.helper.makeColourRule
+import dartzee.helper.makeDartzeeRuleDto
+import dartzee.helper.makeScoreRule
+import dartzee.helper.makeTotalScoreRule
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.matchers.collections.shouldNotContain
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.collections.shouldNotContain
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import javax.swing.JCheckBox
 import javax.swing.SwingUtilities
+import org.junit.jupiter.api.Test
 
-class TestDartzeeRuleAmendment: AbstractTest()
-{
+class TestDartzeeRuleAmendment : AbstractTest() {
     @Test
-    fun `Should adjust the dialog title appropriately`()
-    {
+    fun `Should adjust the dialog title appropriately`() {
         val dlg = DartzeeRuleCreationDialog()
         dlg.amendRule(makeDartzeeRuleDto())
 
@@ -38,22 +55,20 @@ class TestDartzeeRuleAmendment: AbstractTest()
     }
 
     @Test
-    fun `Should populate the ruleName correctly`()
-    {
+    fun `Should populate the ruleName correctly`() {
         val dlg = DartzeeRuleCreationDialog()
         dlg.amendRule(makeDartzeeRuleDto(ruleName = "My Rule"))
 
-        dlg.getChild<JCheckBox>("Custom rule name").isSelected shouldBe true
+        dlg.getChild<JCheckBox>(text = "Custom rule name").isSelected shouldBe true
         dlg.tfRuleName.text shouldBe "My Rule"
 
         dlg.amendRule(makeDartzeeRuleDto())
-        dlg.getChild<JCheckBox>("Custom rule name").isSelected shouldBe false
+        dlg.getChild<JCheckBox>(text = "Custom rule name").isSelected shouldBe false
         dlg.tfRuleName.text shouldBe ""
     }
 
     @Test
-    fun `Should populate from a 'no darts' rule correctly`()
-    {
+    fun `Should populate from a 'no darts' rule correctly`() {
         val rule = makeDartzeeRuleDto()
 
         val dlg = DartzeeRuleCreationDialog()
@@ -63,8 +78,7 @@ class TestDartzeeRuleAmendment: AbstractTest()
     }
 
     @Test
-    fun `Should populate from an 'at least one' rule correctly`()
-    {
+    fun `Should populate from an 'at least one' rule correctly`() {
         val rule = makeDartzeeRuleDto(makeScoreRule(12))
 
         val dlg = DartzeeRuleCreationDialog()
@@ -78,9 +92,14 @@ class TestDartzeeRuleAmendment: AbstractTest()
     }
 
     @Test
-    fun `Should populate from a 'three darts' rule correctly`()
-    {
-        val rule = makeDartzeeRuleDto(makeScoreRule(13), makeColourRule(red = true, green = true), DartzeeDartRuleOdd(), inOrder = false)
+    fun `Should populate from a 'three darts' rule correctly`() {
+        val rule =
+            makeDartzeeRuleDto(
+                makeScoreRule(13),
+                makeColourRule(red = true, green = true),
+                DartzeeDartRuleOdd(),
+                inOrder = false,
+            )
 
         val dlg = DartzeeRuleCreationDialog()
         dlg.amendRule(rule)
@@ -100,9 +119,14 @@ class TestDartzeeRuleAmendment: AbstractTest()
     }
 
     @Test
-    fun `Should populate an in order rule correctly`()
-    {
-        val rule = makeDartzeeRuleDto(DartzeeDartRuleEven(), DartzeeDartRuleOdd(), DartzeeDartRuleEven(), inOrder = true)
+    fun `Should populate an in order rule correctly`() {
+        val rule =
+            makeDartzeeRuleDto(
+                DartzeeDartRuleEven(),
+                DartzeeDartRuleOdd(),
+                DartzeeDartRuleEven(),
+                inOrder = true,
+            )
 
         val dlg = DartzeeRuleCreationDialog()
         dlg.amendRule(rule)
@@ -112,8 +136,7 @@ class TestDartzeeRuleAmendment: AbstractTest()
     }
 
     @Test
-    fun `Should populate no total rule correctly`()
-    {
+    fun `Should populate no total rule correctly`() {
         val dlg = DartzeeRuleCreationDialog()
         dlg.amendRule(makeDartzeeRuleDto())
 
@@ -121,10 +144,11 @@ class TestDartzeeRuleAmendment: AbstractTest()
     }
 
     @Test
-    fun `Should populate a total rule correctly`()
-    {
+    fun `Should populate a total rule correctly`() {
         val dlg = DartzeeRuleCreationDialog()
-        dlg.amendRule(makeDartzeeRuleDto(aggregateRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(48)))
+        dlg.amendRule(
+            makeDartzeeRuleDto(aggregateRule = makeTotalScoreRule<DartzeeTotalRuleEqualTo>(48))
+        )
 
         dlg.aggregateSelector.cbDesc.isSelected shouldBe true
         val totalRule = dlg.aggregateSelector.getSelection() as DartzeeTotalRuleEqualTo
@@ -132,8 +156,7 @@ class TestDartzeeRuleAmendment: AbstractTest()
     }
 
     @Test
-    fun `Should update the rule description`()
-    {
+    fun `Should update the rule description`() {
         val dlg = DartzeeRuleCreationDialog()
         dlg.amendRule(makeDartzeeRuleDto(DartzeeDartRuleOuter()))
 
@@ -143,8 +166,7 @@ class TestDartzeeRuleAmendment: AbstractTest()
     }
 
     @Test
-    fun `Should populate allow misses correctly`()
-    {
+    fun `Should populate allow misses correctly`() {
         val dlg = DartzeeRuleCreationDialog()
         val allowMisses = makeDartzeeRuleDto(allowMisses = true)
         val disallowMisses = makeDartzeeRuleDto(allowMisses = false)
@@ -157,8 +179,7 @@ class TestDartzeeRuleAmendment: AbstractTest()
     }
 
     @Test
-    fun `Should replace the darzeeRule with new values if Ok is pressed`()
-    {
+    fun `Should replace the darzeeRule with new values if Ok is pressed`() {
         val dlg = DartzeeRuleCreationDialog()
 
         val rule = makeDartzeeRuleDto()
@@ -166,7 +187,7 @@ class TestDartzeeRuleAmendment: AbstractTest()
 
         dlg.rdbtnAtLeastOne.doClick()
         dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleOdd>()
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         val updatedRule = dlg.dartzeeRule!!
         updatedRule shouldNotBe rule
@@ -174,8 +195,7 @@ class TestDartzeeRuleAmendment: AbstractTest()
     }
 
     @Test
-    fun `Should leave the old dartzeeRule alone if cancelled`()
-    {
+    fun `Should leave the old dartzeeRule alone if cancelled`() {
         val dlg = DartzeeRuleCreationDialog()
 
         val rule = makeDartzeeRuleDto()
@@ -183,21 +203,19 @@ class TestDartzeeRuleAmendment: AbstractTest()
 
         dlg.rdbtnAtLeastOne.doClick()
         dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleOdd>()
-        dlg.btnCancel.doClick()
+        dlg.clickCancel()
 
         val updatedRule = dlg.dartzeeRule!!
         updatedRule shouldBe rule
     }
 }
 
-class TestDartzeeRuleCreationDialogValidation: AbstractTest()
-{
+class TestDartzeeRuleCreationDialogValidation : AbstractTest() {
     @Test
-    fun `Should prevent an empty rule name`()
-    {
+    fun `Should prevent an empty rule name`() {
         val dlg = showRuleCreationDialog()
-        dlg.clickChild<JCheckBox>("Custom rule name")
-        dlg.btnOk.doClick()
+        dlg.clickChild<JCheckBox>(text = "Custom rule name")
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("You cannot have an empty rule name.")
         dlg.dartzeeRule shouldBe null
@@ -205,14 +223,13 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
     }
 
     @Test
-    fun `Should prevent a rule name that is too long`()
-    {
+    fun `Should prevent a rule name that is too long`() {
         val ruleName = "a".repeat(1001)
 
         val dlg = showRuleCreationDialog()
-        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.clickChild<JCheckBox>(text = "Custom rule name")
         dlg.tfRuleName.text = ruleName
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldContainExactly("Rule name cannot exceed 1000 characters.")
         dlg.dartzeeRule shouldBe null
@@ -220,15 +237,17 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
     }
 
     @Test
-    fun `Should validate all three dart selectors for an all darts rule`()
-    {
+    fun `Should validate all three dart selectors for an all darts rule`() {
         val dlg = showRuleCreationDialog()
 
         SwingUtilities.invokeAndWait {
             dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-            dlg.btnOk.doClick()
         }
-        dialogFactory.errorsShown.shouldContainExactly("Dart 1: You must select at least one colour.")
+
+        dlg.clickOk()
+        dialogFactory.errorsShown.shouldContainExactly(
+            "Dart 1: You must select at least one colour."
+        )
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
 
@@ -236,9 +255,12 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
         SwingUtilities.invokeAndWait {
             dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
             dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-            dlg.btnOk.doClick()
         }
-        dialogFactory.errorsShown.shouldContainExactly("Dart 2: You must select at least one colour.")
+
+        dlg.clickOk()
+        dialogFactory.errorsShown.shouldContainExactly(
+            "Dart 2: You must select at least one colour."
+        )
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
 
@@ -246,32 +268,35 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
         SwingUtilities.invokeAndWait {
             dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
             dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-            dlg.btnOk.doClick()
         }
-        dialogFactory.errorsShown.shouldContainExactly("Dart 3: You must select at least one colour.")
+
+        dlg.clickOk()
+        dialogFactory.errorsShown.shouldContainExactly(
+            "Dart 3: You must select at least one colour."
+        )
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
     }
 
     @Test
-    fun `Should validate the target selector for an 'at least one' dart rule`()
-    {
+    fun `Should validate the target selector for an 'at least one' dart rule`() {
         val dlg = showRuleCreationDialog()
 
         SwingUtilities.invokeAndWait {
             dlg.rdbtnAtLeastOne.doClick()
             dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
-            dlg.btnOk.doClick()
         }
 
-        dialogFactory.errorsShown.shouldContainExactly("Target: You must select at least one colour.")
+        dlg.clickOk()
+        dialogFactory.errorsShown.shouldContainExactly(
+            "Target: You must select at least one colour."
+        )
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
     }
 
     @Test
-    fun `Should detect impossible rules and not return a rule`()
-    {
+    fun `Should detect impossible rules and not return a rule`() {
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val dlg = showRuleCreationDialog()
@@ -282,29 +307,24 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
             dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleEven>()
             dlg.aggregateSelector.cbDesc.doClick()
             dlg.aggregateSelector.comboBoxRuleType.selectByClass<DartzeeTotalRuleOdd>()
-            dlg.btnOk.doClick()
         }
 
+        dlg.clickOk()
         dialogFactory.errorsShown.shouldContainExactly("This rule is impossible!")
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
     }
 
     @Test
-    fun `Should dispose if valid`()
-    {
+    fun `Should dispose if valid`() {
         val dlg = showRuleCreationDialog()
-
-        SwingUtilities.invokeAndWait {
-            dlg.btnOk.doClick()
-        }
+        dlg.clickOk()
 
         dialogFactory.errorsShown.shouldBeEmpty()
         dlg.shouldNotBeVisible()
     }
 
-    private fun showRuleCreationDialog(): DartzeeRuleCreationDialog
-    {
+    private fun showRuleCreationDialog(): DartzeeRuleCreationDialog {
         val dlg = DartzeeRuleCreationDialog()
         dlg.isModal = false
         dlg.isVisible = true
@@ -313,15 +333,13 @@ class TestDartzeeRuleCreationDialogValidation: AbstractTest()
     }
 }
 
-class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest()
-{
+class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest() {
     @Test
-    fun `Should populate an 'at least one' rule correctly`()
-    {
+    fun `Should populate an 'at least one' rule correctly`() {
         val dlg = DartzeeRuleCreationDialog()
         dlg.rdbtnAtLeastOne.doClick()
         dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleOdd>()
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         val rule = dlg.dartzeeRule!!
 
@@ -332,8 +350,7 @@ class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest()
     }
 
     @Test
-    fun `Should populate an 'all darts' rule correctly`()
-    {
+    fun `Should populate an 'all darts' rule correctly`() {
         val dlg = DartzeeRuleCreationDialog()
         dlg.rdbtnAllDarts.isSelected = true
         dlg.cbInOrder.isSelected = false
@@ -341,7 +358,7 @@ class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest()
         dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleInner>()
         dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleOuter>()
         dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleOdd>()
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         val rule = dlg.dartzeeRule!!
 
@@ -352,106 +369,100 @@ class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest()
     }
 
     @Test
-    fun `Should populate in order correctly when checked`()
-    {
+    fun `Should populate in order correctly when checked`() {
         val dlg = DartzeeRuleCreationDialog()
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         val rule = dlg.dartzeeRule!!
         rule.inOrder shouldBe true
     }
 
     @Test
-    fun `Should populate allowMisses correctly when checked`()
-    {
+    fun `Should populate allowMisses correctly when checked`() {
         val dlg = DartzeeRuleCreationDialog()
         dlg.cbAllowMisses.isSelected = true
 
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         val rule = dlg.dartzeeRule!!
         rule.allowMisses shouldBe true
     }
 
     @Test
-    fun `Should populate ruleName correctly when checked`()
-    {
+    fun `Should populate ruleName correctly when checked`() {
         val dlg = DartzeeRuleCreationDialog()
-        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.clickChild<JCheckBox>(text = "Custom rule name")
         dlg.tfRuleName.text = "My Rule"
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         val rule = dlg.dartzeeRule!!
         rule.ruleName shouldBe "My Rule"
     }
 
     @Test
-    fun `Should not populate ruleName when unchecked`()
-    {
+    fun `Should not populate ruleName when unchecked`() {
         val dlg = DartzeeRuleCreationDialog()
-        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.clickChild<JCheckBox>(text = "Custom rule name")
         dlg.tfRuleName.text = "My Rule"
-        dlg.clickChild<JCheckBox>("Custom rule name")
-        dlg.btnOk.doClick()
+        dlg.clickChild<JCheckBox>(text = "Custom rule name")
+        dlg.clickOk()
 
         val rule = dlg.dartzeeRule!!
         rule.ruleName shouldBe null
     }
 
     @Test
-    fun `Should populate a 'no darts' rule correctly`()
-    {
+    fun `Should populate a 'no darts' rule correctly`() {
         val dlg = DartzeeRuleCreationDialog()
         dlg.rdbtnNoDarts.doClick()
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         val rule = dlg.dartzeeRule!!
         rule.dart1Rule shouldBe null
     }
 
     @Test
-    fun `Should populate the total rule correctly`()
-    {
+    fun `Should populate the total rule correctly`() {
         val dlg = DartzeeRuleCreationDialog()
         dlg.aggregateSelector.cbDesc.doClick()
         dlg.aggregateSelector.comboBoxRuleType.selectByClass<DartzeeTotalRulePrime>()
-        dlg.btnOk.doClick()
+        dlg.clickOk()
 
         val rule = dlg.dartzeeRule!!
         rule.aggregateRule!!.toDbString() shouldBe DartzeeTotalRulePrime().toDbString()
     }
 }
 
-class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
-{
+class TestDartzeeRuleCreationDialogInteraction : AbstractTest() {
     @Test
-    fun `Should not return a rule when cancelled`()
-    {
+    fun `Should not return a rule when cancelled`() {
         val dlg = DartzeeRuleCreationDialog()
-        dlg.btnCancel.doClick()
+        dlg.clickCancel()
         dlg.dartzeeRule shouldBe null
     }
 
     @Test
-    fun `Should toggle rule name text field based on checkbox`()
-    {
+    fun `Should toggle rule name text field based on checkbox`() {
         val dlg = DartzeeRuleCreationDialog()
         dlg.tfRuleName.shouldBeDisabled()
 
-        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.clickChild<JCheckBox>(text = "Custom rule name")
         dlg.tfRuleName.shouldBeEnabled()
 
-        dlg.clickChild<JCheckBox>("Custom rule name")
+        dlg.clickChild<JCheckBox>(text = "Custom rule name")
         dlg.tfRuleName.shouldBeDisabled()
     }
 
     @Test
-    fun `Should toggle the rule selectors based on radio selection`()
-    {
+    fun `Should toggle the rule selectors based on radio selection`() {
         val dlg = DartzeeRuleCreationDialog()
 
         var children = dlg.getAllChildComponentsForType<DartzeeDartRuleSelector>()
-        children.shouldContainExactlyInAnyOrder(dlg.dartOneSelector, dlg.dartTwoSelector, dlg.dartThreeSelector)
+        children.shouldContainExactlyInAnyOrder(
+            dlg.dartOneSelector,
+            dlg.dartTwoSelector,
+            dlg.dartThreeSelector,
+        )
         children.shouldNotContain(dlg.targetSelector)
 
         dlg.rdbtnAtLeastOne.doClick()
@@ -460,7 +471,11 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
 
         dlg.rdbtnAllDarts.doClick()
         children = dlg.getAllChildComponentsForType()
-        children.shouldContainExactlyInAnyOrder(dlg.dartOneSelector, dlg.dartTwoSelector, dlg.dartThreeSelector)
+        children.shouldContainExactlyInAnyOrder(
+            dlg.dartOneSelector,
+            dlg.dartTwoSelector,
+            dlg.dartThreeSelector,
+        )
         children.shouldNotContain(dlg.targetSelector)
 
         dlg.rdbtnNoDarts.doClick()
@@ -469,8 +484,7 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
     }
 
     @Test
-    fun `Should update the verification panel on initialisation`()
-    {
+    fun `Should update the verification panel on initialisation`() {
         val verificationPanel = mockk<DartzeeRuleVerificationPanel>(relaxed = true)
 
         val dlg = DartzeeRuleCreationDialog(verificationPanel)
@@ -480,8 +494,7 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
     }
 
     @Test
-    fun `Should update the verification panel when things change`()
-    {
+    fun `Should update the verification panel when things change`() {
         val verificationPanel = mockk<DartzeeRuleVerificationPanel>(relaxed = true)
 
         val dlg = DartzeeRuleCreationDialog(verificationPanel)
@@ -495,8 +508,7 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
     }
 
     @Test
-    fun `Should update the rule description when combo boxes change`()
-    {
+    fun `Should update the rule description when combo boxes change`() {
         val dlg = DartzeeRuleCreationDialog()
         dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleInner>()
         dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleOuter>()
@@ -515,9 +527,8 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
     }
 
     @Test
-    fun `Should update rule difficulty when the rule changes`()
-    {
-        //Need a real calculator for this to actually change
+    fun `Should update rule difficulty when the rule changes`() {
+        // Need a real calculator for this to actually change
         InjectedThings.dartzeeCalculator = DartzeeCalculator()
 
         val dlg = DartzeeRuleCreationDialog()
@@ -531,8 +542,7 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
     }
 
     @Test
-    fun `Should update the rule description when score config changes`()
-    {
+    fun `Should update the rule description when score config changes`() {
         val dlg = DartzeeRuleCreationDialog()
 
         val scoreRule = dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleScore>()!!
@@ -547,11 +557,11 @@ class TestDartzeeRuleCreationDialogInteraction : AbstractTest()
     }
 
     @Test
-    fun `Should update the rule description when custom config changes`()
-    {
+    fun `Should update the rule description when custom config changes`() {
         val dlg = DartzeeRuleCreationDialog()
 
-        val customRule = dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleCustom>()!!
+        val customRule =
+            dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleCustom>()!!
         flushEdt()
 
         dlg.tfDescription.text shouldBe "Custom → Any → Any"

@@ -3,13 +3,12 @@ package dartzee.screen.ai
 import dartzee.ai.DartsAiModel
 import javax.swing.JPanel
 
-abstract class AbstractAIConfigurationSubPanel : JPanel()
-{
+abstract class AbstractAIConfigurationSubPanel : JPanel() {
     abstract fun populateModel(model: DartsAiModel): DartsAiModel
+
     abstract fun initialiseFromModel(model: DartsAiModel)
 
-    fun reset()
-    {
+    fun reset() {
         initialiseFromModel(DartsAiModel.new())
     }
 }

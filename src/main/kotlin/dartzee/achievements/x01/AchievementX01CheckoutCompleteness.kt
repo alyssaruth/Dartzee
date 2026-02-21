@@ -1,23 +1,26 @@
 package dartzee.achievements.x01
 
-import dartzee.achievements.*
+import dartzee.achievements.AbstractMultiRowAchievement
+import dartzee.achievements.AchievementType
+import dartzee.achievements.X01_ROUNDS_TABLE
+import dartzee.achievements.bulkInsertFromResultSet
+import dartzee.achievements.ensureX01RoundsTableExists
 import dartzee.core.bean.paint
 import dartzee.db.AchievementEntity
-import dartzee.game.GameType
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import dartzee.utils.DartsColour
 import dartzee.utils.Database
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.image.BufferedImage
-import java.net.URL
 
-class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
-{
+class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement() {
     override val name = "Completionist"
     override val desc = "Total unique doubles checked out on in X01"
     override val achievementType = AchievementType.X01_CHECKOUT_COMPLETENESS
     override val gameType = GameType.X01
+    override val allowedForTeams = true
 
     override val redThreshold = 1
     override val orangeThreshold = 5
@@ -27,20 +30,25 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
     override val pinkThreshold = 21
     override val maxValue = 21
 
-    var hitDoubles = mutableListOf<Int>()
+    private var hitDoubles = listOf<Int>()
 
-    override fun getIconURL(): URL = ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
+    override fun getIconURL() = ResourceCache.URL_ACHIEVEMENT_CHECKOUT_COMPLETENESS
 
     override fun getBreakdownColumns() = listOf("Double", "Game", "Date Achieved")
-    override fun getBreakdownRow(a: AchievementEntity) = arrayOf(a.achievementCounter, a.localGameIdEarned, a.dtAchieved)
+
+    override fun getBreakdownRow(a: AchievementEntity) =
+        arrayOf<Any>(a.achievementCounter, a.localGameIdEarned, a.dtAchieved)
+
     override fun isUnbounded() = false
 
-    override fun populateForConversion(playerIds: List<String>, database: Database)
-    {
+    override fun populateForConversion(playerIds: List<String>, database: Database) {
         ensureX01RoundsTableExists(playerIds, database)
 
-        val tempTable = database.createTempTable("PlayerCheckouts", "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP")
-                      ?: return
+        val tempTable =
+            database.createTempTable(
+                "PlayerCheckouts",
+                "PlayerId VARCHAR(36), Score INT, GameId VARCHAR(36), DtAchieved TIMESTAMP",
+            ) ?: return
 
         var sb = StringBuilder()
 
@@ -50,8 +58,7 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
         sb.append(" WHERE LastDartMultiplier = 2")
         sb.append(" AND RemainingScore = 0")
 
-        if (!database.executeUpdate("" + sb))
-            return
+        if (!database.executeUpdate("" + sb)) return
 
         sb = StringBuilder()
         sb.append(" SELECT PlayerId, Score, GameId, DtAchieved")
@@ -65,34 +72,34 @@ class AchievementX01CheckoutCompleteness : AbstractMultiRowAchievement()
         sb.append(")")
 
         database.executeQuery(sb).use { rs ->
-            bulkInsertFromResultSet(rs, database, achievementType, achievementCounterFn = { rs.getInt("Score") })
+            bulkInsertFromResultSet(
+                rs,
+                database,
+                achievementType,
+                achievementCounterFn = { rs.getInt("Score") },
+            )
         }
     }
 
-    override fun initialiseFromDb(achievementRows: List<AchievementEntity>, player: PlayerEntity?)
-    {
+    override fun initialiseFromDb(achievementRows: List<AchievementEntity>, player: PlayerEntity?) {
         super.initialiseFromDb(achievementRows, player)
 
         hitDoubles = achievementRows.map { it.achievementCounter }.toMutableList()
     }
 
-    override fun changeIconColor(img : BufferedImage, newColor: Color)
-    {
-        if (isLocked())
-        {
+    override fun changeIconColor(img: BufferedImage, newColor: Color) {
+        if (isLocked()) {
             super.changeIconColor(img, newColor)
             return
         }
 
-        img.paint {
-            val current = Color(img.getRGB(it.x, it.y), true)
-            when
-            {
+        img.paint { pt ->
+            val current = Color(img.getRGB(pt.x, pt.y), true)
+            when {
                 current == Color.BLACK -> newColor.darker()
                 hitDoubles.contains(current.red) -> newColor
                 else -> DartsColour.TRANSPARENT
             }
         }
     }
-
 }

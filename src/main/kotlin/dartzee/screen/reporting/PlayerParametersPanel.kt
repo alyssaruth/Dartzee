@@ -7,25 +7,25 @@ import dartzee.db.MAX_PLAYERS
 import dartzee.db.PlayerEntity
 import dartzee.reporting.COMPARATOR_SCORE_UNSET
 import dartzee.reporting.IncludedPlayerParameters
-import net.miginfocom.swing.MigLayout
+import dartzee.reporting.grabIfSelected
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JCheckBox
 import javax.swing.JPanel
 import javax.swing.JSpinner
 import javax.swing.SpinnerNumberModel
+import net.miginfocom.swing.MigLayout
 
-class PlayerParametersPanel : JPanel(), ActionListener
-{
+class PlayerParametersPanel : JPanel(), ActionListener {
     val chckbxFinalScore = JCheckBox("Game Score")
     val comboBox = ComboBoxNumberComparison()
     val spinner = JSpinner(SpinnerNumberModel(3, 3, 200, 1))
     val chckbxPosition = JCheckBox("Position")
-    val positionCheckboxes = List(MAX_PLAYERS) { ix -> JCheckBox(StringUtil.convertOrdinalToText(ix + 1)) }
+    val positionCheckboxes =
+        List(MAX_PLAYERS) { ix -> JCheckBox(StringUtil.convertOrdinalToText(ix + 1)) }
     val cbUndecided = JCheckBox("Undecided")
 
-    init
-    {
+    init {
         layout = MigLayout("", "[][][]", "[][]")
 
         comboBox.addOption(COMPARATOR_SCORE_UNSET)
@@ -44,66 +44,46 @@ class PlayerParametersPanel : JPanel(), ActionListener
         comboBox.addActionListener(this)
     }
 
-    fun valid(player: PlayerEntity): Boolean
-    {
-        if (chckbxPosition.isSelected && getFinishingPositions().isEmpty())
-        {
-            DialogUtil.showError("You must select at least one finishing position for player " + player.name)
+    fun valid(player: PlayerEntity): Boolean {
+        if (chckbxPosition.isSelected && getFinishingPositions().isEmpty()) {
+            DialogUtil.showErrorOLD(
+                "You must select at least one finishing position for player " + player.name
+            )
             return false
         }
 
         return true
     }
 
-    fun generateParameters(): IncludedPlayerParameters
-    {
-        val parms = IncludedPlayerParameters()
+    fun generateParameters(): IncludedPlayerParameters {
+        val finalScore = grabIfSelected(chckbxFinalScore) { spinner.value as Int }
+        val finalScoreComparator =
+            grabIfSelected(chckbxFinalScore) { comboBox.selectedItem as String }.orEmpty()
+        val finishingPosition = grabIfSelected(chckbxPosition) { getFinishingPositions() }.orEmpty()
 
-        if (chckbxFinalScore.isSelected)
-        {
-            val finalScore = spinner.value as Int
-            val comparator = comboBox.selectedItem as String
-
-            parms.finalScore = finalScore
-            parms.finalScoreComparator = comparator
-        }
-
-        if (chckbxPosition.isSelected)
-        {
-            val finishingPositions = getFinishingPositions()
-            parms.finishingPositions = finishingPositions
-        }
-
-        return parms
+        return IncludedPlayerParameters(finishingPosition, finalScoreComparator, finalScore)
     }
 
-    private fun getFinishingPositions(): List<Int>
-    {
+    private fun getFinishingPositions(): List<Int> {
         val ret = mutableListOf<Int>()
 
-        positionCheckboxes.forEachIndexed { ix, cb ->
-            addValueIfSelected(ret, cb, ix + 1)
-        }
+        positionCheckboxes.forEachIndexed { ix, cb -> addValueIfSelected(ret, cb, ix + 1) }
 
         addValueIfSelected(ret, cbUndecided, -1)
         return ret
     }
 
-    private fun addValueIfSelected(v: MutableList<Int>, cb: JCheckBox, value: Int)
-    {
-        if (cb.isSelected)
-        {
+    private fun addValueIfSelected(v: MutableList<Int>, cb: JCheckBox, value: Int) {
+        if (cb.isSelected) {
             v.add(value)
         }
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
+    override fun actionPerformed(arg0: ActionEvent) {
         updatePlayerOptionsEnabled()
     }
 
-    fun disableAll()
-    {
+    fun disableAll() {
         chckbxFinalScore.isSelected = false
         chckbxFinalScore.isEnabled = false
         chckbxPosition.isSelected = false
@@ -112,8 +92,7 @@ class PlayerParametersPanel : JPanel(), ActionListener
         updatePlayerOptionsEnabled()
     }
 
-    private fun updatePlayerOptionsEnabled()
-    {
+    private fun updatePlayerOptionsEnabled() {
         positionCheckboxes.forEach { it.isEnabled = chckbxPosition.isSelected }
         cbUndecided.isEnabled = chckbxPosition.isSelected
 

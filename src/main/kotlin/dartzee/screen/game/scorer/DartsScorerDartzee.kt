@@ -1,23 +1,22 @@
 package dartzee.screen.game.scorer
 
+import dartzee.bean.IMouseListener
 import dartzee.game.state.DartzeePlayerState
+import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.utils.factoryHighScoreResult
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
 
 private const val RULE_COLUMN = 3
 private const val SCORE_COLUMN = 4
 
-class DartsScorerDartzee(private val parent: GamePanelDartzee): AbstractDartsScorer<DartzeePlayerState>(), MouseListener
-{
-    init
-    {
+class DartsScorerDartzee(private val parent: GamePanelDartzee, participant: IWrappedParticipant) :
+    AbstractDartsScorer<DartzeePlayerState>(participant), IMouseListener {
+    init {
         lblAvatar.addMouseListener(this)
     }
 
-    override fun stateChangedImpl(state: DartzeePlayerState)
-    {
+    override fun stateChangedImpl(state: DartzeePlayerState) {
         setScoreAndFinishingPosition(state)
 
         state.completedRounds.forEachIndexed { ix, round ->
@@ -31,36 +30,32 @@ class DartsScorerDartzee(private val parent: GamePanelDartzee): AbstractDartsSco
             model.setValueAt(cumulativeScore, ix, SCORE_COLUMN)
         }
 
-        if (state.currentRound.isNotEmpty())
-        {
+        if (state.currentRound.isNotEmpty()) {
             addDartRound(state.currentRound)
         }
 
-        tableScores.getColumn(SCORE_COLUMN).cellRenderer = DartzeeScoreRenderer(state.getPeakScore() ?: 0)
+        tableScores.getColumn(SCORE_COLUMN).cellRenderer =
+            DartzeeScoreRenderer(state.getPeakScore() ?: 0)
     }
 
     override fun getNumberOfColumns() = 5
 
-    override fun initImpl()
-    {
-        for (i in 0 until RULE_COLUMN)
-        {
+    override fun initImpl() {
+        for (i in 0 until RULE_COLUMN) {
             tableScores.getColumn(i).cellRenderer = DartRenderer()
         }
 
         tableScores.getColumn(RULE_COLUMN).cellRenderer = DartzeeRoundResultRenderer()
     }
 
-    override fun mouseReleased(e: MouseEvent?)
-    {
-        if (parent.gameEntity.isFinished())
-        {
+    fun togglePostGame(selected: Boolean) {
+        lblName.text = participant.getParticipantNameHtml(selected)
+        lblAvatar.setSelected(selected, -1, selected)
+    }
+
+    override fun mouseReleased(e: MouseEvent) {
+        if (parent.gameEntity.isFinished()) {
             parent.scorerSelected(this)
         }
     }
-
-    override fun mouseEntered(e: MouseEvent?) {}
-    override fun mouseClicked(e: MouseEvent?) {}
-    override fun mouseExited(e: MouseEvent?) {}
-    override fun mousePressed(e: MouseEvent?) {}
 }

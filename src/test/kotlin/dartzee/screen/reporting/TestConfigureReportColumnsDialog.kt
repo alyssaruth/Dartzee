@@ -1,19 +1,17 @@
 package dartzee.screen.reporting
 
-import com.github.alexburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickChild
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import javax.swing.JCheckBox
+import org.junit.jupiter.api.Test
 
-class TestConfigureReportColumnsDialog: AbstractTest()
-{
+class TestConfigureReportColumnsDialog : AbstractTest() {
     @Test
-    fun `Should start with all options checked`()
-    {
+    fun `Should start with all options checked`() {
         val dlg = ConfigureReportColumnsDialog()
         val checkBoxes = dlg.getAllChildComponentsForType<JCheckBox>()
         checkBoxes.forEach { it.isSelected shouldBe true }
@@ -22,11 +20,10 @@ class TestConfigureReportColumnsDialog: AbstractTest()
     }
 
     @Test
-    fun `Should exclude unticked options`()
-    {
+    fun `Should exclude unticked options`() {
         val dlg = ConfigureReportColumnsDialog()
-        dlg.clickChild<JCheckBox>("Type")
-        dlg.clickChild<JCheckBox>("Match")
+        dlg.clickChild<JCheckBox>(text = "Type")
+        dlg.clickChild<JCheckBox>(text = "Match")
 
         dlg.excludedColumns().shouldContainExactly("Type", "Match")
     }

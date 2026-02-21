@@ -1,6 +1,6 @@
 package dartzee.sync
 
-import com.github.alexburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
@@ -9,18 +9,16 @@ import dartzee.helper.syncDirectoryShouldNotExist
 import dartzee.logging.CODE_PUSH_ERROR
 import dartzee.logging.Severity
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Test
 import java.io.IOException
+import org.junit.jupiter.api.Test
 
-class TestSyncManagerPush: AbstractTest()
-{
+class TestSyncManagerPush : AbstractTest() {
     @Test
-    fun `Should log an error, dismiss the loading dialog and tidy up SyncAudit if an error occurs`()
-    {
+    fun `Should log an error, dismiss the loading dialog and tidy up SyncAudit if an error occurs`() {
         val exception = IOException("Boom.")
         val dbStore = mockk<IRemoteDatabaseStore>()
         every { dbStore.pushDatabase(any(), any()) } throws exception
@@ -36,15 +34,16 @@ class TestSyncManagerPush: AbstractTest()
         val log = verifyLog(CODE_PUSH_ERROR, Severity.ERROR)
         log.errorObject shouldBe exception
 
-        dialogFactory.errorsShown.shouldContainExactly("An unexpected error occurred - no data has been changed.")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "An unexpected error occurred - no data has been changed."
+        )
         SyncAuditEntity.getLastSyncData(mainDatabase) shouldBe null
 
         syncDirectoryShouldNotExist()
     }
 
     @Test
-    fun `Should insert into sync audit and push the current database`()
-    {
+    fun `Should insert into sync audit and push the current database`() {
         val store = InMemoryRemoteDatabaseStore()
 
         val manager = SyncManager(store)
@@ -63,8 +62,7 @@ class TestSyncManagerPush: AbstractTest()
     }
 
     @Test
-    fun `Should update sync screen regardless of an error occurring`()
-    {
+    fun `Should update sync screen regardless of an error occurring`() {
         shouldUpdateSyncScreen {
             val exception = IOException("Boom.")
             val dbStore = mockk<IRemoteDatabaseStore>()

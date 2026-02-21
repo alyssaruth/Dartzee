@@ -1,24 +1,22 @@
 package dartzee.dartzee.aggregate
 
-import dartzee.`object`.DartboardSegment
 import dartzee.core.util.getAttributeInt
 import dartzee.dartzee.IDartzeeRuleConfigurable
+import dartzee.`object`.DartboardSegment
 import dartzee.utils.getNumbersWithinN
-import org.w3c.dom.Document
-import org.w3c.dom.Element
 import java.awt.FlowLayout
 import javax.swing.JPanel
 import javax.swing.JSpinner
 import javax.swing.SpinnerNumberModel
 import kotlin.random.Random
+import org.w3c.dom.Document
+import org.w3c.dom.Element
 
-class DartzeeAggregateRuleSpread: AbstractDartzeeAggregateRule(), IDartzeeRuleConfigurable
-{
+class DartzeeAggregateRuleSpread : AbstractDartzeeAggregateRule(), IDartzeeRuleConfigurable {
     override val configPanel = JPanel()
     val spinner = JSpinner()
 
-    init
-    {
+    init {
         configPanel.layout = FlowLayout()
         configPanel.add(spinner)
 
@@ -26,8 +24,7 @@ class DartzeeAggregateRuleSpread: AbstractDartzeeAggregateRule(), IDartzeeRuleCo
         spinner.value = 1
     }
 
-    override fun isValidRound(segments: List<DartboardSegment>): Boolean
-    {
+    override fun isValidRound(segments: List<DartboardSegment>): Boolean {
         if (segments.any { it.isMiss() || it.score == 25 }) {
             return false
         }
@@ -45,21 +42,20 @@ class DartzeeAggregateRuleSpread: AbstractDartzeeAggregateRule(), IDartzeeRuleCo
     }
 
     override fun getRuleIdentifier() = "DartsSpread"
-    override fun toString() = "Darts spaced by "
-    override fun getDescription() = "Darts spaced by ${spinner.value}"
 
-    override fun writeXmlAttributes(doc: Document, rootElement: Element)
-    {
+    override fun toString() = "Darts spaced by at least "
+
+    override fun getDescription() = "Darts spaced by at least ${spinner.value}"
+
+    override fun writeXmlAttributes(doc: Document, rootElement: Element) {
         rootElement.setAttribute("Spread", "${spinner.value}")
     }
 
-    override fun populate(rootElement: Element)
-    {
+    override fun populate(rootElement: Element) {
         spinner.value = rootElement.getAttributeInt("Spread")
     }
 
-    override fun randomise()
-    {
+    override fun randomise() {
         spinner.value = Random.nextInt(4) + 1
     }
 }

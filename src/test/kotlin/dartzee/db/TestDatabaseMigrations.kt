@@ -2,55 +2,52 @@ package dartzee.db
 
 import dartzee.helper.AbstractTest
 import dartzee.helper.usingInMemoryDatabase
-import dartzee.utils.Database
+import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDatabaseMigrations: AbstractTest()
-{
+class TestDatabaseMigrations : AbstractTest() {
     @Test
-    fun `Conversions map should not have gaps`()
-    {
+    fun `Conversions map should not have gaps`() {
         val supportedVersions = DatabaseMigrations.getConversionsMap().keys
-        val min = supportedVersions.min()!!
-        val max = supportedVersions.max()!!
+        val min = supportedVersions.minOrNull()!!
+        val max = supportedVersions.maxOrNull()!!
 
         supportedVersions.shouldContainExactly((min..max).toSet())
     }
 
     @Test
-    fun `Conversions should all run on the specified database`()
-    {
-        try
-        {
+    fun `Conversions map should get us up to the current version`() {
+        val supportedVersions = DatabaseMigrations.getConversionsMap().keys
+        val max = supportedVersions.maxOrNull()!!
+
+        max shouldBe DartsDatabaseUtil.DATABASE_VERSION - 1
+    }
+
+    @Test
+    fun `Conversions should all run on the specified database`() {
+        try {
             usingInMemoryDatabase(withSchema = true) { dbToRunOn ->
                 mainDatabase.shutDown() shouldBe true
 
                 val conversionFns = DatabaseMigrations.getConversionsMap().values.flatten()
-                for (conversion in conversionFns)
-                {
-                    try { conversion(dbToRunOn) } catch (e: Exception) {}
+                for (conversion in conversionFns) {
+                    try {
+                        conversion(dbToRunOn)
+                    } catch (_: Exception) {}
                 }
 
-                //Will probably have one logged, which is fine
+                // Will probably have one logged, which is fine
                 errorLogged()
 
-                //If it's been connected to during the test, then another shut down would succeed
+                // If it's been connected to during the test, then another shut down would succeed
                 mainDatabase.shutDown() shouldBe false
             }
-        }
-        finally
-        {
+        } finally {
             mainDatabase.initialiseConnectionPool(1)
         }
     }
-}
-
-fun runMigrationsForVersion(database: Database, version: Int)
-{
-    val conversions = DatabaseMigrations.getConversionsMap().getValue(version)
-    conversions.forEach { it(database) }
 }

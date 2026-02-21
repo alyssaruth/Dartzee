@@ -1,7 +1,7 @@
 package dartzee.achievements
 
 import dartzee.core.bean.paint
-import dartzee.core.util.DateStatics.Companion.START_OF_TIME
+import dartzee.core.util.DateStatics
 import dartzee.core.util.formatAsDate
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
@@ -9,8 +9,8 @@ import dartzee.game.GameType
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.utils.DartsColour
 import dartzee.utils.Database
-import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.image.BufferedImage
@@ -18,39 +18,39 @@ import java.net.URL
 import javax.imageio.ImageIO
 import javax.swing.table.DefaultTableModel
 
-abstract class AbstractAchievement
-{
-    abstract val name : String
-    abstract val desc : String
-    abstract val achievementType : AchievementType
-    abstract val redThreshold : Int
-    abstract val orangeThreshold : Int
-    abstract val yellowThreshold : Int
-    abstract val greenThreshold : Int
-    abstract val blueThreshold : Int
-    abstract val pinkThreshold : Int
-    abstract val maxValue : Int
+abstract class AbstractAchievement {
+    abstract val name: String
+    abstract val desc: String
+    abstract val achievementType: AchievementType
+    abstract val redThreshold: Int
+    abstract val orangeThreshold: Int
+    abstract val yellowThreshold: Int
+    abstract val greenThreshold: Int
+    abstract val blueThreshold: Int
+    abstract val pinkThreshold: Int
+    abstract val maxValue: Int
     abstract val gameType: GameType?
+    abstract val allowedForTeams: Boolean
+
+    open val allowedForIndividuals = true
 
     open val usesTransactionalTablesForConversion = true
 
     var attainedValue = -1
     var gameIdEarned = ""
     var localGameIdEarned = -1L
-    var dtLatestUpdate = START_OF_TIME
-    var player : PlayerEntity? = null
+    var dtLatestUpdate = DateStatics.START_OF_TIME
+    var player: PlayerEntity? = null
 
-    var tmBreakdown : DefaultTableModel? = null
+    var tmBreakdown: DefaultTableModel? = null
 
-    fun runConversion(playerIds: List<String>, database: Database = mainDatabase)
-    {
+    fun runConversion(playerIds: List<String>, database: Database = mainDatabase) {
         val sb = StringBuilder()
         sb.append(" DELETE FROM Achievement")
         sb.append(" WHERE AchievementType = '$achievementType'")
         appendPlayerSql(sb, playerIds, null)
 
-        if (!database.executeUpdate("" + sb))
-        {
+        if (!database.executeUpdate("" + sb)) {
             return
         }
 
@@ -58,21 +58,20 @@ abstract class AbstractAchievement
     }
 
     abstract fun populateForConversion(playerIds: List<String>, database: Database = mainDatabase)
-    abstract fun getIconURL() : URL
 
-    /**
-     * Basic init will be the same for most achievements - get the value from the single row
-     */
-    open fun initialiseFromDb(achievementRows : List<AchievementEntity>, player: PlayerEntity?)
-    {
-        if (achievementRows.isEmpty())
-        {
+    abstract fun getIconURL(): URL?
+
+    /** Basic init will be the same for most achievements - get the value from the single row */
+    open fun initialiseFromDb(achievementRows: List<AchievementEntity>, player: PlayerEntity?) {
+        if (achievementRows.isEmpty()) {
             return
         }
 
-        if (achievementRows.size > 1)
-        {
-            logger.error(CODE_SQL_EXCEPTION, "Got ${achievementRows.size} rows (expected 1) for achievement $achievementType and player ${achievementRows.first().playerId}")
+        if (achievementRows.size > 1) {
+            logger.error(
+                CODE_SQL_EXCEPTION,
+                "Got ${achievementRows.size} rows (expected 1) for achievement $achievementType and player ${achievementRows.first().playerId}",
+            )
         }
 
         val achievementRow = achievementRows.first()
@@ -84,11 +83,9 @@ abstract class AbstractAchievement
         this.player = player
     }
 
-    fun getScore() : Int
-    {
+    fun getScore(): Int {
         val color = getColor(false)
-        return when (color)
-        {
+        return when (color) {
             Color.MAGENTA -> 6
             Color.CYAN -> 5
             Color.GREEN -> 4
@@ -99,62 +96,50 @@ abstract class AbstractAchievement
         }
     }
 
-    fun getColor(highlighted : Boolean) : Color
-    {
-        val col = if (isDecreasing())
-        {
-            when (attainedValue)
-            {
-                -1 -> Color.GRAY
-                in redThreshold+1..Int.MAX_VALUE -> Color.GRAY
-                in orangeThreshold+1 until redThreshold+1 -> Color.RED
-                in yellowThreshold+1 until orangeThreshold+1 -> DartsColour.COLOUR_ACHIEVEMENT_ORANGE
-                in greenThreshold+1 until yellowThreshold+1 -> Color.YELLOW
-                in blueThreshold+1 until greenThreshold+1 -> Color.GREEN
-                in pinkThreshold+1 until blueThreshold+1 -> Color.CYAN
-                else -> Color.MAGENTA
+    fun getColor(highlighted: Boolean): Color {
+        val col =
+            if (isDecreasing()) {
+                when (attainedValue) {
+                    -1 -> Color.GRAY
+                    in redThreshold + 1..Int.MAX_VALUE -> Color.GRAY
+                    in orangeThreshold + 1 until redThreshold + 1 -> Color.RED
+                    in yellowThreshold + 1 until orangeThreshold + 1 ->
+                        DartsColour.COLOUR_ACHIEVEMENT_ORANGE
+                    in greenThreshold + 1 until yellowThreshold + 1 -> Color.YELLOW
+                    in blueThreshold + 1 until greenThreshold + 1 -> Color.GREEN
+                    in pinkThreshold + 1 until blueThreshold + 1 -> Color.CYAN
+                    else -> Color.MAGENTA
+                }
+            } else {
+                when (attainedValue) {
+                    in Int.MIN_VALUE until redThreshold -> Color.GRAY
+                    in redThreshold until orangeThreshold -> Color.RED
+                    in orangeThreshold until yellowThreshold ->
+                        DartsColour.COLOUR_ACHIEVEMENT_ORANGE
+                    in yellowThreshold until greenThreshold -> Color.YELLOW
+                    in greenThreshold until blueThreshold -> Color.GREEN
+                    in blueThreshold until pinkThreshold -> Color.CYAN
+                    else -> Color.MAGENTA
+                }
             }
-        }
-        else
-        {
-            when (attainedValue)
-            {
-                in Int.MIN_VALUE until redThreshold -> Color.GRAY
-                in redThreshold until orangeThreshold -> Color.RED
-                in orangeThreshold until yellowThreshold -> DartsColour.COLOUR_ACHIEVEMENT_ORANGE
-                in yellowThreshold until greenThreshold -> Color.YELLOW
-                in greenThreshold until blueThreshold -> Color.GREEN
-                in blueThreshold until pinkThreshold -> Color.CYAN
-                else -> Color.MAGENTA
-            }
-        }
 
-        if (highlighted
-          && !isLocked())
-        {
+        if (highlighted && !isLocked()) {
             return col.darker()
         }
 
         return col
     }
 
-    fun getAngle() : Double
-    {
-        return getAngle(attainedValue)
-    }
-    fun getAngle(attainedValue : Int) : Double
-    {
-        if (attainedValue == -1)
-        {
+    fun getAngle() = getAngle(attainedValue)
+
+    fun getAngle(attainedValue: Int): Double {
+        if (attainedValue == -1) {
             return 0.0
         }
 
-        return if (!isDecreasing())
-        {
+        return if (!isDecreasing()) {
             360 * attainedValue.toDouble() / maxValue
-        }
-        else
-        {
+        } else {
             val denom = redThreshold - maxValue + 1
             val num = Math.max(redThreshold - attainedValue + 1, 0)
 
@@ -162,47 +147,39 @@ abstract class AbstractAchievement
         }
     }
 
-    fun isLocked() : Boolean
-    {
-        if (attainedValue == -1)
-        {
+    fun isLocked(): Boolean {
+        if (attainedValue == -1) {
             return true
         }
 
-        return if (isDecreasing())
-        {
+        return if (isDecreasing()) {
             attainedValue > redThreshold
-        }
-        else
-        {
+        } else {
             attainedValue < redThreshold
         }
     }
 
-    fun isClickable(): Boolean
-    {
-        return !gameIdEarned.isEmpty()
-          || tmBreakdown != null
-    }
+    fun isClickable() = gameIdEarned.isNotEmpty() || tmBreakdown != null
 
-    fun getIcon(highlighted : Boolean) : BufferedImage?
-    {
+    fun getIcon(): BufferedImage? {
         var iconURL = getIconURL()
-        if (isLocked())
-        {
+        if (isLocked()) {
             iconURL = ResourceCache.URL_ACHIEVEMENT_LOCKED
         }
 
         val bufferedImage = ImageIO.read(iconURL)
-        changeIconColor(bufferedImage, getColor(highlighted).darker())
+        changeIconColor(bufferedImage, getColor(false).darker())
 
         return bufferedImage
     }
-    protected open fun changeIconColor(img : BufferedImage, newColor: Color)
-    {
-        img.paint {
-            val current = Color(img.getRGB(it.x, it.y), true)
-            if (current == Color.BLACK) newColor else current
+
+    protected open fun changeIconColor(img: BufferedImage, newColor: Color) {
+        img.paint { pt ->
+            val current = Color(img.getRGB(pt.x, pt.y), true)
+            if (current.red == current.blue && current.blue == current.green && current.red < 255) {
+                val alpha = if (current.alpha == 255) 255 - current.red else current.alpha
+                Color(newColor.red, newColor.green, newColor.blue, alpha)
+            } else current
         }
     }
 
@@ -210,11 +187,9 @@ abstract class AbstractAchievement
 
     open fun isUnbounded() = false
 
-    fun getProgressDesc() : String
-    {
+    fun getProgressDesc(): String {
         var progressStr = "$attainedValue"
-        if (!isUnbounded())
-        {
+        if (!isUnbounded()) {
             progressStr += "/$maxValue"
         }
 
@@ -223,27 +198,21 @@ abstract class AbstractAchievement
 
     open fun isDecreasing() = false
 
-    fun getExtraDetails() : String
-    {
-        var ret = if (this is AbstractMultiRowAchievement)
-        {
-            "Last updated on ${dtLatestUpdate.formatAsDate()}"
-        }
-        else
-        {
-            "Earned on ${dtLatestUpdate.formatAsDate()}"
-        }
+    fun getExtraDetails(): String {
+        var ret =
+            if (this is AbstractMultiRowAchievement) {
+                "Last updated on ${dtLatestUpdate.formatAsDate()}"
+            } else {
+                "Earned on ${dtLatestUpdate.formatAsDate()}"
+            }
 
-        if (!gameIdEarned.isEmpty())
-        {
+        if (!gameIdEarned.isEmpty()) {
             ret += " in Game #$localGameIdEarned"
         }
 
         return ret
     }
 
-    open fun retrieveAllRows(): List<AchievementEntity>
-    {
-        return AchievementEntity().retrieveEntities("AchievementType = '$achievementType'")
-    }
+    open fun retrieveAllRows() =
+        AchievementEntity().retrieveEntities("AchievementType = '$achievementType'")
 }

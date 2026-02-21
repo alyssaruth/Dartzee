@@ -1,9 +1,9 @@
 package dartzee.screen.game.scorer
 
-import dartzee.bean.PlayerAvatar
+import dartzee.bean.ParticipantAvatar
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.util.TableUtil.DefaultModel
-import dartzee.db.PlayerEntity
+import dartzee.game.state.IWrappedParticipant
 import dartzee.utils.DartsColour
 import java.awt.BorderLayout
 import java.awt.Color
@@ -14,26 +14,24 @@ import javax.swing.JPanel
 import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 
-abstract class AbstractScorer : JPanel()
-{
-    var playerId = ""
+abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), IScorerTable {
+    val playerIds = participant.individuals.map { it.playerId }
 
-    val model = DefaultModel()
+    override val model = DefaultModel()
 
     val lblName = JLabel()
     protected val panelCenter = JPanel()
     val tableScores = ScrollTableDartsGame()
     val lblResult = JLabel("")
     protected val panelNorth = JPanel()
-    val lblAvatar = PlayerAvatar()
+    val lblAvatar = ParticipantAvatar(participant)
     val panelAvatar = JPanel()
     protected val panelSouth = JPanel()
 
     val playerName: String
         get() = lblName.text
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
         preferredSize = Dimension(180, 600)
 
@@ -46,7 +44,9 @@ abstract class AbstractScorer : JPanel()
         panelNorth.add(lblName, BorderLayout.NORTH)
         lblName.horizontalAlignment = SwingConstants.CENTER
         lblName.font = Font("Trebuchet MS", Font.PLAIN, 16)
+        lblName.text = participant.getParticipantNameHtml(false)
         lblName.foreground = Color.BLACK
+        lblName.border = EmptyBorder(10, 0, 0, 0)
         panelAvatar.border = EmptyBorder(5, 15, 5, 15)
         panelNorth.add(panelAvatar, BorderLayout.CENTER)
         panelAvatar.layout = BorderLayout(0, 0)
@@ -61,53 +61,22 @@ abstract class AbstractScorer : JPanel()
         tableScores.setFillsViewportHeight(false)
         tableScores.setShowRowCount(false)
         tableScores.disableSorting()
-
-        lblAvatar.readOnly = true
     }
 
-    abstract fun getNumberOfColumns(): Int
-    abstract fun initImpl()
+    protected abstract fun initImpl()
 
-    fun init(player: PlayerEntity?)
-    {
-        lblName.isVisible = player != null
-        lblAvatar.isVisible = player != null
-        panelAvatar.isVisible = player != null
-
-        //Sometimes we pass in a null player for the purpose of showing stats
-        if (player != null)
-        {
-            val playerName = player.name
-            lblName.text = playerName
-            lblAvatar.init(player, false)
-            playerId = player.rowId
-        }
-
+    fun init() {
         lblResult.text = ""
 
-        //TableModel
+        // TableModel
         tableScores.setRowHeight(25)
-        for (i in 0 until getNumberOfColumns())
-        {
-            model.addColumn("")
-        }
+        repeat(getNumberOfColumns()) { model.addColumn("") }
         tableScores.model = model
 
         initImpl()
     }
 
-    fun addRow(row: Array<*>)
-    {
-        model.addRow(row)
-        tableScores.scrollToBottom()
-    }
-
-    protected open fun makeEmptyRow() = arrayOfNulls<Any>(getNumberOfColumns())
-
-    fun canBeAssigned() = isVisible && playerName.isEmpty()
-
-    protected fun updateResultColourForPosition(pos: Int)
-    {
+    protected fun updateResultColourForPosition(pos: Int) {
         DartsColour.setFgAndBgColoursForPosition(lblResult, pos)
     }
 }

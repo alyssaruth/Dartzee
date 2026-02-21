@@ -3,31 +3,37 @@ package dartzee.achievements
 import dartzee.core.util.getSqlDateNow
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertPlayer
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import java.sql.Timestamp
+import org.junit.jupiter.api.Test
 
-abstract class AbstractMultiRowAchievementTest<E: AbstractMultiRowAchievement>: AbstractAchievementTest<E>()
-{
-    private fun getDtAchievedColumnIndex() = factoryAchievement().getBreakdownColumns().indexOf("Date Achieved")
+abstract class AbstractMultiRowAchievementTest<E : AbstractMultiRowAchievement> :
+    AbstractAchievementTest<E>() {
+    private fun getDtAchievedColumnIndex() =
+        factoryAchievement().getBreakdownColumns().indexOf("Date Achieved")
+
     fun getGameIdEarnedColumnIndex() = factoryAchievement().getBreakdownColumns().indexOf("Game")
 
-    private fun insertAchievementRow(dtAchieved: Timestamp = getSqlDateNow(),
-                                     achievementCounter: Int = -1)
-            = insertAchievement(dtAchieved = dtAchieved, achievementCounter = achievementCounter, achievementDetail = "10")
+    private fun insertAchievementRow(
+        dtAchieved: Timestamp = getSqlDateNow(),
+        achievementCounter: Int = -1,
+    ) =
+        insertAchievement(
+            dtAchieved = dtAchieved,
+            achievementCounter = achievementCounter,
+            achievementDetail = "10",
+        )
 
     @Test
-    fun `Breakdown column count should match row length`()
-    {
+    fun `Breakdown column count should match row length`() {
         val a = factoryAchievement()
 
         a.getBreakdownColumns().size shouldBe a.getBreakdownRow(insertAchievementRow()).size
     }
 
     @Test
-    fun `Should handle 0 achievement rows`()
-    {
+    fun `Should handle 0 achievement rows`() {
         val a = factoryAchievement()
 
         a.initialiseFromDb(listOf(), null)
@@ -38,23 +44,26 @@ abstract class AbstractMultiRowAchievementTest<E: AbstractMultiRowAchievement>: 
     }
 
     @Test
-    fun `Should set the attainedValue correctly, taking into account all rows`()
-    {
+    fun `Should set the attainedValue correctly, taking into account all rows`() {
         val a = factoryAchievement()
-        if (a.useCounter())
-        {
-            a.initialiseFromDb(listOf(
-                insertAchievementRow(achievementCounter = 1),
-                insertAchievementRow(achievementCounter = 2),
-                insertAchievementRow(achievementCounter = 4)), null)
+        if (a.useCounter()) {
+            a.initialiseFromDb(
+                listOf(
+                    insertAchievementRow(achievementCounter = 1),
+                    insertAchievementRow(achievementCounter = 2),
+                    insertAchievementRow(achievementCounter = 4),
+                ),
+                null,
+            )
             a.attainedValue shouldBe 7
 
             a.initialiseFromDb(listOf(insertAchievementRow(achievementCounter = 8)), null)
             a.attainedValue shouldBe 8
-        }
-        else
-        {
-            a.initialiseFromDb(listOf(insertAchievementRow(), insertAchievementRow(), insertAchievementRow()), null)
+        } else {
+            a.initialiseFromDb(
+                listOf(insertAchievementRow(), insertAchievementRow(), insertAchievementRow()),
+                null,
+            )
             a.attainedValue shouldBe 3
 
             a.initialiseFromDb(listOf(insertAchievementRow()), null)
@@ -63,15 +72,17 @@ abstract class AbstractMultiRowAchievementTest<E: AbstractMultiRowAchievement>: 
     }
 
     @Test
-    fun `Should sort the rows by dtLastUpdate`()
-    {
+    fun `Should sort the rows by dtLastUpdate`() {
         val achievementOne = insertAchievementRow(dtAchieved = Timestamp(500))
         val achievementTwo = insertAchievementRow(dtAchieved = Timestamp(1000))
         val achievementThree = insertAchievementRow(dtAchieved = Timestamp(1500))
         val achievementFour = insertAchievementRow(dtAchieved = Timestamp(2000))
 
         val a = factoryAchievement()
-        a.initialiseFromDb(listOf(achievementTwo, achievementFour, achievementThree, achievementOne), null)
+        a.initialiseFromDb(
+            listOf(achievementTwo, achievementFour, achievementThree, achievementOne),
+            null,
+        )
 
         a.dtLatestUpdate shouldBe Timestamp(2000)
         a.tmBreakdown shouldNotBe null
@@ -83,8 +94,7 @@ abstract class AbstractMultiRowAchievementTest<E: AbstractMultiRowAchievement>: 
     }
 
     @Test
-    fun `Should set the player`()
-    {
+    fun `Should set the player`() {
         val player = insertPlayer()
         val a = factoryAchievement()
 
@@ -93,8 +103,7 @@ abstract class AbstractMultiRowAchievementTest<E: AbstractMultiRowAchievement>: 
     }
 
     @Test
-    fun `Should display the local game ID in the breakdown`()
-    {
+    fun `Should display the local game ID in the breakdown`() {
         val a = factoryAchievement()
 
         val dbRow = insertAchievementRow()

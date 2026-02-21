@@ -1,20 +1,18 @@
 package dartzee.screen.sync
 
-import com.github.alexburlton.swingtest.flushEdt
-import com.github.alexburlton.swingtest.getChild
-import com.github.alexburlton.swingtest.shouldBeVisible
-import com.github.alexburlton.swingtest.shouldNotBeVisible
+import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.helper.AbstractTest
 import dartzee.sync.SyncStage
-import io.kotlintest.shouldBe
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.shouldBe
 import javax.swing.JProgressBar
+import org.junit.jupiter.api.Test
 
-class TestSyncProgressDialog: AbstractTest()
-{
+class TestSyncProgressDialog : AbstractTest() {
     @Test
-    fun `Should show and hide`()
-    {
+    fun `Should show and hide`() {
         val dlg = SyncProgressDialog()
         dlg.setVisibleLater()
         flushEdt()
@@ -26,8 +24,7 @@ class TestSyncProgressDialog: AbstractTest()
     }
 
     @Test
-    fun `Should update correctly when progressing to stages`()
-    {
+    fun `Should update correctly when progressing to stages`() {
         val dlg = SyncProgressDialog()
         val progressBar = dlg.getChild<JProgressBar>()
 

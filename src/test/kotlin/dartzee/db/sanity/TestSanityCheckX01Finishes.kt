@@ -2,28 +2,30 @@ package dartzee.db.sanity
 
 import dartzee.game.GameType
 import dartzee.getRows
-import dartzee.helper.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.insertDart
+import dartzee.helper.insertFinishForPlayer
+import dartzee.helper.insertGame
+import dartzee.helper.insertParticipant
+import dartzee.helper.insertPlayer
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
+import java.util.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.*
 
-class TestSanityCheckX01Finishes: AbstractTest()
-{
+class TestSanityCheckX01Finishes : AbstractTest() {
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         mainDatabase.dropUnexpectedTables()
     }
 
     @Test
-    fun `Should return an empty list if the finishes line up`()
-    {
+    fun `Should return an empty list if the finishes line up`() {
         val p = insertPlayer()
         val g = insertGame(gameType = GameType.X01)
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId)
@@ -38,8 +40,7 @@ class TestSanityCheckX01Finishes: AbstractTest()
     }
 
     @Test
-    fun `Should return results if mismatching playerIds`()
-    {
+    fun `Should return results if mismatching playerIds`() {
         val p = insertPlayer()
         val g = insertGame(gameType = GameType.X01)
         val pt = insertParticipant(gameId = g.rowId, playerId = UUID.randomUUID().toString())
@@ -54,11 +55,14 @@ class TestSanityCheckX01Finishes: AbstractTest()
     }
 
     @Test
-    fun `Should return results if mismatching gameIds`()
-    {
+    fun `Should return results if mismatching gameIds`() {
         val p = insertPlayer()
         val g = insertGame(gameType = GameType.X01)
-        val pt = insertParticipant(gameId = insertGame(gameType = GameType.X01).rowId, playerId = p.rowId)
+        val pt =
+            insertParticipant(
+                gameId = insertGame(gameType = GameType.X01).rowId,
+                playerId = p.rowId,
+            )
 
         insertFinishForPlayer(p, 60, game = g)
 
@@ -70,8 +74,7 @@ class TestSanityCheckX01Finishes: AbstractTest()
     }
 
     @Test
-    fun `Should return results if mismatching finish value`()
-    {
+    fun `Should return results if mismatching finish value`() {
         val p = insertPlayer()
         val g = insertGame(gameType = GameType.X01)
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId)
@@ -86,8 +89,7 @@ class TestSanityCheckX01Finishes: AbstractTest()
     }
 
     @Test
-    fun `Should report extra rows in X01Finish`()
-    {
+    fun `Should report extra rows in X01Finish`() {
         val p = insertPlayer()
         val g = insertGame(gameType = GameType.X01)
 
@@ -100,8 +102,7 @@ class TestSanityCheckX01Finishes: AbstractTest()
     }
 
     @Test
-    fun `Should report missing rows in X01Finish`()
-    {
+    fun `Should report missing rows in X01Finish`() {
         val p = insertPlayer()
         val g = insertGame(gameType = GameType.X01)
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId)
@@ -116,8 +117,7 @@ class TestSanityCheckX01Finishes: AbstractTest()
     }
 
     @Test
-    fun `Should report discrepancy as missing and extra`()
-    {
+    fun `Should report discrepancy as missing and extra`() {
         val p = insertPlayer()
         val g = insertGame(gameType = GameType.X01)
         val pt = insertParticipant(gameId = g.rowId, playerId = p.rowId)
@@ -131,9 +131,10 @@ class TestSanityCheckX01Finishes: AbstractTest()
         val rows = result.getResultsModel().getRows()
         rows.shouldContainExactlyInAnyOrder(
             listOf("MISSING", p.rowId, g.rowId, 55),
-            listOf("EXTRA", p.rowId, g.rowId, 60))
+            listOf("EXTRA", p.rowId, g.rowId, 60),
+        )
     }
 
-    private fun assertPositiveResult(): SanityCheckResultSimpleTableModel
-        = SanityCheckX01Finishes().runCheck().first() as SanityCheckResultSimpleTableModel
+    private fun assertPositiveResult(): SanityCheckResultSimpleTableModel =
+        SanityCheckX01Finishes().runCheck().first() as SanityCheckResultSimpleTableModel
 }

@@ -9,54 +9,44 @@ import javax.swing.JRadioButton
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-open class RadioButtonPanel : JPanel(), ChangeListener
-{
+open class RadioButtonPanel : JPanel(), ChangeListener {
     private val bg = ButtonGroup()
     var selection: JRadioButton? = null
 
-    override fun add(arg0: Component): Component
-    {
-        if (arg0 is JRadioButton)
-        {
+    override fun add(arg0: Component): Component {
+        if (arg0 is JRadioButton) {
             addRadioButton(arg0)
         }
 
         return super.add(arg0)
     }
 
-    override fun add(arg0: Component, arg1: Any)
-    {
-        if (arg0 is JRadioButton)
-        {
+    override fun add(arg0: Component, arg1: Any) {
+        if (arg0 is JRadioButton) {
             addRadioButton(arg0)
         }
 
         super.add(arg0, arg1)
     }
 
-    private fun addRadioButton(rdbtn: JRadioButton)
-    {
+    private fun addRadioButton(rdbtn: JRadioButton) {
         rdbtn.addChangeListener(this)
 
         bg.add(rdbtn)
-        if (bg.buttonCount == 1)
-        {
-            //Ensure this is selected
+        if (bg.buttonCount == 1) {
+            // Ensure this is selected
             rdbtn.isSelected = true
         }
     }
 
-    fun getSelectionStr() = selection?.text ?: ""
+    fun getSelectionStr() = selection?.text.orEmpty()
 
-    fun setSelection(selectionStr: String)
-    {
+    fun setSelection(selectionStr: String) {
         val buttons = bg.elements
-        while (buttons.hasMoreElements())
-        {
+        while (buttons.hasMoreElements()) {
             val button = buttons.nextElement()
             val buttonText = button.text
-            if (buttonText == selectionStr)
-            {
+            if (buttonText == selectionStr) {
                 button.isSelected = true
                 stateChanged(ChangeEvent(button))
                 break
@@ -64,38 +54,31 @@ open class RadioButtonPanel : JPanel(), ChangeListener
         }
     }
 
-    fun addActionListener(listener: ActionListener)
-    {
+    fun addActionListener(listener: ActionListener) {
         val buttons = bg.elements
-        while (buttons.hasMoreElements())
-        {
+        while (buttons.hasMoreElements()) {
             val button = buttons.nextElement()
             button.addActionListener(listener)
         }
     }
 
-    fun removeActionListener(listener: ActionListener)
-    {
+    fun removeActionListener(listener: ActionListener) {
         val buttons = bg.elements
-        while (buttons.hasMoreElements())
-        {
+        while (buttons.hasMoreElements()) {
             val button = buttons.nextElement()
             button.removeActionListener(listener)
         }
     }
 
-    fun isEventSource(evt: ActionEvent?): Boolean
-    {
+    fun isEventSource(evt: ActionEvent?): Boolean {
         evt ?: return false
 
         val source = evt.source
 
         val buttons = bg.elements
-        while (buttons.hasMoreElements())
-        {
+        while (buttons.hasMoreElements()) {
             val button = buttons.nextElement()
-            if (source === button)
-            {
+            if (source === button) {
                 return true
             }
         }
@@ -103,11 +86,9 @@ open class RadioButtonPanel : JPanel(), ChangeListener
         return false
     }
 
-    override fun stateChanged(arg0: ChangeEvent)
-    {
+    override fun stateChanged(arg0: ChangeEvent) {
         val src = arg0.source as JRadioButton
-        if (src.isSelected)
-        {
+        if (src.isSelected) {
             selection = src
         }
     }

@@ -1,18 +1,16 @@
 package dartzee.screen.game.scorer
 
-import dartzee.`object`.Dart
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeClockPlayerState
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import dartzee.`object`.Dart
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestRoundTheClockScorecard: AbstractTest()
-{
+class TestRoundTheClockScorecard : AbstractTest() {
     @Test
-    fun `Should have correct rows for empty state`()
-    {
+    fun `Should have correct rows for empty state`() {
         val scorecard = RoundTheClockScorecard()
         scorecard.stateChanged(makeClockPlayerState(isActive = false), false)
 
@@ -21,8 +19,7 @@ class TestRoundTheClockScorecard: AbstractTest()
     }
 
     @Test
-    fun `Should flag as current target if unpaused and active`()
-    {
+    fun `Should flag as current target if unpaused and active`() {
         val state = makeClockPlayerState(isActive = true)
         val scorecard = RoundTheClockScorecard()
         scorecard.stateChanged(state, false)
@@ -30,8 +27,7 @@ class TestRoundTheClockScorecard: AbstractTest()
     }
 
     @Test
-    fun `Should not flag as current target if paused`()
-    {
+    fun `Should not flag as current target if paused`() {
         val state = makeClockPlayerState(isActive = true)
         val scorecard = RoundTheClockScorecard()
         scorecard.stateChanged(state, true)
@@ -39,8 +35,7 @@ class TestRoundTheClockScorecard: AbstractTest()
     }
 
     @Test
-    fun `Should flag as current target if inactive`()
-    {
+    fun `Should flag as current target if inactive`() {
         val state = makeClockPlayerState(isActive = false)
         val scorecard = RoundTheClockScorecard()
         scorecard.stateChanged(state, false)
@@ -48,20 +43,22 @@ class TestRoundTheClockScorecard: AbstractTest()
     }
 
     @Test
-    fun `Should flag results that have been hit`()
-    {
+    fun `Should flag results that have been hit`() {
         val state = makeClockPlayerState(isActive = false, inOrder = false)
         state.dartThrown(Dart(1, 1))
         state.dartThrown(Dart(4, 1))
 
         val scorecard = RoundTheClockScorecard()
         scorecard.stateChanged(state, false)
-        scorecard.getRows().first().shouldContainExactly(
-            makeClockResult(1, hit = true),
-            makeClockResult(2, hit = false),
-            makeClockResult(3, hit = false),
-            makeClockResult(4, hit = true)
-        )
+        scorecard
+            .getRows()
+            .first()
+            .shouldContainExactly(
+                makeClockResult(1, hit = true),
+                makeClockResult(2, hit = false),
+                makeClockResult(3, hit = false),
+                makeClockResult(4, hit = true),
+            )
     }
 }
 

@@ -13,23 +13,27 @@ import dartzee.utils.Database
 import dartzee.utils.InjectedThings.logger
 import java.sql.Timestamp
 
-class DatabaseMerger(private val localDatabase: Database,
-                     private val remoteDatabase: Database,
-                     private val remoteName: String)
-{
-    fun performMerge(): Database
-    {
+class DatabaseMerger(
+    private val localDatabase: Database,
+    private val remoteDatabase: Database,
+    private val remoteName: String,
+) {
+    fun performMerge(): Database {
         SyncProgressDialog.progressToStage(SyncStage.MERGE_LOCAL_CHANGES)
 
         val lastLocalSync = SyncAuditEntity.getLastSyncData(localDatabase)?.lastSynced
         logger.info(CODE_MERGE_STARTED, "Starting merge - last local sync $lastLocalSync")
-        DartsDatabaseUtil.getSyncEntities(localDatabase).forEach { dao -> syncRowsFromTable(dao, lastLocalSync) }
+        DartsDatabaseUtil.getSyncEntities(localDatabase).forEach { dao ->
+            syncRowsFromTable(dao, lastLocalSync)
+        }
+
+        // Explicitly sync deletion audits last
+        syncRowsFromTable(DeletionAuditEntity(localDatabase), lastLocalSync)
 
         SyncProgressDialog.progressToStage(SyncStage.UPDATE_ACHIEVEMENTS)
 
         val achievementsChanged = AchievementEntity().retrieveModifiedSince(lastLocalSync)
-        if (achievementsChanged.isNotEmpty())
-        {
+        if (achievementsChanged.isNotEmpty()) {
             val players = achievementsChanged.map { it.playerId }.distinct()
             val achievementTypes = achievementsChanged.map { it.achievementType }.distinct()
             val achievements = achievementTypes.mapNotNull(::getAchievementForType)
@@ -41,12 +45,14 @@ class DatabaseMerger(private val localDatabase: Database,
         return remoteDatabase
     }
 
-    private fun syncRowsFromTable(localDao: AbstractEntity<*>, lastSync: Timestamp?)
-    {
+    private fun syncRowsFromTable(localDao: AbstractEntity<*>, lastSync: Timestamp?) {
         val rows = localDao.retrieveModifiedSince(lastSync)
-        val tableName = localDao.getTableName()
-        logger.info(CODE_MERGING_ENTITY, "Merging ${rows.size} rows from ${localDao.getTableName()}",
-            KEY_TABLE_NAME to tableName, KEY_ROW_COUNT to rows.size)
+        logger.info(
+            CODE_MERGING_ENTITY,
+            "Merging ${rows.size} rows from ${localDao.getTableName()}",
+            KEY_TABLE_NAME to localDao.getTableName(),
+            KEY_ROW_COUNT to rows.size,
+        )
 
         rows.forEach { it.mergeIntoDatabase(remoteDatabase) }
     }

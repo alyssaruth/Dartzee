@@ -1,15 +1,13 @@
 package dartzee.ai
 
-import dartzee.`object`.SegmentType
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
+import dartzee.`object`.SegmentType
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestAimDart: AbstractTest()
-{
+class TestAimDart : AbstractTest() {
     @Test
-    fun `Should report the right segment type to aim for`()
-    {
+    fun `Should report the right segment type to aim for`() {
         AimDart(1, 0).getSegmentType() shouldBe SegmentType.MISS
         AimDart(1, 1).getSegmentType() shouldBe SegmentType.OUTER_SINGLE
         AimDart(1, 2).getSegmentType() shouldBe SegmentType.DOUBLE

@@ -1,16 +1,14 @@
 package dartzee.dartzee.aggregate
 
 import dartzee.dartzee.AbstractDartzeeRuleTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDartzeeTotalRuleEven: AbstractDartzeeRuleTest<DartzeeTotalRuleEven>()
-{
+class TestDartzeeTotalRuleEven : AbstractDartzeeRuleTest<DartzeeTotalRuleEven>() {
     override fun factory() = DartzeeTotalRuleEven()
 
     @Test
-    fun `Total validation`()
-    {
+    fun `Total validation`() {
         val rule = DartzeeTotalRuleEven()
 
         rule.isValidTotal(20) shouldBe true
@@ -18,8 +16,7 @@ class TestDartzeeTotalRuleEven: AbstractDartzeeRuleTest<DartzeeTotalRuleEven>()
     }
 
     @Test
-    fun `Rule description`()
-    {
+    fun `Rule description`() {
         val rule = DartzeeTotalRuleEven()
         rule.getDescription() shouldBe "Total is even"
     }

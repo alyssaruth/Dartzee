@@ -16,16 +16,14 @@ import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
 
-class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
-{
+class DartzeeRuleSetupPanel : JPanel(), ActionListener, RowSelectionListener {
     val tableRules = ScrollTableOrdered(3)
     val btnAddRule = JButton()
     val btnAmendRule = JButton()
     val btnRemoveRule = JButton()
     val btnCalculateOrder = JButton()
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
         add(tableRules, BorderLayout.CENTER)
 
@@ -67,8 +65,7 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
         btnCalculateOrder.addActionListener(this)
     }
 
-    private fun setTableModel()
-    {
+    private fun setTableModel() {
         val tm = TableUtil.DefaultModel()
         tm.addColumn("Rule")
         tm.addColumn("Difficulty")
@@ -81,10 +78,8 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
         selectionChanged(tableRules)
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnAddRule -> addRule()
             btnAmendRule -> amendRule()
             btnRemoveRule -> removeRule()
@@ -92,16 +87,14 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
         }
     }
 
-    private fun addRule()
-    {
+    private fun addRule() {
         val rule = InjectedThings.dartzeeRuleFactory.newRule()
-        if (rule != null)
-        {
+        if (rule != null) {
             addRuleToTable(rule)
         }
     }
-    private fun amendRule()
-    {
+
+    private fun amendRule() {
         val rowIndex = tableRules.selectedModelRow
 
         val tm = tableRules.model
@@ -116,32 +109,30 @@ class DartzeeRuleSetupPanel: JPanel(), ActionListener, RowSelectionListener
 
         tableRules.repaint()
     }
-    private fun removeRule()
-    {
+
+    private fun removeRule() {
         val tm = tableRules.model
         tm.removeRow(tableRules.selectedModelRow)
 
         tableRules.repaint()
     }
-    private fun sortRulesByDifficulty()
-    {
-        tableRules.reorderRows { -(it[0] as DartzeeRuleDto).getDifficulty() }
+
+    private fun sortRulesByDifficulty() {
+        tableRules.reorderRows { -(it[0]!! as DartzeeRuleDto).getDifficulty() }
     }
 
-    fun addRulesToTable(rules: List<DartzeeRuleDto>)
-    {
+    fun addRulesToTable(rules: List<DartzeeRuleDto>) {
         rules.forEach { addRuleToTable(it) }
     }
-    private fun addRuleToTable(rule: DartzeeRuleDto)
-    {
+
+    private fun addRuleToTable(rule: DartzeeRuleDto) {
         tableRules.addRow(arrayOf(rule, rule))
     }
 
-    override fun selectionChanged(src: ScrollTable)
-    {
+    override fun selectionChanged(src: ScrollTable) {
         btnAmendRule.isEnabled = src.selectedModelRow != -1
         btnRemoveRule.isEnabled = src.selectedModelRow != -1
     }
 
-    fun getRules() = tableRules.getAllRows().map { it[0] as DartzeeRuleDto }
+    fun getRules() = tableRules.getAllRows().map { it[0]!! as DartzeeRuleDto }
 }

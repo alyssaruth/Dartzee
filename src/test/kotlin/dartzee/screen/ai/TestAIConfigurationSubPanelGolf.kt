@@ -1,45 +1,60 @@
 package dartzee.screen.ai
 
-import com.github.alexburlton.swingtest.getChild
-import dartzee.`object`.SegmentType
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
 import dartzee.core.bean.selectedItemTyped
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
-import io.kotlintest.shouldBe
-import org.junit.jupiter.api.Test
+import dartzee.`object`.SegmentType
+import io.kotest.matchers.shouldBe
 import javax.swing.JComboBox
 import javax.swing.JSpinner
 import javax.swing.border.TitledBorder
+import org.junit.jupiter.api.Test
 
-class TestAIConfigurationSubPanelGolf: AbstractTest()
-{
+class TestAIConfigurationSubPanelGolf : AbstractTest() {
     @Test
-    fun `Should initialise from a model correctly`()
-    {
-        val hmDartNoToSegmentType = mapOf(1 to SegmentType.TREBLE, 2 to SegmentType.INNER_SINGLE, 3 to SegmentType.OUTER_SINGLE)
+    fun `Should initialise from a model correctly`() {
+        val hmDartNoToSegmentType =
+            mapOf(
+                1 to SegmentType.TREBLE,
+                2 to SegmentType.INNER_SINGLE,
+                3 to SegmentType.OUTER_SINGLE,
+            )
         val hmDartNoToStopThreshold = mapOf(1 to 2, 2 to 4)
-        val model = makeDartsModel(hmDartNoToSegmentType = hmDartNoToSegmentType, hmDartNoToStopThreshold = hmDartNoToStopThreshold)
+        val model =
+            makeDartsModel(
+                hmDartNoToSegmentType = hmDartNoToSegmentType,
+                hmDartNoToStopThreshold = hmDartNoToStopThreshold,
+            )
 
         val panel = AIConfigurationSubPanelGolf()
         panel.initialiseFromModel(model)
 
         val dartOnePanel = panel.getPanelForDartNo(1)
-        dartOnePanel.getChild<JComboBox<ComboBoxItem<SegmentType>>>().selectedItemTyped().hiddenData shouldBe SegmentType.TREBLE
+        dartOnePanel
+            .getChild<JComboBox<ComboBoxItem<SegmentType>>>()
+            .selectedItemTyped()
+            .hiddenData shouldBe SegmentType.TREBLE
         dartOnePanel.getChild<JSpinner>().value shouldBe 2
 
         val dartTwoPanel = panel.getPanelForDartNo(2)
-        dartTwoPanel.getChild<JComboBox<ComboBoxItem<SegmentType>>>().selectedItemTyped().hiddenData shouldBe SegmentType.INNER_SINGLE
+        dartTwoPanel
+            .getChild<JComboBox<ComboBoxItem<SegmentType>>>()
+            .selectedItemTyped()
+            .hiddenData shouldBe SegmentType.INNER_SINGLE
         dartTwoPanel.getChild<JSpinner>().value shouldBe 4
 
         val dartThreePanel = panel.getPanelForDartNo(3)
-        dartThreePanel.getChild<JComboBox<ComboBoxItem<SegmentType>>>().selectedItemTyped().hiddenData shouldBe SegmentType.OUTER_SINGLE
+        dartThreePanel
+            .getChild<JComboBox<ComboBoxItem<SegmentType>>>()
+            .selectedItemTyped()
+            .hiddenData shouldBe SegmentType.OUTER_SINGLE
     }
 
     @Test
-    fun `Should populate the model correctly`()
-    {
+    fun `Should populate the model correctly`() {
         val panel = AIConfigurationSubPanelGolf()
 
         panel.selectSegmentType(1, SegmentType.DOUBLE)
@@ -59,13 +74,15 @@ class TestAIConfigurationSubPanelGolf: AbstractTest()
         model.hmDartNoToSegmentType[3] shouldBe SegmentType.TREBLE
     }
 
-    private fun AIConfigurationSubPanelGolf.selectSegmentType(dartNo: Int, segmentType: SegmentType)
-    {
+    private fun AIConfigurationSubPanelGolf.selectSegmentType(
+        dartNo: Int,
+        segmentType: SegmentType,
+    ) {
         val panel = getPanelForDartNo(dartNo)
         val comboBox = panel.getChild<JComboBox<ComboBoxItem<SegmentType>>>()
         comboBox.items().find { it.hiddenData == segmentType }?.let { comboBox.selectedItem = it }
     }
 }
 
-fun AIConfigurationSubPanelGolf.getPanelForDartNo(dartNo: Int)
-        = getChild<AIConfigurationGolfDartPanel> { (it.border as TitledBorder).title == "Dart #$dartNo" }
+fun AIConfigurationSubPanelGolf.getPanelForDartNo(dartNo: Int) =
+    getChild<AIConfigurationGolfDartPanel> { (it.border as TitledBorder).title == "Dart #$dartNo" }

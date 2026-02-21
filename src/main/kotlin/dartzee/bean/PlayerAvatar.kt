@@ -2,96 +2,77 @@ package dartzee.bean
 
 import dartzee.db.PlayerEntity
 import dartzee.db.PlayerImageEntity
-import dartzee.utils.InjectedThings.playerImageSelector
-import java.awt.Color
+import dartzee.screen.PlayerImageDialog
+import dartzee.utils.PLAYER_IMAGE_HEIGHT
+import dartzee.utils.PLAYER_IMAGE_WIDTH
+import dartzee.utils.ResourceCache
 import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.SwingConstants
 import javax.swing.border.EtchedBorder
-import javax.swing.border.LineBorder
 
-class PlayerAvatar : JLabel(AVATAR_UNSET)
-{
+class PlayerAvatar : JLabel(ResourceCache.AVATAR_UNSET) {
     private var player: PlayerEntity? = null
 
     var avatarId = ""
     var readOnly = false
 
-    init
-    {
-        preferredSize = Dimension(150, 150)
+    init {
+        preferredSize = Dimension(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
         border = EtchedBorder(EtchedBorder.RAISED, null, null)
         horizontalAlignment = SwingConstants.CENTER
 
         addMouseListener(AvatarClickListener())
     }
 
-    fun setSelected(selected: Boolean)
-    {
-        border = if (selected) LineBorder(Color.RED, 2) else EtchedBorder(EtchedBorder.RAISED, null, null)
-    }
-
-    fun init(player: PlayerEntity, saveChanges: Boolean)
-    {
-        //Only set the player variable if we want to allow the label to directly make changes to it.
-        if (saveChanges)
-        {
+    fun init(player: PlayerEntity, saveChanges: Boolean) {
+        // Only set the player variable if we want to allow the label to directly make changes to
+        // it.
+        if (saveChanges) {
             this.player = player
         }
 
         avatarId = player.playerImageId
-        icon = player.getAvatar() ?: AVATAR_UNSET
+        icon =
+            if (player.playerImageId.isNotEmpty()) player.getAvatar()
+            else ResourceCache.AVATAR_UNSET
     }
 
-    /**
-     * MouseListener
-     */
-    private inner class AvatarClickListener : MouseAdapter()
-    {
-        override fun mouseClicked(arg0: MouseEvent?)
-        {
-            if (readOnly)
-            {
+    /** MouseListener */
+    private inner class AvatarClickListener : MouseAdapter() {
+        override fun mouseClicked(arg0: MouseEvent?) {
+            if (readOnly) {
                 return
             }
 
-            val playerImageId = playerImageSelector.selectImage()
-            if (playerImageId != null)
-            {
-                avatarId = playerImageId
-                val newIcon = PlayerImageEntity.retrieveImageIconForId(avatarId)
-                icon = newIcon
+            val dlg = PlayerImageDialog(::imageSelected)
+            dlg.isVisible = true
+        }
 
-                player?.let {
-                    it.playerImageId = avatarId
-                    it.saveToDatabase()
-                }
+        private fun imageSelected(imageId: String) {
+            avatarId = imageId
+            val newIcon = PlayerImageEntity.retrieveImageIconForId(avatarId)
+            icon = newIcon
+
+            player?.run {
+                playerImageId = avatarId
+                saveToDatabase()
             }
         }
 
-        override fun mouseEntered(arg0: MouseEvent?)
-        {
-            if (!readOnly)
-            {
+        override fun mouseEntered(arg0: MouseEvent?) {
+            if (!readOnly) {
                 cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
             }
         }
 
-        override fun mouseExited(arg0: MouseEvent?)
-        {
-            if (!readOnly)
-            {
+        override fun mouseExited(arg0: MouseEvent?) {
+            if (!readOnly) {
                 cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
             }
         }
-    }
-
-    companion object
-    {
-        private val AVATAR_UNSET = ImageIcon(PlayerAvatar::class.java.getResource("/avatars/Unset.png"))
     }
 }

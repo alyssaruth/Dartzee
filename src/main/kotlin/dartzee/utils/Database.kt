@@ -1,9 +1,16 @@
 package dartzee.utils
 
 import dartzee.core.util.DialogUtil
+import dartzee.db.BulkInserter
+import dartzee.db.DeletionAuditEntity
+import dartzee.db.EntityName
 import dartzee.db.LocalIdGenerator
 import dartzee.db.VersionEntity
-import dartzee.logging.*
+import dartzee.logging.CODE_DATABASE_IN_USE
+import dartzee.logging.CODE_NEW_CONNECTION
+import dartzee.logging.CODE_TABLE_CREATED
+import dartzee.logging.CODE_TABLE_EXISTS
+import dartzee.logging.CODE_TEST_CONNECTION_ERROR
 import dartzee.logging.exceptions.WrappedSqlException
 import dartzee.utils.InjectedThings.databaseDirectory
 import dartzee.utils.InjectedThings.logger
@@ -15,41 +22,34 @@ import java.sql.SQLException
 import java.util.*
 import javax.sql.rowset.CachedRowSet
 import javax.sql.rowset.RowSetProvider
-import kotlin.system.exitProcess
 
 const val TABLE_ALREADY_EXISTS = "X0Y32"
 val DATABASE_FILE_PATH: String = "${System.getProperty("user.dir")}/Databases"
 
-/**
- * Generic derby helper methods
- */
-class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val inMemory: Boolean = false)
-{
+/** Generic derby helper methods */
+class Database(
+    val dbName: String = DartsDatabaseUtil.DATABASE_NAME,
+    private val inMemory: Boolean = false,
+) {
     val localIdGenerator = LocalIdGenerator(this)
 
     private val hsConnections = mutableListOf<Connection>()
     private val connectionPoolLock = Any()
     private var connectionCreateCount = 0
 
-    fun initialiseConnectionPool(initialCount: Int)
-    {
-        synchronized(connectionPoolLock)
-        {
+    fun initialiseConnectionPool(initialCount: Int) {
+        synchronized(connectionPoolLock) {
             hsConnections.clear()
-            for (i in 0 until initialCount)
-            {
+            repeat(initialCount) {
                 val conn = createDatabaseConnection()
                 hsConnections.add(conn)
             }
         }
     }
 
-    fun borrowConnection() : Connection
-    {
-        synchronized(connectionPoolLock)
-        {
-            if (hsConnections.isEmpty())
-            {
+    fun borrowConnection(): Connection {
+        synchronized(connectionPoolLock) {
+            if (hsConnections.isEmpty()) {
                 return createDatabaseConnection()
             }
 
@@ -57,36 +57,31 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         }
     }
 
-    fun returnConnection(connection: Connection)
-    {
-        synchronized(connectionPoolLock)
-        {
-            hsConnections.add(connection)
-        }
+    fun returnConnection(connection: Connection) {
+        synchronized(connectionPoolLock) { hsConnections.add(connection) }
     }
 
-    private fun createDatabaseConnection(): Connection
-    {
+    private fun createDatabaseConnection(): Connection {
         connectionCreateCount++
 
         val connection = DriverManager.getConnection(getDbStringForNewConnection(), getProps())
-        logger.info(CODE_NEW_CONNECTION, "Created new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}")
+        logger.info(
+            CODE_NEW_CONNECTION,
+            "Created new connection. Total created: $connectionCreateCount, pool size: ${hsConnections.size}",
+        )
         return connection
     }
 
     private fun getDbStringForNewConnection() = "${getQualifiedDbName()};create=true"
+
     fun getQualifiedDbName() =
-        if (inMemory)
-        {
+        if (inMemory) {
             "jdbc:derby:memory:$databaseDirectory/$dbName"
-        }
-        else
-        {
+        } else {
             "jdbc:derby:$databaseDirectory/$dbName"
         }
 
-    private fun getProps(): Properties
-    {
+    private fun getProps(): Properties {
         val props = Properties()
         props["user"] = "administrator"
         props["password"] = "wallace"
@@ -94,13 +89,12 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
     }
 
     fun getDirectoryStr() = "$databaseDirectory/$dbName"
+
     fun getDirectory() = File(getDirectoryStr())
 
-    fun executeUpdates(statements: List<String>): Boolean
-    {
-        statements.forEach {
-            if (!executeUpdate(it))
-            {
+    fun executeUpdates(statements: List<String>): Boolean {
+        statements.forEach { statement ->
+            if (!executeUpdate(statement)) {
                 return false
             }
         }
@@ -109,14 +103,11 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
     }
 
     fun executeUpdate(sb: StringBuilder) = executeUpdate(sb.toString())
-    fun executeUpdate(statement: String, log: Boolean = true): Boolean
-    {
-        try
-        {
+
+    fun executeUpdate(statement: String, log: Boolean = true): Boolean {
+        try {
             executeUpdateUncaught(statement, log)
-        }
-        catch (sqle: SQLException)
-        {
+        } catch (sqle: SQLException) {
             logger.logSqlException(statement, "", sqle)
             return false
         }
@@ -124,116 +115,102 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         return true
     }
 
-    private fun executeUpdateUncaught(statement: String, log: Boolean = true)
-    {
+    private fun executeUpdateUncaught(statement: String, log: Boolean = true) {
         val timer = DurationTimer()
         val conn = borrowConnection()
-        var updateCount = 0
-        try
-        {
-            conn.createStatement().use {
-                s -> s.execute(statement)
-                updateCount = s.updateCount
+        val updateCount =
+            try {
+                conn.createStatement().use { s ->
+                    s.execute(statement)
+                    s.updateCount
+                }
+            } finally {
+                returnConnection(conn)
             }
-        }
-        finally
-        {
-            returnConnection(conn)
-        }
 
-        if (log)
-        {
+        if (log) {
             logger.logSql(statement, "", timer.getDuration(), updateCount, dbName)
         }
     }
 
-    fun executeQuery(sb: StringBuilder): ResultSet
-    {
-        return executeQuery(sb.toString())
-    }
+    fun executeQuery(sb: StringBuilder) = executeQuery(sb.toString())
 
-    fun executeQuery(query: String): ResultSet
-    {
+    fun executeQuery(query: String): ResultSet {
         val timer = DurationTimer()
         val conn = borrowConnection()
 
-        try
-        {
+        try {
             conn.createStatement().use { s ->
-                val resultSet: CachedRowSet = s.executeQuery(query).use { rs ->
-                    val crs = RowSetProvider.newFactory().createCachedRowSet()
-                    crs.populate(rs)
-                    crs
-                }
+                val resultSet: CachedRowSet =
+                    s.executeQuery(query).use { rs ->
+                        val crs = RowSetProvider.newFactory().createCachedRowSet()
+                        crs.populate(rs)
+                        crs
+                    }
 
                 logger.logSql(query, "", timer.getDuration(), resultSet.size(), dbName)
                 return resultSet
             }
-        }
-        catch (sqle: SQLException)
-        {
+        } catch (sqle: SQLException) {
             throw WrappedSqlException(query, "", sqle)
-        }
-        finally
-        {
+        } finally {
             returnConnection(conn)
         }
     }
 
-    fun executeQueryAggregate(sb: StringBuilder): Int
-    {
-        return executeQueryAggregate(sb.toString())
+    fun <T> retrieveAsList(sb: StringBuilder, fn: (rs: ResultSet) -> T) =
+        retrieveAsList(sb.toString(), fn)
+
+    fun <T> retrieveAsList(query: String, fn: (rs: ResultSet) -> T): List<T> {
+        executeQuery(query).use { rs ->
+            val result = mutableListOf<T>()
+            while (rs.next()) {
+                result.add(fn(rs))
+            }
+
+            return result.toList()
+        }
     }
 
-    fun executeQueryAggregate(sql: String): Int
-    {
+    fun executeQueryAggregate(sb: StringBuilder) = executeQueryAggregate(sb.toString())
+
+    fun executeQueryAggregate(sql: String): Int {
         executeQuery(sql).use { rs ->
             return if (rs.next()) rs.getInt(1) else -1
         }
     }
 
-    fun doDuplicateInstanceCheck()
-    {
-        try
-        {
+    fun doDuplicateInstanceCheck() {
+        try {
             createDatabaseConnection()
-        }
-        catch (sqle: SQLException)
-        {
+        } catch (sqle: SQLException) {
             val next = sqle.nextException
-            if (next != null
-             && next.message!!.contains("Another instance of Derby may have already booted the database"))
-            {
+            if (
+                next != null &&
+                    next.message!!.contains(
+                        "Another instance of Derby may have already booted the database"
+                    )
+            ) {
                 logger.warn(CODE_DATABASE_IN_USE, "Failed multiple instance check, exiting.")
-                DialogUtil.showError("Database already in use - Dartzee will now exit.")
-                exitProcess(1)
-            }
-            else
-            {
+                DialogUtil.showErrorOLD("Database already in use - Dartzee will now exit.")
+                InjectedThings.exiter.exit(1)
+            } else {
                 logger.logSqlException("", "", sqle)
             }
         }
-
     }
 
-    fun createTableIfNotExists(tableName: String, columnSql: String): Boolean
-    {
+    fun createTableIfNotExists(tableName: String, columnSql: String): Boolean {
         val statement = "CREATE TABLE $tableName($columnSql)"
 
-        try
-        {
+        try {
             executeUpdateUncaught(statement)
             logger.info(CODE_TABLE_CREATED, "Created $tableName")
-        }
-        catch (sqle: SQLException)
-        {
+        } catch (sqle: SQLException) {
             val state = sqle.sqlState
-            if (state == TABLE_ALREADY_EXISTS)
-            {
+            if (state == TABLE_ALREADY_EXISTS) {
                 logger.info(CODE_TABLE_EXISTS, "$tableName already exists")
-            }
-            else
-            {
+            } else {
                 logger.logSqlException(statement, "", sqle)
             }
 
@@ -245,75 +222,65 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
 
     fun getDatabaseVersion(): Int? = getVersionRow()?.version
 
-    fun updateDatabaseVersion(version: Int)
-    {
+    fun updateDatabaseVersion(version: Int) {
         val entity = getVersionRow() ?: VersionEntity(this).also { it.assignRowId() }
         entity.version = version
         entity.saveToDatabase()
     }
 
-    fun generateLocalId(tableName: String) = localIdGenerator.generateLocalId(tableName)
+    fun generateLocalId(entityName: EntityName) = localIdGenerator.generateLocalId(entityName)
 
-    private fun getVersionRow(): VersionEntity?
-    {
+    private fun getVersionRow(): VersionEntity? {
         val versionEntity = VersionEntity(this)
         versionEntity.createTable()
         return versionEntity.retrieveEntity("1 = 1")
     }
 
-    fun createTempTable(tableName: String, colStr: String): String?
-    {
+    fun createTempTable(tableName: String, colStr: String): String? {
         val millis = System.currentTimeMillis()
         val fullTableName = "zzTmp_$tableName$millis"
 
         val success = createTableIfNotExists(fullTableName, colStr)
-        return if (success)
-        {
+        return if (success) {
             fullTableName
-        }
-        else null
+        } else null
     }
 
-    fun dropTable(tableName: String?): Boolean
-    {
+    fun dropTable(tableName: EntityName) = dropTable(tableName.name)
+
+    fun dropTable(tableName: String): Boolean {
         val sql = "DROP TABLE $tableName"
         return executeUpdate(sql)
     }
 
-    fun testConnection(): Boolean
-    {
-        try
-        {
+    fun testConnection(): Boolean {
+        try {
             createDatabaseConnection()
-        }
-        catch (t: Throwable)
-        {
-            logger.error(CODE_TEST_CONNECTION_ERROR, "Failed to establish test connection for path ${getDirectory()}", t)
+        } catch (t: Throwable) {
+            logger.error(
+                CODE_TEST_CONNECTION_ERROR,
+                "Failed to establish test connection for path ${getDirectory()}",
+                t,
+            )
             return false
         }
 
         return true
     }
 
-    fun shutDown(): Boolean
-    {
+    fun shutDown(): Boolean {
         closeConnections()
         val command = "${getQualifiedDbName()};shutdown=true"
 
-        try
-        {
+        try {
             DriverManager.getConnection(command, getProps())
-        }
-        catch (sqle: SQLException)
-        {
-            val msg = sqle.message ?: ""
-            if (msg.contains("shutdown"))
-            {
+        } catch (sqle: SQLException) {
+            val msg = sqle.message.orEmpty()
+            if (msg.contains("shutdown")) {
                 return true
             }
 
-            if (!msg.contains("not found"))
-            {
+            if (!msg.contains("not found")) {
                 logger.logSqlException(command, command, sqle)
             }
         }
@@ -321,44 +288,39 @@ class Database(val dbName: String = DartsDatabaseUtil.DATABASE_NAME, private val
         return false
     }
 
-    private fun closeConnections()
-    {
+    private fun closeConnections() {
         hsConnections.forEach { it.close() }
         hsConnections.clear()
     }
 
-    fun deleteRowsFromTable(tableName: String, rowIds: List<String>): Boolean
-    {
+    fun deleteRowsFromTable(entityName: EntityName, rowIds: List<String>): Boolean {
         var success = true
-        rowIds.chunked(50).forEach {
-            val idStr = it.joinToString{rowId -> "'$rowId'"}
-            val sql = "DELETE FROM $tableName WHERE RowId IN ($idStr)"
+        rowIds.chunked(50).forEach { rowIdBatch ->
+            val idStr = rowIdBatch.getQuotedIdStr()
+            val sql = "DELETE FROM $entityName WHERE RowId IN $idStr"
             success = executeUpdate(sql)
+        }
+
+        if (success) {
+            val deletionAudits = rowIds.map { DeletionAuditEntity.factory(entityName, it, this) }
+            BulkInserter.insert(deletionAudits, database = this)
         }
 
         return success
     }
 
-    fun dropUnexpectedTables(): List<String>
-    {
+    fun dropUnexpectedTables(): List<String> {
         val entities = DartsDatabaseUtil.getAllEntitiesIncludingVersion()
-        val tableNameSql = entities.joinToString{ "'${it.getTableNameUpperCase()}'"}
+        val tableNameSql = entities.getQuotedIdStr { it.getTableNameUpperCase() }
 
         val sb = StringBuilder()
         sb.append(" SELECT TableName")
         sb.append(" FROM sys.systables")
         sb.append(" WHERE TableType = 'T'")
-        sb.append(" AND TableName NOT IN ($tableNameSql)")
+        sb.append(" AND TableName NOT IN $tableNameSql")
 
-        val list = mutableListOf<String>()
-        executeQuery(sb).use{ rs ->
-            while (rs.next())
-            {
-                list.add(rs.getString("TableName"))
-            }
-        }
-
-        list.forEach{ dropTable(it) }
-        return list
+        val tables = retrieveAsList(sb) { it.getString("TableName") }
+        tables.forEach { dropTable(it) }
+        return tables
     }
 }

@@ -1,53 +1,47 @@
 package dartzee.core.util
 
-import dartzee.core.util.DateStatics.Companion.END_OF_TIME
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.boolean.shouldBeFalse
-import io.kotlintest.matchers.boolean.shouldBeTrue
-import io.kotlintest.matchers.string.shouldBeEmpty
-import io.kotlintest.shouldBe
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
 import java.sql.Timestamp
 import java.time.ZonedDateTime
+import org.junit.jupiter.api.Test
 
-class TestDateUtil: AbstractTest()
-{
+class TestDateUtil : AbstractTest() {
     @Test
-    fun testGetSqlDateNow()
-    {
+    fun testGetSqlDateNow() {
         val now = ZonedDateTime.now()
 
         val dtNow = getSqlDateNow()
         val convertedDtNow = dtNow.toLocalDateTime()
 
-        now.year shouldBe  convertedDtNow.year
+        now.year shouldBe convertedDtNow.year
         now.month shouldBe convertedDtNow.month
         now.dayOfMonth shouldBe convertedDtNow.dayOfMonth
         now.hour shouldBe convertedDtNow.hour
     }
 
     @Test
-    fun testEndOfTimeStr()
-    {
+    fun testEndOfTimeStr() {
         val str = getEndOfTimeSqlString()
 
         str.shouldBe("'9999-12-31 00:00:00.000'")
     }
 
     @Test
-    fun testIsEndOfTime()
-    {
+    fun testIsEndOfTime() {
         isEndOfTime(null).shouldBeFalse()
         isEndOfTime(getSqlDateNow()).shouldBeFalse()
-        isEndOfTime(END_OF_TIME).shouldBeTrue()
+        isEndOfTime(DateStatics.END_OF_TIME).shouldBeTrue()
     }
 
     @Test
-    fun `Should format a regular date as expected`()
-    {
-        val millis = 1545733545000 //25/12/2018 10:25:45
+    fun `Should format a regular date as expected`() {
+        val millis = 1545733545000 // 25/12/2018 10:25:45
 
         val timestamp = Timestamp(millis)
 
@@ -56,16 +50,14 @@ class TestDateUtil: AbstractTest()
     }
 
     @Test
-    fun `Should format end of time correctly`()
-    {
-        END_OF_TIME.formatAsDate().shouldBeEmpty()
-        END_OF_TIME.formatTimestamp().shouldBeEmpty()
+    fun `Should format end of time correctly`() {
+        DateStatics.END_OF_TIME.formatAsDate().shouldBeEmpty()
+        DateStatics.END_OF_TIME.formatTimestamp().shouldBeEmpty()
     }
 
     @Test
-    fun `Should return a valid string for running SQL`()
-    {
-        val millis = 1545733545000 //25/12/2018 10:25:45
+    fun `Should return a valid string for running SQL`() {
+        val millis = 1545733545000 // 25/12/2018 10:25:45
         val timestamp = Timestamp(millis)
 
         insertGame(dtFinish = timestamp)

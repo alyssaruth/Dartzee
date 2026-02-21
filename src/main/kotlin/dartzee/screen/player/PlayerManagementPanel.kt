@@ -10,20 +10,26 @@ import dartzee.core.util.setMargins
 import dartzee.db.AchievementEntity
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.screen.HumanConfigurationDialog
 import dartzee.screen.ScreenCache
+import dartzee.screen.ai.AIConfigurationDialog
+import dartzee.screen.ai.AISimulationSetupDialog
 import dartzee.stats.getGameCounts
-import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JLabel
+import javax.swing.JOptionPane
+import javax.swing.JPanel
+import javax.swing.SwingConstants
 import javax.swing.border.EmptyBorder
 
-class PlayerManagementPanel : JPanel(), ActionListener
-{
+class PlayerManagementPanel : JPanel(), ActionListener {
     private var player: PlayerEntity? = null
 
     private val btnEdit = JButton("Edit")
@@ -34,8 +40,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
     private val panelCenter = JPanel()
     private val btnRunSimulation = JButton("Run Simulation")
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
 
         val panelOptions = JPanel()
@@ -77,16 +82,15 @@ class PlayerManagementPanel : JPanel(), ActionListener
         panelCenter.layout = WrapLayout()
     }
 
-    fun refresh(player: PlayerEntity?)
-    {
+    fun refresh(player: PlayerEntity?) {
         this.player = player
 
-        lblPlayerName.text = player?.name ?: ""
+        lblPlayerName.text = player?.name.orEmpty()
 
-        //Only show this for AIs
-        btnEdit.isVisible = player?.isAi() == true
+        // Only show this for AIs
         btnRunSimulation.isVisible = player?.isAi() == true
 
+        btnEdit.isVisible = player != null
         btnDelete.isVisible = player != null
         avatar.isVisible = player != null
 
@@ -101,8 +105,7 @@ class PlayerManagementPanel : JPanel(), ActionListener
         revalidate()
     }
 
-    private fun addSummaryPanels(player: PlayerEntity)
-    {
+    private fun addSummaryPanels(player: PlayerEntity) {
         val counts = getGameCounts(player)
         val achievements = AchievementEntity.retrieveAchievements(player.rowId)
 
@@ -112,36 +115,52 @@ class PlayerManagementPanel : JPanel(), ActionListener
         panelCenter.add(PlayerAchievementsButton(player, achievements))
     }
 
-    private fun makeStatsButton(player: PlayerEntity, gameCounts: HashMapCount<GameType>, achievements: List<AchievementEntity>, gameType: GameType): PlayerStatsButton
-    {
+    private fun makeStatsButton(
+        player: PlayerEntity,
+        gameCounts: HashMapCount<GameType>,
+        achievements: List<AchievementEntity>,
+        gameType: GameType,
+    ): PlayerStatsButton {
         val gamesPlayed = gameCounts.getCount(gameType)
 
-        val achievement = achievements.find { it.achievementType == getBestGameAchievement(gameType)?.achievementType }
+        val achievement =
+            achievements.find {
+                it.achievementType == getBestGameAchievement(gameType)?.achievementType
+            }
         val bestScore: Int = achievement?.achievementCounter ?: 0
 
         return PlayerStatsButton(player, gameType, gamesPlayed, bestScore)
     }
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
+    override fun actionPerformed(arg0: ActionEvent) {
         val selectedPlayer = player ?: return
-        when (arg0.source)
-        {
-            btnEdit -> InjectedThings.playerManager.amendPlayer(selectedPlayer)
+        when (arg0.source) {
+            btnEdit -> amendPlayer(selectedPlayer)
             btnDelete -> confirmAndDeletePlayer(selectedPlayer)
-            btnRunSimulation -> InjectedThings.playerManager.runSimulation(selectedPlayer)
+            btnRunSimulation ->
+                AISimulationSetupDialog(selectedPlayer, selectedPlayer.getModel()).isVisible = true
         }
     }
 
-    private fun confirmAndDeletePlayer(selectedPlayer: PlayerEntity)
-    {
-        val option = DialogUtil.showQuestion("Are you sure you want to delete ${selectedPlayer.name}?", false)
-        if (option == JOptionPane.YES_OPTION)
-        {
+    private fun amendPlayer(playerEntity: PlayerEntity) {
+        if (playerEntity.isAi()) {
+            AIConfigurationDialog.amendPlayer(::refresh, playerEntity)
+        } else {
+            HumanConfigurationDialog.amendPlayer(::refresh, playerEntity)
+        }
+    }
+
+    private fun confirmAndDeletePlayer(selectedPlayer: PlayerEntity) {
+        val option =
+            DialogUtil.showQuestionOLD(
+                "Are you sure you want to delete ${selectedPlayer.name}?",
+                false,
+            )
+        if (option == JOptionPane.YES_OPTION) {
             selectedPlayer.dtDeleted = getSqlDateNow()
             selectedPlayer.saveToDatabase()
 
-            //Re-initialise the screen so it updates
+            // Re-initialise the screen so it updates
             ScreenCache.get<PlayerManagementScreen>().initialise()
         }
     }

@@ -1,16 +1,14 @@
 package dartzee.dartzee.aggregate
 
 import dartzee.dartzee.AbstractDartzeeRuleTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDartzeeTotalRulePrime: AbstractDartzeeRuleTest<DartzeeTotalRulePrime>()
-{
+class TestDartzeeTotalRulePrime : AbstractDartzeeRuleTest<DartzeeTotalRulePrime>() {
     override fun factory() = DartzeeTotalRulePrime()
 
     @Test
-    fun `Total validation`()
-    {
+    fun `Total validation`() {
         val rule = DartzeeTotalRulePrime()
 
         rule.isValidTotal(2) shouldBe true
@@ -21,5 +19,4 @@ class TestDartzeeTotalRulePrime: AbstractDartzeeRuleTest<DartzeeTotalRulePrime>(
         rule.isValidTotal(6) shouldBe false
         rule.isValidTotal(21) shouldBe false
     }
-
 }

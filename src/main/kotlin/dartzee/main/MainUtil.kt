@@ -1,43 +1,48 @@
 package dartzee.main
 
 import Theme
-import dartzee.`object`.DartsClient
-import dartzee.core.util.CoreRegistry.INSTANCE_STRING_DEVICE_ID
-import dartzee.core.util.CoreRegistry.instance
 import dartzee.core.util.DialogUtil
-import dartzee.logging.*
+import dartzee.logging.CODE_LOOK_AND_FEEL_ERROR
+import dartzee.logging.CODE_LOOK_AND_FEEL_SET
+import dartzee.logging.KEY_APP_VERSION
+import dartzee.logging.KEY_DEVICE_ID
+import dartzee.logging.KEY_DEV_MODE
+import dartzee.logging.KEY_OPERATING_SYSTEM
+import dartzee.logging.KEY_USERNAME
+import dartzee.`object`.DartsClient
+import dartzee.preferences.Preferences
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.preferenceService
 import java.awt.Color
 import java.util.*
 import javax.swing.UIManager
 
-fun setLookAndFeel()
-{
-    if (!DartsClient.isAppleOs())
-    {
+fun setLookAndFeel() {
+    if (!DartsClient.isAppleOs()) {
         setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
     }
 }
 
-fun setLookAndFeel(laf: String)
-{
-    try
-    {
-        Theme(Color.CYAN, Color.GREEN, Color.WHITE).apply()
+fun setLookAndFeel(laf: String) {
+    try {
+        Theme(
+                Color.CYAN,
+                Color.GREEN,
+                Color.decode("#def7f7"),
+                lightBackground = Color.decode("#f3fcfc"),
+            )
+            .apply()
         UIManager.setLookAndFeel(laf)
-    }
-    catch (e: Throwable)
-    {
+    } catch (e: Throwable) {
         logger.error(CODE_LOOK_AND_FEEL_ERROR, "Failed to load laf $laf", e)
-        DialogUtil.showError("Failed to load Look & Feel 'Nimbus'.")
+        DialogUtil.showErrorOLD("Failed to load Look & Feel 'Nimbus'.")
     }
 
     logger.info(CODE_LOOK_AND_FEEL_SET, "Set look and feel to $laf")
 }
 
-fun setLoggingContextFields()
-{
+fun setLoggingContextFields() {
     logger.addToContext(KEY_USERNAME, getUsername())
     logger.addToContext(KEY_APP_VERSION, DARTS_VERSION_NUMBER)
     logger.addToContext(KEY_OPERATING_SYSTEM, DartsClient.operatingSystem)
@@ -45,11 +50,11 @@ fun setLoggingContextFields()
     logger.addToContext(KEY_DEV_MODE, DartsClient.devMode)
 }
 
-fun getDeviceId() = instance.get(INSTANCE_STRING_DEVICE_ID, null) ?: setDeviceId()
-private fun setDeviceId(): String
-{
+fun getDeviceId() = preferenceService.find(Preferences.deviceId) ?: setDeviceId()
+
+private fun setDeviceId(): String {
     val deviceId = UUID.randomUUID().toString()
-    instance.put(INSTANCE_STRING_DEVICE_ID, deviceId)
+    preferenceService.save(Preferences.deviceId, deviceId)
     return deviceId
 }
 

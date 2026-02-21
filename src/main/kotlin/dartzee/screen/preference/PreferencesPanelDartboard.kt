@@ -1,20 +1,21 @@
 package dartzee.screen.preference
 
-import dartzee.`object`.ColourWrapper
+import dartzee.bean.InteractiveDartboard
 import dartzee.core.bean.ColourPicker
 import dartzee.core.bean.ColourSelectionListener
 import dartzee.core.util.setFontSize
-import dartzee.screen.Dartboard
-import dartzee.utils.*
-import dartzee.utils.InjectedThings.preferencesDartboardSize
-import net.miginfocom.swing.MigLayout
+import dartzee.`object`.ColourWrapper
+import dartzee.preferences.Preference
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import java.awt.BorderLayout
 import java.awt.Color
+import java.awt.Dimension
 import javax.swing.JLabel
 import javax.swing.JPanel
+import net.miginfocom.swing.MigLayout
 
-class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionListener
-{
+class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionListener {
     override val title = "Dartboard"
 
     private val panelCenter = JPanel()
@@ -25,21 +26,21 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
     val cpEvenSingle = ColourPicker()
     val cpEvenDouble = ColourPicker()
     val cpEvenTreble = ColourPicker()
-    private val dartboardPreview = Dartboard(preferencesDartboardSize, preferencesDartboardSize)
+    private var dartboard = InteractiveDartboard()
 
-    init
-    {
-        panelCenter.layout = MigLayout("al center center, gapy 20")
+    init {
+        panelCenter.layout = BorderLayout()
         add(panelCenter, BorderLayout.CENTER)
-        panelCenter.add(dartboardPreview)
-        panelCenter.add(panelEast)
+        panelCenter.add(dartboard, BorderLayout.CENTER)
+        panelCenter.add(panelEast, BorderLayout.EAST)
 
-        panelEast.layout = MigLayout("", "[][][]", "[][][]")
+        panelEast.layout = MigLayout("al center center, gapy 20", "[][][]", "[][][]")
         val lblSingleColours = JLabel("Single Colours")
         lblSingleColours.setFontSize(16)
         panelEast.add(lblSingleColours, "cell 0 0")
         panelEast.add(cpOddSingle, "cell 1 0")
         panelEast.add(cpEvenSingle, "cell 2 0")
+        panelEast.preferredSize = Dimension(300, 100)
 
         val lblDoubleColours = JLabel("Double Colours")
         lblDoubleColours.setFontSize(16)
@@ -53,8 +54,6 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
         panelEast.add(cpOddTreble, "cell 1 2")
         panelEast.add(cpEvenTreble, "cell 2 2")
 
-        dartboardPreview.renderScoreLabels = true
-
         cpOddSingle.addColourSelectionListener(this)
         cpOddDouble.addColourSelectionListener(this)
         cpOddTreble.addColourSelectionListener(this)
@@ -63,35 +62,25 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
         cpEvenTreble.addColourSelectionListener(this)
     }
 
-    override fun refreshImpl(useDefaults: Boolean)
-    {
-        val evenSingleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_SINGLE_COLOUR, useDefaults)
-        val evenDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_DOUBLE_COLOUR, useDefaults)
-        val evenTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_EVEN_TREBLE_COLOUR, useDefaults)
-        val oddSingleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_SINGLE_COLOUR, useDefaults)
-        val oddDoubleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_DOUBLE_COLOUR, useDefaults)
-        val oddTrebleStr = PreferenceUtil.getStringValue(PREFERENCES_STRING_ODD_TREBLE_COLOUR, useDefaults)
+    override fun refreshImpl(useDefaults: Boolean) {
+        val evenSingle = preferenceService.get(Preferences.evenSingleColour, useDefaults)
+        val evenDouble = preferenceService.get(Preferences.evenDoubleColour, useDefaults)
+        val evenTreble = preferenceService.get(Preferences.evenTrebleColour, useDefaults)
+        val oddSingle = preferenceService.get(Preferences.oddSingleColour, useDefaults)
+        val oddDouble = preferenceService.get(Preferences.oddDoubleColour, useDefaults)
+        val oddTreble = preferenceService.get(Preferences.oddTrebleColour, useDefaults)
 
-        val evenSingle = DartsColour.getColorFromPrefStr(evenSingleStr)
-        val evenDouble = DartsColour.getColorFromPrefStr(evenDoubleStr)
-        val evenTreble = DartsColour.getColorFromPrefStr(evenTrebleStr)
-
-        val oddSingle = DartsColour.getColorFromPrefStr(oddSingleStr)
-        val oddDouble = DartsColour.getColorFromPrefStr(oddDoubleStr)
-        val oddTreble = DartsColour.getColorFromPrefStr(oddTrebleStr)
-
-        cpOddSingle.updateSelectedColor(oddSingle)
-        cpOddDouble.updateSelectedColor(oddDouble)
-        cpOddTreble.updateSelectedColor(oddTreble)
-        cpEvenSingle.updateSelectedColor(evenSingle)
-        cpEvenDouble.updateSelectedColor(evenDouble)
-        cpEvenTreble.updateSelectedColor(evenTreble)
+        cpOddSingle.updateSelectedColor(oddSingle, notify = false)
+        cpOddDouble.updateSelectedColor(oddDouble, notify = false)
+        cpOddTreble.updateSelectedColor(oddTreble, notify = false)
+        cpEvenSingle.updateSelectedColor(evenSingle, notify = false)
+        cpEvenDouble.updateSelectedColor(evenDouble, notify = false)
+        cpEvenTreble.updateSelectedColor(evenTreble, notify = false)
 
         refreshDartboard()
     }
 
-    private fun refreshDartboard()
-    {
+    private fun refreshDartboard() {
         val oddSingle = cpOddSingle.selectedColour
         val oddDouble = cpOddDouble.selectedColour
         val oddTreble = cpOddTreble.selectedColour
@@ -99,44 +88,46 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
         val evenDouble = cpEvenDouble.selectedColour
         val evenTreble = cpEvenTreble.selectedColour
 
-        val wrapper = ColourWrapper(evenSingle, evenDouble, evenTreble,
-                oddSingle, oddDouble, oddTreble, evenDouble, oddDouble)
+        val wrapper =
+            ColourWrapper(
+                evenSingle,
+                evenDouble,
+                evenTreble,
+                oddSingle,
+                oddDouble,
+                oddTreble,
+                evenDouble,
+                oddDouble,
+            )
 
-        dartboardPreview.paintDartboard(wrapper, true)
+        panelCenter.remove(dartboard)
+        dartboard = InteractiveDartboard(wrapper)
+        panelCenter.add(dartboard, BorderLayout.CENTER)
+        panelCenter.revalidate()
+        panelCenter.repaint()
     }
 
-    override fun saveImpl()
-    {
-        val oddSingleStr = cpOddSingle.getPrefString()
-        val oddDoubleStr = cpOddDouble.getPrefString()
-        val oddTrebleStr = cpOddTreble.getPrefString()
-        val evenSingleStr = cpEvenSingle.getPrefString()
-        val evenDoubleStr = cpEvenDouble.getPrefString()
-        val evenTrebleStr = cpEvenTreble.getPrefString()
-
-        PreferenceUtil.saveString(PREFERENCES_STRING_ODD_SINGLE_COLOUR, oddSingleStr)
-        PreferenceUtil.saveString(PREFERENCES_STRING_ODD_DOUBLE_COLOUR, oddDoubleStr)
-        PreferenceUtil.saveString(PREFERENCES_STRING_ODD_TREBLE_COLOUR, oddTrebleStr)
-        PreferenceUtil.saveString(PREFERENCES_STRING_EVEN_SINGLE_COLOUR, evenSingleStr)
-        PreferenceUtil.saveString(PREFERENCES_STRING_EVEN_DOUBLE_COLOUR, evenDoubleStr)
-        PreferenceUtil.saveString(PREFERENCES_STRING_EVEN_TREBLE_COLOUR, evenTrebleStr)
+    override fun saveImpl() {
+        preferenceService.save(Preferences.oddSingleColour, cpOddSingle.selectedColour)
+        preferenceService.save(Preferences.oddDoubleColour, cpOddDouble.selectedColour)
+        preferenceService.save(Preferences.oddTrebleColour, cpOddTreble.selectedColour)
+        preferenceService.save(Preferences.evenSingleColour, cpEvenSingle.selectedColour)
+        preferenceService.save(Preferences.evenDoubleColour, cpEvenDouble.selectedColour)
+        preferenceService.save(Preferences.evenTrebleColour, cpEvenTreble.selectedColour)
     }
 
     override fun hasOutstandingChanges() =
-            !cpOddSingle.matchesPreference(PREFERENCES_STRING_ODD_SINGLE_COLOUR)
-                    || !cpOddDouble.matchesPreference(PREFERENCES_STRING_ODD_DOUBLE_COLOUR)
-                    || !cpOddTreble.matchesPreference(PREFERENCES_STRING_ODD_TREBLE_COLOUR)
-                    || !cpEvenSingle.matchesPreference(PREFERENCES_STRING_EVEN_SINGLE_COLOUR)
-                    || !cpEvenDouble.matchesPreference(PREFERENCES_STRING_EVEN_DOUBLE_COLOUR)
-                    || !cpEvenTreble.matchesPreference(PREFERENCES_STRING_EVEN_TREBLE_COLOUR)
+        !cpOddSingle.matchesPreference(Preferences.oddSingleColour) ||
+            !cpOddDouble.matchesPreference(Preferences.oddDoubleColour) ||
+            !cpOddTreble.matchesPreference(Preferences.oddTrebleColour) ||
+            !cpEvenSingle.matchesPreference(Preferences.evenSingleColour) ||
+            !cpEvenDouble.matchesPreference(Preferences.evenDoubleColour) ||
+            !cpEvenTreble.matchesPreference(Preferences.evenTrebleColour)
 
-    private fun ColourPicker.matchesPreference(preferenceKey: String): Boolean
-    {
-        return getPrefString() == PreferenceUtil.getStringValue(preferenceKey)
-    }
+    private fun ColourPicker.matchesPreference(pref: Preference<Color>) =
+        selectedColour == preferenceService.get(pref)
 
-    override fun colourSelected(colour: Color)
-    {
+    override fun colourSelected(colour: Color) {
         refreshDartboard()
         stateChanged()
     }

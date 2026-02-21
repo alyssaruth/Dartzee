@@ -1,31 +1,29 @@
 package dartzee.db
 
+import dartzee.dartzee.aggregate.DartzeeTotalRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleCustom
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.dart.DartzeeDartRuleOuter
-import dartzee.dartzee.aggregate.DartzeeTotalRuleEven
 import dartzee.doubleNineteen
 import dartzee.helper.insertDartzeeRule
 import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.insertGame
 import dartzee.helper.makeDartzeeRuleCalculationResult
 import dartzee.utils.getAllPossibleSegments
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.matchers.types.shouldBeNull
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotThrowAny
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 
-class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
-{
+class TestDartzeeRuleEntity : AbstractEntityTest<DartzeeRuleEntity>() {
     override fun factoryDao() = DartzeeRuleEntity()
 
     @Test
-    fun `Should support unset dartzee rules`()
-    {
+    fun `Should support unset dartzee rules`() {
         val entity = DartzeeRuleEntity()
         val rowId = entity.assignRowId()
         entity.dart1Rule = DartzeeDartRuleEven().toDbString()
@@ -39,8 +37,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
     }
 
     @Test
-    fun `Should support large custom rules in all the dart rule fields`()
-    {
+    fun `Should support large custom rules in all the dart rule fields`() {
         val entity = DartzeeRuleEntity()
         val rowId = entity.assignRowId()
 
@@ -51,11 +48,9 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
         entity.dart2Rule = customRule.toDbString()
         entity.dart3Rule = customRule.toDbString()
 
-        shouldNotThrowAny {
-            entity.saveToDatabase()
-        }
+        shouldNotThrowAny { entity.saveToDatabase() }
 
-        //Re-retrieve to make sure no silent truncation has happened
+        // Re-retrieve to make sure no silent truncation has happened
         val reretrievedEntity = DartzeeRuleEntity().retrieveForId(rowId)!!
         reretrievedEntity.dart1Rule shouldBe customRule.toDbString()
         reretrievedEntity.dart2Rule shouldBe customRule.toDbString()
@@ -63,8 +58,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
     }
 
     @Test
-    fun `Should repopulate the DTO correctly`()
-    {
+    fun `Should repopulate the DTO correctly`() {
         val entity = DartzeeRuleEntity()
         entity.dart1Rule = "<Even />"
         entity.dart2Rule = "<Odd />"
@@ -92,8 +86,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
     }
 
     @Test
-    fun `Should optionally skip populating the calculationResult when converting to a DTO`()
-    {
+    fun `Should optionally skip populating the calculationResult when converting to a DTO`() {
         val entity = DartzeeRuleEntity()
         entity.dart1Rule = "<Even />"
         entity.dart2Rule = "<Odd />"
@@ -118,8 +111,7 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
     }
 
     @Test
-    fun `Should convert empty values to nulls when converting to a DTO`()
-    {
+    fun `Should convert empty values to nulls when converting to a DTO`() {
         val entity = DartzeeRuleEntity()
         entity.dart1Rule = ""
         entity.dart2Rule = ""
@@ -139,35 +131,70 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
     }
 
     @Test
-    fun `Should retrieve rows for a template, sorted by ordinal`()
-    {
+    fun `Should retrieve rows for a template, sorted by ordinal`() {
         val templateA = insertDartzeeTemplate(name = "Template A")
         val templateB = insertDartzeeTemplate(name = "Template B")
 
-        val ruleA3 = insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateA.rowId, ordinal = 3)
-        val ruleA1 = insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateA.rowId, ordinal = 1)
-        val ruleA2 = insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateA.rowId, ordinal = 2)
+        val ruleA3 =
+            insertDartzeeRule(
+                entityName = EntityName.DartzeeTemplate,
+                entityId = templateA.rowId,
+                ordinal = 3,
+            )
+        val ruleA1 =
+            insertDartzeeRule(
+                entityName = EntityName.DartzeeTemplate,
+                entityId = templateA.rowId,
+                ordinal = 1,
+            )
+        val ruleA2 =
+            insertDartzeeRule(
+                entityName = EntityName.DartzeeTemplate,
+                entityId = templateA.rowId,
+                ordinal = 2,
+            )
 
-        insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateB.rowId, ordinal = 1)
-        insertDartzeeRule(entityName = "Game", entityId = templateA.rowId, ordinal = 4)
+        insertDartzeeRule(
+            entityName = EntityName.DartzeeTemplate,
+            entityId = templateB.rowId,
+            ordinal = 1,
+        )
+        insertDartzeeRule(entityName = EntityName.Game, entityId = templateA.rowId, ordinal = 4)
 
         val rules = DartzeeRuleEntity().retrieveForTemplate(templateA.rowId)
 
-        rules.map{ it.rowId }.shouldContainExactly(ruleA1.rowId, ruleA2.rowId, ruleA3.rowId)
+        rules.map { it.rowId }.shouldContainExactly(ruleA1.rowId, ruleA2.rowId, ruleA3.rowId)
     }
 
     @Test
-    fun `Should delete rows for a template`()
-    {
+    fun `Should delete rows for a template`() {
         val templateA = insertDartzeeTemplate(name = "Template A")
         val templateB = insertDartzeeTemplate(name = "Template B")
 
-        insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateA.rowId, ordinal = 3)
-        insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateA.rowId, ordinal = 1)
-        insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateA.rowId, ordinal = 2)
+        insertDartzeeRule(
+            entityName = EntityName.DartzeeTemplate,
+            entityId = templateA.rowId,
+            ordinal = 3,
+        )
+        insertDartzeeRule(
+            entityName = EntityName.DartzeeTemplate,
+            entityId = templateA.rowId,
+            ordinal = 1,
+        )
+        insertDartzeeRule(
+            entityName = EntityName.DartzeeTemplate,
+            entityId = templateA.rowId,
+            ordinal = 2,
+        )
 
-        val ruleB1 = insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = templateB.rowId, ordinal = 1)
-        val gameRule = insertDartzeeRule(entityName = "Game", entityId = templateA.rowId, ordinal = 4)
+        val ruleB1 =
+            insertDartzeeRule(
+                entityName = EntityName.DartzeeTemplate,
+                entityId = templateB.rowId,
+                ordinal = 1,
+            )
+        val gameRule =
+            insertDartzeeRule(entityName = EntityName.Game, entityId = templateA.rowId, ordinal = 4)
 
         DartzeeRuleEntity().deleteForTemplate(templateA.rowId)
 
@@ -177,21 +204,53 @@ class TestDartzeeRuleEntity: AbstractEntityTest<DartzeeRuleEntity>()
     }
 
     @Test
-    fun `Should retrieve rules for a game, sorted by ordinal`()
-    {
+    fun `Should delete rows for a game`() {
         val gameA = insertGame()
         val gameB = insertGame()
 
-        val ruleA3 = insertDartzeeRule(entityName = "Game", entityId = gameA.rowId, ordinal = 3)
-        val ruleA1 = insertDartzeeRule(entityName = "Game", entityId = gameA.rowId, ordinal = 1)
-        val ruleA2 = insertDartzeeRule(entityName = "Game", entityId = gameA.rowId, ordinal = 2)
+        insertDartzeeRule(entityName = EntityName.Game, entityId = gameA.rowId, ordinal = 3)
+        insertDartzeeRule(entityName = EntityName.Game, entityId = gameA.rowId, ordinal = 1)
+        insertDartzeeRule(entityName = EntityName.Game, entityId = gameA.rowId, ordinal = 2)
 
-        insertDartzeeRule(entityName = "Game", entityId = gameB.rowId, ordinal = 1)
-        insertDartzeeRule(entityName = DARTZEE_TEMPLATE, entityId = gameA.rowId, ordinal = 4)
+        val ruleB1 =
+            insertDartzeeRule(entityName = EntityName.Game, entityId = gameB.rowId, ordinal = 1)
+        val templateRule =
+            insertDartzeeRule(
+                entityName = EntityName.DartzeeTemplate,
+                entityId = insertDartzeeTemplate().rowId,
+                ordinal = 1,
+            )
+
+        DartzeeRuleEntity().deleteForGame(gameA.rowId)
+
+        val remainingRules = DartzeeRuleEntity().retrieveEntities()
+
+        remainingRules
+            .map { it.rowId }
+            .shouldContainExactlyInAnyOrder(ruleB1.rowId, templateRule.rowId)
+    }
+
+    @Test
+    fun `Should retrieve rules for a game, sorted by ordinal`() {
+        val gameA = insertGame()
+        val gameB = insertGame()
+
+        val ruleA3 =
+            insertDartzeeRule(entityName = EntityName.Game, entityId = gameA.rowId, ordinal = 3)
+        val ruleA1 =
+            insertDartzeeRule(entityName = EntityName.Game, entityId = gameA.rowId, ordinal = 1)
+        val ruleA2 =
+            insertDartzeeRule(entityName = EntityName.Game, entityId = gameA.rowId, ordinal = 2)
+
+        insertDartzeeRule(entityName = EntityName.Game, entityId = gameB.rowId, ordinal = 1)
+        insertDartzeeRule(
+            entityName = EntityName.DartzeeTemplate,
+            entityId = gameA.rowId,
+            ordinal = 4,
+        )
 
         val rules = DartzeeRuleEntity().retrieveForGame(gameA.rowId)
 
-        rules.map{ it.rowId }.shouldContainExactly(ruleA1.rowId, ruleA2.rowId, ruleA3.rowId)
+        rules.map { it.rowId }.shouldContainExactly(ruleA1.rowId, ruleA2.rowId, ruleA3.rowId)
     }
-
 }

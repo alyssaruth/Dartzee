@@ -1,45 +1,55 @@
 package dartzee.sync
 
 import dartzee.core.util.getSqlDateNow
+import dartzee.db.DeletionAuditEntity
+import dartzee.db.EntityName
 import dartzee.db.SyncAuditEntity
-import dartzee.helper.*
-import dartzee.logging.*
+import dartzee.helper.AbstractTest
+import dartzee.helper.REMOTE_NAME
+import dartzee.helper.TEST_DB_DIRECTORY
+import dartzee.helper.getCountFromTable
+import dartzee.helper.insertGame
+import dartzee.helper.insertPlayer
+import dartzee.helper.shouldUpdateSyncScreen
+import dartzee.helper.syncDirectoryShouldNotExist
+import dartzee.helper.usingInMemoryDatabase
+import dartzee.logging.CODE_REVERT_TO_PULL
+import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.logging.CODE_SYNC_ERROR
+import dartzee.logging.KEY_GAME_IDS
+import dartzee.logging.Severity
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import java.io.File
 import java.io.IOException
 import java.net.SocketException
 import java.sql.Timestamp
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-class TestSyncManager: AbstractTest()
-{
+class TestSyncManager : AbstractTest() {
     @BeforeEach
-    fun beforeEach()
-    {
+    fun beforeEach() {
         File(TEST_DB_DIRECTORY).mkdirs()
     }
 
     @AfterEach
-    fun afterEach()
-    {
+    fun afterEach() {
         File(TEST_DB_DIRECTORY).deleteRecursively()
     }
 
     @Test
-    fun `Should revert to a PULL if no local changes`()
-    {
+    fun `Should revert to a PULL if no local changes`() {
         val syncManager = spyk(SyncManager(mockk(relaxed = true)))
         val t = syncManager.doSyncIfNecessary(REMOTE_NAME)
         t.join()
@@ -49,8 +59,7 @@ class TestSyncManager: AbstractTest()
     }
 
     @Test
-    fun `Should process with a sync if there are local changes`()
-    {
+    fun `Should process with a sync if there are local changes`() {
         insertGame()
 
         val syncManager = spyk(SyncManager(mockk(relaxed = true)))
@@ -61,8 +70,7 @@ class TestSyncManager: AbstractTest()
     }
 
     @Test
-    fun `Should show an error and log a warning if there is a connection error`()
-    {
+    fun `Should show an error and log a warning if there is a connection error`() {
         val exception = SocketException("Failed to connect.")
         val store = mockk<IRemoteDatabaseStore>()
         every { store.fetchDatabase(any()) } throws exception
@@ -70,15 +78,16 @@ class TestSyncManager: AbstractTest()
         val t = SyncManager(store).doSync(REMOTE_NAME)
         t.join()
 
-        dialogFactory.errorsShown.shouldContainExactly("A connection error occurred. Check your internet connection and try again.")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "A connection error occurred. Check your internet connection and try again."
+        )
         val log = verifyLog(CODE_SYNC_ERROR, Severity.WARN)
         log.message shouldBe "Caught network error during sync: $exception"
         syncDirectoryShouldNotExist()
     }
 
     @Test
-    fun `Should abort sync if merger validation fails`()
-    {
+    fun `Should abort sync if merger validation fails`() {
         val remoteDb = mockk<Database>()
         every { remoteDb.testConnection() } returns false
 
@@ -87,23 +96,26 @@ class TestSyncManager: AbstractTest()
         val t = SyncManager(store).doSync("Goomba")
         t.join()
 
-        dialogFactory.errorsShown.shouldContainExactly("An error occurred connecting to the remote database.")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "An error occurred connecting to the remote database."
+        )
         syncDirectoryShouldNotExist()
     }
 
     @Test
-    fun `Should abort if a SQL error occurs during database merge`()
-    {
+    fun `Should abort if a SQL error occurs during database merge`() {
         usingDbWithTestFile { remoteDb ->
             insertPlayer(database = mainDatabase)
-            remoteDb.dropTable("Player")
+            remoteDb.dropTable(EntityName.Player)
 
             val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to remoteDb)
 
             val t = SyncManager(store).doSync(REMOTE_NAME)
             t.join()
 
-            dialogFactory.errorsShown.shouldContainExactly("An unexpected error occurred - no data has been changed.")
+            dialogFactory.errorsShown.shouldContainExactly(
+                "An unexpected error occurred - no data has been changed."
+            )
 
             val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
             log.message shouldContain "Caught SQLException for statement"
@@ -116,8 +128,7 @@ class TestSyncManager: AbstractTest()
     }
 
     @Test
-    fun `Should throw an error if games from the original database have not made it through the merge`()
-    {
+    fun `Should throw an error if games from the original database have not made it through the merge`() {
         usingDbWithTestFile { remoteDb ->
             val g = insertGame(dtLastUpdate = Timestamp(1000), database = mainDatabase)
             SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME)
@@ -127,7 +138,9 @@ class TestSyncManager: AbstractTest()
             val t = SyncManager(store).doSync(REMOTE_NAME)
             t.join()
 
-            dialogFactory.errorsShown.shouldContainExactly("Sync resulted in missing data. \n\nResults have been discarded.")
+            dialogFactory.errorsShown.shouldContainExactly(
+                "Sync resulted in missing data. \n\nResults have been discarded."
+            )
 
             val log = verifyLog(CODE_SYNC_ERROR, Severity.ERROR)
             log.message shouldContain "1 game(s) missing from resulting database after merge"
@@ -140,20 +153,40 @@ class TestSyncManager: AbstractTest()
     }
 
     @Test
-    fun `Should show an error and log a warning if remote db has been modified since it was pulled`()
-    {
+    fun `Should not throw an error if game from original database was explicitly deleted on another device`() {
+        usingDbWithTestFile { remoteDb ->
+            val g = insertGame(dtLastUpdate = Timestamp(1000), database = mainDatabase)
+            SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME)
+            DeletionAuditEntity.factoryAndSave(g, remoteDb)
+
+            val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to remoteDb)
+
+            val t = SyncManager(store).doSync(REMOTE_NAME)
+            t.join()
+
+            dialogFactory.errorsShown.shouldBeEmpty()
+            syncDirectoryShouldNotExist()
+            databasesSwapped() shouldBe true
+        }
+    }
+
+    @Test
+    fun `Should show an error and log a warning if remote db has been modified since it was pulled`() {
         usingDbWithTestFile { remoteDb ->
             val exception = ConcurrentModificationException("Oh no")
             val store = mockk<IRemoteDatabaseStore>()
-            every { store.fetchDatabase(any()) } returns FetchDatabaseResult(remoteDb, getSqlDateNow())
+            every { store.fetchDatabase(any()) } returns
+                FetchDatabaseResult(remoteDb, getSqlDateNow())
             every { store.pushDatabase(any(), any(), any()) } throws exception
 
             val t = SyncManager(store).doSync(REMOTE_NAME)
             t.join()
 
-            dialogFactory.errorsShown.shouldContainExactly("Another sync has been performed since this one started. \n" +
+            dialogFactory.errorsShown.shouldContainExactly(
+                "Another sync has been performed since this one started. \n" +
                     "\n" +
-                    "Results have been discarded.")
+                    "Results have been discarded."
+            )
 
             val log = verifyLog(CODE_SYNC_ERROR, Severity.WARN)
             log.message shouldBe "$exception"
@@ -165,8 +198,7 @@ class TestSyncManager: AbstractTest()
     }
 
     @Test
-    fun `Should show an error if something goes wrong swapping the database in`()
-    {
+    fun `Should show an error if something goes wrong swapping the database in`() {
         usingDbWithTestFile { remoteDb ->
             remoteDb.getDirectory().deleteRecursively()
 
@@ -174,17 +206,19 @@ class TestSyncManager: AbstractTest()
             val t = SyncManager(store).doSync(REMOTE_NAME)
             t.join()
 
-            dialogFactory.errorsShown.shouldContainExactly("Failed to restore database. Error: Failed to rename new file to ${mainDatabase.dbName}")
+            dialogFactory.errorsShown.shouldContainExactly(
+                "Failed to restore database. Error: Failed to rename new file to ${mainDatabase.dbName}"
+            )
             dialogFactory.infosShown.shouldBeEmpty()
 
-            // Open a test connection so the tidy-up doesn't freak out about the db already being shut down
+            // Open a test connection so the tidy-up doesn't freak out about the db already being
+            // shut down
             remoteDb.testConnection()
         }
     }
 
     @Test
-    fun `Should update sync screen regardless of an error occurring`()
-    {
+    fun `Should update sync screen regardless of an error occurring`() {
         shouldUpdateSyncScreen {
             val exception = IOException("Boom.")
             val dbStore = mockk<IRemoteDatabaseStore>()
@@ -199,8 +233,7 @@ class TestSyncManager: AbstractTest()
     }
 
     @Test
-    fun `Should successfully sync data between remote and local db, pushing up the result and swapping in locally`()
-    {
+    fun `Should successfully sync data between remote and local db, pushing up the result and swapping in locally`() {
         usingDbWithTestFile { remoteDb ->
             insertGame(database = mainDatabase)
             insertGame(database = remoteDb)
@@ -221,8 +254,7 @@ class TestSyncManager: AbstractTest()
         }
     }
 
-    private fun usingDbWithTestFile(testBlock: (inMemoryDatabase: Database) -> Unit)
-    {
+    private fun usingDbWithTestFile(testBlock: (inMemoryDatabase: Database) -> Unit) {
         usingInMemoryDatabase(withSchema = true) { remoteDb ->
             val f = File("${remoteDb.getDirectoryStr()}/SomeFile.txt")
             f.createNewFile()
@@ -231,5 +263,6 @@ class TestSyncManager: AbstractTest()
         }
     }
 
-    private fun databasesSwapped() = File("${InjectedThings.databaseDirectory}/Darts/SomeFile.txt").exists()
+    private fun databasesSwapped() =
+        File("${InjectedThings.databaseDirectory}/Darts/SomeFile.txt").exists()
 }

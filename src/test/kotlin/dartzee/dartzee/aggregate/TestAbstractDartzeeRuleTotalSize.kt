@@ -1,32 +1,28 @@
 package dartzee.dartzee.aggregate
 
 import dartzee.helper.AbstractTest
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrow
-import org.junit.jupiter.api.Test
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import java.text.ParseException
+import org.junit.jupiter.api.Test
 
-class TestAbstractDartzeeRuleTotalSize: AbstractTest()
-{
+class TestAbstractDartzeeRuleTotalSize : AbstractTest() {
     @Test
-    fun `Should initialise with a target of 20`()
-    {
+    fun `Should initialise with a target of 20`() {
         val rule = FakeDartzeeTotalRule()
         rule.spinner.value shouldBe 20
         rule.target shouldBe 20
     }
 
     @Test
-    fun `Should update the target when spinner value is changed`()
-    {
+    fun `Should update the target when spinner value is changed`() {
         val rule = FakeDartzeeTotalRule()
         rule.spinner.value = 18
         rule.target shouldBe 18
     }
 
     @Test
-    fun `Should be possible to set values between 3 and 180`()
-    {
+    fun `Should be possible to set values between 3 and 180`() {
         val rule = FakeDartzeeTotalRule()
         rule.spinner.value = 3
         rule.spinner.commitEdit()
@@ -38,8 +34,7 @@ class TestAbstractDartzeeRuleTotalSize: AbstractTest()
     }
 
     @Test
-    fun `Should not be possible to set values lower than 3 or higher than 180`()
-    {
+    fun `Should not be possible to set values lower than 3 or higher than 180`() {
         val rule = FakeDartzeeTotalRule()
 
         shouldThrow<ParseException> {
@@ -54,8 +49,7 @@ class TestAbstractDartzeeRuleTotalSize: AbstractTest()
     }
 
     @Test
-    fun `Should initialise spinner and target when reading from XML`()
-    {
+    fun `Should initialise spinner and target when reading from XML`() {
         val rule = FakeDartzeeTotalRule()
         rule.target = 77
 
@@ -68,9 +62,9 @@ class TestAbstractDartzeeRuleTotalSize: AbstractTest()
         newRule.spinner.value shouldBe 77
     }
 
-    private class FakeDartzeeTotalRule: AbstractDartzeeRuleTotalSize()
-    {
+    private class FakeDartzeeTotalRule : AbstractDartzeeRuleTotalSize() {
         override fun isValidTotal(total: Int) = true
+
         override fun getRuleIdentifier() = "Fake"
     }
 }

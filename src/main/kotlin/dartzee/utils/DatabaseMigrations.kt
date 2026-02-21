@@ -1,71 +1,47 @@
 package dartzee.utils
 
-import dartzee.core.util.getAttributeInt
+import com.fasterxml.jackson.module.kotlin.readValue
 import dartzee.core.util.jsonMapper
-import dartzee.core.util.toXmlDoc
-import dartzee.dartzee.DartzeeRuleCalculationResult
-import dartzee.db.DartsMatchEntity
-import dartzee.db.DartzeeRuleEntity
+import dartzee.db.GameEntity
+import dartzee.db.PlayerEntity
+import dartzee.game.FinishType
+import dartzee.game.GameType
+import dartzee.game.X01Config
 
-object DatabaseMigrations
-{
-    fun getConversionsMap(): Map<Int, List<(database: Database) -> Any>>
-    {
+object DatabaseMigrations {
+    fun getConversionsMap(): Map<Int, List<(database: Database) -> Any>> {
         return mapOf(
-            16 to listOf (
-                { db -> convertMatchParams(db) }
-            ),
-            17 to listOf(
-                { db -> runScript(db, 18, "1. DlookartzeeRule.sql") },
-                { db -> convertDartzeeCalculationResults(db) }
-            )
+            22 to
+                listOf(
+                    ::convertX01GameParams,
+                    ::dropHmScoreToDarts,
+                    { db -> runScript(db, 23, "Participant.sql") },
+                    { db -> runScript(db, 23, "Team.sql") },
+                )
         )
     }
 
-    /**
-     * V17 -> V18
-     */
-    fun convertDartzeeCalculationResults(database: Database)
-    {
-        val rules = DartzeeRuleEntity(database).retrieveEntities()
-        rules.forEach { ruleEntity ->
-            val calculationResult = DartzeeRuleCalculationResult.fromDbStringOLD(ruleEntity.calculationResult)
-            ruleEntity.calculationResult = calculationResult.toDbString()
-            ruleEntity.saveToDatabase()
+    private fun dropHmScoreToDarts(database: Database) {
+        val players = PlayerEntity(database).retrieveEntities("Strategy != ''")
+        players.forEach { player ->
+            val strategyMap = jsonMapper().readValue<MutableMap<Any, Any>>(player.strategy)
+            strategyMap.remove("hmScoreToDart")
+            player.strategy = jsonMapper().writeValueAsString(strategyMap)
+            player.saveToDatabase()
         }
     }
 
-    /**
-     * V16 -> V17
-     */
-    fun convertMatchParams(database: Database)
-    {
-        val matches = DartsMatchEntity(database).retrieveEntities("MatchParams <> ''")
-        matches.forEach { match ->
-            val params = match.matchParams
-            val map = readMatchParamXml(params)
-            match.matchParams = jsonMapper().writeValueAsString(map)
-            match.saveToDatabase()
+    private fun convertX01GameParams(database: Database) {
+        val games = GameEntity(database).retrieveEntities("GameType = '${GameType.X01}'")
+        games.forEach { game ->
+            val target = game.gameParams.toInt()
+            val config = X01Config(target, FinishType.Doubles)
+            game.gameParams = config.toJson()
+            game.saveToDatabase()
         }
     }
-    private fun readMatchParamXml(matchParams: String): Map<Int, Int>
-    {
-        val map = mutableMapOf<Int, Int>()
-        val doc = matchParams.toXmlDoc() ?: return map
-        val root = doc.documentElement
 
-        map[1] = root.getAttributeInt("First")
-        map[2] = root.getAttributeInt("Second")
-        map[3] = root.getAttributeInt("Third")
-        map[4] = root.getAttributeInt("Fourth")
-        map[5] = root.getAttributeInt("Fifth")
-        map[6] = root.getAttributeInt("Sixth")
-
-        return map
-    }
-
-    fun runScript(database: Database, version: Int, scriptName: String): Boolean
-    {
+    private fun runScript(database: Database, version: Int, scriptName: String): Boolean {
         val resourcePath = "/sql/v$version/"
         val rsrc = javaClass.getResource("$resourcePath$scriptName").readText()
 

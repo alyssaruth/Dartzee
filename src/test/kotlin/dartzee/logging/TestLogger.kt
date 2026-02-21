@@ -4,19 +4,17 @@ import dartzee.CURRENT_TIME
 import dartzee.helper.AbstractTest
 import dartzee.helper.FakeLogDestination
 import dartzee.shouldContainKeyValues
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.sql.SQLException
+import org.junit.jupiter.api.Test
 
-class TestLogger: AbstractTest()
-{
+class TestLogger : AbstractTest() {
     @Test
-    fun `Should log INFO`()
-    {
+    fun `Should log INFO`() {
         val destination = FakeLogDestination()
         val logger = Logger(listOf(destination))
 
@@ -34,8 +32,7 @@ class TestLogger: AbstractTest()
     }
 
     @Test
-    fun `Should support extra key values when logging INFO`()
-    {
+    fun `Should support extra key values when logging INFO`() {
         val destination = FakeLogDestination()
         val logger = Logger(listOf(destination))
 
@@ -53,8 +50,7 @@ class TestLogger: AbstractTest()
     }
 
     @Test
-    fun `Should log WARN`()
-    {
+    fun `Should log WARN`() {
         val destination = FakeLogDestination()
         val logger = Logger(listOf(destination))
 
@@ -72,14 +68,18 @@ class TestLogger: AbstractTest()
     }
 
     @Test
-    fun `Should log ERROR`()
-    {
+    fun `Should log ERROR`() {
         val destination = FakeLogDestination()
         val logger = Logger(listOf(destination))
 
         val loggingCode = LoggingCode("bad.thing")
         val throwable = Throwable("Boo")
-        logger.error(LoggingCode("bad.thing"), "An exception happened!", throwable, "other.info" to 60)
+        logger.error(
+            LoggingCode("bad.thing"),
+            "An exception happened!",
+            throwable,
+            "other.info" to 60,
+        )
         logger.waitUntilLoggingFinished()
 
         val record = destination.logRecords.first()
@@ -91,8 +91,7 @@ class TestLogger: AbstractTest()
     }
 
     @Test
-    fun `Should log SQL statements`()
-    {
+    fun `Should log SQL statements`() {
         val destination = FakeLogDestination()
         val logger = Logger(listOf(destination))
 
@@ -108,16 +107,18 @@ class TestLogger: AbstractTest()
         record.message shouldBe sql
         record.errorObject shouldBe null
         record.timestamp shouldBe CURRENT_TIME
-        record.shouldContainKeyValues(KEY_DURATION to 150L,
+        record.shouldContainKeyValues(
+            KEY_DURATION to 150L,
             KEY_GENERIC_SQL to genericSql,
             KEY_SQL to sql,
             KEY_ROW_COUNT to 20,
-            KEY_DATABASE_NAME to "some_database")
+            KEY_DATABASE_NAME to "some_database",
+            KEY_STATEMENT_TYPE to "INSERT",
+        )
     }
 
     @Test
-    fun `Should log SQLExceptions`()
-    {
+    fun `Should log SQLExceptions`() {
         val sqle = SQLException("Unable to drop table FOO", "State.ROLLBACK", 403)
 
         val destination = FakeLogDestination()
@@ -135,16 +136,17 @@ class TestLogger: AbstractTest()
         record.message shouldBe "Caught SQLException for statement: DROP TABLE Foo"
         record.errorObject shouldBe sqle
         record.timestamp shouldBe CURRENT_TIME
-        record.shouldContainKeyValues(KEY_GENERIC_SQL to genericSql,
-                KEY_SQL to sql,
-                KEY_SQL_STATE to "State.ROLLBACK",
-                KEY_ERROR_CODE to 403,
-                KEY_EXCEPTION_MESSAGE to "Unable to drop table FOO")
+        record.shouldContainKeyValues(
+            KEY_GENERIC_SQL to genericSql,
+            KEY_SQL to sql,
+            KEY_SQL_STATE to "State.ROLLBACK",
+            KEY_ERROR_CODE to 403,
+            KEY_EXCEPTION_MESSAGE to "Unable to drop table FOO",
+        )
     }
 
     @Test
-    fun `Should log progress correctly`()
-    {
+    fun `Should log progress correctly`() {
         val destination = FakeLogDestination()
         val logger = Logger(listOf(destination))
         logger.logProgress(LoggingCode("progress"), 9, 100)
@@ -159,8 +161,7 @@ class TestLogger: AbstractTest()
     }
 
     @Test
-    fun `Should log to all destinations`()
-    {
+    fun `Should log to all destinations`() {
         val destinationOne = FakeLogDestination()
         val destinationTwo = FakeLogDestination()
         val logger = Logger(listOf(destinationOne, destinationTwo))
@@ -172,8 +173,7 @@ class TestLogger: AbstractTest()
     }
 
     @Test
-    fun `Should not log on the current thread, but should be possible to await all logging having finished`()
-    {
+    fun `Should not log on the current thread, but should be possible to await all logging having finished`() {
         val destination = SleepyLogDestination()
         val logger = Logger(listOf(destination))
 
@@ -185,8 +185,7 @@ class TestLogger: AbstractTest()
     }
 
     @Test
-    fun `Should be possible to continue logging after awaiting logging to finish`()
-    {
+    fun `Should be possible to continue logging after awaiting logging to finish`() {
         val destination = SleepyLogDestination()
         val logger = Logger(listOf(destination))
 
@@ -200,8 +199,7 @@ class TestLogger: AbstractTest()
     }
 
     @Test
-    fun `Should automatically include logging context fields`()
-    {
+    fun `Should automatically include logging context fields`() {
         val destination = FakeLogDestination()
         val logger = Logger(listOf(destination))
 
@@ -214,8 +212,7 @@ class TestLogger: AbstractTest()
     }
 
     @Test
-    fun `Should notify destinations when context is updated`()
-    {
+    fun `Should notify destinations when context is updated`() {
         val destination = mockk<ILogDestination>(relaxed = true)
         val logger = Logger(listOf(destination))
 
@@ -225,20 +222,17 @@ class TestLogger: AbstractTest()
     }
 }
 
-class SleepyLogDestination: ILogDestination
-{
+class SleepyLogDestination : ILogDestination {
     val logRecords: MutableList<LogRecord> = mutableListOf()
 
-    override fun log(record: LogRecord)
-    {
+    override fun log(record: LogRecord) {
         Thread.sleep(500)
         logRecords.add(record)
     }
 
     override fun contextUpdated(context: Map<String, Any?>) {}
 
-    fun clear()
-    {
+    fun clear() {
         logRecords.clear()
     }
 }

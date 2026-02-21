@@ -1,22 +1,27 @@
 package dartzee.helper
 
+import com.github.alyssaburlton.swingtest.SwingTestCleanupExtension
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
-import dartzee.logging.*
-import dartzee.screen.Dartboard
+import dartzee.logging.LogDestinationSystemOut
+import dartzee.logging.LogRecord
+import dartzee.logging.Logger
+import dartzee.logging.LoggingCode
+import dartzee.logging.Severity
+import dartzee.`object`.DartsClient
+import dartzee.preferences.InMemoryPreferenceService
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
+import io.kotest.assertions.fail
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
-import java.awt.Window
-import javax.swing.SwingUtilities
 
 private val logDestination = FakeLogDestination()
 val logger = Logger(listOf(logDestination, LogDestinationSystemOut()))
@@ -26,97 +31,90 @@ const val TEST_ROOT = "Test/"
 const val TEST_DB_DIRECTORY = "Test/Databases"
 
 @ExtendWith(BeforeAllTestsExtension::class)
-abstract class AbstractTest
-{
+@ExtendWith(SwingTestCleanupExtension::class)
+open class AbstractTest {
     val dialogFactory = TestMessageDialogFactory()
 
     @BeforeEach
-    fun beforeEachTest()
-    {
+    fun beforeEachTest() {
         ScreenCache.emptyCache()
         dialogFactory.reset()
         clearLogs()
         clearAllMocks()
 
         DialogUtil.init(dialogFactory)
+        DartsClient.devMode = false
 
-        mainDatabase.localIdGenerator.hmLastAssignedIdByTableName.clear()
+        mainDatabase.localIdGenerator.clearCache()
 
-        if (logDestination.haveRunInsert)
-        {
+        if (logDestination.haveRunInsert) {
             wipeDatabase()
             logDestination.haveRunInsert = false
         }
 
         InjectedThings.esDestination = mockk(relaxed = true)
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
-
-        //Clear cached dartboards
-        Dartboard.appearancePreferenceChanged()
+        InjectedThings.partyMode = false
+        InjectedThings.preferenceService = InMemoryPreferenceService()
 
         logger.loggingContext.clear()
     }
 
     @AfterEach
-    fun afterEachTest()
-    {
-        if (!checkedForExceptions)
-        {
+    fun afterEachTest() {
+        if (!checkedForExceptions) {
+            val errors = getErrorsLogged()
+            if (errors.isNotEmpty()) {
+                fail(
+                    "Unexpected error(s) were logged during test: ${errors.map { it.toJsonString() } }"
+                )
+            }
             errorLogged() shouldBe false
-        }
-
-        val visibleWindows = Window.getWindows().filter { it.isVisible }
-        if (visibleWindows.isNotEmpty())
-        {
-            SwingUtilities.invokeLater { visibleWindows.forEach { it.dispose() } }
         }
 
         checkedForExceptions = false
     }
 
-    fun wipeDatabase()
-    {
+    fun wipeDatabase() {
         DartsDatabaseUtil.getAllEntitiesIncludingVersion().forEach { wipeTable(it.getTableName()) }
     }
 
-    fun getLastLog() = getLogRecords().last()
+    fun getLastLog() = flushAndGetLogRecords().last()
 
-    fun verifyLog(code: LoggingCode, severity: Severity = Severity.INFO): LogRecord
-    {
-        val record = getLogRecords().findLast { it.loggingCode == code && it.severity == severity }
+    fun verifyLog(code: LoggingCode, severity: Severity = Severity.INFO): LogRecord {
+        val record =
+            flushAndGetLogRecords().findLast { it.loggingCode == code && it.severity == severity }
         record.shouldNotBeNull()
 
-        if (severity == Severity.ERROR)
-        {
+        if (severity == Severity.ERROR) {
             checkedForExceptions = true
         }
 
         return record
     }
 
-    fun verifyNoLogs(code: LoggingCode)
-    {
-        getLogRecords().any { it.loggingCode == code } shouldBe false
+    protected fun findLog(code: LoggingCode, severity: Severity = Severity.INFO) =
+        getLogRecordsSoFar().findLast { it.loggingCode == code && it.severity == severity }
+
+    fun verifyNoLogs(code: LoggingCode) {
+        flushAndGetLogRecords().any { it.loggingCode == code } shouldBe false
     }
 
-    fun errorLogged(): Boolean
-    {
+    fun errorLogged(): Boolean {
         checkedForExceptions = true
-        return getLogRecords().any { it.severity == Severity.ERROR }
+        return getErrorsLogged().isNotEmpty()
     }
 
-    fun getLogRecordsSoFar(): List<LogRecord>
-    {
-        return logDestination.logRecords.toList()
-    }
+    private fun getErrorsLogged() = flushAndGetLogRecords().filter { it.severity == Severity.ERROR }
 
-    fun getLogRecords(): List<LogRecord>
-    {
+    fun getLogRecordsSoFar() = logDestination.logRecords.toList()
+
+    fun flushAndGetLogRecords(): List<LogRecord> {
         logger.waitUntilLoggingFinished()
         return logDestination.logRecords.toList()
     }
-    fun clearLogs()
-    {
+
+    fun clearLogs() {
         logger.waitUntilLoggingFinished()
         logDestination.clear()
     }

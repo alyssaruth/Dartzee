@@ -1,22 +1,20 @@
 package dartzee.screen.sync
 
-import com.github.alexburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.findChild
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.REMOTE_NAME_2
 import dartzee.sync.resetRemote
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.types.shouldBeNull
-import io.kotlintest.matchers.types.shouldNotBeNull
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import javax.swing.JLabel
+import org.junit.jupiter.api.Test
 
-class TestSyncManagementScreen: AbstractTest()
-{
+class TestSyncManagementScreen : AbstractTest() {
     @Test
-    fun `Should show the setup screen if never synced before`()
-    {
+    fun `Should show the setup screen if never synced before`() {
         val scrn = SyncManagementScreen()
         scrn.initialise()
 
@@ -25,8 +23,7 @@ class TestSyncManagementScreen: AbstractTest()
     }
 
     @Test
-    fun `Should show the config screen if a sync has occurred`()
-    {
+    fun `Should show the config screen if a sync has occurred`() {
         SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME)
 
         val scrn = SyncManagementScreen()
@@ -37,8 +34,7 @@ class TestSyncManagementScreen: AbstractTest()
     }
 
     @Test
-    fun `Should show the right child after multiple initialisations`()
-    {
+    fun `Should show the right child after multiple initialisations`() {
         val scrn = SyncManagementScreen()
         scrn.initialise()
         scrn.findChild<SyncManagementPanel>().shouldBeNull()
@@ -56,8 +52,7 @@ class TestSyncManagementScreen: AbstractTest()
     }
 
     @Test
-    fun `Should update sync management panel when initialised`()
-    {
+    fun `Should update sync management panel when initialised`() {
         SyncAuditEntity.insertSyncAudit(mainDatabase, REMOTE_NAME)
         val scrn = SyncManagementScreen()
         scrn.initialise()

@@ -5,21 +5,24 @@ import dartzee.db.PlayerEntity
 import dartzee.game.GameType
 import dartzee.screen.ScreenCache
 import dartzee.stats.GameWrapper
-import net.miginfocom.swing.MigLayout
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.Box
+import javax.swing.JButton
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.SwingConstants
 import javax.swing.border.EtchedBorder
+import net.miginfocom.swing.MigLayout
 
 /**
  * Info panel to appear above the statistics detailing the player and the filters that are in use.
  */
-class PlayerStatisticsFilterPanel : JPanel(), ActionListener
-{
+class PlayerStatisticsFilterPanel : JPanel(), ActionListener {
     private val lblAvatar = PlayerAvatar()
     private val lblFilterDesc = JLabel("No filters")
     private val btnFilters = JButton("Filters...")
@@ -33,8 +36,7 @@ class PlayerStatisticsFilterPanel : JPanel(), ActionListener
 
     private var dlg: PlayerStatisticsFilterDialog = PlayerStatisticsFilterDialog(GameType.X01)
 
-    init
-    {
+    init {
         val flowLayout = layout as FlowLayout
         flowLayout.hgap = 0
         add(lblAvatar)
@@ -63,27 +65,24 @@ class PlayerStatisticsFilterPanel : JPanel(), ActionListener
         btnX.addActionListener(this)
     }
 
-    fun init(player: PlayerEntity, gameType: GameType, comparison: Boolean)
-    {
+    fun init(player: PlayerEntity, gameType: GameType, comparison: Boolean) {
         dlg = PlayerStatisticsFilterDialog(gameType)
 
         lblAvatar.init(player, false)
         label.text = player.name
 
         panelX.isVisible = comparison
-        if (comparison)
-        {
+        if (comparison) {
             label.foreground = Color.RED
             lblFilterDesc.foreground = Color.RED
             lblDateFilter.foreground = Color.RED
         }
 
-        //Reset the filters
+        // Reset the filters
         dlg.resetFilters()
     }
 
-    fun update(filteredGames: List<GameWrapper>)
-    {
+    fun update(filteredGames: List<GameWrapper>) {
         lblFilterDesc.text = dlg.getFiltersDesc()
         lblDateFilter.text = dlg.getDateDesc()
         lblXGames.text = "${filteredGames.size} Games"
@@ -91,10 +90,8 @@ class PlayerStatisticsFilterPanel : JPanel(), ActionListener
 
     fun includeGame(game: GameWrapper) = dlg.includeGameBasedOnFilters(game)
 
-    override fun actionPerformed(arg0: ActionEvent)
-    {
-        when (arg0.source)
-        {
+    override fun actionPerformed(arg0: ActionEvent) {
+        when (arg0.source) {
             btnFilters -> {
                 dlg.refresh()
                 dlg.setLocationRelativeTo(this)

@@ -1,30 +1,33 @@
 package dartzee.screen.ai
 
-import com.github.alexburlton.swingtest.clickChild
-import com.github.alexburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.AbstractDartsSimulation
-import dartzee.ai.AbstractSimulationRunner
 import dartzee.ai.DartsSimulationGolf
 import dartzee.ai.DartsSimulationX01
+import dartzee.ai.SimulationRunner
 import dartzee.core.bean.NumberField
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartsModel
 import dartzee.utils.InjectedThings
-import io.kotlintest.matchers.types.shouldBeInstanceOf
-import io.kotlintest.shouldBe
-import io.mockk.*
-import org.junit.jupiter.api.Test
-import javax.swing.JButton
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.mockk.CapturingSlot
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.verify
 import javax.swing.JRadioButton
+import org.junit.jupiter.api.Test
 
-class TestAISimulationSetupDialog: AbstractTest()
-{
+class TestAISimulationSetupDialog : AbstractTest() {
     @Test
-    fun `Should kick off an X01 simulation`()
-    {
+    fun `Should kick off an X01 simulation`() {
         val slot = CapturingSlot<AbstractDartsSimulation>()
-        val mockRunner = mockk<AbstractSimulationRunner>(relaxed = true)
+        val mockRunner = mockk<SimulationRunner>(relaxed = true)
         every { mockRunner.runSimulation(capture(slot), any(), any()) } just runs
 
         InjectedThings.simulationRunner = mockRunner
@@ -32,10 +35,10 @@ class TestAISimulationSetupDialog: AbstractTest()
         val model = makeDartsModel()
         val player = insertPlayer(model)
         val dlg = AISimulationSetupDialog(player, model)
-        dlg.clickChild<JRadioButton>("501")
+        dlg.clickChild<JRadioButton>(text = "501")
         dlg.getChild<NumberField>().value = 15000
 
-        dlg.clickChild<JButton>("Ok")
+        dlg.clickOk()
 
         val sim = slot.captured
         verify { mockRunner.runSimulation(sim, 15000, false) }
@@ -46,10 +49,9 @@ class TestAISimulationSetupDialog: AbstractTest()
     }
 
     @Test
-    fun `Should kick off a Golf simulation`()
-    {
+    fun `Should kick off a Golf simulation`() {
         val slot = CapturingSlot<AbstractDartsSimulation>()
-        val mockRunner = mockk<AbstractSimulationRunner>(relaxed = true)
+        val mockRunner = mockk<SimulationRunner>(relaxed = true)
         every { mockRunner.runSimulation(capture(slot), any(), any()) } just runs
 
         InjectedThings.simulationRunner = mockRunner
@@ -57,10 +59,10 @@ class TestAISimulationSetupDialog: AbstractTest()
         val model = makeDartsModel()
         val player = insertPlayer(model)
         val dlg = AISimulationSetupDialog(player, model, true)
-        dlg.clickChild<JRadioButton>("Golf (18 Holes)")
+        dlg.clickChild<JRadioButton>(text = "Golf (18 Holes)")
         dlg.getChild<NumberField>().value = 12000
 
-        dlg.clickChild<JButton>("Ok")
+        dlg.clickOk()
 
         val sim = slot.captured
         verify { mockRunner.runSimulation(sim, 12000, true) }

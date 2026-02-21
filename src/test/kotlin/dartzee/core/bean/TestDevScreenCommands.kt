@@ -3,24 +3,22 @@ package dartzee.core.bean
 import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_COMMAND_ERROR
 import dartzee.logging.Severity
-import io.kotlintest.matchers.boolean.shouldBeFalse
-import io.kotlintest.matchers.boolean.shouldBeTrue
-import io.kotlintest.matchers.string.shouldBeEmpty
-import io.kotlintest.shouldBe
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
 import io.mockk.mockk
-import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
+import org.junit.jupiter.api.Test
 
-class TestDevScreenCommands: AbstractTest()
-{
+class TestDevScreenCommands : AbstractTest() {
     var commandsEnabled = true
     var toggle = false
 
     @Test
-    fun testCommandsDisabled()
-    {
+    fun testCommandsDisabled() {
         commandsEnabled = false
 
         val cheatBar = CheatBar()
@@ -32,8 +30,7 @@ class TestDevScreenCommands: AbstractTest()
     }
 
     @Test
-    fun testCommandsEnabled()
-    {
+    fun testCommandsEnabled() {
         commandsEnabled = true
 
         val cheatBar = CheatBar()
@@ -44,8 +41,7 @@ class TestDevScreenCommands: AbstractTest()
         cheatBar.isVisible shouldBe true
     }
 
-    private fun simulateKeyStroke(devScreen: AbstractDevScreen)
-    {
+    private fun simulateKeyStroke(devScreen: AbstractDevScreen) {
         val cheatBarKeyStroke = devScreen.getKeyStrokeForCommandBar()
         val innerPanel = devScreen.contentPane as JPanel
 
@@ -56,8 +52,7 @@ class TestDevScreenCommands: AbstractTest()
     }
 
     @Test
-    fun testTextualCommand()
-    {
+    fun testTextualCommand() {
         commandsEnabled = true
 
         val cheatBar = CheatBar()
@@ -73,8 +68,7 @@ class TestDevScreenCommands: AbstractTest()
     }
 
     @Test
-    fun testStateChangingCommand()
-    {
+    fun testStateChangingCommand() {
         commandsEnabled = true
         toggle = false
 
@@ -92,8 +86,7 @@ class TestDevScreenCommands: AbstractTest()
     }
 
     @Test
-    fun testExceptionCommand()
-    {
+    fun testExceptionCommand() {
         commandsEnabled = true
 
         val cheatBar = CheatBar()
@@ -111,28 +104,17 @@ class TestDevScreenCommands: AbstractTest()
         log.errorObject?.message shouldBe "Test"
     }
 
-
-    inner class TestDevScreen(cheatBar: CheatBar): AbstractDevScreen(cheatBar)
-    {
+    inner class TestDevScreen(cheatBar: CheatBar) : AbstractDevScreen(cheatBar) {
         override val windowName = "Test"
 
-        override fun commandsEnabled(): Boolean
-        {
-            return commandsEnabled
-        }
+        override fun commandsEnabled() = commandsEnabled
 
-        override fun processCommand(cmd: String): String
-        {
-            if (cmd == "1+1")
-            {
+        override fun processCommand(cmd: String): String {
+            if (cmd == "1+1") {
                 return "2"
-            }
-            else if (cmd == "exception")
-            {
+            } else if (cmd == "exception") {
                 throw Exception("Test")
-            }
-            else
-            {
+            } else {
                 toggle = !toggle
                 return ""
             }

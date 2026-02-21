@@ -1,26 +1,28 @@
 package dartzee.bean
 
+import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.core.bean.ScrollTable
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.shouldBe
-import org.junit.jupiter.api.Test
+import dartzee.toLabel
+import dartzee.utils.InjectedThings
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.shouldBe
+import javax.swing.ImageIcon
 import javax.swing.ListSelectionModel
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 
-class TestScrollTablePlayers: AbstractTest()
-{
+class TestScrollTablePlayers : AbstractTest() {
     @Test
-    fun `Should initialise correctly`()
-    {
+    fun `Should initialise correctly`() {
         val table = ScrollTable()
 
         val bob = insertPlayer(name = "Bob", strategy = "")
         val robot = insertPlayer(name = "Robot", strategy = "foo")
         val players = listOf(bob, robot)
         table.initPlayerTableModel(players)
-
 
         table.getColumnName(0) shouldBe ""
         table.getColumnName(1) shouldBe "Player"
@@ -34,22 +36,41 @@ class TestScrollTablePlayers: AbstractTest()
     }
 
     @Test
-    fun `Should return all players correctly`()
-    {
+    @Tag("screenshot")
+    fun `Should render with player avatars in party mode`() {
+        InjectedThings.partyMode = true
+
+        val table = ScrollTable()
+        val bob = insertPlayer(name = "Bob")
+        table.initPlayerTableModel(listOf(bob))
+
+        val icon = table.getValueAt(0, 0) as ImageIcon
+        icon.toLabel().shouldMatchImage("tableAvatar")
+    }
+
+    @Test
+    fun `Should return all players correctly`() {
         val table = ScrollTable()
 
-        val players = listOf(insertPlayer(name = "Bob", strategy = ""), insertPlayer(name = "Robot", strategy = "foo"))
+        val players =
+            listOf(
+                insertPlayer(name = "Bob", strategy = ""),
+                insertPlayer(name = "Robot", strategy = "foo"),
+            )
         table.initPlayerTableModel(players)
 
         table.getAllPlayers() shouldBe players
     }
 
     @Test
-    fun `Should return null and empty list if no selection`()
-    {
+    fun `Should return null and empty list if no selection`() {
         val table = ScrollTable()
 
-        val players = listOf(insertPlayer(name = "Bob", strategy = ""), insertPlayer(name = "Robot", strategy = "foo"))
+        val players =
+            listOf(
+                insertPlayer(name = "Bob", strategy = ""),
+                insertPlayer(name = "Robot", strategy = "foo"),
+            )
         table.initPlayerTableModel(players)
 
         table.getSelectedPlayer() shouldBe null
@@ -57,8 +78,7 @@ class TestScrollTablePlayers: AbstractTest()
     }
 
     @Test
-    fun `Should return the selected player`()
-    {
+    fun `Should return the selected player`() {
         val table = ScrollTable()
 
         val playerTwo = insertPlayer(name = "Robot", strategy = "foo")
@@ -73,8 +93,7 @@ class TestScrollTablePlayers: AbstractTest()
     }
 
     @Test
-    fun `Should return all the selected players`()
-    {
+    fun `Should return all the selected players`() {
         val table = ScrollTable()
 
         val playerOne = insertPlayer(name = "Alice")
@@ -89,8 +108,7 @@ class TestScrollTablePlayers: AbstractTest()
     }
 
     @Test
-    fun `Should sort by name by default`()
-    {
+    fun `Should sort by name by default`() {
         val table = ScrollTable()
 
         val playerOne = insertPlayer(name = "Alice")
@@ -103,8 +121,7 @@ class TestScrollTablePlayers: AbstractTest()
     }
 
     @Test
-    fun `Should be able to add players dynamically`()
-    {
+    fun `Should be able to add players dynamically`() {
         val table = ScrollTable()
 
         val playerOne = insertPlayer(name = "Alice")
@@ -117,9 +134,7 @@ class TestScrollTablePlayers: AbstractTest()
         table.getAllPlayers() shouldBe listOf(playerOne, playerTwo, playerThree)
     }
 
-    private fun ScrollTable.selectRows(first: Int, last: Int)
-    {
+    private fun ScrollTable.selectRows(first: Int, last: Int) {
         table.setRowSelectionInterval(first, last)
     }
-
 }

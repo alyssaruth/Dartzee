@@ -7,17 +7,17 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerStatisticsScreen
 import javax.swing.ImageIcon
 
-class PlayerStatsButton(private val player: PlayerEntity,
-                        private val gameType: GameType,
-                        played: Int,
-                        highScore: Int) : PlayerSummaryButton()
-{
+class PlayerStatsButton(
+    private val player: PlayerEntity,
+    private val gameType: GameType,
+    played: Int,
+    highScore: Int,
+) : PlayerSummaryButton() {
     private val iconUrl = getGamesWonIcon(gameType)
     override val defaultText = makeStatsText(played, highScore)
     override val hoverText = "<html><h3>${gameType.getDescription()} stats &gt;</h3></html>"
 
-    init
-    {
+    init {
         icon = ImageIcon(iconUrl)
         text = defaultText
 
@@ -30,8 +30,7 @@ class PlayerStatsButton(private val player: PlayerEntity,
         addMouseListener(this)
     }
 
-    private fun makeStatsText(played: Int, highScore: Int): String
-    {
+    private fun makeStatsText(played: Int, highScore: Int): String {
         val scoreDesc = if (highScore > 0) "$highScore" else "-"
 
         val lineOne = "<h3>${gameType.getDescription()}</h3>"
@@ -40,8 +39,7 @@ class PlayerStatsButton(private val player: PlayerEntity,
         return "<html><center>$lineOne $lineTwo<br>$lineThree</center></html>"
     }
 
-    override fun buttonPressed()
-    {
+    override fun buttonPressed() {
         val statsScrn = ScreenCache.get<PlayerStatisticsScreen>()
         statsScrn.setVariables(gameType, player)
 

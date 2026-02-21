@@ -1,6 +1,6 @@
 package dartzee.logging
 
-//Info
+// Info
 val CODE_SQL = LoggingCode("sql")
 val CODE_BULK_SQL = LoggingCode("bulkSql")
 val CODE_JUST_UPDATED = LoggingCode("justUpdated")
@@ -30,7 +30,7 @@ val CODE_UPDATE_CHECK_RESULT = LoggingCode("updateCheckResult")
 val CODE_LOADED_RESOURCES = LoggingCode("loadedResources")
 val CODE_STARTING_BACKUP = LoggingCode("startingBackup")
 val CODE_STARTING_RESTORE = LoggingCode("startingRestore")
-val CODE_RENDERED_DARTBOARD = LoggingCode("renderedDartboard")
+val CODE_SLOW_DARTBOARD_RENDER = LoggingCode("slowDartboardRender")
 val CODE_PLAYER_PAUSED = LoggingCode("playerPaused")
 val CODE_PLAYER_UNPAUSED = LoggingCode("playerUnpaused")
 val CODE_FETCHING_DATABASE = LoggingCode("fetchingDatabase")
@@ -46,15 +46,21 @@ val CODE_ACHIEVEMENT_CONVERSION_STARTED = LoggingCode("achievementConversionStar
 val CODE_ACHIEVEMENT_CONVERSION_FINISHED = LoggingCode("achievementConversionFinished")
 val CODE_SWITCHING_FILES = LoggingCode("switchingFiles")
 val CODE_REVERT_TO_PULL = LoggingCode("revertToPull")
+val CODE_SWITCHED_SCREEN = LoggingCode("switchedScreen")
+val CODE_GAME_LAUNCHED = LoggingCode("gameLaunched")
+val CODE_MATCH_LAUNCHED = LoggingCode("matchLaunched")
+val CODE_MATCH_FINISHED = LoggingCode("matchFinished")
+val CODE_PARTY_MODE = LoggingCode("partyMode")
+val CODE_PREFERENCE_SAVED = LoggingCode("preferenceSaved")
 
-//Warn
+// Warn
 val CODE_UNEXPECTED_ARGUMENT = LoggingCode("unexpectedArgument")
 val CODE_DATABASE_TOO_OLD = LoggingCode("databaseTooOld")
 val CODE_RESOURCE_CACHE_NOT_INITIALISED = LoggingCode("resourceCacheNotInitialised")
 val CODE_DATABASE_IN_USE = LoggingCode("databaseInUse")
 val CODE_NO_STREAMS = LoggingCode("noStreams")
 
-//Error
+// Error
 val CODE_LOOK_AND_FEEL_ERROR = LoggingCode("lafError")
 val CODE_SQL_EXCEPTION = LoggingCode("sqlException")
 val CODE_UNCAUGHT_EXCEPTION = LoggingCode("uncaughtException")
@@ -80,3 +86,6 @@ val CODE_PUSH_ERROR = LoggingCode("pushError")
 val CODE_PULL_ERROR = LoggingCode("pullError")
 val CODE_BACKUP_ERROR = LoggingCode("backupError")
 val CODE_RESTORE_ERROR = LoggingCode("restoreError")
+val CODE_DELETE_ERROR = LoggingCode("deleteError")
+val CODE_HYPERLINK_ERROR = LoggingCode("hyperlinkError")
+val CODE_EDT_FROZEN = LoggingCode("edtFrozen")

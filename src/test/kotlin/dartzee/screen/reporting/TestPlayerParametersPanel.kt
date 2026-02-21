@@ -1,22 +1,20 @@
 package dartzee.screen.reporting
 
-import com.github.alexburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickChild
 import dartzee.core.bean.ComboBoxNumberComparison
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
+import dartzee.helper.makeIncludedPlayerParameters
 import dartzee.reporting.COMPARATOR_SCORE_UNSET
-import dartzee.reporting.IncludedPlayerParameters
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import javax.swing.JCheckBox
+import org.junit.jupiter.api.Test
 
-class TestPlayerParametersPanel: AbstractTest()
-{
+class TestPlayerParametersPanel : AbstractTest() {
     @Test
-    fun `Should support disabling all components`()
-    {
+    fun `Should support disabling all components`() {
         val panel = PlayerParametersPanel()
         panel.disableAll()
 
@@ -24,18 +22,16 @@ class TestPlayerParametersPanel: AbstractTest()
     }
 
     @Test
-    fun `Should having nothing selected by default, and generate empty parameters`()
-    {
+    fun `Should having nothing selected by default, and generate empty parameters`() {
         val panel = PlayerParametersPanel()
         panel.chckbxPosition.isSelected shouldBe false
         panel.chckbxFinalScore.isSelected shouldBe false
 
-        panel.generateParameters() shouldBe IncludedPlayerParameters()
+        panel.generateParameters() shouldBe makeIncludedPlayerParameters()
     }
 
     @Test
-    fun `Should enable and disable the position checkboxes`()
-    {
+    fun `Should enable and disable the position checkboxes`() {
         val panel = PlayerParametersPanel()
         panel.positionCheckboxes.forEach { it.isEnabled shouldBe false }
         panel.cbUndecided.isEnabled shouldBe false
@@ -50,8 +46,7 @@ class TestPlayerParametersPanel: AbstractTest()
     }
 
     @Test
-    fun `Should enable and disable the score options`()
-    {
+    fun `Should enable and disable the score options`() {
         val panel = PlayerParametersPanel()
         panel.comboBox.isEnabled shouldBe false
         panel.spinner.isEnabled shouldBe false
@@ -66,8 +61,7 @@ class TestPlayerParametersPanel: AbstractTest()
     }
 
     @Test
-    fun `Should enable and disable the spinner based on combo selection`()
-    {
+    fun `Should enable and disable the spinner based on combo selection`() {
         val panel = PlayerParametersPanel()
         panel.chckbxFinalScore.doClick()
         panel.spinner.isEnabled shouldBe true
@@ -80,33 +74,33 @@ class TestPlayerParametersPanel: AbstractTest()
     }
 
     @Test
-    fun `Should not be valid if position is selected but nothing ticked`()
-    {
+    fun `Should not be valid if position is selected but nothing ticked`() {
         val player = insertPlayer(name = "Gordon")
 
         val panel = PlayerParametersPanel()
         panel.valid(player) shouldBe true
 
-        panel.clickChild<JCheckBox>("Position")
+        panel.clickChild<JCheckBox>(text = "Position")
         panel.valid(player) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly("You must select at least one finishing position for player Gordon")
+        dialogFactory.errorsShown.shouldContainExactly(
+            "You must select at least one finishing position for player Gordon"
+        )
         dialogFactory.errorsShown.clear()
 
-        panel.clickChild<JCheckBox>("Undecided")
+        panel.clickChild<JCheckBox>(text = "Undecided")
         panel.valid(player) shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
 
         panel.cbUndecided.doClick()
-        panel.clickChild<JCheckBox>("1st")
+        panel.clickChild<JCheckBox>(text = "1st")
         panel.valid(player) shouldBe true
         dialogFactory.errorsShown.shouldBeEmpty()
     }
 
     @Test
-    fun `Should generate the correct parameters for final score`()
-    {
+    fun `Should generate the correct parameters for final score`() {
         val panel = PlayerParametersPanel()
-        panel.clickChild<JCheckBox>("Game Score")
+        panel.clickChild<JCheckBox>(text = "Game Score")
         panel.spinner.value = 20
         panel.comboBox.selectedItem = ComboBoxNumberComparison.FILTER_MODE_GREATER_THAN
 
@@ -116,14 +110,12 @@ class TestPlayerParametersPanel: AbstractTest()
     }
 
     @Test
-    fun `Should generate the correct parameters for position`()
-    {
+    fun `Should generate the correct parameters for position`() {
         val panel = PlayerParametersPanel()
-        panel.clickChild<JCheckBox>("Position")
-        panel.clickChild<JCheckBox>("1st")
-        panel.clickChild<JCheckBox>("5th")
-        panel.clickChild<JCheckBox>("Undecided")
-
+        panel.clickChild<JCheckBox>(text = "Position")
+        panel.clickChild<JCheckBox>(text = "1st")
+        panel.clickChild<JCheckBox>(text = "5th")
+        panel.clickChild<JCheckBox>(text = "Undecided")
 
         val params = panel.generateParameters()
         params.finishingPositions.shouldContainExactly(1, 5, -1)

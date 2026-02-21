@@ -1,7 +1,9 @@
 package dartzee.logging
 
 import dartzee.core.bean.WrapLayout
+import dartzee.core.util.runOnEventThread
 import dartzee.core.util.setMargins
+import dartzee.db.SqlStatementType
 import dartzee.screen.FocusableWindow
 import dartzee.utils.DartsDatabaseUtil
 import java.awt.BorderLayout
@@ -18,8 +20,7 @@ import javax.swing.text.DefaultStyledDocument
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 
-class LoggingConsole: FocusableWindow(), ILogDestination
-{
+class LoggingConsole : FocusableWindow(), ILogDestination {
     override val windowName = "Console"
 
     val doc = DefaultStyledDocument()
@@ -27,8 +28,7 @@ class LoggingConsole: FocusableWindow(), ILogDestination
     private val textArea = JTextPane(doc)
     private val contextPanel = JPanel()
 
-    init
-    {
+    init {
         title = "Console"
         setSize(1000, 600)
         setLocationRelativeTo(null)
@@ -45,35 +45,30 @@ class LoggingConsole: FocusableWindow(), ILogDestination
         contextPanel.layout = WrapLayout()
     }
 
-    override fun log(record: LogRecord)
-    {
+    override fun log(record: LogRecord) {
         val cx = StyleContext()
         val text = record.toString()
         val style = cx.addStyle(text, null)
-        if (record.loggingCode == CODE_SQL)
-        {
-            when
-            {
-                text.contains("INSERT") -> StyleConstants.setForeground(style, Color.ORANGE)
-                text.contains("UPDATE") -> StyleConstants.setForeground(style, Color.ORANGE)
-                text.contains("DELETE") -> StyleConstants.setForeground(style, Color.PINK)
-                else -> StyleConstants.setForeground(style, Color.CYAN)
+        if (record.loggingCode == CODE_SQL) {
+            val type = SqlStatementType.fromStatement(text)
+            when (type) {
+                SqlStatementType.INSERT,
+                SqlStatementType.UPDATE -> StyleConstants.setForeground(style, Color.ORANGE)
+                SqlStatementType.DELETE -> StyleConstants.setForeground(style, Color.PINK)
+                SqlStatementType.SELECT -> StyleConstants.setForeground(style, Color.CYAN)
             }
 
             val dbName = record.keyValuePairs[KEY_DATABASE_NAME]
-            if (dbName != DartsDatabaseUtil.DATABASE_NAME)
-            {
+            if (dbName != DartsDatabaseUtil.DATABASE_NAME) {
                 StyleConstants.setBackground(style, Color.DARK_GRAY)
             }
         }
 
-        if (record.severity == Severity.ERROR)
-        {
+        if (record.severity == Severity.ERROR) {
             StyleConstants.setForeground(style, Color.RED)
         }
 
-        try
-        {
+        try {
             doc.insertString(doc.length, "\n$text", style)
             record.getThrowableStr()?.let { doc.insertString(doc.length, "\n$it", style) }
 
@@ -81,27 +76,25 @@ class LoggingConsole: FocusableWindow(), ILogDestination
             threadStack?.let { doc.insertString(doc.length, "\n$it", style) }
 
             textArea.select(doc.length, doc.length)
-        }
-        catch (ble: BadLocationException)
-        {
+        } catch (ble: BadLocationException) {
             System.err.println("BLE trying to append: $text")
             System.err.println(extractStackTrace(ble))
         }
     }
 
-    override fun contextUpdated(context: Map<String, Any?>)
-    {
+    override fun contextUpdated(context: Map<String, Any?>) {
         contextPanel.removeAll()
         val labels = context.map(::factoryLabelForContext)
 
-        labels.forEach { contextPanel.add(it) }
+        runOnEventThread {
+            labels.forEach { contextPanel.add(it) }
 
-        contextPanel.validate()
-        contextPanel.repaint()
+            contextPanel.validate()
+            contextPanel.repaint()
+        }
     }
 
-    private fun factoryLabelForContext(field: Map.Entry<String, Any?>): Component
-    {
+    private fun factoryLabelForContext(field: Map.Entry<String, Any?>): Component {
         val label = JLabel("${field.key}: ${field.value}")
         label.foreground = Color.GREEN
         label.setMargins(5)
@@ -114,8 +107,7 @@ class LoggingConsole: FocusableWindow(), ILogDestination
         return panel
     }
 
-    fun clear()
-    {
+    fun clear() {
         textArea.text = ""
     }
 }

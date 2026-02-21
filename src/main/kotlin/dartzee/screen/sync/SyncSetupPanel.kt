@@ -11,10 +11,13 @@ import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.SwingConstants
 
-class SyncSetupPanel: JPanel(), ActionListener
-{
+class SyncSetupPanel : JPanel(), ActionListener {
     private val instructionsPanel = JPanel()
     private val syncPanelOne = JLabel()
     private val syncPanelTwo = JLabel()
@@ -27,8 +30,7 @@ class SyncSetupPanel: JPanel(), ActionListener
     private val setupPanel = JPanel()
     private val btnSetUp = JButton("Get Started > ")
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
         infoPanel.layout = BorderLayout(0, 0)
 
@@ -75,21 +77,17 @@ class SyncSetupPanel: JPanel(), ActionListener
         btnSetUp.addActionListener(this)
     }
 
-    override fun actionPerformed(e: ActionEvent?)
-    {
+    override fun actionPerformed(e: ActionEvent?) {
         setUpPressed()
     }
 
-    private fun setUpPressed()
-    {
-        if (!validateSyncAction())
-        {
+    private fun setUpPressed() {
+        if (!validateSyncAction()) {
             return
         }
 
         val result = syncConfigurer.doFirstTimeSetup() ?: return
-        when (result.mode)
-        {
+        when (result.mode) {
             SyncMode.CREATE_REMOTE -> syncManager.doPush(result.remoteName)
             SyncMode.OVERWRITE_LOCAL -> syncManager.doPull(result.remoteName)
             SyncMode.NORMAL_SYNC -> syncManager.doSync(result.remoteName)

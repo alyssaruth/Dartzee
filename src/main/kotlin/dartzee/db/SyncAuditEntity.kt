@@ -1,33 +1,31 @@
 package dartzee.db
 
-import dartzee.`object`.DartsClient
 import dartzee.main.getDeviceId
 import dartzee.main.getUsername
+import dartzee.`object`.DartsClient
 import dartzee.sync.LastSyncData
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 
-class SyncAuditEntity(database: Database = InjectedThings.mainDatabase) : AbstractEntity<SyncAuditEntity>(database)
-{
+class SyncAuditEntity(database: Database = InjectedThings.mainDatabase) :
+    AbstractEntity<SyncAuditEntity>(database) {
     var remoteName = ""
     var username = ""
     var appVersion = ""
     var deviceId = ""
     var operatingSystem = ""
 
-    override fun getTableName() = "SyncAudit"
+    override fun getTableName() = EntityName.SyncAudit
 
     override fun getCreateTableSqlSpecific() =
         "RemoteName VARCHAR(255) NOT NULL, Username VARCHAR(1000) NOT NULL, AppVersion VARCHAR(255) NOT NULL, " +
-        "DeviceId VARCHAR(36) NOT NULL, OperatingSystem VARCHAR(1000) NOT NULL"
+            "DeviceId VARCHAR(36) NOT NULL, OperatingSystem VARCHAR(1000) NOT NULL"
 
     override fun includeInSync() = false
 
-    companion object
-    {
-        fun insertSyncAudit(database: Database, remoteName: String): SyncAuditEntity
-        {
+    companion object {
+        fun insertSyncAudit(database: Database, remoteName: String): SyncAuditEntity {
             val entity = SyncAuditEntity(database)
             entity.assignRowId()
             entity.appVersion = DARTS_VERSION_NUMBER
@@ -40,13 +38,11 @@ class SyncAuditEntity(database: Database = InjectedThings.mainDatabase) : Abstra
             return entity
         }
 
-        fun getLastSyncData(database: Database): LastSyncData?
-        {
+        fun getLastSyncData(database: Database): LastSyncData? {
             val dao = SyncAuditEntity(database)
             val entities = dao.retrieveEntities()
-            val latest = entities.maxBy { it.dtLastUpdate } ?: return null
+            val latest = entities.maxByOrNull { it.dtLastUpdate } ?: return null
             return LastSyncData(latest.remoteName, latest.dtLastUpdate)
         }
     }
-
 }

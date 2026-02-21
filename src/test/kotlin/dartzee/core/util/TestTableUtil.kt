@@ -1,16 +1,14 @@
 package dartzee.core.util
 
 import dartzee.helper.AbstractTest
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestTableUtil: AbstractTest()
-{
+class TestTableUtil : AbstractTest() {
     @Test
-    fun `Default model should return all column values`()
-    {
+    fun `Default model should return all column values`() {
         val model = TableUtil.DefaultModel()
         model.addColumn("Foo")
         model.getColumnValues(0).shouldBeEmpty()
@@ -23,8 +21,7 @@ class TestTableUtil: AbstractTest()
     }
 
     @Test
-    fun `Should set a list of column names`()
-    {
+    fun `Should set a list of column names`() {
         val model = TableUtil.DefaultModel()
 
         model.setColumnNames(listOf("A", "B", "C"))
@@ -35,8 +32,7 @@ class TestTableUtil: AbstractTest()
     }
 
     @Test
-    fun `Should support adding multiple rows at once`()
-    {
+    fun `Should support adding multiple rows at once`() {
         val model = TableUtil.DefaultModel()
         model.addColumn("Foo")
 
@@ -50,8 +46,7 @@ class TestTableUtil: AbstractTest()
     }
 
     @Test
-    fun `Should be able to clear all rows`()
-    {
+    fun `Should be able to clear all rows`() {
         val model = TableUtil.DefaultModel()
         model.addColumn("Foo")
 
@@ -62,8 +57,7 @@ class TestTableUtil: AbstractTest()
     }
 
     @Test
-    fun `Should be able to clear an empty table model`()
-    {
+    fun `Should be able to clear an empty table model`() {
         val model = TableUtil.DefaultModel()
         model.addColumn("Foo")
         model.clear()

@@ -1,16 +1,14 @@
 package dartzee.dartzee.aggregate
 
 import dartzee.dartzee.AbstractDartzeeRuleTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDartzeeTotalRuleEqualTo: AbstractDartzeeRuleTest<DartzeeTotalRuleEqualTo>()
-{
+class TestDartzeeTotalRuleEqualTo : AbstractDartzeeRuleTest<DartzeeTotalRuleEqualTo>() {
     override fun factory() = DartzeeTotalRuleEqualTo()
 
     @Test
-    fun `Total validation`()
-    {
+    fun `Total validation`() {
         val rule = DartzeeTotalRuleEqualTo()
         rule.target = 55
 
@@ -20,8 +18,7 @@ class TestDartzeeTotalRuleEqualTo: AbstractDartzeeRuleTest<DartzeeTotalRuleEqual
     }
 
     @Test
-    fun `Rule description`()
-    {
+    fun `Rule description`() {
         val rule = DartzeeTotalRuleEqualTo()
         rule.target = 25
 

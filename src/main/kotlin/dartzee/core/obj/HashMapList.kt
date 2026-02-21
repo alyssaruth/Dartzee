@@ -1,34 +1,12 @@
 package dartzee.core.obj
 
+class HashMapList<K : Comparable<K>, V> : HashMap<K, MutableList<V>>() {
+    fun getFlattenedValuesSortedByKey() = entries.sortedBy { it.key }.flatMap { it.value }
 
-class HashMapList<K: Comparable<K>, V> : HashMap<K, MutableList<V>>()
-{
-    fun getFlattenedValuesSortedByKey(): List<V>
-    {
-        val sortedEntries = entries.sortedBy { it.key }
+    fun getAllValues() = values.flatten().toList()
 
-        val values = mutableListOf<V>()
-        sortedEntries.forEach {
-            values.addAll(it.value)
-        }
-
-        return values
-    }
-
-    fun getAllValues(): MutableList<V>
-    {
-        return values.flatten().toMutableList()
-    }
-
-    fun putInList(key: K, value: V)
-    {
-        var list: MutableList<V>? = get(key)
-        if (list == null)
-        {
-            list = mutableListOf()
-            put(key, list)
-        }
-
+    fun putInList(key: K, value: V) {
+        val list = getOrPut(key, ::mutableListOf)
         list.add(value)
     }
 }

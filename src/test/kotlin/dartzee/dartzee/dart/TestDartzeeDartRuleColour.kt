@@ -1,24 +1,30 @@
 package dartzee.dartzee.dart
 
-import dartzee.*
+import dartzee.bullseye
 import dartzee.dartzee.AbstractDartzeeRuleTest
 import dartzee.dartzee.parseDartRule
+import dartzee.doubleNineteen
+import dartzee.doubleTwenty
 import dartzee.helper.makeColourRule
-import io.kotlintest.matchers.string.shouldBeEmpty
-import io.kotlintest.matchers.types.shouldNotBeNull
-import io.kotlintest.shouldBe
-import org.junit.jupiter.api.Test
+import dartzee.missTwenty
+import dartzee.outerBull
+import dartzee.singleNineteen
+import dartzee.singleTwenty
+import dartzee.trebleNineteen
+import dartzee.trebleTwenty
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
 import javax.swing.JCheckBox
+import org.junit.jupiter.api.Test
 
-class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>()
-{
+class TestDartzeeDartRuleColour : AbstractDartzeeRuleTest<DartzeeDartRuleColour>() {
     override val emptyIsValid = false
 
     override fun factory() = DartzeeDartRuleColour()
 
     @Test
-    fun `segment validation - black`()
-    {
+    fun `segment validation - black`() {
         val rule = DartzeeDartRuleColour()
         rule.black = true
 
@@ -29,14 +35,12 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
         rule.isValidSegment(doubleNineteen) shouldBe false
         rule.isValidSegment(trebleNineteen) shouldBe false
         rule.isValidSegment(missTwenty) shouldBe false
-        rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe false
         rule.isValidSegment(outerBull) shouldBe false
     }
 
     @Test
-    fun `segment validation - white`()
-    {
+    fun `segment validation - white`() {
         val rule = DartzeeDartRuleColour()
         rule.white = true
 
@@ -47,14 +51,12 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
         rule.isValidSegment(doubleNineteen) shouldBe false
         rule.isValidSegment(trebleNineteen) shouldBe false
         rule.isValidSegment(missTwenty) shouldBe false
-        rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe false
         rule.isValidSegment(outerBull) shouldBe false
     }
 
     @Test
-    fun `segment validation - green`()
-    {
+    fun `segment validation - green`() {
         val rule = DartzeeDartRuleColour()
         rule.green = true
 
@@ -65,14 +67,12 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
         rule.isValidSegment(doubleNineteen) shouldBe true
         rule.isValidSegment(trebleNineteen) shouldBe true
         rule.isValidSegment(missTwenty) shouldBe false
-        rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe false
         rule.isValidSegment(outerBull) shouldBe true
     }
 
     @Test
-    fun `segment validation - red`()
-    {
+    fun `segment validation - red`() {
         val rule = DartzeeDartRuleColour()
         rule.red = true
 
@@ -83,14 +83,12 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
         rule.isValidSegment(doubleNineteen) shouldBe false
         rule.isValidSegment(trebleNineteen) shouldBe false
         rule.isValidSegment(missTwenty) shouldBe false
-        rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe true
         rule.isValidSegment(outerBull) shouldBe false
     }
 
     @Test
-    fun `segment validation - combination`()
-    {
+    fun `segment validation - combination`() {
         val rule = DartzeeDartRuleColour()
         rule.red = true
         rule.black = true
@@ -102,31 +100,28 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
         rule.isValidSegment(doubleNineteen) shouldBe false
         rule.isValidSegment(trebleNineteen) shouldBe false
         rule.isValidSegment(missTwenty) shouldBe false
-        rule.isValidSegment(missedBoard) shouldBe false
         rule.isValidSegment(bullseye) shouldBe true
         rule.isValidSegment(outerBull) shouldBe false
     }
 
     @Test
-    fun `colour config panel updates rule correctly`()
-    {
+    fun `colour config panel updates rule correctly`() {
         val rule = DartzeeDartRuleColour()
         val panel = rule.configPanel
 
         val checkBoxes: List<JCheckBox> = panel.components.filterIsInstance(JCheckBox::class.java)
 
-        val cbBlack = checkBoxes.find{it.text == "Black"}
-        val cbWhite = checkBoxes.find{it.text == "White"}
-        val cbGreen = checkBoxes.find{it.text == "Green"}
-        val cbRed = checkBoxes.find{it.text == "Red"}
+        val cbBlack = checkBoxes.find { it.text == "Black" }
+        val cbWhite = checkBoxes.find { it.text == "White" }
+        val cbGreen = checkBoxes.find { it.text == "Green" }
+        val cbRed = checkBoxes.find { it.text == "Red" }
 
         cbBlack.shouldNotBeNull()
         cbWhite.shouldNotBeNull()
         cbGreen.shouldNotBeNull()
         cbRed.shouldNotBeNull()
 
-        for (i in 0..15)
-        {
+        for (i in 0..15) {
             cbBlack.isSelected = (i and 1) > 0
             cbWhite.isSelected = (i and 2) > 0
             cbRed.isSelected = (i and 4) > 0
@@ -142,10 +137,9 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
     }
 
     @Test
-    fun `read and write XML`()
-    {
+    fun `read and write XML`() {
         val rules = getAllValidColorPermutations()
-        rules.forEach{
+        rules.forEach {
             val red = it.red
             val green = it.green
             val black = it.black
@@ -167,20 +161,16 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
     }
 
     @Test
-    fun `all non-empty colour rules are valid`()
-    {
+    fun `all non-empty colour rules are valid`() {
         val rules = getAllValidColorPermutations()
 
-        rules.forEach{
-            it.validate().shouldBeEmpty()
-        }
+        rules.forEach { it.validate().shouldBeEmpty() }
     }
-    private fun getAllValidColorPermutations(): MutableList<DartzeeDartRuleColour>
-    {
+
+    private fun getAllValidColorPermutations(): MutableList<DartzeeDartRuleColour> {
         val list = mutableListOf<DartzeeDartRuleColour>()
 
-        for (i in 1..15)
-        {
+        for (i in 1..15) {
             val rule = DartzeeDartRuleColour()
             rule.black = (i and 1) > 0
             rule.white = (i and 2) > 0
@@ -194,8 +184,7 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
     }
 
     @Test
-    fun `rule description`()
-    {
+    fun `rule description`() {
         val rule = makeColourRule(red = true, black = true)
         rule.getDescription() shouldBe "R/B"
 
@@ -208,8 +197,7 @@ class TestDartzeeDartRuleColour: AbstractDartzeeRuleTest<DartzeeDartRuleColour>(
     }
 
     @Test
-    fun `should update from UI interaction`()
-    {
+    fun `should update from UI interaction`() {
         val rule = makeColourRule()
         rule.cbBlack.doClick()
         rule.black shouldBe true

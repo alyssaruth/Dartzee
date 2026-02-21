@@ -6,7 +6,11 @@ import dartzee.core.screen.TableModelDialog
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.core.util.runOnEventThread
-import dartzee.logging.*
+import dartzee.logging.CODE_SANITY_CHECK_COMPLETED
+import dartzee.logging.CODE_SANITY_CHECK_RESULT
+import dartzee.logging.CODE_SANITY_CHECK_STARTED
+import dartzee.logging.KEY_SANITY_COUNT
+import dartzee.logging.KEY_SANITY_DESCRIPTION
 import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings.logger
@@ -15,10 +19,9 @@ import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.table.DefaultTableModel
 
-fun getAllSanityChecks(): List<AbstractSanityCheck>
-{
-    //Bog standard checks
-    val checks = mutableListOf(
+private fun getAllSanityChecks(): List<ISanityCheck> {
+    val specificChecks =
+        listOf(
             SanityCheckFinishedParticipantsNoScore(),
             SanityCheckDuplicateDarts(),
             SanityCheckColumnsThatAllowDefaults(),
@@ -28,95 +31,90 @@ fun getAllSanityChecks(): List<AbstractSanityCheck>
             SanityCheckFinalScoreGolf(),
             SanityCheckFinalScoreRtc(),
             SanityCheckPlayerIdMismatch(),
-            SanityCheckX01Finishes())
+            SanityCheckX01Finishes(),
+        )
 
-    //Checks that run on all entities
-    DartsDatabaseUtil.getAllEntities().forEach{
-        checks.add(SanityCheckDanglingIdFields(it))
-        checks.add(SanityCheckUnsetIdFields(it))
-    }
+    val genericChecks: List<ISanityCheck> =
+        DartsDatabaseUtil.getAllEntities().flatMap {
+            listOf(SanityCheckDanglingIdFields(it), SanityCheckUnsetIdFields(it))
+        }
 
-    return checks
+    return specificChecks + genericChecks
 }
 
-object DatabaseSanityCheck
-{
-    private val sanityErrors = mutableListOf<AbstractSanityCheckResult>()
+object DatabaseSanityCheck {
+    fun runSanityCheck(checks: List<ISanityCheck> = getAllSanityChecks()) {
+        logger.info(
+            CODE_SANITY_CHECK_STARTED,
+            "Running ${getAllSanityChecks().size} sanity checks...",
+        )
 
-    fun runSanityCheck()
-    {
-        logger.info(CODE_SANITY_CHECK_STARTED, "Running ${getAllSanityChecks().size} sanity checks...")
-
-        sanityErrors.clear()
-
-        runAllChecks()
+        runAllChecks(checks)
     }
 
-    private fun runAllChecks()
-    {
-        val r = Runnable { runChecksInOtherThread(getAllSanityChecks())}
+    private fun runAllChecks(checks: List<ISanityCheck>) {
+        val r = Runnable { runChecksInOtherThread(checks) }
         val t = Thread(r, "Sanity checks")
         t.start()
     }
 
-    private fun runChecksInOtherThread(checks: List<AbstractSanityCheck>)
-    {
+    private fun runChecksInOtherThread(checks: List<ISanityCheck>) {
         val dlg = ProgressDialog.factory("Running Sanity Check", "checks remaining", checks.size)
         dlg.setVisibleLater()
 
-        try
-        {
-            getAllSanityChecks().forEach{
-                val results = it.runCheck()
+        val sanityErrors = mutableListOf<AbstractSanityCheckResult>()
+
+        try {
+            checks.forEach { check ->
+                val results = check.runCheck()
                 sanityErrors.addAll(results)
 
                 dlg.incrementProgressLater()
             }
-        }
-        finally
-        {
+        } finally {
             mainDatabase.dropUnexpectedTables()
             dlg.disposeLater()
         }
 
-        runOnEventThread { sanityCheckComplete() }
+        runOnEventThread { sanityCheckComplete(sanityErrors) }
     }
 
-    private fun sanityCheckComplete()
-    {
-        logger.info(CODE_SANITY_CHECK_COMPLETED, "Completed sanity check and found ${sanityErrors.size} issues")
+    private fun sanityCheckComplete(sanityErrors: List<AbstractSanityCheckResult>) {
+        logger.info(
+            CODE_SANITY_CHECK_COMPLETED,
+            "Completed sanity check and found ${sanityErrors.size} issues",
+        )
 
-        sanityErrors.forEach {
-            logger.info(CODE_SANITY_CHECK_RESULT,
-                    "${it.getCount()} ${it.getDescription()}",
-                    KEY_SANITY_DESCRIPTION to it.getDescription(),
-                    KEY_SANITY_COUNT to it.getCount())
+        sanityErrors.forEach { error ->
+            logger.info(
+                CODE_SANITY_CHECK_RESULT,
+                "${error.getCount()} ${error.getDescription()}",
+                KEY_SANITY_DESCRIPTION to error.getDescription(),
+                KEY_SANITY_COUNT to error.getCount(),
+            )
         }
 
-        val tm = buildResultsModel()
-        if (tm.rowCount > 0)
-        {
-            val showResults = object : AbstractAction()
-            {
-                override fun actionPerformed(e: ActionEvent)
-                {
-                    val modelRow = Integer.valueOf(e.actionCommand)
+        val tm = buildResultsModel(sanityErrors)
+        if (tm.rowCount > 0) {
+            val showResults =
+                object : AbstractAction() {
+                    override fun actionPerformed(e: ActionEvent) {
+                        val modelRow = Integer.valueOf(e.actionCommand)
 
-                    val result = sanityErrors[modelRow]
-                    showResultsBreakdown(result)
+                        val result = sanityErrors[modelRow]
+                        showResultsBreakdown(result)
+                    }
                 }
-            }
 
-            val autoFix = object : AbstractAction()
-            {
-                override fun actionPerformed(e: ActionEvent)
-                {
-                    val modelRow = Integer.valueOf(e.actionCommand)
+            val autoFix =
+                object : AbstractAction() {
+                    override fun actionPerformed(e: ActionEvent) {
+                        val modelRow = Integer.valueOf(e.actionCommand)
 
-                    val result = sanityErrors[modelRow]
-                    result.autoFix()
+                        val result = sanityErrors[modelRow]
+                        result.autoFix()
+                    }
                 }
-            }
 
             val table = ScrollTableButton(tm)
             table.setButtonColumn(2, showResults)
@@ -126,32 +124,35 @@ object DatabaseSanityCheck
             dlg.setColumnWidths("-1;50;150;150")
             dlg.setLocationRelativeTo(ScreenCache.mainScreen)
             dlg.isVisible = true
-        }
-        else
-        {
-            DialogUtil.showInfo("Sanity check completed and found no issues")
+        } else {
+            DialogUtil.showInfoOLD("Sanity check completed and found no issues")
         }
     }
 
-    private fun buildResultsModel(): DefaultTableModel
-    {
+    private fun buildResultsModel(
+        sanityErrors: List<AbstractSanityCheckResult>
+    ): DefaultTableModel {
         val model = DefaultModel()
         model.addColumn("Description")
         model.addColumn("Count")
         model.addColumn("")
         model.addColumn("")
 
-        for (result in sanityErrors)
-        {
-            val row = arrayOf(result.getDescription(), result.getCount(), "View Results >", "Auto-fix")
+        for (result in sanityErrors) {
+            val row =
+                arrayOf<Any>(
+                    result.getDescription(),
+                    result.getCount(),
+                    "View Results >",
+                    "Auto-fix",
+                )
             model.addRow(row)
         }
 
         return model
     }
 
-    private fun showResultsBreakdown(result: AbstractSanityCheckResult)
-    {
+    private fun showResultsBreakdown(result: AbstractSanityCheckResult) {
         val dlg = result.getResultsDialog()
         dlg.setSize(800, 600)
         dlg.setLocationRelativeTo(ScreenCache.mainScreen)

@@ -1,22 +1,22 @@
 package dartzee.db.sanity
 
 import dartzee.db.AbstractEntity
+import dartzee.db.EntityName
 import dartzee.utils.DartsDatabaseUtil
 
-class SanityCheckDanglingIdFields(val entity: AbstractEntity<*>): AbstractSanityCheck()
-{
+class SanityCheckDanglingIdFields(val entity: AbstractEntity<*>) : ISanityCheck {
     private val sanityErrors = mutableListOf<AbstractSanityCheckResult>()
 
-    override fun runCheck(): List<AbstractSanityCheckResult>
-    {
-        val idColumns = getIdColumns(entity)
-
-        idColumns.forEach{
-            checkForHangingValues(entity, it)
+    override fun runCheck(): List<AbstractSanityCheckResult> {
+        if (entity.getTableName() == EntityName.DeletionAudit) {
+            return emptyList()
         }
 
-        if (entity.getColumns().contains("EntityId"))
-        {
+        val idColumns = getIdColumns(entity)
+
+        idColumns.forEach { checkForHangingValues(entity, it) }
+
+        if (entity.getColumns().contains("EntityId")) {
             DartsDatabaseUtil.getAllEntities().forEach {
                 checkForHangingEntityId(entity, it.getTableName())
             }
@@ -25,9 +25,9 @@ class SanityCheckDanglingIdFields(val entity: AbstractEntity<*>): AbstractSanity
         return sanityErrors
     }
 
-    private fun checkForHangingValues(entity: AbstractEntity<*>, idColumn: String)
-    {
-        val referencedTable = idColumn.substring(0, idColumn.length - 2)
+    private fun checkForHangingValues(entity: AbstractEntity<*>, idColumn: String) {
+        val tableStr = idColumn.substring(0, idColumn.length - 2)
+        val referencedTable = EntityName.valueOf(tableStr)
 
         val sb = StringBuilder()
         sb.append("$idColumn <> ''")
@@ -39,14 +39,12 @@ class SanityCheckDanglingIdFields(val entity: AbstractEntity<*>): AbstractSanity
         val entities = entity.retrieveEntities(whereSql, "e")
 
         val count = entities.size
-        if (count > 0)
-        {
+        if (count > 0) {
             sanityErrors.add(SanityCheckResultDanglingIdFields(idColumn, referencedTable, entities))
         }
     }
 
-    private fun checkForHangingEntityId(entity: AbstractEntity<*>, referencedTable: String)
-    {
+    private fun checkForHangingEntityId(entity: AbstractEntity<*>, referencedTable: EntityName) {
         val sb = StringBuilder()
         sb.append("EntityId <> ''")
         sb.append(" AND e.EntityName = '$referencedTable'")
@@ -58,9 +56,10 @@ class SanityCheckDanglingIdFields(val entity: AbstractEntity<*>): AbstractSanity
         val entities = entity.retrieveEntities(whereSql, "e")
 
         val count = entities.size
-        if (count > 0)
-        {
-            sanityErrors.add(SanityCheckResultDanglingIdFields("EntityId", referencedTable, entities))
+        if (count > 0) {
+            sanityErrors.add(
+                SanityCheckResultDanglingIdFields("EntityId", referencedTable, entities)
+            )
         }
     }
 }

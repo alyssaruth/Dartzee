@@ -1,87 +1,59 @@
 package dartzee.screen.game.scorer
 
-import com.github.alexburlton.swingtest.shouldBeVisible
-import com.github.alexburlton.swingtest.shouldNotBeVisible
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import dartzee.game.state.IWrappedParticipant
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
-import io.kotlintest.shouldBe
+import dartzee.screen.game.makeSingleParticipant
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
-class TestAbstractScorer: AbstractTest()
-{
+class TestAbstractScorer : AbstractTest() {
     @Test
-    fun `Should initialise correctly without a player`()
-    {
-        val scorer = TestScorer()
-        scorer.init(null)
-
-        scorer.lblName.shouldNotBeVisible()
-        scorer.lblAvatar.shouldNotBeVisible()
-        scorer.panelAvatar.shouldNotBeVisible()
-        scorer.playerId shouldBe ""
-    }
-
-    @Test
-    fun `Should initialise correctly with a player`()
-    {
+    fun `Should initialise correctly with a single participant`() {
         val player = insertPlayer(name = "Bob")
-        val scorer = TestScorer()
-        scorer.init(player)
+        val participant = makeSingleParticipant(player)
+        val scorer = TestScorer(participant)
+        scorer.init()
 
-        scorer.lblName.shouldBeVisible()
-        scorer.lblName.text shouldBe "Bob"
-        scorer.lblAvatar.shouldBeVisible()
-        scorer.lblAvatar.avatarId shouldBe player.playerImageId
-        scorer.lblAvatar.icon shouldBe player.getAvatar()
+        scorer.lblName.text shouldContain "Bob"
+        scorer.lblAvatar.icon.shouldNotBeNull()
         scorer.panelAvatar.shouldBeVisible()
-        scorer.playerId shouldBe player.rowId
+        scorer.playerIds.shouldContainExactly(player.rowId)
     }
 
     @Test
-    fun `Should initialise with the right number of columns`()
-    {
-        val twoCols = TestScorer(2)
-        twoCols.init(null)
+    fun `Should initialise with the right number of columns`() {
+        val twoCols = TestScorer(columnCount = 2)
+        twoCols.init()
         twoCols.tableScores.model.columnCount shouldBe 2
 
-        val fourCols = TestScorer(4)
-        fourCols.init(null)
+        val fourCols = TestScorer(columnCount = 4)
+        fourCols.init()
         fourCols.tableScores.model.columnCount shouldBe 4
     }
 
     @Test
-    fun `Should call init implementation`()
-    {
+    fun `Should call init implementation`() {
         val scorer = TestScorer()
         scorer.initted shouldBe false
-        scorer.init(null)
+        scorer.init()
         scorer.initted shouldBe true
     }
 
-    @Test
-    fun `Should only be assignable if visible and not already assigned`()
-    {
-        val scorer = TestScorer()
-        scorer.isVisible = false
-        scorer.canBeAssigned() shouldBe false
-
-        scorer.isVisible = true
-        scorer.canBeAssigned() shouldBe true
-
-        scorer.init(insertPlayer())
-        scorer.canBeAssigned() shouldBe false
-    }
-
-    private class TestScorer(val columnCount: Int = 4): AbstractScorer()
-    {
+    private class TestScorer(
+        participant: IWrappedParticipant = makeSingleParticipant(),
+        val columnCount: Int = 4,
+    ) : AbstractScorer(participant) {
         var initted = false
 
         override fun getNumberOfColumns() = columnCount
 
-        override fun initImpl()
-        {
+        override fun initImpl() {
             initted = true
         }
-
     }
 }

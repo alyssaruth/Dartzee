@@ -2,15 +2,13 @@ package dartzee.db.sanity
 
 import dartzee.helper.AbstractTest
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestSanityCheckSanityCheckColumnsThatAllowDefaults: AbstractTest()
-{
+class TestSanityCheckSanityCheckColumnsThatAllowDefaults : AbstractTest() {
     @Test
-    fun `Should return no results by default`()
-    {
+    fun `Should return no results by default`() {
         val check = SanityCheckColumnsThatAllowDefaults()
         val results = check.runCheck()
 
@@ -18,8 +16,7 @@ class TestSanityCheckSanityCheckColumnsThatAllowDefaults: AbstractTest()
     }
 
     @Test
-    fun `Should pick up on tables that allow defaults`()
-    {
+    fun `Should pick up on tables that allow defaults`() {
         val sql = "CREATE TABLE BadTable(Id INT PRIMARY KEY, OtherField VARCHAR(50) DEFAULT 'foo')"
 
         mainDatabase.executeUpdate(sql)

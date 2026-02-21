@@ -7,39 +7,33 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.text.JTextComponent
 
-class GhostText(ghostText: String, component: JTextComponent): JLabel(), DocumentListener
-{
-	private val document = component.document
+class GhostText(ghostText: String, component: JTextComponent) : JLabel(), DocumentListener {
+    private val document = component.document
 
-	init
-	{
+    init {
         text = ghostText
         font = component.font
-		foreground = Color(foreground.red, foreground.green, foreground.blue, 127)
+        foreground = Color(foreground.red, foreground.green, foreground.blue, 127)
         border = EmptyBorder(component.insets)
         horizontalAlignment = LEADING
 
-		document.addDocumentListener(this)
+        document.addDocumentListener(this)
 
-		toggleVisibility()
-	}
+        toggleVisibility()
+    }
 
-	private fun toggleVisibility()
-	{
-		isVisible = document.length == 0
-	}
+    private fun toggleVisibility() {
+        isVisible = document.length == 0
+    }
 
-    /**
-     * DocumentListener
-     */
-    override fun insertUpdate(e: DocumentEvent)
-	{
-		toggleVisibility()
-	}
+    /** DocumentListener */
+    override fun insertUpdate(e: DocumentEvent) {
+        toggleVisibility()
+    }
 
-    override fun removeUpdate(e: DocumentEvent)
-	{
-		toggleVisibility()
-	}
+    override fun removeUpdate(e: DocumentEvent) {
+        toggleVisibility()
+    }
+
     override fun changedUpdate(e: DocumentEvent?) {}
 }

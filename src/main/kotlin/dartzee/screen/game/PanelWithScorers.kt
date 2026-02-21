@@ -1,26 +1,24 @@
 package dartzee.screen.game
 
 import dartzee.core.util.ceilDiv
-import dartzee.db.PlayerEntity
+import dartzee.game.state.IWrappedParticipant
 import dartzee.screen.game.scorer.AbstractScorer
-import net.miginfocom.swing.MigLayout
 import java.awt.BorderLayout
 import javax.swing.JPanel
+import net.miginfocom.swing.MigLayout
 
 /**
- * Represents a panel that has scorers on it, centralising the logic for laying them out and assigning players to them etc.
+ * Represents a panel that has scorers on it, centralising the logic for laying them out and
+ * assigning players to them etc.
  */
-abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
-{
-    private val innerPanel = JPanel()
+abstract class PanelWithScorers<S : AbstractScorer> : JPanel() {
     val panelEast = JPanel()
     val panelWest = JPanel()
     protected val panelCenter = JPanel()
 
     val scorersOrdered = mutableListOf<S>()
 
-    init
-    {
+    init {
         layout = BorderLayout(0, 0)
         panelCenter.layout = BorderLayout(0, 0)
 
@@ -29,21 +27,12 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
         add(panelWest, BorderLayout.WEST)
     }
 
-    /**
-     * Abstract methods
-     */
-    abstract fun factoryScorer(): S
+    /** Abstract methods */
+    protected abstract fun factoryScorer(participant: IWrappedParticipant): S
 
-    /**
-     * Instance methods
-     */
-    fun initScorers(totalPlayers: Int)
-    {
-        scorersOrdered.clear()
+    fun finaliseScorers(parentWindow: AbstractDartsGameScreen) {
         panelEast.removeAll()
         panelWest.removeAll()
-
-        for (i in 0 until totalPlayers) { scorersOrdered.add(factoryScorer()) }
 
         val chunkSize = scorersOrdered.size.ceilDiv(2)
         val eastAndWestScorers = scorersOrdered.chunked(chunkSize)
@@ -57,12 +46,14 @@ abstract class PanelWithScorers<S : AbstractScorer> : JPanel()
 
         eastScorers?.forEach { panelEast.add(it, "growy") }
         westScorers.forEach { panelWest.add(it, "growy") }
+
+        parentWindow.packIfNecessary()
     }
 
-    fun assignScorer(player: PlayerEntity): S
-    {
-        val scorer = scorersOrdered.find { it.canBeAssigned() } ?: throw Exception("Unable to assign scorer for player $player")
-        scorer.init(player)
+    fun assignScorer(participant: IWrappedParticipant): S {
+        val scorer = factoryScorer(participant)
+        scorer.init()
+        scorersOrdered.add(scorer)
         return scorer
     }
 }

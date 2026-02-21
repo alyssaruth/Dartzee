@@ -1,25 +1,18 @@
 package dartzee.utils
 
-import dartzee.logging.CODE_PARSE_ERROR
-import dartzee.utils.InjectedThings.logger
+import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings.preferenceService
 import java.awt.Color
 import java.awt.Component
 import java.lang.Float.max
 
-
-object DartsColour
-{
+object DartsColour {
     val TRANSPARENT = Color(0, 0, 0, 0)
 
     val DARTBOARD_RED: Color = Color.red
     val DARTBOARD_GREEN: Color = Color.green
-    val DARTBOARD_BLACK: Color = Color.getHSBColor(0f, 0f, 0.1.toFloat())
+    val DARTBOARD_BLACK: Color = Color(32, 42, 68)
     val DARTBOARD_WHITE: Color = Color.white
-
-    val DARTBOARD_BLACK_STR = toPrefStr(DARTBOARD_BLACK)
-    val DARTBOARD_GREEN_STR = toPrefStr(DARTBOARD_GREEN)
-    val DARTBOARD_RED_STR = toPrefStr(DARTBOARD_RED)
-    val DARTBOARD_WHITE_STR = toPrefStr(DARTBOARD_WHITE)
 
     val DARTBOARD_LIGHTEST_GREY: Color = Color.getHSBColor(0f, 0f, 0.9.toFloat())
     val DARTBOARD_LIGHTER_GREY: Color = Color.getHSBColor(0f, 0f, 0.75.toFloat())
@@ -33,7 +26,12 @@ object DartsColour
 
     val COLOUR_ACHIEVEMENT_ORANGE: Color = Color.getHSBColor(0.1f, 1f, 1f)
 
-    val COLOUR_PASTEL_BLUE: Color = Color.getHSBColor(242.toFloat() / 360, 0.48.toFloat(), 0.8.toFloat())
+    val COLOUR_PASTEL_BLUE: Color =
+        Color.getHSBColor(242.toFloat() / 360, 0.48.toFloat(), 0.8.toFloat())
+    val PURPLE = Color(138, 43, 226)
+    val ORANGE = Color(255, 140, 0)
+    val DARK_GREEN = Color(1, 75, 32)
+    val DARK_RED = Color(139, 0, 0)
 
     val FIRST_COLOURS = Pair(Color.YELLOW, COLOUR_GOLD_TEXT)
     val SECOND_COLOURS = Pair(Color.GRAY, COLOUR_SILVER_TEXT)
@@ -42,8 +40,7 @@ object DartsColour
 
     fun getDarkenedColour(colour: Color): Color = colour.darker().darker()
 
-    fun getBrightenedColour(colour: Color): Color
-    {
+    fun getBrightenedColour(colour: Color): Color {
         var hsbValues = FloatArray(3)
         hsbValues = Color.RGBtoHSB(colour.red, colour.green, colour.blue, hsbValues)
 
@@ -51,32 +48,8 @@ object DartsColour
         return Color.getHSBColor(hsbValues[0], decreasedSat, hsbValues[2])
     }
 
-    fun toPrefStr(colour: Color): String {
-        val r = colour.red
-        val g = colour.green
-        val b = colour.blue
-        val a = colour.alpha
-
-        return "$r;$g;$b;$a"
-    }
-
-    fun getColorFromPrefStr(prefStr: String): Color =
-        try
-        {
-            val colours = prefStr.split(";").map{ it.toInt() }
-            Color(colours[0], colours[1], colours[2], colours[3])
-        }
-        catch (t: Throwable)
-        {
-            logger.error(CODE_PARSE_ERROR, "Failed to reconstruct colour from string: $prefStr", t)
-            Color.BLACK
-        }
-
-
-    fun setFgAndBgColoursForPosition(c: Component, finishPos: Int, defaultBg: Color? = null)
-    {
-        when (finishPos)
-        {
+    fun setFgAndBgColoursForPosition(c: Component, finishPos: Int, defaultBg: Color? = null) {
+        when (finishPos) {
             -1 -> setColors(c, defaultBg, null)
             1 -> setColors(c, Color.YELLOW, COLOUR_GOLD_TEXT)
             2 -> setColors(c, Color.GRAY, COLOUR_SILVER_TEXT)
@@ -86,37 +59,39 @@ object DartsColour
 
         c.repaint()
     }
-    private fun setColors(c: Component, background: Color?, foreground: Color?)
-    {
+
+    private fun setColors(c: Component, background: Color?, foreground: Color?) {
         c.background = background
         c.foreground = foreground
     }
 
-
-    fun getScorerForegroundColour(totalScore: Double): Color
-    {
-        val hueFactor = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_HUE_FACTOR)
-        val fgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_FG_BRIGHTNESS)
+    fun getScorerForegroundColour(totalScore: Double): Color {
+        val hueFactor = preferenceService.get(Preferences.hueFactor)
+        val fgBrightness = preferenceService.get(Preferences.fgBrightness)
         return getScorerColour(totalScore, hueFactor, fgBrightness)
     }
 
-    fun getScorerBackgroundColour(totalScore: Double): Color
-    {
-        val hueFactor = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_HUE_FACTOR)
-        val bgBrightness = PreferenceUtil.getDoubleValue(PREFERENCES_DOUBLE_BG_BRIGHTNESS)
+    fun getScorerBackgroundColour(totalScore: Double): Color {
+        val hueFactor = preferenceService.get(Preferences.hueFactor)
+        val bgBrightness = preferenceService.get(Preferences.bgBrightness)
         return getScorerColour(totalScore, hueFactor, bgBrightness)
     }
 
-    fun getScorerColour(totalScore: Double, multiplier: Double, brightness: Double): Color
-    {
-        return getProportionalColour(totalScore, 180, multiplier, brightness)
-    }
+    fun getScorerColour(totalScore: Double, multiplier: Double, brightness: Double) =
+        getProportionalColour(totalScore, 180, multiplier, brightness)
 
-    fun getProportionalColour(value: Double, total: Int, multiplier: Double, brightness: Double): Color
-    {
+    private fun getProportionalColour(
+        value: Double,
+        total: Int,
+        multiplier: Double,
+        brightness: Double,
+    ): Color {
         val hue = (value * multiplier).toFloat() / total
         return Color.getHSBColor(hue, 1f, brightness.toFloat())
     }
 
-    fun getProportionalColourRedToGreen(value: Double, total: Int, brightness: Double) = getProportionalColour(value, total, 0.4, brightness)
+    fun getProportionalColourRedToGreen(value: Double, total: Int, brightness: Double) =
+        getProportionalColour(value, total, 0.4, brightness)
 }
+
+fun Color.translucent() = Color(this.red, this.green, this.blue, 120)

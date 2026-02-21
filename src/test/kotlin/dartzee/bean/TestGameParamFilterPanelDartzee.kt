@@ -6,30 +6,30 @@ import dartzee.core.bean.selectedItemTyped
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertDartzeeTemplate
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.awt.event.ActionListener
+import org.junit.jupiter.api.Test
 
-class TestGameParamFilterPanelDartzee: AbstractTest()
-{
+class TestGameParamFilterPanelDartzee : AbstractTest() {
     @Test
-    fun `Should populate empty if there are no templates set up`()
-    {
+    fun `Should populate empty if there are no templates set up`() {
         val panel = GameParamFilterPanelDartzee()
 
-        panel.getOptions().shouldContainExactly(
-            ComboBoxItem(null, "Custom"),
-            ComboBoxItem(null, "-----", false),
-            ComboBoxItem(null, "No templates configured", false))
+        panel
+            .getOptions()
+            .shouldContainExactly(
+                ComboBoxItem(null, "Custom"),
+                ComboBoxItem(null, "-----", false),
+                ComboBoxItem(null, "No templates configured", false),
+            )
     }
 
     @Test
-    fun `Should always return empty gameParams if there are no templates set up`()
-    {
+    fun `Should always return empty gameParams if there are no templates set up`() {
         val panel = GameParamFilterPanelDartzee()
 
         panel.comboBox.selectedIndex = 0
@@ -46,23 +46,20 @@ class TestGameParamFilterPanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should add templates below the divider if they exist`()
-    {
+    fun `Should add templates below the divider if they exist`() {
         insertDartzeeTemplate(name = "Template A")
         insertDartzeeTemplate(name = "Template B")
 
         val panel = GameParamFilterPanelDartzee()
 
-        panel.getOptions().map { it.visibleData }.shouldContainExactly(
-            "Custom",
-            "-----",
-            "Template A",
-            "Template B")
+        panel
+            .getOptions()
+            .map { it.visibleData }
+            .shouldContainExactly("Custom", "-----", "Template A", "Template B")
     }
 
     @Test
-    fun `Selecting a template should populate its ID as the game params`()
-    {
+    fun `Selecting a template should populate its ID as the game params`() {
         val templateId = insertDartzeeTemplate(name = "Template A").rowId
 
         val panel = GameParamFilterPanelDartzee()
@@ -73,8 +70,7 @@ class TestGameParamFilterPanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should support setting the selection by gameParams`()
-    {
+    fun `Should support setting the selection by gameParams`() {
         val templateId = insertDartzeeTemplate(name = "Some Template").rowId
 
         val panel = GameParamFilterPanelDartzee()
@@ -86,8 +82,7 @@ class TestGameParamFilterPanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should enable and disable its comboBox correctly`()
-    {
+    fun `Should enable and disable its comboBox correctly`() {
         val panel = GameParamFilterPanelDartzee()
 
         panel.enableChildren(false)
@@ -98,8 +93,7 @@ class TestGameParamFilterPanelDartzee: AbstractTest()
     }
 
     @Test
-    fun `Should add and remove action listeners on the combo box`()
-    {
+    fun `Should add and remove action listeners on the combo box`() {
         val panel = GameParamFilterPanelDartzee()
 
         val listener = mockk<ActionListener>(relaxed = true)
@@ -116,7 +110,6 @@ class TestGameParamFilterPanelDartzee: AbstractTest()
 
         verifyNotCalled { listener.actionPerformed(any()) }
     }
-
 
     private fun GameParamFilterPanelDartzee.getOptions() = comboBox.items()
 }

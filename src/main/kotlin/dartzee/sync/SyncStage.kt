@@ -1,19 +1,17 @@
 package dartzee.sync
 
-enum class SyncStage
-{
+enum class SyncStage {
     PULL_REMOTE,
     VALIDATE_REMOTE,
     MERGE_LOCAL_CHANGES,
     UPDATE_ACHIEVEMENTS,
     PUSH_TO_REMOTE,
     PUSH_BACKUP_TO_REMOTE,
-    OVERWRITE_LOCAL
+    OVERWRITE_LOCAL,
 }
 
 fun SyncStage.desc() =
-    when (this)
-    {
+    when (this) {
         SyncStage.PULL_REMOTE -> "Download data"
         SyncStage.VALIDATE_REMOTE -> "Validate database"
         SyncStage.MERGE_LOCAL_CHANGES -> "Merge changes"

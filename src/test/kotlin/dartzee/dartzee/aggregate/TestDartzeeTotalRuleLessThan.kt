@@ -1,16 +1,14 @@
 package dartzee.dartzee.aggregate
 
 import dartzee.dartzee.AbstractDartzeeRuleTest
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDartzeeTotalRuleLessThan: AbstractDartzeeRuleTest<DartzeeTotalRuleLessThan>()
-{
+class TestDartzeeTotalRuleLessThan : AbstractDartzeeRuleTest<DartzeeTotalRuleLessThan>() {
     override fun factory() = DartzeeTotalRuleLessThan()
 
     @Test
-    fun `Total validation`()
-    {
+    fun `Total validation`() {
         val rule = DartzeeTotalRuleLessThan()
         rule.target = 55
 
@@ -20,8 +18,7 @@ class TestDartzeeTotalRuleLessThan: AbstractDartzeeRuleTest<DartzeeTotalRuleLess
     }
 
     @Test
-    fun `Rule description`()
-    {
+    fun `Rule description`() {
         val rule = DartzeeTotalRuleLessThan()
         rule.target = 25
 

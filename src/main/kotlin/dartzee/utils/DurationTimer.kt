@@ -1,7 +1,6 @@
 package dartzee.utils
 
-class DurationTimer
-{
+class DurationTimer {
     val start = System.currentTimeMillis()
 
     fun getDuration() = System.currentTimeMillis() - start

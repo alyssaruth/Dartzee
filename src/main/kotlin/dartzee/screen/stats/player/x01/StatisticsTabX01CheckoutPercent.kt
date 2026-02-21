@@ -1,10 +1,10 @@
 package dartzee.screen.stats.player.x01
 
-import dartzee.`object`.Dart
 import dartzee.core.bean.ScrollTable
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.MathsUtil
 import dartzee.core.util.TableUtil.DefaultModel
+import dartzee.`object`.Dart
 import dartzee.screen.stats.player.AbstractStatisticsTab
 import dartzee.stats.GameWrapper
 import dartzee.utils.getCheckoutScores
@@ -14,18 +14,14 @@ import java.awt.Color
 import java.awt.GridLayout
 import javax.swing.JPanel
 
-/**
- * Checkout percentages for X01
- */
-class StatisticsTabX01CheckoutPercent : AbstractStatisticsTab()
-{
+/** Checkout percentages for X01 */
+class StatisticsTabX01CheckoutPercent : AbstractStatisticsTab() {
     private val panelMine = JPanel()
     private val tableMine = ScrollTable()
     private val panelOther = JPanel()
     private val tableOther = ScrollTable()
 
-    init
-    {
+    init {
         layout = GridLayout(0, 2, 0, 0)
 
         add(panelMine)
@@ -37,23 +33,18 @@ class StatisticsTabX01CheckoutPercent : AbstractStatisticsTab()
         tableOther.tableForeground = Color.RED
     }
 
-    override fun populateStats()
-    {
+    override fun populateStats() {
         setOtherComponentVisibility(this, panelOther)
 
         populateTable(tableMine, filteredGames)
-        if (includeOtherComparison())
-        {
+        if (includeOtherComparison()) {
             populateTable(tableOther, filteredGamesOther)
         }
-
     }
 
-    private fun populateTable(table: ScrollTable, games: List<GameWrapper>)
-    {
+    private fun populateTable(table: ScrollTable, games: List<GameWrapper>) {
         val hmDoubleToDartsThrown = HashMapList<Int, Dart>()
-        for (g in games)
-        {
+        for (g in games) {
             addDartsToHashMap(g, hmDoubleToDartsThrown)
         }
 
@@ -66,13 +57,19 @@ class StatisticsTabX01CheckoutPercent : AbstractStatisticsTab()
         var totalOpportunities = 0
         var totalHits = 0
 
-        getCheckoutScores().forEach{
-            val darts = hmDoubleToDartsThrown[it] ?: mutableListOf()
+        getCheckoutScores().forEach { checkout ->
+            val darts = hmDoubleToDartsThrown[checkout] ?: mutableListOf()
 
             val opportunities = darts.size
-            val hits = darts.filter { drt -> drt.isDouble() && drt.getTotal() == it }.size
+            val hits = darts.count { drt -> drt.isDouble() && drt.getTotal() == checkout }
 
-            val row = arrayOf(it / 2, opportunities, hits, MathsUtil.getPercentage(hits, opportunities.toDouble()))
+            val row =
+                arrayOf<Any>(
+                    checkout / 2,
+                    opportunities,
+                    hits,
+                    MathsUtil.getPercentage(hits, opportunities.toDouble()),
+                )
             model.addRow(row)
 
             totalOpportunities += opportunities
@@ -81,19 +78,22 @@ class StatisticsTabX01CheckoutPercent : AbstractStatisticsTab()
 
         table.model = model
 
-        val totalsRow = arrayOf("", totalOpportunities, totalHits, MathsUtil.getPercentage(totalHits, totalOpportunities.toDouble()))
+        val totalsRow =
+            arrayOf<Any>(
+                "",
+                totalOpportunities,
+                totalHits,
+                MathsUtil.getPercentage(totalHits, totalOpportunities.toDouble()),
+            )
         table.addFooterRow(totalsRow)
 
         table.sortBy(0, false)
     }
 
-    private fun addDartsToHashMap(g: GameWrapper, hmDoubleToDartsThrown: HashMapList<Int, Dart>)
-    {
+    private fun addDartsToHashMap(g: GameWrapper, hmDoubleToDartsThrown: HashMapList<Int, Dart>) {
         val darts = g.getAllDarts()
-        for (drt in darts)
-        {
-            if (isCheckoutDart(drt))
-            {
+        for (drt in darts) {
+            if (isCheckoutDart(drt)) {
                 val startingScore = drt.startingScore
                 hmDoubleToDartsThrown.putInList(startingScore, drt)
             }

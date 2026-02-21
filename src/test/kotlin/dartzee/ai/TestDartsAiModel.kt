@@ -1,35 +1,36 @@
 package dartzee.ai
 
-import dartzee.`object`.Dart
-import dartzee.`object`.DartboardSegment
-import dartzee.`object`.SegmentType
-import dartzee.makeTestDartboard
-import dartzee.core.helper.verifyNotCalled
+import dartzee.dartzee.DartzeeAimCalculator
 import dartzee.game.ClockType
+import dartzee.game.FinishType
 import dartzee.helper.AbstractTest
 import dartzee.helper.beastDartsModel
 import dartzee.helper.makeDartsModel
-import dartzee.listener.DartboardListener
-import dartzee.screen.Dartboard
-import dartzee.screen.dartzee.DartzeeDartboard
-import dartzee.screen.game.dartzee.SegmentStatus
-import dartzee.utils.getAllPossibleSegments
+import dartzee.helper.makeSegmentStatuses
+import dartzee.`object`.DartboardSegment
+import dartzee.`object`.SegmentType
+import dartzee.screen.game.SegmentStatuses
+import dartzee.utils.InjectedThings
+import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getCheckoutScores
-import io.kotlintest.matchers.doubles.shouldBeBetween
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldNotBe
+import io.kotest.matchers.doubles.shouldBeBetween
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
-import io.mockk.verifySequence
-import org.junit.jupiter.api.Test
 import java.awt.Point
 import kotlin.math.floor
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-class TestDartsAiModel: AbstractTest()
-{
+class TestDartsAiModel : AbstractTest() {
+    @BeforeEach
+    fun beforeEach() {
+        InjectedThings.dartzeeAimCalculator = DartzeeAimCalculator()
+    }
+
     @Test
-    fun `Should serialize and deserialize with default values`()
-    {
+    fun `Should serialize and deserialize with default values`() {
         val model = DartsAiModel.new()
         val result = model.toJson()
 
@@ -38,8 +39,7 @@ class TestDartsAiModel: AbstractTest()
     }
 
     @Test
-    fun `Should serialize and deserialize with populated values`()
-    {
+    fun `Should serialize and deserialize with populated values`() {
         val model = makePopulatedAiModel()
 
         val result = model.toJson()
@@ -48,18 +48,16 @@ class TestDartsAiModel: AbstractTest()
     }
 
     @Test
-    fun `Should deserialize from static JSON`()
-    {
-        val jsonString = javaClass.getResource("/aiModel.json").readText()
+    fun `Should deserialize from static JSON`() {
+        val jsonString = javaClass.getResource("/aiModel.json")!!.readText()
         val model = DartsAiModel.fromJson(jsonString)
 
         model shouldBe makePopulatedAiModel()
     }
 
-    private fun makePopulatedAiModel(): DartsAiModel
-    {
-        val setupDarts = mapOf(57 to AimDart(17, 1), 97 to AimDart(19, 3))
-        val hmDartNoToSegmentType = mapOf(1 to SegmentType.TREBLE, 2 to SegmentType.TREBLE, 3 to SegmentType.OUTER_SINGLE)
+    private fun makePopulatedAiModel(): DartsAiModel {
+        val hmDartNoToSegmentType =
+            mapOf(1 to SegmentType.TREBLE, 2 to SegmentType.TREBLE, 3 to SegmentType.OUTER_SINGLE)
         val hmDartNoToThreshold = mapOf(1 to 2, 2 to 3)
         return DartsAiModel(
             50.0,
@@ -67,91 +65,64 @@ class TestDartsAiModel: AbstractTest()
             35.0,
             345,
             20,
-            setupDarts,
             17,
             hmDartNoToSegmentType,
             hmDartNoToThreshold,
-            DartzeePlayStyle.CAUTIOUS)
+            DartzeePlayStyle.CAUTIOUS,
+        )
     }
 
-    /**
-     * Verified against standard Normal Dist z-tables
-     */
+    /** Verified against standard Normal Dist z-tables */
     @Test
-    fun `Should return the correct density based on the standard deviation`()
-    {
+    fun `Should return the correct density based on the standard deviation`() {
         val model = makeDartsModel(standardDeviation = 20.0)
 
-        //P(within 0.5 SD)
+        // P(within 0.5 SD)
         model.getProbabilityWithinRadius(10.0)!!.shouldBeBetween(0.3829, 0.3831, 0.0)
 
-        //P(within 1 SD)
+        // P(within 1 SD)
         model.getProbabilityWithinRadius(20.0)!!.shouldBeBetween(0.6826, 0.6827, 0.0)
 
-        //P(within 2 SD)
+        // P(within 2 SD)
         model.getProbabilityWithinRadius(40.0)!!.shouldBeBetween(0.9543, 0.9545, 0.0)
 
-        //P(within 3 SD)
+        // P(within 3 SD)
         model.getProbabilityWithinRadius(60.0)!!.shouldBeBetween(0.9973, 0.9975, 0.0)
     }
 
     @Test
-    fun `Should return null density if maxOutlierRatio prevents darts going there`()
-    {
+    fun `Should return null density if maxOutlierRatio prevents darts going there`() {
         val model = makeDartsModel(standardDeviation = 3.0, maxRadius = 50)
 
         model.getProbabilityWithinRadius(51.0) shouldBe null
         model.getProbabilityWithinRadius(50.0) shouldNotBe null
     }
 
-    /**
-     * Actual sampling behaviour
-     */
+    /** Actual sampling behaviour */
     @Test
-    fun `Should use the double distribution if throwing at a double, and the regular distribution otherwise`()
-    {
+    fun `Should use the double distribution if throwing at a double, and the regular distribution otherwise`() {
         val model = beastDartsModel(standardDeviationDoubles = 100000.0, maxRadius = 1000)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(40, dartboard)
-
-        verify { listener.dartThrown(any()) }
-        verifyNotCalled { listener.dartThrown(Dart(20, 2)) }
+        val pt = model.throwX01Dart(40, FinishType.Doubles, 3)
+        pt.segment shouldNotBe DartboardSegment(SegmentType.DOUBLE, 20)
     }
 
     @Test
-    fun `Should revert to the regular distribution for doubles`()
-    {
+    fun `Should revert to the regular distribution for doubles`() {
         val model = beastDartsModel(standardDeviationDoubles = null)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(40, dartboard)
-
-        verify { listener.dartThrown(Dart(20, 2)) }
+        val pt = model.throwX01Dart(40, FinishType.Doubles, 3)
+        pt.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 20)
     }
 
     @Test
-    fun `Should generate a random angle between 0 - 360 by default`()
-    {
+    fun `Should generate a random angle between 0 - 360 by default`() {
         val model = makeDartsModel(standardDeviation = 3.0)
 
-        val dartboard = makeTestDartboard()
         val pt = Point(0, 0)
-
         val hsAngles = HashSet<Double>()
-        for (i in 0..100000)
-        {
-            val (_, theta) = model.calculateRadiusAndAngle(pt, dartboard)
+        repeat(100000) {
+            val (_, theta) = model.calculateRadiusAndAngle(pt)
             theta.shouldBeBetween(0.0, 360.0, 0.0)
 
             hsAngles.add(floor(theta))
@@ -161,212 +132,235 @@ class TestDartsAiModel: AbstractTest()
     }
 
     @Test
-    fun `Should not allow the radius to exceed the max outlier ratio`()
-    {
-        val dartboard = makeTestDartboard()
+    fun `Should not allow the radius to exceed the max outlier ratio`() {
         val pt = Point(0, 0)
 
         val model = makeDartsModel(standardDeviation = 50.0, maxRadius = 50)
-        val radii = (1..1000).map { model.calculateRadiusAndAngle(pt, dartboard).radius }
+        val radii = (1..1000).map { model.calculateRadiusAndAngle(pt).radius }
         radii.forEach { it.shouldBeBetween(-50.0, 50.0, 0.0) }
 
         val erraticModel = makeDartsModel(standardDeviation = 50.0, maxRadius = 75)
-        val moreRadii = (1..1000).map { erraticModel.calculateRadiusAndAngle(pt, dartboard).radius }
+        val moreRadii = (1..1000).map { erraticModel.calculateRadiusAndAngle(pt).radius }
         moreRadii.forEach { it.shouldBeBetween(-75.0, 75.0, 0.0) }
     }
 
-    /**
-     * X01 test
-     */
     @Test
-    fun `Should aim for the overridden value if one is set for the current setup score`()
-    {
-        val model = beastDartsModel(hmScoreToDart = mapOf(77 to AimDart(17, 2)))
+    fun `Should just miss the board if told to deliberately miss`() {
+        val erraticModel = makeDartsModel(standardDeviation = 100.0, maxRadius = 75)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
+        val mockDartzeeAimCalculator = mockk<DartzeeAimCalculator>()
+        every { mockDartzeeAimCalculator.getPointToAimFor(any(), any(), any()) } returns
+            DELIBERATE_MISS
+        InjectedThings.dartzeeAimCalculator = mockDartzeeAimCalculator
 
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
+        repeat(20) {
+            val pt = erraticModel.throwDartzeeDart(0, makeSegmentStatuses())
+            pt.segment shouldBe DartboardSegment(SegmentType.MISS, 3)
+        }
+    }
 
-        model.throwX01Dart(77, dartboard)
+    /** X01 test */
+    @Test
+    fun `Should adopt checkout suggestion if there is one`() {
+        val model = beastDartsModel()
 
-        verify { listener.dartThrown(Dart(17, 2)) }
+        val pt = model.throwX01Dart(81, FinishType.Doubles, 2)
+        pt.segment shouldBe DartboardSegment(SegmentType.TREBLE, 19)
     }
 
     @Test
-    fun `Should aim for the scoring dart when the score is over 60`()
-    {
+    fun `Should checkout a 170`() {
+        val model = beastDartsModel()
+
+        val ptOne = model.throwX01Dart(170, FinishType.Doubles, 3)
+        val ptTwo = model.throwX01Dart(110, FinishType.Doubles, 2)
+        val ptThree = model.throwX01Dart(50, FinishType.Doubles, 1)
+
+        ptOne.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
+        ptTwo.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
+        ptThree.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
+    }
+
+    @Test
+    fun `Should not use checkout suggestion in relaxed mode`() {
+        val model = beastDartsModel()
+
+        val pt = model.throwX01Dart(81, FinishType.Any, 2)
+        pt.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
+    }
+
+    @Test
+    fun `Should aim for the scoring dart when the score is over 60`() {
         val model = beastDartsModel(scoringDart = 18)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(61, dartboard)
-
-        verify { listener.dartThrown(Dart(18, 3)) }
-    }
-
-    @Test
-    fun `Should throw at inner bull if the scoring dart is 25`()
-    {
-        val model = beastDartsModel(scoringDart = 25)
-
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(501, dartboard)
-
-        verify { listener.dartThrown(Dart(25, 2)) }
-    }
-
-    @Test
-    fun `Should aim to reduce down to D20 when in the 41 - 60 range`()
-    {
-        val model = beastDartsModel(scoringDart = 25)
-
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        for (i in 41..60)
-        {
-            dartboard.clearDarts()
-
-            val listener = mockk<DartboardListener>(relaxed = true)
-            dartboard.addDartboardListener(listener)
-
-            model.throwX01Dart(i, dartboard)
-            verify { listener.dartThrown(Dart(i - 40, 1))}
+        FinishType.entries.forEach { finishType ->
+            val pt = model.throwX01Dart(61, finishType, 1)
+            pt.segment shouldBe DartboardSegment(SegmentType.TREBLE, 18)
         }
     }
 
     @Test
-    fun `Should aim to reduce to 32 when the score is less than 40`()
-    {
-        val model = beastDartsModel()
+    fun `Should throw at inner bull if the scoring dart is 25`() {
+        val model = beastDartsModel(scoringDart = 25)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(37, dartboard)
-        verify { listener.dartThrown(Dart(5, 1))}
+        val pt = model.throwX01Dart(501, FinishType.Doubles, 3)
+        pt.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
     }
 
     @Test
-    fun `Should aim to reduce to 16 when the score is less than 32`()
-    {
-        val model = beastDartsModel()
+    fun `Should aim to reduce down to D20 when in the 41 - 60 range and 3 darts remaining`() {
+        val model = beastDartsModel(scoringDart = 25)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(31, dartboard)
-        verify { listener.dartThrown(Dart(15, 1))}
+        for (i in 41..60) {
+            val pt = model.throwX01Dart(i, FinishType.Doubles, 3)
+            pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, i - 40)
+        }
     }
 
     @Test
-    fun `Should aim to reduce to 8 when the score is less than 16`()
-    {
+    fun `Should aim for bullseye when on 50 and 2 or fewer darts remaining`() {
         val model = beastDartsModel()
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
+        val pt = model.throwX01Dart(50, FinishType.Doubles, 2)
+        val pt2 = model.throwX01Dart(50, FinishType.Doubles, 1)
 
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(15, dartboard)
-        verify { listener.dartThrown(Dart(7, 1))}
+        pt.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
+        pt2.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
     }
 
     @Test
-    fun `Should aim to reduce to 4 when the score is less than 8`()
-    {
+    fun `Should aim to reduce to 32 when the score is less than 40`() {
         val model = beastDartsModel()
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
-
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
-
-        model.throwX01Dart(7, dartboard)
-        verify { listener.dartThrown(Dart(3, 1)) }
+        val pt = model.throwX01Dart(37, FinishType.Doubles, 3)
+        pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 5)
     }
 
     @Test
-    fun `Should aim for the double when on an even number`()
-    {
+    fun `Should aim to reduce to 16 when the score is less than 32`() {
         val model = beastDartsModel()
 
-        val scores = getCheckoutScores().filter{ it <= 40 }
+        val pt = model.throwX01Dart(31, FinishType.Doubles, 3)
+        pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 15)
+    }
+
+    @Test
+    fun `Should aim to reduce to 8 when the score is less than 16`() {
+        val model = beastDartsModel()
+
+        val pt = model.throwX01Dart(15, FinishType.Doubles, 3)
+        pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 7)
+    }
+
+    @Test
+    fun `Should aim to reduce to 4 when the score is less than 8`() {
+        val model = beastDartsModel()
+
+        val pt = model.throwX01Dart(7, FinishType.Doubles, 3)
+        pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 3)
+    }
+
+    @Test
+    fun `Should aim for the double when on an even number`() {
+        val model = beastDartsModel()
+
+        val scores = getCheckoutScores().filter { it <= 40 }
         scores.forEach {
-            val dartboard = Dartboard(100, 100)
-            dartboard.paintDartboard()
-
-            val listener = mockk<DartboardListener>(relaxed = true)
-            dartboard.addDartboardListener(listener)
-
-            model.throwX01Dart(it, dartboard)
-            verify { listener.dartThrown(Dart(it/2, 2))}
+            val pt = model.throwX01Dart(it, FinishType.Doubles, 3)
+            pt.segment shouldBe DartboardSegment(SegmentType.DOUBLE, it / 2)
         }
     }
 
-    /**
-     * Golf behaviour
-     */
+    /** Relaxed mode */
     @Test
-    fun `Should aim for double, treble, treble by default`()
-    {
+    fun `Should aim for the single when on one`() {
         val model = beastDartsModel()
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
+        val scores = 1..20
+        scores.forEach {
+            val pt = model.throwX01Dart(it, FinishType.Any, 3)
+            pt.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, it)
+        }
+    }
 
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
+    @Test
+    fun `Should aim for treble finishes`() {
+        val model = beastDartsModel()
 
-        for (i in 1..3) { model.throwGolfDart(1, i, dartboard) }
+        model.throwX01Dart(21, FinishType.Any, 3).segment shouldBe
+            DartboardSegment(SegmentType.TREBLE, 7)
 
-        verifySequence { listener.dartThrown(Dart(1, 2)); listener.dartThrown(Dart(1, 3)); listener.dartThrown(Dart(1, 3)) }
+        model.throwX01Dart(39, FinishType.Any, 3).segment shouldBe
+            DartboardSegment(SegmentType.TREBLE, 13)
 
+        model.throwX01Dart(60, FinishType.Any, 3).segment shouldBe
+            DartboardSegment(SegmentType.TREBLE, 20)
+    }
+
+    @Test
+    fun `Should aim to leave single twenty`() {
+        val model = beastDartsModel()
+
+        model.throwX01Dart(40, FinishType.Any, 3).segment shouldBe
+            DartboardSegment(SegmentType.OUTER_SINGLE, 20)
+
+        model.throwX01Dart(31, FinishType.Any, 3).segment shouldBe
+            DartboardSegment(SegmentType.OUTER_SINGLE, 11)
+
+        model.throwX01Dart(29, FinishType.Any, 3).segment shouldBe
+            DartboardSegment(SegmentType.OUTER_SINGLE, 9)
+    }
+
+    @Test
+    fun `Should fall back on aiming for single twenty otherwise`() {
+        val model = beastDartsModel()
+
+        model.throwX01Dart(41, FinishType.Any, 3).segment shouldBe
+            DartboardSegment(SegmentType.OUTER_SINGLE, 20)
+
+        model.throwX01Dart(50, FinishType.Any, 3).segment shouldBe
+            DartboardSegment(SegmentType.OUTER_SINGLE, 20)
+
+        model.throwX01Dart(58, FinishType.Any, 3).segment shouldBe
+            DartboardSegment(SegmentType.OUTER_SINGLE, 20)
+    }
+
+    /** Golf behaviour */
+    @Test
+    fun `Should aim for double, treble, treble by default`() {
+        val model = beastDartsModel()
         model.getSegmentTypeForDartNo(1) shouldBe SegmentType.DOUBLE
         model.getSegmentTypeForDartNo(2) shouldBe SegmentType.TREBLE
         model.getSegmentTypeForDartNo(3) shouldBe SegmentType.TREBLE
+
+        val pt1 = model.throwGolfDart(1, 1)
+        pt1.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 1)
+
+        val pt2 = model.throwGolfDart(1, 2)
+        pt2.segment shouldBe DartboardSegment(SegmentType.TREBLE, 1)
+
+        val pt3 = model.throwGolfDart(1, 3)
+        pt3.segment shouldBe DartboardSegment(SegmentType.TREBLE, 1)
     }
 
     @Test
-    fun `Should respect overridden targets per dart`()
-    {
-        val hmDartNoToSegmentType = mapOf(1 to SegmentType.TREBLE, 2 to SegmentType.OUTER_SINGLE, 3 to SegmentType.DOUBLE)
+    fun `Should respect overridden targets per dart`() {
+        val hmDartNoToSegmentType =
+            mapOf(1 to SegmentType.TREBLE, 2 to SegmentType.OUTER_SINGLE, 3 to SegmentType.DOUBLE)
         val model = beastDartsModel(hmDartNoToSegmentType = hmDartNoToSegmentType)
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
+        val pt1 = model.throwGolfDart(1, 1)
+        pt1.segment shouldBe DartboardSegment(SegmentType.TREBLE, 1)
 
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
+        val pt2 = model.throwGolfDart(1, 2)
+        pt2.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 1)
 
-        for (i in 1..3) { model.throwGolfDart(1, i, dartboard) }
-
-        verifySequence { listener.dartThrown(Dart(1, 3)); listener.dartThrown(Dart(1, 1)); listener.dartThrown(Dart(1, 2)) }
+        val pt3 = model.throwGolfDart(1, 3)
+        pt3.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 1)
     }
 
     @Test
-    fun `Stop thresholds should be 2 then 3 by default`()
-    {
+    fun `Stop thresholds should be 2 then 3 by default`() {
         val model = beastDartsModel()
 
         model.getStopThresholdForDartNo(1) shouldBe 2
@@ -374,8 +368,7 @@ class TestDartsAiModel: AbstractTest()
     }
 
     @Test
-    fun `Overridden stop thresholds should be adhered to`()
-    {
+    fun `Overridden stop thresholds should be adhered to`() {
         val hmDartNoToStopThreshold = mapOf(1 to 3, 2 to 4)
         val model = beastDartsModel(hmDartNoToStopThreshold = hmDartNoToStopThreshold)
 
@@ -383,73 +376,57 @@ class TestDartsAiModel: AbstractTest()
         model.getStopThresholdForDartNo(2) shouldBe 4
     }
 
-    /**
-     * Clock
-     */
+    /** Clock */
     @Test
-    fun `Should aim for the right segmentType and target number`()
-    {
+    fun `Should aim for the right segmentType and target number`() {
         val model = beastDartsModel()
 
-        val dartboard = Dartboard(100, 100)
-        dartboard.paintDartboard()
+        val pt1 = model.throwClockDart(1, ClockType.Standard)
+        pt1.segment shouldBe DartboardSegment(SegmentType.OUTER_SINGLE, 1)
 
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
+        val pt2 = model.throwClockDart(13, ClockType.Doubles)
+        pt2.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 13)
 
-        model.throwClockDart(1, ClockType.Standard, dartboard)
-        model.throwClockDart(13, ClockType.Doubles, dartboard)
-        model.throwClockDart(11, ClockType.Trebles, dartboard)
-
-        verifySequence { listener.dartThrown(Dart(1, 1)); listener.dartThrown(Dart(13, 2)); listener.dartThrown(Dart(11, 3)) }
+        val pt3 = model.throwClockDart(11, ClockType.Trebles)
+        pt3.segment shouldBe DartboardSegment(SegmentType.TREBLE, 11)
     }
 
-    /**
-     * Dartzee
-     */
+    /** Dartzee */
     @Test
-    fun `Should aim aggressively if less than 2 darts thrown, and cautiously for the final one`()
-    {
+    fun `Should aim aggressively if less than 2 darts thrown, and cautiously for the final one`() {
         val model = beastDartsModel(dartzeePlayStyle = DartzeePlayStyle.CAUTIOUS)
 
-        val dartboard = DartzeeDartboard(100, 100)
-        dartboard.paintDartboard()
+        val segmentStatuses =
+            SegmentStatuses(
+                listOf(DartboardSegment(SegmentType.TREBLE, 20)),
+                getAllNonMissSegments(),
+            )
+        val pt1 = model.throwDartzeeDart(0, segmentStatuses)
+        pt1.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
+        val pt2 = model.throwDartzeeDart(1, segmentStatuses)
+        pt2.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
-        val segmentStatus = SegmentStatus(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
-        model.throwDartzeeDart(0, dartboard, segmentStatus)
-        model.throwDartzeeDart(1, dartboard, segmentStatus)
-        model.throwDartzeeDart(2, dartboard, segmentStatus)
-
-        verifySequence {
-            listener.dartThrown(Dart(20, 3))
-            listener.dartThrown(Dart(20, 3))
-            listener.dartThrown(Dart(25, 2))
-        }
+        val pt3 = model.throwDartzeeDart(2, segmentStatuses)
+        pt3.segment shouldBe DartboardSegment(SegmentType.DOUBLE, 25)
     }
 
     @Test
-    fun `Should throw aggressively for the final dart if player is aggressive`()
-    {
+    fun `Should throw aggressively for the final dart if player is aggressive`() {
         val model = beastDartsModel(dartzeePlayStyle = DartzeePlayStyle.AGGRESSIVE)
 
-        val dartboard = DartzeeDartboard(100, 100)
-        dartboard.paintDartboard()
+        val segmentStatuses =
+            SegmentStatuses(
+                listOf(DartboardSegment(SegmentType.TREBLE, 20)),
+                getAllNonMissSegments(),
+            )
+        val pt1 = model.throwDartzeeDart(0, segmentStatuses)
+        pt1.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
-        val listener = mockk<DartboardListener>(relaxed = true)
-        dartboard.addDartboardListener(listener)
+        val pt2 = model.throwDartzeeDart(1, segmentStatuses)
+        pt2.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
 
-        val segmentStatus = SegmentStatus(listOf(DartboardSegment(SegmentType.TREBLE, 20)), getAllPossibleSegments())
-        model.throwDartzeeDart(0, dartboard, segmentStatus)
-        model.throwDartzeeDart(1, dartboard, segmentStatus)
-        model.throwDartzeeDart(2, dartboard, segmentStatus)
-
-        verifySequence {
-            listener.dartThrown(Dart(20, 3))
-            listener.dartThrown(Dart(20, 3))
-            listener.dartThrown(Dart(20, 3))
-        }
+        val pt3 = model.throwDartzeeDart(2, segmentStatuses)
+        pt3.segment shouldBe DartboardSegment(SegmentType.TREBLE, 20)
     }
 }

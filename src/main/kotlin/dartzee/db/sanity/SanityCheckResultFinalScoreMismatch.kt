@@ -6,16 +6,18 @@ import dartzee.db.ParticipantEntity
 import dartzee.game.GameType
 import javax.swing.table.DefaultTableModel
 
-class SanityCheckResultFinalScoreMismatch(private val gameType: GameType, private val hmParticipantToFinalScore: MutableMap<ParticipantEntity, Int>) : AbstractSanityCheckResult()
-{
-    override fun getDescription() = "FinalScores that don't match the raw data (${gameType.getDescription()})"
+class SanityCheckResultFinalScoreMismatch(
+    private val gameType: GameType,
+    private val hmParticipantToFinalScore: MutableMap<ParticipantEntity, Int>,
+) : AbstractSanityCheckResult() {
+    override fun getDescription() =
+        "FinalScores that don't match the raw data (${gameType.getDescription()})"
 
     override fun getScrollTable() = ScrollTableDartsGame("GameId")
 
     override fun getCount() = hmParticipantToFinalScore.size
 
-    override fun getResultsModel(): DefaultTableModel
-    {
+    override fun getResultsModel(): DefaultTableModel {
         val model = DefaultModel()
         model.addColumn("ParticipantId")
         model.addColumn("PlayerId")
@@ -25,8 +27,7 @@ class SanityCheckResultFinalScoreMismatch(private val gameType: GameType, privat
         model.addColumn("FinalScoreRAW")
 
         val pts = hmParticipantToFinalScore.keys
-        for (pt in pts)
-        {
+        for (pt in pts) {
             val participantId = pt.rowId
             val playerId = pt.playerId
             val gameId = pt.gameId
@@ -34,11 +35,18 @@ class SanityCheckResultFinalScoreMismatch(private val gameType: GameType, privat
             val finalScore = pt.finalScore
             val finalScoreRaw = hmParticipantToFinalScore[pt]!!
 
-            val row = arrayOf(participantId, playerId, gameId, dtLastUpdate, finalScore, finalScoreRaw)
+            val row =
+                arrayOf<Any>(
+                    participantId,
+                    playerId,
+                    gameId,
+                    dtLastUpdate,
+                    finalScore,
+                    finalScoreRaw,
+                )
             model.addRow(row)
         }
 
         return model
     }
-
 }

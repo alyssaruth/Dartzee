@@ -7,34 +7,29 @@ import dartzee.logging.LoggerUncaughtExceptionHandler
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
-import org.junit.jupiter.api.extension.BeforeAllCallback
-import org.junit.jupiter.api.extension.ExtensionContext
 import java.time.Clock
 import java.time.ZoneId
 import javax.swing.UIManager
+import org.junit.jupiter.api.extension.BeforeAllCallback
+import org.junit.jupiter.api.extension.ExtensionContext
 
 var doneOneTimeSetup = false
 
-class BeforeAllTestsExtension: BeforeAllCallback
-{
-    override fun beforeAll(context: ExtensionContext?)
-    {
-        if (!doneOneTimeSetup)
-        {
+class BeforeAllTestsExtension : BeforeAllCallback {
+    override fun beforeAll(context: ExtensionContext?) {
+        if (!doneOneTimeSetup) {
             doOneTimeSetup()
             doneOneTimeSetup = true
         }
     }
 
-    private fun doOneTimeSetup()
-    {
+    private fun doOneTimeSetup() {
         DialogUtil.init(TestMessageDialogFactory())
         Thread.setDefaultUncaughtExceptionHandler(LoggerUncaughtExceptionHandler())
 
+        InjectedThings.allowModalDialogs = false
         InjectedThings.databaseDirectory = TEST_DB_DIRECTORY
         InjectedThings.logger = logger
-        InjectedThings.dartboardSize = 50
-        InjectedThings.preferencesDartboardSize = 50
         InjectedThings.clock = Clock.fixed(CURRENT_TIME, ZoneId.of("UTC"))
         InjectedThings.connectionPoolSize = 1
 

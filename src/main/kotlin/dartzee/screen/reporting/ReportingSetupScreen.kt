@@ -7,14 +7,12 @@ import java.awt.BorderLayout
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
 
-class ReportingSetupScreen: EmbeddedScreen()
-{
+class ReportingSetupScreen : EmbeddedScreen() {
     private val tabbedPane = JTabbedPane(SwingConstants.TOP)
     private val gameTab = ReportingGameTab()
     private val playerTab = ReportingPlayersTab()
 
-    init
-    {
+    init {
         add(tabbedPane, BorderLayout.CENTER)
 
         tabbedPane.addTab("Game", null, gameTab, null)
@@ -22,15 +20,15 @@ class ReportingSetupScreen: EmbeddedScreen()
     }
 
     override fun getScreenName() = "Report Setup"
+
     override fun initialise() {}
 
     private fun valid() = gameTab.valid() && playerTab.valid()
 
     override fun showNextButton() = true
-    override fun nextPressed()
-    {
-        if (!valid())
-        {
+
+    override fun nextPressed() {
+        if (!valid()) {
             return
         }
 
@@ -40,11 +38,9 @@ class ReportingSetupScreen: EmbeddedScreen()
         ScreenCache.switch(scrn)
     }
 
-    private fun generateReportParams(): ReportParameters
-    {
-        val rp = ReportParameters()
-        gameTab.populateReportParameters(rp)
-        playerTab.populateReportParameters(rp)
-        return rp
+    private fun generateReportParams(): ReportParameters {
+        val gameFilters = gameTab.generateReportParameters()
+        val playerFilters = playerTab.generateReportParameters()
+        return ReportParameters(gameFilters, playerFilters)
     }
 }

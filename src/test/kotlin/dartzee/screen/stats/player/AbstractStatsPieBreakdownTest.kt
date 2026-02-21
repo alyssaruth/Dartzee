@@ -1,36 +1,31 @@
 package dartzee.screen.stats.player
 
-import io.kotlintest.matchers.collections.shouldContainNoNulls
-import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.shouldBe
-import org.junit.jupiter.api.Test
+import io.kotest.matchers.collections.shouldContainNoNulls
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import java.awt.Component
+import org.junit.jupiter.api.Test
 
-abstract class AbstractStatsPieBreakdownTest<E: AbstractStatisticsTabPieBreakdown>: AbstractPlayerStatisticsTest<E>()
-{
+abstract class AbstractStatsPieBreakdownTest<E : AbstractStatisticsTabPieBreakdown> :
+    AbstractPlayerStatisticsTest<E>() {
     abstract fun getAllPossibilitiesForScores(): IntRange
 
-    override fun getComponentsForComparison(tab: E): List<Component>
-    {
-        return listOf(tab.otherPieChartPanel, tab.tableHoleBreakdownOther)
-    }
+    override fun getComponentsForComparison(tab: E): List<Component> =
+        listOf(tab.otherPieChartPanel, tab.tableHoleBreakdownOther)
 
     @Test
-    fun `Ranges should be distinct and cover all possibilities`()
-    {
+    fun `Ranges should be distinct and cover all possibilities`() {
         val ranges = factoryTab().ranges
-        for (i in getAllPossibilitiesForScores())
-        {
-            ranges.filter{ it.contains(i) }.shouldHaveSize(1)
+        for (i in getAllPossibilitiesForScores()) {
+            ranges.filter { it.contains(i) }.shouldHaveSize(1)
         }
     }
 
     @Test
-    fun `Should return a different, valid colour for all ranges`()
-    {
+    fun `Should return a different, valid colour for all ranges`() {
         val tab = factoryTab()
 
-        val colours = tab.ranges.map{ tab.getColorForRange(it) }.distinct()
+        val colours = tab.ranges.map { tab.getColorForRange(it) }.distinct()
 
         colours.size shouldBe tab.ranges.size
         colours.shouldContainNoNulls()

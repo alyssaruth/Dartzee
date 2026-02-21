@@ -1,7 +1,6 @@
 package dartzee.achievements
 
-enum class AchievementType
-{
+enum class AchievementType {
     X01_BEST_FINISH,
     X01_BEST_THREE_DART_SCORE,
     X01_CHECKOUT_COMPLETENESS,
@@ -10,6 +9,10 @@ enum class AchievementType
     X01_GAMES_WON,
     GOLF_GAMES_WON,
     CLOCK_GAMES_WON,
+    X01_TEAM_GAMES_WON,
+    GOLF_TEAM_GAMES_WON,
+    CLOCK_TEAM_GAMES_WON,
+    DARTZEE_TEAM_GAMES_WON,
     X01_BEST_GAME,
     GOLF_BEST_GAME,
     CLOCK_BEST_GAME,
@@ -22,5 +25,14 @@ enum class AchievementType
     X01_NO_MERCY,
     GOLF_COURSE_MASTER,
     DARTZEE_GAMES_WON,
-    DUMMY_TOTAL
+    DARTZEE_BEST_GAME,
+    DARTZEE_FLAWLESS,
+    DARTZEE_UNDER_PRESSURE,
+    DARTZEE_BINGO,
+    DARTZEE_HALVED,
+    X01_CHUCKLEVISION,
+    GOLF_ONE_HIT_WONDER,
+    GOLF_IN_BOUNDS,
+    X01_STYLISH_FINISH,
+    DUMMY_TOTAL,
 }

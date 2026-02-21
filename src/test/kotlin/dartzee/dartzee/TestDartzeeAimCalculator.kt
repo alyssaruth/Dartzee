@@ -1,137 +1,138 @@
 package dartzee.dartzee
 
-import com.github.alexburlton.swingtest.shouldMatchImage
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
+import com.github.alyssaburlton.swingtest.shouldMatchImage
+import dartzee.ai.AI_DARTBOARD
+import dartzee.ai.DELIBERATE_MISS
+import dartzee.bean.PresentationDartboard
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.helper.AbstractTest
-import dartzee.screen.Dartboard
-import dartzee.screen.dartzee.DartzeeDartboard
-import dartzee.screen.game.dartzee.SegmentStatus
+import dartzee.helper.markPoints
+import dartzee.missTwenty
+import dartzee.`object`.ComputationalDartboard
+import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
+import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllNonMissSegments
-import io.kotlintest.matchers.numerics.shouldBeLessThan
+import io.kotest.matchers.comparables.shouldBeLessThan
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import java.awt.*
-import javax.swing.ImageIcon
-import javax.swing.JLabel
 
-class TestDartzeeAimCalculator: AbstractTest()
-{
-    private val allNonMisses = getAllNonMissSegments()
-    private val calculator = DartzeeAimCalculator()
+private val allNonMisses = getAllNonMissSegments()
+private val calculator = DartzeeAimCalculator()
 
+class TestDartzeeAimCalculator : AbstractTest() {
     @Test
     @Tag("screenshot")
-    fun `Should aim at the bullseye for a fully valid dartboard`()
-    {
-        val segmentStatus = SegmentStatus(allNonMisses, allNonMisses)
-        verifyAim(segmentStatus, "All valid")
+    fun `Should aim at the bullseye for a fully valid dartboard`() {
+        val segmentStatuses = SegmentStatuses(allNonMisses, allNonMisses)
+        verifyAim(segmentStatuses, "All valid")
     }
 
     @Test
     @Tag("screenshot")
-    fun `Should aim at the right place for all odd`()
-    {
+    fun `Should aim at the right place for all odd`() {
         val odd = allNonMisses.filter { DartzeeDartRuleOdd().isValidSegment(it) }
-        val segmentStatus = SegmentStatus(odd, odd)
-        verifyAim(segmentStatus, "Odd")
+        val segmentStatuses = SegmentStatuses(odd, odd)
+        verifyAim(segmentStatuses, "Odd")
     }
 
     @Test
     @Tag("screenshot")
-    fun `Should aim based on valid segments for if cautious`()
-    {
+    fun `Should aim based on valid segments for if cautious`() {
         val twenties = allNonMisses.filter { it.score == 20 }
-        val segmentStatus = SegmentStatus(twenties, allNonMisses)
-        verifyAim(segmentStatus, "Score 20s - cautious", false)
+        val segmentStatuses = SegmentStatuses(twenties, allNonMisses)
+        verifyAim(segmentStatuses, "Score 20s - cautious", false)
     }
 
     @Test
     @Tag("screenshot")
-    fun `Should aim based on scoring segments if aggressive`()
-    {
+    fun `Should aim based on scoring segments if aggressive`() {
         val twenties = allNonMisses.filter { it.score == 20 }
-        val segmentStatus = SegmentStatus(twenties, allNonMisses)
-        verifyAim(segmentStatus, "Score 20s - aggressive", true)
+        val segmentStatuses = SegmentStatuses(twenties, allNonMisses)
+        verifyAim(segmentStatuses, "Score 20s - aggressive", true)
     }
 
     @Test
     @Tag("screenshot")
-    fun `Should go on score for tie breakers`()
-    {
+    fun `Should go on score for tie breakers`() {
         val trebles = allNonMisses.filter { it.getMultiplier() == 3 }
-        val segmentStatus = SegmentStatus(trebles, trebles)
-        verifyAim(segmentStatus, "Trebles")
+        val segmentStatuses = SegmentStatuses(trebles, trebles)
+        verifyAim(segmentStatuses, "Trebles")
 
         val treblesWithoutTwenty = trebles.filter { it.score != 20 }
-        verifyAim(SegmentStatus(treblesWithoutTwenty, treblesWithoutTwenty), "Trebles (no 20)")
+        verifyAim(SegmentStatuses(treblesWithoutTwenty, treblesWithoutTwenty), "Trebles (no 20)")
     }
 
     @Test
     @Tag("screenshot")
-    fun `Should aim correctly if bullseye is missing`()
-    {
+    fun `Should aim correctly if bullseye is missing`() {
         val nonBull = allNonMisses.filter { it.getTotal() != 50 }
-        val segmentStatus = SegmentStatus(nonBull, nonBull)
-        verifyAim(segmentStatus, "No bullseye")
+        val segmentStatuses = SegmentStatuses(nonBull, nonBull)
+        verifyAim(segmentStatuses, "No bullseye")
     }
 
     @Test
     @Tag("screenshot")
-    fun `Should aim correctly for some missing trebles`()
-    {
-        val segments = allNonMisses.filterNot { it.getMultiplier() == 3 && (it.score == 20 || it.score == 3) }
-        val segmentStatus = SegmentStatus(segments, segments)
-        verifyAim(segmentStatus, "Missing trebles")
+    fun `Should aim correctly for some missing trebles`() {
+        val segments =
+            allNonMisses.filterNot { it.getMultiplier() == 3 && (it.score == 20 || it.score == 3) }
+        val segmentStatuses = SegmentStatuses(segments, segments)
+        verifyAim(segmentStatuses, "Missing trebles")
     }
 
     @Test
-    fun `Should be performant`()
-    {
-        val awkward = allNonMisses.filter { it.score != 25 }
-        val segmentStatus = SegmentStatus(awkward, awkward)
+    @Tag("screenshot")
+    fun `Should revert to aiming at valid segments if there are no scoring segments`() {
+        val validSegments = allNonMisses.filter { it.score == 1 }
+        val segmentStatuses = SegmentStatuses(emptyList(), validSegments)
+        verifyAim(segmentStatuses, "No scoring segments", true)
+    }
 
-        val dartboard = DartzeeDartboard(400, 400)
-        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(segmentStatus)
+    @Test
+    fun `Should deliberately miss if no valid segments`() {
+        val segmentStatuses = SegmentStatuses(emptyList(), emptyList())
+
+        val pt = calculator.getPointToAimFor(AI_DARTBOARD, segmentStatuses, true)
+        pt shouldBe DELIBERATE_MISS
+    }
+
+    @Test
+    fun `Should deliberately miss if only valid segments are misses`() {
+        val segmentStatuses = SegmentStatuses(listOf(missTwenty), listOf(missTwenty))
+
+        val pt = calculator.getPointToAimFor(AI_DARTBOARD, segmentStatuses, true)
+        pt shouldBe DELIBERATE_MISS
+    }
+
+    @Test
+    @Tag("integration")
+    fun `Should be performant`() {
+        val awkward = allNonMisses.filter { it.score != 25 }
+        val segmentStatuses = SegmentStatuses(awkward, awkward)
+
+        val dartboard = ComputationalDartboard(400, 400)
 
         val timer = DurationTimer()
-        for (i in 1..10)
-        {
-            calculator.getPointToAimFor(dartboard, segmentStatus, true)
-        }
+        repeat(10) { calculator.getPointToAimFor(dartboard, segmentStatuses, true) }
 
         val timeElapsed = timer.getDuration()
         timeElapsed shouldBeLessThan 5000
     }
 
-    private fun verifyAim(segmentStatus: SegmentStatus, screenshotName: String, aggressive: Boolean = false)
-    {
-        val dartboard = DartzeeDartboard(400, 400)
-        dartboard.paintDartboard(DEFAULT_COLOUR_WRAPPER)
-        dartboard.refreshValidSegments(segmentStatus)
+    private fun verifyAim(
+        segmentStatuses: SegmentStatuses,
+        screenshotName: String,
+        aggressive: Boolean = false,
+    ) {
+        val dartboard = ComputationalDartboard(400, 400)
+        val pt = calculator.getPointToAimFor(dartboard, segmentStatuses, aggressive)
 
-        val pt = calculator.getPointToAimFor(dartboard, segmentStatus, aggressive)
-        val lbl = dartboard.markPoints(listOf(pt))
+        val oldDartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
+        oldDartboard.setBounds(0, 0, 400, 400)
+        oldDartboard.updateSegmentStatus(segmentStatuses)
+
+        val lbl = oldDartboard.markPoints(listOf(pt))
         lbl.shouldMatchImage(screenshotName)
     }
-}
-
-fun Dartboard.markPoints(points: List<Point>): JLabel
-{
-    val img = dartboardImage!!
-
-    val g = img.graphics as Graphics2D
-    g.color = Color.BLUE
-    g.stroke = BasicStroke(3f)
-    points.forEach { pt ->
-        g.drawLine(pt.x - 5, pt.y - 5, pt.x + 5, pt.y + 5)
-        g.drawLine(pt.x - 5, pt.y + 5, pt.x + 5, pt.y - 5)
-    }
-
-    val lbl = JLabel(ImageIcon(img))
-    lbl.size = Dimension(500, 500)
-    lbl.repaint()
-    return lbl
 }

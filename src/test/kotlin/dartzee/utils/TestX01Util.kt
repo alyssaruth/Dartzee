@@ -1,71 +1,73 @@
 package dartzee.utils
 
-import dartzee.`object`.Dart
+import dartzee.game.FinishType
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDart
 import dartzee.helper.makeDartsModel
-import io.kotlintest.matchers.boolean.shouldBeFalse
-import io.kotlintest.matchers.boolean.shouldBeTrue
-import io.kotlintest.matchers.collections.shouldBeEmpty
-import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.shouldBe
+import dartzee.helper.makeX01Rounds
+import dartzee.`object`.Dart
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestX01Util: AbstractTest()
-{
+class TestX01Util : AbstractTest() {
     @Test
-    fun `isBust should return the right values when just passed a dart`()
-    {
-        isBust(makeDart(3, 1, startingScore = 5)) shouldBe false
-        isBust(makeDart(3, 1, startingScore = 4)) shouldBe true
-        isBust(makeDart(3, 1, startingScore = 3)) shouldBe true
+    fun `isBust should return the right values for finishType Doubles`() {
+        isBust(makeDart(3, 1, startingScore = 4), FinishType.Doubles) shouldBe true
+        isBust(makeDart(3, 1, startingScore = 3), FinishType.Doubles) shouldBe true
+        isBust(makeDart(20, 3, startingScore = 60), FinishType.Doubles) shouldBe true
 
-        isBust(makeDart(2, 2, startingScore = 5)) shouldBe true
-        isBust(makeDart(2, 2, startingScore = 4)) shouldBe false
-        isBust(makeDart(2, 2, startingScore = 3)) shouldBe true
+        isBust(makeDart(2, 2, startingScore = 5), FinishType.Doubles) shouldBe true
+        isBust(makeDart(2, 2, startingScore = 4), FinishType.Doubles) shouldBe false
+        isBust(makeDart(2, 2, startingScore = 3), FinishType.Doubles) shouldBe true
+
+        isBust(makeDart(25, 2, startingScore = 50), FinishType.Doubles) shouldBe false
+        isBust(makeDart(3, 1, startingScore = 5), FinishType.Doubles) shouldBe false
     }
 
     @Test
-    fun testIsBust()
-    {
-        isBust(5, Dart(3, 2)).shouldBeTrue()
-        isBust(10, Dart(10, 1)).shouldBeTrue()
-        isBust(60, Dart(20, 3)).shouldBeTrue()
+    fun `isBust should return correct values for finishType Any`() {
+        isBust(makeDart(3, 1, startingScore = 4), FinishType.Any) shouldBe false
+        isBust(makeDart(3, 1, startingScore = 3), FinishType.Any) shouldBe false
+        isBust(makeDart(20, 3, startingScore = 60), FinishType.Any) shouldBe false
 
-        isBust(41, Dart(20, 2)).shouldBeTrue()
+        isBust(makeDart(2, 2, startingScore = 5), FinishType.Any) shouldBe false
+        isBust(makeDart(2, 2, startingScore = 4), FinishType.Any) shouldBe false
+        isBust(makeDart(2, 2, startingScore = 3), FinishType.Any) shouldBe true
 
-        isBust(40, Dart(20, 2)).shouldBeFalse()
-        isBust(50, Dart(25, 2)).shouldBeFalse()
-
-        isBust(60, Dart(20, 2)).shouldBeFalse()
-        isBust(40, Dart(20, 1)).shouldBeFalse()
+        isBust(makeDart(25, 2, startingScore = 50), FinishType.Any) shouldBe false
+        isBust(makeDart(3, 1, startingScore = 5), FinishType.Any) shouldBe false
     }
 
     @Test
-    fun testShouldStopForMercyRule()
-    {
+    fun `mercy rule`() {
         var model = makeDartsModel(mercyThreshold = 19)
 
-        shouldStopForMercyRule(model, 19, 16).shouldBeFalse()
-        shouldStopForMercyRule(model, 17, 16).shouldBeTrue()
-        shouldStopForMercyRule(model, 15, 8).shouldBeTrue()
-        shouldStopForMercyRule(model, 16, 8).shouldBeFalse()
-        shouldStopForMercyRule(model, 17, 13).shouldBeFalse()
-        shouldStopForMercyRule(model, 17, 17).shouldBeFalse()
+        shouldStopForMercyRule(model, 19, 16, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 16, FinishType.Doubles).shouldBeTrue()
+        shouldStopForMercyRule(model, 15, 8, FinishType.Doubles).shouldBeTrue()
+        shouldStopForMercyRule(model, 16, 8, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 13, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 17, FinishType.Doubles).shouldBeFalse()
+
+        shouldStopForMercyRule(model, 15, 8, FinishType.Any).shouldBeFalse()
 
         model = makeDartsModel(mercyThreshold = null)
 
-        shouldStopForMercyRule(model, 19, 16).shouldBeFalse()
-        shouldStopForMercyRule(model, 17, 16).shouldBeFalse()
-        shouldStopForMercyRule(model, 15, 8).shouldBeFalse()
-        shouldStopForMercyRule(model, 16, 8).shouldBeFalse()
-        shouldStopForMercyRule(model, 17, 13).shouldBeFalse()
-        shouldStopForMercyRule(model, 17, 17).shouldBeFalse()
+        shouldStopForMercyRule(model, 19, 16, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 16, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 15, 8, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 16, 8, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 13, FinishType.Doubles).shouldBeFalse()
+        shouldStopForMercyRule(model, 17, 17, FinishType.Doubles).shouldBeFalse()
     }
 
     @Test
-    fun testIsCheckoutDart()
-    {
+    fun testIsCheckoutDart() {
         assertCheckout(52, false)
         assertCheckout(50, true)
         assertCheckout(45, false)
@@ -76,8 +78,7 @@ class TestX01Util: AbstractTest()
         assertCheckout(2, true)
     }
 
-    private fun assertCheckout(startingScore: Int, expected: Boolean)
-    {
+    private fun assertCheckout(startingScore: Int, expected: Boolean) {
         val drt = Dart(20, 2)
         drt.startingScore = startingScore
 
@@ -85,30 +86,31 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testIsFinishRound()
-    {
-        isFinishRound(listOf(Dart(2, 1), makeDart(20, 1, startingScore = 20))).shouldBeFalse()
-        isFinishRound(listOf(Dart(2, 1), makeDart(20, 2, startingScore = 20))).shouldBeFalse()
-        isFinishRound(listOf(Dart(2, 1), makeDart(10, 2, startingScore = 20))).shouldBeTrue()
+    fun testIsFinishRound() {
+        isFinishRound(listOf(Dart(2, 1), makeDart(20, 1, startingScore = 20)), FinishType.Doubles)
+            .shouldBeFalse()
+        isFinishRound(listOf(Dart(2, 1), makeDart(20, 2, startingScore = 20)), FinishType.Doubles)
+            .shouldBeFalse()
+        isFinishRound(listOf(Dart(2, 1), makeDart(10, 2, startingScore = 20)), FinishType.Doubles)
+            .shouldBeTrue()
+
+        isFinishRound(listOf(Dart(2, 1), makeDart(20, 1, startingScore = 20)), FinishType.Any)
+            .shouldBeTrue()
+        isFinishRound(listOf(makeDart(20, 1, startingScore = 19)), FinishType.Any).shouldBeFalse()
     }
 
     @Test
-    fun testGetScoringDartsNull()
-    {
+    fun testGetScoringDartsNull() {
         val result = getScoringDarts(null, 20)
 
         result.shouldBeEmpty()
     }
 
     @Test
-    fun testGetScoringDarts()
-    {
-        val d1 = Dart(20, 1)
-        val d2 = Dart(20, 1)
-        val d3 = Dart(20, 1)
-        d1.startingScore = 51
-        d2.startingScore = 50
-        d3.startingScore = 49
+    fun testGetScoringDarts() {
+        val d1 = makeDart(1, 1, startingScore = 51)
+        val d2 = makeDart(1, 1, startingScore = 50)
+        val d3 = makeDart(20, 1, startingScore = 49)
 
         val list = mutableListOf(d1, d2, d3)
 
@@ -117,22 +119,30 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testCalculateThreeDartAverage()
-    {
-        val d1 = Dart(20, 1)
-        val d2 = Dart(20, 2)
-        val d3 = Dart(10, 0)
-        val d4 = Dart(5, 3)
+    fun `getScoringRounds should exclude rounds correctly`() {
+        val round1 = listOf(Dart(20, 3), Dart(20, 1), Dart(5, 1)) // 115
+        val round2 = listOf(Dart(20, 1), Dart(20, 1), Dart(1, 1)) //  74
+        val round3 = listOf(Dart(9, 1), Dart(14, 1), Dart(1, 1)) //  50
+        val rounds = makeX01Rounds(200, round1, round2, round3)
 
-        d1.startingScore = 100
-        d2.startingScore = 100
-        d3.startingScore = 80
-        d4.startingScore = 100
+        getScoringRounds(rounds, 200).shouldBeEmpty()
+        getScoringRounds(rounds, 75).shouldContainExactlyInAnyOrder(listOf(round1))
+        getScoringRounds(rounds, 74).shouldContainExactlyInAnyOrder(round1, round2)
+        getScoringRounds(rounds, 51).shouldContainExactlyInAnyOrder(round1, round2)
+        getScoringRounds(rounds, 50).shouldContainExactlyInAnyOrder(round1, round2, round3)
+    }
 
-        val list = mutableListOf(d1, d2, d3, d4)
+    @Test
+    fun testCalculateThreeDartAverage() {
+        val d1 = makeDart(20, 1, startingScore = 100)
+        val d2 = makeDart(20, 2, startingScore = 100)
+        val d3 = makeDart(10, 0, startingScore = 80)
+        val d4 = makeDart(5, 3, startingScore = 100)
+
+        val list = listOf(d1, d2, d3, d4)
         val result = calculateThreeDartAverage(list, 70)
-        val resultTwo = calculateThreeDartAverage(list, 90) //The miss should be excluded
-        val resultThree = calculateThreeDartAverage(list, 200) //Test an empty list
+        val resultTwo = calculateThreeDartAverage(list, 90) // The miss should be excluded
+        val resultThree = calculateThreeDartAverage(list, 200) // Test an empty list
 
         result shouldBe 56.25
         resultTwo shouldBe 75.0
@@ -140,8 +150,7 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testSumScore()
-    {
+    fun testSumScore() {
         val d1 = Dart(20, 2)
         val d2 = Dart(13, 0)
         val d3 = Dart(11, 1)
@@ -152,8 +161,7 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testIsShanghai()
-    {
+    fun testIsShanghai() {
         val tooShort = mutableListOf(Dart(20, 3), Dart(20, 3))
         val miss = mutableListOf(Dart(20, 3), Dart(20, 3), Dart(20, 0))
         val wrongSum = mutableListOf(Dart(20, 1), Dart(20, 3), Dart(20, 3))
@@ -171,8 +179,7 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testGetSortedDartStr()
-    {
+    fun testGetSortedDartStr() {
         val listOne = mutableListOf(Dart(2, 3), Dart(3, 2), Dart(20, 1))
         val listTwo = mutableListOf(Dart(1, 1), Dart(7, 1), Dart(5, 1))
         val listThree = mutableListOf(Dart(20, 3), Dart(20, 3), Dart(20, 3))
@@ -185,8 +192,7 @@ class TestX01Util: AbstractTest()
     }
 
     @Test
-    fun testIsNearMissDouble()
-    {
+    fun testIsNearMissDouble() {
         val nonCheckoutDart = Dart(16, 2)
         nonCheckoutDart.startingScore = 48
 
