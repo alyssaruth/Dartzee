@@ -27,7 +27,6 @@ import dartzee.utils.InjectedThings.mainDatabase
 import java.io.File
 import java.io.InterruptedIOException
 import java.net.SocketException
-import javax.swing.SwingUtilities
 
 val SYNC_DIR = "${System.getProperty("user.dir")}/Sync"
 
@@ -40,7 +39,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore) {
         var auditEntry: SyncAuditEntity? = null
 
         try {
-            SwingUtilities.invokeLater { DialogUtil.showLoadingDialog("Pushing $remoteName...") }
+            DialogUtil.showLoadingDialog("Pushing $remoteName...")
             setUpSyncDir()
 
             auditEntry = SyncAuditEntity.insertSyncAudit(mainDatabase, remoteName)
@@ -50,7 +49,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore) {
             handleSyncError(e, CODE_PUSH_ERROR)
         } finally {
             tidyUpAllSyncDirs()
-            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
+            DialogUtil.dismissLoadingDialog()
             ScreenCache.get<SyncManagementScreen>().initialise()
         }
     }
@@ -59,7 +58,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore) {
 
     private fun doPullOnOtherThread(remoteName: String) {
         try {
-            SwingUtilities.invokeLater { DialogUtil.showLoadingDialog("Pulling $remoteName...") }
+            DialogUtil.showLoadingDialog("Pulling $remoteName...")
             setUpSyncDir()
 
             val remote = dbStore.fetchDatabase(remoteName).database
@@ -72,7 +71,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore) {
             handleSyncError(e, CODE_PULL_ERROR)
         } finally {
             tidyUpAllSyncDirs()
-            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialog() }
+            DialogUtil.dismissLoadingDialog()
             ScreenCache.get<SyncManagementScreen>().initialise()
         }
     }
