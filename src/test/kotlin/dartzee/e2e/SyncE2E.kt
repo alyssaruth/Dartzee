@@ -3,7 +3,6 @@ package dartzee.e2e
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.AchievementType
 import dartzee.confirmGameDeletion
@@ -137,7 +136,6 @@ class SyncE2E : AbstractE2ETest() {
         dialogFactory.questionOption = JOptionPane.YES_OPTION
         mainScreen.clickChild<JButton>(text = "Delete Game", async = true)
         confirmGameDeletion(1)
-        purgeWindows()
     }
 
     private fun runGame(winner: PlayerEntity, loser: PlayerEntity): String {

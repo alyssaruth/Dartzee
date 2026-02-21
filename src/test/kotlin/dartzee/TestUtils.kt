@@ -233,8 +233,7 @@ fun FileUploader.uploadFileFromResource(resourceName: String) {
     flushEdt()
 }
 
-fun findLoadingDialog(text: String) =
-    findWindow<LoadingDialog> { it.getChild<JLabel>().text == text }
+fun findLoadingDialog(text: String) = findWindow<LoadingDialog> { it.message == text }
 
 fun getInfoDialog() = findInfoDialog()!!
 
@@ -293,6 +292,7 @@ fun confirmGameDeletion(localId: Long): String {
     info.getDialogMessage() shouldBe "Game #$localId has been purged."
     info.clickOk()
     flushEdt()
+    purgeWindows()
 
     return questionText
 }

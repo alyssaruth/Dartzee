@@ -11,6 +11,8 @@ import dartzee.core.helper.verifyNotCalled
 import dartzee.core.screen.ProgressDialog
 import dartzee.db.EntityName
 import dartzee.game.GameType
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertPlayer
@@ -49,9 +51,10 @@ class TestSimulationRunner : AbstractTest() {
         waitForSimulation()
 
         verifyLog(CODE_SIMULATION_ERROR, Severity.ERROR)
-        dialogFactory.errorsShown.shouldContainExactly(
-            "A serious problem has occurred with the simulation."
-        )
+
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "A serious problem has occurred with the simulation."
+
         findResultsWindow() shouldBe null
         findWindow<ProgressDialog>()!!.shouldNotBeVisible()
     }

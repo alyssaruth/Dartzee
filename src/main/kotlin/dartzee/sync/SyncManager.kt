@@ -175,29 +175,33 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore) {
             is SocketException,
             is InterruptedIOException -> {
                 logger.warn(code, "Caught network error during sync: $e")
-                DialogUtil.showError(
+                DialogUtil.showErrorLater(
                     "A connection error occurred. Check your internet connection and try again."
                 )
             }
             is ConcurrentModificationException -> {
                 logger.warn(code, "$e")
-                DialogUtil.showError(
+                DialogUtil.showErrorLater(
                     "Another sync has been performed since this one started. \n\nResults have been discarded."
                 )
             }
             is SyncDataLossError -> {
                 logger.error(code, "$e", e, KEY_GAME_IDS to e.missingGameIds)
-                DialogUtil.showError(
+                DialogUtil.showErrorLater(
                     "Sync resulted in missing data. \n\nResults have been discarded."
                 )
             }
             is WrappedSqlException -> {
                 logger.logSqlException(e.sqlStatement, e.genericStatement, e.sqlException)
-                DialogUtil.showError("An unexpected error occurred - no data has been changed.")
+                DialogUtil.showErrorLater(
+                    "An unexpected error occurred - no data has been changed."
+                )
             }
             else -> {
                 logger.error(code, "Unexpected error: $e", e)
-                DialogUtil.showError("An unexpected error occurred - no data has been changed.")
+                DialogUtil.showErrorLater(
+                    "An unexpected error occurred - no data has been changed."
+                )
             }
         }
     }

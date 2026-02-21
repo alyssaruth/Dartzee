@@ -60,7 +60,7 @@ object DialogUtil {
     }
 
     fun showErrorLater(errorText: String) {
-        SwingUtilities.invokeLater { showErrorOLD(errorText) }
+        SwingUtilities.invokeLater { showError(errorText) }
     }
 
     @Deprecated("Use showQuestion")
@@ -93,8 +93,8 @@ object DialogUtil {
 
     fun showLoadingDialog(text: String) {
         logDialogShown("Loading", "", text)
-        loadingDialog = LoadingDialog()
-        loadingDialog?.showDialog(text)
+        loadingDialog = LoadingDialog(text)
+        loadingDialog?.showDialog()
     }
 
     fun dismissLoadingDialog() {

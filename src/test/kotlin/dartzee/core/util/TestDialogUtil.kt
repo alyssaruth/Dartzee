@@ -16,14 +16,11 @@ import dartzee.logging.CODE_DIALOG_CLOSED
 import dartzee.logging.CODE_DIALOG_SHOWN
 import dartzee.logging.Severity
 import dartzee.runAsync
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.spyk
 import io.mockk.verifySequence
 import java.io.File
-import javax.swing.SwingUtilities
 import org.junit.jupiter.api.Test
 
 class TestDialogUtil : AbstractTest() {
@@ -86,16 +83,6 @@ class TestDialogUtil : AbstractTest() {
         getErrorDialog().clickOk()
         flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Error dialog closed"
-    }
-
-    @Test
-    fun `Should show an ERROR dialog later`() {
-        SwingUtilities.invokeLater { Thread.sleep(500) }
-        DialogUtil.showErrorLater("Some error")
-        dialogFactory.errorsShown.shouldBeEmpty()
-
-        flushEdt()
-        dialogFactory.errorsShown.shouldContainExactly("Some error")
     }
 
     @Test
