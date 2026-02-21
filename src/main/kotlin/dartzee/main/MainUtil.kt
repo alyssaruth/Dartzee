@@ -9,13 +9,13 @@ import dartzee.logging.KEY_DEVICE_ID
 import dartzee.logging.KEY_DEV_MODE
 import dartzee.logging.KEY_OPERATING_SYSTEM
 import dartzee.logging.KEY_USERNAME
+import dartzee.`object`.ColourWrapper
 import dartzee.`object`.DartsClient
 import dartzee.preferences.Preferences
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.preferenceService
-import fontForResource
 import java.awt.Color
 import java.util.*
 import javax.swing.UIManager
@@ -28,13 +28,28 @@ fun setLookAndFeel() {
 
 fun setLookAndFeel(laf: String) {
     try {
+        val lightOrange = Color.decode("#FF6600")
+        val orange = Color.decode("#CF5704")
+        val colours =
+            ColourWrapper(
+                lightOrange,
+                orange,
+                orange,
+                Color.decode("#009900"),
+                Color.GREEN,
+                Color.GREEN,
+                orange,
+                Color.GREEN,
+            )
+
         InjectedThings.theme =
             Theme(
-                Color.decode("#CF5704"),
+                "halloween",
+                orange,
                 Color.decode("#32172a"),
                 lightBackground = Color.decode("#DAB1DA"),
-                font = fontForResource("/theme/halloween.ttf"),
                 fontColor = Color.decode("#880808"),
+                dartboardColours = colours,
             )
 
         InjectedThings.theme?.apply()

@@ -6,6 +6,7 @@ import dartzee.core.util.getEndOfTimeSqlString
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import javax.swing.ImageIcon
+import themedIcon
 
 open class PlayerEntity(database: Database = mainDatabase) :
     AbstractEntity<PlayerEntity>(database) {
@@ -49,7 +50,8 @@ open class PlayerEntity(database: Database = mainDatabase) :
         val ICON_AI = ImageIcon(PlayerEntity::class.java.getResource("/flags/aiFlag.png"))
         val ICON_HUMAN = ImageIcon(PlayerEntity::class.java.getResource("/flags/humanFlag.png"))
 
-        fun getPlayerFlag(human: Boolean) = if (human) ICON_HUMAN else ICON_AI
+        fun getPlayerFlag(human: Boolean) =
+            if (human) themedIcon("/flags/humanFlag.png") else ICON_AI
 
         /** Retrieval methods */
         fun retrievePlayers(startingSql: String): List<PlayerEntity> {

@@ -219,6 +219,11 @@ fun getPotentialAimPoints(centerPt: Point, radius: Double): Set<AimPoint> {
 }
 
 fun getColourWrapperFromPrefs(): ColourWrapper {
+    val themeColours = InjectedThings.theme?.dartboardColours
+    if (themeColours != null) {
+        return themeColours
+    }
+
     if (colourWrapperFromPrefs != null) {
         return colourWrapperFromPrefs!!
     }

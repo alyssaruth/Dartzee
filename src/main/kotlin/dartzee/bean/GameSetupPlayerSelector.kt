@@ -9,6 +9,7 @@ import dartzee.utils.ResourceCache
 import java.awt.Font
 import java.awt.event.ActionEvent
 import javax.swing.JToggleButton
+import themedIcon
 
 class GameSetupPlayerSelector : AbstractPlayerSelector<ScrollTableOrdered>() {
     override val tablePlayersSelected = ScrollTableOrdered()
@@ -23,7 +24,7 @@ class GameSetupPlayerSelector : AbstractPlayerSelector<ScrollTableOrdered>() {
             tablePlayersSelected.setTableFont(font)
         }
 
-        btnPairs.icon = ResourceCache.ICON_TEAMS
+        btnPairs.icon = themedIcon("/buttons/teams.png")
         btnPairs.toolTipText = "Play in pairs"
         tablePlayersSelected.addButtonToOrderingPanel(btnPairs, 3)
         lblSelected.setMargins(0, 0, 0, 60)

@@ -1,16 +1,21 @@
+import dartzee.`object`.ColourWrapper
 import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.Font
+import javax.swing.ImageIcon
 import javax.swing.UIManager
 
 data class Theme(
+    val name: String,
     val primary: Color,
     val background: Color,
     val lightBackground: Color,
-    val font: Font,
+    val dartboardColours: ColourWrapper,
     val fontColor: Color = Color.BLACK,
 ) {
+    val font = fontForResource("/theme/$name/font.ttf")
+
     fun apply() {
         UIManager.put("control", background)
         UIManager.put("nimbusBase", primary)
@@ -34,3 +39,11 @@ fun fontForResource(resourcePath: String): Font {
 }
 
 fun getBaseFont(): Font = InjectedThings.theme?.font ?: ResourceCache.BASE_FONT
+
+fun themedIcon(path: String): ImageIcon {
+    return InjectedThings.theme?.icon(path) ?: ImageIcon(Theme::class.java.getResource(path))
+}
+
+fun Theme.icon(path: String): ImageIcon? {
+    return Theme::class.java.getResource("/theme/$name$path")?.let(::ImageIcon)
+}

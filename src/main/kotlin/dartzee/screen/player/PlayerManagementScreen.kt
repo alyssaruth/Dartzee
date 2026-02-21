@@ -21,6 +21,7 @@ import javax.swing.border.EmptyBorder
 import javax.swing.border.TitledBorder
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
+import themedIcon
 
 class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener {
     private val tablePlayers = ScrollTable()
@@ -47,8 +48,7 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener {
 
         sideBar.add(panelNorth, BorderLayout.NORTH)
         panelNorth.layout = FlowLayout(FlowLayout.LEFT, 5, 5)
-        btnNewPlayer.icon =
-            ImageIcon(PlayerManagementScreen::class.java.getResource("/buttons/addHuman.png"))
+        btnNewPlayer.icon = themedIcon("/buttons/addHuman.png")
         btnNewPlayer.preferredSize = Dimension(30, 30)
         btnNewPlayer.toolTipText = "Add player"
         btnNewPlayer.name = "AddPlayer"

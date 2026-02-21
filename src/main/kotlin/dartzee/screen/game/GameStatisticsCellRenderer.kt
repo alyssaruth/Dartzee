@@ -1,6 +1,7 @@
 package dartzee.screen.game
 
 import dartzee.utils.DartsColour
+import dartzee.utils.InjectedThings
 import java.awt.Color
 import java.awt.Component
 import java.awt.Font
@@ -50,10 +51,11 @@ class GameStatisticsCellRenderer(
     }
 
     private fun setColours(table: JTable, row: Int, column: Int) {
+        val white = InjectedThings.theme?.lightBackground ?: Color.WHITE
         if (column == 0) {
             // Do nothing
             foreground = null
-            background = Color.WHITE
+            background = white
             return
         }
 
@@ -68,17 +70,20 @@ class GameStatisticsCellRenderer(
             DartsColour.setFgAndBgColoursForPosition(this, pos, Color.WHITE)
         } else if (histogramRows.contains(rowName)) {
             val sum = getHistogramSum(tm, column)
-
+            val baseColor =
+                InjectedThings.theme?.primary ?: Color.getHSBColor(0.5.toFloat(), 0f, 1f)
+            val hsbValues =
+                Color.RGBtoHSB(baseColor.red, baseColor.green, baseColor.blue, FloatArray(3))
             val thisValue = getDoubleAt(tm, row, column)
             val percent = if (sum == 0L) 0f else thisValue.toFloat() / sum
 
-            val bg = Color.getHSBColor(0.5.toFloat(), percent, 1f)
+            val bg = Color.getHSBColor(hsbValues[0], percent, hsbValues[2])
 
             foreground = null
             background = bg
         } else {
             foreground = null
-            background = Color.WHITE
+            background = white
         }
     }
 

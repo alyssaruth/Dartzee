@@ -20,6 +20,7 @@ import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import javax.swing.ImageIcon
 import javax.swing.JButton
+import themedIcon
 
 private const val BUTTON_WIDTH = 220
 private const val BUTTON_HEIGHT = 80
@@ -57,7 +58,7 @@ class MenuScreen : EmbeddedScreen() {
         add(lblVersion)
 
         btnNewGame.icon = ImageIcon(javaClass.getResource("/buttons/newGame.png"))
-        btnManagePlayers.icon = ImageIcon(javaClass.getResource("/buttons/playerManagement.png"))
+        btnManagePlayers.icon = themedIcon("/buttons/playerManagement.png")
         btnUtilities.icon = ImageIcon(javaClass.getResource("/buttons/utilities.png"))
         btnPreferences.icon = ImageIcon(javaClass.getResource("/buttons/preferences.png"))
         btnGameReport.icon = ImageIcon(javaClass.getResource("/buttons/gameReport.png"))

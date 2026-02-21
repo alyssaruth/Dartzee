@@ -9,11 +9,11 @@ import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.game.X01_PARTY_CONFIG
 import dartzee.utils.InjectedThings.gameLauncher
-import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
+import themedIcon
 
 class SimplePlayerSelectionScreen : EmbeddedScreen() {
     private val lblTitle = JLabel()
@@ -37,7 +37,7 @@ class SimplePlayerSelectionScreen : EmbeddedScreen() {
                 border = EmptyBorder(0, 0, 25, 0)
 
                 append("Select who is playing using the controls below. Play in pairs using the ")
-                val lbl = JLabel(ResourceCache.ICON_TEAMS)
+                val lbl = JLabel(themedIcon("/buttons/teams.png"))
                 lbl.alignmentY = 0.75f
                 insertComponent(lbl)
                 append(" button.")
