@@ -125,7 +125,7 @@ object DatabaseSanityCheck {
             dlg.setLocationRelativeTo(ScreenCache.mainScreen)
             dlg.isVisible = true
         } else {
-            DialogUtil.showInfoOLD("Sanity check completed and found no issues")
+            DialogUtil.showInfo("Sanity check completed and found no issues")
         }
     }
 

@@ -38,7 +38,7 @@ class DatabaseMigrator(private val migrations: Map<Int, List<((database: Databas
                 CODE_DATABASE_TOO_OLD,
                 "$databaseDesc database too old, exiting. $dbDetails",
             )
-            DialogUtil.showErrorOLD(
+            DialogUtil.showError(
                 "$databaseDesc database is too out-of-date to be upgraded by this version of Dartzee. " +
                     "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails"
             )

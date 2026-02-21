@@ -27,7 +27,6 @@ import dartzee.utils.InjectedThings.mainDatabase
 import java.io.File
 import java.io.InterruptedIOException
 import java.net.SocketException
-import javax.swing.SwingUtilities
 
 val SYNC_DIR = "${System.getProperty("user.dir")}/Sync"
 
@@ -40,7 +39,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore) {
         var auditEntry: SyncAuditEntity? = null
 
         try {
-            SwingUtilities.invokeLater { DialogUtil.showLoadingDialogOLD("Pushing $remoteName...") }
+            DialogUtil.showLoadingDialog("Pushing $remoteName...")
             setUpSyncDir()
 
             auditEntry = SyncAuditEntity.insertSyncAudit(mainDatabase, remoteName)
@@ -50,7 +49,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore) {
             handleSyncError(e, CODE_PUSH_ERROR)
         } finally {
             tidyUpAllSyncDirs()
-            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialogOLD() }
+            DialogUtil.dismissLoadingDialog()
             ScreenCache.get<SyncManagementScreen>().initialise()
         }
     }
@@ -59,7 +58,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore) {
 
     private fun doPullOnOtherThread(remoteName: String) {
         try {
-            SwingUtilities.invokeLater { DialogUtil.showLoadingDialogOLD("Pulling $remoteName...") }
+            DialogUtil.showLoadingDialog("Pulling $remoteName...")
             setUpSyncDir()
 
             val remote = dbStore.fetchDatabase(remoteName).database
@@ -72,7 +71,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore) {
             handleSyncError(e, CODE_PULL_ERROR)
         } finally {
             tidyUpAllSyncDirs()
-            SwingUtilities.invokeLater { DialogUtil.dismissLoadingDialogOLD() }
+            DialogUtil.dismissLoadingDialog()
             ScreenCache.get<SyncManagementScreen>().initialise()
         }
     }
@@ -94,7 +93,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore) {
             if (result != null) {
                 val summary =
                     "\n\nGames pushed: ${result.gamesPushed}\nGames pulled: ${result.gamesPulled}"
-                DialogUtil.showInfoOLD("Sync completed successfully!$summary")
+                DialogUtil.showInfo("Sync completed successfully!$summary")
             }
         } catch (e: Exception) {
             handleSyncError(e, CODE_SYNC_ERROR)
@@ -175,29 +174,33 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore) {
             is SocketException,
             is InterruptedIOException -> {
                 logger.warn(code, "Caught network error during sync: $e")
-                DialogUtil.showErrorOLD(
+                DialogUtil.showErrorLater(
                     "A connection error occurred. Check your internet connection and try again."
                 )
             }
             is ConcurrentModificationException -> {
                 logger.warn(code, "$e")
-                DialogUtil.showErrorOLD(
+                DialogUtil.showErrorLater(
                     "Another sync has been performed since this one started. \n\nResults have been discarded."
                 )
             }
             is SyncDataLossError -> {
                 logger.error(code, "$e", e, KEY_GAME_IDS to e.missingGameIds)
-                DialogUtil.showErrorOLD(
+                DialogUtil.showErrorLater(
                     "Sync resulted in missing data. \n\nResults have been discarded."
                 )
             }
             is WrappedSqlException -> {
                 logger.logSqlException(e.sqlStatement, e.genericStatement, e.sqlException)
-                DialogUtil.showErrorOLD("An unexpected error occurred - no data has been changed.")
+                DialogUtil.showErrorLater(
+                    "An unexpected error occurred - no data has been changed."
+                )
             }
             else -> {
                 logger.error(code, "Unexpected error: $e", e)
-                DialogUtil.showErrorOLD("An unexpected error occurred - no data has been changed.")
+                DialogUtil.showErrorLater(
+                    "An unexpected error occurred - no data has been changed."
+                )
             }
         }
     }

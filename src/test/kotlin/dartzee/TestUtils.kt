@@ -19,6 +19,7 @@ import dartzee.core.bean.DateFilterPanel
 import dartzee.core.bean.FileUploader
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
+import dartzee.core.screen.LoadingDialog
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
@@ -232,13 +233,21 @@ fun FileUploader.uploadFileFromResource(resourceName: String) {
     flushEdt()
 }
 
-fun getInfoDialog() = getOptionPaneDialog("Information")
+fun findLoadingDialog(text: String) = findWindow<LoadingDialog> { it.message == text }
 
-fun getQuestionDialog() = getOptionPaneDialog("Question")
+fun getInfoDialog() = findInfoDialog()!!
 
-fun getErrorDialog() = getOptionPaneDialog("Error")
+fun findInfoDialog() = findOptionPaneDialog("Information")
 
-private fun getOptionPaneDialog(title: String) = findWindow<JDialog> { it.title == title }!!
+fun getQuestionDialog() = findQuestionDialog()!!
+
+fun findQuestionDialog() = findOptionPaneDialog("Question")
+
+fun getErrorDialog() = findErrorDialog()!!
+
+fun findErrorDialog() = findOptionPaneDialog("Error")
+
+private fun findOptionPaneDialog(title: String) = findWindow<JDialog> { it.title == title }
 
 fun JDialog.getDialogMessage(): String {
     val messageLabels = findAll<JLabel>().filter { it.name == "OptionPane.label" }
@@ -283,6 +292,7 @@ fun confirmGameDeletion(localId: Long): String {
     info.getDialogMessage() shouldBe "Game #$localId has been purged."
     info.clickOk()
     flushEdt()
+    purgeWindows()
 
     return questionText
 }
