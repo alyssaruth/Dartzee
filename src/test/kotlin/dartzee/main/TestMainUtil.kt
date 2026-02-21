@@ -1,5 +1,7 @@
 package dartzee.main
 
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.logger
 import dartzee.logging.CODE_LOOK_AND_FEEL_ERROR
@@ -12,6 +14,7 @@ import dartzee.logging.KEY_USERNAME
 import dartzee.logging.Severity
 import dartzee.`object`.DartsClient
 import dartzee.preferences.Preferences
+import dartzee.runAsync
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.maps.shouldContainAll
@@ -50,11 +53,14 @@ class TestMainUtil : AbstractTest() {
 
     @Test
     fun `Should log an error if it fails to set look and feel`() {
-        setLookAndFeel("invalid")
+        runAsync { setLookAndFeel("invalid") }
 
         val error = verifyLog(CODE_LOOK_AND_FEEL_ERROR, Severity.ERROR)
         error.message shouldContain "invalid"
         error.errorObject?.shouldBeInstanceOf<ClassNotFoundException>()
+
+        val errorDialog = getErrorDialog()
+        errorDialog.getDialogMessage() shouldBe "Failed to load Look & Feel 'Nimbus'."
     }
 
     @Test

@@ -56,7 +56,7 @@ fun setLookAndFeel(laf: String) {
         UIManager.setLookAndFeel(laf)
     } catch (e: Throwable) {
         logger.error(CODE_LOOK_AND_FEEL_ERROR, "Failed to load laf $laf", e)
-        DialogUtil.showErrorOLD("Failed to load Look & Feel 'Nimbus'.")
+        DialogUtil.showError("Failed to load Look & Feel 'Nimbus'.")
     }
 
     logger.info(CODE_LOOK_AND_FEEL_SET, "Set look and feel to $laf")

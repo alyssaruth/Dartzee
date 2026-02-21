@@ -6,7 +6,6 @@ import java.awt.Color
 import java.awt.Component
 import java.awt.Font
 import javax.swing.JTable
-import javax.swing.SwingConstants
 import javax.swing.border.MatteBorder
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableModel
@@ -28,7 +27,7 @@ class GameStatisticsCellRenderer(
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
         table ?: return this
 
-        horizontalAlignment = SwingConstants.CENTER
+        horizontalAlignment = CENTER
 
         val style = if (column == 0) Font.BOLD else Font.PLAIN
         font = Font("Trebuchet MS", style, 15)
