@@ -12,8 +12,10 @@ import dartzee.logging.KEY_USERNAME
 import dartzee.`object`.DartsClient
 import dartzee.preferences.Preferences
 import dartzee.utils.DARTS_VERSION_NUMBER
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.preferenceService
+import fontForResource
 import java.awt.Color
 import java.util.*
 import javax.swing.UIManager
@@ -26,13 +28,16 @@ fun setLookAndFeel() {
 
 fun setLookAndFeel(laf: String) {
     try {
-        Theme(
-                Color.CYAN,
-                Color.GREEN,
-                Color.decode("#def7f7"),
-                lightBackground = Color.decode("#f3fcfc"),
+        InjectedThings.theme =
+            Theme(
+                Color.decode("#CF5704"),
+                Color.decode("#32172a"),
+                lightBackground = Color.decode("#DAB1DA"),
+                font = fontForResource("/theme/halloween.ttf"),
+                fontColor = Color.decode("#880808"),
             )
-            .apply()
+
+        InjectedThings.theme?.apply()
         UIManager.setLookAndFeel(laf)
     } catch (e: Throwable) {
         logger.error(CODE_LOOK_AND_FEEL_ERROR, "Failed to load laf $laf", e)

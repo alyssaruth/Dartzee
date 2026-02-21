@@ -1,5 +1,6 @@
 package dartzee.utils
 
+import Theme
 import dartzee.ai.SimulationRunner
 import dartzee.dartzee.DartzeeAimCalculator
 import dartzee.dartzee.DartzeeCalculator
@@ -46,4 +47,5 @@ object InjectedThings {
     var preferenceService: AbstractPreferenceService = DefaultPreferenceService()
     var partyMode = false
     var exiter: IExiter = DefaultExiter()
+    var theme: Theme? = null
 }

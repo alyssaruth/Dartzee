@@ -12,7 +12,7 @@ import dartzee.screen.stats.overall.SimplifiedLeaderboardScreen
 import dartzee.screen.sync.SyncManagementScreen
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings
-import dartzee.utils.ResourceCache
+import getBaseFont
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
@@ -36,8 +36,6 @@ class MenuScreen : EmbeddedScreen() {
     private val btnSyncSummary = JButton("Sync Setup")
     private val btnGameReport = JButton("Game Report")
     private val lblVersion = LinkLabel("Dartzee $DARTS_VERSION_NUMBER", ::linkClicked)
-
-    private val buttonFont = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
 
     init {
         layout = null
@@ -69,7 +67,7 @@ class MenuScreen : EmbeddedScreen() {
 
         getAllChildComponentsForType<JButton>().forEach { button ->
             button.size = Dimension(BUTTON_WIDTH, BUTTON_HEIGHT)
-            button.font = buttonFont
+            button.font = getBaseFont().deriveFont(Font.PLAIN, 18f)
             button.addActionListener(this)
         }
 

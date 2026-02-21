@@ -1,13 +1,13 @@
 package dartzee.bean
 
 import dartzee.game.state.IWrappedParticipant
+import dartzee.utils.InjectedThings
 import dartzee.utils.PLAYER_IMAGE_HEIGHT
 import dartzee.utils.PLAYER_IMAGE_WIDTH
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.Dimension
 import javax.swing.JLabel
-import javax.swing.SwingConstants
 import javax.swing.border.EtchedBorder
 import javax.swing.border.LineBorder
 
@@ -15,13 +15,13 @@ class ParticipantAvatar(private val pt: IWrappedParticipant) : JLabel(ResourceCa
     init {
         size = Dimension(PLAYER_IMAGE_WIDTH, PLAYER_IMAGE_HEIGHT)
         border = EtchedBorder(EtchedBorder.RAISED, null, null)
-        horizontalAlignment = SwingConstants.CENTER
+        horizontalAlignment = CENTER
         icon = pt.getAvatar(1, selected = false, gameFinished = false)
     }
 
     fun setSelected(selected: Boolean, roundNumber: Int, gameFinished: Boolean = false) {
         border =
-            if (selected) LineBorder(Color.BLACK, 2)
+            if (selected) LineBorder(InjectedThings.theme?.primary ?: Color.BLACK, 2)
             else EtchedBorder(EtchedBorder.RAISED, null, null)
         icon = pt.getAvatar(roundNumber, selected, gameFinished)
     }

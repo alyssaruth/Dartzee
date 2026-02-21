@@ -1,7 +1,6 @@
 package dartzee.screen
 
 import java.awt.BorderLayout
-import java.awt.Color
 import javax.swing.JFrame
 import javax.swing.JScrollPane
 import javax.swing.JTextArea
@@ -17,8 +16,8 @@ class ChangeLog : JFrame() {
         setLocationRelativeTo(null)
         contentPane.layout = BorderLayout(0, 0)
         contentPane.add(scrollPane)
-        textArea.foreground = Color.BLACK
-        textArea.background = Color.WHITE
+        // textArea.foreground = Color.BLACK
+        // textArea.background = Color.WHITE
         textArea.isEditable = false
         appendChangeLog()
         scrollPane.setViewportView(textArea)
@@ -27,7 +26,7 @@ class ChangeLog : JFrame() {
     private fun appendChangeLog() {
         textArea.text = ""
 
-        val text = javaClass.getResource("/ChangeLog").readText()
+        val text = javaClass.getResource("/ChangeLog")?.readText()
         textArea.append(text)
 
         textArea.caretPosition = 0

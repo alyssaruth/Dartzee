@@ -280,8 +280,9 @@ fun getAllNonMissSegments() = getAllPossibleSegments().filterNot { it.isMiss() }
 
 fun getFontForDartboardLabels(lblHeight: Int): Font {
     // Start with a fontSize of 1
+    val baseFont = InjectedThings.theme?.font ?: ResourceCache.BASE_FONT
     var fontSize = 1f
-    var font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, fontSize)
+    var font = baseFont.deriveFont(Font.PLAIN, fontSize)
 
     // We're going to increment our test font 1 at a time, and keep checking its height
     var testFont = font
@@ -294,7 +295,7 @@ fun getFontForDartboardLabels(lblHeight: Int): Font {
 
         // Create a new testFont, with incremented font size
         fontSize++
-        testFont = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, fontSize)
+        testFont = baseFont.deriveFont(Font.PLAIN, fontSize)
 
         // Get the updated font height
         metrics = factoryFontMetrics(testFont)

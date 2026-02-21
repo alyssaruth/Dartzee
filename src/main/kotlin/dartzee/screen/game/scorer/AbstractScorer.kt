@@ -6,7 +6,6 @@ import dartzee.core.util.TableUtil.DefaultModel
 import dartzee.game.state.IWrappedParticipant
 import dartzee.utils.DartsColour
 import java.awt.BorderLayout
-import java.awt.Color
 import java.awt.Dimension
 import java.awt.Font
 import javax.swing.JLabel
@@ -45,7 +44,6 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), 
         lblName.horizontalAlignment = SwingConstants.CENTER
         lblName.font = Font("Trebuchet MS", Font.PLAIN, 16)
         lblName.text = participant.getParticipantNameHtml(false)
-        lblName.foreground = Color.BLACK
         lblName.border = EmptyBorder(10, 0, 0, 0)
         panelAvatar.border = EmptyBorder(5, 15, 5, 15)
         panelNorth.add(panelAvatar, BorderLayout.CENTER)
