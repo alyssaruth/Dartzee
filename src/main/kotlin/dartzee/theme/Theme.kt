@@ -1,6 +1,8 @@
 package dartzee.theme
 
+import dartzee.logging.CODE_THEME_APPLIED
 import dartzee.`object`.ColourWrapper
+import dartzee.utils.InjectedThings.logger
 import java.awt.Color
 import javax.swing.UIManager
 
@@ -16,6 +18,8 @@ data class Theme(
     val font = fontForResource("/theme/$name/font.ttf")
 
     fun apply() {
+        logger.info(CODE_THEME_APPLIED, "Applying theme $name")
+
         val defaults = UIManager.getDefaults()
 
         defaults.put("control", background)
