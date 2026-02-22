@@ -8,11 +8,11 @@ import dartzee.`object`.SegmentType
 import dartzee.preferences.Preferences
 import dartzee.theme.getBaseFont
 import dartzee.utils.InjectedThings.preferenceService
-import java.awt.Canvas
 import java.awt.Color
 import java.awt.Font
-import java.awt.FontMetrics
+import java.awt.Graphics2D
 import java.awt.Point
+import java.awt.font.TextLayout
 
 /** Utilities for the Dartboard object. */
 private val numberOrder =
@@ -284,7 +284,7 @@ fun getAllPossibleSegments(): List<DartboardSegment> {
 
 fun getAllNonMissSegments() = getAllPossibleSegments().filterNot { it.isMiss() }
 
-fun getFontForDartboardLabels(lblHeight: Int): Font {
+fun getFontForDartboardLabels(lblHeight: Int, g: Graphics2D): Font {
     // Start with a fontSize of 1
     val baseFont = getBaseFont()
     var fontSize = 1f
@@ -292,10 +292,9 @@ fun getFontForDartboardLabels(lblHeight: Int): Font {
 
     // We're going to increment our test font 1 at a time, and keep checking its height
     var testFont = font
-    var metrics = factoryFontMetrics(testFont)
-    var fontHeight = metrics.height
+    var fontHeight = TextLayout("20", font, g.fontRenderContext).bounds.height
 
-    while (fontHeight < lblHeight - 2) {
+    while (fontHeight < lblHeight * 0.8) {
         // The last iteration succeeded, so set our return value to be the font we tested.
         font = testFont
 
@@ -304,14 +303,11 @@ fun getFontForDartboardLabels(lblHeight: Int): Font {
         testFont = baseFont.deriveFont(Font.PLAIN, fontSize)
 
         // Get the updated font height
-        metrics = factoryFontMetrics(testFont)
-        fontHeight = metrics.height
+        fontHeight = TextLayout("20", font, g.fontRenderContext).bounds.height
     }
 
     return font
 }
-
-fun factoryFontMetrics(font: Font): FontMetrics = Canvas().getFontMetrics(font)
 
 fun getHighlightedColour(colour: Color): Color =
     if (colour == DartsColour.DARTBOARD_BLACK) {

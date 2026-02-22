@@ -16,7 +16,7 @@ fun autoApplyTheme() {
 
 fun pickThemeForDate(now: LocalDate): Theme? {
     if (DartsClient.devMode) {
-        return Themes.HALLOWEEN
+        return Themes.EASTER
     }
 
     if (now.month == Month.OCTOBER && now.dayOfMonth >= 24) {
