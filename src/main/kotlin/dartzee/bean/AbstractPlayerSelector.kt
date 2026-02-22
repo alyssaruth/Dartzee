@@ -6,6 +6,7 @@ import dartzee.core.util.setBold
 import dartzee.core.util.setFontSize
 import dartzee.db.PlayerEntity
 import dartzee.logging.CODE_SWING_ERROR
+import dartzee.theme.themedIcon
 import dartzee.utils.InjectedThings
 import java.awt.Component
 import java.awt.Dimension
@@ -16,7 +17,6 @@ import javax.swing.JButton
 import javax.swing.JLabel
 import javax.swing.JPanel
 import net.miginfocom.swing.MigLayout
-import themedIcon
 
 class PlayerSelector : AbstractPlayerSelector<ScrollTable>() {
     override val tablePlayersSelected = ScrollTable()

@@ -9,6 +9,7 @@ import dartzee.screen.EmbeddedScreen
 import dartzee.screen.HumanConfigurationDialog
 import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
+import dartzee.theme.themedIcon
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
@@ -21,7 +22,6 @@ import javax.swing.border.EmptyBorder
 import javax.swing.border.TitledBorder
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
-import themedIcon
 
 class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener {
     private val tablePlayers = ScrollTable()

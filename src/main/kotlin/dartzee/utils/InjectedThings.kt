@@ -1,6 +1,5 @@
 package dartzee.utils
 
-import Theme
 import dartzee.ai.SimulationRunner
 import dartzee.dartzee.DartzeeAimCalculator
 import dartzee.dartzee.DartzeeCalculator
@@ -23,6 +22,7 @@ import dartzee.sync.IRemoteDatabaseStore
 import dartzee.sync.SYNC_BUCKET_NAME
 import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
+import dartzee.theme.Theme
 import java.time.Clock
 
 object InjectedThings {

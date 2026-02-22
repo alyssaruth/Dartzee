@@ -10,9 +10,10 @@ import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.stats.overall.SimplifiedLeaderboardScreen
 import dartzee.screen.sync.SyncManagementScreen
+import dartzee.theme.getBaseFont
+import dartzee.theme.themedIcon
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings
-import getBaseFont
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
@@ -20,7 +21,6 @@ import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import javax.swing.ImageIcon
 import javax.swing.JButton
-import themedIcon
 
 private const val BUTTON_WIDTH = 220
 private const val BUTTON_HEIGHT = 80

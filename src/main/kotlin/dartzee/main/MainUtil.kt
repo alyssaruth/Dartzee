@@ -1,6 +1,5 @@
 package dartzee.main
 
-import Theme
 import dartzee.core.util.DialogUtil
 import dartzee.logging.CODE_LOOK_AND_FEEL_ERROR
 import dartzee.logging.CODE_LOOK_AND_FEEL_SET
@@ -12,6 +11,7 @@ import dartzee.logging.KEY_USERNAME
 import dartzee.`object`.ColourWrapper
 import dartzee.`object`.DartsClient
 import dartzee.preferences.Preferences
+import dartzee.theme.Theme
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger

@@ -1,3 +1,5 @@
+package dartzee.theme
+
 import dartzee.`object`.ColourWrapper
 import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache

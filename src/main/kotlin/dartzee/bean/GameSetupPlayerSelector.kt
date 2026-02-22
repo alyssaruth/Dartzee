@@ -4,12 +4,12 @@ import dartzee.core.bean.ScrollTableOrdered
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.setMargins
 import dartzee.db.MAX_PLAYERS
+import dartzee.theme.themedIcon
 import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
 import java.awt.Font
 import java.awt.event.ActionEvent
 import javax.swing.JToggleButton
-import themedIcon
 
 class GameSetupPlayerSelector : AbstractPlayerSelector<ScrollTableOrdered>() {
     override val tablePlayersSelected = ScrollTableOrdered()

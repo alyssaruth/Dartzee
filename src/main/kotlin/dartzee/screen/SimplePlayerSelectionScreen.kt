@@ -8,12 +8,12 @@ import dartzee.core.util.setFontSize
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.game.X01_PARTY_CONFIG
+import dartzee.theme.themedIcon
 import dartzee.utils.InjectedThings.gameLauncher
 import java.awt.BorderLayout
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
-import themedIcon
 
 class SimplePlayerSelectionScreen : EmbeddedScreen() {
     private val lblTitle = JLabel()

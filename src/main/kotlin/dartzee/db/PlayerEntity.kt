@@ -3,10 +3,10 @@ package dartzee.db
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getEndOfTimeSqlString
+import dartzee.theme.themedIcon
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.mainDatabase
 import javax.swing.ImageIcon
-import themedIcon
 
 open class PlayerEntity(database: Database = mainDatabase) :
     AbstractEntity<PlayerEntity>(database) {
