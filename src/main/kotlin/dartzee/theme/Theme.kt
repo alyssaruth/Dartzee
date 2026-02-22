@@ -32,7 +32,7 @@ data class Theme(
         defaults.put("DesktopPane.background", background)
         defaults.put("Panel.background", background)
         defaults.put("text", fontColor)
-        defaults.put("nimbusSelectionBackground", background)
+        defaults.put("nimbusSelectionBackground", primaryDark)
         defaults.put("nimbusOrange", lightBackground)
         defaults.put("nimbusBorder", background)
     }

@@ -93,9 +93,9 @@ class MenuScreen : EmbeddedScreen() {
 
         btnNewGame.icon = ImageIcon(javaClass.getResource("/buttons/newGame.png"))
         btnManagePlayers.icon = themedIcon("/buttons/playerManagement.png")
-        btnUtilities.icon = ImageIcon(javaClass.getResource("/buttons/utilities.png"))
+        btnUtilities.icon = themedIcon("/buttons/utilities.png")
         btnPreferences.icon = ImageIcon(javaClass.getResource("/buttons/preferences.png"))
-        btnGameReport.icon = ImageIcon(javaClass.getResource("/buttons/gameReport.png"))
+        btnGameReport.icon = themedIcon("/buttons/gameReport.png")
         btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
         btnDartzeeTemplates.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
         btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
