@@ -1,6 +1,7 @@
 package dartzee.screen
 
 import dartzee.logging.CODE_SWING_ERROR
+import dartzee.theme.getBaseFont
 import dartzee.utils.InjectedThings.logger
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -26,13 +27,12 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
         panelNavigation.layout = BorderLayout(0, 0)
 
         panelNavigation.add(panelNext, BorderLayout.EAST)
-        btnNext.font = Font("Tahoma", Font.PLAIN, 20)
-
         panelNext.add(btnNext)
 
         panelNavigation.add(panelBack, BorderLayout.WEST)
-        btnBack.font = Font("Tahoma", Font.PLAIN, 20)
         panelBack.add(btnBack)
+
+        setFonts()
 
         btnBack.addActionListener(this)
         btnNext.addActionListener(this)
@@ -77,6 +77,17 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
 
     open fun nextPressed() {
         // default method
+    }
+
+    private fun setFonts() {
+        val baseFont = getBaseFont()
+
+        btnNext.font = baseFont.deriveFont(Font.PLAIN, 20f)
+        btnBack.font = baseFont.deriveFont(Font.PLAIN, 20f)
+    }
+
+    open fun fireAppearancePreferencesChanged() {
+        setFonts()
     }
 
     /** Default methods */

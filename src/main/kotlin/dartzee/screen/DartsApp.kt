@@ -11,6 +11,8 @@ import dartzee.logging.KEY_CURRENT_SCREEN
 import dartzee.logging.LoggingCode
 import dartzee.main.exitApplication
 import dartzee.`object`.DartsClient
+import dartzee.theme.Themes
+import dartzee.theme.applyCurrentTheme
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
@@ -26,13 +28,12 @@ import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowEvent
 import java.awt.event.WindowListener
-import java.util.*
+import java.util.UUID
 import javax.swing.AbstractAction
 import javax.swing.ImageIcon
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.KeyStroke
-import javax.swing.WindowConstants
 
 private const val CMD_PURGE_GAME = "purge "
 private const val CMD_LOAD_GAME = "load "
@@ -40,6 +41,8 @@ private const val CMD_CLEAR_CONSOLE = "cls"
 private const val CMD_EMPTY_SCREEN_CACHE = "emptyscr"
 private const val CMD_GUID = "guid"
 private const val CMD_TEST = "test"
+private const val CMD_VANILLA = "vanilla"
+private const val CMD_HALLOWEEN = "halloween"
 
 val APP_SIZE = Dimension(1000, 700)
 
@@ -55,7 +58,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         contentPane.layout = BorderLayout(0, 0)
 
         contentPane.add(commandBar, BorderLayout.SOUTH)
-        defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
+        defaultCloseOperation = DO_NOTHING_ON_CLOSE
 
         rootPane.putClientProperty(
             "JRootPane.titleBarBackground",
@@ -178,6 +181,12 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         } else if (cmd == CMD_TEST) {
             val window = TestWindow()
             window.isVisible = true
+        } else if (cmd == CMD_HALLOWEEN) {
+            InjectedThings.theme = Themes.HALLOWEEN
+            applyCurrentTheme()
+        } else if (cmd == CMD_VANILLA) {
+            InjectedThings.theme = null
+            applyCurrentTheme()
         }
 
         return textToShow

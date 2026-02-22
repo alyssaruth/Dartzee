@@ -57,20 +57,12 @@ class MenuScreen : EmbeddedScreen() {
         lblVersion.size = Dimension(100, 20)
         add(lblVersion)
 
-        btnNewGame.icon = ImageIcon(javaClass.getResource("/buttons/newGame.png"))
-        btnManagePlayers.icon = themedIcon("/buttons/playerManagement.png")
-        btnUtilities.icon = ImageIcon(javaClass.getResource("/buttons/utilities.png"))
-        btnPreferences.icon = ImageIcon(javaClass.getResource("/buttons/preferences.png"))
-        btnGameReport.icon = ImageIcon(javaClass.getResource("/buttons/gameReport.png"))
-        btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
-        btnDartzeeTemplates.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
-        btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
-
         getAllChildComponentsForType<JButton>().forEach { button ->
             button.size = Dimension(BUTTON_WIDTH, BUTTON_HEIGHT)
-            button.font = getBaseFont().deriveFont(Font.PLAIN, 18f)
             button.addActionListener(this)
         }
+
+        refreshButtons()
 
         addComponentListener(
             object : ComponentAdapter() {
@@ -88,6 +80,29 @@ class MenuScreen : EmbeddedScreen() {
     override fun postInit() {
         super.postInit()
         layoutScreen()
+    }
+
+    override fun fireAppearancePreferencesChanged() {
+        super.fireAppearancePreferencesChanged()
+
+        refreshButtons()
+    }
+
+    private fun refreshButtons() {
+        lblVersion.refresh()
+
+        btnNewGame.icon = ImageIcon(javaClass.getResource("/buttons/newGame.png"))
+        btnManagePlayers.icon = themedIcon("/buttons/playerManagement.png")
+        btnUtilities.icon = ImageIcon(javaClass.getResource("/buttons/utilities.png"))
+        btnPreferences.icon = ImageIcon(javaClass.getResource("/buttons/preferences.png"))
+        btnGameReport.icon = ImageIcon(javaClass.getResource("/buttons/gameReport.png"))
+        btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
+        btnDartzeeTemplates.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
+        btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
+
+        getAllChildComponentsForType<JButton>().forEach { button ->
+            button.font = getBaseFont().deriveFont(Font.PLAIN, 18f)
+        }
     }
 
     private fun layoutScreen(width: Int = getWidth(), height: Int = getHeight()) {
