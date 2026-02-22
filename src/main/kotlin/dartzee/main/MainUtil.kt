@@ -45,6 +45,7 @@ fun setLookAndFeel(laf: String) {
         InjectedThings.theme =
             Theme(
                 "halloween",
+                lightOrange,
                 orange,
                 Color.decode("#32172a"),
                 lightBackground = Color.decode("#DAB1DA"),

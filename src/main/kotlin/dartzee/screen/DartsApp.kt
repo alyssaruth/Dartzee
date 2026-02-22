@@ -1,7 +1,6 @@
 package dartzee.screen
 
 import dartzee.achievements.convertEmptyAchievements
-import dartzee.achievements.x01.AchievementX01Chucklevision
 import dartzee.core.bean.AbstractDevScreen
 import dartzee.core.bean.CheatBar
 import dartzee.core.util.DialogUtil
@@ -58,6 +57,11 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         contentPane.add(commandBar, BorderLayout.SOUTH)
         defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
 
+        rootPane.putClientProperty(
+            "JRootPane.titleBarBackground",
+            InjectedThings.theme?.lightBackground,
+        )
+
         addWindowListener(this)
     }
 
@@ -76,9 +80,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         // Pop up the change log if we've just updated
         if (DartsClient.justUpdated) {
             convertEmptyAchievements()
-
-            // TODO - Remove before next release
-            AchievementX01Chucklevision().runConversion(emptyList())
 
             val dialog = ChangeLog()
             dialog.isVisible = true
@@ -127,7 +128,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
             }
         } catch (t: Throwable) {
             logger.error(CODE_SCREEN_LOAD_ERROR, "Failed to load screen ${scrn.getScreenName()}", t)
-            DialogUtil.showErrorOLD("Error loading screen - " + scrn.getScreenName())
+            DialogUtil.showError("Error loading screen - " + scrn.getScreenName())
             return
         }
 
