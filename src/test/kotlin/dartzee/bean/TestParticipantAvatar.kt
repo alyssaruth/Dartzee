@@ -7,6 +7,8 @@ import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.screen.game.makeTeam
+import dartzee.theme.Themes
+import dartzee.utils.InjectedThings
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
@@ -51,5 +53,9 @@ class TestParticipantAvatar : AbstractTest() {
 
         avatar.setSelected(selected = false, 1, gameFinished = false)
         avatar.shouldMatchImage("single-unselected")
+
+        InjectedThings.theme = Themes.HALLOWEEN
+        avatar.setSelected(selected = true, 1, gameFinished = false)
+        avatar.shouldMatchImage("single-selected-themed")
     }
 }

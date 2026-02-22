@@ -16,8 +16,6 @@ class ChangeLog : JFrame() {
         setLocationRelativeTo(null)
         contentPane.layout = BorderLayout(0, 0)
         contentPane.add(scrollPane)
-        // textArea.foreground = Color.BLACK
-        // textArea.background = Color.WHITE
         textArea.isEditable = false
         appendChangeLog()
         scrollPane.setViewportView(textArea)

@@ -10,17 +10,16 @@ import java.time.Month
 import javax.swing.ImageIcon
 
 fun autoApplyTheme() {
-    InjectedThings.theme = pickThemeForDate()
+    InjectedThings.theme = pickThemeForDate(LocalDate.now())
     InjectedThings.theme?.apply()
 }
 
-private fun pickThemeForDate(): Theme? {
+fun pickThemeForDate(now: LocalDate): Theme? {
     if (DartsClient.devMode) {
         return Themes.HALLOWEEN
     }
 
-    val currentDate = LocalDate.now()
-    if (currentDate.month == Month.OCTOBER && currentDate.dayOfMonth >= 24) {
+    if (now.month == Month.OCTOBER && now.dayOfMonth >= 24) {
         return Themes.HALLOWEEN
     }
 
@@ -46,6 +45,6 @@ fun themedIcon(path: String): ImageIcon {
     return InjectedThings.theme?.icon(path) ?: ImageIcon(Theme::class.java.getResource(path))
 }
 
-fun Theme.icon(path: String): ImageIcon? {
+private fun Theme.icon(path: String): ImageIcon? {
     return Theme::class.java.getResource("/theme/$name$path")?.let(::ImageIcon)
 }

@@ -11,6 +11,8 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
 import dartzee.screen.game.SegmentStatuses
+import dartzee.theme.Themes
+import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments
 import io.kotest.matchers.shouldBe
 import java.awt.Color
@@ -61,6 +63,15 @@ class TestPresentationDartboard : AbstractTest() {
         val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER, renderScoreLabels = true)
         dartboard.setBounds(0, 0, 500, 500)
         dartboard.shouldMatchImage("scores")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should match snapshot - halloween`() {
+        InjectedThings.theme = Themes.HALLOWEEN
+        val dartboard = PresentationDartboard(renderScoreLabels = true)
+        dartboard.setBounds(0, 0, 500, 500)
+        dartboard.shouldMatchImage("halloween")
     }
 
     @Test

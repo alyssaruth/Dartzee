@@ -60,11 +60,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         contentPane.add(commandBar, BorderLayout.SOUTH)
         defaultCloseOperation = DO_NOTHING_ON_CLOSE
 
-        rootPane.putClientProperty(
-            "JRootPane.titleBarBackground",
-            InjectedThings.theme?.lightBackground,
-        )
-
         addWindowListener(this)
     }
 

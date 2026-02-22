@@ -1,6 +1,7 @@
 package dartzee.utils
 
 import com.github.alyssaburlton.swingtest.shouldMatchImage
+import dartzee.DEFAULT_HUMAN_ICON
 import dartzee.core.util.FileUtil
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
@@ -69,7 +70,7 @@ class TestPlayerImageUtils : AbstractTest() {
     @Test
     @Tag("screenshot")
     fun `Should combine player flags`() {
-        combinePlayerFlags(PlayerEntity.ICON_HUMAN, PlayerEntity.ICON_AI)
+        combinePlayerFlags(DEFAULT_HUMAN_ICON, PlayerEntity.ICON_AI)
             .toLabel()
             .shouldMatchImage("human-ai")
 
@@ -77,11 +78,11 @@ class TestPlayerImageUtils : AbstractTest() {
             .toLabel()
             .shouldMatchImage("ai-ai")
 
-        combinePlayerFlags(PlayerEntity.ICON_AI, PlayerEntity.ICON_HUMAN)
+        combinePlayerFlags(PlayerEntity.ICON_AI, DEFAULT_HUMAN_ICON)
             .toLabel()
             .shouldMatchImage("ai-human")
 
-        combinePlayerFlags(PlayerEntity.ICON_HUMAN, PlayerEntity.ICON_HUMAN)
+        combinePlayerFlags(DEFAULT_HUMAN_ICON, DEFAULT_HUMAN_ICON)
             .toLabel()
             .shouldMatchImage("human-human")
     }

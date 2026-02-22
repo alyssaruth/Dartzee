@@ -48,7 +48,6 @@ open class PlayerEntity(database: Database = mainDatabase) :
 
     companion object {
         val ICON_AI = ImageIcon(PlayerEntity::class.java.getResource("/flags/aiFlag.png"))
-        val ICON_HUMAN = ImageIcon(PlayerEntity::class.java.getResource("/flags/humanFlag.png"))
 
         fun getPlayerFlag(human: Boolean) =
             if (human) themedIcon("/flags/humanFlag.png") else ICON_AI
