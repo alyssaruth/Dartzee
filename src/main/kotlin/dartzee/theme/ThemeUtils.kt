@@ -31,10 +31,8 @@ fun applyCurrentTheme() {
     ScreenCache.fireAppearancePreferencesChanged()
 }
 
-fun fontForResource(resourcePath: String): Font {
-    val fontStream =
-        Theme::class.java.getResourceAsStream(resourcePath)
-            ?: throw RuntimeException("Font not found for path $resourcePath")
+fun fontForResource(resourcePath: String): Font? {
+    val fontStream = Theme::class.java.getResourceAsStream(resourcePath) ?: return null
 
     return Font.createFont(Font.TRUETYPE_FONT, fontStream)
 }

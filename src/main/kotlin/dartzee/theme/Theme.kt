@@ -16,19 +16,20 @@ data class Theme(
     val font = fontForResource("/theme/$name/font.ttf")
 
     fun apply() {
-        UIManager.put("control", background)
-        UIManager.put("nimbusBase", primary)
-        UIManager.put("nimbusBlueGrey", primaryDark)
-        UIManager.put("nimbusFocus", primaryDark)
-        UIManager.put("background", background)
-        UIManager.put("nimbusLightBackground", lightBackground)
-        UIManager.put("Table.alternateRowColor", null)
-        UIManager.put("DesktopPane.background", background)
-        UIManager.put("Panel.background", background)
-        UIManager.put("text", fontColor)
-        UIManager.put("nimbusSelectionBackground", background)
-        UIManager.put("nimbusOrange", lightBackground)
+        val defaults = UIManager.getDefaults()
 
-        UIManager.put("nimbusBorder", background)
+        defaults.put("control", background)
+        defaults.put("nimbusBase", primary)
+        defaults.put("nimbusBlueGrey", primaryDark)
+        defaults.put("nimbusFocus", primaryDark)
+        defaults.put("background", background)
+        defaults.put("nimbusLightBackground", lightBackground)
+        defaults.put("Table.alternateRowColor", null)
+        defaults.put("DesktopPane.background", background)
+        defaults.put("Panel.background", background)
+        defaults.put("text", fontColor)
+        defaults.put("nimbusSelectionBackground", background)
+        defaults.put("nimbusOrange", lightBackground)
+        defaults.put("nimbusBorder", background)
     }
 }

@@ -6,6 +6,7 @@ import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.preferences.Preferences
+import dartzee.theme.getBaseFont
 import dartzee.utils.InjectedThings.preferenceService
 import java.awt.Canvas
 import java.awt.Color
@@ -285,7 +286,7 @@ fun getAllNonMissSegments() = getAllPossibleSegments().filterNot { it.isMiss() }
 
 fun getFontForDartboardLabels(lblHeight: Int): Font {
     // Start with a fontSize of 1
-    val baseFont = InjectedThings.theme?.font ?: ResourceCache.BASE_FONT
+    val baseFont = getBaseFont()
     var fontSize = 1f
     var font = baseFont.deriveFont(Font.PLAIN, fontSize)
 
