@@ -70,7 +70,7 @@ class GameStatisticsCellRenderer(
         } else if (histogramRows.contains(rowName)) {
             val sum = getHistogramSum(tm, column)
             val baseColor =
-                InjectedThings.theme?.primary ?: Color.getHSBColor(0.5.toFloat(), 0f, 1f)
+                InjectedThings.theme?.primary ?: Color.getHSBColor(0.5.toFloat(), 1f, 1f)
             val hsbValues =
                 Color.RGBtoHSB(baseColor.red, baseColor.green, baseColor.blue, FloatArray(3))
             val thisValue = getDoubleAt(tm, row, column)
@@ -127,7 +127,7 @@ class GameStatisticsCellRenderer(
     }
 
     private fun getHistogramSum(tm: TableModel, col: Int) =
-        getHistogramRowNumbers(tm).map { row -> (tm.getValueAt(row, col) as Number).toLong() }.sum()
+        getHistogramRowNumbers(tm).sumOf { row -> (tm.getValueAt(row, col) as Number).toLong() }
 
     private fun getHistogramRowNumbers(tm: TableModel) =
         (0 until tm.rowCount).filter { histogramRows.contains(tm.getValueAt(it, 0)) }
