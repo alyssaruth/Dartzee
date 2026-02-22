@@ -41,10 +41,8 @@ fun fontForResource(resourcePath: String): Font {
 
 fun getBaseFont(): Font = InjectedThings.theme?.font ?: ResourceCache.BASE_FONT
 
-fun themedIcon(path: String): ImageIcon {
-    return InjectedThings.theme?.icon(path) ?: ImageIcon(Theme::class.java.getResource(path))
-}
+fun themedIcon(path: String) =
+    InjectedThings.theme?.icon(path) ?: ImageIcon(Theme::class.java.getResource(path))
 
-private fun Theme.icon(path: String): ImageIcon? {
-    return Theme::class.java.getResource("/theme/$name$path")?.let(::ImageIcon)
-}
+private fun Theme.icon(path: String) =
+    Theme::class.java.getResource("/theme/$name$path")?.let(::ImageIcon)
