@@ -21,6 +21,7 @@ import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
 import dartzee.core.screen.LoadingDialog
 import dartzee.core.util.runOnEventThreadBlocking
+import dartzee.db.PlayerEntity
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
 import dartzee.logging.LogRecord
@@ -85,6 +86,8 @@ val CURRENT_TIME_STRING: String =
         .withLocale(Locale.UK)
         .withZone(ZoneId.systemDefault())
         .format(CURRENT_TIME)
+
+val DEFAULT_HUMAN_ICON = ImageIcon(PlayerEntity::class.java.getResource("/flags/humanFlag.png"))
 
 fun makeLogRecord(
     timestamp: Instant = CURRENT_TIME,

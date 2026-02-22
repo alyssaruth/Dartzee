@@ -1,6 +1,8 @@
 package dartzee.bean
 
+import com.github.alyssaburlton.swingtest.shouldMatch
 import com.github.alyssaburlton.swingtest.shouldMatchImage
+import dartzee.DEFAULT_HUMAN_ICON
 import dartzee.core.bean.ScrollTable
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
@@ -28,7 +30,7 @@ class TestScrollTablePlayers : AbstractTest() {
         table.getColumnName(1) shouldBe "Player"
         table.rowCount shouldBe 2
 
-        table.getValueAt(0, 0) shouldBe PlayerEntity.ICON_HUMAN
+        (table.getValueAt(0, 0) as ImageIcon).shouldMatch(DEFAULT_HUMAN_ICON)
         table.getValueAt(0, 1) shouldBe bob
 
         table.getValueAt(1, 0) shouldBe PlayerEntity.ICON_AI

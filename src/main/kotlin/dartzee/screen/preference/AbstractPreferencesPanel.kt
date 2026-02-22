@@ -60,7 +60,7 @@ abstract class AbstractPreferencesPanel : JPanel() {
             // Refresh all active screens in case we've changed appearance preferences
             resetCachedDartboardValues()
 
-            ScreenCache.getDartsGameScreens().forEach { it.fireAppearancePreferencesChanged() }
+            ScreenCache.fireAppearancePreferencesChanged()
         }
     }
 

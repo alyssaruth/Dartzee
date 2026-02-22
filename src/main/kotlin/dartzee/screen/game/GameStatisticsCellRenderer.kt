@@ -1,11 +1,11 @@
 package dartzee.screen.game
 
 import dartzee.utils.DartsColour
+import dartzee.utils.InjectedThings
 import java.awt.Color
 import java.awt.Component
 import java.awt.Font
 import javax.swing.JTable
-import javax.swing.SwingConstants
 import javax.swing.border.MatteBorder
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.TableModel
@@ -27,7 +27,7 @@ class GameStatisticsCellRenderer(
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
         table ?: return this
 
-        horizontalAlignment = SwingConstants.CENTER
+        horizontalAlignment = CENTER
 
         val style = if (column == 0) Font.BOLD else Font.PLAIN
         font = Font("Trebuchet MS", style, 15)
@@ -50,10 +50,11 @@ class GameStatisticsCellRenderer(
     }
 
     private fun setColours(table: JTable, row: Int, column: Int) {
+        val white = InjectedThings.theme?.lightBackground ?: Color.WHITE
         if (column == 0) {
             // Do nothing
             foreground = null
-            background = Color.WHITE
+            background = white
             return
         }
 
@@ -68,17 +69,20 @@ class GameStatisticsCellRenderer(
             DartsColour.setFgAndBgColoursForPosition(this, pos, Color.WHITE)
         } else if (histogramRows.contains(rowName)) {
             val sum = getHistogramSum(tm, column)
-
+            val baseColor =
+                InjectedThings.theme?.primary ?: Color.getHSBColor(0.5.toFloat(), 1f, 1f)
+            val hsbValues =
+                Color.RGBtoHSB(baseColor.red, baseColor.green, baseColor.blue, FloatArray(3))
             val thisValue = getDoubleAt(tm, row, column)
             val percent = if (sum == 0L) 0f else thisValue.toFloat() / sum
 
-            val bg = Color.getHSBColor(0.5.toFloat(), percent, 1f)
+            val bg = Color.getHSBColor(hsbValues[0], percent, hsbValues[2])
 
             foreground = null
             background = bg
         } else {
             foreground = null
-            background = Color.WHITE
+            background = white
         }
     }
 
@@ -123,7 +127,7 @@ class GameStatisticsCellRenderer(
     }
 
     private fun getHistogramSum(tm: TableModel, col: Int) =
-        getHistogramRowNumbers(tm).map { row -> (tm.getValueAt(row, col) as Number).toLong() }.sum()
+        getHistogramRowNumbers(tm).sumOf { row -> (tm.getValueAt(row, col) as Number).toLong() }
 
     private fun getHistogramRowNumbers(tm: TableModel) =
         (0 until tm.rowCount).filter { histogramRows.contains(tm.getValueAt(it, 0)) }

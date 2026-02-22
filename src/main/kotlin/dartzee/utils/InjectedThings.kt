@@ -22,6 +22,7 @@ import dartzee.sync.IRemoteDatabaseStore
 import dartzee.sync.SYNC_BUCKET_NAME
 import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
+import dartzee.theme.Theme
 import java.time.Clock
 
 object InjectedThings {
@@ -46,4 +47,5 @@ object InjectedThings {
     var preferenceService: AbstractPreferenceService = DefaultPreferenceService()
     var partyMode = false
     var exiter: IExiter = DefaultExiter()
+    var theme: Theme? = null
 }

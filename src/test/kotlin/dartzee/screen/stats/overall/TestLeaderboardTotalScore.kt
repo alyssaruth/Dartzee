@@ -3,7 +3,9 @@ package dartzee.screen.stats.overall
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldMatch
 import com.github.alyssaburlton.swingtest.shouldMatchImage
+import dartzee.DEFAULT_HUMAN_ICON
 import dartzee.bean.GameParamFilterPanel
 import dartzee.bean.GameParamFilterPanelRoundTheClock
 import dartzee.bean.GameParamFilterPanelX01
@@ -43,7 +45,7 @@ class TestLeaderboardTotalScore : AbstractTest() {
         leaderboard.rowCount() shouldBe 3
 
         leaderboard.getNameAt(0) shouldBe "Bob"
-        leaderboard.getIconAt(0) shouldBe PlayerEntity.ICON_HUMAN
+        leaderboard.getIconAt(0).shouldMatch(DEFAULT_HUMAN_ICON)
         leaderboard.getScoreAt(0) shouldBe 35
         leaderboard.getGameIdAt(0) shouldBe gBob.localId
 

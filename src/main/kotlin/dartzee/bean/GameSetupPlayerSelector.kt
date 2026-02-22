@@ -4,6 +4,7 @@ import dartzee.core.bean.ScrollTableOrdered
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.setMargins
 import dartzee.db.MAX_PLAYERS
+import dartzee.theme.themedIcon
 import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
 import java.awt.Font
@@ -23,7 +24,7 @@ class GameSetupPlayerSelector : AbstractPlayerSelector<ScrollTableOrdered>() {
             tablePlayersSelected.setTableFont(font)
         }
 
-        btnPairs.icon = ResourceCache.ICON_TEAMS
+        btnPairs.icon = themedIcon("/buttons/teams.png")
         btnPairs.toolTipText = "Play in pairs"
         tablePlayersSelected.addButtonToOrderingPanel(btnPairs, 3)
         lblSelected.setMargins(0, 0, 0, 60)

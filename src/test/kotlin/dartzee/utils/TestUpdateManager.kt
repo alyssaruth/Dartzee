@@ -169,7 +169,7 @@ class TestUpdateManager : AbstractTest() {
         DartsClient.operatingSystem = "foo"
 
         val metadata = UpdateMetadata("v100", 123456, "Dartzee_x_y.jar", 100)
-        shouldUpdateAsync(DARTS_VERSION_NUMBER, metadata).get() shouldBe false
+        val result = shouldUpdateAsync(DARTS_VERSION_NUMBER, metadata)
 
         val log = verifyLog(CODE_UPDATE_CHECK_RESULT)
         log.message shouldBe "Newer release available - v100"
@@ -177,6 +177,9 @@ class TestUpdateManager : AbstractTest() {
         val info = getInfoDialog()
         val linkLabel = info.getChild<LinkLabel>()
         linkLabel.text shouldBe "<html><u>$DARTZEE_MANUAL_DOWNLOAD_URL/tag/v100</u></html>"
+        info.clickOk(async = true)
+
+        result.get() shouldBe false
     }
 
     @Test
@@ -229,7 +232,7 @@ class TestUpdateManager : AbstractTest() {
 
         UpdateManager.prepareBatchFile()
 
-        updateFile.readText() shouldBe javaClass.getResource("/update/update.bat").readText()
+        updateFile.readText() shouldBe javaClass.getResource("/update/update.bat")!!.readText()
         updateFile.delete()
     }
 
@@ -245,6 +248,7 @@ class TestUpdateManager : AbstractTest() {
         val errorDialog = getErrorDialog()
         errorDialog.getDialogMessage() shouldBe
             "Failed to launch update.bat - call the following manually to perform the update: \n\nupdate.bat foo"
+        errorDialog.clickOk(async = true)
 
         val log = verifyLog(CODE_BATCH_ERROR, Severity.ERROR)
         log.errorObject shouldBe error

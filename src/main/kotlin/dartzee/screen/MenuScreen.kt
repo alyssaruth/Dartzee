@@ -10,9 +10,10 @@ import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.stats.overall.SimplifiedLeaderboardScreen
 import dartzee.screen.sync.SyncManagementScreen
+import dartzee.theme.getBaseFont
+import dartzee.theme.themedIcon
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings
-import dartzee.utils.ResourceCache
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
@@ -37,8 +38,6 @@ class MenuScreen : EmbeddedScreen() {
     private val btnGameReport = JButton("Game Report")
     private val lblVersion = LinkLabel("Dartzee $DARTS_VERSION_NUMBER", ::linkClicked)
 
-    private val buttonFont = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 18f)
-
     init {
         layout = null
         layoutScreen(1000, 663)
@@ -58,20 +57,12 @@ class MenuScreen : EmbeddedScreen() {
         lblVersion.size = Dimension(100, 20)
         add(lblVersion)
 
-        btnNewGame.icon = ImageIcon(javaClass.getResource("/buttons/newGame.png"))
-        btnManagePlayers.icon = ImageIcon(javaClass.getResource("/buttons/playerManagement.png"))
-        btnUtilities.icon = ImageIcon(javaClass.getResource("/buttons/utilities.png"))
-        btnPreferences.icon = ImageIcon(javaClass.getResource("/buttons/preferences.png"))
-        btnGameReport.icon = ImageIcon(javaClass.getResource("/buttons/gameReport.png"))
-        btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
-        btnDartzeeTemplates.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
-        btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
-
         getAllChildComponentsForType<JButton>().forEach { button ->
             button.size = Dimension(BUTTON_WIDTH, BUTTON_HEIGHT)
-            button.font = buttonFont
             button.addActionListener(this)
         }
+
+        refreshButtons()
 
         addComponentListener(
             object : ComponentAdapter() {
@@ -89,6 +80,29 @@ class MenuScreen : EmbeddedScreen() {
     override fun postInit() {
         super.postInit()
         layoutScreen()
+    }
+
+    override fun fireAppearancePreferencesChanged() {
+        super.fireAppearancePreferencesChanged()
+
+        refreshButtons()
+    }
+
+    private fun refreshButtons() {
+        lblVersion.refresh()
+
+        btnNewGame.icon = ImageIcon(javaClass.getResource("/buttons/newGame.png"))
+        btnManagePlayers.icon = themedIcon("/buttons/playerManagement.png")
+        btnUtilities.icon = themedIcon("/buttons/utilities.png")
+        btnPreferences.icon = ImageIcon(javaClass.getResource("/buttons/preferences.png"))
+        btnGameReport.icon = themedIcon("/buttons/gameReport.png")
+        btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
+        btnDartzeeTemplates.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
+        btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
+
+        getAllChildComponentsForType<JButton>().forEach { button ->
+            button.font = getBaseFont().deriveFont(Font.PLAIN, 18f)
+        }
     }
 
     private fun layoutScreen(width: Int = getWidth(), height: Int = getHeight()) {

@@ -9,6 +9,7 @@ import dartzee.screen.EmbeddedScreen
 import dartzee.screen.HumanConfigurationDialog
 import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
+import dartzee.theme.themedIcon
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
@@ -47,8 +48,7 @@ class PlayerManagementScreen : EmbeddedScreen(), ListSelectionListener {
 
         sideBar.add(panelNorth, BorderLayout.NORTH)
         panelNorth.layout = FlowLayout(FlowLayout.LEFT, 5, 5)
-        btnNewPlayer.icon =
-            ImageIcon(PlayerManagementScreen::class.java.getResource("/buttons/addHuman.png"))
+        btnNewPlayer.icon = themedIcon("/buttons/addHuman.png")
         btnNewPlayer.preferredSize = Dimension(30, 30)
         btnNewPlayer.toolTipText = "Add player"
         btnNewPlayer.name = "AddPlayer"

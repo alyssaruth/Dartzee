@@ -4,6 +4,8 @@ import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.doHover
 import com.github.alyssaburlton.swingtest.doHoverAway
 import dartzee.helper.AbstractTest
+import dartzee.theme.Themes
+import dartzee.utils.InjectedThings
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
@@ -18,6 +20,13 @@ class TestLinkLabel : AbstractTest() {
 
         label.text shouldBe "<html><u>https://foo.bar</u></html>"
         label.foreground shouldBe Color.BLUE
+    }
+
+    @Test
+    fun `Should take theme into account`() {
+        InjectedThings.theme = Themes.HALLOWEEN
+        val label = LinkLabel("https://foo.bar") {}
+        label.foreground shouldBe Themes.HALLOWEEN.primary
     }
 
     @Test

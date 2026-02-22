@@ -1,5 +1,6 @@
 package dartzee.core.bean
 
+import dartzee.utils.InjectedThings
 import java.awt.Color
 import java.awt.Component
 import java.awt.Cursor
@@ -41,7 +42,10 @@ abstract class ScrollTableHyperlink(private val linkColumnName: String, testId: 
      */
     fun setLinkColumnIndex(ix: Int) {
         linkColumn = ix
-        setRenderer(linkColumn, HyperlinkRenderer(tableForeground))
+        setRenderer(
+            linkColumn,
+            HyperlinkRenderer(tableForeground ?: InjectedThings.theme?.fontColor),
+        )
     }
 
     override fun isOverHyperlink(arg0: MouseEvent): Boolean {

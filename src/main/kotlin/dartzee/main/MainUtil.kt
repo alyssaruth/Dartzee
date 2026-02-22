@@ -10,6 +10,7 @@ import dartzee.logging.KEY_OPERATING_SYSTEM
 import dartzee.logging.KEY_USERNAME
 import dartzee.`object`.DartsClient
 import dartzee.preferences.Preferences
+import dartzee.theme.autoApplyTheme
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.preferenceService
@@ -24,10 +25,11 @@ fun setLookAndFeel() {
 
 fun setLookAndFeel(laf: String) {
     try {
+        autoApplyTheme()
         UIManager.setLookAndFeel(laf)
     } catch (e: Throwable) {
         logger.error(CODE_LOOK_AND_FEEL_ERROR, "Failed to load laf $laf", e)
-        DialogUtil.showErrorOLD("Failed to load Look & Feel 'Nimbus'.")
+        DialogUtil.showError("Failed to load Look & Feel 'Nimbus'.")
     }
 
     logger.info(CODE_LOOK_AND_FEEL_SET, "Set look and feel to $laf")

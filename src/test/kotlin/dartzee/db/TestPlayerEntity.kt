@@ -1,12 +1,15 @@
 package dartzee.db
 
 import com.github.alyssaburlton.swingtest.shouldMatch
+import dartzee.DEFAULT_HUMAN_ICON
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.helper.makeDartsModel
+import dartzee.theme.Themes
+import dartzee.utils.InjectedThings
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -30,7 +33,7 @@ class TestPlayerEntity : AbstractEntityTest<PlayerEntity>() {
 
         human.isAi() shouldBe false
         human.isHuman() shouldBe true
-        human.getFlag() shouldBe PlayerEntity.ICON_HUMAN
+        human.getFlag().shouldMatch(DEFAULT_HUMAN_ICON)
 
         val ai = PlayerEntity()
         ai.strategy = "foo"
@@ -38,6 +41,18 @@ class TestPlayerEntity : AbstractEntityTest<PlayerEntity>() {
         ai.isAi() shouldBe true
         ai.isHuman() shouldBe false
         ai.getFlag() shouldBe PlayerEntity.ICON_AI
+    }
+
+    @Test
+    fun `Should return themed icon`() {
+        InjectedThings.theme = Themes.HALLOWEEN
+        val expected =
+            ImageIcon(PlayerEntity::class.java.getResource("/theme/halloween/flags/humanFlag.png"))
+
+        val human = PlayerEntity()
+        human.strategy = ""
+
+        human.getFlag().shouldMatch(expected)
     }
 
     @Test

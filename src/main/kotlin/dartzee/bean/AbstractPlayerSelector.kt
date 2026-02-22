@@ -6,13 +6,13 @@ import dartzee.core.util.setBold
 import dartzee.core.util.setFontSize
 import dartzee.db.PlayerEntity
 import dartzee.logging.CODE_SWING_ERROR
+import dartzee.theme.themedIcon
 import dartzee.utils.InjectedThings
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
-import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -53,13 +53,11 @@ abstract class AbstractPlayerSelector<S : ScrollTable> :
         add(panelMovementOptions, "cell 1 1,grow")
         panelMovementOptions.layout = MigLayout("al center center, wrap, gapy 20")
         btnSelect.name = "Select"
-        btnSelect.icon =
-            ImageIcon(AbstractPlayerSelector::class.java.getResource("/buttons/rightArrow.png"))
+        btnSelect.icon = themedIcon("/buttons/rightArrow.png")
         btnSelect.preferredSize = Dimension(40, 40)
         panelMovementOptions.add(btnSelect, "cell 0 1,alignx left,aligny top")
         btnUnselect.name = "Unselect"
-        btnUnselect.icon =
-            ImageIcon(AbstractPlayerSelector::class.java.getResource("/buttons/leftArrow.png"))
+        btnUnselect.icon = themedIcon("/buttons/leftArrow.png")
         btnUnselect.preferredSize = Dimension(40, 40)
         panelMovementOptions.add(btnUnselect, "cell 0 2,alignx left,aligny top")
 

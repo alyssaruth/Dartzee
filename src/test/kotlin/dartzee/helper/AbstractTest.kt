@@ -56,6 +56,7 @@ open class AbstractTest {
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
         InjectedThings.partyMode = false
         InjectedThings.preferenceService = InMemoryPreferenceService()
+        InjectedThings.theme = null
 
         logger.loggingContext.clear()
     }
