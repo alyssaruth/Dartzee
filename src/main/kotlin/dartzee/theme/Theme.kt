@@ -13,6 +13,7 @@ data class Theme(
     val background: Color,
     val lightBackground: Color,
     val dartboardColours: ColourWrapper,
+    val linkColour: Color,
     val fontColor: Color = Color.BLACK,
 ) {
     val font = fontForResource("/theme/$name/font.ttf")

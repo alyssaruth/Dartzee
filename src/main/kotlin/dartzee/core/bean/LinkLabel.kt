@@ -20,6 +20,6 @@ class LinkLabel(text: String, private val linkClicked: () -> Unit) :
     override fun isOverHyperlink(arg0: MouseEvent) = true
 
     fun refresh() {
-        foreground = InjectedThings.theme?.primary ?: Color.BLUE
+        foreground = InjectedThings.theme?.linkColour ?: Color.BLUE
     }
 }

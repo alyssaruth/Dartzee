@@ -6,6 +6,7 @@ import java.awt.Color
 private val lightOrange = Color.decode("#ff8200")
 private val orange = Color.decode("#CF5704")
 private val pastelGreen = Color.decode("#dcf9a8")
+private val bloodRed = Color.decode("#880808")
 private val easterYellow = Color.decode("#ffebaf")
 
 private val halloweenDartboardColours =
@@ -18,6 +19,7 @@ private val halloweenDartboardColours =
         Color.GREEN,
         orange,
         Color.GREEN,
+        fontColor = bloodRed,
     )
 
 private val easterDartboardColours =
@@ -40,7 +42,8 @@ object Themes {
             orange,
             Color.decode("#32172a"),
             lightBackground = Color.decode("#DAB1DA"),
-            fontColor = Color.decode("#880808"),
+            linkColour = Color.decode("#009900"),
+            fontColor = bloodRed,
             dartboardColours = halloweenDartboardColours,
         )
 
@@ -51,6 +54,7 @@ object Themes {
             Color.decode("#8aadd3"),
             Color.decode("#e0cdff"),
             Color.decode("#f9ceee"),
+            linkColour = Color.BLUE,
             fontColor = Color.DARK_GRAY,
             dartboardColours = easterDartboardColours,
         )

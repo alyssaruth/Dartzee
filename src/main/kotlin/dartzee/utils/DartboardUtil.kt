@@ -294,7 +294,7 @@ fun getFontForDartboardLabels(lblHeight: Int, g: Graphics2D): Font {
     var testFont = font
     var fontHeight = TextLayout("20", font, g.fontRenderContext).bounds.height
 
-    while (fontHeight < lblHeight * 0.8) {
+    while (fontHeight < lblHeight * 0.75) {
         // The last iteration succeeded, so set our return value to be the font we tested.
         font = testFont
 

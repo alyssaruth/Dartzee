@@ -37,6 +37,7 @@ data class ColourWrapper(
     private val innerBullColour: Color,
     private val outerBullColour: Color,
     var outerDartboardColour: Color = Color.black,
+    val fontColor: Color = Color.white,
 ) {
     var missedBoardColour: Color = DartsColour.TRANSPARENT
     var edgeColour: Color? = null

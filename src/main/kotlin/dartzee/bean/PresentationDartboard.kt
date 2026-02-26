@@ -10,7 +10,6 @@ import dartzee.`object`.IDartboard
 import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.getSegmentStatus
 import dartzee.utils.DurationTimer
-import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.UPPER_BOUND_DOUBLE_RATIO
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
@@ -232,7 +231,7 @@ open class PresentationDartboard(
     private fun paintScoreLabel(score: Int, g: Graphics2D, fontToUse: Font, lblHeight: Int) {
         // Create a label with standard properties
         val lbl = JLabel(score.toString())
-        lbl.foreground = InjectedThings.theme?.fontColor ?: Color.WHITE
+        lbl.foreground = colourWrapper.fontColor
         lbl.horizontalAlignment = SwingConstants.CENTER
         lbl.font = fontToUse
 
