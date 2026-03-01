@@ -5,6 +5,7 @@ import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
 import java.awt.Font
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
 import javax.swing.ImageIcon
@@ -16,7 +17,7 @@ fun autoApplyTheme() {
 
 fun pickThemeForDate(now: LocalDate): Theme? {
     if (DartsClient.devMode) {
-        return Themes.EASTER
+        return Themes.OKTOBERFEST
     }
 
     val easterSunday = findEasterSunday(now.year)
@@ -24,11 +25,30 @@ fun pickThemeForDate(now: LocalDate): Theme? {
         return Themes.EASTER
     }
 
+    val (oktoberfestStart, oktoberfestEnd) = findOktoberfest(now.year)
+    if (now.isBefore(oktoberfestEnd.plusDays(1)) && now.isAfter(oktoberfestStart.minusDays(1))) {
+        return Themes.OKTOBERFEST
+    }
+
     if (now.month == Month.OCTOBER && now.dayOfMonth >= 24) {
         return Themes.HALLOWEEN
     }
 
     return null
+}
+
+fun findOktoberfest(year: Int): Pair<LocalDate, LocalDate> {
+    val germanUnityDay = LocalDate.of(year, Month.OCTOBER, 3)
+    val firstSunday =
+        (1..7)
+            .map { LocalDate.of(year, Month.OCTOBER, it) }
+            .first { it.getDayOfWeek() == DayOfWeek.SUNDAY }
+
+    val endDate = if (firstSunday.isBefore(germanUnityDay)) germanUnityDay else firstSunday
+    val daysAdded = maxOf(0, germanUnityDay.dayOfMonth - firstSunday.dayOfMonth)
+
+    val startDate = endDate.minusDays(15L + daysAdded)
+    return startDate to endDate
 }
 
 /** https://en.wikipedia.org/wiki/Date_of_Easter#Gauss's_Easter_algorithm */
