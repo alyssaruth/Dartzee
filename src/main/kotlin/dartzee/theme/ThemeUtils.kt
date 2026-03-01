@@ -32,6 +32,7 @@ fun pickThemeForDate(now: LocalDate): Theme? {
 }
 
 /** https://en.wikipedia.org/wiki/Date_of_Easter#Gauss's_Easter_algorithm */
+@Suppress("VariableNaming")
 fun findEasterSunday(year: Int): LocalDate {
     val a = year % 19
     val b = year % 4
