@@ -51,4 +51,28 @@ class ThemeUtilsTest : AbstractTest() {
         pickThemeForDate(LocalDate.of(2026, Month.NOVEMBER, 1)) shouldBe null
         pickThemeForDate(LocalDate.of(2026, Month.NOVEMBER, 28)) shouldBe null
     }
+
+    @Test
+    fun `Should pick easter for the relevant dates`() {
+        pickThemeForDate(LocalDate.of(2026, Month.MARCH, 27)) shouldBe null
+        pickThemeForDate(LocalDate.of(2026, Month.MARCH, 28)) shouldBe Themes.EASTER
+        pickThemeForDate(LocalDate.of(2026, Month.MARCH, 29)) shouldBe Themes.EASTER
+        pickThemeForDate(LocalDate.of(2026, Month.MARCH, 30)) shouldBe Themes.EASTER
+        pickThemeForDate(LocalDate.of(2026, Month.MARCH, 31)) shouldBe Themes.EASTER
+        pickThemeForDate(LocalDate.of(2026, Month.APRIL, 1)) shouldBe Themes.EASTER
+        pickThemeForDate(LocalDate.of(2026, Month.APRIL, 2)) shouldBe Themes.EASTER
+        pickThemeForDate(LocalDate.of(2026, Month.APRIL, 3)) shouldBe Themes.EASTER
+        pickThemeForDate(LocalDate.of(2026, Month.APRIL, 4)) shouldBe Themes.EASTER
+        pickThemeForDate(LocalDate.of(2026, Month.APRIL, 5)) shouldBe Themes.EASTER
+        pickThemeForDate(LocalDate.of(2026, Month.APRIL, 6)) shouldBe null
+    }
+
+    @Test
+    fun `Should find the right date for easter sunday`() {
+        findEasterSunday(2027) shouldBe LocalDate.of(2027, Month.MARCH, 28)
+        findEasterSunday(2026) shouldBe LocalDate.of(2026, Month.APRIL, 5)
+        findEasterSunday(2025) shouldBe LocalDate.of(2025, Month.APRIL, 20)
+        findEasterSunday(2024) shouldBe LocalDate.of(2024, Month.MARCH, 31)
+        findEasterSunday(2023) shouldBe LocalDate.of(2023, Month.APRIL, 9)
+    }
 }

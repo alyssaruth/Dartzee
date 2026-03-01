@@ -24,6 +24,7 @@ class ThemeTest : AbstractTest() {
                 Color.decode("#C9A0DC"),
                 Color.decode("#D8BFD8"),
                 DEFAULT_COLOUR_WRAPPER,
+                Color.BLUE,
             )
 
         theme.apply()

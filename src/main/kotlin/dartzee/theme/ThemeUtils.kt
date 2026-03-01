@@ -16,7 +16,12 @@ fun autoApplyTheme() {
 
 fun pickThemeForDate(now: LocalDate): Theme? {
     if (DartsClient.devMode) {
-        return Themes.HALLOWEEN
+        return Themes.EASTER
+    }
+
+    val easterSunday = findEasterSunday(now.year)
+    if (now.isBefore(easterSunday.plusDays(1)) && now.isAfter(easterSunday.minusDays(9))) {
+        return Themes.EASTER
     }
 
     if (now.month == Month.OCTOBER && now.dayOfMonth >= 24) {
@@ -24,6 +29,33 @@ fun pickThemeForDate(now: LocalDate): Theme? {
     }
 
     return null
+}
+
+/** https://en.wikipedia.org/wiki/Date_of_Easter#Gauss's_Easter_algorithm */
+@Suppress("VariableNaming")
+fun findEasterSunday(year: Int): LocalDate {
+    val a = year % 19
+    val b = year % 4
+    val c = year % 7
+    val k = year / 100
+    val p = (13 + 8 * k) / 25
+    val q = k / 4
+    val M = (15 - p + k - q) % 30
+    val N = (4 + k - q) % 7
+    val d = (19 * a + M) % 30
+    val e = (2 * b + 4 * c + 6 * d + N) % 7
+
+    if (d == 29 && e == 6) {
+        return LocalDate.of(year, 4, 19)
+    } else if (d == 28 && e == 6 && ((11 * M + 11) % 30 < 10)) {
+        return LocalDate.of(year, 4, 18)
+    }
+
+    val H = 22 + d + e
+    if (H <= 31) {
+        return LocalDate.of(year, 3, H)
+    }
+    return LocalDate.of(year, 4, H - 31)
 }
 
 fun applyCurrentTheme() {

@@ -44,7 +44,7 @@ abstract class ScrollTableHyperlink(private val linkColumnName: String, testId: 
         linkColumn = ix
         setRenderer(
             linkColumn,
-            HyperlinkRenderer(tableForeground ?: InjectedThings.theme?.fontColor),
+            HyperlinkRenderer(tableForeground ?: InjectedThings.theme?.linkColour),
         )
     }
 

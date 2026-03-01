@@ -26,7 +26,7 @@ class TestLinkLabel : AbstractTest() {
     fun `Should take theme into account`() {
         InjectedThings.theme = Themes.HALLOWEEN
         val label = LinkLabel("https://foo.bar") {}
-        label.foreground shouldBe Themes.HALLOWEEN.primary
+        label.foreground shouldBe Themes.HALLOWEEN.linkColour
     }
 
     @Test

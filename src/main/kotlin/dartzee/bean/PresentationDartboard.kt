@@ -10,18 +10,17 @@ import dartzee.`object`.IDartboard
 import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.getSegmentStatus
 import dartzee.utils.DurationTimer
-import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.UPPER_BOUND_DOUBLE_RATIO
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.computeEdgePoints
-import dartzee.utils.factoryFontMetrics
 import dartzee.utils.getAllSegmentsForDartzee
 import dartzee.utils.getAnglesForScore
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getFontForDartboardLabels
 import dartzee.utils.getNeighbours
 import dartzee.utils.translatePoint
+import java.awt.Canvas
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics
@@ -225,19 +224,19 @@ open class PresentationDartboard(
         val outerRadius = UPPER_BOUND_OUTSIDE_BOARD_RATIO * radius
         val lblHeight = ((outerRadius - radius) / 2).roundToInt()
 
-        val fontToUse = getFontForDartboardLabels(lblHeight)
+        val fontToUse = getFontForDartboardLabels(lblHeight, g)
         (1..20).forEach { paintScoreLabel(it, g, fontToUse, lblHeight) }
     }
 
     private fun paintScoreLabel(score: Int, g: Graphics2D, fontToUse: Font, lblHeight: Int) {
         // Create a label with standard properties
         val lbl = JLabel(score.toString())
-        lbl.foreground = InjectedThings.theme?.fontColor ?: Color.WHITE
+        lbl.foreground = colourWrapper.fontColor
         lbl.horizontalAlignment = SwingConstants.CENTER
         lbl.font = fontToUse
 
         // Work out the width for this label, based on the text
-        val metrics = factoryFontMetrics(fontToUse)
+        val metrics = Canvas().getFontMetrics(fontToUse)
         val lblWidth = metrics.stringWidth(score.toString()) + 5
         lbl.setSize(lblWidth, lblHeight)
 

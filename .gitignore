@@ -14,6 +14,7 @@ out
 *.failed.png
 *.comparison.png
 .daktari-local.yaml
+.kotlin
 
 ### Synced idea settings
 !.idea/dataSources.xml

@@ -91,7 +91,7 @@ class MenuScreen : EmbeddedScreen() {
     private fun refreshButtons() {
         lblVersion.refresh()
 
-        btnNewGame.icon = ImageIcon(javaClass.getResource("/buttons/newGame.png"))
+        btnNewGame.icon = themedIcon("/buttons/newGame.png")
         btnManagePlayers.icon = themedIcon("/buttons/playerManagement.png")
         btnUtilities.icon = themedIcon("/buttons/utilities.png")
         btnPreferences.icon = ImageIcon(javaClass.getResource("/buttons/preferences.png"))
