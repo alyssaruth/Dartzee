@@ -44,6 +44,7 @@ private val oktoberfestDartboardColours =
         Color.YELLOW,
         Color.RED,
         Color.YELLOW,
+        fontColor = Color.decode("#e3570a"),
     )
 
 object Themes {
@@ -74,12 +75,12 @@ object Themes {
     val OKTOBERFEST =
         Theme(
             "oktoberfest",
-            Color.decode("#c1f0fb"),
-            Color.decode("#8aadd3"),
-            Color.decode("#e0cdff"),
-            Color.decode("#f9ceee"),
-            linkColour = Color.BLUE,
-            fontColor = Color.DARK_GRAY,
+            Color.decode("#e3570a"),
+            Color.decode("#764d2a"),
+            Color.decode("#fbb40e"),
+            Color.decode("#ffcf60"),
+            linkColour = bloodRed,
             dartboardColours = oktoberfestDartboardColours,
+            menuFontSize = 24f,
         )
 }
