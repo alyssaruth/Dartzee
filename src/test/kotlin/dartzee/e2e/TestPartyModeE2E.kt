@@ -50,7 +50,7 @@ class TestPartyModeE2E : AbstractE2ETest() {
         val selector = app.getChild<GameSetupPlayerSelector>()
         selector.selectTopPlayer()
         selector.selectTopPlayer()
-        app.clickButton(text = "Launch Game >")
+        app.clickButton("Next")
 
         val gameWindow = waitForAssertionWithReturn {
             findWindow<DartsGameScreen>().run {
@@ -82,7 +82,7 @@ class TestPartyModeE2E : AbstractE2ETest() {
         gameWindow.dispose()
 
         // Check leaderboard
-        app.clickChild<JButton>(text = " < Back")
+        app.clickChild<JButton>("Back")
         app.clickChild<JButton>(text = "Leaderboards")
 
         val leaderboardTable = app.getChild<ScrollTableDartsGame>()

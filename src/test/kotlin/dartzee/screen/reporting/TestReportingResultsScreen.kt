@@ -107,7 +107,7 @@ class TestReportingResultsScreen : AbstractTest() {
     @Test
     fun `Should go back to setup screen`() {
         val scrn = ReportingResultsScreen()
-        scrn.btnBack.doClick()
+        scrn.clickChild<JButton>("Back")
 
         ScreenCache.currentScreen().shouldBeInstanceOf<ReportingSetupScreen>()
     }

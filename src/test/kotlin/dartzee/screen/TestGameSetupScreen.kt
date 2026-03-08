@@ -3,6 +3,8 @@ package dartzee.screen
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelX01
@@ -47,6 +49,7 @@ import io.mockk.runs
 import io.mockk.slot
 import io.mockk.verify
 import javax.swing.JButton
+import javax.swing.JLabel
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -165,14 +168,14 @@ class TestGameSetupScreen : AbstractTest() {
         val screen = GameSetupScreen()
         screen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
 
-        screen.launchButton().isVisible shouldBe false
-        screen.btnNext.isVisible shouldBe true
+        screen.launchButton().shouldNotBeVisible()
+        screen.getChild<JButton>("Next").shouldBeVisible()
 
         val dartzeeParamPanel = screen.gameParamFilterPanel as GameParamFilterPanelDartzee
         dartzeeParamPanel.comboBox.selectedIndex = 2
 
-        screen.launchButton().isVisible shouldBe true
-        screen.btnNext.isVisible shouldBe false
+        screen.launchButton().shouldBeVisible()
+        screen.getChild<JButton>("Next").shouldNotBeVisible()
     }
 
     @Test
@@ -255,7 +258,7 @@ class TestGameSetupScreen : AbstractTest() {
         setupScreen.playerSelector.init(listOf())
 
         setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
-        setupScreen.clickChild<JButton>(text = "Next > ", async = true)
+        setupScreen.clickChild<JButton>("Next", async = true)
 
         val error = getErrorDialog()
         error.getDialogMessage() shouldBe "You must select at least 1 player."
@@ -275,11 +278,11 @@ class TestGameSetupScreen : AbstractTest() {
         setupScreen.playerSelector.init(listOf(p1, p2))
 
         setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
-        setupScreen.btnNext.doClick()
+        setupScreen.clickChild<JButton>("Next")
 
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<DartzeeRuleSetupScreen>()
-        currentScreen.btnNext.text shouldBe "Launch Game >"
+        currentScreen.getChild<JLabel>("NextText").text shouldBe "Launch Game"
         currentScreen.nextPressed()
 
         val expectedParams =
@@ -301,11 +304,11 @@ class TestGameSetupScreen : AbstractTest() {
 
         setupScreen.rdbtnFirstTo.doClick()
         setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
-        setupScreen.btnNext.doClick()
+        setupScreen.clickChild<JButton>("Next")
 
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldBeInstanceOf<DartzeeRuleSetupScreen>()
-        currentScreen.btnNext.text shouldBe "Launch Match >"
+        currentScreen.getChild<JLabel>("NextText").text shouldBe "Launch Match"
         currentScreen.nextPressed()
 
         val expectedParams =

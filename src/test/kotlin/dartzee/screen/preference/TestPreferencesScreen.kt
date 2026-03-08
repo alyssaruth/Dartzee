@@ -1,5 +1,6 @@
 package dartzee.screen.preference
 
+import com.github.alyssaburlton.swingtest.clickChild
 import dartzee.helper.AbstractTest
 import dartzee.screen.MenuScreen
 import dartzee.screen.ScreenCache
@@ -10,6 +11,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import javax.swing.JButton
 import javax.swing.JOptionPane
 import org.junit.jupiter.api.Test
 
@@ -33,7 +35,7 @@ class TestPreferencesScreen : AbstractTest() {
 
         ScreenCache.switch(screen, true)
 
-        screen.btnBack.doClick()
+        screen.clickChild<JButton>("Back")
         dialogFactory.questionsShown.shouldContainExactly(
             "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
         )
@@ -51,7 +53,7 @@ class TestPreferencesScreen : AbstractTest() {
 
         ScreenCache.switch(screen, true)
 
-        screen.btnBack.doClick()
+        screen.clickChild<JButton>("Back")
         dialogFactory.questionsShown.shouldContainExactly(
             "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
         )
@@ -68,7 +70,7 @@ class TestPreferencesScreen : AbstractTest() {
 
         ScreenCache.switch(screen, true)
 
-        screen.btnBack.doClick()
+        screen.clickChild<JButton>("Back")
         dialogFactory.questionsShown.shouldBeEmpty()
 
         ScreenCache.currentScreen().shouldBeInstanceOf<MenuScreen>()
