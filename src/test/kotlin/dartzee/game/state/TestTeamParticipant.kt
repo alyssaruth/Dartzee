@@ -5,6 +5,7 @@ import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertTeam
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
 class TestTeamParticipant : AbstractTest() {
@@ -34,8 +35,8 @@ class TestTeamParticipant : AbstractTest() {
         val teamOne = TeamParticipant(insertTeam(), listOf(pt1, pt2))
         val teamTwo = TeamParticipant(insertTeam(), listOf(pt2, pt1))
 
-        teamOne.getParticipantNameHtml(false) shouldBe "<html>Alyssa &#38; Leah</html>"
-        teamTwo.getParticipantNameHtml(false) shouldBe "<html>Leah &#38; Alyssa</html>"
+        teamOne.getParticipantNameHtml(false) shouldContain "Alyssa &#38; Leah"
+        teamTwo.getParticipantNameHtml(false) shouldContain "Leah &#38; Alyssa"
 
         teamOne.getParticipantName() shouldBe "Alyssa & Leah"
         teamTwo.getParticipantName() shouldBe "Leah & Alyssa"
@@ -51,9 +52,9 @@ class TestTeamParticipant : AbstractTest() {
 
         val team = TeamParticipant(insertTeam(), listOf(pt1, pt2))
 
-        team.getParticipantNameHtml(true, pt1) shouldBe "<html><b>Alyssa</b> &#38; Leah</html>"
-        team.getParticipantNameHtml(true, pt2) shouldBe "<html>Alyssa &#38; <b>Leah</b></html>"
-        team.getParticipantNameHtml(true, null) shouldBe "<html><b>Alyssa &#38; Leah</b></html>"
+        team.getParticipantNameHtml(true, pt1) shouldContain "<b>Alyssa</b> &#38; Leah"
+        team.getParticipantNameHtml(true, pt2) shouldContain "Alyssa &#38; <b>Leah</b>"
+        team.getParticipantNameHtml(true, null) shouldContain "<b>Alyssa &#38; Leah</b>"
     }
 
     @Test

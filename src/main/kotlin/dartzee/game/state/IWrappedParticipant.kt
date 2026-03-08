@@ -4,6 +4,7 @@ import dartzee.db.IParticipant
 import dartzee.db.ParticipantEntity
 import dartzee.db.TeamEntity
 import dartzee.game.UniqueParticipantName
+import dartzee.theme.getBaseFont
 import dartzee.utils.greyscale
 import dartzee.utils.splitAvatar
 import javax.swing.ImageIcon
@@ -42,11 +43,15 @@ sealed interface IWrappedParticipant {
                 }
             }
 
+        val font = getBaseFont()
+        val leftBracket = "<html><p style=\"text-align:center;\"><font face=\"${font.family}\">"
+        val rightBracket = "</font></p></html>"
+
         if (active && currentParticipant == null) {
-            return "<html><b>$contents</b></html>"
+            return "$leftBracket<b>$contents</b>$rightBracket"
         }
 
-        return "<html>$contents</html>"
+        return "$leftBracket$contents$rightBracket"
     }
 
     fun getAvatar(roundNumber: Int, selected: Boolean, gameFinished: Boolean): ImageIcon

@@ -3,11 +3,13 @@ package dartzee.screen.game.scorer
 import dartzee.bean.ParticipantAvatar
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.util.TableUtil.DefaultModel
+import dartzee.core.util.setFontSize
 import dartzee.game.state.IWrappedParticipant
+import dartzee.theme.getBaseFont
 import dartzee.utils.DartsColour
+import dartzee.utils.InjectedThings
 import java.awt.BorderLayout
 import java.awt.Dimension
-import java.awt.Font
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.SwingConstants
@@ -42,7 +44,6 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), 
         panelNorth.layout = BorderLayout(0, 0)
         panelNorth.add(lblName, BorderLayout.NORTH)
         lblName.horizontalAlignment = SwingConstants.CENTER
-        lblName.font = Font("Trebuchet MS", Font.PLAIN, 16)
         lblName.text = participant.getParticipantNameHtml(false)
         lblName.border = EmptyBorder(10, 0, 0, 0)
         panelAvatar.border = EmptyBorder(5, 15, 5, 15)
@@ -53,7 +54,6 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), 
         panelSouth.layout = BorderLayout(0, 0)
         panelSouth.add(lblResult)
         lblResult.isOpaque = true
-        lblResult.font = Font("Trebuchet MS", Font.PLAIN, 22)
         lblResult.horizontalAlignment = SwingConstants.CENTER
 
         tableScores.setFillsViewportHeight(false)
@@ -64,7 +64,11 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), 
     protected abstract fun initImpl()
 
     fun init() {
-        lblResult.text = ""
+        val fontSize = InjectedThings.theme?.menuFontSize?.toInt() ?: 16
+        lblName.setFontSize(fontSize)
+
+        lblResult.font = getBaseFont()
+        lblResult.setFontSize(fontSize + 6)
 
         // TableModel
         tableScores.setRowHeight(25)

@@ -164,8 +164,8 @@ class TestDartsMatchScreen : AbstractTest() {
         gameTwo.dartsMatchId shouldBe match.rowId
 
         val participants = loadParticipants(gameTwo.rowId)
-        participants[0].getParticipantNameHtml(false) shouldBe "<html>Billie</html>"
-        participants[1].getParticipantNameHtml(false) shouldBe "<html>Amy</html>"
+        participants[0].getParticipantName() shouldBe "Billie"
+        participants[1].getParticipantName() shouldBe "Amy"
     }
 
     @Test

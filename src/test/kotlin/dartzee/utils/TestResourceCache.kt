@@ -1,11 +1,8 @@
 package dartzee.utils
 
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
-import dartzee.findLoadingDialog
 import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_NO_STREAMS
 import dartzee.logging.Severity
-import dartzee.runAsync
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import java.io.BufferedReader
@@ -75,13 +72,6 @@ class TestResourceCache : AbstractTest() {
         newWav shouldBe wav1
 
         verifyNoLogs(CODE_NO_STREAMS)
-    }
-
-    @Test
-    fun `Should show a loading dialog whilst initialising`() {
-        runAsync { ResourceCache.initialiseResources() }
-
-        findLoadingDialog("Loading resources...")!!.shouldNotBeVisible()
     }
 
     @Test

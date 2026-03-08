@@ -13,6 +13,7 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import javax.swing.JButton
 import javax.swing.JCheckBox
 import org.junit.jupiter.api.Test
 
@@ -26,7 +27,7 @@ class TestReportingSetupScreen : AbstractTest() {
         gameTab.clickChild<JCheckBox>(text = "Start Date")
         gameTab.getStartDateFilterPanel().makeInvalid()
 
-        scrn.btnNext.doClick()
+        scrn.clickChild<JButton>("Next")
 
         ScreenCache.currentScreen() shouldBe scrn
         dialogFactory.errorsShown.shouldNotBeEmpty()
@@ -43,7 +44,7 @@ class TestReportingSetupScreen : AbstractTest() {
         tab.addPlayers(listOf(playerOne))
         tab.includedPlayerPanel.chckbxPosition.doClick()
 
-        scrn.btnNext.doClick()
+        scrn.clickChild<JButton>("Next")
         ScreenCache.currentScreen() shouldBe scrn
         dialogFactory.errorsShown.shouldContainExactly(
             "You must select at least one finishing position for player Alice"
@@ -60,7 +61,7 @@ class TestReportingSetupScreen : AbstractTest() {
         val playersTab = scrn.getChild<ReportingPlayersTab>()
         playersTab.clickChild<JCheckBox>(text = "Exclude games with only AI players")
 
-        scrn.btnNext.doClick()
+        scrn.clickChild<JButton>("Next")
 
         ScreenCache.currentScreen().shouldBeInstanceOf<ReportingResultsScreen>()
         val resultsScreen = ScreenCache.currentScreen() as ReportingResultsScreen

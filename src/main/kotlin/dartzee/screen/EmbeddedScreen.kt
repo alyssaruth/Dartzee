@@ -2,6 +2,7 @@ package dartzee.screen
 
 import dartzee.logging.CODE_SWING_ERROR
 import dartzee.theme.getBaseFont
+import dartzee.theme.themedIcon
 import dartzee.utils.InjectedThings.logger
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -9,15 +10,18 @@ import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
+import javax.swing.JLabel
 import javax.swing.JPanel
 
 abstract class EmbeddedScreen : JPanel(), ActionListener {
-    val btnBack = JButton(" < Back")
-    val btnNext = JButton("Next > ")
+    val btnBack = JButton("Back")
+    protected val btnNext = JButton()
 
     protected val panelNavigation = JPanel()
     protected val panelNext = JPanel()
     protected val panelBack = JPanel()
+    protected val lblNext = JLabel()
+    protected val iconNext = JLabel()
 
     init {
         preferredSize = Dimension(800, 610)
@@ -32,7 +36,14 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
         panelNavigation.add(panelBack, BorderLayout.WEST)
         panelBack.add(btnBack)
 
-        setFonts()
+        lblNext.name = "NextText"
+        btnNext.name = "Next"
+        btnNext.layout = BorderLayout(5, 0)
+        btnNext.add(lblNext, BorderLayout.CENTER)
+        btnNext.add(iconNext, BorderLayout.EAST)
+        btnBack.name = "Back"
+
+        updateAppearance()
 
         btnBack.addActionListener(this)
         btnNext.addActionListener(this)
@@ -47,7 +58,7 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
         btnBack.isVisible = showBackButton()
         btnNext.isVisible = showNextButton()
 
-        btnNext.text = getNextText() + " >"
+        lblNext.text = getNextText()
     }
 
     open fun getBackTarget(): EmbeddedScreen = ScreenCache.get<MenuScreen>()
@@ -79,15 +90,18 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
         // default method
     }
 
-    private fun setFonts() {
+    private fun updateAppearance() {
         val baseFont = getBaseFont()
 
-        btnNext.font = baseFont.deriveFont(Font.PLAIN, 20f)
+        iconNext.icon = themedIcon("/buttons/rightArrow.png")
+        btnBack.icon = themedIcon("/buttons/leftArrow.png")
+
+        lblNext.font = baseFont.deriveFont(Font.PLAIN, 20f)
         btnBack.font = baseFont.deriveFont(Font.PLAIN, 20f)
     }
 
     open fun fireAppearancePreferencesChanged() {
-        setFonts()
+        updateAppearance()
     }
 
     /** Default methods */

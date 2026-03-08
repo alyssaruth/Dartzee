@@ -21,6 +21,8 @@ import dartzee.utils.DartsColour
 import dartzee.utils.factoryHighScoreResult
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
@@ -59,10 +61,10 @@ class TestDartsScorerDartzee : AbstractTest() {
         val scorer = makeScorer(participant = team)
 
         scorer.togglePostGame(true)
-        scorer.lblName.text shouldBe "<html><b>Alice &#38; Bob</b></html>"
+        scorer.lblName.text shouldContain "<b>Alice &#38; Bob</b>"
 
         scorer.togglePostGame(false)
-        scorer.lblName.text shouldBe "<html>Alice &#38; Bob</html>"
+        scorer.lblName.text shouldNotContain "<b>"
     }
 
     @Test

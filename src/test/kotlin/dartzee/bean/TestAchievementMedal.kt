@@ -131,7 +131,7 @@ class TestAchievementMedal : AbstractTest() {
         currentScreen.shouldBeInstanceOf<PlayerAchievementBreakdown>()
         currentScreen.achievement shouldBe achievement
 
-        ScreenCache.mainScreen.clickChild<JButton>(text = " < Back")
+        ScreenCache.mainScreen.clickChild<JButton>("Back")
         ScreenCache.currentScreen() shouldBe scrn
     }
 

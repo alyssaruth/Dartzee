@@ -34,6 +34,19 @@ private val easterDartboardColours =
         pastelGreen.darker(),
     )
 
+private val oktoberfestDartboardColours =
+    ColourWrapper(
+        Color.YELLOW,
+        Color.RED,
+        Color.RED,
+        Color.RED,
+        Color.YELLOW,
+        Color.YELLOW,
+        Color.RED,
+        Color.YELLOW,
+        fontColor = Color.decode("#e3570a"),
+    )
+
 object Themes {
     val HALLOWEEN =
         Theme(
@@ -57,5 +70,18 @@ object Themes {
             linkColour = Color.BLUE,
             fontColor = Color.DARK_GRAY,
             dartboardColours = easterDartboardColours,
+            menuFontSize = 20f,
+        )
+
+    val OKTOBERFEST =
+        Theme(
+            "oktoberfest",
+            Color.decode("#e3570a"),
+            Color.decode("#764d2a"),
+            Color.decode("#fbb40e"),
+            Color.decode("#ffcf60"),
+            linkColour = bloodRed,
+            dartboardColours = oktoberfestDartboardColours,
+            menuFontSize = 24f,
         )
 }

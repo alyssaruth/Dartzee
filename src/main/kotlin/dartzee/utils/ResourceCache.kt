@@ -2,7 +2,6 @@ package dartzee.utils
 
 import dartzee.bean.PlayerAvatar
 import dartzee.core.obj.HashMapList
-import dartzee.core.util.DialogUtil
 import dartzee.logging.CODE_LOADED_RESOURCES
 import dartzee.logging.CODE_NO_STREAMS
 import dartzee.logging.CODE_RESOURCE_LOAD_ERROR
@@ -129,8 +128,6 @@ object ResourceCache {
 
     fun initialiseResources() {
         try {
-            DialogUtil.showLoadingDialog("Loading resources...")
-
             val wavFiles = getWavFiles()
 
             for (wavFile in wavFiles) {
@@ -146,8 +143,6 @@ object ResourceCache {
             isInitialised = true
         } catch (e: Exception) {
             logger.error(CODE_RESOURCE_LOAD_ERROR, "Failed to load resources", e)
-        } finally {
-            DialogUtil.dismissLoadingDialog()
         }
     }
 

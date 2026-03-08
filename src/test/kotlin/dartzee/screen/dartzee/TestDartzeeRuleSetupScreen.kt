@@ -1,5 +1,6 @@
 package dartzee.screen.dartzee
 
+import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
@@ -18,6 +19,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.mockk
 import io.mockk.verify
+import javax.swing.JButton
 import org.junit.jupiter.api.Test
 
 class TestDartzeeRuleSetupScreen : AbstractTest() {
@@ -47,7 +49,7 @@ class TestDartzeeRuleSetupScreen : AbstractTest() {
         val players = listOf(insertPlayer(), insertPlayer())
 
         val scrn = makeDartzeeRuleSetupScreen(players, match = match)
-        scrn.btnNext.doClick()
+        scrn.clickChild<JButton>("Next")
 
         verify { launcher.launchNewMatch(match, any()) }
     }
@@ -68,7 +70,7 @@ class TestDartzeeRuleSetupScreen : AbstractTest() {
         val panel = scrn.getChild<DartzeeRuleSetupPanel>()
         panel.addRulesToTable(rules)
 
-        scrn.btnNext.doClick()
+        scrn.clickChild<JButton>("Next")
 
         val expectedParams = GameLaunchParams(players, GameType.DARTZEE, "", true, rules)
         verify { launcher.launchNewGame(expectedParams) }

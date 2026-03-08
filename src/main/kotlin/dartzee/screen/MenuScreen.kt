@@ -101,7 +101,8 @@ class MenuScreen : EmbeddedScreen() {
         btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
 
         getAllChildComponentsForType<JButton>().forEach { button ->
-            button.font = getBaseFont().deriveFont(Font.PLAIN, 18f)
+            button.font =
+                getBaseFont().deriveFont(Font.PLAIN, InjectedThings.theme?.menuFontSize ?: 18f)
         }
     }
 
