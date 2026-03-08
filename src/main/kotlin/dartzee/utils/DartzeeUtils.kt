@@ -69,7 +69,7 @@ fun generateDartzeeTemplateFromGame(
     game.gameParams = template.rowId
     game.saveToDatabase()
 
-    DialogUtil.showInfoOLD("Template '$templateName' successfully created.")
+    DialogUtil.showInfo("Template '$templateName' successfully created.")
 
     return template
 }

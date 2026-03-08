@@ -9,7 +9,7 @@ import dartzee.utils.InjectedThings.logger
 class ForeignDatabaseValidator(private val migrator: DatabaseMigrator) {
     fun validateAndMigrateForeignDatabase(database: Database, desc: String): Boolean {
         if (!database.testConnection()) {
-            DialogUtil.showErrorOLD("An error occurred connecting to the $desc database.")
+            DialogUtil.showError("An error occurred connecting to the $desc database.")
             return false
         }
 
@@ -19,14 +19,14 @@ class ForeignDatabaseValidator(private val migrator: DatabaseMigrator) {
                 CODE_MERGE_ERROR,
                 "Unable to ascertain $desc database version (but could connect) - this is unexpected.",
             )
-            DialogUtil.showErrorOLD("An error occurred connecting to the $desc database.")
+            DialogUtil.showError("An error occurred connecting to the $desc database.")
             return false
         }
 
         if (remoteVersion > DartsDatabaseUtil.DATABASE_VERSION) {
             val error =
                 "The $desc database contains data written by a higher Dartzee version. \n\nYou will need to update to the latest version of Dartzee before continuing."
-            DialogUtil.showErrorOLD(error)
+            DialogUtil.showError(error)
             return false
         }
 

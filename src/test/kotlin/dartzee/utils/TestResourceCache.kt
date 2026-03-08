@@ -1,9 +1,11 @@
 package dartzee.utils
 
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
+import dartzee.findLoadingDialog
 import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_NO_STREAMS
 import dartzee.logging.Severity
-import io.kotest.matchers.collections.shouldContainExactly
+import dartzee.runAsync
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import java.io.BufferedReader
@@ -77,9 +79,9 @@ class TestResourceCache : AbstractTest() {
 
     @Test
     fun `Should show a loading dialog whilst initialising`() {
-        ResourceCache.initialiseResources()
+        runAsync { ResourceCache.initialiseResources() }
 
-        dialogFactory.loadingsShown.shouldContainExactly("Loading resources...")
+        findLoadingDialog("Loading resources...")!!.shouldNotBeVisible()
     }
 
     @Test

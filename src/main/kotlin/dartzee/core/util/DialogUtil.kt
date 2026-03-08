@@ -22,13 +22,6 @@ object DialogUtil {
         dialogFactory = implementation
     }
 
-    @Deprecated("Use showInfo")
-    fun showInfoOLD(infoText: String) {
-        logDialogShown("Info", "Information", infoText)
-        dialogFactory.showInfo(infoText)
-        logDialogClosed("Info", null)
-    }
-
     fun showInfo(infoText: String, parent: Component = ScreenCache.mainScreen) {
         logDialogShown("Info", "Information", infoText)
         JOptionPane.showMessageDialog(
@@ -53,8 +46,6 @@ object DialogUtil {
 
     @Deprecated("Use showError")
     fun showErrorOLD(errorText: String) {
-        dismissLoadingDialogOLD()
-
         logDialogShown("Error", "Error", errorText)
         dialogFactory.showError(errorText)
         logDialogClosed("Error", null)
@@ -69,7 +60,7 @@ object DialogUtil {
     }
 
     fun showErrorLater(errorText: String) {
-        SwingUtilities.invokeLater { showErrorOLD(errorText) }
+        SwingUtilities.invokeLater { showError(errorText) }
     }
 
     @Deprecated("Use showQuestion")
@@ -100,30 +91,16 @@ object DialogUtil {
         return selection
     }
 
-    @Deprecated("Use showLoadingDialog / dismissLoadingDialog")
-    fun showLoadingDialogOLD(text: String) {
-        logDialogShown("Loading", "", text)
-        dialogFactory.showLoading(text)
-    }
-
     fun showLoadingDialog(text: String) {
         logDialogShown("Loading", "", text)
-        loadingDialog = LoadingDialog()
-        loadingDialog?.showDialog(text)
+        loadingDialog = LoadingDialog(text)
+        loadingDialog?.showDialog()
     }
 
     fun dismissLoadingDialog() {
         val wasVisible = loadingDialog?.isVisible ?: false
         loadingDialog?.dismissDialog()
         if (wasVisible) {
-            logDialogClosed("Loading", null)
-        }
-    }
-
-    @Deprecated("Use showLoadingDialog / dismissLoadingDialog")
-    fun dismissLoadingDialogOLD() {
-        val dismissed = dialogFactory.dismissLoading()
-        if (dismissed) {
             logDialogClosed("Loading", null)
         }
     }

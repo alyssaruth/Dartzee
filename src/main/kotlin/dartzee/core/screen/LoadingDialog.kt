@@ -5,11 +5,10 @@ import javax.swing.JLabel
 import javax.swing.JProgressBar
 import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
-import javax.swing.WindowConstants
 import net.miginfocom.swing.MigLayout
 
-class LoadingDialog : JDialog() {
-    private val lblMessage = JLabel("Communicating with Server...")
+class LoadingDialog(val message: String) : JDialog() {
+    private val lblMessage = JLabel(message)
 
     init {
         layout = MigLayout("gapy 12px", "[grow]", "[]")
@@ -18,7 +17,7 @@ class LoadingDialog : JDialog() {
         isResizable = false
         isModal = true
         isAlwaysOnTop = true
-        defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
+        defaultCloseOperation = DO_NOTHING_ON_CLOSE
         lblMessage.horizontalAlignment = SwingConstants.CENTER
         contentPane.add(lblMessage, "cell 0 0, alignx center")
 
@@ -28,11 +27,8 @@ class LoadingDialog : JDialog() {
         contentPane.add(progressBar, "cell 0 1, alignx center")
     }
 
-    fun showDialog(textToShow: String) {
-        val showRunnable = Runnable {
-            lblMessage.text = textToShow
-            isVisible = true
-        }
+    fun showDialog() {
+        val showRunnable = Runnable { isVisible = true }
 
         SwingUtilities.invokeLater(showRunnable)
     }

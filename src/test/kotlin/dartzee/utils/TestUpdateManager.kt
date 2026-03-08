@@ -3,12 +3,11 @@ package dartzee.utils
 import com.github.alyssaburlton.swingtest.clickNo
 import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.core.bean.LinkLabel
-import dartzee.core.screen.LoadingDialog
+import dartzee.findLoadingDialog
 import dartzee.getDialogMessage
 import dartzee.getErrorDialog
 import dartzee.getInfoDialog
@@ -64,7 +63,7 @@ class TestUpdateManager : AbstractTest() {
         log.message shouldBe "Received non-success HTTP status: 404 - Not Found"
         log.keyValuePairs[KEY_RESPONSE_BODY].toString() shouldContain """"message":"Not Found""""
 
-        findWindow<LoadingDialog>()!!.shouldNotBeVisible()
+        findLoadingDialog("Checking for updates...")!!.shouldNotBeVisible()
     }
 
     @Test
@@ -79,7 +78,7 @@ class TestUpdateManager : AbstractTest() {
         val errorLog = verifyLog(CODE_UPDATE_ERROR, Severity.ERROR)
         errorLog.errorObject.shouldBeInstanceOf<UnirestException>()
 
-        findWindow<LoadingDialog>()!!.shouldNotBeVisible()
+        findLoadingDialog("Checking for updates...")!!.shouldNotBeVisible()
     }
 
     private fun queryLatestReleastJsonExpectingError(repositoryUrl: String): String {

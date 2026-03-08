@@ -1,9 +1,16 @@
 package dartzee.sync
 
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DeletionAuditEntity
 import dartzee.db.EntityName
 import dartzee.db.SyncAuditEntity
+import dartzee.findErrorDialog
+import dartzee.findInfoDialog
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
+import dartzee.getInfoDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.TEST_DB_DIRECTORY
@@ -18,12 +25,12 @@ import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.CODE_SYNC_ERROR
 import dartzee.logging.KEY_GAME_IDS
 import dartzee.logging.Severity
+import dartzee.runAsync
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
@@ -51,6 +58,8 @@ class TestSyncManager : AbstractTest() {
     @Test
     fun `Should revert to a PULL if no local changes`() {
         val syncManager = spyk(SyncManager(mockk(relaxed = true)))
+        every { syncManager.doPull(any()) } returns Thread()
+
         val t = syncManager.doSyncIfNecessary(REMOTE_NAME)
         t.join()
 
@@ -63,10 +72,12 @@ class TestSyncManager : AbstractTest() {
         insertGame()
 
         val syncManager = spyk(SyncManager(mockk(relaxed = true)))
+        every { syncManager.doSync(any()) } returns Thread()
+
         val t = syncManager.doSyncIfNecessary(REMOTE_NAME)
         t.join()
 
-        verify { syncManager.doSync(REMOTE_NAME) }
+        waitForAssertion { verify { syncManager.doSync(REMOTE_NAME) } }
     }
 
     @Test
@@ -75,15 +86,23 @@ class TestSyncManager : AbstractTest() {
         val store = mockk<IRemoteDatabaseStore>()
         every { store.fetchDatabase(any()) } throws exception
 
-        val t = SyncManager(store).doSync(REMOTE_NAME)
-        t.join()
+        var t: Thread? = null
+        runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
 
-        dialogFactory.errorsShown.shouldContainExactly(
+        waitForAssertion { findErrorDialog() shouldNotBe null }
+
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe
             "A connection error occurred. Check your internet connection and try again."
-        )
-        val log = verifyLog(CODE_SYNC_ERROR, Severity.WARN)
-        log.message shouldBe "Caught network error during sync: $exception"
-        syncDirectoryShouldNotExist()
+        error.clickOk(async = true)
+
+        waitForAssertion {
+            val log = verifyLog(CODE_SYNC_ERROR, Severity.WARN)
+            log.message shouldBe "Caught network error during sync: $exception"
+            syncDirectoryShouldNotExist()
+        }
+
+        t!!.join()
     }
 
     @Test
@@ -93,13 +112,16 @@ class TestSyncManager : AbstractTest() {
 
         val store = InMemoryRemoteDatabaseStore("Goomba" to remoteDb)
 
-        val t = SyncManager(store).doSync("Goomba")
-        t.join()
+        var t: Thread? = null
+        runAsync { t = SyncManager(store).doSync("Goomba") }
+        waitForAssertion { findErrorDialog() shouldNotBe null }
 
-        dialogFactory.errorsShown.shouldContainExactly(
-            "An error occurred connecting to the remote database."
-        )
-        syncDirectoryShouldNotExist()
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "An error occurred connecting to the remote database."
+        error.clickOk(async = true)
+
+        waitForAssertion { syncDirectoryShouldNotExist() }
+        t!!.join()
     }
 
     @Test
@@ -110,20 +132,25 @@ class TestSyncManager : AbstractTest() {
 
             val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to remoteDb)
 
-            val t = SyncManager(store).doSync(REMOTE_NAME)
-            t.join()
+            var t: Thread? = null
+            runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
+            waitForAssertion { findErrorDialog() shouldNotBe null }
 
-            dialogFactory.errorsShown.shouldContainExactly(
+            val error = getErrorDialog()
+            error.getDialogMessage() shouldBe
                 "An unexpected error occurred - no data has been changed."
-            )
+            error.clickOk(async = true)
 
-            val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
-            log.message shouldContain "Caught SQLException for statement"
-            log.errorObject?.message shouldContain "Table/View 'PLAYER' does not exist"
+            waitForAssertion {
+                val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
+                log.message shouldContain "Caught SQLException for statement"
+                log.errorObject?.message shouldContain "Table/View 'PLAYER' does not exist"
 
-            dialogFactory.infosShown.shouldBeEmpty()
-            syncDirectoryShouldNotExist()
-            databasesSwapped() shouldBe false
+                syncDirectoryShouldNotExist()
+                databasesSwapped() shouldBe false
+            }
+
+            t!!.join()
         }
     }
 
@@ -135,20 +162,25 @@ class TestSyncManager : AbstractTest() {
 
             val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to remoteDb)
 
-            val t = SyncManager(store).doSync(REMOTE_NAME)
-            t.join()
+            var t: Thread? = null
+            runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
+            waitForAssertion { findErrorDialog() shouldNotBe null }
 
-            dialogFactory.errorsShown.shouldContainExactly(
+            val error = getErrorDialog()
+            error.getDialogMessage() shouldBe
                 "Sync resulted in missing data. \n\nResults have been discarded."
-            )
+            error.clickOk(async = true)
 
-            val log = verifyLog(CODE_SYNC_ERROR, Severity.ERROR)
-            log.message shouldContain "1 game(s) missing from resulting database after merge"
-            log.keyValuePairs[KEY_GAME_IDS] shouldBe setOf(g.rowId)
+            waitForAssertion {
+                val log = verifyLog(CODE_SYNC_ERROR, Severity.ERROR)
+                log.message shouldContain "1 game(s) missing from resulting database after merge"
+                log.keyValuePairs[KEY_GAME_IDS] shouldBe setOf(g.rowId)
 
-            dialogFactory.infosShown.shouldBeEmpty()
-            syncDirectoryShouldNotExist()
-            databasesSwapped() shouldBe false
+                syncDirectoryShouldNotExist()
+                databasesSwapped() shouldBe false
+            }
+
+            t!!.join()
         }
     }
 
@@ -161,12 +193,17 @@ class TestSyncManager : AbstractTest() {
 
             val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to remoteDb)
 
-            val t = SyncManager(store).doSync(REMOTE_NAME)
-            t.join()
+            var t: Thread? = null
+            runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
+            waitForAssertion { findInfoDialog() shouldNotBe null }
+            getInfoDialog().clickOk(async = true)
 
-            dialogFactory.errorsShown.shouldBeEmpty()
-            syncDirectoryShouldNotExist()
-            databasesSwapped() shouldBe true
+            waitForAssertion {
+                syncDirectoryShouldNotExist()
+                databasesSwapped() shouldBe true
+            }
+
+            t!!.join()
         }
     }
 
@@ -179,21 +216,26 @@ class TestSyncManager : AbstractTest() {
                 FetchDatabaseResult(remoteDb, getSqlDateNow())
             every { store.pushDatabase(any(), any(), any()) } throws exception
 
-            val t = SyncManager(store).doSync(REMOTE_NAME)
-            t.join()
+            var t: Thread? = null
+            runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
+            waitForAssertion { findErrorDialog() shouldNotBe null }
 
-            dialogFactory.errorsShown.shouldContainExactly(
+            val error = getErrorDialog()
+            error.getDialogMessage() shouldBe
                 "Another sync has been performed since this one started. \n" +
                     "\n" +
                     "Results have been discarded."
-            )
+            error.clickOk(async = true)
 
-            val log = verifyLog(CODE_SYNC_ERROR, Severity.WARN)
-            log.message shouldBe "$exception"
+            waitForAssertion {
+                val log = verifyLog(CODE_SYNC_ERROR, Severity.WARN)
+                log.message shouldBe "$exception"
 
-            dialogFactory.infosShown.shouldBeEmpty()
-            syncDirectoryShouldNotExist()
-            databasesSwapped() shouldBe false
+                syncDirectoryShouldNotExist()
+                databasesSwapped() shouldBe false
+            }
+
+            t!!.join()
         }
     }
 
@@ -203,16 +245,18 @@ class TestSyncManager : AbstractTest() {
             remoteDb.getDirectory().deleteRecursively()
 
             val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to remoteDb)
-            val t = SyncManager(store).doSync(REMOTE_NAME)
-            t.join()
+            var t: Thread? = null
+            runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
+            waitForAssertion { findErrorDialog() shouldNotBe null }
 
-            dialogFactory.errorsShown.shouldContainExactly(
+            val error = getErrorDialog()
+            error.getDialogMessage() shouldBe
                 "Failed to restore database. Error: Failed to rename new file to ${mainDatabase.dbName}"
-            )
-            dialogFactory.infosShown.shouldBeEmpty()
+            error.clickOk(async = true)
 
             // Open a test connection so the tidy-up doesn't freak out about the db already being
             // shut down
+            t!!.join()
             remoteDb.testConnection()
         }
     }
@@ -225,8 +269,9 @@ class TestSyncManager : AbstractTest() {
             every { dbStore.fetchDatabase(any()) } throws exception
 
             val manager = SyncManager(dbStore)
-            val t = manager.doSync(REMOTE_NAME)
-            t.join()
+            runAsync { manager.doSync(REMOTE_NAME) }
+            waitForAssertion { findErrorDialog() shouldNotBe null }
+            getErrorDialog().clickOk(async = true)
 
             errorLogged() shouldBe true
         }
@@ -239,18 +284,25 @@ class TestSyncManager : AbstractTest() {
             insertGame(database = remoteDb)
 
             val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to remoteDb)
-            val t = SyncManager(store).doSync(REMOTE_NAME)
-            t.join()
+            var t: Thread? = null
+            runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
+            waitForAssertion { findInfoDialog() shouldNotBe null }
 
-            val resultingRemote = store.fetchDatabase(REMOTE_NAME).database
-            getCountFromTable("Game", resultingRemote) shouldBe 2
-
-            val summary = "\n\nGames pushed: 1\nGames pulled: 1"
+            val summary = "\n\nGames pushed: 1\n\nGames pulled: 1"
             val expectedInfoText = "Sync completed successfully!$summary"
-            dialogFactory.infosShown.shouldContainExactly(expectedInfoText)
+            val info = getInfoDialog()
+            info.getDialogMessage() shouldBe expectedInfoText
+            info.clickOk(async = true)
 
-            syncDirectoryShouldNotExist()
-            databasesSwapped() shouldBe true
+            waitForAssertion {
+                val resultingRemote = store.fetchDatabase(REMOTE_NAME).database
+                getCountFromTable("Game", resultingRemote) shouldBe 2
+
+                syncDirectoryShouldNotExist()
+                databasesSwapped() shouldBe true
+            }
+
+            t!!.join()
         }
     }
 

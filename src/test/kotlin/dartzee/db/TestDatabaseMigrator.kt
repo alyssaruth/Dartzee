@@ -1,5 +1,8 @@
 package dartzee.db
 
+import com.github.alyssaburlton.swingtest.clickOk
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getTableNames
 import dartzee.helper.usingInMemoryDatabase
@@ -9,6 +12,7 @@ import dartzee.logging.CODE_DATABASE_NEEDS_UPDATE
 import dartzee.logging.CODE_DATABASE_TOO_OLD
 import dartzee.logging.CODE_DATABASE_UP_TO_DATE
 import dartzee.logging.Severity
+import dartzee.runAsync
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import dartzee.utils.Database
@@ -71,19 +75,21 @@ class TestDatabaseMigrator : AbstractTest() {
             database.updateDatabaseVersion(oldVersion)
 
             val migrator = DatabaseMigrator(migrations)
-            val result = migrator.migrateToLatest(database, "Test")
-            result shouldBe MigrationResult.TOO_OLD
-
-            verifyLog(CODE_DATABASE_TOO_OLD, Severity.WARN)
-            database.getTableNames().shouldContainExactly("VERSION")
+            var result = MigrationResult.SUCCESS
+            runAsync { result = migrator.migrateToLatest(database, "Test") }
 
             val dbDetails =
                 "Test version: $oldVersion, min supported: 13, current: $DATABASE_VERSION"
 
-            dialogFactory.errorsShown.shouldContainExactly(
+            val errorDialog = getErrorDialog()
+            errorDialog.getDialogMessage() shouldBe
                 "Test database is too out-of-date to be upgraded by this version of Dartzee. " +
                     "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails"
-            )
+            errorDialog.clickOk(async = true)
+
+            verifyLog(CODE_DATABASE_TOO_OLD, Severity.WARN)
+            database.getTableNames().shouldContainExactly("VERSION")
+            result shouldBe MigrationResult.TOO_OLD
         }
     }
 

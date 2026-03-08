@@ -1,6 +1,12 @@
 package dartzee.sync
 
-import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.shouldNotBeVisible
+import com.github.alyssaburlton.swingtest.waitForAssertion
+import dartzee.findErrorDialog
+import dartzee.findLoadingDialog
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.TEST_DB_DIRECTORY
@@ -10,11 +16,12 @@ import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.logging.CODE_PULL_ERROR
 import dartzee.logging.Severity
+import dartzee.runAsync
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.databaseDirectory
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import java.io.File
@@ -41,20 +48,21 @@ class TestSyncManagerPull : AbstractTest() {
         every { dbStore.fetchDatabase(any()) } throws exception
 
         val manager = SyncManager(dbStore)
-        val t = manager.doPull(REMOTE_NAME)
-        t.join()
-        flushEdt()
+        var t: Thread? = null
+        runAsync { t = manager.doPull(REMOTE_NAME) }
+        waitForAssertion { findErrorDialog() shouldNotBe null }
 
-        dialogFactory.loadingsShown.shouldContainExactly("Pulling $REMOTE_NAME...")
-        dialogFactory.loadingVisible shouldBe false
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "An unexpected error occurred - no data has been changed."
+        error.clickOk(async = true)
+
+        waitForAssertion { t != null }
+        t!!.join()
 
         val log = verifyLog(CODE_PULL_ERROR, Severity.ERROR)
         log.errorObject shouldBe exception
 
-        dialogFactory.errorsShown.shouldContainExactly(
-            "An unexpected error occurred - no data has been changed."
-        )
-
+        findLoadingDialog("Pulling Goomba...")!!.shouldNotBeVisible()
         syncDirectoryShouldNotExist()
     }
 
@@ -66,12 +74,16 @@ class TestSyncManagerPull : AbstractTest() {
         val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to db)
 
         val manager = SyncManager(store)
-        val t = manager.doPull(REMOTE_NAME)
-        t.join()
+        var t: Thread? = null
+        runAsync { t = manager.doPull(REMOTE_NAME) }
+        waitForAssertion { findErrorDialog() shouldNotBe null }
 
-        dialogFactory.errorsShown.shouldContainExactly(
-            "An error occurred connecting to the remote database."
-        )
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "An error occurred connecting to the remote database."
+        error.clickOk(async = true)
+
+        waitForAssertion { t != null }
+        t!!.join()
     }
 
     @Test
@@ -80,15 +92,20 @@ class TestSyncManagerPull : AbstractTest() {
             val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to db)
 
             val manager = SyncManager(store)
-            val t = manager.doPull(REMOTE_NAME)
-            t.join()
+            var t: Thread? = null
+            runAsync { t = manager.doPull(REMOTE_NAME) }
+            waitForAssertion { findErrorDialog() shouldNotBe null }
+
+            val error = getErrorDialog()
+            error.getDialogMessage() shouldBe "An error occurred connecting to the remote database."
+            error.clickOk(async = true)
+
+            waitForAssertion { t != null }
+            t!!.join()
 
             val log = verifyLog(CODE_MERGE_ERROR, Severity.ERROR)
             log.message shouldBe
                 "Unable to ascertain remote database version (but could connect) - this is unexpected."
-            dialogFactory.errorsShown.shouldContainExactly(
-                "An error occurred connecting to the remote database."
-            )
         }
     }
 
@@ -116,8 +133,13 @@ class TestSyncManagerPull : AbstractTest() {
             every { dbStore.fetchDatabase(any()) } throws exception
 
             val manager = SyncManager(dbStore)
-            val t = manager.doPull(REMOTE_NAME)
-            t.join()
+            var t: Thread? = null
+            runAsync { t = manager.doPull(REMOTE_NAME) }
+            waitForAssertion { findErrorDialog() shouldNotBe null }
+
+            getErrorDialog().clickOk(async = true)
+            waitForAssertion { t != null }
+            t!!.join()
 
             errorLogged() shouldBe true
         }

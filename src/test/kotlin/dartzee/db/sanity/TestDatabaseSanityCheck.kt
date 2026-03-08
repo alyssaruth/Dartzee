@@ -10,6 +10,8 @@ import dartzee.core.bean.ScrollTable
 import dartzee.core.screen.TableModelDialog
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
+import dartzee.getDialogMessage
+import dartzee.getInfoDialog
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
@@ -34,7 +36,8 @@ class TestDatabaseSanityCheck : AbstractTest() {
 
         mainDatabase.dropUnexpectedTables().shouldBeEmpty()
         findResultsWindow() shouldBe null
-        dialogFactory.infosShown.shouldContainExactly("Sanity check completed and found no issues")
+        val infoDialog = getInfoDialog()
+        infoDialog.getDialogMessage() shouldBe "Sanity check completed and found no issues"
     }
 
     @Test

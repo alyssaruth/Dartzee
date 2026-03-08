@@ -16,14 +16,11 @@ import dartzee.logging.CODE_DIALOG_CLOSED
 import dartzee.logging.CODE_DIALOG_SHOWN
 import dartzee.logging.Severity
 import dartzee.runAsync
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.spyk
 import io.mockk.verifySequence
 import java.io.File
-import javax.swing.SwingUtilities
 import org.junit.jupiter.api.Test
 
 class TestDialogUtil : AbstractTest() {
@@ -38,10 +35,7 @@ class TestDialogUtil : AbstractTest() {
 
         DialogUtil.init(factoryMock)
 
-        DialogUtil.showInfoOLD("Info")
-        DialogUtil.showLoadingDialogOLD("Loading...")
         DialogUtil.showQuestionOLD("Q")
-        DialogUtil.dismissLoadingDialogOLD()
         DialogUtil.showOption(
             "Free Pizza",
             "Would you like some?",
@@ -50,10 +44,7 @@ class TestDialogUtil : AbstractTest() {
         DialogUtil.chooseDirectory(null)
 
         verifySequence {
-            factoryMock.showInfo("Info")
-            factoryMock.showLoading("Loading...")
             factoryMock.showQuestion("Q", false)
-            factoryMock.dismissLoading()
             factoryMock.showOption(
                 "Free Pizza",
                 "Would you like some?",
@@ -66,10 +57,7 @@ class TestDialogUtil : AbstractTest() {
 
         DialogUtil.showErrorOLD("Test")
 
-        verifySequence {
-            factoryMock.dismissLoading()
-            factoryMock.showError("Test")
-        }
+        verifySequence { factoryMock.showError("Test") }
 
         clearAllMocks()
     }
@@ -95,16 +83,6 @@ class TestDialogUtil : AbstractTest() {
         getErrorDialog().clickOk()
         flushEdt()
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Error dialog closed"
-    }
-
-    @Test
-    fun `Should show an ERROR dialog later`() {
-        SwingUtilities.invokeLater { Thread.sleep(500) }
-        DialogUtil.showErrorLater("Some error")
-        dialogFactory.errorsShown.shouldBeEmpty()
-
-        flushEdt()
-        dialogFactory.errorsShown.shouldContainExactly("Some error")
     }
 
     @Test

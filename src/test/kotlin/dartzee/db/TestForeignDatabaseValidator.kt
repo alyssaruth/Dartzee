@@ -1,12 +1,15 @@
 package dartzee.db
 
+import com.github.alyssaburlton.swingtest.clickOk
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_MERGE_ERROR
 import dartzee.logging.Severity
+import dartzee.runAsync
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -19,10 +22,14 @@ class TestForeignDatabaseValidator : AbstractTest() {
         every { remote.testConnection() } returns false
 
         val validator = makeValidator()
-        validator.validateAndMigrateForeignDatabase(remote, "remote") shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
-            "An error occurred connecting to the remote database."
-        )
+        var result = true
+        runAsync { result = validator.validateAndMigrateForeignDatabase(remote, "remote") }
+
+        val dlg = getErrorDialog()
+        dlg.getDialogMessage() shouldBe "An error occurred connecting to the remote database."
+        dlg.clickOk(async = true)
+
+        result shouldBe false
     }
 
     @Test
@@ -32,14 +39,19 @@ class TestForeignDatabaseValidator : AbstractTest() {
         every { remoteDatabase.getDatabaseVersion() } returns null
 
         val validator = makeValidator()
-        validator.validateAndMigrateForeignDatabase(remoteDatabase, "selected") shouldBe false
+        var result = true
+        runAsync {
+            result = validator.validateAndMigrateForeignDatabase(remoteDatabase, "selected")
+        }
+
+        val dlg = getErrorDialog()
+        dlg.getDialogMessage() shouldBe "An error occurred connecting to the selected database."
+        dlg.clickOk(async = true)
 
         val log = verifyLog(CODE_MERGE_ERROR, Severity.ERROR)
         log.message shouldBe
             "Unable to ascertain selected database version (but could connect) - this is unexpected."
-        dialogFactory.errorsShown.shouldContainExactly(
-            "An error occurred connecting to the selected database."
-        )
+        result shouldBe false
     }
 
     @Test
@@ -48,10 +60,17 @@ class TestForeignDatabaseValidator : AbstractTest() {
             remoteDatabase.updateDatabaseVersion(DartsDatabaseUtil.DATABASE_VERSION + 1)
 
             val validator = makeValidator()
-            validator.validateAndMigrateForeignDatabase(remoteDatabase, "other") shouldBe false
-            dialogFactory.errorsShown.shouldContainExactly(
+            var result = true
+            runAsync {
+                result = validator.validateAndMigrateForeignDatabase(remoteDatabase, "other")
+            }
+
+            val dlg = getErrorDialog()
+            dlg.getDialogMessage() shouldBe
                 "The other database contains data written by a higher Dartzee version. \n\nYou will need to update to the latest version of Dartzee before continuing."
-            )
+            dlg.clickOk(async = true)
+
+            result shouldBe false
         }
     }
 
@@ -63,15 +82,21 @@ class TestForeignDatabaseValidator : AbstractTest() {
 
             val migrator = DatabaseMigrator(emptyMap())
             val validator = makeValidator(databaseMigrator = migrator)
-            val result = validator.validateAndMigrateForeignDatabase(remoteDatabase, "other")
-            result shouldBe false
+            var result = true
+            runAsync {
+                result = validator.validateAndMigrateForeignDatabase(remoteDatabase, "other")
+            }
 
             val dbDetails =
                 "Other version: $dbVersion, min supported: ${DartsDatabaseUtil.DATABASE_VERSION}, current: ${DartsDatabaseUtil.DATABASE_VERSION}"
-            dialogFactory.errorsShown.shouldContainExactly(
+
+            val dlg = getErrorDialog()
+            dlg.getDialogMessage() shouldBe
                 "Other database is too out-of-date to be upgraded by this version of Dartzee. " +
                     "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails"
-            )
+
+            dlg.clickOk(async = true)
+            result shouldBe false
         }
     }
 

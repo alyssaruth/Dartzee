@@ -73,7 +73,7 @@ object DartsDatabaseUtil {
     fun initialiseDatabase(database: Database) {
         initialiseDerby()
 
-        DialogUtil.showLoadingDialogOLD("Checking database status...")
+        DialogUtil.showLoadingDialog("Checking database status...")
 
         database.doDuplicateInstanceCheck()
 
@@ -84,7 +84,7 @@ object DartsDatabaseUtil {
 
         logger.addToContext(KEY_DB_VERSION, version)
 
-        DialogUtil.dismissLoadingDialogOLD()
+        DialogUtil.dismissLoadingDialog()
 
         val migrator = DatabaseMigrator(DatabaseMigrations.getConversionsMap())
         migrateDatabase(migrator, database)
@@ -116,9 +116,9 @@ object DartsDatabaseUtil {
         val fullDestination = File("${file.absolutePath}/$DATABASE_NAME")
         val success = backupDatabaseToDestination(fullDestination)
         if (!success) {
-            DialogUtil.showErrorOLD("There was a problem creating the backup.")
+            DialogUtil.showError("There was a problem creating the backup.")
         } else {
-            DialogUtil.showInfoOLD("Database successfully backed up to $fullDestination")
+            DialogUtil.showInfo("Database successfully backed up to $fullDestination")
         }
     }
 
@@ -146,7 +146,7 @@ object DartsDatabaseUtil {
             validateAndRestoreDatabase(dbOther)
         } catch (e: Exception) {
             logger.error(CODE_RESTORE_ERROR, "Caught $e trying to restore database", e)
-            DialogUtil.showErrorOLD("There was a problem restoring the database.")
+            DialogUtil.showError("There was a problem restoring the database.")
         } finally {
             dbOther.shutDown()
             dbOther.getDirectory().deleteRecursively()
@@ -154,13 +154,13 @@ object DartsDatabaseUtil {
     }
 
     private fun selectNewDatabase(): File? {
-        DialogUtil.showInfoOLD("Select the '$DATABASE_NAME' folder you want to restore from.")
+        DialogUtil.showInfo("Select the '$DATABASE_NAME' folder you want to restore from.")
         val directoryFrom = DialogUtil.chooseDirectory(ScreenCache.mainScreen) ?: return null
 
         // Check it's named right
         val name = directoryFrom.name
         if (name != DATABASE_NAME) {
-            DialogUtil.showErrorOLD(
+            DialogUtil.showError(
                 "Selected path is not valid - you must select a folder named '$DATABASE_NAME'"
             )
             return null
@@ -179,13 +179,13 @@ object DartsDatabaseUtil {
         // Confirm at this point
         val confirmationQ =
             "Successfully connected to target database.\n\nAre you sure you want to restore this database? All current data will be lost."
-        val option = DialogUtil.showQuestionOLD(confirmationQ, false)
+        val option = DialogUtil.showQuestion(confirmationQ, false)
         if (option == JOptionPane.NO_OPTION) {
             return
         }
 
         if (swapInDatabase(dbOther)) {
-            DialogUtil.showInfoOLD("Database restored successfully.")
+            DialogUtil.showInfo("Database restored successfully.")
         }
     }
 
@@ -198,7 +198,7 @@ object DartsDatabaseUtil {
             val error =
                 FileUtil.swapInFile(mainDatabase.getDirectoryStr(), otherDatabase.getDirectoryStr())
             if (error != null) {
-                DialogUtil.showErrorOLD("Failed to restore database. Error: $error")
+                DialogUtil.showError("Failed to restore database. Error: $error")
                 return false
             }
         } finally {
@@ -212,7 +212,7 @@ object DartsDatabaseUtil {
     private fun checkAllGamesAreClosed(): Boolean {
         val openScreens = ScreenCache.getDartsGameScreens()
         if (openScreens.isNotEmpty()) {
-            DialogUtil.showErrorOLD("You must close all open games before continuing.")
+            DialogUtil.showError("You must close all open games before continuing.")
             return false
         }
 

@@ -129,7 +129,7 @@ object ResourceCache {
 
     fun initialiseResources() {
         try {
-            DialogUtil.showLoadingDialogOLD("Loading resources...")
+            DialogUtil.showLoadingDialog("Loading resources...")
 
             val wavFiles = getWavFiles()
 
@@ -147,7 +147,7 @@ object ResourceCache {
         } catch (e: Exception) {
             logger.error(CODE_RESOURCE_LOAD_ERROR, "Failed to load resources", e)
         } finally {
-            DialogUtil.dismissLoadingDialogOLD()
+            DialogUtil.dismissLoadingDialog()
         }
     }
 

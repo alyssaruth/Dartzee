@@ -1,17 +1,23 @@
 package dartzee.utils
 
+import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.db.DartzeeRuleEntity
+import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
 import dartzee.game.GameType
+import dartzee.getDialogMessage
+import dartzee.getInfoDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.innerOuterInner
 import dartzee.helper.insertGame
 import dartzee.helper.twoBlackOneWhite
 import dartzee.`object`.Dart
+import dartzee.runAsync
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import java.awt.Color
 import javax.swing.JButton
@@ -106,21 +112,26 @@ class TestDartzeeUtils : AbstractTest() {
 
         val g = insertGame(gameType = GameType.DARTZEE, gameParams = "")
         val dtos = listOf(innerOuterInner, twoBlackOneWhite)
-        val result = generateDartzeeTemplateFromGame(g, dtos)!!
-        result.name shouldBe "My Template"
+        var result: DartzeeTemplateEntity? = null
+        runAsync { result = generateDartzeeTemplateFromGame(g, dtos) }
+
+        val info = getInfoDialog()
+        info.getDialogMessage() shouldBe "Template 'My Template' successfully created."
+        info.clickOk(async = true)
+
+        result.shouldNotBeNull()
+
+        result!!.name shouldBe "My Template"
 
         val retrievedGame = GameEntity().retrieveForId(g.rowId)!!
-        retrievedGame.gameParams shouldBe result.rowId
+        retrievedGame.gameParams shouldBe result!!.rowId
 
         val retrievedRuleDescriptions =
-            DartzeeRuleEntity().retrieveForTemplate(result.rowId).map {
+            DartzeeRuleEntity().retrieveForTemplate(result!!.rowId).map {
                 it.toDto().generateRuleDescription()
             }
         retrievedRuleDescriptions.shouldContainExactlyInAnyOrder(
             dtos.map { it.generateRuleDescription() }
-        )
-        dialogFactory.infosShown.shouldContainExactly(
-            "Template 'My Template' successfully created."
         )
     }
 }
