@@ -26,6 +26,8 @@ object ResourceCache {
     val IMG_SPENCER = ImageIcon(javaClass.getResource("/horrific/spencer.png"))
     val IMG_BASIL = ImageIcon(javaClass.getResource("/horrific/basil.png"))
     val IMG_CHUCKLE = ImageIcon(javaClass.getResource("/horrific/chuckle.png"))
+    val IMG_PINTS_OF_LAGER =
+        ImageIcon(javaClass.getResource("/theme/oktoberfest/horrific/pints-of-lager.png"))
     val ICON_RESUME = ImageIcon(javaClass.getResource("/buttons/resume.png"))
     val ICON_PAUSE = ImageIcon(javaClass.getResource("/buttons/pause.png"))
     val ICON_STATS_LARGE = ImageIcon(javaClass.getResource("/buttons/stats_large.png"))
@@ -123,6 +125,8 @@ object ResourceCache {
             "chucklevision1.wav",
             "chucklevision2.wav",
             "chucklevision3.wav",
+            "nine-pints.wav",
+            "eighteen-pints.wav",
         )
     }
 
@@ -175,7 +179,11 @@ object ResourceCache {
         val inputStream = javaClass.getResourceAsStream("/wav/$wavFile")
         val bis = BufferedInputStream(inputStream)
 
-        return AudioSystem.getAudioInputStream(bis)
+        try {
+            return AudioSystem.getAudioInputStream(bis)
+        } catch (e: Exception) {
+            throw Exception("Failed to load audio for resource $wavFile", e)
+        }
     }
 
     fun returnInputStream(wavName: String, stream: AudioInputStream) {

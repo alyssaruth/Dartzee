@@ -21,32 +21,32 @@ fun GameplayDartboard.doChucklevision() {
     val rand = Random()
     val chuckleSound = rand.nextInt(3) + 1
 
-    doDodgy(ResourceCache.IMG_CHUCKLE, 266, 279, "chucklevision$chuckleSound")
+    doDodgy(ResourceCache.IMG_CHUCKLE, "chucklevision$chuckleSound")
 }
 
 fun GameplayDartboard.doFawlty() {
     val rand = Random()
     val brucey = rand.nextInt(4) + 1
 
-    doDodgy(ResourceCache.IMG_BASIL, 576, 419, "basil$brucey")
+    doDodgy(ResourceCache.IMG_BASIL, "basil$brucey")
 }
 
 fun GameplayDartboard.doForsyth() {
     val rand = Random()
     val brucey = rand.nextInt(4) + 1
 
-    doDodgy(ResourceCache.IMG_BRUCE, 300, 478, "forsyth$brucey")
+    doDodgy(ResourceCache.IMG_BRUCE, "forsyth$brucey")
 }
 
 fun GameplayDartboard.doBadLuck() {
     val rand = Random()
     val ix = rand.nextInt(2) + 1
 
-    doDodgy(ResourceCache.IMG_BRUCE, 300, 478, "badLuck$ix")
+    doDodgy(ResourceCache.IMG_BRUCE, "badLuck$ix")
 }
 
 fun GameplayDartboard.doBull() {
-    doDodgy(ResourceCache.IMG_DEV, 400, 476, "bull")
+    doDodgy(ResourceCache.IMG_DEV, "bull")
 }
 
 fun GameplayDartboard.doBadMiss() {
@@ -55,39 +55,42 @@ fun GameplayDartboard.doBadMiss() {
 
     // 4-1 ratio because mitchell > spencer!
     if (miss <= 4) {
-        doDodgy(ResourceCache.IMG_MITCHELL, 300, 250, "badmiss$miss")
+        doDodgy(ResourceCache.IMG_MITCHELL, "badmiss$miss")
     } else {
-        doDodgy(ResourceCache.IMG_SPENCER, 460, 490, "damage")
+        doDodgy(ResourceCache.IMG_SPENCER, "damage")
     }
 }
 
 fun GameplayDartboard.doGolfMiss() {
-    doDodgy(ResourceCache.IMG_DEV, 400, 476, "fourTrimmed")
+    doDodgy(ResourceCache.IMG_DEV, "fourTrimmed")
 }
 
-private fun GameplayDartboard.doDodgy(ii: ImageIcon, width: Int, height: Int, soundName: String) {
+fun GameplayDartboard.doNinePints() {
+    doDodgy(ResourceCache.IMG_PINTS_OF_LAGER, "nine-pints")
+}
+
+fun GameplayDartboard.doEighteenPints() {
+    doDodgy(ResourceCache.IMG_PINTS_OF_LAGER, "eighteen-pints")
+}
+
+private fun GameplayDartboard.doDodgy(ii: ImageIcon, soundName: String) {
     if (!preferenceService.get(Preferences.showAnimations)) {
         return
     }
 
-    runOnEventThread { doDodgyOnEdt(ii, width, height, soundName) }
+    runOnEventThread { doDodgyOnEdt(ii, soundName) }
 }
 
-private fun GameplayDartboard.doDodgyOnEdt(
-    ii: ImageIcon,
-    width: Int,
-    height: Int,
-    soundName: String,
-) {
+private fun GameplayDartboard.doDodgyOnEdt(ii: ImageIcon, soundName: String) {
     removeDodgyLabels()
 
     val dodgyLabel = JLabel("")
     dodgyLabel.name = "DodgyLabel"
     dodgyLabel.icon = ii
-    dodgyLabel.setSize(width, height)
+    dodgyLabel.setSize(ii.iconWidth, ii.iconHeight)
 
-    val x = (getWidth() - width) / 2
-    val y = getHeight() - height
+    val x = (getWidth() - ii.iconWidth) / 2
+    val y = getHeight() - ii.iconHeight
     dodgyLabel.setLocation(x, y)
     add(dodgyLabel)
 
