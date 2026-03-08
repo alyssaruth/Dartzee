@@ -16,6 +16,8 @@ import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import org.junit.jupiter.api.Test
 
 class TestAbstractDartsScorer : AbstractTest() {
@@ -75,14 +77,14 @@ class TestAbstractDartsScorer : AbstractTest() {
 
         val state = TestPlayerState(insertParticipant(), isActive = false)
         scorer.stateChanged(state)
-        scorer.lblName.text shouldBe "<html>Clive</html>"
+        scorer.lblName.text shouldNotContain "<b>"
 
         state.updateActive(true)
         scorer.stateChanged(state)
-        scorer.lblName.text shouldBe "<html><b>Clive</b></html>"
+        scorer.lblName.text shouldContain "<b>"
 
         scorer.gameFinished()
-        scorer.lblName.text shouldBe "<html>Clive</html>"
+        scorer.lblName.text shouldNotContain "<b>"
     }
 
     @Test

@@ -70,6 +70,7 @@ object Themes {
             linkColour = Color.BLUE,
             fontColor = Color.DARK_GRAY,
             dartboardColours = easterDartboardColours,
+            menuFontSize = 20f,
         )
 
     val OKTOBERFEST =

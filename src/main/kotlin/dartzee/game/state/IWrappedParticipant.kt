@@ -44,8 +44,8 @@ sealed interface IWrappedParticipant {
             }
 
         val font = getBaseFont()
-        val leftBracket = "<html><font face=\"${font.family}\">"
-        val rightBracket = "</font></html>"
+        val leftBracket = "<html><p style=\"text-align:center;\"><font face=\"${font.family}\">"
+        val rightBracket = "</font></p></html>"
 
         if (active && currentParticipant == null) {
             return "$leftBracket<b>$contents</b>$rightBracket"

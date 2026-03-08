@@ -85,6 +85,15 @@ class TestPresentationDartboard : AbstractTest() {
 
     @Test
     @Tag("screenshot")
+    fun `Should match snapshot - oktoberfest`() {
+        InjectedThings.theme = Themes.OKTOBERFEST
+        val dartboard = PresentationDartboard(renderScoreLabels = true)
+        dartboard.setBounds(0, 0, 500, 500)
+        dartboard.shouldMatchImage("oktoberfest")
+    }
+
+    @Test
+    @Tag("screenshot")
     fun `Should match snapshot - wireframe`() {
         val dartboard = PresentationDartboard(WIREFRAME_COLOUR_WRAPPER)
         dartboard.setBounds(0, 0, 250, 250)
