@@ -10,6 +10,11 @@ import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.logging.Severity
 import dartzee.preferences.Preferences
 import dartzee.screen.GameplayDartboard
+import dartzee.screen.animation.Animation
+import dartzee.screen.animation.BRUCEY_BAD_LUCK
+import dartzee.screen.animation.CHUCKLEVISION
+import dartzee.screen.animation.DEFAULT_ANIMATIONS
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.ResourceCache
 import io.kotest.matchers.nulls.shouldBeNull
@@ -48,7 +53,7 @@ class TestDartboardDodgyUtil : AbstractTest() {
     fun `should not play a sound if preference is disabled`() {
         preferenceService.save(Preferences.showAnimations, false)
         val dartboard = GameplayDartboard()
-        dartboard.playDodgySound("60")
+        dartboard.doDodgy(Animation("60", null))
 
         verifyNotCalled { AudioSystem.getLine(any()) }
     }
@@ -56,7 +61,7 @@ class TestDartboardDodgyUtil : AbstractTest() {
     @Test
     fun `should do nothing if invalid sound is requested`() {
         val dartboard = GameplayDartboard()
-        dartboard.playDodgySound("invalid")
+        dartboard.doDodgy(Animation("invalid", null))
 
         verifyNotCalled { AudioSystem.getLine(any()) }
     }
@@ -66,7 +71,7 @@ class TestDartboardDodgyUtil : AbstractTest() {
         val dartboard = GameplayDartboard()
         captureClip(true)
 
-        dartboard.doBadLuck()
+        dartboard.doDodgy(BRUCEY_BAD_LUCK)
         flushEdt()
 
         dartboard.dodgyLabelShouldNotExist()
@@ -78,7 +83,7 @@ class TestDartboardDodgyUtil : AbstractTest() {
         val dartboard = GameplayDartboard()
         val clip = captureClip()
 
-        dartboard.doBadLuck()
+        dartboard.doDodgy(BRUCEY_BAD_LUCK)
         flushEdt()
 
         dartboard.dodgyLabelShouldExist()
@@ -92,11 +97,11 @@ class TestDartboardDodgyUtil : AbstractTest() {
         val dartboard = GameplayDartboard()
         val clip1 = captureClip()
 
-        dartboard.doBadLuck()
+        dartboard.doDodgy(BRUCEY_BAD_LUCK)
         flushEdt()
 
         val clip2 = captureClip()
-        dartboard.doChucklevision()
+        dartboard.doDodgy(CHUCKLEVISION)
         flushEdt()
 
         dartboard.dodgyLabelShouldExist()
@@ -126,12 +131,14 @@ class TestDartboardDodgyUtil : AbstractTest() {
         @JvmStatic
         @BeforeAll
         fun beforeAll() {
+            InjectedThings.animations = DEFAULT_ANIMATIONS
             ResourceCache.initialiseResources()
         }
 
         @JvmStatic
         @AfterAll
         fun afterAll() {
+            InjectedThings.animations = emptyMap()
             ResourceCache.resetCache()
         }
     }

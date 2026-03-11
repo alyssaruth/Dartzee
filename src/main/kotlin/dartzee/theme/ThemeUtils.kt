@@ -17,7 +17,7 @@ fun autoApplyTheme() {
 
 fun pickThemeForDate(now: LocalDate): Theme? {
     if (DartsClient.devMode) {
-        return Themes.OKTOBERFEST
+        return null
     }
 
     val easterSunday = findEasterSunday(now.year)

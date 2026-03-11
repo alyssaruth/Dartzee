@@ -1,6 +1,11 @@
 package dartzee.theme
 
+import dartzee.game.GameType
 import dartzee.`object`.ColourWrapper
+import dartzee.screen.animation.Animation
+import dartzee.screen.animation.DartScoreTrigger
+import dartzee.screen.animation.IAnimation
+import dartzee.screen.animation.IAnimationTrigger
 import java.awt.Color
 
 private val lightOrange = Color.decode("#ff8200")
@@ -73,6 +78,16 @@ object Themes {
             menuFontSize = 20f,
         )
 
+    private val oktoberfestAnimations: List<Pair<IAnimationTrigger, IAnimation>> =
+        GameType.values().flatMap { gameType ->
+            listOf(
+                DartScoreTrigger(gameType, 9) to
+                    Animation("nine-pints", "/theme/oktoberfest/horrific/pints-of-lager.png"),
+                DartScoreTrigger(gameType, 18) to
+                    Animation("eighteen-pints", "/theme/oktoberfest/horrific/pints-of-lager.png"),
+            )
+        }
+
     val OKTOBERFEST =
         Theme(
             "oktoberfest",
@@ -83,5 +98,6 @@ object Themes {
             linkColour = bloodRed,
             dartboardColours = oktoberfestDartboardColours,
             menuFontSize = 24f,
+            animations = oktoberfestAnimations.toMap(),
         )
 }

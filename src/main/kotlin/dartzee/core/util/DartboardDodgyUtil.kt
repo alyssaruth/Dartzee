@@ -5,104 +5,56 @@ import dartzee.logging.CODE_RESOURCE_CACHE_NOT_INITIALISED
 import dartzee.preferences.Preferences
 import dartzee.screen.GameplayDartboard
 import dartzee.screen.LAYER_DODGY
+import dartzee.screen.animation.Animation
+import dartzee.screen.animation.IAnimation
+import dartzee.screen.animation.IAnimationTrigger
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.ResourceCache
-import java.util.*
 import javax.sound.sampled.AudioInputStream
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
 import javax.sound.sampled.Line
 import javax.sound.sampled.LineEvent
-import javax.swing.ImageIcon
 import javax.swing.JLabel
 
-fun GameplayDartboard.doChucklevision() {
-    val rand = Random()
-    val chuckleSound = rand.nextInt(3) + 1
-
-    doDodgy(ResourceCache.IMG_CHUCKLE, "chucklevision$chuckleSound")
+fun GameplayDartboard.doDodgy(trigger: IAnimationTrigger) {
+    InjectedThings.animations[trigger]?.let(::doDodgy)
 }
 
-fun GameplayDartboard.doFawlty() {
-    val rand = Random()
-    val brucey = rand.nextInt(4) + 1
-
-    doDodgy(ResourceCache.IMG_BASIL, "basil$brucey")
-}
-
-fun GameplayDartboard.doForsyth() {
-    val rand = Random()
-    val brucey = rand.nextInt(4) + 1
-
-    doDodgy(ResourceCache.IMG_BRUCE, "forsyth$brucey")
-}
-
-fun GameplayDartboard.doBadLuck() {
-    val rand = Random()
-    val ix = rand.nextInt(2) + 1
-
-    doDodgy(ResourceCache.IMG_BRUCE, "badLuck$ix")
-}
-
-fun GameplayDartboard.doBull() {
-    doDodgy(ResourceCache.IMG_DEV, "bull")
-}
-
-fun GameplayDartboard.doBadMiss() {
-    val rand = Random()
-    val miss = rand.nextInt(5) + 1
-
-    // 4-1 ratio because mitchell > spencer!
-    if (miss <= 4) {
-        doDodgy(ResourceCache.IMG_MITCHELL, "badmiss$miss")
-    } else {
-        doDodgy(ResourceCache.IMG_SPENCER, "damage")
-    }
-}
-
-fun GameplayDartboard.doGolfMiss() {
-    doDodgy(ResourceCache.IMG_DEV, "fourTrimmed")
-}
-
-fun GameplayDartboard.doNinePints() {
-    doDodgy(ResourceCache.IMG_PINTS_OF_LAGER, "nine-pints")
-}
-
-fun GameplayDartboard.doEighteenPints() {
-    doDodgy(ResourceCache.IMG_PINTS_OF_LAGER, "eighteen-pints")
-}
-
-private fun GameplayDartboard.doDodgy(ii: ImageIcon, soundName: String) {
+fun GameplayDartboard.doDodgy(animation: IAnimation) {
     if (!preferenceService.get(Preferences.showAnimations)) {
         return
     }
 
-    runOnEventThread { doDodgyOnEdt(ii, soundName) }
+    runOnEventThread { doDodgyOnEdt(animation.getAnimation()) }
 }
 
-private fun GameplayDartboard.doDodgyOnEdt(ii: ImageIcon, soundName: String) {
+private fun GameplayDartboard.doDodgyOnEdt(animation: Animation) {
     removeDodgyLabels()
 
-    val dodgyLabel = JLabel("")
-    dodgyLabel.name = "DodgyLabel"
-    dodgyLabel.icon = ii
-    dodgyLabel.setSize(ii.iconWidth, ii.iconHeight)
+    animation.img?.let { ii ->
+        val dodgyLabel = JLabel("")
+        dodgyLabel.name = "DodgyLabel"
+        dodgyLabel.icon = ii
+        dodgyLabel.setSize(ii.iconWidth, ii.iconHeight)
 
-    val x = (getWidth() - ii.iconWidth) / 2
-    val y = getHeight() - ii.iconHeight
-    dodgyLabel.setLocation(x, y)
-    add(dodgyLabel)
+        val x = (getWidth() - ii.iconWidth) / 2
+        val y = getHeight() - ii.iconHeight
+        dodgyLabel.setLocation(x, y)
+        add(dodgyLabel)
 
-    setLayer(dodgyLabel, LAYER_DODGY)
+        setLayer(dodgyLabel, LAYER_DODGY)
 
-    repaint()
-    revalidate()
+        repaint()
+        revalidate()
+    }
 
-    playDodgySound(soundName)
+    playDodgySound(animation.wavResource)
 }
 
-fun GameplayDartboard.playDodgySound(soundName: String) {
+private fun GameplayDartboard.playDodgySound(soundName: String) {
     if (!preferenceService.get(Preferences.showAnimations)) {
         return
     }

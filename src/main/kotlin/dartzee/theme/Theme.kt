@@ -2,6 +2,8 @@ package dartzee.theme
 
 import dartzee.logging.CODE_THEME_APPLIED
 import dartzee.`object`.ColourWrapper
+import dartzee.screen.animation.IAnimation
+import dartzee.screen.animation.IAnimationTrigger
 import dartzee.utils.InjectedThings.logger
 import java.awt.Color
 import java.awt.GraphicsEnvironment
@@ -17,6 +19,7 @@ data class Theme(
     val linkColour: Color,
     val fontColor: Color = Color.BLACK,
     val menuFontSize: Float? = null,
+    val animations: Map<IAnimationTrigger, IAnimation> = emptyMap(),
 ) {
     val font = fontForResource("/theme/$name/font.ttf")
     val dartboardFont = fontForResource("/theme/$name/dartboard.ttf") ?: font

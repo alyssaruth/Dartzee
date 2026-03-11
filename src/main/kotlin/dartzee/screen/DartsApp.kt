@@ -19,7 +19,6 @@ import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.gameLauncher
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.utils.ResourceCache
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Image
@@ -65,8 +64,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
     fun init() {
         setIcon()
-
-        ResourceCache.initialiseResources()
 
         DartsDatabaseUtil.initialiseDatabase(mainDatabase)
 

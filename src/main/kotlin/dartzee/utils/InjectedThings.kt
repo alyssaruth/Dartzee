@@ -17,6 +17,8 @@ import dartzee.main.DefaultExiter
 import dartzee.main.IExiter
 import dartzee.preferences.AbstractPreferenceService
 import dartzee.preferences.DefaultPreferenceService
+import dartzee.screen.animation.IAnimation
+import dartzee.screen.animation.IAnimationTrigger
 import dartzee.sync.AmazonS3RemoteDatabaseStore
 import dartzee.sync.IRemoteDatabaseStore
 import dartzee.sync.SYNC_BUCKET_NAME
@@ -48,4 +50,5 @@ object InjectedThings {
     var partyMode = false
     var exiter: IExiter = DefaultExiter()
     var theme: Theme? = null
+    var animations: Map<IAnimationTrigger, IAnimation> = emptyMap()
 }

@@ -33,7 +33,7 @@ data class ClockPlayerState(
             if (!config.inOrder) {
                 getAllNonMissSegments().filterNot { hasHitTarget(it.score) || it.score == 25 }
             } else {
-                getAllNonMissSegments() - scoringSegments
+                getAllNonMissSegments()
             }
 
         return SegmentStatuses(scoringSegments, validSegments)

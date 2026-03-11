@@ -2,8 +2,7 @@ package dartzee.screen.game.rtc
 
 import dartzee.achievements.AchievementType
 import dartzee.ai.DartsAiModel
-import dartzee.core.util.doBadLuck
-import dartzee.core.util.doForsyth
+import dartzee.core.util.doDodgy
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.game.RoundTheClockConfig
@@ -11,6 +10,8 @@ import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.IWrappedParticipant
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
+import dartzee.screen.animation.BadLuckTrigger
+import dartzee.screen.animation.BruceyBonusTrigger
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerRoundTheClock
@@ -28,9 +29,9 @@ class GamePanelRoundTheClock(parent: AbstractDartsGameScreen, game: GameEntity, 
 
     override fun updateVariablesForDartThrown(dart: Dart) {
         if (dart.hitClockTarget(config.clockType) && dartsThrownCount() == 4) {
-            dartboard.doForsyth()
+            dartboard.doDodgy(BruceyBonusTrigger)
         } else if (dartsThrownCount() == 4) {
-            dartboard.doBadLuck()
+            dartboard.doDodgy(BadLuckTrigger)
         }
 
         updateDartboard()

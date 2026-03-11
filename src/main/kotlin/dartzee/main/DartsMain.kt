@@ -22,6 +22,8 @@ fun main(args: Array<String>) {
 
     setLookAndFeel()
 
+    initialiseAnimations()
+
     DialogUtil.init(MessageDialogFactory())
 
     DartsClient.logArgumentState()

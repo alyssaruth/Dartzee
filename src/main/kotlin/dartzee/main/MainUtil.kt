@@ -10,10 +10,13 @@ import dartzee.logging.KEY_OPERATING_SYSTEM
 import dartzee.logging.KEY_USERNAME
 import dartzee.`object`.DartsClient
 import dartzee.preferences.Preferences
+import dartzee.screen.animation.DEFAULT_ANIMATIONS
 import dartzee.theme.autoApplyTheme
 import dartzee.utils.DARTS_VERSION_NUMBER
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.preferenceService
+import dartzee.utils.ResourceCache
 import java.util.*
 import javax.swing.UIManager
 
@@ -33,6 +36,13 @@ fun setLookAndFeel(laf: String) {
     }
 
     logger.info(CODE_LOOK_AND_FEEL_SET, "Set look and feel to $laf")
+}
+
+fun initialiseAnimations() {
+    InjectedThings.animations =
+        DEFAULT_ANIMATIONS + (InjectedThings.theme?.animations ?: emptyMap())
+
+    ResourceCache.initialiseResources()
 }
 
 fun setLoggingContextFields() {

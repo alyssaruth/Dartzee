@@ -8,4 +8,6 @@ data class TotalScoreTrigger(val gameType: GameType, val total: Int) : IAnimatio
 
 data class DartScoreTrigger(val gameType: GameType, val total: Int) : IAnimationTrigger
 
-sealed class BadLuckTrigger : IAnimationTrigger
+object BadLuckTrigger : IAnimationTrigger
+
+object BruceyBonusTrigger : IAnimationTrigger
