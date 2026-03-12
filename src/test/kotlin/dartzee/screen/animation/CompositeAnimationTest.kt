@@ -10,7 +10,7 @@ class CompositeAnimationTest : AbstractTest() {
     fun `should return all sounds used`() {
         val animation =
             CompositeAnimation(
-                listOf(Animation("foo", null), Animation("bar", null), Animation("bar", null))
+                listOf(Animation("foo", null), Animation("bar", null), Animation("baz", null))
             )
 
         val sounds = animation.getAllSounds()
@@ -21,7 +21,7 @@ class CompositeAnimationTest : AbstractTest() {
     fun `should select a random animation when asked for one`() {
         val animation =
             CompositeAnimation(
-                listOf(Animation("foo", null), Animation("bar", null), Animation("bar", null))
+                listOf(Animation("foo", null), Animation("bar", null), Animation("baz", null))
             )
 
         val picks = (1..100).map { animation.getAnimation() }
