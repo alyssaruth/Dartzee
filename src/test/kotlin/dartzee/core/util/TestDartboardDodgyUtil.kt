@@ -2,9 +2,10 @@ package dartzee.core.util
 
 import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.shouldMatch
 import dartzee.core.helper.verifyNotCalled
+import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.logging.Severity
@@ -12,8 +13,10 @@ import dartzee.preferences.Preferences
 import dartzee.screen.GameplayDartboard
 import dartzee.screen.animation.Animation
 import dartzee.screen.animation.BRUCEY_BAD_LUCK
+import dartzee.screen.animation.BadLuckTrigger
 import dartzee.screen.animation.CHUCKLEVISION
 import dartzee.screen.animation.DEFAULT_ANIMATIONS
+import dartzee.screen.animation.TotalScoreTrigger
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.ResourceCache
@@ -32,15 +35,16 @@ import javax.sound.sampled.Line
 import javax.sound.sampled.LineEvent
 import javax.sound.sampled.LineListener
 import javax.swing.JLabel
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class TestDartboardDodgyUtil : AbstractTest() {
     @BeforeEach
     fun before() {
+        InjectedThings.animations = DEFAULT_ANIMATIONS
+        ResourceCache.initialiseResources()
+
         mockkStatic(AudioSystem::class)
     }
 
@@ -62,6 +66,7 @@ class TestDartboardDodgyUtil : AbstractTest() {
     fun `should do nothing if invalid sound is requested`() {
         val dartboard = GameplayDartboard()
         dartboard.doDodgy(Animation("invalid", null))
+        flushEdt()
 
         verifyNotCalled { AudioSystem.getLine(any()) }
     }
@@ -93,6 +98,25 @@ class TestDartboardDodgyUtil : AbstractTest() {
     }
 
     @Test
+    fun `should do nothing if trigger is not associated with an animation`() {
+        val dartboard = GameplayDartboard()
+        dartboard.doDodgy(TotalScoreTrigger(GameType.X01, 75))
+
+        verifyNotCalled { AudioSystem.getLine(any()) }
+    }
+
+    @Test
+    fun `should launch the appropriate animation based on the trigger`() {
+        InjectedThings.animations = mapOf(BadLuckTrigger to BRUCEY_BAD_LUCK)
+        val dartboard = GameplayDartboard()
+        captureClip()
+        dartboard.doDodgy(BadLuckTrigger)
+        flushEdt()
+
+        dartboard.dodgyLabel()!!.icon.shouldMatch(BRUCEY_BAD_LUCK.getAnimation().img!!)
+    }
+
+    @Test
     fun `should continue to show image until the final sound clip has finished playing`() {
         val dartboard = GameplayDartboard()
         val clip1 = captureClip()
@@ -119,28 +143,14 @@ class TestDartboardDodgyUtil : AbstractTest() {
         return clip
     }
 
+    private fun GameplayDartboard.dodgyLabel() = findChild<JLabel>("DodgyLabel")
+
     private fun GameplayDartboard.dodgyLabelShouldExist() {
-        getChild<JLabel>("DodgyLabel").shouldBeVisible()
+        dodgyLabel()!!.shouldBeVisible()
     }
 
     private fun GameplayDartboard.dodgyLabelShouldNotExist() {
-        findChild<JLabel>("DodgyLabel").shouldBeNull()
-    }
-
-    companion object {
-        @JvmStatic
-        @BeforeAll
-        fun beforeAll() {
-            InjectedThings.animations = DEFAULT_ANIMATIONS
-            ResourceCache.initialiseResources()
-        }
-
-        @JvmStatic
-        @AfterAll
-        fun afterAll() {
-            InjectedThings.animations = emptyMap()
-            ResourceCache.resetCache()
-        }
+        dodgyLabel().shouldBeNull()
     }
 }
 

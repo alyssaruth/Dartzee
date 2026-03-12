@@ -2,7 +2,7 @@ package dartzee.screen.animation
 
 import dartzee.game.GameType
 
-interface IAnimationTrigger {}
+interface IAnimationTrigger
 
 data class TotalScoreTrigger(val gameType: GameType, val total: Int) : IAnimationTrigger
 

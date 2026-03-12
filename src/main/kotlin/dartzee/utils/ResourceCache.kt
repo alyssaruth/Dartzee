@@ -146,7 +146,7 @@ object ResourceCache {
     }
 
     fun returnInputStream(wavName: String, stream: AudioInputStream) {
-        synchronized(wavPoolLock) { hmWavToInputStreams.putInList("$wavName.wav", stream) }
+        synchronized(wavPoolLock) { hmWavToInputStreams.putInList(wavName, stream) }
     }
 
     fun resetCache() {

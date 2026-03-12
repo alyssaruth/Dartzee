@@ -1,9 +1,11 @@
 package dartzee.main
 
+import dartzee.game.GameType
 import dartzee.getDialogMessage
 import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.logger
+import dartzee.helper.makeTheme
 import dartzee.logging.CODE_LOOK_AND_FEEL_ERROR
 import dartzee.logging.CODE_LOOK_AND_FEEL_SET
 import dartzee.logging.KEY_APP_VERSION
@@ -15,7 +17,14 @@ import dartzee.logging.Severity
 import dartzee.`object`.DartsClient
 import dartzee.preferences.Preferences
 import dartzee.runAsync
+import dartzee.screen.animation.Animation
+import dartzee.screen.animation.BRUCEY_BONUS
+import dartzee.screen.animation.BULLSEYE_DEV
+import dartzee.screen.animation.BadLuckTrigger
+import dartzee.screen.animation.BruceyBonusTrigger
+import dartzee.screen.animation.TotalScoreTrigger
 import dartzee.utils.DARTS_VERSION_NUMBER
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.maps.shouldContainAll
 import io.kotest.matchers.shouldBe
@@ -105,5 +114,22 @@ class TestMainUtil : AbstractTest() {
             )
 
         logger.loggingContext.shouldContainAll(expectedContextFields)
+    }
+
+    @Test
+    fun `Should merge default animations with theme, and initialise resource cache correctly`() {
+        val lagerTrigger = TotalScoreTrigger(GameType.X01, 9)
+        val lagerAnimation =
+            Animation("nine-pints", "/theme/oktoberfest/horrific/pints-of-lager.png")
+        val customAnimations = mapOf(BadLuckTrigger to BULLSEYE_DEV, lagerTrigger to lagerAnimation)
+
+        InjectedThings.theme = makeTheme(animations = customAnimations)
+
+        initialiseAnimations()
+
+        val allAnimations = InjectedThings.animations
+        allAnimations[BadLuckTrigger] shouldBe BULLSEYE_DEV
+        allAnimations[lagerTrigger] shouldBe lagerAnimation
+        allAnimations[BruceyBonusTrigger] shouldBe BRUCEY_BONUS
     }
 }

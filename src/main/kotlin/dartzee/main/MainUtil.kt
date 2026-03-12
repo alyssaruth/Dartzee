@@ -39,8 +39,7 @@ fun setLookAndFeel(laf: String) {
 }
 
 fun initialiseAnimations() {
-    InjectedThings.animations =
-        DEFAULT_ANIMATIONS + (InjectedThings.theme?.animations ?: emptyMap())
+    InjectedThings.animations = DEFAULT_ANIMATIONS + (InjectedThings.theme?.animations.orEmpty())
 
     ResourceCache.initialiseResources()
 }
