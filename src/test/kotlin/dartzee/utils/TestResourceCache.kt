@@ -1,51 +1,32 @@
 package dartzee.utils
 
+import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_NO_STREAMS
 import dartzee.logging.Severity
+import dartzee.screen.animation.Animation
+import dartzee.screen.animation.BRUCEY_BAD_LUCK
+import dartzee.screen.animation.BadLuckTrigger
+import dartzee.screen.animation.TotalScoreTrigger
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class TestResourceCache : AbstractTest() {
-    @BeforeEach
-    fun beforeEach() {
-        ResourceCache.resetCache()
-    }
-
-    @AfterEach
-    fun afterEach() {
-        ResourceCache.resetCache()
-    }
-
     @Test
-    fun `Should pre-load all the WAVs in the appropriate resource directory`() {
-        val resources = mutableListOf<String>()
-
-        javaClass.getResourceAsStream("/wav").use { stream ->
-            BufferedReader(InputStreamReader(stream)).use { br ->
-                var resource = br.readLine()
-                while (resource != null) {
-                    resources.add(resource)
-                    resource = br.readLine()
-                }
-            }
-        }
-
+    fun `Should pre-load all the WAVs that will be used for animations`() {
+        InjectedThings.animations = mapOf(BadLuckTrigger to BRUCEY_BAD_LUCK)
         ResourceCache.initialiseResources()
 
-        resources.forEach {
-            val resourceName = it.replace(".wav", "")
-            ResourceCache.borrowInputStream(resourceName) shouldNotBe null
-        }
+        ResourceCache.borrowInputStream("badLuck1") shouldNotBe null
+        ResourceCache.borrowInputStream("badLuck2") shouldNotBe null
+        ResourceCache.borrowInputStream("bull") shouldBe null
     }
 
     @Test
     fun `Should pre-load 3 instances of each WAV`() {
+        InjectedThings.animations =
+            mapOf(TotalScoreTrigger(GameType.X01, 100) to Animation("100", null))
         ResourceCache.initialiseResources()
 
         ResourceCache.borrowInputStream("100") shouldNotBe null
@@ -60,6 +41,8 @@ class TestResourceCache : AbstractTest() {
 
     @Test
     fun `Should re-use WAVs that are returned to the pool`() {
+        InjectedThings.animations =
+            mapOf(TotalScoreTrigger(GameType.X01, 100) to Animation("100", null))
         ResourceCache.initialiseResources()
 
         val wav1 = ResourceCache.borrowInputStream("100")!!
@@ -72,12 +55,5 @@ class TestResourceCache : AbstractTest() {
         newWav shouldBe wav1
 
         verifyNoLogs(CODE_NO_STREAMS)
-    }
-
-    @Test
-    fun `Should return null for a resource that isn't in the cache`() {
-        ResourceCache.initialiseResources()
-
-        ResourceCache.borrowInputStream("50") shouldBe null
     }
 }

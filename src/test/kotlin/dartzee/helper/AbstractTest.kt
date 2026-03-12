@@ -14,6 +14,7 @@ import dartzee.screen.ScreenCache
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.utils.ResourceCache
 import io.kotest.assertions.fail
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -38,6 +39,7 @@ open class AbstractTest {
     @BeforeEach
     fun beforeEachTest() {
         ScreenCache.emptyCache()
+        ResourceCache.resetCache()
         dialogFactory.reset()
         clearLogs()
         clearAllMocks()
@@ -57,6 +59,7 @@ open class AbstractTest {
         InjectedThings.partyMode = false
         InjectedThings.preferenceService = InMemoryPreferenceService()
         InjectedThings.theme = null
+        InjectedThings.animations = emptyMap()
 
         logger.loggingContext.clear()
     }

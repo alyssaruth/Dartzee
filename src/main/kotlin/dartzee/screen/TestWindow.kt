@@ -1,12 +1,13 @@
 package dartzee.screen
 
-import dartzee.core.util.doBadLuck
-import dartzee.core.util.doChucklevision
+import dartzee.core.util.doDodgy
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.listener.DartboardListener
 import dartzee.`object`.Dart
+import dartzee.screen.animation.BRUCEY_BAD_LUCK
+import dartzee.screen.animation.CHUCKLEVISION
 import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.IDartzeeCarouselListener
@@ -61,8 +62,8 @@ class TestWindow : JFrame(), ActionListener, DartboardListener, IDartzeeCarousel
         when (e?.source) {
             btnClear -> clearDarts()
             btnRepaint -> dartboard.repaint()
-            btnChucklevision -> dartboard.doChucklevision()
-            btnBadLuck -> dartboard.doBadLuck()
+            btnChucklevision -> dartboard.doDodgy(CHUCKLEVISION)
+            btnBadLuck -> dartboard.doDodgy(BRUCEY_BAD_LUCK)
         }
     }
 

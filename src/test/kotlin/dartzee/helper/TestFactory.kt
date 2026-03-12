@@ -16,6 +16,8 @@ import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.GolfPlayerState
 import dartzee.game.state.SingleParticipant
 import dartzee.game.state.X01PlayerState
+import dartzee.`object`.ColourWrapper
+import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.reporting.IncludedPlayerParameters
@@ -23,10 +25,14 @@ import dartzee.reporting.MatchFilter
 import dartzee.reporting.ReportParameters
 import dartzee.reporting.ReportParametersGame
 import dartzee.reporting.ReportParametersPlayers
+import dartzee.screen.animation.IAnimation
+import dartzee.screen.animation.IAnimationTrigger
 import dartzee.stats.GameWrapper
+import dartzee.theme.Theme
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.isBust
 import io.kotest.matchers.shouldBe
+import java.awt.Color
 import java.sql.Timestamp
 
 fun factoryClockHit(score: Int, multiplier: Int = 1): Dart {
@@ -308,3 +314,28 @@ fun makeIncludedPlayerParameters(
     finalScoreComparator: String = "",
     finalScore: Int? = null,
 ) = IncludedPlayerParameters(finishingPositions, finalScoreComparator, finalScore)
+
+fun makeTheme(
+    name: String = "test",
+    primary: Color = Color.RED,
+    primaryDark: Color = Color.BLUE,
+    background: Color = Color.YELLOW,
+    lightBackground: Color = Color.GREEN,
+    dartboardColours: ColourWrapper = DEFAULT_COLOUR_WRAPPER,
+    linkColour: Color = Color.BLUE,
+    fontColor: Color = Color.BLACK,
+    menuFontSize: Float? = null,
+    animations: Map<IAnimationTrigger, IAnimation> = emptyMap(),
+) =
+    Theme(
+        name,
+        primary,
+        primaryDark,
+        background,
+        lightBackground,
+        dartboardColours,
+        linkColour,
+        fontColor,
+        menuFontSize,
+        animations,
+    )

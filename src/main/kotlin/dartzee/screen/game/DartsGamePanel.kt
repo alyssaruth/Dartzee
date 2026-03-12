@@ -8,8 +8,7 @@ import dartzee.ai.DartsAiModel
 import dartzee.bean.SliderAiSpeed
 import dartzee.core.obj.HashMapList
 import dartzee.core.util.DialogUtil
-import dartzee.core.util.doBadMiss
-import dartzee.core.util.doBull
+import dartzee.core.util.doDodgy
 import dartzee.core.util.getSortedValues
 import dartzee.core.util.getSqlDateNow
 import dartzee.core.util.isEndOfTime
@@ -26,6 +25,7 @@ import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.preferences.Preferences
 import dartzee.screen.GameplayDartboard
+import dartzee.screen.animation.DartScoreTrigger
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
 import dartzee.screen.game.dartzee.GamePanelDartzee
@@ -475,17 +475,13 @@ abstract class DartsGamePanel<
 
     private fun doAnimations(dart: Dart) {
         if (dart.multiplier == 0 && shouldAnimateMiss(dart)) {
-            doMissAnimation()
-        } else if (dart.getTotal() == 50) {
-            dartboard.doBull()
+            dartboard.doDodgy(DartScoreTrigger(gameEntity.gameType, 0))
+        } else {
+            dartboard.doDodgy(DartScoreTrigger(gameEntity.gameType, dart.getTotal()))
         }
     }
 
     protected open fun shouldAnimateMiss(dart: Dart) = true
-
-    protected open fun doMissAnimation() {
-        dartboard.doBadMiss()
-    }
 
     protected fun stopThrowing() {
         if (getCurrentPlayerState().isHuman()) {

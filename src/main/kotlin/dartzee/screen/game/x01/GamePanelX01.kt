@@ -3,19 +3,19 @@ package dartzee.screen.game.x01
 import dartzee.achievements.AchievementType
 import dartzee.achievements.retrieveAchievementForDetail
 import dartzee.ai.DartsAiModel
-import dartzee.core.util.doBadLuck
-import dartzee.core.util.doChucklevision
-import dartzee.core.util.doFawlty
-import dartzee.core.util.playDodgySound
+import dartzee.core.util.doDodgy
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.db.X01FinishEntity
 import dartzee.game.FinishType
+import dartzee.game.GameType
 import dartzee.game.X01Config
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
+import dartzee.screen.animation.BadLuckTrigger
+import dartzee.screen.animation.TotalScoreTrigger
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.scorer.DartsScorerX01
@@ -51,12 +51,10 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
         if (!bust) {
             val totalScore = sumScore(getDartsThrown())
             if (totalScore == 69) {
-                dartboard.doChucklevision()
                 updateForUniqueScore(AchievementType.X01_CHUCKLEVISION, false)
             }
 
             if (totalScore == 26) {
-                dartboard.doFawlty()
                 updateForUniqueScore(AchievementType.X01_HOTEL_INSPECTOR, true)
             }
 
@@ -68,7 +66,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
                 )
             }
 
-            dartboard.playDodgySound("" + totalScore)
+            dartboard.doDodgy(TotalScoreTrigger(GameType.X01, totalScore))
 
             val total = sumScore(getDartsThrown())
             AchievementEntity.updateAchievement(
@@ -172,7 +170,7 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
 
     override fun updateVariablesForDartThrown(dart: Dart) {
         if (isNearMissDouble(dart)) {
-            dartboard.doBadLuck()
+            dartboard.doDodgy(BadLuckTrigger)
         }
     }
 

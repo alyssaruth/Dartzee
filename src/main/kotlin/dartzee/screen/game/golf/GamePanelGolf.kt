@@ -3,7 +3,6 @@ package dartzee.screen.game.golf
 import dartzee.achievements.AchievementType
 import dartzee.achievements.retrieveAchievementForDetail
 import dartzee.ai.DartsAiModel
-import dartzee.core.util.doGolfMiss
 import dartzee.db.AchievementEntity
 import dartzee.db.GameEntity
 import dartzee.game.state.GolfPlayerState
@@ -117,10 +116,6 @@ class GamePanelGolf(parent: AbstractDartsGameScreen, game: GameEntity, totalPlay
     override fun factoryScorer(participant: IWrappedParticipant) = DartsScorerGolf(participant)
 
     override fun shouldAIStop() = false
-
-    override fun doMissAnimation() {
-        dartboard.doGolfMiss()
-    }
 
     override fun factoryStatsPanel(gameParams: String) = GameStatisticsPanelGolf()
 }

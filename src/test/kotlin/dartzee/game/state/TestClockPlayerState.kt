@@ -277,18 +277,14 @@ class TestClockPlayerState : AbstractTest() {
         status.scoringSegments.shouldContainExactly(
             getAllNonMissSegments().filter { it.score == 1 }
         )
-        status.validSegments.shouldContainExactly(
-            getAllNonMissSegments().filterNot { it.score == 1 }
-        )
+        status.validSegments.shouldContainExactly(getAllNonMissSegments())
 
         state.dartThrown(Dart(1, 1))
         val newStatus = state.getSegmentStatus()
         newStatus.scoringSegments.shouldContainExactly(
             getAllNonMissSegments().filter { it.score == 2 }
         )
-        newStatus.validSegments.shouldContainExactly(
-            getAllNonMissSegments().filterNot { it.score == 2 }
-        )
+        newStatus.validSegments.shouldContainExactly(getAllNonMissSegments())
     }
 
     @Test
