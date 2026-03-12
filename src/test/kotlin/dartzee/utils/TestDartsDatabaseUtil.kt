@@ -132,6 +132,7 @@ class TestDartsDatabaseUtil : AbstractTest() {
 
         val dlg = getErrorDialog()
         dlg.getDialogMessage() shouldBe "You must close all open games before continuing."
+        dlg.clickOk()
     }
 
     @Test

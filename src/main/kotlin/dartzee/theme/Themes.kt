@@ -83,6 +83,8 @@ object Themes {
             listOf(
                 DartScoreTrigger(gameType, 9) to
                     Animation("nine-pints", "/theme/oktoberfest/horrific/pints-of-lager.png"),
+                DartScoreTrigger(gameType, 10) to
+                    Animation("blimey", "/theme/oktoberfest/horrific/blimey.png"),
                 DartScoreTrigger(gameType, 18) to
                     Animation("eighteen-pints", "/theme/oktoberfest/horrific/pints-of-lager.png"),
             )
