@@ -1,5 +1,6 @@
 package dartzee.bean
 
+import com.github.weisj.jsvg.view.ViewBox
 import dartzee.logging.CODE_SLOW_DARTBOARD_RENDER
 import dartzee.logging.KEY_DURATION
 import dartzee.`object`.ColourWrapper
@@ -9,15 +10,18 @@ import dartzee.`object`.GREY_COLOUR_WRAPPER
 import dartzee.`object`.IDartboard
 import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.getSegmentStatus
+import dartzee.theme.getBaseFont
 import dartzee.utils.DurationTimer
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.ResourceCache
 import dartzee.utils.UPPER_BOUND_DOUBLE_RATIO
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.computeEdgePoints
 import dartzee.utils.getAllSegmentsForDartzee
 import dartzee.utils.getAnglesForScore
 import dartzee.utils.getColourWrapperFromPrefs
-import dartzee.utils.getFontForDartboardLabels
+import dartzee.utils.getFontForHeight
 import dartzee.utils.getNeighbours
 import dartzee.utils.translatePoint
 import java.awt.Canvas
@@ -39,6 +43,7 @@ import kotlin.math.roundToInt
 open class PresentationDartboard(
     private val colourWrapper: ColourWrapper = getColourWrapperFromPrefs(),
     private val renderScoreLabels: Boolean = false,
+    private val renderThemeBanner: Boolean = false,
 ) : JComponent(), IDartboard {
     var segmentStatuses: SegmentStatuses? = null
     private val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
@@ -108,8 +113,13 @@ open class PresentationDartboard(
         } else {
             val timer = DurationTimer()
             val bi = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
-            paintOuterBoard(bi.createGraphics())
+            val g2d = bi.createGraphics()
+            paintOuterBoard(g2d)
             getAllSegmentsForDartzee().paintAll(bi)
+
+            if (renderThemeBanner) {
+                renderBanner(g2d)
+            }
 
             g.drawImage(bi, 0, 0, this)
             lastPaintImage = bi
@@ -123,6 +133,22 @@ open class PresentationDartboard(
                 )
             }
         }
+    }
+
+    private fun renderBanner(g: Graphics2D) {
+        val theme = InjectedThings.theme ?: return
+        val svg = theme.banner ?: return
+
+        val viewBox = ViewBox(0f, 0f, getWidth().toFloat(), getHeight().toFloat())
+        svg.render(this, g, viewBox)
+
+        val svgHeight = (svg.computeShape(viewBox).bounds.height * theme.bannerScaleFactor).toInt()
+        val font = getFontForHeight(getBaseFont(), svgHeight, g)
+
+        val bannerTitle = theme.name.replaceFirstChar { it.uppercase() }
+        val center = computeCenter()
+        center.y -= (theme.bannerOffset * svgHeight).toInt()
+        paintLabel(g, center, svgHeight, font, theme.fontColor, bannerTitle)
     }
 
     private fun repaintDirtySegments(cachedImage: BufferedImage) {
@@ -224,29 +250,39 @@ open class PresentationDartboard(
         val outerRadius = UPPER_BOUND_OUTSIDE_BOARD_RATIO * radius
         val lblHeight = ((outerRadius - radius) / 2).roundToInt()
 
-        val fontToUse = getFontForDartboardLabels(lblHeight, g)
+        val baseFont = InjectedThings.theme?.dartboardFont ?: ResourceCache.BASE_FONT
+        val fontToUse = getFontForHeight(baseFont, lblHeight, g)
         (1..20).forEach { paintScoreLabel(it, g, fontToUse, lblHeight) }
     }
 
     private fun paintScoreLabel(score: Int, g: Graphics2D, fontToUse: Font, lblHeight: Int) {
-        // Create a label with standard properties
-        val lbl = JLabel(score.toString())
-        lbl.foreground = colourWrapper.fontColor
-        lbl.horizontalAlignment = SwingConstants.CENTER
-        lbl.font = fontToUse
-
-        // Work out the width for this label, based on the text
-        val metrics = Canvas().getFontMetrics(fontToUse)
-        val lblWidth = metrics.stringWidth(score.toString()) + 5
-        lbl.setSize(lblWidth, lblHeight)
-
-        // Work out where to place the label
         val angle = getAnglesForScore(score).toList().average()
         val radiusForLabel = computeRadius() + lblHeight
         val avgPoint = translatePoint(computeCenter(), radiusForLabel, angle)
 
-        val lblX = avgPoint.getX().toInt() - lblWidth / 2
-        val lblY = avgPoint.getY().toInt() - lblHeight / 2
+        paintLabel(g, avgPoint, lblHeight, fontToUse, colourWrapper.fontColor, score.toString())
+    }
+
+    private fun paintLabel(
+        g: Graphics2D,
+        center: Point,
+        height: Int,
+        font: Font,
+        color: Color,
+        text: String,
+    ) {
+        val lbl = JLabel(text)
+        lbl.foreground = color
+        lbl.horizontalAlignment = SwingConstants.CENTER
+        lbl.font = font
+
+        // Work out the width for this label, based on the text
+        val metrics = Canvas().getFontMetrics(font)
+        val lblWidth = metrics.stringWidth(text) + 5
+        lbl.setSize(lblWidth, height)
+
+        val lblX = center.getX().toInt() - lblWidth / 2
+        val lblY = center.getY().toInt() - height / 2
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
         g.translate(lblX, lblY)

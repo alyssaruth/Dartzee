@@ -283,9 +283,8 @@ fun getAllPossibleSegments(): List<DartboardSegment> {
 
 fun getAllNonMissSegments() = getAllPossibleSegments().filterNot { it.isMiss() }
 
-fun getFontForDartboardLabels(lblHeight: Int, g: Graphics2D): Font {
+fun getFontForHeight(baseFont: Font, lblHeight: Int, g: Graphics2D): Font {
     // Start with a fontSize of 1
-    val baseFont = InjectedThings.theme?.dartboardFont ?: ResourceCache.BASE_FONT
     var fontSize = 1f
     var font = baseFont.deriveFont(Font.PLAIN, fontSize)
 
