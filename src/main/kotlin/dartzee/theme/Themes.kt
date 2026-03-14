@@ -7,6 +7,7 @@ import dartzee.screen.animation.CompositeAnimation
 import dartzee.screen.animation.DartScoreTrigger
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
+import dartzee.screen.animation.PlayerVictory
 import java.awt.Color
 
 private val lightOrange = Color.decode("#ff8200")
@@ -66,6 +67,17 @@ object Themes {
             dartboardColours = halloweenDartboardColours,
         )
 
+    private val easterAnimations: List<Pair<IAnimationTrigger, IAnimation>> =
+        listOf(
+            PlayerVictory to Animation("thats-all-folks", "/theme/easter/horrific/bugs-bunny.png")
+        ) +
+            GameType.values().flatMap { gameType ->
+                listOf(
+                    DartScoreTrigger(gameType, 0) to
+                        Animation("egg-crack", "/theme/easter/horrific/egg-crack.png")
+                )
+            }
+
     val EASTER =
         Theme(
             "easter",
@@ -77,6 +89,7 @@ object Themes {
             fontColor = Color.DARK_GRAY,
             dartboardColours = easterDartboardColours,
             menuFontSize = 20f,
+            animations = easterAnimations.toMap(),
         )
 
     private val beerSmashAnimation =

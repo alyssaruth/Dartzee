@@ -1,9 +1,10 @@
 package dartzee.screen.game
 
+import dartzee.core.util.doDodgy
 import dartzee.db.GameEntity
 import dartzee.game.state.AbstractPlayerState
+import dartzee.screen.animation.PlayerVictory
 import dartzee.screen.game.scorer.AbstractDartsScorer
-import dartzee.utils.doesHighestWin
 import dartzee.utils.setFinishingPositions
 
 abstract class GamePanelFixedLength<
@@ -12,7 +13,6 @@ abstract class GamePanelFixedLength<
 >(parent: AbstractDartsGameScreen, game: GameEntity, totalPlayers: Int) :
     DartsGamePanel<S, PlayerState>(parent, game, totalPlayers) {
     abstract val totalRounds: Int
-    val highestWins = doesHighestWin(game.gameType)
 
     fun finishRound() {
         if (currentRoundNumber == totalRounds) {
@@ -34,6 +34,8 @@ abstract class GamePanelFixedLength<
     private fun finishGame() {
         // Get the participants sorted by score so we can assign finishing positions
         setFinishingPositions(getParticipants().map { it.participant }, gameEntity)
+
+        dartboard.doDodgy(PlayerVictory)
 
         getPlayerStates().forEach { updateWinAchievement(it.wrappedParticipant) }
 

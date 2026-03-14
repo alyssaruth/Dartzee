@@ -26,6 +26,7 @@ import dartzee.`object`.SegmentType
 import dartzee.preferences.Preferences
 import dartzee.screen.GameplayDartboard
 import dartzee.screen.animation.DartScoreTrigger
+import dartzee.screen.animation.PlayerVictory
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleSummaryPanel
 import dartzee.screen.game.dartzee.GamePanelDartzee
@@ -406,6 +407,10 @@ abstract class DartsGamePanel<
     protected fun handlePlayerFinish(): Int {
         val state = getCurrentPlayerState()
         val finishingPosition = getFinishingPositionFromPlayersRemaining()
+        if (finishingPosition == 1) {
+            dartboard.doDodgy(PlayerVictory)
+        }
+
         val numberOfDarts = state.getScoreSoFar()
         state.participantFinished(finishingPosition, numberOfDarts)
 

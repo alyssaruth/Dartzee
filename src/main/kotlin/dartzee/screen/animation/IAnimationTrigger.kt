@@ -11,3 +11,5 @@ data class DartScoreTrigger(val gameType: GameType, val total: Int) : IAnimation
 object BadLuckTrigger : IAnimationTrigger
 
 object BruceyBonusTrigger : IAnimationTrigger
+
+object PlayerVictory : IAnimationTrigger
