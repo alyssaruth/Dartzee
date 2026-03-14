@@ -3,6 +3,7 @@ package dartzee.theme
 import dartzee.game.GameType
 import dartzee.`object`.ColourWrapper
 import dartzee.screen.animation.Animation
+import dartzee.screen.animation.CompositeAnimation
 import dartzee.screen.animation.DartScoreTrigger
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
@@ -78,6 +79,14 @@ object Themes {
             menuFontSize = 20f,
         )
 
+    private val beerSmashAnimation =
+        CompositeAnimation(
+            (1..3).map { Animation("smash$it", "/theme/oktoberfest/horrific/dropped-beer.png") } +
+                (1..3).map {
+                    Animation("smash$it", "/theme/oktoberfest/horrific/dropped-beer-2.png")
+                }
+        )
+
     private val oktoberfestAnimations: List<Pair<IAnimationTrigger, IAnimation>> =
         GameType.values().flatMap { gameType ->
             listOf(
@@ -87,6 +96,7 @@ object Themes {
                     Animation("blimey", "/theme/oktoberfest/horrific/blimey.png"),
                 DartScoreTrigger(gameType, 18) to
                     Animation("eighteen-pints", "/theme/oktoberfest/horrific/pints-of-lager.png"),
+                DartScoreTrigger(gameType, 0) to beerSmashAnimation,
             )
         }
 
