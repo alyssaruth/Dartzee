@@ -1,5 +1,7 @@
 package dartzee.theme
 
+import com.github.weisj.jsvg.SVGDocument
+import com.github.weisj.jsvg.parser.SVGLoader
 import dartzee.`object`.DartsClient
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
@@ -17,7 +19,7 @@ fun autoApplyTheme() {
 
 fun pickThemeForDate(now: LocalDate): Theme? {
     if (DartsClient.devMode) {
-        return Themes.EASTER
+        return Themes.OKTOBERFEST
     }
 
     val easterSunday = findEasterSunday(now.year)
@@ -87,6 +89,12 @@ fun fontForResource(resourcePath: String): Font? {
     val fontStream = Theme::class.java.getResourceAsStream(resourcePath) ?: return null
 
     return Font.createFont(Font.TRUETYPE_FONT, fontStream)
+}
+
+fun svgForResource(resourcePath: String): SVGDocument? {
+    val uri = Theme::class.java.getResource(resourcePath) ?: return null
+
+    return SVGLoader().load(uri)
 }
 
 fun getBaseFont(): Font = InjectedThings.theme?.font ?: ResourceCache.BASE_FONT

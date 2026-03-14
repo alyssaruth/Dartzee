@@ -20,9 +20,12 @@ data class Theme(
     val fontColor: Color = Color.BLACK,
     val menuFontSize: Float? = null,
     val animations: Map<IAnimationTrigger, IAnimation> = emptyMap(),
+    val bannerOffset: Double = 0.0,
+    val bannerScaleFactor: Double = 0.8,
 ) {
     val font = fontForResource("/theme/$name/font.ttf")
     val dartboardFont = fontForResource("/theme/$name/dartboard.ttf") ?: font
+    val banner = svgForResource("/theme/$name/banner.svg")
 
     fun apply() {
         logger.info(CODE_THEME_APPLIED, "Applying theme $name")

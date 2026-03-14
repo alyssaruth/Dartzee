@@ -90,6 +90,8 @@ object Themes {
             dartboardColours = easterDartboardColours,
             menuFontSize = 20f,
             animations = easterAnimations.toMap(),
+            bannerScaleFactor = 0.5,
+            bannerOffset = 0.3,
         )
 
     private val beerSmashAnimation =
