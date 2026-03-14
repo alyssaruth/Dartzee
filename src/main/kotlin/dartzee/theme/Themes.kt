@@ -3,9 +3,11 @@ package dartzee.theme
 import dartzee.game.GameType
 import dartzee.`object`.ColourWrapper
 import dartzee.screen.animation.Animation
+import dartzee.screen.animation.CompositeAnimation
 import dartzee.screen.animation.DartScoreTrigger
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
+import dartzee.screen.animation.PlayerVictory
 import java.awt.Color
 
 private val lightOrange = Color.decode("#ff8200")
@@ -65,6 +67,17 @@ object Themes {
             dartboardColours = halloweenDartboardColours,
         )
 
+    private val easterAnimations: List<Pair<IAnimationTrigger, IAnimation>> =
+        listOf(
+            PlayerVictory to Animation("thats-all-folks", "/theme/easter/horrific/bugs-bunny.png")
+        ) +
+            GameType.values().flatMap { gameType ->
+                listOf(
+                    DartScoreTrigger(gameType, 0) to
+                        Animation("egg-crack", "/theme/easter/horrific/egg-crack.png")
+                )
+            }
+
     val EASTER =
         Theme(
             "easter",
@@ -76,6 +89,15 @@ object Themes {
             fontColor = Color.DARK_GRAY,
             dartboardColours = easterDartboardColours,
             menuFontSize = 20f,
+            animations = easterAnimations.toMap(),
+        )
+
+    private val beerSmashAnimation =
+        CompositeAnimation(
+            (1..3).map { Animation("smash$it", "/theme/oktoberfest/horrific/dropped-beer.png") } +
+                (1..3).map {
+                    Animation("smash$it", "/theme/oktoberfest/horrific/dropped-beer-2.png")
+                }
         )
 
     private val oktoberfestAnimations: List<Pair<IAnimationTrigger, IAnimation>> =
@@ -87,6 +109,7 @@ object Themes {
                     Animation("blimey", "/theme/oktoberfest/horrific/blimey.png"),
                 DartScoreTrigger(gameType, 18) to
                     Animation("eighteen-pints", "/theme/oktoberfest/horrific/pints-of-lager.png"),
+                DartScoreTrigger(gameType, 0) to beerSmashAnimation,
             )
         }
 
