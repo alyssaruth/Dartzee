@@ -55,6 +55,22 @@ private val oktoberfestDartboardColours =
     )
 
 object Themes {
+    private val witchAnimation =
+        CompositeAnimation(
+            (1..3).map { Animation("witch$it", "/theme/halloween/horrific/witch.png") }
+        )
+
+    private val halloweenAnimations: List<Pair<IAnimationTrigger, IAnimation>> =
+        GameType.values().flatMap { gameType ->
+            listOf(
+                DartScoreTrigger(gameType, 0) to witchAnimation,
+                DartScoreTrigger(gameType, 50) to
+                    Animation("wolf", "/theme/halloween/horrific/wolf.png"),
+                DartScoreTrigger(gameType, 25) to
+                    Animation("wolf", "/theme/halloween/horrific/wolf.png"),
+            )
+        }
+
     val HALLOWEEN =
         Theme(
             "halloween",
@@ -65,6 +81,7 @@ object Themes {
             linkColour = Color.decode("#009900"),
             fontColor = bloodRed,
             dartboardColours = halloweenDartboardColours,
+            animations = halloweenAnimations.toMap(),
         )
 
     private val easterAnimations: List<Pair<IAnimationTrigger, IAnimation>> =

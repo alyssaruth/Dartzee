@@ -80,6 +80,12 @@ class MenuScreen : EmbeddedScreen() {
     override fun postInit() {
         super.postInit()
         layoutScreen()
+
+        InjectedThings.theme?.menuMusic?.loop()
+    }
+
+    override fun unInit() {
+        InjectedThings.theme?.menuMusic?.stop()
     }
 
     override fun fireAppearancePreferencesChanged() {
@@ -190,6 +196,8 @@ class MenuScreen : EmbeddedScreen() {
     }
 
     private fun newGame() {
+        InjectedThings.theme?.newGameSfx?.playOnce()
+
         if (InjectedThings.partyMode) {
             ScreenCache.switch<SimplePlayerSelectionScreen>()
         } else {

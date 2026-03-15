@@ -61,6 +61,8 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
         lblNext.text = getNextText()
     }
 
+    open fun unInit() {}
+
     open fun getBackTarget(): EmbeddedScreen = ScreenCache.get<MenuScreen>()
 
     override fun actionPerformed(arg0: ActionEvent) {

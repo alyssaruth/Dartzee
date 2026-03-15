@@ -7,6 +7,7 @@ import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.helper.AbstractTest
+import dartzee.helper.makeTheme
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
 import dartzee.screen.player.PlayerManagementScreen
 import dartzee.screen.preference.PreferencesScreen
@@ -14,14 +15,36 @@ import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.stats.overall.SimplifiedLeaderboardScreen
 import dartzee.screen.sync.SyncManagementScreen
+import dartzee.theme.AudioClip
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.types.shouldBeInstanceOf
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.spyk
+import io.mockk.verify
 import javax.swing.JButton
 import javax.swing.JLabel
 import org.junit.jupiter.api.Test
 
 class TestMenuScreen : AbstractTest() {
+    @Test
+    fun `Should play theme music if present`() {
+        val theme = spyk(makeTheme())
+        val music = mockk<AudioClip>(relaxed = true)
+        every { theme.menuMusic } returns music
+        InjectedThings.theme = theme
+
+        ScreenCache.switch<MenuScreen>()
+        verify { music.loop() }
+
+        ScreenCache.switch<PreferencesScreen>()
+        verify { music.stop() }
+
+        ScreenCache.switch<MenuScreen>()
+        verify { music.loop() }
+    }
+
     @Test
     fun `Should go to Sync Management screen`() {
         val scrn = MenuScreen()
@@ -34,6 +57,19 @@ class TestMenuScreen : AbstractTest() {
         val scrn = MenuScreen()
         scrn.clickChild<JButton>(text = "New Game")
         ScreenCache.currentScreen().shouldBeInstanceOf<GameSetupScreen>()
+    }
+
+    @Test
+    fun `Should play sfx for new game if there is one`() {
+        val theme = spyk(makeTheme())
+        val sfx = mockk<AudioClip>(relaxed = true)
+        every { theme.newGameSfx } returns sfx
+        InjectedThings.theme = theme
+
+        val scrn = MenuScreen()
+        scrn.clickChild<JButton>(text = "New Game")
+
+        verify { sfx.playOnce() }
     }
 
     @Test
