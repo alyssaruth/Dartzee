@@ -27,7 +27,7 @@ private const val BUTTON_HEIGHT = 80
 
 class MenuScreen : EmbeddedScreen() {
     private val changeLog = ChangeLog()
-    private val dartboard = PresentationDartboard()
+    private val dartboard = PresentationDartboard(renderThemeBanner = true)
     private val btnNewGame = JButton("New Game")
     private val btnManagePlayers = JButton("Manage Players")
     private val btnLeaderboards = JButton("Leaderboards")
