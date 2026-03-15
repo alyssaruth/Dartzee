@@ -27,6 +27,9 @@ data class Theme(
     val dartboardFont = fontForResource("/theme/$name/dartboard.ttf") ?: font
     val banner = svgForResource("/theme/$name/banner.svg")
 
+    val menuMusic = clipForResource("/theme/$name/menu.wav")
+    val newGameSfx = clipForResource("/theme/$name/newGame.wav")
+
     fun apply() {
         logger.info(CODE_THEME_APPLIED, "Applying theme $name")
 

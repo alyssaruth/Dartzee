@@ -130,6 +130,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         logger.info(CODE_SWITCHED_SCREEN, "Switched to screen ${scrn.getScreenName()}")
 
         contentPane.remove(this.currentScreen)
+        this.currentScreen.unInit()
 
         this.currentScreen = scrn
         contentPane.add(scrn, BorderLayout.CENTER)

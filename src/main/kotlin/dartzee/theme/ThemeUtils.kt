@@ -10,6 +10,7 @@ import java.awt.Font
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
+import javax.sound.sampled.AudioSystem
 import javax.swing.ImageIcon
 
 fun autoApplyTheme() {
@@ -19,7 +20,7 @@ fun autoApplyTheme() {
 
 fun pickThemeForDate(now: LocalDate): Theme? {
     if (DartsClient.devMode) {
-        return Themes.OKTOBERFEST
+        return Themes.HALLOWEEN
     }
 
     val easterSunday = findEasterSunday(now.year)
@@ -89,6 +90,13 @@ fun fontForResource(resourcePath: String): Font? {
     val fontStream = Theme::class.java.getResourceAsStream(resourcePath) ?: return null
 
     return Font.createFont(Font.TRUETYPE_FONT, fontStream)
+}
+
+fun clipForResource(resourcePath: String): AudioClip? {
+    val stream = Theme::class.java.getResourceAsStream(resourcePath) ?: return null
+
+    val audioStream = AudioSystem.getAudioInputStream(stream) ?: return null
+    return AudioClip(audioStream)
 }
 
 fun svgForResource(resourcePath: String): SVGDocument? {
