@@ -1,5 +1,6 @@
 package dartzee.`object`
 
+import dartzee.logging.CODE_JAVA_VERSION
 import dartzee.logging.CODE_JUST_UPDATED
 import dartzee.logging.CODE_MEMORY_SETTINGS
 import dartzee.logging.CODE_UNEXPECTED_ARGUMENT
@@ -31,6 +32,11 @@ object DartsClient {
         val maxMb = rt.maxMemory() / (1024 * 1024)
         val totalMb = rt.totalMemory() / (1024 * 1024)
         logger.info(CODE_MEMORY_SETTINGS, "Heap settings - Max [$maxMb MB], Total [$totalMb MB]")
+
+        logger.info(
+            CODE_JAVA_VERSION,
+            "Running with Java version ${System.getProperty("java.version")}",
+        )
     }
 
     private fun parseProgramArgument(arg: String) {
