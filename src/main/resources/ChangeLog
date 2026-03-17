@@ -4,7 +4,6 @@
 = Fixed avatar upload to remember the last directory used, rather than resetting back to default
 = Fixed play order to rotate more fairly in matches with more than 2 players
 = AI opponents will aim for bullseye finishes if 2 or fewer darts left to throw
-= Updated Chucklevision achievement to allow misses / 2 dart combos
 = Upgrade to Java 21, gradle 9.3,
 = 93.5% test coverage (14419 / 15429 lines covered by 2473 tests)
 
