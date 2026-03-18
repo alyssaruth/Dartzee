@@ -290,7 +290,7 @@ class TestDartsGamePanel : AbstractTest() {
                 DartScoreTrigger(GameType.GOLF, 10) to MISS_DEV,
             )
 
-        val panel = TestGamePanel(animateMiss = false)
+        val panel = TestGamePanel(animateMiss = true)
         val pt = makeSingleParticipant(insertPlayer(strategy = ""), panel.gameEntity.rowId)
         panel.startNewGame(listOf(pt))
 
@@ -298,7 +298,6 @@ class TestDartsGamePanel : AbstractTest() {
         flushEdt()
         panel.findChild<JLabel>("DodgyLabel") shouldBe null
 
-        panel.animateMiss = true
         panel.dartThrown(Dart(5, 1))
         flushEdt()
         panel.getChild<JLabel>("DodgyLabel").shouldBeVisible()
