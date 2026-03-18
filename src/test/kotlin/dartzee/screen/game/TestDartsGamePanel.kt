@@ -4,6 +4,7 @@ import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.clickNo
 import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.findChild
+import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.shouldBeVisible
@@ -30,6 +31,9 @@ import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
 import dartzee.only
+import dartzee.screen.animation.BAD_MISS
+import dartzee.screen.animation.DartScoreTrigger
+import dartzee.screen.animation.MISS_DEV
 import dartzee.screen.game.scorer.AchievementOverlay
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.screen.game.x01.GameStatisticsPanelX01
@@ -40,6 +44,7 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import javax.swing.JButton
+import javax.swing.JLabel
 import org.junit.jupiter.api.Test
 
 class TestDartsGamePanel : AbstractTest() {
@@ -259,6 +264,46 @@ class TestDartsGamePanel : AbstractTest() {
         panel.dartboard.findChild<DartLabel>() shouldBe null
     }
 
+    @Test
+    fun `Should only play miss animation if allowed`() {
+        InjectedThings.animations = mapOf(DartScoreTrigger(GameType.X01, 0) to BAD_MISS)
+
+        val panel = TestGamePanel(animateMiss = false)
+        val pt = makeSingleParticipant(insertPlayer(strategy = ""), panel.gameEntity.rowId)
+        panel.startNewGame(listOf(pt))
+
+        panel.dartThrown(Dart(20, 0))
+        flushEdt()
+        panel.findChild<JLabel>("DodgyLabel") shouldBe null
+
+        panel.animateMiss = true
+        panel.dartThrown(Dart(20, 0))
+        flushEdt()
+        panel.getChild<JLabel>("DodgyLabel").shouldBeVisible()
+    }
+
+    @Test
+    fun `Should trigger animation for the right score and game type`() {
+        InjectedThings.animations =
+            mapOf(
+                DartScoreTrigger(GameType.X01, 5) to BAD_MISS,
+                DartScoreTrigger(GameType.GOLF, 10) to MISS_DEV,
+            )
+
+        val panel = TestGamePanel(animateMiss = false)
+        val pt = makeSingleParticipant(insertPlayer(strategy = ""), panel.gameEntity.rowId)
+        panel.startNewGame(listOf(pt))
+
+        panel.dartThrown(Dart(10, 1))
+        flushEdt()
+        panel.findChild<JLabel>("DodgyLabel") shouldBe null
+
+        panel.animateMiss = true
+        panel.dartThrown(Dart(5, 1))
+        flushEdt()
+        panel.getChild<JLabel>("DodgyLabel").shouldBeVisible()
+    }
+
     private fun TestGamePanel.clickResign() =
         clickChild<JButton>(async = true) { it.toolTipText == "Resign" }
 
@@ -272,6 +317,7 @@ class TestDartsGamePanel : AbstractTest() {
     class TestGamePanel(
         private val config: X01Config = X01Config(501, FinishType.Doubles),
         totalPlayers: Int = 1,
+        var animateMiss: Boolean = false,
     ) :
         GamePanelPausable<DartsScorerX01, X01PlayerState>(
             FakeDartsScreen(),
@@ -293,5 +339,7 @@ class TestDartsGamePanel : AbstractTest() {
 
         override fun factoryScorer(participant: IWrappedParticipant) =
             DartsScorerX01(this, config.target, participant)
+
+        override fun shouldAnimateMiss(dart: Dart) = animateMiss
     }
 }
