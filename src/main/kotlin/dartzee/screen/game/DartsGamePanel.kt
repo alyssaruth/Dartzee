@@ -479,8 +479,10 @@ abstract class DartsGamePanel<
     }
 
     private fun doAnimations(dart: Dart) {
-        if (dart.multiplier == 0 && shouldAnimateMiss(dart)) {
-            dartboard.doDodgy(DartScoreTrigger(gameEntity.gameType, 0))
+        if (dart.multiplier == 0) {
+            if (shouldAnimateMiss(dart)) {
+                dartboard.doDodgy(DartScoreTrigger(gameEntity.gameType, 0))
+            }
         } else {
             dartboard.doDodgy(DartScoreTrigger(gameEntity.gameType, dart.getTotal()))
         }
