@@ -3,7 +3,7 @@ package dartzee.preferences
 class InMemoryPreferenceService : AbstractPreferenceService() {
     private val hmPreferences = mutableMapOf<String, String>()
 
-    override fun <T : Any> delete(preference: Preference<T>) {
+    override fun <T : Any> deleteImpl(preference: Preference<T>) {
         hmPreferences.remove(preference.name)
     }
 

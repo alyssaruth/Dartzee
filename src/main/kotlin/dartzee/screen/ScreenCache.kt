@@ -55,13 +55,4 @@ object ScreenCache {
 
         return scrn
     }
-
-    fun fireAppearancePreferencesChanged() {
-        hmClassToScreen.values.forEach { scrn ->
-            scrn.fireAppearancePreferencesChanged()
-            scrn.repaint()
-        }
-
-        getDartsGameScreens().forEach { it.fireAppearancePreferencesChanged() }
-    }
 }

@@ -102,10 +102,6 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
         btnBack.font = baseFont.deriveFont(Font.PLAIN, 20f)
     }
 
-    open fun fireAppearancePreferencesChanged() {
-        updateAppearance()
-    }
-
     /** Default methods */
     open fun showBackButton() = true
 

@@ -7,28 +7,42 @@ import dartzee.screen.animation.IAnimationTrigger
 import dartzee.utils.InjectedThings.logger
 import java.awt.Color
 import java.awt.GraphicsEnvironment
+import java.time.LocalDate
 import javax.swing.UIManager
 
+enum class ThemeId {
+    none,
+    easter,
+    oktoberfest,
+    halloween,
+}
+
 data class Theme(
-    val name: String,
+    val id: ThemeId,
     val primary: Color,
-    val primaryDark: Color,
-    val background: Color,
+    private val primaryDark: Color,
+    private val background: Color,
     val lightBackground: Color,
-    val dartboardColours: ColourWrapper,
+    val dartboardColours: ColourWrapper?,
     val linkColour: Color,
     val fontColor: Color = Color.BLACK,
     val menuFontSize: Float? = null,
     val animations: Map<IAnimationTrigger, IAnimation> = emptyMap(),
     val bannerOffset: Double = 0.0,
     val bannerScaleFactor: Double = 0.8,
+    val unlockDate: LocalDate? = null,
 ) {
+    val name = id.name
     val font = fontForResource("/theme/$name/font.ttf")
-    val dartboardFont = fontForResource("/theme/$name/dartboard.ttf") ?: font
+    private val dartboardFont = fontForResource("/theme/$name/dartboard.ttf") ?: font
     val banner = svgForResource("/theme/$name/banner.svg")
 
     val menuMusic = clipForResource("/theme/$name/menu.wav")
     val newGameSfx = clipForResource("/theme/$name/newGame.wav")
+
+    init {
+        dartboardFont?.let { dartboardColours?.font = dartboardFont }
+    }
 
     fun apply() {
         logger.info(CODE_THEME_APPLIED, "Applying theme $name")
@@ -52,4 +66,8 @@ data class Theme(
         dartboardFont?.let { GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(it) }
         font?.let { GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(it) }
     }
+
+    fun nameCapitalised() = name.replaceFirstChar { it.uppercase() }
+
+    override fun toString() = name
 }

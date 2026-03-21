@@ -5,7 +5,7 @@ import java.util.prefs.Preferences
 class DefaultPreferenceService : AbstractPreferenceService() {
     private val preferences = Preferences.userRoot().node("DartsPrefs")
 
-    override fun <T : Any> delete(preference: Preference<T>) {
+    override fun <T : Any> deleteImpl(preference: Preference<T>) {
         preferences.remove(preference.name)
     }
 

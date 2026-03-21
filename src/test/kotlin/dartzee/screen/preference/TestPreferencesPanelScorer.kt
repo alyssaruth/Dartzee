@@ -4,22 +4,22 @@ import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.shouldBe
 
-class TestPreferencesPanelScorer : AbstractPreferencePanelTest<PreferencesPanelScorer>() {
-    override fun factory() = PreferencesPanelScorer()
+class TestPreferencesPanelScorer : AbstractPreferencePanelTest<PreferencesPanelAppearance>() {
+    override fun factory() = PreferencesPanelAppearance()
 
-    override fun checkUiFieldValuesAreDefaults(panel: PreferencesPanelScorer) {
+    override fun checkUiFieldValuesAreDefaults(panel: PreferencesPanelAppearance) {
         panel.spinnerHueFactor.value shouldBe 0.8
         panel.spinnerFgBrightness.value shouldBe 0.5
         panel.spinnerBgBrightness.value shouldBe 1.0
     }
 
-    override fun setUiFieldValuesToNonDefaults(panel: PreferencesPanelScorer) {
+    override fun setUiFieldValuesToNonDefaults(panel: PreferencesPanelAppearance) {
         panel.spinnerHueFactor.value = 0.5
         panel.spinnerFgBrightness.value = 0.9
         panel.spinnerBgBrightness.value = 0.6
     }
 
-    override fun checkUiFieldValuesAreNonDefaults(panel: PreferencesPanelScorer) {
+    override fun checkUiFieldValuesAreNonDefaults(panel: PreferencesPanelAppearance) {
         panel.spinnerHueFactor.value shouldBe 0.5
         panel.spinnerFgBrightness.value shouldBe 0.9
         panel.spinnerBgBrightness.value shouldBe 0.6

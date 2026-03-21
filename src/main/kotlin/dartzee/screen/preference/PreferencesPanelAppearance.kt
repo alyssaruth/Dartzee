@@ -1,13 +1,17 @@
 package dartzee.screen.preference
 
+import dartzee.core.bean.items
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.preferences.Preferences
+import dartzee.theme.ComboBoxTheme
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.preferenceService
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.Font
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JSpinner
@@ -18,12 +22,14 @@ import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 import net.miginfocom.swing.MigLayout
 
-class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener {
-    override val title = "Scorer"
+class PreferencesPanelAppearance : AbstractPreferencesPanel(), ChangeListener, ActionListener {
+    override val title = "Appearance"
 
     private val panelCenter = JPanel()
     private val panelX01Colours = JPanel()
+    private val panelTheme = JPanel()
     private val panelScorerPreview = JPanel()
+    private val comboBoxTheme = ComboBoxTheme()
 
     private val panelOptions = JPanel()
 
@@ -34,7 +40,14 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener {
     init {
         add(panelCenter, BorderLayout.CENTER)
         panelCenter.layout = MigLayout("al center center, gapy 20")
-        panelCenter.add(panelX01Colours)
+        panelCenter.add(panelTheme, "cell 0 1")
+        panelTheme.border =
+            TitledBorder(null, "Theme", TitledBorder.LEADING, TitledBorder.TOP, null, null)
+        panelTheme.preferredSize = Dimension(600, 300)
+        panelTheme.layout = MigLayout("al center center, gapy 20")
+        panelTheme.add(comboBoxTheme)
+
+        panelCenter.add(panelX01Colours, "cell 0 2")
         panelX01Colours.border =
             TitledBorder(
                 null,
@@ -83,6 +96,7 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener {
         spinnerHueFactor.addChangeListener(this)
         spinnerBgBrightness.addChangeListener(this)
         spinnerFgBrightness.addChangeListener(this)
+        comboBoxTheme.addActionListener(this)
     }
 
     private fun makeScoreLabel(score: Int): JLabel {
@@ -94,6 +108,9 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener {
     }
 
     override fun refreshImpl(useDefaults: Boolean) {
+        val theme = if (useDefaults) null else preferenceService.find(Preferences.theme)
+        comboBoxTheme.selectedItem = comboBoxTheme.items().first { it.hiddenData == theme }
+
         spinnerHueFactor.value = preferenceService.get(Preferences.hueFactor, useDefaults)
         spinnerBgBrightness.value = preferenceService.get(Preferences.bgBrightness, useDefaults)
         spinnerFgBrightness.value = preferenceService.get(Preferences.fgBrightness, useDefaults)
@@ -129,15 +146,27 @@ class PreferencesPanelScorer : AbstractPreferencesPanel(), ChangeListener {
         preferenceService.save(Preferences.hueFactor, hueFactor)
         preferenceService.save(Preferences.bgBrightness, bgBrightness)
         preferenceService.save(Preferences.fgBrightness, fgBrightness)
+
+        val selectedTheme = comboBoxTheme.selectedTheme()
+        if (selectedTheme == null) {
+            preferenceService.delete(Preferences.theme)
+        } else {
+            preferenceService.save(Preferences.theme, selectedTheme)
+        }
     }
 
     override fun hasOutstandingChanges() =
         spinnerHueFactor.value != preferenceService.get(Preferences.hueFactor) ||
             spinnerBgBrightness.value != preferenceService.get(Preferences.bgBrightness) ||
-            spinnerFgBrightness.value != preferenceService.get(Preferences.fgBrightness)
+            spinnerFgBrightness.value != preferenceService.get(Preferences.fgBrightness) ||
+            comboBoxTheme.selectedTheme() != preferenceService.find(Preferences.theme)
 
     override fun stateChanged(arg0: ChangeEvent) {
         repaintScorerPreview()
+        stateChanged()
+    }
+
+    override fun actionPerformed(e: ActionEvent?) {
         stateChanged()
     }
 }

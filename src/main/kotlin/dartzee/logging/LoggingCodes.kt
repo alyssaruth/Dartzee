@@ -54,6 +54,7 @@ val CODE_MATCH_LAUNCHED = LoggingCode("matchLaunched")
 val CODE_MATCH_FINISHED = LoggingCode("matchFinished")
 val CODE_PARTY_MODE = LoggingCode("partyMode")
 val CODE_PREFERENCE_SAVED = LoggingCode("preferenceSaved")
+val CODE_PREFERENCE_DELETED = LoggingCode("preferenceDeleted")
 val CODE_THEME_APPLIED = LoggingCode("themeApplied")
 
 // Warn

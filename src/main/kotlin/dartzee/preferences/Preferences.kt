@@ -1,5 +1,6 @@
 package dartzee.preferences
 
+import dartzee.theme.Themes
 import dartzee.utils.DartsColour.DARTBOARD_BLACK
 import dartzee.utils.DartsColour.DARTBOARD_GREEN
 import dartzee.utils.DartsColour.DARTBOARD_RED
@@ -12,6 +13,8 @@ object Preferences {
     val evenSingleColour = Preference("evensing", DARTBOARD_BLACK)
     val evenDoubleColour = Preference("evendoub", DARTBOARD_RED)
     val evenTrebleColour = Preference("eventreb", DARTBOARD_RED)
+
+    val theme = Preference("theme", Themes.HALLOWEEN)
 
     val deviceId = Preference("deviceId", "")
     val imageUploadDirectory = Preference("imageUploadDirectory", "")

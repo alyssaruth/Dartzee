@@ -62,7 +62,19 @@ class MenuScreen : EmbeddedScreen() {
             button.addActionListener(this)
         }
 
-        refreshButtons()
+        btnNewGame.icon = themedIcon("/buttons/newGame.png")
+        btnManagePlayers.icon = themedIcon("/buttons/playerManagement.png")
+        btnUtilities.icon = themedIcon("/buttons/utilities.png")
+        btnPreferences.icon = ImageIcon(javaClass.getResource("/buttons/preferences.png"))
+        btnGameReport.icon = themedIcon("/buttons/gameReport.png")
+        btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
+        btnDartzeeTemplates.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
+        btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
+
+        getAllChildComponentsForType<JButton>().forEach { button ->
+            button.font =
+                getBaseFont().deriveFont(Font.PLAIN, InjectedThings.theme?.menuFontSize ?: 18f)
+        }
 
         addComponentListener(
             object : ComponentAdapter() {
@@ -86,30 +98,6 @@ class MenuScreen : EmbeddedScreen() {
 
     override fun unInit() {
         InjectedThings.theme?.menuMusic?.stop()
-    }
-
-    override fun fireAppearancePreferencesChanged() {
-        super.fireAppearancePreferencesChanged()
-
-        refreshButtons()
-    }
-
-    private fun refreshButtons() {
-        lblVersion.refresh()
-
-        btnNewGame.icon = themedIcon("/buttons/newGame.png")
-        btnManagePlayers.icon = themedIcon("/buttons/playerManagement.png")
-        btnUtilities.icon = themedIcon("/buttons/utilities.png")
-        btnPreferences.icon = ImageIcon(javaClass.getResource("/buttons/preferences.png"))
-        btnGameReport.icon = themedIcon("/buttons/gameReport.png")
-        btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
-        btnDartzeeTemplates.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
-        btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
-
-        getAllChildComponentsForType<JButton>().forEach { button ->
-            button.font =
-                getBaseFont().deriveFont(Font.PLAIN, InjectedThings.theme?.menuFontSize ?: 18f)
-        }
     }
 
     private fun layoutScreen(width: Int = getWidth(), height: Int = getHeight()) {

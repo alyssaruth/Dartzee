@@ -2,8 +2,7 @@ package dartzee.theme
 
 import com.github.weisj.jsvg.SVGDocument
 import com.github.weisj.jsvg.parser.SVGLoader
-import dartzee.`object`.DartsClient
-import dartzee.screen.ScreenCache
+import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
 import java.awt.Font
@@ -13,16 +12,14 @@ import java.time.Month
 import javax.sound.sampled.AudioSystem
 import javax.swing.ImageIcon
 
+fun themeMap() = listOf(Themes.EASTER, Themes.OKTOBERFEST, Themes.HALLOWEEN).associateBy { it.id }
+
 fun autoApplyTheme() {
-    InjectedThings.theme = pickThemeForDate(LocalDate.now())
+    InjectedThings.theme = pickTheme(LocalDate.now())
     InjectedThings.theme?.apply()
 }
 
-fun pickThemeForDate(now: LocalDate): Theme? {
-    if (DartsClient.devMode) {
-        return Themes.HALLOWEEN
-    }
-
+fun pickTheme(now: LocalDate): Theme? {
     val easterSunday = findEasterSunday(now.year)
     if (now.isBefore(easterSunday.plusDays(1)) && now.isAfter(easterSunday.minusDays(9))) {
         return Themes.EASTER
@@ -37,7 +34,7 @@ fun pickThemeForDate(now: LocalDate): Theme? {
         return Themes.HALLOWEEN
     }
 
-    return null
+    return InjectedThings.preferenceService.find(Preferences.theme)
 }
 
 fun findOktoberfest(year: Int): Pair<LocalDate, LocalDate> {
@@ -79,11 +76,6 @@ fun findEasterSunday(year: Int): LocalDate {
         return LocalDate.of(year, 3, H)
     }
     return LocalDate.of(year, 4, H - 31)
-}
-
-fun applyCurrentTheme() {
-    InjectedThings.theme?.apply()
-    ScreenCache.fireAppearancePreferencesChanged()
 }
 
 fun fontForResource(resourcePath: String): Font? {
