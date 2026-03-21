@@ -6,6 +6,7 @@ import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
 import java.awt.Font
+import java.io.BufferedInputStream
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
@@ -88,7 +89,7 @@ fun fontForResource(resourcePath: String): Font? {
 fun clipForResource(resourcePath: String): AudioClip? {
     val stream = Theme::class.java.getResourceAsStream(resourcePath) ?: return null
 
-    val audioStream = AudioSystem.getAudioInputStream(stream) ?: return null
+    val audioStream = AudioSystem.getAudioInputStream(BufferedInputStream(stream)) ?: return null
     return AudioClip(audioStream)
 }
 
