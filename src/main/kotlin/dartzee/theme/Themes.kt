@@ -82,6 +82,7 @@ object Themes {
             fontColor = bloodRed,
             dartboardColours = halloweenDartboardColours,
             animations = halloweenAnimations.toMap(),
+            finder = ::findHalloween,
         )
 
     private val easterAnimations: List<Pair<IAnimationTrigger, IAnimation>> =
@@ -109,6 +110,7 @@ object Themes {
             animations = easterAnimations.toMap(),
             bannerScaleFactor = 0.5,
             bannerOffset = 0.3,
+            finder = ::findEaster,
         )
 
     private val beerSmashAnimation =
@@ -143,5 +145,6 @@ object Themes {
             dartboardColours = oktoberfestDartboardColours,
             menuFontSize = 24f,
             animations = oktoberfestAnimations.toMap(),
+            finder = ::findOktoberfest,
         )
 }

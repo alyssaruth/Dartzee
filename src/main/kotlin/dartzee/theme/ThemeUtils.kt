@@ -13,30 +13,58 @@ import java.time.Month
 import javax.sound.sampled.AudioSystem
 import javax.swing.ImageIcon
 
+typealias FestivalFinder = (Int) -> Pair<LocalDate, LocalDate>
+
 fun themeMap() = listOf(Themes.EASTER, Themes.OKTOBERFEST, Themes.HALLOWEEN).associateBy { it.id }
+
+fun themeDescription(id: ThemeId, now: LocalDate) =
+    when (id) {
+        ThemeId.None -> "The original grey-on-grey, like it's still the 1990s"
+        ThemeId.Easter ->
+            "Bunnies & pastel colours! \n\nWill next pop up on ${nextDue(now, ::findEaster)}"
+        ThemeId.Oktoberfest ->
+            "Time to get the Lederhosen out and crack open some German beer!\n\nHappy hour next begins on ${nextDue(now, ::findOktoberfest)}"
+        ThemeId.Halloween ->
+            "Zombies, eyeballs and witches have come to terrorise the app!\n\nNext haunting will start on ${nextDue(now, ::findHalloween)}"
+    }
 
 fun autoApplyTheme() {
     InjectedThings.theme = pickTheme(LocalDate.now())
     InjectedThings.theme?.apply()
 }
 
+private fun nextDue(now: LocalDate, finder: FestivalFinder): LocalDate {
+    val thisYear = finder(now.year).first
+
+    if (now.isBefore(thisYear)) {
+        return thisYear
+    }
+
+    return finder(now.year + 1).first
+}
+
 fun pickTheme(now: LocalDate): Theme? {
-    val easterSunday = findEasterSunday(now.year)
-    if (now.isBefore(easterSunday.plusDays(1)) && now.isAfter(easterSunday.minusDays(9))) {
-        return Themes.EASTER
-    }
-
-    val (oktoberfestStart, oktoberfestEnd) = findOktoberfest(now.year)
-    if (now.isBefore(oktoberfestEnd.plusDays(1)) && now.isAfter(oktoberfestStart.minusDays(1))) {
-        return Themes.OKTOBERFEST
-    }
-
-    if (now.month == Month.OCTOBER && now.dayOfMonth >= 24) {
-        return Themes.HALLOWEEN
+    val autoTheme = getAutomaticThemeForDate(now)
+    if (autoTheme != null) {
+        return autoTheme
     }
 
     val themeId = InjectedThings.preferenceService.get(Preferences.theme)
     return themeMap()[themeId]
+}
+
+fun getAutomaticThemeForDate(now: LocalDate): Theme? {
+    return themeMap().values.find { theme -> now.inRange(theme.finder) }
+}
+
+private fun LocalDate.inRange(finder: FestivalFinder?): Boolean {
+    finder ?: return false
+    val (start, end) = finder(year)
+    return isBefore(end.plusDays(1)) && isAfter(start.minusDays(1))
+}
+
+fun findHalloween(year: Int): Pair<LocalDate, LocalDate> {
+    return LocalDate.of(year, Month.OCTOBER, 24) to LocalDate.of(year, Month.OCTOBER, 31)
 }
 
 fun findOktoberfest(year: Int): Pair<LocalDate, LocalDate> {
@@ -51,6 +79,11 @@ fun findOktoberfest(year: Int): Pair<LocalDate, LocalDate> {
 
     val startDate = endDate.minusDays(15L + daysAdded)
     return startDate to endDate
+}
+
+fun findEaster(year: Int): Pair<LocalDate, LocalDate> {
+    val easterSunday = findEasterSunday(year)
+    return easterSunday.minusDays(8) to easterSunday
 }
 
 /** https://en.wikipedia.org/wiki/Date_of_Easter#Gauss's_Easter_algorithm */

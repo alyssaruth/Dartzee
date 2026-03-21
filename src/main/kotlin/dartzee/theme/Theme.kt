@@ -45,6 +45,7 @@ data class Theme(
     val animations: Map<IAnimationTrigger, IAnimation> = emptyMap(),
     val bannerOffset: Double = 0.0,
     val bannerScaleFactor: Double = 0.8,
+    val finder: FestivalFinder? = null,
     val unlockDate: LocalDate? = null,
 ) {
     val name = id.name
