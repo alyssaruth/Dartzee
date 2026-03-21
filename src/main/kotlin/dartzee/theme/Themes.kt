@@ -73,7 +73,7 @@ object Themes {
 
     val HALLOWEEN =
         Theme(
-            ThemeId.halloween,
+            ThemeId.Halloween,
             lightOrange,
             orange,
             Color.decode("#32172a"),
@@ -97,7 +97,7 @@ object Themes {
 
     val EASTER =
         Theme(
-            ThemeId.easter,
+            ThemeId.Easter,
             Color.decode("#c1f0fb"),
             Color.decode("#8aadd3"),
             Color.decode("#e0cdff"),
@@ -134,7 +134,7 @@ object Themes {
 
     val OKTOBERFEST =
         Theme(
-            ThemeId.oktoberfest,
+            ThemeId.Oktoberfest,
             Color.decode("#e3570a"),
             Color.decode("#764d2a"),
             Color.decode("#fbb40e"),

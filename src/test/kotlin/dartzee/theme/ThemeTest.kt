@@ -18,7 +18,7 @@ class ThemeTest : AbstractTest() {
     fun `Should apply theme`() {
         val theme =
             Theme(
-                "pink",
+                ThemeId.Easter,
                 Color.magenta,
                 Color.pink,
                 Color.decode("#C9A0DC"),

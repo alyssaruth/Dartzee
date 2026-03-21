@@ -5,14 +5,14 @@ import dartzee.core.bean.selectedItemTyped
 import javax.swing.DefaultComboBoxModel
 import javax.swing.JComboBox
 
-class ComboBoxTheme : JComboBox<ComboBoxItem<Theme?>>() {
+class ComboBoxTheme : JComboBox<ComboBoxItem<ThemeId>>() {
     init {
-        val model = DefaultComboBoxModel<ComboBoxItem<Theme?>>()
-        model.addElement(ComboBoxItem<Theme?>(null, "Classic (no theme)"))
+        val model = DefaultComboBoxModel<ComboBoxItem<ThemeId>>()
 
-        themeMap().forEach { (_, theme) ->
-            val item = ComboBoxItem<Theme?>(theme, theme.nameCapitalised())
-            model.addElement(item)
+        ThemeId.values().forEach { themeId ->
+            val theme = themeMap()[themeId]
+            val name = theme?.name ?: "Classic (no theme)"
+            model.addElement(ComboBoxItem(themeId, name))
         }
 
         setModel(model)

@@ -3,9 +3,7 @@ package dartzee.preferences
 import dartzee.logging.CODE_PARSE_ERROR
 import dartzee.logging.CODE_PREFERENCE_DELETED
 import dartzee.logging.CODE_PREFERENCE_SAVED
-import dartzee.theme.Theme
 import dartzee.theme.ThemeId
-import dartzee.theme.themeMap
 import dartzee.utils.InjectedThings.logger
 import java.awt.Color
 
@@ -54,7 +52,7 @@ abstract class AbstractPreferenceService {
             Int::class -> raw.toInt() as T
             Color::class -> raw.toColor() as T
             String::class -> raw as T
-            Theme::class -> themeMap().getValue(ThemeId.valueOf(raw)) as T
+            ThemeId::class -> ThemeId.parseFromPreference(raw) as T
             else ->
                 throw TypeCastException(
                     "Unhandled type [${desiredType}] for preference ${preference.name}"

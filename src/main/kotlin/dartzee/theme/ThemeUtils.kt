@@ -34,7 +34,8 @@ fun pickTheme(now: LocalDate): Theme? {
         return Themes.HALLOWEEN
     }
 
-    return InjectedThings.preferenceService.find(Preferences.theme)
+    val themeId = InjectedThings.preferenceService.get(Preferences.theme)
+    return themeMap()[themeId]
 }
 
 fun findOktoberfest(year: Int): Pair<LocalDate, LocalDate> {

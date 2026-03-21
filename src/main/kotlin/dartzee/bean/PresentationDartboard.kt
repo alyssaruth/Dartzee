@@ -144,7 +144,7 @@ open class PresentationDartboard(
         val svgHeight = (svg.computeShape(viewBox).bounds.height * theme.bannerScaleFactor).toInt()
         val font = getFontForHeight(getBaseFont(), svgHeight, g)
 
-        val bannerTitle = theme.nameCapitalised()
+        val bannerTitle = theme.name
         val center = computeCenter()
         center.y -= (theme.bannerOffset * svgHeight).toInt()
         paintLabel(g, center, svgHeight, font, theme.fontColor, bannerTitle)

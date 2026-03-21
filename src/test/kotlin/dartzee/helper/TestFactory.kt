@@ -29,6 +29,7 @@ import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
 import dartzee.stats.GameWrapper
 import dartzee.theme.Theme
+import dartzee.theme.ThemeId
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.isBust
 import io.kotest.matchers.shouldBe
@@ -316,7 +317,7 @@ fun makeIncludedPlayerParameters(
 ) = IncludedPlayerParameters(finishingPositions, finalScoreComparator, finalScore)
 
 fun makeTheme(
-    name: String = "test",
+    id: ThemeId = ThemeId.Easter,
     primary: Color = Color.RED,
     primaryDark: Color = Color.BLUE,
     background: Color = Color.YELLOW,
@@ -328,7 +329,7 @@ fun makeTheme(
     animations: Map<IAnimationTrigger, IAnimation> = emptyMap(),
 ) =
     Theme(
-        name,
+        id,
         primary,
         primaryDark,
         background,

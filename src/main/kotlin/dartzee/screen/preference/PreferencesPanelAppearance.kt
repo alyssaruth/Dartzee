@@ -108,7 +108,7 @@ class PreferencesPanelAppearance : AbstractPreferencesPanel(), ChangeListener, A
     }
 
     override fun refreshImpl(useDefaults: Boolean) {
-        val theme = if (useDefaults) null else preferenceService.find(Preferences.theme)
+        val theme = preferenceService.get(Preferences.theme, useDefaults)
         comboBoxTheme.selectedItem = comboBoxTheme.items().first { it.hiddenData == theme }
 
         spinnerHueFactor.value = preferenceService.get(Preferences.hueFactor, useDefaults)
@@ -146,20 +146,14 @@ class PreferencesPanelAppearance : AbstractPreferencesPanel(), ChangeListener, A
         preferenceService.save(Preferences.hueFactor, hueFactor)
         preferenceService.save(Preferences.bgBrightness, bgBrightness)
         preferenceService.save(Preferences.fgBrightness, fgBrightness)
-
-        val selectedTheme = comboBoxTheme.selectedTheme()
-        if (selectedTheme == null) {
-            preferenceService.delete(Preferences.theme)
-        } else {
-            preferenceService.save(Preferences.theme, selectedTheme)
-        }
+        preferenceService.save(Preferences.theme, comboBoxTheme.selectedTheme())
     }
 
     override fun hasOutstandingChanges() =
         spinnerHueFactor.value != preferenceService.get(Preferences.hueFactor) ||
             spinnerBgBrightness.value != preferenceService.get(Preferences.bgBrightness) ||
             spinnerFgBrightness.value != preferenceService.get(Preferences.fgBrightness) ||
-            comboBoxTheme.selectedTheme() != preferenceService.find(Preferences.theme)
+            comboBoxTheme.selectedTheme() != preferenceService.get(Preferences.theme)
 
     override fun stateChanged(arg0: ChangeEvent) {
         repaintScorerPreview()

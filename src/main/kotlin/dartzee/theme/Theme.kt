@@ -1,5 +1,6 @@
 package dartzee.theme
 
+import dartzee.logging.CODE_PARSE_ERROR
 import dartzee.logging.CODE_THEME_APPLIED
 import dartzee.`object`.ColourWrapper
 import dartzee.screen.animation.IAnimation
@@ -11,10 +12,24 @@ import java.time.LocalDate
 import javax.swing.UIManager
 
 enum class ThemeId {
-    none,
-    easter,
-    oktoberfest,
-    halloween,
+    None,
+    Easter,
+    Oktoberfest,
+    Halloween;
+
+    companion object {
+        fun parseFromPreference(preference: String): ThemeId =
+            try {
+                ThemeId.valueOf(preference)
+            } catch (ex: Exception) {
+                logger.error(
+                    CODE_PARSE_ERROR,
+                    "Failed to parse ThemeId from preference: $preference",
+                    ex,
+                )
+                return None
+            }
+    }
 }
 
 data class Theme(
@@ -33,12 +48,13 @@ data class Theme(
     val unlockDate: LocalDate? = null,
 ) {
     val name = id.name
-    val font = fontForResource("/theme/$name/font.ttf")
-    private val dartboardFont = fontForResource("/theme/$name/dartboard.ttf") ?: font
-    val banner = svgForResource("/theme/$name/banner.svg")
+    private val resourcePath = name.lowercase()
+    val font = fontForResource("/theme/$resourcePath/font.ttf")
+    private val dartboardFont = fontForResource("/theme/$resourcePath/dartboard.ttf") ?: font
+    val banner = svgForResource("/theme/$resourcePath/banner.svg")
 
-    val menuMusic = clipForResource("/theme/$name/menu.wav")
-    val newGameSfx = clipForResource("/theme/$name/newGame.wav")
+    val menuMusic = clipForResource("/theme/$resourcePath/menu.wav")
+    val newGameSfx = clipForResource("/theme/$resourcePath/newGame.wav")
 
     init {
         dartboardFont?.let { dartboardColours?.font = dartboardFont }
@@ -66,8 +82,4 @@ data class Theme(
         dartboardFont?.let { GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(it) }
         font?.let { GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(it) }
     }
-
-    fun nameCapitalised() = name.replaceFirstChar { it.uppercase() }
-
-    override fun toString() = name
 }

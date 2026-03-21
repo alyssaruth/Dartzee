@@ -11,7 +11,13 @@ import javax.swing.ImageIcon
 import org.junit.jupiter.api.Test
 
 class ThemeUtilsTest : AbstractTest() {
-    @Test fun `theme map should contain all themes`() {}
+    @Test
+    fun `theme map should contain all themes except None`() {
+        val expected = ThemeId.entries.filterNot { it == ThemeId.None }.toSet()
+        themeMap().keys shouldBe expected
+
+        themeMap().forEach { (id, theme) -> theme.id shouldBe id }
+    }
 
     @Test
     fun `themedIcon should return default icon if no theme`() {
