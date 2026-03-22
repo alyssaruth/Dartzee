@@ -24,6 +24,22 @@ fun setLookAndFeel() {
     if (!DartsClient.isAppleOs()) {
         setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
     }
+
+    val defaults = UIManager.getDefaults()
+
+    println(defaults["control"])
+    println(defaults["nimbusBase"])
+    println(defaults["nimbusBlueGrey"])
+    println(defaults["nimbusFocus"])
+    println(defaults["background"])
+    println(defaults["nimbusLightBackground"])
+    println(defaults["Table.alternateRowColor"])
+    println(defaults["DesktopPane.background"])
+    println(defaults["Panel.background"])
+    println(defaults["text"])
+    println(defaults["nimbusSelectionBackground"])
+    println(defaults["nimbusOrange"])
+    println(defaults["nimbusBorder"])
 }
 
 fun setLookAndFeel(laf: String) {

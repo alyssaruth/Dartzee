@@ -26,7 +26,6 @@ class PreferencesPanelAppearance : AbstractPreferencesPanel(), ChangeListener, A
 
     private val panelCenter = JPanel()
     private val panelX01Colours = JPanel()
-    private val panelTheme = JPanel()
     private val panelScorerPreview = JPanel()
     private val themeSelector = ThemeSelector()
 
@@ -39,12 +38,8 @@ class PreferencesPanelAppearance : AbstractPreferencesPanel(), ChangeListener, A
     init {
         add(panelCenter, BorderLayout.CENTER)
         panelCenter.layout = MigLayout("al center center, gapy 20")
-        panelCenter.add(panelTheme, "cell 0 1")
-        panelTheme.border =
-            TitledBorder(null, "Theme", TitledBorder.LEADING, TitledBorder.TOP, null, null)
-        panelTheme.preferredSize = Dimension(600, 300)
-        panelTheme.layout = BorderLayout()
-        panelTheme.add(themeSelector, BorderLayout.CENTER)
+        panelCenter.add(themeSelector, "cell 0 1")
+        themeSelector.preferredSize = Dimension(600, 300)
 
         panelCenter.add(panelX01Colours, "cell 0 2")
         panelX01Colours.border =

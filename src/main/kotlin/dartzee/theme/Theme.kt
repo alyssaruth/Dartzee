@@ -67,19 +67,19 @@ data class Theme(
 
         val defaults = UIManager.getDefaults()
 
-        defaults.put("control", background)
-        defaults.put("nimbusBase", primary)
-        defaults.put("nimbusBlueGrey", primaryDark)
-        defaults.put("nimbusFocus", primaryDark)
-        defaults.put("background", background)
-        defaults.put("nimbusLightBackground", lightBackground)
-        defaults.put("Table.alternateRowColor", null)
-        defaults.put("DesktopPane.background", background)
-        defaults.put("Panel.background", background)
-        defaults.put("text", fontColor)
-        defaults.put("nimbusSelectionBackground", primaryDark)
-        defaults.put("nimbusOrange", lightBackground)
-        defaults.put("nimbusBorder", background)
+        defaults["control"] = background
+        defaults["nimbusBase"] = primary
+        defaults["nimbusBlueGrey"] = primaryDark
+        defaults["nimbusFocus"] = primaryDark
+        defaults["background"] = background
+        defaults["nimbusLightBackground"] = lightBackground
+        defaults["Table.alternateRowColor"] = null
+        defaults["DesktopPane.background"] = background
+        defaults["Panel.background"] = background
+        defaults["text"] = fontColor
+        defaults["nimbusSelectionBackground"] = primaryDark
+        defaults["nimbusOrange"] = lightBackground
+        defaults["nimbusBorder"] = background
 
         dartboardFont?.let { GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(it) }
         font?.let { GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(it) }
