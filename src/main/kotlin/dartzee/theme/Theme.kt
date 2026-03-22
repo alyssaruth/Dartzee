@@ -9,6 +9,7 @@ import dartzee.utils.InjectedThings.logger
 import java.awt.Color
 import java.awt.GraphicsEnvironment
 import java.time.LocalDate
+import javax.swing.ImageIcon
 import javax.swing.UIManager
 
 enum class ThemeId {
@@ -36,7 +37,7 @@ data class Theme(
     val id: ThemeId,
     val primary: Color,
     private val primaryDark: Color,
-    private val background: Color,
+    val background: Color,
     val lightBackground: Color,
     val dartboardColours: ColourWrapper?,
     val linkColour: Color,
@@ -83,4 +84,6 @@ data class Theme(
         dartboardFont?.let { GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(it) }
         font?.let { GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(it) }
     }
+
+    fun icon(path: String) = javaClass.getResource("/theme/$resourcePath$path")?.let(::ImageIcon)
 }

@@ -134,8 +134,5 @@ fun svgForResource(resourcePath: String): SVGDocument? {
 
 fun getBaseFont(): Font = InjectedThings.theme?.font ?: ResourceCache.BASE_FONT
 
-fun themedIcon(path: String) =
-    InjectedThings.theme?.icon(path) ?: ImageIcon(Theme::class.java.getResource(path))
-
-private fun Theme.icon(path: String) =
-    Theme::class.java.getResource("/theme/$name$path")?.let(::ImageIcon)
+fun themedIcon(path: String, theme: Theme? = InjectedThings.theme) =
+    theme?.icon(path) ?: ImageIcon(Theme::class.java.getResource(path))

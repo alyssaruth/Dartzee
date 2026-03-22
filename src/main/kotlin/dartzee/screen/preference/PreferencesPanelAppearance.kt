@@ -1,12 +1,8 @@
 package dartzee.screen.preference
 
-import dartzee.core.bean.items
-import dartzee.core.bean.makeTransparentTextPane
-import dartzee.core.util.alignCentrally
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.preferences.Preferences
-import dartzee.theme.ComboBoxTheme
-import dartzee.theme.themeDescription
+import dartzee.theme.ThemeSelector
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.preferenceService
 import java.awt.BorderLayout
@@ -15,7 +11,6 @@ import java.awt.FlowLayout
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.time.LocalDate
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JSpinner
@@ -33,8 +28,7 @@ class PreferencesPanelAppearance : AbstractPreferencesPanel(), ChangeListener, A
     private val panelX01Colours = JPanel()
     private val panelTheme = JPanel()
     private val panelScorerPreview = JPanel()
-    private val comboBoxTheme = ComboBoxTheme()
-    private val lblThemeDesc = makeTransparentTextPane().apply { alignCentrally() }
+    private val themeSelector = ThemeSelector()
 
     private val panelOptions = JPanel()
 
@@ -49,9 +43,8 @@ class PreferencesPanelAppearance : AbstractPreferencesPanel(), ChangeListener, A
         panelTheme.border =
             TitledBorder(null, "Theme", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         panelTheme.preferredSize = Dimension(600, 300)
-        panelTheme.layout = MigLayout("al center center, gapy 20")
-        panelTheme.add(comboBoxTheme, "cell 0 1,alignx center")
-        panelTheme.add(lblThemeDesc, "cell 0 2,alignx center")
+        panelTheme.layout = BorderLayout()
+        panelTheme.add(themeSelector, BorderLayout.CENTER)
 
         panelCenter.add(panelX01Colours, "cell 0 2")
         panelX01Colours.border =
@@ -102,7 +95,7 @@ class PreferencesPanelAppearance : AbstractPreferencesPanel(), ChangeListener, A
         spinnerHueFactor.addChangeListener(this)
         spinnerBgBrightness.addChangeListener(this)
         spinnerFgBrightness.addChangeListener(this)
-        comboBoxTheme.addActionListener(this)
+        themeSelector.addActionListener(this)
     }
 
     private fun makeScoreLabel(score: Int): JLabel {
@@ -114,14 +107,12 @@ class PreferencesPanelAppearance : AbstractPreferencesPanel(), ChangeListener, A
     }
 
     override fun refreshImpl(useDefaults: Boolean) {
-        val theme = preferenceService.get(Preferences.theme, useDefaults)
-        comboBoxTheme.selectedItem = comboBoxTheme.items().first { it.hiddenData == theme }
+        val themeId = preferenceService.get(Preferences.theme, useDefaults)
+        themeSelector.selectTheme(themeId)
 
         spinnerHueFactor.value = preferenceService.get(Preferences.hueFactor, useDefaults)
         spinnerBgBrightness.value = preferenceService.get(Preferences.bgBrightness, useDefaults)
         spinnerFgBrightness.value = preferenceService.get(Preferences.fgBrightness, useDefaults)
-
-        lblThemeDesc.text = themeDescription(theme, LocalDate.now())
 
         repaintScorerPreview()
     }
@@ -154,14 +145,14 @@ class PreferencesPanelAppearance : AbstractPreferencesPanel(), ChangeListener, A
         preferenceService.save(Preferences.hueFactor, hueFactor)
         preferenceService.save(Preferences.bgBrightness, bgBrightness)
         preferenceService.save(Preferences.fgBrightness, fgBrightness)
-        preferenceService.save(Preferences.theme, comboBoxTheme.selectedTheme())
+        preferenceService.save(Preferences.theme, themeSelector.selectedThemeId())
     }
 
     override fun hasOutstandingChanges() =
         spinnerHueFactor.value != preferenceService.get(Preferences.hueFactor) ||
             spinnerBgBrightness.value != preferenceService.get(Preferences.bgBrightness) ||
             spinnerFgBrightness.value != preferenceService.get(Preferences.fgBrightness) ||
-            comboBoxTheme.selectedTheme() != preferenceService.get(Preferences.theme)
+            themeSelector.selectedThemeId() != preferenceService.get(Preferences.theme)
 
     override fun stateChanged(arg0: ChangeEvent) {
         repaintScorerPreview()
@@ -169,7 +160,6 @@ class PreferencesPanelAppearance : AbstractPreferencesPanel(), ChangeListener, A
     }
 
     override fun actionPerformed(e: ActionEvent?) {
-        lblThemeDesc.text = themeDescription(comboBoxTheme.selectedTheme(), LocalDate.now())
         stateChanged()
     }
 }
