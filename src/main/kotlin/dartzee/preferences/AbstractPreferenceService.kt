@@ -22,7 +22,7 @@ abstract class AbstractPreferenceService {
     protected abstract fun <T : Any> saveRaw(preference: Preference<T>, value: String)
 
     fun <T : Any> save(preference: Preference<T>, value: T) {
-        val original = findRaw(preference)
+        val original = findRaw(preference) ?: toRawValue(preference.default)
         val raw = toRawValue(value)
         if (original != raw) {
             saveRaw(preference, raw)

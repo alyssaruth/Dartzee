@@ -3,6 +3,7 @@ package dartzee.theme
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.event.ActionEvent
+import java.awt.event.ActionEvent.ACTION_PERFORMED
 import java.awt.event.ActionListener
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -70,6 +71,8 @@ class ThemeSelector : JPanel(), ActionListener {
         panelRight.background = bg
         panelLeft.background = bg
         background = bg
+
+        actionListeners.forEach { it.actionPerformed(ActionEvent(this, ACTION_PERFORMED, "")) }
     }
 
     private fun nextPressed() {
@@ -95,7 +98,5 @@ class ThemeSelector : JPanel(), ActionListener {
             btnRight -> nextPressed()
             btnLeft -> previousPressed()
         }
-
-        actionListeners.forEach { it.actionPerformed(e) }
     }
 }
