@@ -53,9 +53,8 @@ fun pickTheme(now: LocalDate): Theme? {
     return themeMap()[themeId]
 }
 
-fun getAutomaticThemeForDate(now: LocalDate): Theme? {
-    return themeMap().values.find { theme -> now.inRange(theme.finder) }
-}
+fun getAutomaticThemeForDate(now: LocalDate): Theme? =
+    themeMap().values.find { theme -> now.inRange(theme.finder) }
 
 private fun LocalDate.inRange(finder: FestivalFinder?): Boolean {
     finder ?: return false
@@ -63,9 +62,8 @@ private fun LocalDate.inRange(finder: FestivalFinder?): Boolean {
     return isBefore(end.plusDays(1)) && isAfter(start.minusDays(1))
 }
 
-fun findHalloween(year: Int): Pair<LocalDate, LocalDate> {
-    return LocalDate.of(year, Month.OCTOBER, 24) to LocalDate.of(year, Month.OCTOBER, 31)
-}
+fun findHalloween(year: Int): Pair<LocalDate, LocalDate> =
+    LocalDate.of(year, Month.OCTOBER, 24) to LocalDate.of(year, Month.OCTOBER, 31)
 
 fun findOktoberfest(year: Int): Pair<LocalDate, LocalDate> {
     val germanUnityDay = LocalDate.of(year, Month.OCTOBER, 3)

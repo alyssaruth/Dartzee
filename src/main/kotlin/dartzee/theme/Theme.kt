@@ -6,6 +6,7 @@ import dartzee.`object`.ColourWrapper
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.GraphicsEnvironment
 import java.time.LocalDate
@@ -39,7 +40,7 @@ data class Theme(
     private val primaryDark: Color,
     val background: Color,
     val lightBackground: Color,
-    val dartboardColours: ColourWrapper?,
+    private val dartboardColours: ColourWrapper?,
     val linkColour: Color,
     val fontColor: Color = Color.BLACK,
     val menuFontSize: Float? = null,
@@ -58,9 +59,8 @@ data class Theme(
     val menuMusic = clipForResource("/theme/$resourcePath/menu.wav")
     val newGameSfx = clipForResource("/theme/$resourcePath/newGame.wav")
 
-    init {
-        dartboardFont?.let { dartboardColours?.font = dartboardFont }
-    }
+    val dartboardColourWrapper =
+        dartboardColours?.copy(font = dartboardFont ?: ResourceCache.BASE_FONT)
 
     fun apply() {
         logger.info(CODE_THEME_APPLIED, "Applying theme $name")
