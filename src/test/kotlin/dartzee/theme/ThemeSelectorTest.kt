@@ -37,7 +37,7 @@ class ThemeSelectorTest : AbstractTest() {
         selector.previousButton().shouldBeEnabled()
 
         // Select middle one directly
-        selector.selectTheme(ThemeId.Easter)
+        selector.selectTheme(themeIds[1])
         selector.nextButton().shouldBeEnabled()
         selector.previousButton().shouldBeEnabled()
 
