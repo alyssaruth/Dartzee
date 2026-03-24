@@ -1,8 +1,10 @@
 package dartzee.`object`
 
 import dartzee.utils.DartsColour
+import dartzee.utils.ResourceCache
 import dartzee.utils.hmScoreToOrdinal
 import java.awt.Color
+import java.awt.Font
 
 val DEFAULT_COLOUR_WRAPPER =
     ColourWrapper(
@@ -38,6 +40,7 @@ data class ColourWrapper(
     private val outerBullColour: Color,
     var outerDartboardColour: Color = Color.black,
     val fontColor: Color = Color.white,
+    val font: Font = ResourceCache.BASE_FONT,
 ) {
     var missedBoardColour: Color = DartsColour.TRANSPARENT
     var edgeColour: Color? = null

@@ -2,7 +2,10 @@ package dartzee.preferences
 
 import dartzee.helper.AbstractTest
 import dartzee.logging.CODE_PARSE_ERROR
+import dartzee.logging.CODE_PREFERENCE_DELETED
+import dartzee.logging.CODE_PREFERENCE_SAVED
 import dartzee.logging.Severity
+import dartzee.theme.ThemeId
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -16,6 +19,7 @@ private val INT_PREF = Preference("fake_int", 20)
 private val DOUBLE_PREF = Preference("fake_double", 2.5)
 private val BOOLEAN_PREF = Preference("fake_boolean", false)
 private val COLOR_PREF = Preference("fake_color", Color.RED)
+private val THEME_PREF = Preference("fake_theme", ThemeId.None)
 
 class InMemoryPreferenceServiceTest : PreferenceServiceTest() {
     override val implementation = InMemoryPreferenceService()
@@ -35,6 +39,7 @@ abstract class PreferenceServiceTest : AbstractTest() {
         implementation.delete(DOUBLE_PREF)
         implementation.delete(BOOLEAN_PREF)
         implementation.delete(COLOR_PREF)
+        implementation.delete(THEME_PREF)
     }
 
     @Test
@@ -92,6 +97,15 @@ abstract class PreferenceServiceTest : AbstractTest() {
     }
 
     @Test
+    fun `Getting and setting themeIds`() {
+        implementation.find(THEME_PREF) shouldBe null
+        implementation.get(THEME_PREF) shouldBe ThemeId.None
+
+        implementation.save(THEME_PREF, ThemeId.Halloween)
+        implementation.get(THEME_PREF) shouldBe ThemeId.Halloween
+    }
+
+    @Test
     fun `Getting and setting colors`() {
         implementation.find(COLOR_PREF) shouldBe null
         implementation.get(COLOR_PREF) shouldBe Color.RED
@@ -109,6 +123,61 @@ abstract class PreferenceServiceTest : AbstractTest() {
 
         implementation.get(COLOR_PREF) shouldBe Color.BLACK
         verifyLog(CODE_PARSE_ERROR, Severity.ERROR)
+    }
+
+    @Test
+    fun `Saving a default value when unset should do nothing`() {
+        implementation.save(STRING_PREF, STRING_PREF.default)
+
+        implementation.find(STRING_PREF) shouldBe null
+        verifyNoLogs(CODE_PREFERENCE_SAVED)
+    }
+
+    @Test
+    fun `Should save a default value if previously set to something else`() {
+        implementation.save(STRING_PREF, "bar")
+        clearLogs()
+
+        implementation.save(STRING_PREF, STRING_PREF.default)
+        implementation.get(STRING_PREF) shouldBe "foo"
+        val info = verifyLog(CODE_PREFERENCE_SAVED)
+        info.message shouldBe "Updated preference [fake_string] to foo"
+    }
+
+    @Test
+    fun `Should save and log a line when saving non-default`() {
+        implementation.save(STRING_PREF, "bar")
+        implementation.get(STRING_PREF) shouldBe "bar"
+        val info = verifyLog(CODE_PREFERENCE_SAVED)
+        info.message shouldBe "Updated preference [fake_string] to bar"
+    }
+
+    @Test
+    fun `Should not log if updating to value that's already set`() {
+        implementation.save(STRING_PREF, "bar")
+        clearLogs()
+
+        implementation.save(STRING_PREF, "bar")
+        verifyNoLogs(CODE_PREFERENCE_SAVED)
+    }
+
+    @Test
+    fun `Delete should no-op if preference is unset`() {
+        implementation.delete(STRING_PREF)
+
+        implementation.find(STRING_PREF) shouldBe null
+        verifyNoLogs(CODE_PREFERENCE_DELETED)
+    }
+
+    @Test
+    fun `Delete should remove the preference`() {
+        implementation.save(STRING_PREF, "some-value")
+
+        implementation.delete(STRING_PREF)
+
+        implementation.find(STRING_PREF) shouldBe null
+        val log = verifyLog(CODE_PREFERENCE_DELETED)
+        log.message shouldBe "Deleted preference [fake_string]"
     }
 
     @Test

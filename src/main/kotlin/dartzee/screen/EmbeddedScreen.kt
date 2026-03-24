@@ -43,7 +43,13 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
         btnNext.add(iconNext, BorderLayout.EAST)
         btnBack.name = "Back"
 
-        updateAppearance()
+        val baseFont = getBaseFont()
+
+        iconNext.icon = themedIcon("/buttons/rightArrow.png")
+        btnBack.icon = themedIcon("/buttons/leftArrow.png")
+
+        lblNext.font = baseFont.deriveFont(Font.PLAIN, 20f)
+        btnBack.font = baseFont.deriveFont(Font.PLAIN, 20f)
 
         btnBack.addActionListener(this)
         btnNext.addActionListener(this)
@@ -90,20 +96,6 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
 
     open fun nextPressed() {
         // default method
-    }
-
-    private fun updateAppearance() {
-        val baseFont = getBaseFont()
-
-        iconNext.icon = themedIcon("/buttons/rightArrow.png")
-        btnBack.icon = themedIcon("/buttons/leftArrow.png")
-
-        lblNext.font = baseFont.deriveFont(Font.PLAIN, 20f)
-        btnBack.font = baseFont.deriveFont(Font.PLAIN, 20f)
-    }
-
-    open fun fireAppearancePreferencesChanged() {
-        updateAppearance()
     }
 
     /** Default methods */

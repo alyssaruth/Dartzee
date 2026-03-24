@@ -73,7 +73,7 @@ object Themes {
 
     val HALLOWEEN =
         Theme(
-            "halloween",
+            ThemeId.Halloween,
             lightOrange,
             orange,
             Color.decode("#32172a"),
@@ -82,6 +82,7 @@ object Themes {
             fontColor = bloodRed,
             dartboardColours = halloweenDartboardColours,
             animations = halloweenAnimations.toMap(),
+            finder = ::findHalloween,
         )
 
     private val easterAnimations: List<Pair<IAnimationTrigger, IAnimation>> =
@@ -97,7 +98,7 @@ object Themes {
 
     val EASTER =
         Theme(
-            "easter",
+            ThemeId.Easter,
             Color.decode("#c1f0fb"),
             Color.decode("#8aadd3"),
             Color.decode("#e0cdff"),
@@ -109,6 +110,7 @@ object Themes {
             animations = easterAnimations.toMap(),
             bannerScaleFactor = 0.5,
             bannerOffset = 0.3,
+            finder = ::findEaster,
         )
 
     private val beerSmashAnimation =
@@ -134,7 +136,7 @@ object Themes {
 
     val OKTOBERFEST =
         Theme(
-            "oktoberfest",
+            ThemeId.Oktoberfest,
             Color.decode("#e3570a"),
             Color.decode("#764d2a"),
             Color.decode("#fbb40e"),
@@ -143,5 +145,6 @@ object Themes {
             dartboardColours = oktoberfestDartboardColours,
             menuFontSize = 24f,
             animations = oktoberfestAnimations.toMap(),
+            finder = ::findOktoberfest,
         )
 }

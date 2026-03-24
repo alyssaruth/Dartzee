@@ -11,8 +11,6 @@ import dartzee.logging.KEY_CURRENT_SCREEN
 import dartzee.logging.LoggingCode
 import dartzee.main.exitApplication
 import dartzee.`object`.DartsClient
-import dartzee.theme.Themes
-import dartzee.theme.applyCurrentTheme
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
@@ -40,8 +38,6 @@ private const val CMD_CLEAR_CONSOLE = "cls"
 private const val CMD_EMPTY_SCREEN_CACHE = "emptyscr"
 private const val CMD_GUID = "guid"
 private const val CMD_TEST = "test"
-private const val CMD_VANILLA = "vanilla"
-private const val CMD_HALLOWEEN = "halloween"
 
 val APP_SIZE = Dimension(1000, 700)
 
@@ -174,12 +170,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         } else if (cmd == CMD_TEST) {
             val window = TestWindow()
             window.isVisible = true
-        } else if (cmd == CMD_HALLOWEEN) {
-            InjectedThings.theme = Themes.HALLOWEEN
-            applyCurrentTheme()
-        } else if (cmd == CMD_VANILLA) {
-            InjectedThings.theme = null
-            applyCurrentTheme()
         }
 
         return textToShow

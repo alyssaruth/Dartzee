@@ -8,7 +8,7 @@ import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
 
 private fun getPreferenceTabs() =
-    listOf(PreferencesPanelDartboard(), PreferencesPanelScorer(), PreferencesPanelMisc())
+    listOf(PreferencesPanelAppearance(), PreferencesPanelDartboard(), PreferencesPanelMisc())
 
 class PreferencesScreen(private val tabs: List<AbstractPreferencesPanel> = getPreferenceTabs()) :
     EmbeddedScreen() {

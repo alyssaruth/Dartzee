@@ -14,7 +14,6 @@ import dartzee.theme.getBaseFont
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
-import dartzee.utils.ResourceCache
 import dartzee.utils.UPPER_BOUND_DOUBLE_RATIO
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.computeEdgePoints
@@ -145,7 +144,7 @@ open class PresentationDartboard(
         val svgHeight = (svg.computeShape(viewBox).bounds.height * theme.bannerScaleFactor).toInt()
         val font = getFontForHeight(getBaseFont(), svgHeight, g)
 
-        val bannerTitle = theme.name.replaceFirstChar { it.uppercase() }
+        val bannerTitle = theme.name
         val center = computeCenter()
         center.y -= (theme.bannerOffset * svgHeight).toInt()
         paintLabel(g, center, svgHeight, font, theme.fontColor, bannerTitle)
@@ -250,7 +249,7 @@ open class PresentationDartboard(
         val outerRadius = UPPER_BOUND_OUTSIDE_BOARD_RATIO * radius
         val lblHeight = ((outerRadius - radius) / 2).roundToInt()
 
-        val baseFont = InjectedThings.theme?.dartboardFont ?: ResourceCache.BASE_FONT
+        val baseFont = colourWrapper.font
         val fontToUse = getFontForHeight(baseFont, lblHeight, g)
         (1..20).forEach { paintScoreLabel(it, g, fontToUse, lblHeight) }
     }

@@ -2,43 +2,77 @@ package dartzee.theme
 
 import com.github.weisj.jsvg.SVGDocument
 import com.github.weisj.jsvg.parser.SVGLoader
-import dartzee.`object`.DartsClient
-import dartzee.screen.ScreenCache
+import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
+import java.awt.Color
 import java.awt.Font
+import java.io.BufferedInputStream
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
 import javax.sound.sampled.AudioSystem
 import javax.swing.ImageIcon
 
+val DEFAULT_BACKGROUND = Color(214, 217, 223)
+val DEFAULT_BUTTON_COLOUR = Color(169, 176, 190)
+
+typealias FestivalFinder = (Int) -> Pair<LocalDate, LocalDate>
+
+fun themeMap() = listOf(Themes.EASTER, Themes.OKTOBERFEST, Themes.HALLOWEEN).associateBy { it.id }
+
+fun themeDescription(id: ThemeId, now: LocalDate): String {
+    val finder = themeMap()[id]?.finder
+
+    return when (id) {
+        ThemeId.None -> "The original grey-on-grey, like it's still the 1990s"
+        ThemeId.Easter ->
+            "Bunnies & pastel colours! \n\nWill next pop up on ${nextDue(now, finder)}"
+        ThemeId.Oktoberfest ->
+            "Time to get the Lederhosen out and crack open some German beer!\n\nHappy hour next begins on ${nextDue(now, finder)}"
+        ThemeId.Halloween ->
+            "Zombies, eyeballs and witches have come to terrorise the app!\n\nNext haunting will start on ${nextDue(now, finder)}"
+    }
+}
+
 fun autoApplyTheme() {
-    InjectedThings.theme = pickThemeForDate(LocalDate.now())
+    InjectedThings.theme = pickTheme(LocalDate.now())
     InjectedThings.theme?.apply()
 }
 
-fun pickThemeForDate(now: LocalDate): Theme? {
-    if (DartsClient.devMode) {
-        return Themes.HALLOWEEN
+private fun nextDue(now: LocalDate, finder: FestivalFinder?): LocalDate {
+    finder ?: throw IllegalArgumentException("Called nextDue with no finder function")
+
+    val thisYear = finder(now.year).first
+
+    if (now.isBefore(thisYear)) {
+        return thisYear
     }
 
-    val easterSunday = findEasterSunday(now.year)
-    if (now.isBefore(easterSunday.plusDays(1)) && now.isAfter(easterSunday.minusDays(9))) {
-        return Themes.EASTER
-    }
-
-    val (oktoberfestStart, oktoberfestEnd) = findOktoberfest(now.year)
-    if (now.isBefore(oktoberfestEnd.plusDays(1)) && now.isAfter(oktoberfestStart.minusDays(1))) {
-        return Themes.OKTOBERFEST
-    }
-
-    if (now.month == Month.OCTOBER && now.dayOfMonth >= 24) {
-        return Themes.HALLOWEEN
-    }
-
-    return null
+    return finder(now.year + 1).first
 }
+
+fun pickTheme(now: LocalDate): Theme? {
+    val autoTheme = getAutomaticThemeForDate(now)
+    if (autoTheme != null) {
+        return autoTheme
+    }
+
+    val themeId = InjectedThings.preferenceService.get(Preferences.theme)
+    return themeMap()[themeId]
+}
+
+private fun getAutomaticThemeForDate(now: LocalDate): Theme? =
+    themeMap().values.find { theme -> now.inRange(theme.finder) }
+
+private fun LocalDate.inRange(finder: FestivalFinder?): Boolean {
+    finder ?: return false
+    val (start, end) = finder(year)
+    return isBefore(end.plusDays(1)) && isAfter(start.minusDays(1))
+}
+
+fun findHalloween(year: Int): Pair<LocalDate, LocalDate> =
+    LocalDate.of(year, Month.OCTOBER, 24) to LocalDate.of(year, Month.OCTOBER, 31)
 
 fun findOktoberfest(year: Int): Pair<LocalDate, LocalDate> {
     val germanUnityDay = LocalDate.of(year, Month.OCTOBER, 3)
@@ -52,6 +86,11 @@ fun findOktoberfest(year: Int): Pair<LocalDate, LocalDate> {
 
     val startDate = endDate.minusDays(15L + daysAdded)
     return startDate to endDate
+}
+
+fun findEaster(year: Int): Pair<LocalDate, LocalDate> {
+    val easterSunday = findEasterSunday(year)
+    return easterSunday.minusDays(8) to easterSunday
 }
 
 /** https://en.wikipedia.org/wiki/Date_of_Easter#Gauss's_Easter_algorithm */
@@ -81,11 +120,6 @@ fun findEasterSunday(year: Int): LocalDate {
     return LocalDate.of(year, 4, H - 31)
 }
 
-fun applyCurrentTheme() {
-    InjectedThings.theme?.apply()
-    ScreenCache.fireAppearancePreferencesChanged()
-}
-
 fun fontForResource(resourcePath: String): Font? {
     val fontStream = Theme::class.java.getResourceAsStream(resourcePath) ?: return null
 
@@ -95,7 +129,7 @@ fun fontForResource(resourcePath: String): Font? {
 fun clipForResource(resourcePath: String): AudioClip? {
     val stream = Theme::class.java.getResourceAsStream(resourcePath) ?: return null
 
-    val audioStream = AudioSystem.getAudioInputStream(stream) ?: return null
+    val audioStream = AudioSystem.getAudioInputStream(BufferedInputStream(stream)) ?: return null
     return AudioClip(audioStream)
 }
 
@@ -107,8 +141,5 @@ fun svgForResource(resourcePath: String): SVGDocument? {
 
 fun getBaseFont(): Font = InjectedThings.theme?.font ?: ResourceCache.BASE_FONT
 
-fun themedIcon(path: String) =
-    InjectedThings.theme?.icon(path) ?: ImageIcon(Theme::class.java.getResource(path))
-
-private fun Theme.icon(path: String) =
-    Theme::class.java.getResource("/theme/$name$path")?.let(::ImageIcon)
+fun themedIcon(path: String, theme: Theme? = InjectedThings.theme) =
+    theme?.icon(path) ?: ImageIcon(Theme::class.java.getResource(path))

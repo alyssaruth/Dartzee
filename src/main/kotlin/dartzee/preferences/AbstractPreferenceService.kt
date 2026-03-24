@@ -1,21 +1,33 @@
 package dartzee.preferences
 
 import dartzee.logging.CODE_PARSE_ERROR
+import dartzee.logging.CODE_PREFERENCE_DELETED
 import dartzee.logging.CODE_PREFERENCE_SAVED
+import dartzee.theme.ThemeId
 import dartzee.utils.InjectedThings.logger
 import java.awt.Color
 
 abstract class AbstractPreferenceService {
-    abstract fun <T : Any> delete(preference: Preference<T>)
+    fun <T : Any> delete(preference: Preference<T>) {
+        findRaw(preference) ?: return
+
+        deleteImpl(preference)
+        logger.info(CODE_PREFERENCE_DELETED, "Deleted preference [${preference.name}]")
+    }
+
+    abstract fun <T : Any> deleteImpl(preference: Preference<T>)
 
     protected abstract fun <T> findRaw(preference: Preference<T>): String?
 
     protected abstract fun <T : Any> saveRaw(preference: Preference<T>, value: String)
 
     fun <T : Any> save(preference: Preference<T>, value: T) {
+        val original = findRaw(preference) ?: toRawValue(preference.default)
         val raw = toRawValue(value)
-        logger.info(CODE_PREFERENCE_SAVED, "Updated preference [${preference.name}] to $raw")
-        saveRaw(preference, raw)
+        if (original != raw) {
+            saveRaw(preference, raw)
+            logger.info(CODE_PREFERENCE_SAVED, "Updated preference [${preference.name}] to $raw")
+        }
     }
 
     fun <T : Any> find(preference: Preference<T>): T? =
@@ -40,6 +52,7 @@ abstract class AbstractPreferenceService {
             Int::class -> raw.toInt() as T
             Color::class -> raw.toColor() as T
             String::class -> raw as T
+            ThemeId::class -> ThemeId.parseFromPreference(raw) as T
             else ->
                 throw TypeCastException(
                     "Unhandled type [${desiredType}] for preference ${preference.name}"
