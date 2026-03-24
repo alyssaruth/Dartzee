@@ -5,6 +5,7 @@ import com.github.weisj.jsvg.parser.SVGLoader
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
+import java.awt.Color
 import java.awt.Font
 import java.io.BufferedInputStream
 import java.time.DayOfWeek
@@ -13,27 +14,35 @@ import java.time.Month
 import javax.sound.sampled.AudioSystem
 import javax.swing.ImageIcon
 
+val DEFAULT_BACKGROUND = Color(214, 217, 223)
+val DEFAULT_BUTTON_COLOUR = Color(169, 176, 190)
+
 typealias FestivalFinder = (Int) -> Pair<LocalDate, LocalDate>
 
 fun themeMap() = listOf(Themes.EASTER, Themes.OKTOBERFEST, Themes.HALLOWEEN).associateBy { it.id }
 
-fun themeDescription(id: ThemeId, now: LocalDate) =
-    when (id) {
+fun themeDescription(id: ThemeId, now: LocalDate): String {
+    val finder = themeMap()[id]?.finder
+
+    return when (id) {
         ThemeId.None -> "The original grey-on-grey, like it's still the 1990s"
         ThemeId.Easter ->
-            "Bunnies & pastel colours! \n\nWill next pop up on ${nextDue(now, ::findEaster)}"
+            "Bunnies & pastel colours! \n\nWill next pop up on ${nextDue(now, finder)}"
         ThemeId.Oktoberfest ->
-            "Time to get the Lederhosen out and crack open some German beer!\n\nHappy hour next begins on ${nextDue(now, ::findOktoberfest)}"
+            "Time to get the Lederhosen out and crack open some German beer!\n\nHappy hour next begins on ${nextDue(now, finder)}"
         ThemeId.Halloween ->
-            "Zombies, eyeballs and witches have come to terrorise the app!\n\nNext haunting will start on ${nextDue(now, ::findHalloween)}"
+            "Zombies, eyeballs and witches have come to terrorise the app!\n\nNext haunting will start on ${nextDue(now, finder)}"
     }
+}
 
 fun autoApplyTheme() {
     InjectedThings.theme = pickTheme(LocalDate.now())
     InjectedThings.theme?.apply()
 }
 
-private fun nextDue(now: LocalDate, finder: FestivalFinder): LocalDate {
+private fun nextDue(now: LocalDate, finder: FestivalFinder?): LocalDate {
+    finder ?: throw IllegalArgumentException("Called nextDue with no finder function")
+
     val thisYear = finder(now.year).first
 
     if (now.isBefore(thisYear)) {
@@ -53,7 +62,7 @@ fun pickTheme(now: LocalDate): Theme? {
     return themeMap()[themeId]
 }
 
-fun getAutomaticThemeForDate(now: LocalDate): Theme? =
+private fun getAutomaticThemeForDate(now: LocalDate): Theme? =
     themeMap().values.find { theme -> now.inRange(theme.finder) }
 
 private fun LocalDate.inRange(finder: FestivalFinder?): Boolean {

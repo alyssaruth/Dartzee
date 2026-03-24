@@ -1,10 +1,13 @@
 package dartzee.theme
 
+import com.github.alyssaburlton.swingtest.shouldMatch
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.helper.AbstractTest
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
+import io.kotest.matchers.shouldBe
 import java.awt.Color
 import java.awt.Dimension
+import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JRadioButton
@@ -56,5 +59,23 @@ class ThemeTest : AbstractTest() {
         subPanel.add(rdbtnTwo)
 
         panel.shouldMatchImage("themedPanel")
+    }
+
+    @Test
+    fun `Should load dartboard font`() {
+        Themes.OKTOBERFEST.dartboardColourWrapper!!.font shouldBe
+            fontForResource("/theme/oktoberfest/dartboard.ttf")
+    }
+
+    @Test
+    fun `Should return an imageIcon if an icon resource is found`() {
+        val expected =
+            ImageIcon(javaClass.getResource("/theme/halloween/buttons/playerManagement.png"))
+        Themes.HALLOWEEN.icon("/buttons/playerManagement.png")!!.shouldMatch(expected)
+    }
+
+    @Test
+    fun `Should return null if no resource is found`() {
+        Themes.HALLOWEEN.icon("/buttons/blah.png") shouldBe null
     }
 }

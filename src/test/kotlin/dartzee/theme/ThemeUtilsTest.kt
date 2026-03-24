@@ -2,7 +2,9 @@ package dartzee.theme
 
 import com.github.alyssaburlton.swingtest.shouldMatch
 import dartzee.helper.AbstractTest
+import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.ResourceCache
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
@@ -47,6 +49,14 @@ class ThemeUtilsTest : AbstractTest() {
         InjectedThings.theme = Themes.HALLOWEEN
 
         getBaseFont() shouldBe Themes.HALLOWEEN.font
+    }
+
+    @Test
+    fun `should pick preference theme if set and not in a festival`() {
+        preferenceService.save(Preferences.theme, ThemeId.Easter)
+
+        pickTheme(LocalDate.of(2026, Month.OCTOBER, 31)) shouldBe Themes.HALLOWEEN
+        pickTheme(LocalDate.of(2026, Month.NOVEMBER, 1)) shouldBe Themes.EASTER
     }
 
     @Test

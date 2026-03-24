@@ -1,6 +1,5 @@
 package dartzee.theme
 
-import dartzee.logging.CODE_PARSE_ERROR
 import dartzee.logging.CODE_THEME_APPLIED
 import dartzee.`object`.ColourWrapper
 import dartzee.screen.animation.IAnimation
@@ -12,27 +11,6 @@ import java.awt.GraphicsEnvironment
 import java.time.LocalDate
 import javax.swing.ImageIcon
 import javax.swing.UIManager
-
-enum class ThemeId {
-    None,
-    Easter,
-    Oktoberfest,
-    Halloween;
-
-    companion object {
-        fun parseFromPreference(preference: String): ThemeId =
-            try {
-                ThemeId.valueOf(preference)
-            } catch (ex: Exception) {
-                logger.error(
-                    CODE_PARSE_ERROR,
-                    "Failed to parse ThemeId from preference: $preference",
-                    ex,
-                )
-                return None
-            }
-    }
-}
 
 data class Theme(
     val id: ThemeId,

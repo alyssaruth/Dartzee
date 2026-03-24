@@ -10,14 +10,14 @@ import javax.swing.JPanel
 import javax.swing.border.TitledBorder
 import net.miginfocom.swing.MigLayout
 
-class ThemeSelector : JPanel(), ActionListener {
-    private val themeIds = ThemeId.values().toList()
+class ThemeSelector(private val themeIds: List<ThemeId> = ThemeId.values().toList()) :
+    JPanel(), ActionListener {
 
     private val panelRight = JPanel()
     private val panelLeft = JPanel()
-    private val btnRight = JButton()
-    private val btnLeft = JButton()
-    private var themePanel = ThemePanel(ThemeId.None)
+    private val btnNext = JButton()
+    private val btnPrevious = JButton()
+    private var themePanel = ThemePanel(themeIds.first())
     private val actionListeners = mutableListOf<ActionListener>()
 
     private val titleBorder =
@@ -28,21 +28,25 @@ class ThemeSelector : JPanel(), ActionListener {
 
         setLayout(BorderLayout(20, 0))
 
-        btnRight.icon = themedIcon("/buttons/rightArrow.png")
-        btnLeft.icon = themedIcon("/buttons/leftArrow.png")
+        btnNext.name = "Next"
+        btnPrevious.name = "Previous"
+
+        btnNext.icon = themedIcon("/buttons/rightArrow.png")
+        btnPrevious.icon = themedIcon("/buttons/leftArrow.png")
 
         panelLeft.layout = MigLayout("al center center")
-        panelLeft.add(btnLeft)
+        panelLeft.add(btnPrevious)
 
         panelRight.layout = MigLayout("al center center")
-        panelRight.add(btnRight)
+        panelRight.add(btnNext)
 
         add(panelLeft, BorderLayout.WEST)
         add(panelRight, BorderLayout.EAST)
         add(themePanel, BorderLayout.CENTER)
 
-        btnLeft.addActionListener(this)
-        btnRight.addActionListener(this)
+        selectionChanged(0)
+        btnPrevious.addActionListener(this)
+        btnNext.addActionListener(this)
     }
 
     fun selectedThemeId() = themePanel.themeId
@@ -54,17 +58,17 @@ class ThemeSelector : JPanel(), ActionListener {
 
         repaint()
 
-        btnLeft.isEnabled = themeIds.indexOf(selectedThemeId()) > 0
-        btnRight.isEnabled = themeIds.indexOf(selectedThemeId()) < themeIds.size - 1
+        btnPrevious.isEnabled = themeIds.indexOf(selectedThemeId()) > 0
+        btnNext.isEnabled = themeIds.indexOf(selectedThemeId()) < themeIds.size - 1
 
-        btnRight.icon = themedIcon("/buttons/rightArrow.png", themePanel.theme)
-        btnLeft.icon = themedIcon("/buttons/leftArrow.png", themePanel.theme)
+        btnNext.icon = themedIcon("/buttons/rightArrow.png", themePanel.theme)
+        btnPrevious.icon = themedIcon("/buttons/leftArrow.png", themePanel.theme)
 
-        val btnColour = themePanel.theme?.primary ?: Color(169, 176, 190)
-        val bg = themePanel.theme?.background ?: Color(214, 217, 223)
+        val btnColour = themePanel.theme?.primary ?: DEFAULT_BUTTON_COLOUR
+        val bg = themePanel.theme?.background ?: DEFAULT_BACKGROUND
 
-        btnLeft.background = btnColour
-        btnRight.background = btnColour
+        btnPrevious.background = btnColour
+        btnNext.background = btnColour
 
         titleBorder.titleColor = themePanel.theme?.fontColor ?: Color.BLACK
 
@@ -95,8 +99,8 @@ class ThemeSelector : JPanel(), ActionListener {
 
     override fun actionPerformed(e: ActionEvent) {
         when (e.source) {
-            btnRight -> nextPressed()
-            btnLeft -> previousPressed()
+            btnNext -> nextPressed()
+            btnPrevious -> previousPressed()
         }
     }
 }
