@@ -4,6 +4,7 @@ import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.doHover
 import com.github.alyssaburlton.swingtest.doHoverAway
 import dartzee.helper.AbstractTest
+import dartzee.theme.HALLOWEEN
 import dartzee.theme.Themes
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.shouldBe

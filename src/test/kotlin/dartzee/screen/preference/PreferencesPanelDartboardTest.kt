@@ -1,22 +1,30 @@
 package dartzee.screen.preference
 
+import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.toBufferedImage
 import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.bean.PresentationDartboard
 import dartzee.core.util.runOnEventThreadBlocking
+import dartzee.helper.makeTheme
+import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.preferences.Preferences
+import dartzee.theme.ThemeId
 import dartzee.utils.DartsColour
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.ints.shouldBeGreaterThan
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
 import javax.swing.JFrame
+import javax.swing.JTextPane
 import org.junit.jupiter.api.Test
 
-class TestPreferencesPanelDartboard : AbstractPreferencePanelTest<PreferencesPanelDartboard>() {
+class PreferencesPanelDartboardTest : AbstractPreferencePanelTest<PreferencesPanelDartboard>() {
     @Test
     fun `Dartboard should refresh when settings are changed`() {
         val frame = JFrame()
@@ -38,6 +46,31 @@ class TestPreferencesPanelDartboard : AbstractPreferencePanelTest<PreferencesPan
 
         verifyDartboardCenterColour(panel, Color.MAGENTA)
     }
+
+    @Test
+    fun `Should not show warning when there's no current theme`() {
+        val panel = PreferencesPanelDartboard()
+        panel.themeWarning() shouldBe null
+    }
+
+    @Test
+    fun `Should not show warning when current theme doesn't override the dartboard`() {
+        InjectedThings.theme = makeTheme(dartboardColours = null)
+        val panel = PreferencesPanelDartboard()
+        panel.themeWarning() shouldBe null
+    }
+
+    @Test
+    fun `Should show warning when current theme overrides the dartboard`() {
+        InjectedThings.theme =
+            makeTheme(id = ThemeId.Easter, dartboardColours = DEFAULT_COLOUR_WRAPPER)
+        val panel = PreferencesPanelDartboard()
+        val themeWarning = panel.themeWarning()
+        themeWarning.shouldNotBeNull()
+        themeWarning.text shouldContain "Easter theme is currently applied."
+    }
+
+    private fun PreferencesPanelDartboard.themeWarning() = findChild<JTextPane>("ThemeWarning")
 
     private fun verifyDartboardCenterColour(panel: PreferencesPanelDartboard, color: Color) {
         waitForAssertion {

@@ -318,11 +318,12 @@ fun makeIncludedPlayerParameters(
 
 fun makeTheme(
     id: ThemeId = ThemeId.Easter,
+    description: String = "Woohoo",
     primary: Color = Color.RED,
     primaryDark: Color = Color.BLUE,
     background: Color = Color.YELLOW,
     lightBackground: Color = Color.GREEN,
-    dartboardColours: ColourWrapper = DEFAULT_COLOUR_WRAPPER,
+    dartboardColours: ColourWrapper? = DEFAULT_COLOUR_WRAPPER,
     linkColour: Color = Color.BLUE,
     fontColor: Color = Color.BLACK,
     menuFontSize: Float? = null,
@@ -330,6 +331,7 @@ fun makeTheme(
 ) =
     Theme(
         id,
+        description,
         primary,
         primaryDark,
         background,
