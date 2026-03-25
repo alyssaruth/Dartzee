@@ -3,7 +3,7 @@ package dartzee.theme
 import com.github.alyssaburlton.swingtest.shouldMatch
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.helper.AbstractTest
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
+import dartzee.helper.makeTheme
 import io.kotest.matchers.shouldBe
 import java.awt.Color
 import java.awt.Dimension
@@ -20,14 +20,12 @@ class ThemeTest : AbstractTest() {
     @Tag("screenshot")
     fun `Should apply theme`() {
         val theme =
-            Theme(
+            makeTheme(
                 ThemeId.Easter,
-                Color.magenta,
-                Color.pink,
-                Color.decode("#C9A0DC"),
-                Color.decode("#D8BFD8"),
-                DEFAULT_COLOUR_WRAPPER,
-                Color.BLUE,
+                primary = Color.magenta,
+                primaryDark = Color.pink,
+                background = Color.decode("#C9A0DC"),
+                lightBackground = Color.decode("#D8BFD8"),
             )
 
         theme.apply()

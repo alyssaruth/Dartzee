@@ -3,16 +3,20 @@ package dartzee.screen.preference
 import dartzee.bean.InteractiveDartboard
 import dartzee.core.bean.ColourPicker
 import dartzee.core.bean.ColourSelectionListener
+import dartzee.core.util.alignCentrally
 import dartzee.core.util.setFontSize
 import dartzee.`object`.ColourWrapper
 import dartzee.preferences.Preference
 import dartzee.preferences.Preferences
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
 import javax.swing.JLabel
 import javax.swing.JPanel
+import javax.swing.JTextPane
+import javax.swing.border.EmptyBorder
 import net.miginfocom.swing.MigLayout
 
 class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionListener {
@@ -29,6 +33,24 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
     private var dartboard = InteractiveDartboard()
 
     init {
+        if (InjectedThings.theme?.dartboardColourWrapper != null) {
+            val panelNorth = JPanel()
+            panelNorth.border = EmptyBorder(10, 20, 10, 20)
+            panelNorth.layout = BorderLayout()
+            add(panelNorth, BorderLayout.NORTH)
+
+            val textPane = JTextPane()
+            textPane.name = "ThemeWarning"
+            textPane.text =
+                "${InjectedThings.theme?.name} theme is currently applied.\n\nTo apply your own dartboard colours, select a theme without its own dartboard theming."
+            textPane.background = Color.decode("#FFEE8C")
+            textPane.isEditable = false
+            textPane.alignCentrally()
+            textPane.setFontSize(16)
+
+            panelNorth.add(textPane, BorderLayout.CENTER)
+        }
+
         panelCenter.layout = BorderLayout()
         add(panelCenter, BorderLayout.CENTER)
         panelCenter.add(dartboard, BorderLayout.CENTER)

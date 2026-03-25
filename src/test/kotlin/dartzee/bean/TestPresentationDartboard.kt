@@ -11,6 +11,9 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
 import dartzee.screen.game.SegmentStatuses
+import dartzee.theme.EASTER
+import dartzee.theme.HALLOWEEN
+import dartzee.theme.OKTOBERFEST
 import dartzee.theme.Themes
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments

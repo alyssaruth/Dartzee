@@ -8,6 +8,7 @@ import dartzee.core.util.getSqlDateNow
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.helper.makeDartsModel
+import dartzee.theme.HALLOWEEN
 import dartzee.theme.Themes
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.collections.shouldContainExactly

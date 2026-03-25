@@ -8,9 +8,8 @@ import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.Font
 import java.io.BufferedInputStream
-import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.Month
+import java.time.format.DateTimeFormatter
 import javax.sound.sampled.AudioSystem
 import javax.swing.ImageIcon
 
@@ -19,30 +18,39 @@ val DEFAULT_BUTTON_COLOUR = Color(169, 176, 190)
 
 typealias FestivalFinder = (Int) -> Pair<LocalDate, LocalDate>
 
+data class FestivalInfo(val finder: FestivalFinder, val nextDueDesc: String)
+
+object Themes
+
 fun themeMap() = listOf(Themes.EASTER, Themes.OKTOBERFEST, Themes.HALLOWEEN).associateBy { it.id }
 
 fun themeDescription(id: ThemeId, now: LocalDate): String {
-    val finder = themeMap()[id]?.finder
-
-    return when (id) {
-        ThemeId.None -> "The original grey-on-grey, like it's still the 1990s"
-        ThemeId.Easter ->
-            "Bunnies & pastel colours! \n\nWill next pop up on ${nextDue(now, finder)}"
-        ThemeId.Oktoberfest ->
-            "Time to get the Lederhosen out and crack open some German beer!\n\nHappy hour next begins on ${nextDue(now, finder)}"
-        ThemeId.Halloween ->
-            "Zombies, eyeballs and witches have come to terrorise the app!\n\nNext haunting will start on ${nextDue(now, finder)}"
+    val basicInfo = basicDescription(id)
+    val theme = themeMap()[id]
+    val festivalInfo = theme?.festivalInfo
+    return if (festivalInfo == null) {
+        basicInfo
+    } else if (getAutomaticThemeForDate(now) == theme) {
+        "$basicInfo\n\nCurrently active - will end on ${festivalInfo.finder(now.year).second.fmt()}."
+    } else {
+        "$basicInfo\n\n${festivalInfo.nextDueDesc} on ${nextDue(now, festivalInfo.finder).fmt()}."
     }
 }
+
+private fun LocalDate.fmt() = format(DateTimeFormatter.ofPattern("d MMM uuuu"))
+
+private fun basicDescription(id: ThemeId): String =
+    when (id) {
+        ThemeId.None -> "The original grey-on-grey, like it's still the 1990s."
+        else -> themeMap().getValue(id).description
+    }
 
 fun autoApplyTheme() {
     InjectedThings.theme = pickTheme(LocalDate.now())
     InjectedThings.theme?.apply()
 }
 
-private fun nextDue(now: LocalDate, finder: FestivalFinder?): LocalDate {
-    finder ?: throw IllegalArgumentException("Called nextDue with no finder function")
-
+private fun nextDue(now: LocalDate, finder: FestivalFinder): LocalDate {
     val thisYear = finder(now.year).first
 
     if (now.isBefore(thisYear)) {
@@ -62,62 +70,13 @@ fun pickTheme(now: LocalDate): Theme? {
     return themeMap()[themeId]
 }
 
-private fun getAutomaticThemeForDate(now: LocalDate): Theme? =
-    themeMap().values.find { theme -> now.inRange(theme.finder) }
+fun getAutomaticThemeForDate(now: LocalDate): Theme? =
+    themeMap().values.find { theme -> now.inRange(theme.festivalInfo?.finder) }
 
 private fun LocalDate.inRange(finder: FestivalFinder?): Boolean {
     finder ?: return false
     val (start, end) = finder(year)
     return isBefore(end.plusDays(1)) && isAfter(start.minusDays(1))
-}
-
-fun findHalloween(year: Int): Pair<LocalDate, LocalDate> =
-    LocalDate.of(year, Month.OCTOBER, 24) to LocalDate.of(year, Month.OCTOBER, 31)
-
-fun findOktoberfest(year: Int): Pair<LocalDate, LocalDate> {
-    val germanUnityDay = LocalDate.of(year, Month.OCTOBER, 3)
-    val firstSunday =
-        (1..7)
-            .map { LocalDate.of(year, Month.OCTOBER, it) }
-            .first { it.getDayOfWeek() == DayOfWeek.SUNDAY }
-
-    val endDate = if (firstSunday.isBefore(germanUnityDay)) germanUnityDay else firstSunday
-    val daysAdded = maxOf(0, germanUnityDay.dayOfMonth - firstSunday.dayOfMonth)
-
-    val startDate = endDate.minusDays(15L + daysAdded)
-    return startDate to endDate
-}
-
-fun findEaster(year: Int): Pair<LocalDate, LocalDate> {
-    val easterSunday = findEasterSunday(year)
-    return easterSunday.minusDays(8) to easterSunday
-}
-
-/** https://en.wikipedia.org/wiki/Date_of_Easter#Gauss's_Easter_algorithm */
-@Suppress("VariableNaming")
-fun findEasterSunday(year: Int): LocalDate {
-    val a = year % 19
-    val b = year % 4
-    val c = year % 7
-    val k = year / 100
-    val p = (13 + 8 * k) / 25
-    val q = k / 4
-    val M = (15 - p + k - q) % 30
-    val N = (4 + k - q) % 7
-    val d = (19 * a + M) % 30
-    val e = (2 * b + 4 * c + 6 * d + N) % 7
-
-    if (d == 29 && e == 6) {
-        return LocalDate.of(year, 4, 19)
-    } else if (d == 28 && e == 6 && ((11 * M + 11) % 30 < 10)) {
-        return LocalDate.of(year, 4, 18)
-    }
-
-    val H = 22 + d + e
-    if (H <= 31) {
-        return LocalDate.of(year, 3, H)
-    }
-    return LocalDate.of(year, 4, H - 31)
 }
 
 fun fontForResource(resourcePath: String): Font? {

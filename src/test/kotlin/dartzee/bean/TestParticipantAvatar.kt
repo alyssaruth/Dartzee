@@ -7,6 +7,7 @@ import dartzee.helper.insertParticipant
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.screen.game.makeTeam
+import dartzee.theme.HALLOWEEN
 import dartzee.theme.Themes
 import dartzee.utils.InjectedThings
 import org.junit.jupiter.api.Tag

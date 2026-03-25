@@ -106,28 +106,4 @@ class ThemeUtilsTest : AbstractTest() {
         pickTheme(LocalDate.of(2026, Month.OCTOBER, 4)) shouldBe Themes.OKTOBERFEST
         pickTheme(LocalDate.of(2026, Month.OCTOBER, 5)) shouldBe null
     }
-
-    @Test
-    fun `Should find the right date for easter sunday`() {
-        findEasterSunday(2027) shouldBe LocalDate.of(2027, Month.MARCH, 28)
-        findEasterSunday(2026) shouldBe LocalDate.of(2026, Month.APRIL, 5)
-        findEasterSunday(2025) shouldBe LocalDate.of(2025, Month.APRIL, 20)
-        findEasterSunday(2024) shouldBe LocalDate.of(2024, Month.MARCH, 31)
-        findEasterSunday(2023) shouldBe LocalDate.of(2023, Month.APRIL, 9)
-    }
-
-    @Test
-    fun `Should find the right dates for Oktoberfest`() {
-        findOktoberfest(2026) shouldBe
-            (LocalDate.of(2026, Month.SEPTEMBER, 19) to LocalDate.of(2026, Month.OCTOBER, 4))
-
-        findOktoberfest(2025) shouldBe
-            (LocalDate.of(2025, Month.SEPTEMBER, 20) to LocalDate.of(2025, Month.OCTOBER, 5))
-
-        findOktoberfest(2024) shouldBe
-            (LocalDate.of(2024, Month.SEPTEMBER, 21) to LocalDate.of(2024, Month.OCTOBER, 6))
-
-        findOktoberfest(2023) shouldBe
-            (LocalDate.of(2023, Month.SEPTEMBER, 16) to LocalDate.of(2023, Month.OCTOBER, 3))
-    }
 }
