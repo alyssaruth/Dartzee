@@ -11,6 +11,7 @@ import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputedPoint
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.SegmentStatuses
+import dartzee.theme.makeDartLabel
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getDartForSegment
 import java.awt.Dimension
@@ -79,8 +80,7 @@ class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs
 
     private fun addDartLabel(computedPt: ComputedPoint) {
         if (dartboard.isVisible && dartboard.width > 80 && dartboard.height > 80) {
-            val lbl = DartLabel()
-            lbl.location = dartboard.interpretPoint(computedPt)
+            val lbl = makeDartLabel(dartboard.interpretPoint(computedPt))
             add(lbl)
             setLayer(lbl, LAYER_DARTS, 5 - dartsThrown.size)
         }
