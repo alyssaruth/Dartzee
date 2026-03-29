@@ -67,9 +67,7 @@ data class Theme(
 
     fun icon(path: String) = javaClass.getResource("/theme/$resourcePath$path")?.let(::ImageIcon)
 
-    fun isLocked(): Boolean {
-        return unlockDate != null && now.isBefore(unlockDate)
-    }
+    fun isLocked() = unlockDate != null && now.isBefore(unlockDate)
 
     fun <T> getIfUnlocked(getter: (Theme) -> T, lockedValue: T) =
         if (isLocked()) lockedValue else getter(this)
