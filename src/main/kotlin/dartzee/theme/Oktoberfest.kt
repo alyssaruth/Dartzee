@@ -58,6 +58,7 @@ val Themes.OKTOBERFEST: Theme
             menuFontSize = 24f,
             animations = oktoberfestAnimations.toMap(),
             festivalInfo = FestivalInfo(::findOktoberfest, "Happy hour next begins"),
+            unlockDate = LocalDate.of(2026, Month.SEPTEMBER, 19),
         )
 
 private fun findOktoberfest(year: Int): Pair<LocalDate, LocalDate> {

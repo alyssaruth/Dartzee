@@ -5,12 +5,17 @@ import com.github.alyssaburlton.swingtest.shouldBeDisabled
 import com.github.alyssaburlton.swingtest.shouldBeEnabled
 import com.github.alyssaburlton.swingtest.shouldMatch
 import dartzee.helper.AbstractTest
+import dartzee.utils.InjectedThings
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
+import java.awt.Color
 import java.awt.event.ActionListener
+import java.time.LocalDate
+import java.time.Month
 import javax.swing.ImageIcon
 import javax.swing.JButton
+import javax.swing.border.TitledBorder
 import org.junit.jupiter.api.Test
 
 class ThemeSelectorTest : AbstractTest() {
@@ -60,6 +65,8 @@ class ThemeSelectorTest : AbstractTest() {
 
     @Test
     fun `Should update theme panel, colours and button icons appropriately`() {
+        InjectedThings.now = LocalDate.of(2026, Month.DECEMBER, 1)
+
         val selector = ThemeSelector(themeIds)
 
         // Next -> Halloween
@@ -80,6 +87,26 @@ class ThemeSelectorTest : AbstractTest() {
         val regularArrow = ImageIcon(javaClass.getResource("/buttons/rightArrow.png"))
         selector.nextButton().background shouldBe DEFAULT_BUTTON_COLOUR
         selector.nextButton().icon.shouldMatch(regularArrow)
+
+        selector.selectionIsLocked() shouldBe false
+    }
+
+    @Test
+    fun `Should not reveal any details about a locked theme`() {
+        InjectedThings.now = LocalDate.of(2026, Month.MARCH, 28)
+
+        val selector = ThemeSelector(themeIds)
+        selector.nextButton().doClick()
+        selector.getChild<ThemePanel>().theme shouldBe Themes.HALLOWEEN
+
+        selector.background shouldBe Color.DARK_GRAY
+        (selector.border as TitledBorder).titleColor shouldBe Color.LIGHT_GRAY
+
+        val regularArrow = ImageIcon(javaClass.getResource("/buttons/rightArrow.png"))
+        selector.nextButton().background shouldBe DEFAULT_BUTTON_COLOUR
+        selector.nextButton().icon.shouldMatch(regularArrow)
+
+        selector.selectionIsLocked() shouldBe true
     }
 
     private fun ThemeSelector.nextButton() = getChild<JButton>("Next")

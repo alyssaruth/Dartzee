@@ -4,6 +4,7 @@ import com.github.weisj.jsvg.SVGDocument
 import com.github.weisj.jsvg.parser.SVGLoader
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.now
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.Font
@@ -15,6 +16,7 @@ import javax.swing.ImageIcon
 
 val DEFAULT_BACKGROUND = Color(214, 217, 223)
 val DEFAULT_BUTTON_COLOUR = Color(169, 176, 190)
+val CLASSIC_THEME_DESC = "The original grey-on-grey, like it's still the 1990s."
 
 typealias FestivalFinder = (Int) -> Pair<LocalDate, LocalDate>
 
@@ -24,13 +26,18 @@ object Themes
 
 fun themeMap() = listOf(Themes.EASTER, Themes.OKTOBERFEST, Themes.HALLOWEEN).associateBy { it.id }
 
-fun themeDescription(id: ThemeId, now: LocalDate): String {
+fun themeDescription(id: ThemeId): String {
     val basicInfo = basicDescription(id)
     val theme = themeMap()[id]
+
+    if (theme?.isLocked() ?: false) {
+        return "This theme hasn't unlocked yet. Wait and see!"
+    }
+
     val festivalInfo = theme?.festivalInfo
     return if (festivalInfo == null) {
         basicInfo
-    } else if (getAutomaticThemeForDate(now) == theme) {
+    } else if (getAutomaticThemeForDate() == theme) {
         "$basicInfo\n\nCurrently active - will end on ${festivalInfo.finder(now.year).second.fmt()}."
     } else {
         "$basicInfo\n\n${festivalInfo.nextDueDesc} on ${nextDue(now, festivalInfo.finder).fmt()}."
@@ -41,12 +48,12 @@ private fun LocalDate.fmt() = format(DateTimeFormatter.ofPattern("d MMM uuuu"))
 
 private fun basicDescription(id: ThemeId): String =
     when (id) {
-        ThemeId.None -> "The original grey-on-grey, like it's still the 1990s."
+        ThemeId.None -> CLASSIC_THEME_DESC
         else -> themeMap().getValue(id).description
     }
 
 fun autoApplyTheme() {
-    InjectedThings.theme = pickTheme(LocalDate.now())
+    InjectedThings.theme = pickTheme()
     InjectedThings.theme?.apply()
 }
 
@@ -60,8 +67,8 @@ private fun nextDue(now: LocalDate, finder: FestivalFinder): LocalDate {
     return finder(now.year + 1).first
 }
 
-fun pickTheme(now: LocalDate): Theme? {
-    val autoTheme = getAutomaticThemeForDate(now)
+fun pickTheme(): Theme? {
+    val autoTheme = getAutomaticThemeForDate()
     if (autoTheme != null) {
         return autoTheme
     }
@@ -70,7 +77,7 @@ fun pickTheme(now: LocalDate): Theme? {
     return themeMap()[themeId]
 }
 
-fun getAutomaticThemeForDate(now: LocalDate): Theme? =
+fun getAutomaticThemeForDate(): Theme? =
     themeMap().values.find { theme -> now.inRange(theme.festivalInfo?.finder) }
 
 private fun LocalDate.inRange(finder: FestivalFinder?): Boolean {
@@ -100,5 +107,12 @@ fun svgForResource(resourcePath: String): SVGDocument? {
 
 fun getBaseFont(): Font = InjectedThings.theme?.font ?: ResourceCache.BASE_FONT
 
-fun themedIcon(path: String, theme: Theme? = InjectedThings.theme) =
-    theme?.icon(path) ?: ImageIcon(Theme::class.java.getResource(path))
+fun themedIcon(path: String, theme: Theme? = InjectedThings.theme): ImageIcon {
+    val default = ImageIcon(Theme::class.java.getResource(path))
+
+    return if (theme == null || theme.isLocked()) {
+        default
+    } else {
+        theme.icon(path) ?: default
+    }
+}

@@ -5,6 +5,7 @@ import dartzee.`object`.ColourWrapper
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.now
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.GraphicsEnvironment
@@ -65,4 +66,11 @@ data class Theme(
     }
 
     fun icon(path: String) = javaClass.getResource("/theme/$resourcePath$path")?.let(::ImageIcon)
+
+    fun isLocked(): Boolean {
+        return unlockDate != null && now.isBefore(unlockDate)
+    }
+
+    fun <T> getIfUnlocked(getter: (Theme) -> T, lockedValue: T) =
+        if (isLocked()) lockedValue else getter(this)
 }

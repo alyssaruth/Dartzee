@@ -38,7 +38,7 @@ abstract class AbstractPreferencesPanel : JPanel() {
         stateChanged()
     }
 
-    fun stateChanged() {
+    protected fun stateChanged() {
         btnApply.isEnabled = hasOutstandingChanges()
     }
 

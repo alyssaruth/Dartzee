@@ -143,11 +143,16 @@ class PreferencesPanelAppearance : AbstractPreferencesPanel(), ChangeListener, A
         preferenceService.save(Preferences.theme, themeSelector.selectedThemeId())
     }
 
-    override fun hasOutstandingChanges() =
-        spinnerHueFactor.value != preferenceService.get(Preferences.hueFactor) ||
+    override fun hasOutstandingChanges(): Boolean {
+        if (themeSelector.selectionIsLocked()) {
+            return false
+        }
+
+        return spinnerHueFactor.value != preferenceService.get(Preferences.hueFactor) ||
             spinnerBgBrightness.value != preferenceService.get(Preferences.bgBrightness) ||
             spinnerFgBrightness.value != preferenceService.get(Preferences.fgBrightness) ||
             themeSelector.selectedThemeId() != preferenceService.get(Preferences.theme)
+    }
 
     override fun stateChanged(arg0: ChangeEvent) {
         repaintScorerPreview()

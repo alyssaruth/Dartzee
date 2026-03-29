@@ -20,6 +20,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
+import java.time.LocalDate
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
@@ -60,6 +61,7 @@ open class AbstractTest {
         InjectedThings.preferenceService = InMemoryPreferenceService()
         InjectedThings.theme = null
         InjectedThings.animations = emptyMap()
+        InjectedThings.now = LocalDate.now()
 
         logger.loggingContext.clear()
     }

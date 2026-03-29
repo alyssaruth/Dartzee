@@ -1,14 +1,30 @@
 package dartzee.screen.preference
 
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.alyssaburlton.swingtest.shouldBeDisabled
 import dartzee.preferences.Preferences
 import dartzee.theme.ThemeId
 import dartzee.theme.ThemeSelector
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.shouldBe
+import java.time.LocalDate
+import java.time.Month
+import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
 class PreferencesPanelAppearanceTest : AbstractPreferencePanelTest<PreferencesPanelAppearance>() {
     override fun factory() = PreferencesPanelAppearance()
+
+    @Test
+    fun `Should not allow applying a locked theme`() {
+        InjectedThings.now = LocalDate.of(2026, Month.MARCH, 1)
+
+        val panel = PreferencesPanelAppearance()
+        panel.getChild<ThemeSelector>().selectTheme(ThemeId.Easter)
+
+        panel.getChild<JButton>(text = "Apply").shouldBeDisabled()
+    }
 
     override fun checkUiFieldValuesAreDefaults(panel: PreferencesPanelAppearance) {
         panel.spinnerHueFactor.value shouldBe 0.8

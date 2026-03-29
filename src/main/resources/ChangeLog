@@ -1,6 +1,13 @@
+--------- v7.3.0 ---------
+
++ Updates to preferences screen to account for themes
+= Fixed themes activating on Windows
+= Fixed a bug where animations for missing the board played too often (e.g. when aiming for a double)
+= X% test coverage (blah blah)
+
 --------- v7.2.0 ---------
 
-+ ???
++ Beginning of theme logic with 3 new themes, but they broke when actually activating on Windows...
 = Fixed avatar upload to remember the last directory used, rather than resetting back to default
 = Fixed play order to rotate more fairly in matches with more than 2 players
 = AI opponents will aim for bullseye finishes if 2 or fewer darts left to throw
