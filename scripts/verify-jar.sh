@@ -5,7 +5,7 @@ touch dartzee.log
 
 desiredLog=$1
 
-nohup java -jar Dartzee.jar > dartzee.log 2>&1 &
+nohup java -jar Dartzee.jar justUpdated > dartzee.log 2>&1 &
 printf "Waiting for Dartzee to start."
 attempt_counter=0
 max_attempts=20

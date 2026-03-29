@@ -26,6 +26,7 @@ import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
 import dartzee.theme.Theme
 import java.time.Clock
+import java.time.LocalDate
 
 object InjectedThings {
     var allowModalDialogs = true
@@ -51,4 +52,5 @@ object InjectedThings {
     var exiter: IExiter = DefaultExiter()
     var theme: Theme? = null
     var animations: Map<IAnimationTrigger, IAnimation> = emptyMap()
+    var now: LocalDate = LocalDate.now()
 }

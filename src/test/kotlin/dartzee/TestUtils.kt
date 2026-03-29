@@ -9,6 +9,7 @@ import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.purgeWindows
+import com.github.alyssaburlton.swingtest.shouldMatch
 import com.github.alyssaburlton.swingtest.typeText
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.InteractiveDartboard
@@ -32,6 +33,7 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.GameplayDartboard
 import dartzee.screen.PlayerImageDialog
+import dartzee.theme.Theme
 import dartzee.utils.DevUtilities
 import dartzee.utils.getAverage
 import io.kotest.matchers.doubles.shouldBeBetween
@@ -49,6 +51,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import javax.swing.Icon
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JComponent
@@ -306,6 +309,11 @@ inline fun <reified T : Component> JTabbedPane.selectTab(
     noinline filterFn: ((T) -> Boolean)? = null,
 ) {
     runOnEventThreadBlocking { selectedComponent = getChild<T>(name, filterFn = filterFn) }
+}
+
+fun Icon.shouldMatch(otherPath: String) {
+    val other = ImageIcon(Theme::class.java.getResource(otherPath))
+    shouldMatch(other)
 }
 
 fun ImageIcon.toLabel(): JLabel {

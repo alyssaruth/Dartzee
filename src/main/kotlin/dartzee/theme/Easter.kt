@@ -9,6 +9,7 @@ import dartzee.screen.animation.IAnimationTrigger
 import dartzee.screen.animation.PlayerVictory
 import java.awt.Color
 import java.time.LocalDate
+import java.time.Month
 
 private val pastelGreen = Color.decode("#dcf9a8")
 private val easterYellow = Color.decode("#ffebaf")
@@ -51,6 +52,7 @@ val Themes.EASTER: Theme
             bannerScaleFactor = 0.5,
             bannerOffset = 0.3,
             festivalInfo = FestivalInfo(::findEaster, "Will next pop up"),
+            unlockDate = LocalDate.of(2026, Month.MARCH, 28),
         )
 
 private fun findEaster(year: Int): Pair<LocalDate, LocalDate> {

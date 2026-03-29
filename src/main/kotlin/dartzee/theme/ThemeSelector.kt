@@ -51,6 +51,8 @@ class ThemeSelector(private val themeIds: List<ThemeId> = ThemeId.values().toLis
 
     fun selectedThemeId() = themePanel.themeId
 
+    fun selectionIsLocked() = themePanel.theme?.isLocked() ?: false
+
     private fun selectionChanged(newIndex: Int) {
         remove(themePanel)
         themePanel = ThemePanel(themeIds[newIndex])
@@ -64,13 +66,17 @@ class ThemeSelector(private val themeIds: List<ThemeId> = ThemeId.values().toLis
         btnNext.icon = themedIcon("/buttons/rightArrow.png", themePanel.theme)
         btnPrevious.icon = themedIcon("/buttons/leftArrow.png", themePanel.theme)
 
-        val btnColour = themePanel.theme?.primary ?: DEFAULT_BUTTON_COLOUR
-        val bg = themePanel.theme?.background ?: DEFAULT_BACKGROUND
+        val btnColour =
+            themePanel.theme?.getIfUnlocked(Theme::primary, null) ?: DEFAULT_BUTTON_COLOUR
+        val bg =
+            themePanel.theme?.getIfUnlocked(Theme::background, Color.DARK_GRAY)
+                ?: DEFAULT_BACKGROUND
 
         btnPrevious.background = btnColour
         btnNext.background = btnColour
 
-        titleBorder.titleColor = themePanel.theme?.fontColor ?: Color.BLACK
+        titleBorder.titleColor =
+            themePanel.theme?.getIfUnlocked(Theme::fontColor, Color.LIGHT_GRAY) ?: Color.BLACK
 
         panelRight.background = bg
         panelLeft.background = bg

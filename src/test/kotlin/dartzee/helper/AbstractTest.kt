@@ -20,6 +20,8 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
+import java.time.LocalDate
+import java.time.Month
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
@@ -58,6 +60,7 @@ open class AbstractTest {
         InjectedThings.dartzeeCalculator = FakeDartzeeCalculator()
         InjectedThings.partyMode = false
         InjectedThings.preferenceService = InMemoryPreferenceService()
+        InjectedThings.now = LocalDate.of(2026, Month.JANUARY, 1)
         InjectedThings.theme = null
         InjectedThings.animations = emptyMap()
 

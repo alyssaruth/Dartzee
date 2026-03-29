@@ -15,7 +15,9 @@ fun main(args: Array<String>) {
 
     if (!DartsClient.trueLaunch && DartsClient.isWindowsOs()) {
         Runtime.getRuntime()
-            .exec("cmd /c start javaw -Xms256m -Xmx512m -jar Dartzee.jar trueLaunch")
+            .exec(
+                "cmd /c start javaw -Xms256m -Xmx512m -jar Dartzee.jar trueLaunch ${args.joinToString(" ")}"
+            )
         InjectedThings.exiter.exit(0)
     }
 

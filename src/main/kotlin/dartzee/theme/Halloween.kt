@@ -56,6 +56,7 @@ val Themes.HALLOWEEN: Theme
             dartboardColours = halloweenDartboardColours,
             animations = halloweenAnimations.toMap(),
             festivalInfo = FestivalInfo(::findHalloween, "Next haunting will start"),
+            unlockDate = LocalDate.of(2026, Month.OCTOBER, 24),
         )
 
 private fun findHalloween(year: Int): Pair<LocalDate, LocalDate> =
