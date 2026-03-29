@@ -14,6 +14,8 @@ import dartzee.utils.InjectedThings
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import java.time.LocalDate
+import java.time.Month
 import javax.swing.ImageIcon
 import org.junit.jupiter.api.Test
 
@@ -46,6 +48,7 @@ class TestPlayerEntity : AbstractEntityTest<PlayerEntity>() {
 
     @Test
     fun `Should return themed icon`() {
+        InjectedThings.now = LocalDate.of(2027, Month.JANUARY, 1)
         InjectedThings.theme = Themes.HALLOWEEN
         val expected =
             ImageIcon(PlayerEntity::class.java.getResource("/theme/halloween/flags/humanFlag.png"))

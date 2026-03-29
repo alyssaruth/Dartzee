@@ -3,7 +3,7 @@
 + Updates to preferences screen to account for themes
 = Fixed themes activating on Windows
 = Fixed a bug where animations for missing the board played too often (e.g. when aiming for a double)
-= X% test coverage (blah blah)
+= X% test coverage (X / Y lines covered by 2512 tests)
 
 --------- v7.2.0 ---------
 

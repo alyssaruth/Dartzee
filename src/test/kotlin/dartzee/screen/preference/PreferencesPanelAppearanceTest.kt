@@ -11,10 +11,16 @@ import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 import java.time.Month
 import javax.swing.JButton
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class PreferencesPanelAppearanceTest : AbstractPreferencePanelTest<PreferencesPanelAppearance>() {
     override fun factory() = PreferencesPanelAppearance()
+
+    @BeforeEach
+    fun beforeEach() {
+        InjectedThings.now = LocalDate.of(2027, Month.JANUARY, 1)
+    }
 
     @Test
     fun `Should not allow applying a locked theme`() {

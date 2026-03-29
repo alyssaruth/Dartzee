@@ -16,7 +16,7 @@ import javax.swing.ImageIcon
 
 val DEFAULT_BACKGROUND = Color(214, 217, 223)
 val DEFAULT_BUTTON_COLOUR = Color(169, 176, 190)
-val CLASSIC_THEME_DESC = "The original grey-on-grey, like it's still the 1990s."
+const val CLASSIC_THEME_DESC = "The original grey-on-grey, like it's still the 1990s."
 
 typealias FestivalFinder = (Int) -> Pair<LocalDate, LocalDate>
 
