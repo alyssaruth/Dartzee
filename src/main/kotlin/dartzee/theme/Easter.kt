@@ -8,6 +8,7 @@ import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
 import dartzee.screen.animation.PlayerVictory
 import java.awt.Color
+import java.awt.Point
 import java.time.LocalDate
 import java.time.Month
 
@@ -49,11 +50,16 @@ val Themes.EASTER: Theme
             dartboardColours = easterDartboardColours,
             menuFontSize = 20f,
             animations = easterAnimations.toMap(),
-            bannerScaleFactor = 0.5,
-            bannerOffset = 0.3,
+            bannerTextRenderer = ::getBannerDetails,
             festivalInfo = FestivalInfo(::findEaster, "Will next pop up"),
             unlockDate = LocalDate.of(2026, Month.MARCH, 28),
         )
+
+private fun getBannerDetails(svgHeight: Int, dartboardCenter: Point): List<BannerRenderDetails> {
+    val center = Point(dartboardCenter.x, dartboardCenter.y - (0.2 * svgHeight).toInt())
+
+    return listOf(BannerRenderDetails(ThemeId.Easter.name, (svgHeight * 0.5).toInt(), center))
+}
 
 private fun findEaster(year: Int): Pair<LocalDate, LocalDate> {
     val easterSunday = findEasterSunday(year)

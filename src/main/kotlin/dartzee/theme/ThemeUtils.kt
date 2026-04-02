@@ -27,6 +27,14 @@ typealias DartFactory = (Point) -> DartLabel
 
 data class FestivalInfo(val finder: FestivalFinder, val nextDueDesc: String)
 
+data class BannerRenderDetails(val text: String, val fontHeight: Int, val textCenter: Point)
+
+typealias BannerTextRenderer = (Int, Point) -> List<BannerRenderDetails>
+
+fun simpleBannerRenderer(themeId: ThemeId): BannerTextRenderer = { svgHeight, dartboardCenter ->
+    listOf(BannerRenderDetails(themeId.name, (svgHeight * 0.8).toInt(), dartboardCenter))
+}
+
 object Themes
 
 fun themeMap() =

@@ -55,6 +55,7 @@ val Themes.OKTOBERFEST: Theme
             Color.decode("#ffcf60"),
             linkColour = Color.decode("#880808"),
             dartboardColours = oktoberfestDartboardColours,
+            bannerTextRenderer = simpleBannerRenderer(ThemeId.Oktoberfest),
             menuFontSize = 24f,
             animations = oktoberfestAnimations.toMap(),
             festivalInfo = FestivalInfo(::findOktoberfest, "Happy hour next begins"),

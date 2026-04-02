@@ -54,6 +54,7 @@ val Themes.HALLOWEEN: Theme
             linkColour = Color.decode("#009900"),
             fontColor = bloodRed,
             dartboardColours = halloweenDartboardColours,
+            bannerTextRenderer = simpleBannerRenderer(ThemeId.Halloween),
             animations = halloweenAnimations.toMap(),
             festivalInfo = FestivalInfo(::findHalloween, "Next haunting will start"),
             unlockDate = LocalDate.of(2026, Month.OCTOBER, 24),

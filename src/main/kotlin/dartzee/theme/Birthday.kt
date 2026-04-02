@@ -42,5 +42,19 @@ val Themes.BIRTHDAY: Theme
             Color.white,
             lightBackground = Color.decode("#FDFBD4"),
             dartboardColours = dartboardColours,
+            bannerTextRenderer = ::getBannerDetails,
             dartFactory = ::dartFactory,
         )
+
+private fun getBannerDetails(svgHeight: Int, dartboardCenter: Point): List<BannerRenderDetails> {
+    val center = Point(dartboardCenter.x, dartboardCenter.y - (0.3 * svgHeight).toInt())
+
+    return listOf(
+        BannerRenderDetails("Happy Birthday", (svgHeight * 0.1).toInt(), center),
+        BannerRenderDetails(
+            "Alyssa!",
+            (svgHeight * 0.1).toInt(),
+            Point(dartboardCenter.x, dartboardCenter.y - (0.15 * svgHeight).toInt()),
+        ),
+    )
+}
