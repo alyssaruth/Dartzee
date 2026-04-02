@@ -3,6 +3,7 @@ package dartzee.theme
 import com.github.weisj.jsvg.SVGDocument
 import com.github.weisj.jsvg.parser.SVGLoader
 import dartzee.bean.DartLabel
+import dartzee.`object`.DartsClient
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.now
@@ -75,12 +76,16 @@ private fun nextDue(now: LocalDate, finder: FestivalFinder): LocalDate {
 }
 
 fun pickTheme(): Theme? {
+    val themeId = InjectedThings.preferenceService.get(Preferences.theme)
+    if (DartsClient.devMode) {
+        return themeMap()[themeId]
+    }
+
     val autoTheme = getAutomaticThemeForDate()
     if (autoTheme != null) {
         return autoTheme
     }
 
-    val themeId = InjectedThings.preferenceService.get(Preferences.theme)
     return themeMap()[themeId]
 }
 
