@@ -21,7 +21,7 @@ data class Theme(
     val background: Color,
     val lightBackground: Color,
     private val dartboardColours: ColourWrapper?,
-    val linkColour: Color,
+    val linkColour: Color = Color.BLUE,
     val fontColor: Color = Color.BLACK,
     val menuFontSize: Float? = null,
     val animations: Map<IAnimationTrigger, IAnimation> = emptyMap(),
@@ -29,6 +29,7 @@ data class Theme(
     val bannerScaleFactor: Double = 0.8,
     val festivalInfo: FestivalInfo? = null,
     val unlockDate: LocalDate? = null,
+    val dartFactory: DartFactory? = null,
 ) {
     val name = id.name
     private val resourcePath = name.lowercase()
