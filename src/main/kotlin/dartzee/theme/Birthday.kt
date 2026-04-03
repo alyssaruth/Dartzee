@@ -23,6 +23,7 @@ private val dartboardColours =
         lightPink,
         darkPink,
         lightPink,
+        fontColor = Color.decode("#fff68f"),
     )
 
 private fun dartFactory(pt: Point): DartLabel {
@@ -37,9 +38,10 @@ val Themes.BIRTHDAY: Theme
         Theme(
             ThemeId.Birthday,
             "Celebrate with cake, balloons and confetti",
-            Color.decode("#0000CD"),
-            Color.decode("#90D5FF"),
-            Color.white,
+            Color.decode("#057684"),
+            Color.decode("#6bbabe"),
+            Color.decode("#a1cc9e"),
+            menuFontSize = 26f,
             lightBackground = Color.decode("#FDFBD4"),
             dartboardColours = dartboardColours,
             bannerTextRenderer = ::getBannerDetails,
