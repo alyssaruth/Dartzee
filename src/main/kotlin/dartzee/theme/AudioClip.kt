@@ -6,18 +6,22 @@ import javax.sound.sampled.Clip
 import javax.sound.sampled.LineEvent
 
 data class AudioClip(private val stream: AudioInputStream) {
+    private var cachedClip: Clip
+
     init {
         stream.mark(Int.MAX_VALUE)
+        cachedClip = prepareNewClip()
     }
 
-    private var lastClip: Clip? = null
-
-    fun playOnce() {
-        stop()
-
-        stream.reset()
+    private fun prepareNewClip(): Clip {
         val clip = AudioSystem.getClip()
         clip.open(stream)
+        return clip
+    }
+
+    fun playOnce() {
+        stream.reset()
+        val clip = cachedClip
         clip.start()
         clip.addLineListener { event ->
             if (event.type === LineEvent.Type.STOP) {
@@ -26,20 +30,14 @@ data class AudioClip(private val stream: AudioInputStream) {
             }
         }
 
-        lastClip = clip
+        cachedClip = prepareNewClip()
     }
 
     fun loop() {
-        if (lastClip == null) {
-            val clip = AudioSystem.getClip()
-            clip.open(stream)
-            lastClip = clip
-        }
-
-        lastClip?.loop(Clip.LOOP_CONTINUOUSLY)
+        cachedClip.loop(Clip.LOOP_CONTINUOUSLY)
     }
 
     fun stop() {
-        lastClip?.stop()
+        cachedClip.stop()
     }
 }
