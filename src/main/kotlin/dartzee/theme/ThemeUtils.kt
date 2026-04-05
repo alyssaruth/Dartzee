@@ -3,9 +3,11 @@ package dartzee.theme
 import com.github.weisj.jsvg.SVGDocument
 import com.github.weisj.jsvg.parser.SVGLoader
 import dartzee.bean.DartLabel
+import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.`object`.DartsClient
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.now
 import dartzee.utils.ResourceCache
 import java.awt.Color
@@ -119,7 +121,12 @@ fun clipForResource(resourcePath: String): AudioClip? {
     val stream = Theme::class.java.getResourceAsStream(resourcePath) ?: return null
 
     val audioStream = AudioSystem.getAudioInputStream(BufferedInputStream(stream)) ?: return null
-    return AudioClip(audioStream)
+    return try {
+        AudioClip(audioStream)
+    } catch (e: Exception) {
+        logger.error(CODE_AUDIO_ERROR, "Failed to prepare AudioClip $resourcePath", e)
+        return null
+    }
 }
 
 fun svgForResource(resourcePath: String): SVGDocument? {

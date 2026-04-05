@@ -3,6 +3,7 @@ package dartzee.theme
 import javax.sound.sampled.AudioInputStream
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
+import javax.sound.sampled.Line
 import javax.sound.sampled.LineEvent
 
 data class AudioClip(private val stream: AudioInputStream) {
@@ -14,7 +15,7 @@ data class AudioClip(private val stream: AudioInputStream) {
     }
 
     private fun prepareNewClip(): Clip {
-        val clip = AudioSystem.getClip()
+        val clip = AudioSystem.getLine(Line.Info(Clip::class.java)) as Clip
         clip.open(stream)
         return clip
     }
