@@ -124,7 +124,7 @@ fun clipForResource(resourcePath: String): AudioClip? {
     return try {
         AudioClip(audioStream)
     } catch (e: Exception) {
-        logger.error(CODE_AUDIO_ERROR, "Failed to prepare AudioClip $resourcePath", e)
+        logger.warn(CODE_AUDIO_ERROR, "Failed to prepare AudioClip $resourcePath", e)
         return null
     }
 }

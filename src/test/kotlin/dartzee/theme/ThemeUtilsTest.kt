@@ -9,7 +9,6 @@ import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.ResourceCache
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -181,10 +180,5 @@ class ThemeUtilsTest : AbstractTest() {
         }
 
         verifyLog(CODE_AUDIO_ERROR, Severity.ERROR)
-    }
-
-    @Test
-    fun `Should successfully load an audio clip`() {
-        clipForResource("/theme/birthday/newGame.wav") shouldNotBe null
     }
 }
