@@ -17,7 +17,8 @@ object DatabaseMigrations {
                     ::dropHmScoreToDarts,
                     { db -> runScript(db, 23, "Participant.sql") },
                     { db -> runScript(db, 23, "Team.sql") },
-                )
+                ),
+            23 to listOf({ db -> runScript(db, 24, "Player.sql") }),
         )
     }
 
