@@ -179,6 +179,6 @@ class ThemeUtilsTest : AbstractTest() {
             clipForResource("/theme/birthday/newGame.wav") shouldBe null
         }
 
-        verifyLog(CODE_AUDIO_ERROR, Severity.ERROR)
+        verifyLog(CODE_AUDIO_ERROR, Severity.WARN)
     }
 }

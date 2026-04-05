@@ -27,7 +27,7 @@ private val dartboardColours =
     )
 
 private fun dartFactory(pt: Point): DartLabel {
-    val colour = candleColours.random()
+    val colour = candleColours[pt.x % candleColours.size]
     val icon = ImageIcon(Theme::class.java.getResource("/theme/birthday/darts/candle-$colour.png"))
     val label = DartLabel(icon).also { it.location = Point(pt.x, pt.y - icon.iconHeight) }
     return label
