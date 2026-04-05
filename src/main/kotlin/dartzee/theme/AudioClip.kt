@@ -3,21 +3,26 @@ package dartzee.theme
 import javax.sound.sampled.AudioInputStream
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
+import javax.sound.sampled.Line
 import javax.sound.sampled.LineEvent
 
 data class AudioClip(private val stream: AudioInputStream) {
+    private var cachedClip: Clip
+
     init {
         stream.mark(Int.MAX_VALUE)
+        cachedClip = prepareNewClip()
     }
 
-    private var lastClip: Clip? = null
+    private fun prepareNewClip(): Clip {
+        val clip = AudioSystem.getLine(Line.Info(Clip::class.java)) as Clip
+        clip.open(stream)
+        return clip
+    }
 
     fun playOnce() {
-        stop()
-
         stream.reset()
-        val clip = AudioSystem.getClip()
-        clip.open(stream)
+        val clip = cachedClip
         clip.start()
         clip.addLineListener { event ->
             if (event.type === LineEvent.Type.STOP) {
@@ -26,20 +31,14 @@ data class AudioClip(private val stream: AudioInputStream) {
             }
         }
 
-        lastClip = clip
+        cachedClip = prepareNewClip()
     }
 
     fun loop() {
-        if (lastClip == null) {
-            val clip = AudioSystem.getClip()
-            clip.open(stream)
-            lastClip = clip
-        }
-
-        lastClip?.loop(Clip.LOOP_CONTINUOUSLY)
+        cachedClip.loop(Clip.LOOP_CONTINUOUSLY)
     }
 
     fun stop() {
-        lastClip?.stop()
+        cachedClip.stop()
     }
 }

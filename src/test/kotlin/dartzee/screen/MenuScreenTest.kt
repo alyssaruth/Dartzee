@@ -27,7 +27,7 @@ import javax.swing.JButton
 import javax.swing.JLabel
 import org.junit.jupiter.api.Test
 
-class TestMenuScreen : AbstractTest() {
+class MenuScreenTest : AbstractTest() {
     @Test
     fun `Should play theme music if present`() {
         val theme = spyk(makeTheme())

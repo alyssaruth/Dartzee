@@ -44,6 +44,8 @@ private val oktoberfestDartboardColours =
         fontColor = Color.decode("#e3570a"),
     )
 
+private val bannerTextRenderer = simpleBannerRenderer(ThemeId.Oktoberfest)
+
 val Themes.OKTOBERFEST: Theme
     get() =
         Theme(
@@ -55,6 +57,7 @@ val Themes.OKTOBERFEST: Theme
             Color.decode("#ffcf60"),
             linkColour = Color.decode("#880808"),
             dartboardColours = oktoberfestDartboardColours,
+            bannerTextRenderer = bannerTextRenderer,
             menuFontSize = 24f,
             animations = oktoberfestAnimations.toMap(),
             festivalInfo = FestivalInfo(::findOktoberfest, "Happy hour next begins"),

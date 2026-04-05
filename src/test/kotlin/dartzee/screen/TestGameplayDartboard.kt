@@ -11,12 +11,16 @@ import dartzee.core.helper.verifyNotCalled
 import dartzee.getPointForSegment
 import dartzee.helper.AbstractTest
 import dartzee.listener.DartboardListener
+import dartzee.`object`.ColourWrapper
 import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.game.FakeDartsScreen
+import dartzee.theme.BIRTHDAY
+import dartzee.theme.Themes
 import dartzee.throwDartByClick
+import dartzee.utils.InjectedThings
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -128,6 +132,19 @@ class TestGameplayDartboard : AbstractTest() {
 
     @Test
     @Tag("screenshot")
+    fun `Should render birthday candles`() {
+        InjectedThings.theme = Themes.BIRTHDAY
+
+        val dartboard = factoryGameplayDartboard(Themes.BIRTHDAY.dartboardColourWrapper)
+        dartboard.throwDartByClick(DartboardSegment(SegmentType.INNER_SINGLE, 20))
+        dartboard.throwDartByClick(DartboardSegment(SegmentType.DOUBLE, 14))
+        dartboard.throwDartByClick(DartboardSegment(SegmentType.INNER_SINGLE, 17))
+
+        dartboard.shouldMatchImage("birthday-candles")
+    }
+
+    @Test
+    @Tag("screenshot")
     fun `Should re-render darts in the right places on resize`() {
         val dartboard = factoryGameplayDartboard()
         dartboard.throwDartByClick(DartboardSegment(SegmentType.OUTER_SINGLE, 20))
@@ -143,8 +160,8 @@ class TestGameplayDartboard : AbstractTest() {
         dartboard.shouldMatchImage("darts-original-size")
     }
 
-    private fun factoryGameplayDartboard(): GameplayDartboard {
-        val dartboard = GameplayDartboard(DEFAULT_COLOUR_WRAPPER)
+    private fun factoryGameplayDartboard(colourWrapper: ColourWrapper? = null): GameplayDartboard {
+        val dartboard = GameplayDartboard(colourWrapper ?: DEFAULT_COLOUR_WRAPPER)
         dartboard.setBounds(0, 0, 400, 400)
         flushEdt()
         return dartboard

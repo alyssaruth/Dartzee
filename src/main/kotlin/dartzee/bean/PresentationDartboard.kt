@@ -137,17 +137,18 @@ open class PresentationDartboard(
     private fun renderBanner(g: Graphics2D) {
         val theme = InjectedThings.theme ?: return
         val svg = theme.banner ?: return
+        val renderer = theme.bannerTextRenderer ?: return
 
         val viewBox = ViewBox(0f, 0f, getWidth().toFloat(), getHeight().toFloat())
         svg.render(this, g, viewBox)
 
-        val svgHeight = (svg.computeShape(viewBox).bounds.height * theme.bannerScaleFactor).toInt()
-        val font = getFontForHeight(getBaseFont(), svgHeight, g)
+        val svgHeight = svg.computeShape(viewBox).bounds.height
+        val labels = renderer(svgHeight, computeCenter())
 
-        val bannerTitle = theme.name
-        val center = computeCenter()
-        center.y -= (theme.bannerOffset * svgHeight).toInt()
-        paintLabel(g, center, svgHeight, font, theme.fontColor, bannerTitle)
+        labels.forEach { details ->
+            val font = getFontForHeight(getBaseFont(), details.fontHeight, g)
+            paintLabel(g, details.textCenter, svgHeight, font, theme.fontColor, details.text)
+        }
     }
 
     private fun repaintDirtySegments(cachedImage: BufferedImage) {

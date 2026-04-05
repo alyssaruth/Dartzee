@@ -7,6 +7,7 @@ import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.findAll
 import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.generateComponentTree
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.shouldMatch
@@ -257,6 +258,11 @@ private fun findOptionPaneDialog(title: String) = findWindow<JDialog> { it.title
 
 fun JDialog.getDialogMessage(): String {
     val messageLabels = findAll<JLabel>().filter { it.name == "OptionPane.label" }
+    if (messageLabels.isEmpty()) {
+        throw Exception(
+            "Dialog unexpectedly had no message.\n\nComponent tree:\n\n${generateComponentTree()}"
+        )
+    }
     return messageLabels.joinToString("\n\n") { it.text }
 }
 

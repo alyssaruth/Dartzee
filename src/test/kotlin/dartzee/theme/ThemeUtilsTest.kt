@@ -2,13 +2,22 @@ package dartzee.theme
 
 import com.github.alyssaburlton.swingtest.shouldMatch
 import dartzee.helper.AbstractTest
+import dartzee.logging.CODE_AUDIO_ERROR
+import dartzee.logging.Severity
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.ResourceCache
 import io.kotest.matchers.shouldBe
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import java.io.IOException
+import java.io.InputStream
 import java.time.LocalDate
 import java.time.Month
+import javax.sound.sampled.AudioInputStream
+import javax.sound.sampled.AudioSystem
 import javax.swing.ImageIcon
 import org.junit.jupiter.api.Test
 
@@ -145,5 +154,31 @@ class ThemeUtilsTest : AbstractTest() {
     private fun testPickTheme(now: LocalDate): Theme? {
         InjectedThings.now = now
         return pickTheme()
+    }
+
+    @Test
+    fun `Should return null clip for non-existent resource`() {
+        clipForResource("/foo/bar") shouldBe null
+    }
+
+    @Test
+    fun `Should return null clip if unable to construct audio input stream`() {
+        mockkStatic(AudioSystem::class) {
+            every { AudioSystem.getAudioInputStream(any<InputStream>()) } returns null
+            clipForResource("/theme/birthday/newGame.wav") shouldBe null
+        }
+    }
+
+    @Test
+    fun `Should return null clip if error instantiating clip`() {
+        mockkStatic(AudioSystem::class) {
+            val streamMock = mockk<AudioInputStream>(relaxed = true)
+            every { streamMock.mark(any()) } throws IOException("oh no!")
+            every { AudioSystem.getAudioInputStream(any<InputStream>()) } returns streamMock
+
+            clipForResource("/theme/birthday/newGame.wav") shouldBe null
+        }
+
+        verifyLog(CODE_AUDIO_ERROR, Severity.WARN)
     }
 }

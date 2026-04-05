@@ -63,7 +63,16 @@ class Logger(private val destinations: List<ILogDestination>) {
     }
 
     fun warn(code: LoggingCode, message: String, vararg keyValuePairs: Pair<String, Any?>) {
-        log(Severity.WARN, code, message, null, mapOf(*keyValuePairs))
+        warn(code, message, null, keyValuePairs = keyValuePairs)
+    }
+
+    fun warn(
+        code: LoggingCode,
+        message: String,
+        errorObject: Throwable?,
+        vararg keyValuePairs: Pair<String, Any?>,
+    ) {
+        log(Severity.WARN, code, message, errorObject, mapOf(*keyValuePairs))
     }
 
     fun error(code: LoggingCode, message: String, vararg keyValuePairs: Pair<String, Any?>) {

@@ -2,12 +2,17 @@ package dartzee.theme
 
 import com.github.weisj.jsvg.SVGDocument
 import com.github.weisj.jsvg.parser.SVGLoader
+import dartzee.bean.DartLabel
+import dartzee.logging.CODE_AUDIO_ERROR
+import dartzee.`object`.DartsClient
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.now
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.Font
+import java.awt.Point
 import java.io.BufferedInputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -20,11 +25,24 @@ const val CLASSIC_THEME_DESC = "The original grey-on-grey, like it's still the 1
 
 typealias FestivalFinder = (Int) -> Pair<LocalDate, LocalDate>
 
+typealias DartFactory = (Point) -> DartLabel
+
 data class FestivalInfo(val finder: FestivalFinder, val nextDueDesc: String)
+
+data class BannerRenderDetails(val text: String, val fontHeight: Int, val textCenter: Point)
+
+typealias BannerTextRenderer = (Int, Point) -> List<BannerRenderDetails>
+
+fun simpleBannerRenderer(themeId: ThemeId): BannerTextRenderer = { svgHeight, dartboardCenter ->
+    listOf(BannerRenderDetails(themeId.name, (svgHeight * 0.8).toInt(), dartboardCenter))
+}
 
 object Themes
 
-fun themeMap() = listOf(Themes.EASTER, Themes.OKTOBERFEST, Themes.HALLOWEEN).associateBy { it.id }
+fun themeMap() =
+    listOf(Themes.EASTER, Themes.OKTOBERFEST, Themes.HALLOWEEN, Themes.BIRTHDAY).associateBy {
+        it.id
+    }
 
 fun themeDescription(id: ThemeId): String {
     val basicInfo = basicDescription(id)
@@ -68,12 +86,16 @@ private fun nextDue(now: LocalDate, finder: FestivalFinder): LocalDate {
 }
 
 fun pickTheme(): Theme? {
+    val themeId = InjectedThings.preferenceService.get(Preferences.theme)
+    if (DartsClient.devMode) {
+        return themeMap()[themeId]
+    }
+
     val autoTheme = getAutomaticThemeForDate()
     if (autoTheme != null) {
         return autoTheme
     }
 
-    val themeId = InjectedThings.preferenceService.get(Preferences.theme)
     return themeMap()[themeId]
 }
 
@@ -87,7 +109,10 @@ private fun LocalDate.inRange(finder: FestivalFinder?): Boolean {
 }
 
 fun fontForResource(resourcePath: String): Font? {
-    val fontStream = Theme::class.java.getResourceAsStream(resourcePath) ?: return null
+    val fontStream =
+        Theme::class.java.getResourceAsStream(resourcePath)
+            ?: Theme::class.java.getResourceAsStream(resourcePath.replace(".ttf", ".otf"))
+            ?: return null
 
     return Font.createFont(Font.TRUETYPE_FONT, fontStream)
 }
@@ -96,7 +121,12 @@ fun clipForResource(resourcePath: String): AudioClip? {
     val stream = Theme::class.java.getResourceAsStream(resourcePath) ?: return null
 
     val audioStream = AudioSystem.getAudioInputStream(BufferedInputStream(stream)) ?: return null
-    return AudioClip(audioStream)
+    return try {
+        AudioClip(audioStream)
+    } catch (e: Exception) {
+        logger.warn(CODE_AUDIO_ERROR, "Failed to prepare AudioClip $resourcePath", e)
+        return null
+    }
 }
 
 fun svgForResource(resourcePath: String): SVGDocument? {
@@ -115,4 +145,10 @@ fun themedIcon(path: String, theme: Theme? = InjectedThings.theme): ImageIcon {
     } else {
         theme.icon(path) ?: default
     }
+}
+
+fun makeDartLabel(pt: Point): DartLabel {
+    val themed = InjectedThings.theme?.dartFactory?.invoke(pt)
+
+    return themed ?: DartLabel().apply { location = pt }
 }

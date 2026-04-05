@@ -7,7 +7,8 @@ enum class ThemeId {
     None,
     Easter,
     Oktoberfest,
-    Halloween;
+    Halloween,
+    Birthday;
 
     companion object {
         fun parseFromPreference(preference: String): ThemeId =
@@ -19,7 +20,7 @@ enum class ThemeId {
                     "Failed to parse ThemeId from preference: $preference",
                     ex,
                 )
-                return None
+                None
             }
     }
 }
