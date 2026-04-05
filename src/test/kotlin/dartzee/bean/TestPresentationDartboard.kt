@@ -11,9 +11,11 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
 import dartzee.screen.game.SegmentStatuses
+import dartzee.theme.BIRTHDAY
 import dartzee.theme.EASTER
 import dartzee.theme.HALLOWEEN
 import dartzee.theme.OKTOBERFEST
+import dartzee.theme.Theme
 import dartzee.theme.Themes
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments
@@ -71,28 +73,39 @@ class TestPresentationDartboard : AbstractTest() {
     @Test
     @Tag("screenshot")
     fun `Should match snapshot - halloween`() {
-        InjectedThings.theme = Themes.HALLOWEEN
-        val dartboard = PresentationDartboard(renderScoreLabels = true)
-        dartboard.setBounds(0, 0, 500, 500)
-        dartboard.shouldMatchImage("halloween")
+        snapshotTheme(Themes.HALLOWEEN)
     }
 
     @Test
     @Tag("screenshot")
     fun `Should match snapshot - easter`() {
-        InjectedThings.theme = Themes.EASTER
-        val dartboard = PresentationDartboard(renderScoreLabels = true)
-        dartboard.setBounds(0, 0, 500, 500)
-        dartboard.shouldMatchImage("easter")
+        snapshotTheme(Themes.EASTER)
     }
 
     @Test
     @Tag("screenshot")
     fun `Should match snapshot - oktoberfest`() {
-        InjectedThings.theme = Themes.OKTOBERFEST
+        snapshotTheme(Themes.OKTOBERFEST)
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should match snapshot - birthday`() {
+        snapshotTheme(Themes.BIRTHDAY)
+    }
+
+    private fun snapshotTheme(theme: Theme) {
+        InjectedThings.theme = theme
         val dartboard = PresentationDartboard(renderScoreLabels = true)
         dartboard.setBounds(0, 0, 500, 500)
-        dartboard.shouldMatchImage("oktoberfest")
+        dartboard.shouldMatchImage(theme.name.lowercase())
+
+        if (theme.banner != null) {
+            val bannerDartboard =
+                PresentationDartboard(renderScoreLabels = true, renderThemeBanner = true)
+            bannerDartboard.setBounds(0, 0, 500, 500)
+            bannerDartboard.shouldMatchImage("${theme.name.lowercase()}-banner")
+        }
     }
 
     @Test
