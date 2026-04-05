@@ -3,8 +3,10 @@ package dartzee.db
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getEndOfTimeSqlString
+import dartzee.core.util.toLocalDate
 import dartzee.theme.themedIcon
 import dartzee.utils.Database
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import javax.swing.ImageIcon
 
@@ -37,7 +39,6 @@ open class PlayerEntity(database: Database = mainDatabase) :
 
     override fun toString() = name
 
-    /** Helpers */
     fun isHuman() = strategy.isEmpty()
 
     fun isAi() = strategy.isNotEmpty()
@@ -47,6 +48,13 @@ open class PlayerEntity(database: Database = mainDatabase) :
     fun getAvatar() = PlayerImageEntity.retrieveImageIconForId(playerImageId)
 
     fun getFlag() = getPlayerFlag(isHuman())
+
+    fun birthdayIsToday(): Boolean {
+        val localDate = dateOfBirth.toLocalDate() ?: return false
+
+        return localDate.month == InjectedThings.now.month &&
+            localDate.dayOfMonth == InjectedThings.now.dayOfMonth
+    }
 
     companion object {
         val ICON_AI = ImageIcon(PlayerEntity::class.java.getResource("/flags/aiFlag.png"))

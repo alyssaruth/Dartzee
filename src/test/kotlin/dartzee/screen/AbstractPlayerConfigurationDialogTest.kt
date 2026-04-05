@@ -3,20 +3,27 @@ package dartzee.screen
 import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
+import com.github.lgooddatepicker.components.DatePicker
 import dartzee.bean.PlayerAvatar
 import dartzee.core.helper.verifyNotCalled
+import dartzee.db.EntityName
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
+import dartzee.helper.getCountFromTable
 import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.mockk
 import io.mockk.verify
+import java.sql.Timestamp
+import java.time.LocalDate
 import javax.swing.JTextField
 import org.junit.jupiter.api.Test
 
-class TestAbstractPlayerConfigurationDialog : AbstractTest() {
+class AbstractPlayerConfigurationDialogTest : AbstractTest() {
     @Test
     fun `Should not allow an empty player name, and should not call save with a validation error`() {
         val callback = mockCallback()
@@ -54,6 +61,20 @@ class TestAbstractPlayerConfigurationDialog : AbstractTest() {
 
         dialogFactory.errorsShown.shouldBeEmpty()
         verify { callback(player) }
+
+        player.name shouldBe "Clive"
+        PlayerEntity.retrieveForName("Clive") shouldNotBe null
+    }
+
+    @Test
+    fun `Should update date of birth`() {
+        val player = insertPlayer()
+
+        val dlg = DummyPlayerConfigurationDialog(player = player)
+        dlg.getChild<DatePicker>().date = LocalDate.of(1992, 2, 18)
+        dlg.clickOk()
+
+        player.dateOfBirth shouldBe Timestamp.valueOf("1992-02-18 00:00:00")
     }
 
     @Test
@@ -61,6 +82,8 @@ class TestAbstractPlayerConfigurationDialog : AbstractTest() {
         val callback = mockCallback()
         val dlg = DummyPlayerConfigurationDialog(callback)
         dlg.clickCancel()
+
+        getCountFromTable(EntityName.Player) shouldBe 0
 
         verifyNotCalled { callback(any()) }
     }
@@ -132,10 +155,7 @@ class TestAbstractPlayerConfigurationDialog : AbstractTest() {
         player: PlayerEntity = PlayerEntity.factoryCreate(),
     ) : AbstractPlayerConfigurationDialog(callback, player) {
         init {
-            add(avatar)
-            add(textFieldName)
+            add(demographicsPanel)
         }
-
-        override fun savePlayer() {}
     }
 }

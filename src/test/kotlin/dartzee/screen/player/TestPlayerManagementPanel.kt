@@ -1,7 +1,9 @@
 package dartzee.screen.player
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickNo
 import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
@@ -19,6 +21,8 @@ import dartzee.core.util.DateStatics
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
+import dartzee.getDialogMessage
+import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertGameForPlayer
@@ -30,7 +34,6 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetupDialog
 import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -62,13 +65,15 @@ class TestPlayerManagementPanel : AbstractTest() {
         val managementScreen = ScreenCache.get<PlayerManagementScreen>()
         managementScreen.initialise()
 
-        dialogFactory.questionOption = JOptionPane.NO_OPTION
-
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>(text = "Delete")
+        panel.clickChild<JButton>(text = "Delete", async = true)
 
-        dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete Leah?")
+        val dlg = getQuestionDialog()
+        dlg.getDialogMessage() shouldBe "Are you sure you want to delete Leah?"
+        dlg.clickNo()
+        flushEdt()
+
         player.dtDeleted shouldBe DateStatics.END_OF_TIME
         managementScreen.getChild<ScrollTable>().rowCount shouldBe 1
         PlayerEntity.retrieveForName("Leah") shouldNotBe null
@@ -84,9 +89,13 @@ class TestPlayerManagementPanel : AbstractTest() {
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>(text = "Delete")
+        panel.clickChild<JButton>(text = "Delete", async = true)
 
-        dialogFactory.questionsShown.shouldContainExactly("Are you sure you want to delete BTBF?")
+        val dlg = getQuestionDialog()
+        dlg.getDialogMessage() shouldBe "Are you sure you want to delete BTBF?"
+        dlg.clickYes()
+        flushEdt()
+
         player.dtDeleted shouldNotBe DateStatics.END_OF_TIME
         managementScreen.getChild<ScrollTable>().rowCount shouldBe 0
         PlayerEntity.retrieveForName("BTBF") shouldBe null

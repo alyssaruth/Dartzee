@@ -2,9 +2,7 @@ package dartzee.screen.ai
 
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartsAiSimulator
-import dartzee.core.bean.addGhostText
 import dartzee.core.util.MathsUtil
-import dartzee.core.util.setFontSize
 import dartzee.db.PlayerEntity
 import dartzee.screen.AbstractPlayerConfigurationDialog
 import dartzee.screen.ScreenCache
@@ -29,7 +27,6 @@ class AIConfigurationDialog(
 ) : AbstractPlayerConfigurationDialog(saveCallback, player) {
     private val panelScreen = JPanel()
     private val panelNorth = JPanel()
-    private val panelName = JPanel()
     private val tabbedPaneGameSpecifics = JTabbedPane()
     private val panelX01Config = AIConfigurationSubPanelX01()
     private val panelGolfConfig = AIConfigurationSubPanelGolf()
@@ -99,21 +96,9 @@ class AIConfigurationDialog(
         panelScreen.layout = BorderLayout(0, 0)
         panelScreen.add(panelNorth, BorderLayout.NORTH)
         panelNorth.layout = BorderLayout(0, 0)
-        panelName.preferredSize = Dimension(10, 100)
-        panelNorth.add(panelName, BorderLayout.CENTER)
+        panelNorth.add(demographicsPanel, BorderLayout.CENTER)
         panelNorth.add(panelAIConfig, BorderLayout.SOUTH)
-        panelName.layout = BorderLayout()
-        panelName.add(textFieldName)
-        panelName.border = EmptyBorder(40, 15, 40, 15)
-        textFieldName.columns = 10
-        textFieldName.preferredSize = Dimension(10, 50)
-        textFieldName.setFontSize(20)
-        textFieldName.addGhostText("Player name")
 
-        val panelAvatar = JPanel()
-        panelNorth.add(panelAvatar, BorderLayout.WEST)
-        panelAvatar.layout = BorderLayout(0, 0)
-        panelAvatar.add(avatar, BorderLayout.NORTH)
         tabbedPaneGameSpecifics.border =
             TitledBorder(null, "Strategy", TitledBorder.LEADING, TitledBorder.TOP, null, null)
         panelScreen.add(tabbedPaneGameSpecifics, BorderLayout.CENTER)
@@ -132,21 +117,13 @@ class AIConfigurationDialog(
     }
 
     private fun initFields() {
-        avatar.init(player, false)
 
         if (!player.retrievedFromDb) {
-            avatar.readOnly = false
-
             panelX01Config.reset()
             panelGolfConfig.reset()
             panelDartzeeConfig.reset()
             panelAIConfig.reset()
         } else {
-            avatar.readOnly = true
-
-            val name = player.name
-            textFieldName.text = name
-
             val model = DartsAiModel.fromJson(player.strategy)
 
             panelAIConfig.initialiseFromModel(model)
@@ -178,21 +155,14 @@ class AIConfigurationDialog(
 
         // If the player hasn't actually been created yet, then we need to instantiate a
         // PlayerEntity just to hold stuff like the name
-        player.name = textFieldName.text
+        player.name = demographicsPanel.getPlayerName()
 
         val dlg = AISimulationSetupDialog(player, model, true)
         dlg.isVisible = true
     }
 
-    override fun savePlayer() {
-        val name = textFieldName.text
-        player.name = name
+    override fun writeExtraDetails() {
         player.strategy = factoryModelFromPanels().toJson()
-        player.playerImageId = avatar.avatarId
-        player.saveToDatabase()
-
-        // Now dispose the window
-        dispose()
     }
 
     private fun calculateStats() {

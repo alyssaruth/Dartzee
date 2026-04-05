@@ -24,7 +24,7 @@ import javax.swing.JRadioButton
 import javax.swing.JTextField
 import org.junit.jupiter.api.Test
 
-class TestAIConfigurationDialog : AbstractTest() {
+class AIConfigurationDialogTest : AbstractTest() {
     @Test
     fun `Should populate correctly for a new player`() {
         val dlg = AIConfigurationDialog(mockk())

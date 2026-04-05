@@ -1,9 +1,15 @@
 package dartzee.theme
 
 import dartzee.bean.DartLabel
+import dartzee.core.util.toLocalDate
+import dartzee.db.PlayerEntity
 import dartzee.`object`.ColourWrapper
+import dartzee.utils.InjectedThings
+import dartzee.utils.InjectedThings.now
 import java.awt.Color
 import java.awt.Point
+import java.awt.Rectangle
+import java.time.LocalDate
 import javax.swing.ImageIcon
 
 private val lightBrown = Color.decode("#542e15")
@@ -48,15 +54,54 @@ val Themes.BIRTHDAY: Theme
             dartFactory = ::dartFactory,
         )
 
-private fun getBannerDetails(svgHeight: Int, dartboardCenter: Point): List<BannerRenderDetails> {
-    val center = Point(dartboardCenter.x, dartboardCenter.y - (0.3 * svgHeight).toInt())
+private fun getBannerDetails(
+    svgBounds: Rectangle,
+    dartboardCenter: Point,
+): List<BannerRenderDetails> {
+    val center = Point(dartboardCenter.x, dartboardCenter.y - (0.3 * svgBounds.height).toInt())
+    val topBanner = BannerRenderDetails("Happy Birthday", (svgBounds.height * 0.1).toInt(), center)
+    val names = InjectedThings.birthdayInfo?.namesString()
 
-    return listOf(
-        BannerRenderDetails("Happy Birthday", (svgHeight * 0.1).toInt(), center),
-        BannerRenderDetails(
-            "Alyssa!",
-            (svgHeight * 0.1).toInt(),
-            Point(dartboardCenter.x, dartboardCenter.y - (0.15 * svgHeight).toInt()),
-        ),
-    )
+    val bottomBanner =
+        names?.let {
+            BannerRenderDetails(
+                "$names!",
+                (svgBounds.height * 0.1).toInt(),
+                Point(dartboardCenter.x, dartboardCenter.y - (0.15 * svgBounds.height).toInt()),
+                maxWidth = (svgBounds.width * 0.85).toInt(),
+            )
+        }
+
+    return listOfNotNull(topBanner, bottomBanner)
+}
+
+fun getExtraBirthdayDescription(): String {
+    val birthdayInfo = InjectedThings.birthdayInfo
+    if (birthdayInfo != null) {
+        return "Active today for ${InjectedThings.birthdayInfo?.namesString()}!"
+    } else {
+        val birthDateToPlayer =
+            PlayerEntity.retrievePlayers("").mapNotNull {
+                val birthDate = it.dateOfBirth.toLocalDate()
+                if (birthDate == null) {
+                    null
+                } else {
+                    var nextBirthday = LocalDate.of(now.year, birthDate.month, birthDate.dayOfMonth)
+                    if (nextBirthday.isBefore(now)) {
+                        nextBirthday =
+                            LocalDate.of(now.year + 1, birthDate.month, birthDate.dayOfMonth)
+                    }
+
+                    nextBirthday to it.name
+                }
+            }
+
+        if (birthDateToPlayer.isEmpty()) {
+            return ""
+        } else {
+            val nextBirthDate = birthDateToPlayer.minBy { it.first }.first
+            val players = birthDateToPlayer.filter { it.first == nextBirthDate }.map { it.second }
+            return "Next celebrated on ${nextBirthDate.fmt()} for ${players.joinToString(" & ")}!"
+        }
+    }
 }

@@ -14,7 +14,7 @@ import io.mockk.verify
 import javax.swing.JTextField
 import org.junit.jupiter.api.Test
 
-class TestHumanConfigurationDialog : AbstractTest() {
+class HumanConfigurationDialogTest : AbstractTest() {
     @Test
     fun `Should start with correct state for new player`() {
         val dlg = HumanConfigurationDialog(mockk())

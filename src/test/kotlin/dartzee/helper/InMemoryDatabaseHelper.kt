@@ -133,6 +133,7 @@ fun insertPlayer(
     uuid: String = randomGuid(),
     name: String = "Clive",
     strategy: String = "",
+    dateOfBirth: Timestamp = DateStatics.END_OF_TIME,
     dtDeleted: Timestamp = DateStatics.END_OF_TIME,
     playerImageId: String? = null,
     database: Database = mainDatabase,
@@ -141,6 +142,7 @@ fun insertPlayer(
     p.rowId = uuid
     p.name = name
     p.strategy = strategy
+    p.dateOfBirth = dateOfBirth
     p.dtDeleted = dtDeleted
     p.playerImageId = playerImageId ?: insertPlayerImage(database = database).rowId
 

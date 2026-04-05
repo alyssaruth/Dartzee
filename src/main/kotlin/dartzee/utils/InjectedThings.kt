@@ -24,6 +24,7 @@ import dartzee.sync.IRemoteDatabaseStore
 import dartzee.sync.SYNC_BUCKET_NAME
 import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
+import dartzee.theme.BirthdayInfo
 import dartzee.theme.Theme
 import java.time.Clock
 import java.time.LocalDate
@@ -51,6 +52,7 @@ object InjectedThings {
     var partyMode = false
     var exiter: IExiter = DefaultExiter()
     var theme: Theme? = null
+    var birthdayInfo: BirthdayInfo? = null
     var animations: Map<IAnimationTrigger, IAnimation> = emptyMap()
     var now: LocalDate = LocalDate.now()
 }
