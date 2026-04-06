@@ -2,19 +2,23 @@ package dartzee.screen.ai
 
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 import dartzee.bean.PlayerAvatar
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.selectedItemTyped
+import dartzee.core.helper.verifyNotCalled
+import dartzee.db.EntityName
 import dartzee.db.PlayerEntity
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
+import dartzee.helper.getCountFromTable
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartsModel
 import dartzee.`object`.SegmentType
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
@@ -103,32 +107,22 @@ class AIConfigurationDialogTest : AbstractTest() {
     }
 
     @Test
-    fun `Should enforce name and avatar for a new player`() {
-        insertPlayer(name = "Duplicate")
+    fun `Should not save if there is a validation error`() {
+        val callback = mockCallback()
+        val player = PlayerEntity.factoryCreate()
 
-        val dlg = AIConfigurationDialog(mockCallback())
-        dlg.clickOk()
-        dialogFactory.errorsShown.shouldContainExactly("You must enter a name for this player.")
+        val dlg = AIConfigurationDialog(callback, player)
+        dlg.getChild<JTextField>("nameField").text = "Name"
+        dlg.clickOk(async = true)
 
-        dialogFactory.errorsShown.clear()
-        dlg.getChild<JTextField>("nameField").text = "Duplicate"
-        dlg.clickOk()
-        dialogFactory.errorsShown.shouldContainExactly(
-            "A player with the name Duplicate already exists."
-        )
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "You must select an avatar."
+        error.clickOk()
+        flushEdt()
 
-        dialogFactory.errorsShown.clear()
-        dlg.getChild<JTextField>("nameField").text = "Valid"
-        dlg.clickOk()
-        dialogFactory.errorsShown.shouldContainExactly("You must select an avatar.")
-
-        dialogFactory.errorsShown.clear()
-        dlg.getChild<PlayerAvatar>().avatarId = "foo"
-        dlg.clickOk()
-        dialogFactory.errorsShown.shouldBeEmpty()
-
-        val player = PlayerEntity.retrieveForName("Valid")!!
-        player.playerImageId shouldBe "foo"
+        verifyNotCalled { callback(any()) }
+        player.name shouldBe ""
+        getCountFromTable(EntityName.Player) shouldBe 0
     }
 
     @Test

@@ -2,9 +2,10 @@ package dartzee.screen.ai
 
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartsAiSimulator
+import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.MathsUtil
 import dartzee.db.PlayerEntity
-import dartzee.screen.AbstractPlayerConfigurationDialog
+import dartzee.screen.PlayerDemographicsPanel
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
 import java.awt.BorderLayout
@@ -22,9 +23,11 @@ import javax.swing.border.SoftBevelBorder
 import javax.swing.border.TitledBorder
 
 class AIConfigurationDialog(
-    saveCallback: (PlayerEntity) -> Unit,
-    player: PlayerEntity = PlayerEntity.factoryCreate(),
-) : AbstractPlayerConfigurationDialog(saveCallback, player) {
+    private val saveCallback: (PlayerEntity) -> Unit,
+    private val player: PlayerEntity = PlayerEntity.factoryCreate(),
+) : SimpleDialog() {
+
+    private val demographicsPanel = PlayerDemographicsPanel(player)
     private val panelScreen = JPanel()
     private val panelNorth = JPanel()
     private val tabbedPaneGameSpecifics = JTabbedPane()
@@ -161,8 +164,15 @@ class AIConfigurationDialog(
         dlg.isVisible = true
     }
 
-    override fun writeExtraDetails() {
-        player.strategy = factoryModelFromPanels().toJson()
+    override fun okPressed() {
+        if (demographicsPanel.valid()) {
+            demographicsPanel.writeDetails()
+            player.strategy = factoryModelFromPanels().toJson()
+            player.saveToDatabase()
+
+            dispose()
+            saveCallback(player)
+        }
     }
 
     private fun calculateStats() {

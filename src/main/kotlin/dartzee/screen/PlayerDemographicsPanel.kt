@@ -58,7 +58,7 @@ class PlayerDemographicsPanel(private val player: PlayerEntity) : JPanel() {
 
         val avatarId = avatar.avatarId
         if (avatarId.isEmpty()) {
-            DialogUtil.showErrorOLD("You must select an avatar.")
+            DialogUtil.showError("You must select an avatar.")
             return false
         }
 
@@ -67,24 +67,24 @@ class PlayerDemographicsPanel(private val player: PlayerEntity) : JPanel() {
 
     private fun isValidName(name: String?): Boolean {
         if (name.isNullOrEmpty()) {
-            DialogUtil.showErrorOLD("You must enter a name for this player.")
+            DialogUtil.showError("You must enter a name for this player.")
             return false
         }
 
         val length = name.length
         if (length < 3) {
-            DialogUtil.showErrorOLD("The player name must be at least 3 characters long.")
+            DialogUtil.showError("The player name must be at least 3 characters long.")
             return false
         }
 
         if (length > 25) {
-            DialogUtil.showErrorOLD("The player name cannot be more than 25 characters long.")
+            DialogUtil.showError("The player name cannot be more than 25 characters long.")
             return false
         }
 
         val existingPlayer = PlayerEntity.retrieveForName(name)
         if (existingPlayer != null && existingPlayer.rowId != player.rowId) {
-            DialogUtil.showErrorOLD("A player with the name $name already exists.")
+            DialogUtil.showError("A player with the name $name already exists.")
             return false
         }
 
