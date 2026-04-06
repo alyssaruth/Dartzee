@@ -14,6 +14,7 @@ import dartzee.utils.InjectedThings
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.Month
 import javax.swing.ImageIcon
@@ -101,5 +102,19 @@ class TestPlayerEntity : AbstractEntityTest<PlayerEntity>() {
         PlayerEntity.retrieveForName("Bob")!!.rowId shouldBe p2.rowId
         PlayerEntity.retrieveForName("Clive") shouldBe null
         PlayerEntity.retrieveForName("ZZZZ") shouldBe null
+    }
+
+    @Test
+    fun `Should correctly identify a players birthday`() {
+        InjectedThings.now = LocalDate.of(2026, Month.FEBRUARY, 18)
+
+        val p = insertPlayer(dateOfBirth = Timestamp.valueOf("1992-02-18 00:00:00"))
+        p.birthdayIsToday() shouldBe true
+
+        val endOfTime = insertPlayer(dateOfBirth = DateStatics.END_OF_TIME)
+        endOfTime.birthdayIsToday() shouldBe false
+
+        val yesterday = insertPlayer(dateOfBirth = Timestamp.valueOf("1992-02-17 00:00:00"))
+        yesterday.birthdayIsToday() shouldBe false
     }
 }

@@ -283,16 +283,24 @@ fun getAllPossibleSegments(): List<DartboardSegment> {
 
 fun getAllNonMissSegments() = getAllPossibleSegments().filterNot { it.isMiss() }
 
-fun getFontForHeight(baseFont: Font, lblHeight: Int, g: Graphics2D): Font {
+fun getFontForHeight(
+    text: String,
+    baseFont: Font,
+    lblHeight: Int,
+    g: Graphics2D,
+    maxWidth: Int = Int.MAX_VALUE,
+): Font {
+    val normalisedText = text.uppercase()
+
     // Start with a fontSize of 1
     var fontSize = 1f
     var font = baseFont.deriveFont(Font.PLAIN, fontSize)
 
     // We're going to increment our test font 1 at a time, and keep checking its height
     var testFont = font
-    var fontHeight = TextLayout("20", font, g.fontRenderContext).bounds.height
+    var bounds = TextLayout(normalisedText, font, g.fontRenderContext).bounds
 
-    while (fontHeight < lblHeight * 0.75) {
+    while (bounds.height < lblHeight * 0.75 && bounds.width < maxWidth) {
         // The last iteration succeeded, so set our return value to be the font we tested.
         font = testFont
 
@@ -301,7 +309,7 @@ fun getFontForHeight(baseFont: Font, lblHeight: Int, g: Graphics2D): Font {
         testFont = baseFont.deriveFont(Font.PLAIN, fontSize)
 
         // Get the updated font height
-        fontHeight = TextLayout("20", font, g.fontRenderContext).bounds.height
+        bounds = TextLayout(normalisedText, font, g.fontRenderContext).bounds
     }
 
     return font

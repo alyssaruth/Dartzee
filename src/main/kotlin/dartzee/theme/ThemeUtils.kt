@@ -4,7 +4,6 @@ import com.github.weisj.jsvg.SVGDocument
 import com.github.weisj.jsvg.parser.SVGLoader
 import dartzee.bean.DartLabel
 import dartzee.logging.CODE_AUDIO_ERROR
-import dartzee.`object`.DartsClient
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
@@ -13,6 +12,7 @@ import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.Font
 import java.awt.Point
+import java.awt.Rectangle
 import java.io.BufferedInputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -29,12 +29,17 @@ typealias DartFactory = (Point) -> DartLabel
 
 data class FestivalInfo(val finder: FestivalFinder, val nextDueDesc: String)
 
-data class BannerRenderDetails(val text: String, val fontHeight: Int, val textCenter: Point)
+data class BannerRenderDetails(
+    val text: String,
+    val fontHeight: Int,
+    val textCenter: Point,
+    val maxWidth: Int = Int.MAX_VALUE,
+)
 
-typealias BannerTextRenderer = (Int, Point) -> List<BannerRenderDetails>
+typealias BannerTextRenderer = (Rectangle, Point) -> List<BannerRenderDetails>
 
-fun simpleBannerRenderer(themeId: ThemeId): BannerTextRenderer = { svgHeight, dartboardCenter ->
-    listOf(BannerRenderDetails(themeId.name, (svgHeight * 0.8).toInt(), dartboardCenter))
+fun simpleBannerRenderer(themeId: ThemeId): BannerTextRenderer = { svgBounds, dartboardCenter ->
+    listOf(BannerRenderDetails(themeId.name, (svgBounds.height * 0.8).toInt(), dartboardCenter))
 }
 
 object Themes
@@ -53,7 +58,9 @@ fun themeDescription(id: ThemeId): String {
     }
 
     val festivalInfo = theme?.festivalInfo
-    return if (festivalInfo == null) {
+    return if (id == ThemeId.Birthday) {
+        "$basicInfo\n\n${getExtraBirthdayDescription()}"
+    } else if (festivalInfo == null) {
         basicInfo
     } else if (getAutomaticThemeForDate() == theme) {
         "$basicInfo\n\nCurrently active - will end on ${festivalInfo.finder(now.year).second.fmt()}."
@@ -62,7 +69,7 @@ fun themeDescription(id: ThemeId): String {
     }
 }
 
-private fun LocalDate.fmt() = format(DateTimeFormatter.ofPattern("d MMM uuuu"))
+fun LocalDate.fmt(): String = format(DateTimeFormatter.ofPattern("d MMM uuuu"))
 
 private fun basicDescription(id: ThemeId): String =
     when (id) {
@@ -71,6 +78,7 @@ private fun basicDescription(id: ThemeId): String =
     }
 
 fun autoApplyTheme() {
+    InjectedThings.birthdayInfo = computeBirthdayInfo()
     InjectedThings.theme = pickTheme()
     InjectedThings.theme?.apply()
 }
@@ -86,9 +94,8 @@ private fun nextDue(now: LocalDate, finder: FestivalFinder): LocalDate {
 }
 
 fun pickTheme(): Theme? {
-    val themeId = InjectedThings.preferenceService.get(Preferences.theme)
-    if (DartsClient.devMode) {
-        return themeMap()[themeId]
+    if (InjectedThings.birthdayInfo != null) {
+        return Themes.BIRTHDAY
     }
 
     val autoTheme = getAutomaticThemeForDate()
@@ -96,6 +103,7 @@ fun pickTheme(): Theme? {
         return autoTheme
     }
 
+    val themeId = InjectedThings.preferenceService.get(Preferences.theme)
     return themeMap()[themeId]
 }
 

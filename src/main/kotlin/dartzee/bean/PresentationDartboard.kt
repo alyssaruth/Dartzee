@@ -142,12 +142,20 @@ open class PresentationDartboard(
         val viewBox = ViewBox(0f, 0f, getWidth().toFloat(), getHeight().toFloat())
         svg.render(this, g, viewBox)
 
-        val svgHeight = svg.computeShape(viewBox).bounds.height
-        val labels = renderer(svgHeight, computeCenter())
+        val svgBounds = svg.computeShape(viewBox).bounds
+        val labels = renderer(svgBounds, computeCenter())
 
         labels.forEach { details ->
-            val font = getFontForHeight(getBaseFont(), details.fontHeight, g)
-            paintLabel(g, details.textCenter, svgHeight, font, theme.fontColor, details.text)
+            val font =
+                getFontForHeight(
+                    details.text,
+                    getBaseFont(),
+                    details.fontHeight,
+                    g,
+                    details.maxWidth,
+                )
+
+            paintLabel(g, details.textCenter, svgBounds.height, font, theme.fontColor, details.text)
         }
     }
 
@@ -251,7 +259,7 @@ open class PresentationDartboard(
         val lblHeight = ((outerRadius - radius) / 2).roundToInt()
 
         val baseFont = colourWrapper.font
-        val fontToUse = getFontForHeight(baseFont, lblHeight, g)
+        val fontToUse = getFontForHeight("20", baseFont, lblHeight, g)
         (1..20).forEach { paintScoreLabel(it, g, fontToUse, lblHeight) }
     }
 

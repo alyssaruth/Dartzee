@@ -12,6 +12,7 @@ import dartzee.`object`.SegmentType
 import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
 import dartzee.screen.game.SegmentStatuses
 import dartzee.theme.BIRTHDAY
+import dartzee.theme.BirthdayInfo
 import dartzee.theme.EASTER
 import dartzee.theme.HALLOWEEN
 import dartzee.theme.OKTOBERFEST
@@ -26,7 +27,7 @@ import java.awt.Point
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestPresentationDartboard : AbstractTest() {
+class PresentationDartboardTest : AbstractTest() {
     @Test
     fun `Should preserve the segment type when mapping between dartboards`() {
         val computationalDartboard = ComputationalDartboard(200, 200)
@@ -92,6 +93,26 @@ class TestPresentationDartboard : AbstractTest() {
     @Tag("screenshot")
     fun `Should match snapshot - birthday`() {
         snapshotTheme(Themes.BIRTHDAY)
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should match snapshot - birthday with names`() {
+        InjectedThings.theme = Themes.BIRTHDAY
+        InjectedThings.birthdayInfo = BirthdayInfo(listOf("Alyssa"), listOf())
+
+        val bannerDartboard =
+            PresentationDartboard(renderScoreLabels = true, renderThemeBanner = true)
+        bannerDartboard.setBounds(0, 0, 500, 500)
+        bannerDartboard.shouldMatchImage("birthday-banner-name")
+
+        InjectedThings.birthdayInfo =
+            BirthdayInfo(listOf("Alyssa", "Sir Digby Chicken Caesar"), listOf())
+
+        val bannerDartboard2 =
+            PresentationDartboard(renderScoreLabels = true, renderThemeBanner = true)
+        bannerDartboard2.setBounds(0, 0, 500, 500)
+        bannerDartboard2.shouldMatchImage("birthday-banner-long-names")
     }
 
     private fun snapshotTheme(theme: Theme) {

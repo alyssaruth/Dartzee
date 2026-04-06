@@ -2,6 +2,7 @@ package dartzee.theme
 
 import com.github.alyssaburlton.swingtest.shouldMatch
 import dartzee.helper.AbstractTest
+import dartzee.helper.insertPlayer
 import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.logging.Severity
 import dartzee.preferences.Preferences
@@ -14,6 +15,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import java.io.IOException
 import java.io.InputStream
+import java.sql.Timestamp
 import java.time.LocalDate
 import java.time.Month
 import javax.sound.sampled.AudioInputStream
@@ -73,9 +75,20 @@ class ThemeUtilsTest : AbstractTest() {
     @Test
     fun `should pick preference theme if set and not in a festival`() {
         preferenceService.save(Preferences.theme, ThemeId.Easter)
-
-        testPickTheme(LocalDate.of(2026, Month.OCTOBER, 31)) shouldBe Themes.HALLOWEEN
         testPickTheme(LocalDate.of(2026, Month.NOVEMBER, 1)) shouldBe Themes.EASTER
+    }
+
+    @Test
+    fun `should pick festival theme over preference`() {
+        preferenceService.save(Preferences.theme, ThemeId.Easter)
+        testPickTheme(LocalDate.of(2026, Month.OCTOBER, 31)) shouldBe Themes.HALLOWEEN
+    }
+
+    @Test
+    fun `should pick birthday theme over festival`() {
+        testPickTheme(LocalDate.of(2026, Month.OCTOBER, 31)) shouldBe Themes.HALLOWEEN
+        InjectedThings.birthdayInfo = BirthdayInfo(listOf("Spooky"), emptyList())
+        testPickTheme(LocalDate.of(2026, Month.OCTOBER, 31)) shouldBe Themes.BIRTHDAY
     }
 
     @Test
@@ -124,6 +137,22 @@ class ThemeUtilsTest : AbstractTest() {
         testPickTheme(LocalDate.of(2026, Month.OCTOBER, 3)) shouldBe Themes.OKTOBERFEST
         testPickTheme(LocalDate.of(2026, Month.OCTOBER, 4)) shouldBe Themes.OKTOBERFEST
         testPickTheme(LocalDate.of(2026, Month.OCTOBER, 5)) shouldBe null
+    }
+
+    @Test
+    fun `Description should be correct for no theme`() {
+        val description = themeDescription(ThemeId.None)
+        description shouldBe CLASSIC_THEME_DESC
+    }
+
+    @Test
+    fun `Description should include correct details for birthday theme`() {
+        InjectedThings.now = LocalDate.of(2026, 6, 1)
+        insertPlayer(name = "Leah", dateOfBirth = Timestamp.valueOf("1993-06-03 00:00:00"))
+
+        val description = themeDescription(ThemeId.Birthday)
+        description shouldBe
+            "${Themes.BIRTHDAY.description}\n\nNext celebrated on 3 Jun 2026 for Leah!"
     }
 
     @Test

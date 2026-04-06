@@ -2,6 +2,7 @@ package dartzee.core.util
 
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 
 fun getSqlDateNow() = Timestamp(System.currentTimeMillis())
 
@@ -17,6 +18,12 @@ fun Timestamp.formatTimestamp(): String {
     val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
     return dateFormat.format(this)
 }
+
+fun Timestamp.toLocalDate(): LocalDate? =
+    if (isEndOfTime(this)) null else toLocalDateTime().toLocalDate()
+
+fun LocalDate?.toTimestamp(): Timestamp =
+    if (this == null) DateStatics.END_OF_TIME else Timestamp.valueOf(atTime(0, 0))
 
 fun Timestamp.formatAsDate(): String {
     if (isEndOfTime(this)) {

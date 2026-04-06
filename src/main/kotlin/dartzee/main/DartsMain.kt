@@ -7,8 +7,10 @@ import dartzee.logging.CODE_JAVA_UNSUPPORTED
 import dartzee.logging.LoggerUncaughtExceptionHandler
 import dartzee.`object`.DartsClient
 import dartzee.screen.ScreenCache
+import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.mainDatabase
 
 fun main(args: Array<String>) {
     DartsClient.parseProgramArguments(args)
@@ -25,11 +27,6 @@ fun main(args: Array<String>) {
     setLoggingContextFields()
     InjectedThings.esDestination.startPosting()
 
-    setLookAndFeel()
-    initialiseAnimations()
-
-    DialogUtil.init(MessageDialogFactory())
-
     DartsClient.logArgumentState()
 
     if (versionTooOld()) {
@@ -40,6 +37,13 @@ fun main(args: Array<String>) {
 
         InjectedThings.exiter.exit(1)
     }
+
+    DartsDatabaseUtil.initialiseDatabase(mainDatabase)
+
+    setLookAndFeel()
+    initialiseAnimations()
+
+    DialogUtil.init(MessageDialogFactory())
 
     DartsClient.checkForUpdatesIfRequired()
     EdtMonitor.start()
