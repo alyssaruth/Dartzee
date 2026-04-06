@@ -62,6 +62,7 @@ open class AbstractTest {
         InjectedThings.preferenceService = InMemoryPreferenceService()
         InjectedThings.now = LocalDate.of(2026, Month.JANUARY, 1)
         InjectedThings.theme = null
+        InjectedThings.birthdayInfo = null
         InjectedThings.animations = emptyMap()
 
         logger.loggingContext.clear()
