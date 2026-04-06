@@ -11,12 +11,10 @@ import dartzee.logging.KEY_CURRENT_SCREEN
 import dartzee.logging.LoggingCode
 import dartzee.main.exitApplication
 import dartzee.`object`.DartsClient
-import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.gameLauncher
 import dartzee.utils.InjectedThings.logger
-import dartzee.utils.InjectedThings.mainDatabase
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Image
@@ -60,8 +58,6 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
     fun init() {
         setIcon()
-
-        DartsDatabaseUtil.initialiseDatabase(mainDatabase)
 
         InjectedThings.esDestination.readOldLogs()
 

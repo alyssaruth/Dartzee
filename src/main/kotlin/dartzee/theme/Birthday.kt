@@ -81,18 +81,16 @@ fun getExtraBirthdayDescription(): String {
         return "Active today for ${InjectedThings.birthdayInfo?.namesString()}!"
     } else {
         val birthDateToPlayer =
-            PlayerEntity.retrievePlayers("").mapNotNull {
-                val birthDate = it.dateOfBirth.toLocalDate()
-                if (birthDate == null) {
-                    null
-                } else {
+            PlayerEntity.retrievePlayers("").mapNotNull { player ->
+                val birthDate = player.dateOfBirth.toLocalDate()
+                birthDate?.let {
                     var nextBirthday = LocalDate.of(now.year, birthDate.month, birthDate.dayOfMonth)
                     if (nextBirthday.isBefore(now)) {
                         nextBirthday =
                             LocalDate.of(now.year + 1, birthDate.month, birthDate.dayOfMonth)
                     }
 
-                    nextBirthday to it.name
+                    nextBirthday to player.name
                 }
             }
 

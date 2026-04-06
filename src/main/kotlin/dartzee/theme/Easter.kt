@@ -65,7 +65,7 @@ private fun getBannerDetails(
     val center = Point(dartboardCenter.x, dartboardCenter.y - (0.2 * svgBounds.height).toInt())
 
     return listOf(
-        BannerRenderDetails(ThemeId.Easter.name, (svgBounds.height * 0.5).toInt(), center)
+        BannerRenderDetails(ThemeId.Easter.name, (svgBounds.height * 0.6).toInt(), center)
     )
 }
 
