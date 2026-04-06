@@ -75,6 +75,18 @@ private fun getBannerDetails(
     return listOfNotNull(topBanner, bottomBanner)
 }
 
+fun computeBirthdayInfo(): BirthdayInfo? {
+    val players = PlayerEntity.retrievePlayers("").filter { it.birthdayIsToday() }
+    if (players.isEmpty()) {
+        return null
+    }
+
+    val names = players.map { it.name }
+    val ages = players.map { now.year - it.dateOfBirth.toLocalDateTime().year }
+
+    return BirthdayInfo(names, ages)
+}
+
 fun getExtraBirthdayDescription(): String {
     val birthdayInfo = InjectedThings.birthdayInfo
     if (birthdayInfo != null) {

@@ -3,7 +3,6 @@ package dartzee.theme
 import com.github.weisj.jsvg.SVGDocument
 import com.github.weisj.jsvg.parser.SVGLoader
 import dartzee.bean.DartLabel
-import dartzee.db.PlayerEntity
 import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
@@ -106,18 +105,6 @@ fun pickTheme(): Theme? {
 
     val themeId = InjectedThings.preferenceService.get(Preferences.theme)
     return themeMap()[themeId]
-}
-
-private fun computeBirthdayInfo(): BirthdayInfo? {
-    val players = PlayerEntity.retrievePlayers("").filter { it.birthdayIsToday() }
-    if (players.isEmpty()) {
-        return null
-    }
-
-    val names = players.map { it.name }
-    val ages = players.map { now.year - it.dateOfBirth.toLocalDateTime().year }
-
-    return BirthdayInfo(names, ages)
 }
 
 fun getAutomaticThemeForDate(): Theme? =
