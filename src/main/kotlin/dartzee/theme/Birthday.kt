@@ -46,7 +46,9 @@ private fun dartFactory(pt: Point): DartLabel {
 
 private fun partyPopperAnimation(age: Int) =
     CompositeAnimation(
-        (1..3).map { Animation("party-popper", "/theme/birthday/horrific/party-popper-$it.png", "$age") }
+        (1..3).map {
+            Animation("party-popper", "/theme/birthday/horrific/party-popper-$it.png", "$age")
+        }
     )
 
 val Themes.BIRTHDAY: Theme
@@ -71,11 +73,13 @@ fun makeBirthdayTheme(): Theme {
     return Themes.BIRTHDAY.copy(animations = animations.toMap())
 }
 
-private fun animationsForAge(age: Int) = GameType.values().flatMap { gameType -> listOf(
-        DartScoreTrigger(gameType, age) to partyPopperAnimation(age),
-        TotalScoreTrigger(gameType, age) to partyPopperAnimation(age),
-    )
-}
+private fun animationsForAge(age: Int) =
+    GameType.values().flatMap { gameType ->
+        listOf(
+            DartScoreTrigger(gameType, age) to partyPopperAnimation(age),
+            TotalScoreTrigger(gameType, age) to partyPopperAnimation(age),
+        )
+    }
 
 private fun getBannerDetails(
     svgBounds: Rectangle,

@@ -43,15 +43,24 @@ private fun GameplayDartboard.doDodgyOnEdt(animation: Animation) {
     removeDodgyLabels()
 
     animation.img?.let { ii ->
-        val img = animation.text?.let { text ->
-            val bi = ii.toBufferedImage(BufferedImage.TYPE_INT_ARGB)
-            val graphics = bi.graphics as Graphics2D
+        val img =
+            animation.text?.let { text ->
+                val bi = ii.toBufferedImage(BufferedImage.TYPE_INT_ARGB)
+                val graphics = bi.graphics as Graphics2D
 
-            val center = Point(bi.width / 2, bi.height / 2)
-            paintLabel(graphics, center, bi.height / 3, bi.height, getBaseFont(), Color.white, text)
+                val center = Point(bi.width / 2, bi.height / 2)
+                paintLabel(
+                    graphics,
+                    center,
+                    bi.height / 3,
+                    bi.height,
+                    getBaseFont(),
+                    Color.white,
+                    text,
+                )
 
-            ImageIcon(bi)
-        } ?: ii
+                ImageIcon(bi)
+            } ?: ii
 
         val dodgyLabel = JLabel("")
         dodgyLabel.name = "DodgyLabel"

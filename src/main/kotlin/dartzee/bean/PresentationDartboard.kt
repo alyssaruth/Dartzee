@@ -140,7 +140,16 @@ open class PresentationDartboard(
         val labels = renderer(svgBounds, computeCenter())
 
         labels.forEach { details ->
-            paintLabel(g, details.textCenter, details.fontHeight, svgBounds.height, getBaseFont(), theme.fontColor, details.text, details.maxWidth)
+            paintLabel(
+                g,
+                details.textCenter,
+                details.fontHeight,
+                svgBounds.height,
+                getBaseFont(),
+                theme.fontColor,
+                details.text,
+                details.maxWidth,
+            )
         }
     }
 
@@ -251,6 +260,14 @@ open class PresentationDartboard(
         val radiusForLabel = computeRadius() + lblHeight
         val avgPoint = translatePoint(computeCenter(), radiusForLabel, angle)
 
-        paintLabel(g, avgPoint, lblHeight, lblHeight, colourWrapper.font, colourWrapper.fontColor, score.toString())
+        paintLabel(
+            g,
+            avgPoint,
+            lblHeight,
+            lblHeight,
+            colourWrapper.font,
+            colourWrapper.fontColor,
+            score.toString(),
+        )
     }
 }

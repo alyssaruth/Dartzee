@@ -8,10 +8,7 @@ import dartzee.`object`.SegmentType
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings.preferenceService
 import java.awt.Color
-import java.awt.Font
-import java.awt.Graphics2D
 import java.awt.Point
-import java.awt.font.TextLayout
 
 /** Utilities for the Dartboard object. */
 private val numberOrder =

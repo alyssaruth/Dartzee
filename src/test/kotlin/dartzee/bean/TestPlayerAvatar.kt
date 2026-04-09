@@ -8,6 +8,7 @@ import com.github.alyssaburlton.swingtest.doHoverAway
 import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.shouldMatch
 import dartzee.db.PlayerEntity
+import dartzee.getWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
@@ -27,7 +28,7 @@ class TestPlayerAvatar : AbstractTest() {
         val avatar = PlayerAvatar()
         avatar.doClick()
 
-        val window = findWindow<PlayerImageDialog>()!!
+        val window = getWindow<PlayerImageDialog>()
         window.selectImage(image.rowId)
         window.clickOk()
 
@@ -45,7 +46,7 @@ class TestPlayerAvatar : AbstractTest() {
         avatar.init(p, false)
         avatar.doClick()
 
-        val window = findWindow<PlayerImageDialog>()!!
+        val window = getWindow<PlayerImageDialog>()
         window.selectImage(otherImage.rowId)
         window.clickCancel()
 
@@ -63,7 +64,7 @@ class TestPlayerAvatar : AbstractTest() {
         avatar.init(player, true)
 
         avatar.doClick()
-        val window = findWindow<PlayerImageDialog>()!!
+        val window = getWindow<PlayerImageDialog>()
         window.selectImage(newImage.rowId)
         window.clickOk()
 
@@ -86,7 +87,7 @@ class TestPlayerAvatar : AbstractTest() {
 
         avatar.doClick()
 
-        val window = findWindow<PlayerImageDialog>()!!
+        val window = getWindow<PlayerImageDialog>()
         window.selectImage(newImage.rowId)
         window.clickOk()
 

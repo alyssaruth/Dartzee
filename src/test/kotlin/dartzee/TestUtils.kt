@@ -46,6 +46,7 @@ import java.awt.Component
 import java.awt.Container
 import java.awt.Dimension
 import java.awt.Point
+import java.awt.Window
 import java.io.File
 import java.time.Instant
 import java.time.LocalDate
@@ -210,7 +211,7 @@ fun GameplayDartboard.throwDartByClick(
 
 fun GameplayDartboard.segmentStatuses() = getChild<PresentationDartboard>().segmentStatuses
 
-fun getFileChooser() = findWindow<JDialog> { it.title == "Open" }!!
+fun getFileChooser() = getWindow<JDialog> { it.title == "Open" }
 
 fun <T> List<T>.only(): T {
     size shouldBe 1
@@ -327,6 +328,20 @@ fun ImageIcon.toLabel(): JLabel {
     label.size = Dimension(iconWidth, iconHeight)
     label.repaint()
     return label
+}
+
+inline fun <reified W : Window> getWindow(
+    noinline predicate: (window: W) -> Boolean = { true }
+): W {
+    val result = findWindow<W>(predicate)
+
+    if (result == null) {
+        val trees = Window.getWindows().joinToString("------\n") { it.generateComponentTree() }
+
+        throw Exception("Window not found for predicate. All windows:\n\n$trees")
+    }
+
+    return result
 }
 
 fun <T> waitForAssertionWithReturn(timeout: Int = 10000, assertion: (() -> T)): T {
