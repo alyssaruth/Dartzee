@@ -1,5 +1,6 @@
 package dartzee.core.util
 
+import dartzee.bean.paintLabel
 import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.logging.CODE_RESOURCE_CACHE_NOT_INITIALISED
 import dartzee.preferences.Preferences
@@ -8,15 +9,22 @@ import dartzee.screen.LAYER_DODGY
 import dartzee.screen.animation.Animation
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
+import dartzee.theme.getBaseFont
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.ResourceCache
+import dartzee.utils.toBufferedImage
+import java.awt.Color
+import java.awt.Graphics2D
+import java.awt.Point
+import java.awt.image.BufferedImage
 import javax.sound.sampled.AudioInputStream
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
 import javax.sound.sampled.Line
 import javax.sound.sampled.LineEvent
+import javax.swing.ImageIcon
 import javax.swing.JLabel
 
 fun GameplayDartboard.doDodgy(trigger: IAnimationTrigger) {
@@ -35,13 +43,23 @@ private fun GameplayDartboard.doDodgyOnEdt(animation: Animation) {
     removeDodgyLabels()
 
     animation.img?.let { ii ->
+        val img = animation.text?.let { text ->
+            val bi = ii.toBufferedImage(BufferedImage.TYPE_INT_ARGB)
+            val graphics = bi.graphics as Graphics2D
+
+            val center = Point(bi.width / 2, bi.height / 2)
+            paintLabel(graphics, center, bi.height / 3, bi.height, getBaseFont(), Color.white, text)
+
+            ImageIcon(bi)
+        } ?: ii
+
         val dodgyLabel = JLabel("")
         dodgyLabel.name = "DodgyLabel"
-        dodgyLabel.icon = ii
-        dodgyLabel.setSize(ii.iconWidth, ii.iconHeight)
+        dodgyLabel.icon = img
+        dodgyLabel.setSize(img.iconWidth, img.iconHeight)
 
-        val x = (getWidth() - ii.iconWidth) / 2
-        val y = getHeight() - ii.iconHeight
+        val x = (getWidth() - img.iconWidth) / 2
+        val y = getHeight() - img.iconHeight
         dodgyLabel.setLocation(x, y)
         add(dodgyLabel)
 

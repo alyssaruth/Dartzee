@@ -20,23 +20,17 @@ import dartzee.utils.computeEdgePoints
 import dartzee.utils.getAllSegmentsForDartzee
 import dartzee.utils.getAnglesForScore
 import dartzee.utils.getColourWrapperFromPrefs
-import dartzee.utils.getFontForHeight
 import dartzee.utils.getNeighbours
 import dartzee.utils.translatePoint
-import java.awt.Canvas
 import java.awt.Color
-import java.awt.Font
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.Point
-import java.awt.RenderingHints
 import java.awt.Shape
 import java.awt.geom.Area
 import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 import javax.swing.JComponent
-import javax.swing.JLabel
-import javax.swing.SwingConstants
 import kotlin.math.roundToInt
 
 open class PresentationDartboard(
@@ -146,16 +140,7 @@ open class PresentationDartboard(
         val labels = renderer(svgBounds, computeCenter())
 
         labels.forEach { details ->
-            val font =
-                getFontForHeight(
-                    details.text,
-                    getBaseFont(),
-                    details.fontHeight,
-                    g,
-                    details.maxWidth,
-                )
-
-            paintLabel(g, details.textCenter, svgBounds.height, font, theme.fontColor, details.text)
+            paintLabel(g, details.textCenter, details.fontHeight, svgBounds.height, getBaseFont(), theme.fontColor, details.text, details.maxWidth)
         }
     }
 
@@ -258,43 +243,14 @@ open class PresentationDartboard(
         val outerRadius = UPPER_BOUND_OUTSIDE_BOARD_RATIO * radius
         val lblHeight = ((outerRadius - radius) / 2).roundToInt()
 
-        val baseFont = colourWrapper.font
-        val fontToUse = getFontForHeight("20", baseFont, lblHeight, g)
-        (1..20).forEach { paintScoreLabel(it, g, fontToUse, lblHeight) }
+        (1..20).forEach { paintScoreLabel(it, g, lblHeight) }
     }
 
-    private fun paintScoreLabel(score: Int, g: Graphics2D, fontToUse: Font, lblHeight: Int) {
+    private fun paintScoreLabel(score: Int, g: Graphics2D, lblHeight: Int) {
         val angle = getAnglesForScore(score).toList().average()
         val radiusForLabel = computeRadius() + lblHeight
         val avgPoint = translatePoint(computeCenter(), radiusForLabel, angle)
 
-        paintLabel(g, avgPoint, lblHeight, fontToUse, colourWrapper.fontColor, score.toString())
-    }
-
-    private fun paintLabel(
-        g: Graphics2D,
-        center: Point,
-        height: Int,
-        font: Font,
-        color: Color,
-        text: String,
-    ) {
-        val lbl = JLabel(text)
-        lbl.foreground = color
-        lbl.horizontalAlignment = SwingConstants.CENTER
-        lbl.font = font
-
-        // Work out the width for this label, based on the text
-        val metrics = Canvas().getFontMetrics(font)
-        val lblWidth = metrics.stringWidth(text) + 5
-        lbl.setSize(lblWidth, height)
-
-        val lblX = center.getX().toInt() - lblWidth / 2
-        val lblY = center.getY().toInt() - height / 2
-
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-        g.translate(lblX, lblY)
-        lbl.paint(g)
-        g.translate(-lblX, -lblY)
+        paintLabel(g, avgPoint, lblHeight, lblHeight, colourWrapper.font, colourWrapper.fontColor, score.toString())
     }
 }

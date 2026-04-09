@@ -95,7 +95,7 @@ private fun nextDue(now: LocalDate, finder: FestivalFinder): LocalDate {
 
 fun pickTheme(): Theme? {
     if (InjectedThings.birthdayInfo != null) {
-        return Themes.BIRTHDAY
+        return makeBirthdayTheme()
     }
 
     val autoTheme = getAutomaticThemeForDate()
