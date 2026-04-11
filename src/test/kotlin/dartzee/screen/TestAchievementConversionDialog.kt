@@ -2,7 +2,6 @@ package dartzee.screen
 
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeDisabled
@@ -16,6 +15,7 @@ import dartzee.bean.PlayerSelector
 import dartzee.bean.getAllPlayers
 import dartzee.core.bean.selectedItemTyped
 import dartzee.core.screen.ProgressDialog
+import dartzee.getWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.preparePlayers
 import dartzee.logging.CODE_ACHIEVEMENT_CONVERSION_FINISHED
@@ -81,7 +81,7 @@ class TestAchievementConversionDialog : AbstractTest() {
         waitForConversionToFinish()
 
         dlg.shouldNotBeVisible()
-        findWindow<ProgressDialog>()!!.shouldNotBeVisible()
+        getWindow<ProgressDialog>().shouldNotBeVisible()
 
         val log = findLog(CODE_ACHIEVEMENT_CONVERSION_STARTED)!!
         log.message shouldBe

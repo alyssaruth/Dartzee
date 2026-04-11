@@ -13,6 +13,7 @@ import dartzee.db.EntityName
 import dartzee.game.GameType
 import dartzee.getDialogMessage
 import dartzee.getErrorDialog
+import dartzee.getWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertPlayer
@@ -56,7 +57,7 @@ class TestSimulationRunner : AbstractTest() {
         error.getDialogMessage() shouldBe "A serious problem has occurred with the simulation."
 
         findResultsWindow() shouldBe null
-        findWindow<ProgressDialog>()!!.shouldNotBeVisible()
+        getWindow<ProgressDialog>().shouldNotBeVisible()
     }
 
     @Test
@@ -80,7 +81,7 @@ class TestSimulationRunner : AbstractTest() {
 
         waitForAssertion { findWindow<ProgressDialog>() shouldNotBe null }
         flushEdt()
-        val progressDialog = findWindow<ProgressDialog>()!!
+        val progressDialog = getWindow<ProgressDialog>()
         progressDialog.shouldBeVisible()
         progressDialog.clickCancel()
         lock.unlock()
@@ -102,8 +103,9 @@ class TestSimulationRunner : AbstractTest() {
         val runner = SimulationRunner()
         runner.runSimulation(simulation, 5, false)
         waitForSimulation()
+        flushEdt()
 
-        val progressDialog = findWindow<ProgressDialog>()!!
+        val progressDialog = getWindow<ProgressDialog>()
         progressDialog.shouldNotBeVisible()
         val progressBar = progressDialog.getChild<JProgressBar>()
         progressBar.maximum shouldBe 5

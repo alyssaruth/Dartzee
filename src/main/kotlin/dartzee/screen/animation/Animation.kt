@@ -8,7 +8,11 @@ interface IAnimation {
     fun getAllSounds(): List<String>
 }
 
-data class Animation(val wavResource: String, val imgResourcePath: String?) : IAnimation {
+data class Animation(
+    val wavResource: String,
+    val imgResourcePath: String? = null,
+    val text: String? = null,
+) : IAnimation {
     val img = imgResourcePath?.let { ImageIcon(javaClass.getResource(it)) }
 
     override fun getAnimation() = this

@@ -3,7 +3,14 @@ package dartzee.theme
 import dartzee.bean.DartLabel
 import dartzee.core.util.toLocalDate
 import dartzee.db.PlayerEntity
+import dartzee.game.GameType
 import dartzee.`object`.ColourWrapper
+import dartzee.screen.animation.Animation
+import dartzee.screen.animation.CompositeAnimation
+import dartzee.screen.animation.DartScoreTrigger
+import dartzee.screen.animation.IAnimation
+import dartzee.screen.animation.IAnimationTrigger
+import dartzee.screen.animation.TotalScoreTrigger
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.now
 import java.awt.Color
@@ -39,6 +46,13 @@ private fun dartFactory(pt: Point): DartLabel {
     return label
 }
 
+private fun partyPopperAnimation(age: Int) =
+    CompositeAnimation(
+        (1..3).map {
+            Animation("party-popper", "/theme/birthday/horrific/party-popper-$it.png", "$age")
+        }
+    )
+
 val Themes.BIRTHDAY: Theme
     get() =
         Theme(
@@ -53,6 +67,33 @@ val Themes.BIRTHDAY: Theme
             bannerTextRenderer = ::getBannerDetails,
             dartFactory = ::dartFactory,
         )
+
+private val birthdayAnimations: List<Pair<IAnimationTrigger, IAnimation>> =
+    GameType.values().flatMap { gameType ->
+        listOf(
+            DartScoreTrigger(gameType, 0) to
+                CompositeAnimation(
+                    (1..2).map {
+                        Animation("splat-$it", "/theme/birthday/horrific/dropped-cake.png")
+                    }
+                )
+        )
+    }
+
+fun makeBirthdayTheme(): Theme {
+    val ages = InjectedThings.birthdayInfo?.ages?.distinct().orEmpty()
+
+    val animations = birthdayAnimations + ages.flatMap(::animationsForAge)
+    return Themes.BIRTHDAY.copy(animations = animations.toMap())
+}
+
+private fun animationsForAge(age: Int) =
+    GameType.values().flatMap { gameType ->
+        listOf(
+            DartScoreTrigger(gameType, age) to partyPopperAnimation(age),
+            TotalScoreTrigger(gameType, age) to partyPopperAnimation(age),
+        )
+    }
 
 private fun getBannerDetails(
     svgBounds: Rectangle,

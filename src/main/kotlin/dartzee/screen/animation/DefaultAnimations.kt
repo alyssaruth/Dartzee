@@ -26,10 +26,10 @@ val BASIL_FAWLTY = CompositeAnimation((1..4).map { Animation("basil$it", "/horri
 
 val DEFAULT_ANIMATIONS: Map<IAnimationTrigger, IAnimation> =
     mapOf(
-        TotalScoreTrigger(GameType.X01, 60) to Animation("60", null),
-        TotalScoreTrigger(GameType.X01, 100) to Animation("100", null),
-        TotalScoreTrigger(GameType.X01, 140) to Animation("140", null),
-        TotalScoreTrigger(GameType.X01, 180) to Animation("180", null),
+        TotalScoreTrigger(GameType.X01, 60) to Animation("60"),
+        TotalScoreTrigger(GameType.X01, 100) to Animation("100"),
+        TotalScoreTrigger(GameType.X01, 140) to Animation("140"),
+        TotalScoreTrigger(GameType.X01, 180) to Animation("180"),
         TotalScoreTrigger(GameType.X01, 69) to CHUCKLEVISION,
         TotalScoreTrigger(GameType.X01, 26) to BASIL_FAWLTY,
         BadLuckTrigger to BRUCEY_BAD_LUCK,
