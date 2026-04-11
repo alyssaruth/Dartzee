@@ -103,6 +103,7 @@ class TestSimulationRunner : AbstractTest() {
         val runner = SimulationRunner()
         runner.runSimulation(simulation, 5, false)
         waitForSimulation()
+        flushEdt()
 
         val progressDialog = getWindow<ProgressDialog>()
         progressDialog.shouldNotBeVisible()

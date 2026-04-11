@@ -67,7 +67,7 @@ val Themes.BIRTHDAY: Theme
         )
 
 fun makeBirthdayTheme(): Theme {
-    val ages = InjectedThings.birthdayInfo?.ages?.distinct() ?: emptyList()
+    val ages = InjectedThings.birthdayInfo?.ages?.distinct().orEmpty()
 
     val animations = ages.flatMap(::animationsForAge)
     return Themes.BIRTHDAY.copy(animations = animations.toMap())
