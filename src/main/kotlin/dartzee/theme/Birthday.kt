@@ -8,6 +8,8 @@ import dartzee.`object`.ColourWrapper
 import dartzee.screen.animation.Animation
 import dartzee.screen.animation.CompositeAnimation
 import dartzee.screen.animation.DartScoreTrigger
+import dartzee.screen.animation.IAnimation
+import dartzee.screen.animation.IAnimationTrigger
 import dartzee.screen.animation.TotalScoreTrigger
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.now
@@ -66,10 +68,22 @@ val Themes.BIRTHDAY: Theme
             dartFactory = ::dartFactory,
         )
 
+private val birthdayAnimations: List<Pair<IAnimationTrigger, IAnimation>> =
+    GameType.values().flatMap { gameType ->
+        listOf(
+            DartScoreTrigger(gameType, 0) to
+                CompositeAnimation(
+                    (1..2).map {
+                        Animation("splat-$it", "/theme/birthday/horrific/dropped-cake.png")
+                    }
+                )
+        )
+    }
+
 fun makeBirthdayTheme(): Theme {
     val ages = InjectedThings.birthdayInfo?.ages?.distinct().orEmpty()
 
-    val animations = ages.flatMap(::animationsForAge)
+    val animations = birthdayAnimations + ages.flatMap(::animationsForAge)
     return Themes.BIRTHDAY.copy(animations = animations.toMap())
 }
 
