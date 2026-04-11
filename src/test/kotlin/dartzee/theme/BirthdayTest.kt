@@ -1,9 +1,13 @@
 package dartzee.theme
 
 import dartzee.core.util.DateStatics
+import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
+import dartzee.screen.animation.DartScoreTrigger
+import dartzee.screen.animation.TotalScoreTrigger
 import dartzee.utils.InjectedThings
+import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import java.sql.Timestamp
@@ -25,6 +29,20 @@ class BirthdayTest : AbstractTest() {
         insertPlayer(dateOfBirth = DateStatics.END_OF_TIME)
 
         getExtraBirthdayDescription() shouldBe ""
+    }
+
+    @Test
+    fun `Should include animations for player ages`() {
+        InjectedThings.birthdayInfo = BirthdayInfo(listOf("Clyde", "Havelock"), listOf(20, 35))
+
+        val theme = makeBirthdayTheme()
+
+        theme.animations.keys.shouldContainAll(
+            DartScoreTrigger(GameType.X01, 20),
+            DartScoreTrigger(GameType.GOLF, 35),
+            TotalScoreTrigger(GameType.DARTZEE, 20),
+            TotalScoreTrigger(GameType.ROUND_THE_CLOCK, 35),
+        )
     }
 
     @Test

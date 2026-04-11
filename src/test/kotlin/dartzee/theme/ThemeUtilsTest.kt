@@ -88,7 +88,7 @@ class ThemeUtilsTest : AbstractTest() {
     fun `should pick birthday theme over festival`() {
         testPickTheme(LocalDate.of(2026, Month.OCTOBER, 31)) shouldBe Themes.HALLOWEEN
         InjectedThings.birthdayInfo = BirthdayInfo(listOf("Spooky"), emptyList())
-        testPickTheme(LocalDate.of(2026, Month.OCTOBER, 31)) shouldBe Themes.BIRTHDAY
+        testPickTheme(LocalDate.of(2026, Month.OCTOBER, 31))?.id shouldBe ThemeId.Birthday
     }
 
     @Test
