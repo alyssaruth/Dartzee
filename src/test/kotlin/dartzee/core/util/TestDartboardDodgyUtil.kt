@@ -4,6 +4,7 @@ import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldMatch
+import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.core.helper.verifyNotCalled
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
@@ -37,6 +38,7 @@ import javax.sound.sampled.LineListener
 import javax.swing.JLabel
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
 class TestDartboardDodgyUtil : AbstractTest() {
@@ -114,6 +116,23 @@ class TestDartboardDodgyUtil : AbstractTest() {
         flushEdt()
 
         dartboard.dodgyLabel()!!.icon.shouldMatch(BRUCEY_BAD_LUCK.getAnimation().img!!)
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `should render text over image if specified`() {
+        InjectedThings.animations =
+            mapOf(
+                BadLuckTrigger to
+                    Animation("party-popper", "/theme/birthday/horrific/party-popper-1.png", "33")
+            )
+
+        val dartboard = GameplayDartboard()
+        captureClip()
+        dartboard.doDodgy(BadLuckTrigger)
+        flushEdt()
+
+        dartboard.dodgyLabel()!!.shouldMatchImage("animation-with-text")
     }
 
     @Test
