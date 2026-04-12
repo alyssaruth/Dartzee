@@ -22,7 +22,7 @@ class ThemePanelTest : AbstractTest() {
         val panel = ThemePanel(ThemeId.Halloween)
         panel.background shouldBe Color.DARK_GRAY
 
-        panel.nameLabel().text shouldBe "4. Locked"
+        panel.nameLabel().text shouldBe "5. Locked"
         panel.nameLabel().font shouldBe ResourceCache.BASE_FONT.deriveFont(34f)
         panel.nameLabel().foreground shouldBe Color.LIGHT_GRAY
 
@@ -40,7 +40,7 @@ class ThemePanelTest : AbstractTest() {
         val panel = ThemePanel(ThemeId.Halloween)
         panel.background shouldBe Themes.HALLOWEEN.background
 
-        panel.nameLabel().text shouldBe "4. Halloween"
+        panel.nameLabel().text shouldBe "5. Halloween"
         panel.nameLabel().font shouldBe Themes.HALLOWEEN.font!!.deriveFont(34f)
         panel.nameLabel().foreground shouldBe Themes.HALLOWEEN.fontColor
 

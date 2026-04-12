@@ -57,6 +57,7 @@ class VisualisationPanelDensity : AbstractVisualisationPanel() {
             val probInt = 10 * y / 50
             val label = JLabel("-   $probInt%   -")
             label.font = ResourceCache.BASE_FONT.deriveFont(Font.PLAIN, 14f)
+            label.foreground = Color.black
             label.setSize(LABEL_WIDTH, LABEL_HEIGHT)
             label.horizontalAlignment = SwingConstants.CENTER
 
