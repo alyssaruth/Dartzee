@@ -5,6 +5,7 @@ import dartzee.utils.InjectedThings.logger
 
 enum class ThemeId {
     None,
+    Dartzee,
     Easter,
     Oktoberfest,
     Halloween,

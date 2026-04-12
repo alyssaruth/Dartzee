@@ -63,10 +63,10 @@ class GameStatisticsCellRenderer(
         val rowName = table.getValueAt(row, 0)
         if (highestWins.contains(rowName)) {
             val pos = getPositionForColour(tm, row, column, true)
-            DartsColour.setFgAndBgColoursForPosition(this, pos, Color.WHITE)
+            DartsColour.setFgAndBgColoursForPosition(this, pos, white)
         } else if (lowestWins.contains(rowName)) {
             val pos = getPositionForColour(tm, row, column, false)
-            DartsColour.setFgAndBgColoursForPosition(this, pos, Color.WHITE)
+            DartsColour.setFgAndBgColoursForPosition(this, pos, white)
         } else if (histogramRows.contains(rowName)) {
             val sum = getHistogramSum(tm, column)
             val baseColor =

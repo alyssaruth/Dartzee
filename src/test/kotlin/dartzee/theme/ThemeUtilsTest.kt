@@ -97,14 +97,14 @@ class ThemeUtilsTest : AbstractTest() {
             testPickTheme(LocalDate.of(2026, Month.OCTOBER, it)) shouldBe Themes.HALLOWEEN
         }
 
-        testPickTheme(LocalDate.of(2026, Month.OCTOBER, 23)) shouldBe null
-        testPickTheme(LocalDate.of(2026, Month.NOVEMBER, 1)) shouldBe null
-        testPickTheme(LocalDate.of(2026, Month.NOVEMBER, 28)) shouldBe null
+        testPickTheme(LocalDate.of(2026, Month.OCTOBER, 23)) shouldBe Themes.DARTZEE
+        testPickTheme(LocalDate.of(2026, Month.NOVEMBER, 1)) shouldBe Themes.DARTZEE
+        testPickTheme(LocalDate.of(2026, Month.NOVEMBER, 28)) shouldBe Themes.DARTZEE
     }
 
     @Test
     fun `Should pick easter for the relevant dates`() {
-        testPickTheme(LocalDate.of(2026, Month.MARCH, 27)) shouldBe null
+        testPickTheme(LocalDate.of(2026, Month.MARCH, 27)) shouldBe Themes.DARTZEE
         testPickTheme(LocalDate.of(2026, Month.MARCH, 28)) shouldBe Themes.EASTER
         testPickTheme(LocalDate.of(2026, Month.MARCH, 29)) shouldBe Themes.EASTER
         testPickTheme(LocalDate.of(2026, Month.MARCH, 30)) shouldBe Themes.EASTER
@@ -114,12 +114,12 @@ class ThemeUtilsTest : AbstractTest() {
         testPickTheme(LocalDate.of(2026, Month.APRIL, 3)) shouldBe Themes.EASTER
         testPickTheme(LocalDate.of(2026, Month.APRIL, 4)) shouldBe Themes.EASTER
         testPickTheme(LocalDate.of(2026, Month.APRIL, 5)) shouldBe Themes.EASTER
-        testPickTheme(LocalDate.of(2026, Month.APRIL, 6)) shouldBe null
+        testPickTheme(LocalDate.of(2026, Month.APRIL, 6)) shouldBe Themes.DARTZEE
     }
 
     @Test
     fun `Should pick oktoberfest for the relevant dates`() {
-        testPickTheme(LocalDate.of(2026, Month.SEPTEMBER, 18)) shouldBe null
+        testPickTheme(LocalDate.of(2026, Month.SEPTEMBER, 18)) shouldBe Themes.DARTZEE
         testPickTheme(LocalDate.of(2026, Month.SEPTEMBER, 19)) shouldBe Themes.OKTOBERFEST
         testPickTheme(LocalDate.of(2026, Month.SEPTEMBER, 20)) shouldBe Themes.OKTOBERFEST
         testPickTheme(LocalDate.of(2026, Month.SEPTEMBER, 21)) shouldBe Themes.OKTOBERFEST
@@ -136,7 +136,7 @@ class ThemeUtilsTest : AbstractTest() {
         testPickTheme(LocalDate.of(2026, Month.OCTOBER, 2)) shouldBe Themes.OKTOBERFEST
         testPickTheme(LocalDate.of(2026, Month.OCTOBER, 3)) shouldBe Themes.OKTOBERFEST
         testPickTheme(LocalDate.of(2026, Month.OCTOBER, 4)) shouldBe Themes.OKTOBERFEST
-        testPickTheme(LocalDate.of(2026, Month.OCTOBER, 5)) shouldBe null
+        testPickTheme(LocalDate.of(2026, Month.OCTOBER, 5)) shouldBe Themes.DARTZEE
     }
 
     @Test
