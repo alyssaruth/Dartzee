@@ -28,8 +28,8 @@ fun setLookAndFeel() {
 
 fun setLookAndFeel(laf: String) {
     try {
-        autoApplyTheme()
         UIManager.setLookAndFeel(laf)
+        autoApplyTheme()
     } catch (e: Throwable) {
         logger.error(CODE_LOOK_AND_FEEL_ERROR, "Failed to load laf $laf", e)
         DialogUtil.showError("Failed to load Look & Feel 'Nimbus'.")

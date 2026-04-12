@@ -14,7 +14,7 @@ object Preferences {
     val evenDoubleColour = Preference("evendoub", DARTBOARD_RED)
     val evenTrebleColour = Preference("eventreb", DARTBOARD_RED)
 
-    val theme = Preference("theme", ThemeId.None)
+    val theme = Preference("theme", ThemeId.Dartzee)
 
     val deviceId = Preference("deviceId", "")
     val imageUploadDirectory = Preference("imageUploadDirectory", "")

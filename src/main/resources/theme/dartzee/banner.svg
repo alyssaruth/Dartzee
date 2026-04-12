@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg" id="svg5444" viewBox="0 0 484.71 245.35" version="1.1">
+  <defs id="defs5446">
+    <linearGradient id="linearGradient7215" y2="130.07" gradientUnits="userSpaceOnUse" x2="569.35" y1="286.38" x1="125.89">
+      <stop id="stop7035" stop-color="#867850" offset="0"/>
+      <stop id="stop7041" stop-color="#a08872" offset=".35474"/>
+      <stop id="stop7037" stop-color="#867850" offset="1"/>
+    </linearGradient>
+    <linearGradient id="linearGradient7217" y2="335.09" gradientUnits="userSpaceOnUse" x2="411.64" y1="330.39" x1="412.44">
+      <stop id="stop7104" stop-color="#b8b8b8" offset="0"/>
+      <stop id="stop7110" stop-color="#e3e3e3" offset=".5"/>
+      <stop id="stop7106" stop-color="#b9b9b9" offset="1"/>
+    </linearGradient>
+    <linearGradient id="linearGradient7219" y2="335.09" gradientUnits="userSpaceOnUse" x2="411.64" gradientTransform="matrix(.90747 -.42013 .42013 .90747 -96.493 204.08)" y1="330.39" x1="412.44">
+      <stop id="stop7104-7" stop-color="#b8b8b8" offset="0"/>
+      <stop id="stop7110-8" stop-color="#e3e3e3" offset=".5"/>
+      <stop id="stop7106-8" stop-color="#b9b9b9" offset="1"/>
+    </linearGradient>
+    <linearGradient id="linearGradient7221" y2="335.09" gradientUnits="userSpaceOnUse" x2="411.64" gradientTransform="matrix(-.96884 -.24771 .24771 -.96884 748.05 756.69)" y1="330.39" x1="412.44">
+      <stop id="stop7104-5" stop-color="#b8b8b8" offset="0"/>
+      <stop id="stop7110-4" stop-color="#e3e3e3" offset=".5"/>
+      <stop id="stop7106-1" stop-color="#b9b9b9" offset="1"/>
+    </linearGradient>
+  </defs>
+  <g id="layer1" transform="translate(-129.82 -97.676)">
+    <g id="g7206" stroke-linejoin="round">
+      <rect id="rect5454" style="color:#000000" ry="3.8279" height="244.51" width="480.9" stroke="#777" y="97.776" x="131.73" stroke-width=".2" fill="url(#linearGradient7215)"/>
+      <rect id="rect5454-1" style="color:#000000" ry="3.8279" height="212.93" width="452.52" stroke="#777" y="109.51" x="145.92" stroke-width=".2" fill="#444"/>
+      <path id="rect7048-4" style="color:#000000" d="m397.66 328.23 30.171 3.838-0.79998 5.4618-30.018-4.881 0.64721-4.4188z" stroke="#858585" stroke-width=".1" fill="url(#linearGradient7217)"/>
+      <path id="rect7048-4-2" style="color:#000000" d="m402.27 334.87 28.991-9.1927 1.5687 5.2925-29.291 8.1821-1.2691-4.2818z" stroke="#858585" stroke-width=".1" fill="url(#linearGradient7219)"/>
+      <path id="rect7048-4-27" style="color:#000000" d="m444.09 340.19-28.28-11.192 2.128-5.0934 27.873 12.165-1.7216 4.1208z" stroke="#858585" stroke-width=".1" fill="url(#linearGradient7221)"/>
+      <rect id="rect7204" style="color:#000000" transform="rotate(2.4312)" height="11.905" width="37.648" stroke="#858585" y="314.14" x="267.4" stroke-width=".1" fill="#493a3d"/>
+      <rect id="rect6009" style="color:#000000" height="7.218" width="484.51" stroke="#777" y="335.71" x="129.92" stroke-width=".2" fill="#60553f"/>
+    </g>
+  </g>
+  <metadata>
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>Blackboard</dc:title>
+        <dc:date>2010-04-21T03:43:54</dc:date>
+        <dc:description>A blackboard with chalk and eraser. Drawn in Inkscape.</dc:description>
+        <dc:source>http://openclipart.org/detail/49363/blackboard-by-j_alves</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>J_Alves</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>blackboard</rdf:li>
+            <rdf:li>chalk</rdf:li>
+            <rdf:li>chalkboard</rdf:li>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+            <rdf:li>education</rdf:li>
+            <rdf:li>school</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>
