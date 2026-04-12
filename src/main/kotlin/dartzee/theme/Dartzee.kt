@@ -17,7 +17,7 @@ val Themes.DARTZEE: Theme
     get() =
         Theme(
             ThemeId.Dartzee,
-            "The default Dartzee theme, chalk on a blackboard like being in a real-life pub.",
+            "The default Dartzee theme. Chalk on a blackboard - like being in a real-life pub.",
             Color.decode("#1e6239"),
             Color.decode("#31343a"),
             Color.decode("#63492b"),

@@ -36,7 +36,7 @@ class PreferencesPanelAppearanceTest : AbstractPreferencePanelTest<PreferencesPa
         panel.spinnerHueFactor.value shouldBe 0.8
         panel.spinnerFgBrightness.value shouldBe 0.5
         panel.spinnerBgBrightness.value shouldBe 1.0
-        panel.getChild<ThemeSelector>().selectedThemeId() shouldBe ThemeId.None
+        panel.getChild<ThemeSelector>().selectedThemeId() shouldBe ThemeId.Dartzee
     }
 
     override fun setUiFieldValuesToNonDefaults(panel: PreferencesPanelAppearance) {
