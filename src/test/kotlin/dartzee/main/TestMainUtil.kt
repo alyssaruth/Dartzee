@@ -52,6 +52,9 @@ class TestMainUtil : AbstractTest() {
 
     @Test
     fun `Should successfully set Nimbus look and feel for other OS`() {
+        InjectedThings.now = LocalDate.of(2026, 1, 1)
+        preferenceService.save(Preferences.theme, ThemeId.None)
+
         UIManager.setLookAndFeel(MetalLookAndFeel())
         DartsClient.operatingSystem = "Windows"
 
@@ -60,6 +63,7 @@ class TestMainUtil : AbstractTest() {
         UIManager.getLookAndFeel().shouldBeInstanceOf<NimbusLookAndFeel>()
         verifyLog(CODE_LOOK_AND_FEEL_SET)
         errorLogged() shouldBe false
+        InjectedThings.theme shouldBe null
     }
 
     @Test
