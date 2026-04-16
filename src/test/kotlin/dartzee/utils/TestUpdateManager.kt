@@ -230,7 +230,7 @@ class TestUpdateManager : AbstractTest() {
         val updateFile = File("update.bat")
         updateFile.writeText("blah")
 
-        UpdateManager.prepareBatchFile()
+        UpdateManager.prepareUpdateFile()
 
         updateFile.readText() shouldBe javaClass.getResource("/update/update.bat")!!.readText()
         updateFile.delete()
