@@ -13,6 +13,7 @@ import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
 import dartzee.screen.game.SegmentStatuses
 import dartzee.theme.BIRTHDAY
 import dartzee.theme.BirthdayInfo
+import dartzee.theme.DARTZEE
 import dartzee.theme.EASTER
 import dartzee.theme.HALLOWEEN
 import dartzee.theme.OKTOBERFEST
@@ -93,6 +94,17 @@ class PresentationDartboardTest : AbstractTest() {
     @Tag("screenshot")
     fun `Should match snapshot - birthday`() {
         snapshotTheme(Themes.BIRTHDAY)
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should match snapshot - dartzee banner`() {
+        InjectedThings.theme = Themes.DARTZEE
+
+        val bannerDartboard =
+            PresentationDartboard(renderScoreLabels = true, renderThemeBanner = true)
+        bannerDartboard.setBounds(0, 0, 500, 500)
+        bannerDartboard.shouldMatchImage("dartzee-banner")
     }
 
     @Test
