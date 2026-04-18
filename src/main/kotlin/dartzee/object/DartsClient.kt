@@ -54,6 +54,8 @@ object DartsClient {
 
     fun isWindowsOs() = operatingSystem.contains("windows", ignoreCase = true)
 
+    fun isLinux() = operatingSystem.contains("linux", ignoreCase = true)
+
     fun checkForUpdatesIfRequired() {
         if (devMode) {
             logger.info(CODE_UPDATE_CHECK, "Not checking for updates: I'm in dev mode")

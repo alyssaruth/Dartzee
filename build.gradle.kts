@@ -51,6 +51,7 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core:5.5.4")
     testImplementation("com.github.alexburlton:swing-test:4.0.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.14.3")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

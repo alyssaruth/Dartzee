@@ -5,7 +5,9 @@ import com.github.alyssaburlton.swingtest.clickNo
 import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.flushEdt
+import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.purgeWindows
+import com.github.alyssaburlton.swingtest.shouldBeVisible
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.getErrorDialog
 import dartzee.getInfoDialog
@@ -21,9 +23,10 @@ import io.mockk.clearAllMocks
 import io.mockk.spyk
 import io.mockk.verifySequence
 import java.io.File
+import javax.swing.JLabel
 import org.junit.jupiter.api.Test
 
-class TestDialogUtil : AbstractTest() {
+class DialogUtilTest : AbstractTest() {
     var factoryMock = spyk<TestMessageDialogFactory>()
 
     @Test
@@ -177,5 +180,22 @@ class TestDialogUtil : AbstractTest() {
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "File selector dialog shown: "
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
             "File selector dialog closed - selected ${f.absolutePath}"
+    }
+
+    @Test
+    fun `Should show a custom error message`() {
+        val component = JLabel("My custom message")
+
+        runAsync { DialogUtil.showCustomError(component) }
+
+        val log = verifyLog(CODE_DIALOG_SHOWN)
+        log.message shouldBe "CustomError dialog shown: ?"
+
+        val dlg = getErrorDialog()
+        dlg.shouldBeVisible()
+        dlg.getChild<JLabel>(text = "My custom message") shouldBe component
+        dlg.clickOk(async = true)
+
+        verifyLog(CODE_DIALOG_CLOSED).message shouldBe "CustomError dialog closed"
     }
 }

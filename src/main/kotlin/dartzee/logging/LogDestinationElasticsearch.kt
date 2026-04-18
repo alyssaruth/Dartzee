@@ -51,11 +51,15 @@ class LogDestinationElasticsearch(
     }
 
     fun shutDown() {
-        scheduler.shutdown()
-        logger.waitUntilLoggingFinished()
+        try {
+            scheduler.shutdown()
+            logger.waitUntilLoggingFinished()
 
-        val remainingLogs = pendingLogs.toList()
-        val entities = remainingLogs.map { PendingLogsEntity.factory(it) }
-        BulkInserter.insert(entities)
+            val remainingLogs = pendingLogs.toList()
+            val entities = remainingLogs.map { PendingLogsEntity.factory(it) }
+            BulkInserter.insert(entities)
+        } catch (e: Exception) {
+            logger.error(CODE_ELASTICSEARCH_ERROR, "Failed to write out pending logs", e)
+        }
     }
 }

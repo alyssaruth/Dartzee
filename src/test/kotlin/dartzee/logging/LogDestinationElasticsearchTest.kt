@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class TestLogDestinationElasticsearch : AbstractTest() {
+class LogDestinationElasticsearchTest : AbstractTest() {
     @BeforeEach
     fun beforeEach() {
         DartsClient.devMode = false
@@ -169,6 +169,24 @@ class TestLogDestinationElasticsearch : AbstractTest() {
         val pendingLogs = PendingLogsEntity().retrieveEntities()
         pendingLogs.size shouldBe 1
         pendingLogs.first().logJson shouldBe record.toJsonString()
+    }
+
+    @Test
+    fun `Should now throw an error if shutting down fails for some reason`() {
+        val ex = Exception("blargh")
+        val scheduler = mockk<ScheduledExecutorService>(relaxed = true)
+        val dest = makeLogDestination(mockPoster(), scheduler)
+        every { scheduler.shutdown() } throws ex
+
+        val record = makeLogRecord(loggingCode = LoggingCode("tooLate"))
+        dest.log(record)
+
+        shouldNotThrowAny { dest.shutDown() }
+
+        verify { scheduler.shutdown() }
+
+        val log = verifyLog(CODE_ELASTICSEARCH_ERROR, Severity.ERROR)
+        log.errorObject shouldBe ex
     }
 
     private fun makeLogDestination(

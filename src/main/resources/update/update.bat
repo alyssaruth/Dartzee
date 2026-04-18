@@ -1,17 +1,13 @@
-@echo off
+@echo on
 
-REM %1 = noOfBytes
-REM %2 = version number
-REM %3 = filename
-REM %4 = assetId
+REM %1 = filename
 
-echo Performing download of %1 bytes (Version %2)
+timeout 2
+del Dartzee.jar || goto :error
+ren %1 Dartzee.jar || goto :error
 
-curl -LJO -H "Accept: application/octet-stream" https://api.github.com/repos/alyssaburlton/Dartzee/releases/assets/%4
-
-ren Dartzee.jar Dartzee_OLD.jar
-ren %3 Dartzee.jar
-del Dartzee_OLD.jar
-
-start javaw -Xms256m -Xmx512m -jar Dartzee.jar justUpdated trueLaunch
+start javaw -Xms256m -Xmx512m -jar Dartzee.jar justUpdated trueLaunch || goto :error
 exit
+
+:error
+echo Something went wrong! Please copy the contents of this so Alyssa can fix it :) Error level: #%errorlevel%
