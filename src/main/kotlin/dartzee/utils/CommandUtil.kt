@@ -36,6 +36,6 @@ private fun execCommand(command: Array<String>, runtime: Runtime) =
         runtime.exec(command)
         true
     } catch (e: Exception) {
-        logger.error(CODE_EXEC_ERROR, "Command failed", e)
+        logger.error(CODE_EXEC_ERROR, "Command failed: ${command.joinToString(" ")}", e)
         false
     }

@@ -46,9 +46,9 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class UpdateManagerTest : AbstractTest() {
-    private val TEST_JAR_FILE_NAME = "Dartzee_v7_3_0.jar"
+private const val TEST_JAR_FILE_NAME = "Dartzee_v7_3_0.jar"
 
+class UpdateManagerTest : AbstractTest() {
     @BeforeEach
     fun beforeEach() {
         Unirest.config().automaticRetries(false)

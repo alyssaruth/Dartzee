@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class TestLogDestinationElasticsearch : AbstractTest() {
+class LogDestinationElasticsearchTest : AbstractTest() {
     @BeforeEach
     fun beforeEach() {
         DartsClient.devMode = false
