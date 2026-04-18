@@ -23,6 +23,7 @@ import dartzee.screen.animation.BULLSEYE_DEV
 import dartzee.screen.animation.BadLuckTrigger
 import dartzee.screen.animation.BruceyBonusTrigger
 import dartzee.screen.animation.TotalScoreTrigger
+import dartzee.theme.ThemeId
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
@@ -31,6 +32,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotBeEmpty
 import io.kotest.matchers.types.shouldBeInstanceOf
+import java.time.LocalDate
 import javax.swing.UIManager
 import javax.swing.plaf.metal.MetalLookAndFeel
 import javax.swing.plaf.nimbus.NimbusLookAndFeel
@@ -50,6 +52,9 @@ class TestMainUtil : AbstractTest() {
 
     @Test
     fun `Should successfully set Nimbus look and feel for other OS`() {
+        InjectedThings.now = LocalDate.of(2026, 1, 1)
+        preferenceService.save(Preferences.theme, ThemeId.None)
+
         UIManager.setLookAndFeel(MetalLookAndFeel())
         DartsClient.operatingSystem = "Windows"
 
@@ -58,10 +63,14 @@ class TestMainUtil : AbstractTest() {
         UIManager.getLookAndFeel().shouldBeInstanceOf<NimbusLookAndFeel>()
         verifyLog(CODE_LOOK_AND_FEEL_SET)
         errorLogged() shouldBe false
+        InjectedThings.theme shouldBe null
     }
 
     @Test
     fun `Should log an error if it fails to set look and feel`() {
+        InjectedThings.now = LocalDate.of(2026, 1, 1)
+        preferenceService.save(Preferences.theme, ThemeId.None)
+
         runAsync { setLookAndFeel("invalid") }
 
         val error = verifyLog(CODE_LOOK_AND_FEEL_ERROR, Severity.ERROR)

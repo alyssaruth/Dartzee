@@ -133,7 +133,9 @@ open class PresentationDartboard(
         val svg = theme.banner ?: return
         val renderer = theme.bannerTextRenderer ?: return
 
-        val viewBox = ViewBox(0f, 0f, getWidth().toFloat(), getHeight().toFloat())
+        val boxWidth = getWidth().toFloat() * theme.svgWidthScaleFactor
+        val xCoord = (getWidth() - boxWidth) / 2
+        val viewBox = ViewBox(xCoord, 0f, boxWidth, getHeight().toFloat())
         svg.render(this, g, viewBox)
 
         val svgBounds = svg.computeShape(viewBox).bounds

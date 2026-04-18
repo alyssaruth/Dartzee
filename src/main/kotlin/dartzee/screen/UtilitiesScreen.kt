@@ -6,12 +6,13 @@ import dartzee.core.util.runInOtherThread
 import dartzee.db.sanity.DatabaseSanityCheck
 import dartzee.logging.CODE_PARTY_MODE
 import dartzee.`object`.DartsClient
+import dartzee.theme.getBaseFont
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
 import java.awt.BorderLayout
-import java.awt.Font
+import java.awt.Dimension
 import java.awt.event.ActionEvent
 import javax.swing.AbstractButton
 import javax.swing.JButton
@@ -43,9 +44,11 @@ class UtilitiesScreen : EmbeddedScreen() {
         panel.add(btnAchievementConversion, "cell 0 11,alignx center")
         panel.add(btnPartyMode, "cell 0 12,alignx center")
 
+        val font = getBaseFont().deriveFont(InjectedThings.theme?.menuFontSize ?: 18f)
         val buttons = panel.getAllChildComponentsForType<AbstractButton>()
         for (button in buttons) {
-            button.font = Font("Tahoma", Font.PLAIN, 18)
+            button.font = font
+            button.preferredSize = Dimension(10, 50)
             button.addActionListener(this)
         }
     }

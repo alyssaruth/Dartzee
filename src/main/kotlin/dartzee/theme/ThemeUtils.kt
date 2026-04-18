@@ -45,9 +45,8 @@ fun simpleBannerRenderer(themeId: ThemeId): BannerTextRenderer = { svgBounds, da
 object Themes
 
 fun themeMap() =
-    listOf(Themes.EASTER, Themes.OKTOBERFEST, Themes.HALLOWEEN, Themes.BIRTHDAY).associateBy {
-        it.id
-    }
+    listOf(Themes.EASTER, Themes.OKTOBERFEST, Themes.HALLOWEEN, Themes.BIRTHDAY, Themes.DARTZEE)
+        .associateBy { it.id }
 
 fun themeDescription(id: ThemeId): String {
     val basicInfo = basicDescription(id)

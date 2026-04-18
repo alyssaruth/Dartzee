@@ -25,6 +25,7 @@ data class Theme(
     val fontColor: Color = Color.BLACK,
     val menuFontSize: Float? = null,
     val animations: Map<IAnimationTrigger, IAnimation> = emptyMap(),
+    val svgWidthScaleFactor: Float = 1f,
     val bannerTextRenderer: BannerTextRenderer? = null,
     val festivalInfo: FestivalInfo? = null,
     val unlockDate: LocalDate? = null,

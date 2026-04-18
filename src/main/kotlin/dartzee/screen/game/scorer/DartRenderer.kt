@@ -3,6 +3,7 @@ package dartzee.screen.game.scorer
 import dartzee.core.bean.AbstractTableRenderer
 import dartzee.`object`.Dart
 import dartzee.`object`.DartHint
+import dartzee.utils.InjectedThings
 import java.awt.Color
 import java.awt.Font
 
@@ -19,7 +20,8 @@ class DartRenderer : AbstractTableRenderer<Dart>() {
             if (isSelected) {
                 if (typedValue is DartHint) Color.CYAN else Color.WHITE
             } else {
-                if (typedValue is DartHint) Color.RED else Color.BLACK
+                if (typedValue is DartHint) Color.RED
+                else InjectedThings.theme?.fontColor ?: Color.BLACK
             }
 
         val style = if (typedValue is DartHint) Font.ITALIC else Font.PLAIN
