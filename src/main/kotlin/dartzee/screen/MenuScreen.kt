@@ -14,6 +14,7 @@ import dartzee.theme.getBaseFont
 import dartzee.theme.themedIcon
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings
+import java.awt.Color
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.event.ActionEvent
@@ -70,6 +71,8 @@ class MenuScreen : EmbeddedScreen() {
         btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
         btnDartzeeTemplates.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
         btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
+
+        btnNewGame.background = Color.red
 
         getAllChildComponentsForType<JButton>().forEach { button ->
             button.font =

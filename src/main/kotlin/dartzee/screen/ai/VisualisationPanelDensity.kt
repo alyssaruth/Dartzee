@@ -2,7 +2,7 @@ package dartzee.screen.ai
 
 import dartzee.ai.DartsAiModel
 import dartzee.core.bean.paint
-import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
+import dartzee.theme.WIREFRAME_COLOUR_WRAPPER
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.Font

@@ -2,7 +2,7 @@ package dartzee.screen.ai
 
 import dartzee.ai.DartsAiModel
 import dartzee.bean.PresentationDartboard
-import dartzee.`object`.ColourWrapper
+import dartzee.theme.ColourWrapper
 import dartzee.utils.DartsColour
 import java.awt.Point
 import java.awt.image.BufferedImage

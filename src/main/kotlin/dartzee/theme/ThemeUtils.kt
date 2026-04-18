@@ -45,7 +45,14 @@ fun simpleBannerRenderer(themeId: ThemeId): BannerTextRenderer = { svgBounds, da
 object Themes
 
 fun themeMap() =
-    listOf(Themes.EASTER, Themes.OKTOBERFEST, Themes.HALLOWEEN, Themes.BIRTHDAY, Themes.DARTZEE)
+    listOf(
+            Themes.EASTER,
+            Themes.OKTOBERFEST,
+            Themes.HALLOWEEN,
+            Themes.BIRTHDAY,
+            Themes.DARTZEE,
+            Themes.PRIDE,
+        )
         .associateBy { it.id }
 
 fun themeDescription(id: ThemeId): String {

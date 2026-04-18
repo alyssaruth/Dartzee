@@ -1,18 +1,17 @@
 package dartzee.utils
 
 import dartzee.core.util.mapStepped
-import dartzee.`object`.ColourWrapper
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.preferences.Preferences
+import dartzee.theme.ColourWrapper
+import dartzee.theme.IDartboardPainter
 import dartzee.utils.InjectedThings.preferenceService
 import java.awt.Color
 import java.awt.Point
 
-/** Utilities for the Dartboard object. */
-private val numberOrder =
-    listOf(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20)
+val numberOrder = listOf(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20)
 
 val hmScoreToOrdinal = initialiseOrdinalHashMap()
 private var colourWrapperFromPrefs: ColourWrapper? = null
@@ -215,7 +214,7 @@ fun getPotentialAimPoints(centerPt: Point, radius: Double): Set<AimPoint> {
     return points.toSet()
 }
 
-fun getColourWrapperFromPrefs(): ColourWrapper {
+fun getColourWrapperFromPrefs(): IDartboardPainter {
     val themeColours = InjectedThings.theme?.dartboardColourWrapper
     if (themeColours != null) {
         return themeColours

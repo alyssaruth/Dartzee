@@ -1,15 +1,15 @@
 package dartzee.bean
 
 import dartzee.core.util.getParentWindow
-import dartzee.`object`.ColourWrapper
 import dartzee.`object`.DartboardSegment
+import dartzee.theme.IDartboardPainter
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getHighlightedColour
 import java.awt.Point
 import java.awt.event.MouseEvent
 
-class InteractiveDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs()) :
+class InteractiveDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromPrefs()) :
     PresentationDartboard(colourWrapper, true), IMouseListener {
     private var hoveredSegment: DartboardSegment? = null
     private var allowInteraction = true

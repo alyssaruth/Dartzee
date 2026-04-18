@@ -1,7 +1,6 @@
 package dartzee.theme
 
 import dartzee.logging.CODE_THEME_APPLIED
-import dartzee.`object`.ColourWrapper
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
 import dartzee.utils.InjectedThings.logger
@@ -20,7 +19,7 @@ data class Theme(
     private val primaryDark: Color,
     val background: Color,
     val lightBackground: Color,
-    private val dartboardColours: ColourWrapper?,
+    private val dartboardColours: IDartboardPainter?,
     val linkColour: Color = Color.BLUE,
     val fontColor: Color = Color.BLACK,
     val menuFontSize: Float? = null,
@@ -41,7 +40,7 @@ data class Theme(
     val newGameSfx = clipForResource("/theme/$resourcePath/newGame.wav")
 
     val dartboardColourWrapper =
-        dartboardColours?.copy(font = dartboardFont ?: ResourceCache.BASE_FONT)
+        dartboardColours?.withFont(dartboardFont ?: ResourceCache.BASE_FONT)
 
     fun apply() {
         logger.info(CODE_THEME_APPLIED, "Applying theme $name")

@@ -12,12 +12,12 @@ import dartzee.db.GameEntity
 import dartzee.game.GameType
 import dartzee.game.state.DartzeePlayerState
 import dartzee.game.state.IWrappedParticipant
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelFixedLength
 import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.scorer.DartsScorerDartzee
+import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import dartzee.utils.factoryHighScoreResult
 import dartzee.utils.generateDartzeeTemplateFromGame
 import dartzee.utils.getQuotedIdStr

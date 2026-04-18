@@ -16,8 +16,6 @@ import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.GolfPlayerState
 import dartzee.game.state.SingleParticipant
 import dartzee.game.state.X01PlayerState
-import dartzee.`object`.ColourWrapper
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.reporting.IncludedPlayerParameters
@@ -28,6 +26,8 @@ import dartzee.reporting.ReportParametersPlayers
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
 import dartzee.stats.GameWrapper
+import dartzee.theme.ColourWrapper
+import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import dartzee.theme.Theme
 import dartzee.theme.ThemeId
 import dartzee.utils.InjectedThings.mainDatabase

@@ -9,7 +9,8 @@ enum class ThemeId {
     Easter,
     Oktoberfest,
     Halloween,
-    Birthday;
+    Birthday,
+    Pride;
 
     companion object {
         fun parseFromPreference(preference: String): ThemeId =

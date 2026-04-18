@@ -2,7 +2,7 @@ package dartzee.screen.ai
 
 import dartzee.ai.DartsAiModel
 import dartzee.core.bean.paint
-import dartzee.`object`.ColourWrapper
+import dartzee.theme.ColourWrapper
 import dartzee.utils.DartsColour
 import dartzee.utils.ResourceCache
 import java.awt.Color
@@ -60,9 +60,9 @@ class VisualisationPanelScatter : AbstractVisualisationPanel() {
                 oddTreble,
                 evenDouble,
                 oddDouble,
+                outerDartboardColour = Color.WHITE,
+                missedBoardColour = Color.WHITE,
             )
-        wrapper.missedBoardColour = Color.WHITE
-        wrapper.outerDartboardColour = Color.WHITE
         return wrapper
     }
 

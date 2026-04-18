@@ -4,8 +4,8 @@ import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.bean.PresentationDartboard
 import dartzee.helper.AbstractTest
 import dartzee.helper.markPoints
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.SegmentType
+import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 

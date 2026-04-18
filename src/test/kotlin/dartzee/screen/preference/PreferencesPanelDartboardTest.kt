@@ -7,8 +7,8 @@ import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.bean.PresentationDartboard
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.helper.makeTheme
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.preferences.Preferences
+import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import dartzee.theme.ThemeId
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings
