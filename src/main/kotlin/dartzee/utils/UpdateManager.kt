@@ -26,6 +26,8 @@ import kong.unirest.json.JSONObject
  * https://developer.github.com/v3/repos/releases/#get-the-latest-release
  */
 object UpdateManager {
+    private val jarDirectory = System.getProperty("user.dir")
+
     fun checkForUpdates(currentVersion: String) {
         // Show this here, checking the CRC can take time
         logger.info(CODE_UPDATE_CHECK, "Checking for updates - my version is $currentVersion")
@@ -135,15 +137,13 @@ object UpdateManager {
 
     private fun downloadJar(repositoryUrl: String, metadata: UpdateMetadata): Boolean =
         try {
-            FileUtil.deleteFileIfExists(metadata.fileName)
+            val downloadPath = "$jarDirectory/${metadata.fileName}"
+            FileUtil.deleteFileIfExists(downloadPath)
             val downloadUrl = "$repositoryUrl/releases/assets/${metadata.assetId}"
-            logger.info(
-                CODE_UPDATE_STARTING,
-                "Downloading from $downloadUrl to ${metadata.fileName}",
-            )
+            logger.info(CODE_UPDATE_STARTING, "Downloading from $downloadUrl to $downloadPath")
 
             DialogUtil.showLoadingDialog("Downloading ${metadata.version}...")
-            val response = Unirest.get(downloadUrl).accept(MimeTypes.EXE).asFile(metadata.fileName)
+            val response = Unirest.get(downloadUrl).accept(MimeTypes.EXE).asFile(downloadPath)
             if (response.status != 200) {
                 logger.error(
                     CODE_UPDATE_ERROR,
@@ -151,10 +151,10 @@ object UpdateManager {
                     KEY_RESPONSE_BODY to response.body,
                 )
                 DialogUtil.showError("Failed to check for updates (unable to connect).")
-                return false
+                false
+            } else {
+                true
             }
-
-            true
         } catch (e: Exception) {
             DialogUtil.dismissLoadingDialog()
             logger.error(CODE_UPDATE_ERROR, "Caught $e during download", e)
@@ -167,8 +167,9 @@ object UpdateManager {
     private fun relaunchWithScript(metadata: UpdateMetadata, runtime: Runtime) {
         val success =
             runCommand(
-                windows = arrayOf("cmd", "/c", "start", "update.bat", metadata.fileName),
-                linux = arrayOf("sh", "update.sh", metadata.fileName),
+                windows =
+                    arrayOf("cmd", "/c", "start", "$jarDirectory/update.bat", metadata.fileName),
+                linux = arrayOf("sh", "$jarDirectory/update.sh", metadata.fileName),
                 runtime,
             )
 
@@ -182,7 +183,8 @@ object UpdateManager {
     }
 
     fun prepareUpdateFile(filename: String) {
-        val updateFile = File(filename)
+        val filePath = "$jarDirectory/$filename"
+        val updateFile = File(filePath)
 
         updateFile.delete()
         val updateScript = javaClass.getResource("/update/$filename").readText()
