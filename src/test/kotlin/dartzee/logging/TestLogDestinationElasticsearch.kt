@@ -171,6 +171,24 @@ class TestLogDestinationElasticsearch : AbstractTest() {
         pendingLogs.first().logJson shouldBe record.toJsonString()
     }
 
+    @Test
+    fun `Should now throw an error if shutting down fails for some reason`() {
+        val ex = Exception("blargh")
+        val scheduler = mockk<ScheduledExecutorService>(relaxed = true)
+        val dest = makeLogDestination(mockPoster(), scheduler)
+        every { scheduler.shutdown() } throws ex
+
+        val record = makeLogRecord(loggingCode = LoggingCode("tooLate"))
+        dest.log(record)
+
+        shouldNotThrowAny { dest.shutDown() }
+
+        verify { scheduler.shutdown() }
+
+        val log = verifyLog(CODE_ELASTICSEARCH_ERROR, Severity.ERROR)
+        log.errorObject shouldBe ex
+    }
+
     private fun makeLogDestination(
         poster: ElasticsearchPoster?,
         scheduler: ScheduledExecutorService = mockk(relaxed = true),

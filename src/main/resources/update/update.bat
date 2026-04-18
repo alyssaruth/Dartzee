@@ -1,10 +1,13 @@
-@echo off
+@echo on
 
 REM %1 = filename
 
-ren Dartzee.jar Dartzee_OLD.jar
-ren %3 Dartzee.jar
-del Dartzee_OLD.jar
+timeout 2
+del Dartzee.jar || goto :error
+ren %1 Dartzee.jar || goto :error
 
-start javaw -Xms256m -Xmx512m -jar Dartzee.jar justUpdated trueLaunch
+start javaw -Xms256m -Xmx512m -jar Dartzee.jar justUpdated trueLaunch || goto :error
 exit
+
+:error
+echo Something went wrong! Please copy the contents of this so Alyssa can fix it :) Error level: #%errorlevel%

@@ -15,7 +15,7 @@ import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.assertDoesNotExit
 import dartzee.helper.assertExits
-import dartzee.logging.CODE_BATCH_ERROR
+import dartzee.logging.CODE_EXEC_ERROR
 import dartzee.logging.CODE_PARSE_ERROR
 import dartzee.logging.CODE_UPDATE_CHECK_RESULT
 import dartzee.logging.CODE_UPDATE_ERROR
@@ -250,7 +250,7 @@ class TestUpdateManager : AbstractTest() {
             "Failed to launch update.bat - call the following manually to perform the update: \n\nupdate.bat foo"
         errorDialog.clickOk(async = true)
 
-        val log = verifyLog(CODE_BATCH_ERROR, Severity.ERROR)
+        val log = verifyLog(CODE_EXEC_ERROR, Severity.ERROR)
         log.errorObject shouldBe error
     }
 

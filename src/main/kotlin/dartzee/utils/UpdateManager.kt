@@ -3,7 +3,6 @@ package dartzee.utils
 import dartzee.core.bean.LinkLabel
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.FileUtil
-import dartzee.logging.CODE_BATCH_ERROR
 import dartzee.logging.CODE_PARSE_ERROR
 import dartzee.logging.CODE_UPDATE_CHECK
 import dartzee.logging.CODE_UPDATE_CHECK_RESULT
@@ -77,11 +76,6 @@ object UpdateManager {
         // An update is available
         logger.info(CODE_UPDATE_CHECK_RESULT, "Newer release available - $newVersion")
 
-        //        if (!DartsClient.isWindowsOs()) {
-        //            showManualDownloadMessage(newVersion)
-        //            return false
-        //        }
-
         val answer =
             DialogUtil.showQuestion(
                 "An update is available (${metadata.version}). Would you like to download it now?",
@@ -131,10 +125,12 @@ object UpdateManager {
         }
 
         if (DartsClient.isWindowsOs()) {
-            relaunchWithScript("update.bat", "cmd /c start", metadata, runtime)
+            prepareUpdateFile("update.bat")
         } else if (DartsClient.isLinux()) {
-            relaunchWithScript("update.sh", "sh", metadata, runtime)
+            prepareUpdateFile("update.sh")
         }
+
+        relaunchWithScript(metadata, runtime)
     }
 
     private fun downloadJar(repositoryUrl: String, metadata: UpdateMetadata): Boolean =
@@ -155,11 +151,12 @@ object UpdateManager {
                     KEY_RESPONSE_BODY to response.body,
                 )
                 DialogUtil.showError("Failed to check for updates (unable to connect).")
-                false
+                return false
             }
 
             true
         } catch (e: Exception) {
+            DialogUtil.dismissLoadingDialog()
             logger.error(CODE_UPDATE_ERROR, "Caught $e during download", e)
             showManualDownloadMessage(metadata.version)
             false
@@ -167,24 +164,18 @@ object UpdateManager {
             DialogUtil.dismissLoadingDialog()
         }
 
-    private fun relaunchWithScript(
-        scriptName: String,
-        launchCommand: String,
-        metadata: UpdateMetadata,
-        runtime: Runtime,
-    ) {
-        prepareUpdateFile(scriptName)
+    private fun relaunchWithScript(metadata: UpdateMetadata, runtime: Runtime) {
+        val success =
+            runCommand(
+                windows = arrayOf("cmd", "/c", "start", "update.bat", metadata.fileName),
+                linux = arrayOf("sh", "update.sh", metadata.fileName),
+                runtime,
+            )
 
-        try {
-            runtime.exec("$launchCommand $scriptName ${metadata.fileName}")
-        } catch (t: Throwable) {
-            logger.error(CODE_BATCH_ERROR, "Error running $scriptName", t)
-            val manualCommand = "$scriptName ${metadata.fileName}"
-
-            val msg =
-                "Failed to launch $scriptName - call the following manually to perform the update: \n\n$manualCommand"
-            DialogUtil.showError(msg)
-            return
+        if (!success) {
+            DialogUtil.showError(
+                "Failed to swap in updated file. \n\nDelete the old Dartzee.jar and rename ${metadata.fileName} -> Dartzee.jar"
+            )
         }
 
         InjectedThings.exiter.exit(0)
