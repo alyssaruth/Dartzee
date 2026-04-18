@@ -40,7 +40,7 @@ object UpdateManager {
             return
         }
 
-        startUpdate(DARTZEE_REPOSITORY_URL, metadata, Runtime.getRuntime())
+        doUpdate(DARTZEE_REPOSITORY_URL, metadata, Runtime.getRuntime())
     }
 
     fun queryLatestReleaseJson(repositoryUrl: String): JSONObject? {
@@ -87,6 +87,8 @@ object UpdateManager {
     }
 
     private fun showManualDownloadMessage(newVersion: String) {
+        DialogUtil.dismissLoadingDialog()
+
         val fullUrl = "$DARTZEE_MANUAL_DOWNLOAD_URL/tag/$newVersion"
         val panel = JPanel()
         panel.layout = BorderLayout(0, 0)
@@ -96,7 +98,7 @@ object UpdateManager {
         panel.add(lblOne, BorderLayout.NORTH)
         panel.add(linkLabel, BorderLayout.SOUTH)
 
-        DialogUtil.showCustomMessage(panel)
+        DialogUtil.showCustomError(panel)
     }
 
     fun parseUpdateMetadata(responseJson: JSONObject): UpdateMetadata? {
@@ -107,8 +109,7 @@ object UpdateManager {
 
             val assetId = asset.getLong("id")
             val fileName = asset.getString("name")
-            val size = asset.getLong("size")
-            UpdateMetadata(remoteVersion, assetId, fileName, size)
+            UpdateMetadata(remoteVersion, assetId, fileName)
         } catch (t: Throwable) {
             logger.error(
                 CODE_PARSE_ERROR,
@@ -120,9 +121,8 @@ object UpdateManager {
         }
     }
 
-    fun startUpdate(repositoryUrl: String, metadata: UpdateMetadata, runtime: Runtime) {
-        val success = downloadJar(repositoryUrl, metadata)
-        if (!success) {
+    fun doUpdate(repositoryUrl: String, metadata: UpdateMetadata, runtime: Runtime) {
+        if (!downloadJar(repositoryUrl, metadata)) {
             return
         }
 
@@ -132,39 +132,6 @@ object UpdateManager {
             prepareUpdateFile("update.sh")
         }
 
-        relaunchWithScript(metadata, runtime)
-    }
-
-    private fun downloadJar(repositoryUrl: String, metadata: UpdateMetadata): Boolean =
-        try {
-            val downloadPath = "$jarDirectory/${metadata.fileName}"
-            FileUtil.deleteFileIfExists(downloadPath)
-            val downloadUrl = "$repositoryUrl/releases/assets/${metadata.assetId}"
-            logger.info(CODE_UPDATE_STARTING, "Downloading from $downloadUrl to $downloadPath")
-
-            DialogUtil.showLoadingDialog("Downloading ${metadata.version}...")
-            val response = Unirest.get(downloadUrl).accept(MimeTypes.EXE).asFile(downloadPath)
-            if (response.status != 200) {
-                logger.error(
-                    CODE_UPDATE_ERROR,
-                    "Received non-success HTTP status: ${response.status} - ${response.statusText}",
-                    KEY_RESPONSE_BODY to response.body,
-                )
-                DialogUtil.showError("Failed to check for updates (unable to connect).")
-                false
-            } else {
-                true
-            }
-        } catch (e: Exception) {
-            DialogUtil.dismissLoadingDialog()
-            logger.error(CODE_UPDATE_ERROR, "Caught $e during download", e)
-            showManualDownloadMessage(metadata.version)
-            false
-        } finally {
-            DialogUtil.dismissLoadingDialog()
-        }
-
-    private fun relaunchWithScript(metadata: UpdateMetadata, runtime: Runtime) {
         val success =
             runCommand(
                 windows =
@@ -182,6 +149,35 @@ object UpdateManager {
         InjectedThings.exiter.exit(0)
     }
 
+    fun downloadJar(repositoryUrl: String, metadata: UpdateMetadata): Boolean =
+        try {
+            val downloadPath = "$jarDirectory/${metadata.fileName}"
+            FileUtil.deleteFileIfExists(downloadPath)
+            val downloadUrl = "$repositoryUrl/releases/assets/${metadata.assetId}"
+            logger.info(CODE_UPDATE_STARTING, "Downloading from $downloadUrl to $downloadPath")
+
+            DialogUtil.showLoadingDialog("Downloading ${metadata.version}...")
+            val response = Unirest.get(downloadUrl).accept(MimeTypes.EXE).asFile(downloadPath)
+            if (response.status != 200) {
+                logger.error(
+                    CODE_UPDATE_ERROR,
+                    "Received non-success HTTP status: ${response.status} - ${response.statusText}",
+                    KEY_RESPONSE_BODY to response.body,
+                )
+
+                showManualDownloadMessage(metadata.version)
+                false
+            } else {
+                true
+            }
+        } catch (e: Exception) {
+            logger.error(CODE_UPDATE_ERROR, "Caught $e during download", e)
+            showManualDownloadMessage(metadata.version)
+            false
+        } finally {
+            DialogUtil.dismissLoadingDialog()
+        }
+
     fun prepareUpdateFile(filename: String) {
         val filePath = "$jarDirectory/$filename"
         val updateFile = File(filePath)
@@ -192,9 +188,4 @@ object UpdateManager {
     }
 }
 
-data class UpdateMetadata(
-    val version: String,
-    val assetId: Long,
-    val fileName: String,
-    val size: Long,
-)
+data class UpdateMetadata(val version: String, val assetId: Long, val fileName: String)

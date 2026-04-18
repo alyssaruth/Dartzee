@@ -33,15 +33,10 @@ object DialogUtil {
         logDialogClosed("Info", null)
     }
 
-    fun showCustomMessage(message: Any, parent: Component = ScreenCache.mainScreen) {
-        logDialogShown("CustomInfo", "Information", "?")
-        JOptionPane.showMessageDialog(
-            parent,
-            message,
-            "Information",
-            JOptionPane.INFORMATION_MESSAGE,
-        )
-        logDialogClosed("CustomInfo", null)
+    fun showCustomError(message: Any, parent: Component = ScreenCache.mainScreen) {
+        logDialogShown("CustomError", "Error", "?")
+        JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE)
+        logDialogClosed("CustomError", null)
     }
 
     @Deprecated("Use showError")
