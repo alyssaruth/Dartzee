@@ -2,18 +2,64 @@ package dartzee.theme
 
 import java.awt.Color
 
+object PrideColors {
+    val red = Color.decode("#ED1C24")
+    val orange = Color.decode("#FF7F27")
+    val yellow = Color.decode("#FFF200")
+    val lightGreen = Color.decode("#B5E61D")
+    val darkGreen = Color.decode("#22B14C")
+    val darkBlue = Color.decode("#00A2E8")
+    val lightBlue = Color.decode("#99D9EA")
+    val lightPurple = Color.decode("#B19CD7")
+    val purple = Color.decode("#A349A4")
+    val pink = Color.decode("#FFAEC9")
+}
+
+private val buttonOverrideColours =
+    mapOf(
+        "New Game" to PrideColors.red,
+        "Players" to PrideColors.orange,
+        "Leaderboards" to PrideColors.yellow,
+        "Game Report" to PrideColors.darkGreen,
+        "Sync Setup" to PrideColors.darkBlue,
+        "Utilities" to PrideColors.lightBlue,
+        "Dartzee" to PrideColors.pink,
+        "Preferences" to PrideColors.purple,
+
+        // Utilities
+        "Delete Game" to PrideColors.red,
+        "Create Backup" to PrideColors.orange,
+        "Restore from backup" to PrideColors.yellow,
+        "Perform database check" to PrideColors.lightGreen,
+        "Thread stacks" to PrideColors.darkGreen,
+        "Check for updates" to PrideColors.darkBlue,
+        "View logs" to PrideColors.lightBlue,
+        "Run achievement conversion" to PrideColors.pink,
+        "Enter party mode" to PrideColors.purple,
+
+        // Game setup
+        "Launch game" to PrideColors.darkGreen,
+        "Select" to PrideColors.lightGreen,
+        "Unselect" to PrideColors.orange,
+
+        // Navigation
+        "Back" to PrideColors.red,
+        "Next" to PrideColors.darkGreen,
+    )
+
 val Themes.PRIDE: Theme
     get() =
         Theme(
             ThemeId.Pride,
             "Beep boop.",
-            Color.decode("#1e6239"),
-            Color.decode("#31343a"),
+            PrideColors.red,
+            PrideColors.purple,
             Color.decode("#FFFFC5"),
             fontColor = Color.black,
-            lightBackground = Color.YELLOW,
+            lightBackground = PrideColors.pink,
             dartboardColours = PrideDartboardPainter(),
             svgWidthScaleFactor = 0.8f,
-            menuFontSize = 24f,
-            linkColour = Color.decode("#90D5FF"),
+            menuFontSize = 15f,
+            linkColour = PrideColors.darkBlue,
+            buttonOverrideColours = buttonOverrideColours,
         )

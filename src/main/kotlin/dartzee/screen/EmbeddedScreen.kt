@@ -1,8 +1,11 @@
 package dartzee.screen
 
+import dartzee.core.util.getAllChildComponentsForType
 import dartzee.logging.CODE_SWING_ERROR
+import dartzee.theme.ButtonHoverListener
 import dartzee.theme.getBaseFont
 import dartzee.theme.themedIcon
+import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -59,11 +62,25 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
 
     abstract fun getScreenName(): String
 
-    /** Called after the new screen has been switched in etc */
+    fun init() {
+        val overrides = InjectedThings.theme?.buttonOverrideColours?.mapKeys { it.key.lowercase() }
+        if (overrides != null) {
+            getAllChildComponentsForType<JButton>().forEach { button ->
+                val overrideColour =
+                    overrides[button.text.lowercase()] ?: overrides[button.name?.lowercase()]
+                if (overrideColour != null && button.background != overrideColour) {
+                    button.background = overrideColour
+                    button.addMouseListener(ButtonHoverListener(button))
+                }
+            }
+        }
+
+        initialise()
+    }
+
     open fun postInit() {
         btnBack.isVisible = showBackButton()
         btnNext.isVisible = showNextButton()
-
         lblNext.text = getNextText()
     }
 

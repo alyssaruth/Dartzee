@@ -14,18 +14,17 @@ data class PrideDartboardPainter(override val font: Font = getBaseFont()) : IDar
 
     private val colours =
         listOf(
-                "#ED1C24", // Red
-                "#FF7F27", // Orange
-                "#FFF200", // Yellow
-                "#B5E61D", // Light green
-                "#22B14C", // Dark green
-                "#00A2E8", // Dark blue
-                "#99D9EA", // Light blue
-                "#B19CD7", // Light purple
-                "#A349A4", // Purple
-                "#FFAEC9", // Pink
-            )
-            .map(Color::decode)
+            PrideColors.red,
+            PrideColors.orange,
+            PrideColors.yellow,
+            PrideColors.lightGreen,
+            PrideColors.darkGreen,
+            PrideColors.darkBlue,
+            PrideColors.lightBlue,
+            PrideColors.lightPurple,
+            PrideColors.purple,
+            PrideColors.pink,
+        )
 
     override fun getColour(segment: DartboardSegment): Color =
         if (segment.isMiss()) Color.BLACK
