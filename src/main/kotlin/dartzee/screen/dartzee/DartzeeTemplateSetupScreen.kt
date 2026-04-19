@@ -54,7 +54,7 @@ class DartzeeTemplateSetupScreen : EmbeddedScreen(), RowSelectionListener {
         btnCopy.toolTipText = "Copy Template"
         btnCopy.preferredSize = Dimension(40, 40)
 
-        btnDelete.name = "delete"
+        btnDelete.name = "deleteTemplate"
         btnDelete.icon = ImageIcon(javaClass.getResource("/buttons/remove.png"))
         btnDelete.toolTipText = "Delete Template"
         btnDelete.preferredSize = Dimension(40, 40)

@@ -17,6 +17,7 @@ class PlayerAchievementsButton(
     init {
         icon = ImageIcon(javaClass.getResource("/achievements/trophy.png"))
         text = defaultText
+        name = "Achievements"
 
         rolloverIcon = ImageIcon(javaClass.getResource("/buttons/achievement.png"))
         selectedIcon = ImageIcon(javaClass.getResource("/buttons/achievement.png"))

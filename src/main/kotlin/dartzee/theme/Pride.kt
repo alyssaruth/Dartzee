@@ -26,6 +26,27 @@ private val buttonOverrideColours =
         "Dartzee" to PrideColors.pink,
         "Preferences" to PrideColors.purple,
 
+        // Sync
+        "Perform Sync" to PrideColors.darkBlue,
+        "Push" to PrideColors.lightGreen,
+        "Pull" to PrideColors.orange,
+        "Reset" to Color.black,
+
+        // dartzee rules
+        "Add" to PrideColors.lightGreen,
+        "Rename" to PrideColors.orange,
+        "Copy" to PrideColors.lightBlue,
+        "deleteTemplate" to PrideColors.pink,
+
+        // Player management
+        "STATS_X01" to PrideColors.darkGreen,
+        "STATS_GOLF" to PrideColors.darkBlue,
+        "STATS_ROUND_THE_CLOCK" to PrideColors.orange,
+        "Achievements" to PrideColors.yellow,
+        "Edit" to PrideColors.lightBlue,
+        "Run simulation" to PrideColors.lightGreen,
+        "Delete" to PrideColors.red,
+
         // Utilities
         "Delete Game" to PrideColors.red,
         "Create Backup" to PrideColors.orange,

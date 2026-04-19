@@ -1,11 +1,10 @@
 package dartzee.screen
 
-import dartzee.core.util.getAllChildComponentsForType
 import dartzee.logging.CODE_SWING_ERROR
-import dartzee.theme.ButtonHoverListener
+import dartzee.theme.applyButtonOverrides
 import dartzee.theme.getBaseFont
+import dartzee.theme.getMenuFont
 import dartzee.theme.themedIcon
-import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -47,12 +46,13 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
         btnBack.name = "Back"
 
         val baseFont = getBaseFont()
+        val size = minOf(20f, getMenuFont().size2D)
 
         iconNext.icon = themedIcon("/buttons/rightArrow.png")
         btnBack.icon = themedIcon("/buttons/leftArrow.png")
 
-        lblNext.font = baseFont.deriveFont(Font.PLAIN, 20f)
-        btnBack.font = baseFont.deriveFont(Font.PLAIN, 20f)
+        lblNext.font = baseFont.deriveFont(Font.PLAIN, size)
+        btnBack.font = baseFont.deriveFont(Font.PLAIN, size)
 
         btnBack.addActionListener(this)
         btnNext.addActionListener(this)
@@ -63,19 +63,9 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
     abstract fun getScreenName(): String
 
     fun init() {
-        val overrides = InjectedThings.theme?.buttonOverrideColours?.mapKeys { it.key.lowercase() }
-        if (overrides != null) {
-            getAllChildComponentsForType<JButton>().forEach { button ->
-                val overrideColour =
-                    overrides[button.text.lowercase()] ?: overrides[button.name?.lowercase()]
-                if (overrideColour != null && button.background != overrideColour) {
-                    button.background = overrideColour
-                    button.addMouseListener(ButtonHoverListener(button))
-                }
-            }
-        }
-
         initialise()
+
+        applyButtonOverrides()
     }
 
     open fun postInit() {

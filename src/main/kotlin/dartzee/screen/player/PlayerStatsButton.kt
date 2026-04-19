@@ -21,6 +21,8 @@ class PlayerStatsButton(
         icon = ImageIcon(iconUrl)
         text = defaultText
 
+        name = "STATS_${gameType.name}"
+
         rolloverIcon = ImageIcon(javaClass.getResource("/buttons/stats_large.png"))
         selectedIcon = ImageIcon(javaClass.getResource("/buttons/stats_large.png"))
 

@@ -67,17 +67,17 @@ class TestDartzeeTemplateSetupScreen : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<JButton>("copy").shouldBeDisabled()
-        scrn.getChild<JButton>("delete").shouldBeDisabled()
+        scrn.getChild<JButton>("deleteTemplate").shouldBeDisabled()
         scrn.getChild<JButton>("rename").shouldBeDisabled()
 
         scrn.getChild<ScrollTable>().selectRow(0)
         scrn.getChild<JButton>("copy").shouldBeEnabled()
-        scrn.getChild<JButton>("delete").shouldBeEnabled()
+        scrn.getChild<JButton>("deleteTemplate").shouldBeEnabled()
         scrn.getChild<JButton>("rename").shouldBeEnabled()
 
         scrn.getChild<ScrollTable>().selectRow(-1)
         scrn.getChild<JButton>("copy").shouldBeDisabled()
-        scrn.getChild<JButton>("delete").shouldBeDisabled()
+        scrn.getChild<JButton>("deleteTemplate").shouldBeDisabled()
         scrn.getChild<JButton>("rename").shouldBeDisabled()
     }
 
@@ -90,7 +90,7 @@ class TestDartzeeTemplateSetupScreen : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("delete")
+        scrn.clickChild<JButton>("deleteTemplate")
 
         dialogFactory.questionsShown.shouldContainExactly(
             "Are you sure you want to delete the ABC Template?"
@@ -108,7 +108,7 @@ class TestDartzeeTemplateSetupScreen : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("delete")
+        scrn.clickChild<JButton>("deleteTemplate")
 
         dialogFactory.questionsShown.shouldContainExactly(
             "Are you sure you want to delete the ABC Template?"
@@ -168,7 +168,7 @@ class TestDartzeeTemplateSetupScreen : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("delete")
+        scrn.clickChild<JButton>("deleteTemplate")
 
         dialogFactory.questionsShown.shouldContainExactly(
             "You have played 2 games using the ABC Template." +

@@ -3,6 +3,7 @@ package dartzee.theme
 import com.github.weisj.jsvg.SVGDocument
 import com.github.weisj.jsvg.parser.SVGLoader
 import dartzee.bean.DartLabel
+import dartzee.core.util.getAllChildComponentsForType
 import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
@@ -18,6 +19,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.sound.sampled.AudioSystem
 import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JPanel
+import kotlin.collections.get
 
 val DEFAULT_BACKGROUND = Color(214, 217, 223)
 val DEFAULT_BUTTON_COLOUR = Color(169, 176, 190)
@@ -72,6 +76,20 @@ fun themeDescription(id: ThemeId): String {
         "$basicInfo\n\nCurrently active - will end on ${festivalInfo.finder(now.year).second.fmt()}."
     } else {
         "$basicInfo\n\n${festivalInfo.nextDueDesc} on ${nextDue(now, festivalInfo.finder).fmt()}."
+    }
+}
+
+fun JPanel.applyButtonOverrides() {
+    val overrides = InjectedThings.theme?.buttonOverrideColours?.mapKeys { it.key.lowercase() }
+    if (overrides != null) {
+        getAllChildComponentsForType<JButton>().forEach { button ->
+            val overrideColour =
+                overrides[button.text.lowercase()] ?: overrides[button.name?.lowercase()]
+            if (overrideColour != null && button.background != overrideColour) {
+                button.background = overrideColour
+                button.addMouseListener(ButtonHoverListener(button))
+            }
+        }
     }
 }
 
@@ -150,6 +168,9 @@ fun svgForResource(resourcePath: String): SVGDocument? {
 }
 
 fun getBaseFont(): Font = InjectedThings.theme?.font ?: ResourceCache.BASE_FONT
+
+fun getMenuFont(): Font =
+    getBaseFont().deriveFont(Font.PLAIN, InjectedThings.theme?.menuFontSize ?: 18f)
 
 fun themedIcon(path: String, theme: Theme? = InjectedThings.theme): ImageIcon {
     val default = ImageIcon(Theme::class.java.getResource(path))
