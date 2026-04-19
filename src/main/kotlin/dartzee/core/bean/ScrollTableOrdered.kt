@@ -1,6 +1,7 @@
 package dartzee.core.bean
 
 import dartzee.core.util.InjectedCore
+import dartzee.theme.themedIcon
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -21,12 +22,12 @@ class ScrollTableOrdered(customButtons: Int = 0) : ScrollTable(), ActionListener
     init {
         add(panelOrdering, BorderLayout.EAST)
         panelOrdering.layout = MigLayout("al center center, wrap, gapy 20")
-        btnMoveUp.icon = ImageIcon(javaClass.getResource("/buttons/upArrow.png"))
+        btnMoveUp.icon = themedIcon("/buttons/upArrow.png")
         btnMoveUp.preferredSize = Dimension(40, 40)
         btnMoveUp.toolTipText = "Move row up"
 
         panelOrdering.add(btnMoveUp, "cell 0 $customButtons")
-        btnMoveDown.icon = ImageIcon(javaClass.getResource("/buttons/downArrow.png"))
+        btnMoveDown.icon = themedIcon("/buttons/downArrow.png")
         btnMoveDown.preferredSize = Dimension(40, 40)
         btnMoveDown.toolTipText = "Move row down"
 

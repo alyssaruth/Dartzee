@@ -8,6 +8,7 @@ import dartzee.utils.InjectedThings.now
 import dartzee.utils.ResourceCache
 import java.awt.Color
 import java.awt.GraphicsEnvironment
+import java.net.URL
 import java.time.LocalDate
 import javax.swing.ImageIcon
 import javax.swing.UIManager
@@ -30,6 +31,7 @@ data class Theme(
     val unlockDate: LocalDate? = null,
     val dartFactory: DartFactory? = null,
     val buttonOverrideColours: Map<String, Color> = emptyMap(),
+    val customIcons: Map<String, () -> URL> = emptyMap(),
 ) {
     val name = id.name
     private val resourcePath = name.lowercase()
@@ -66,7 +68,10 @@ data class Theme(
         font?.let { GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(it) }
     }
 
-    fun icon(path: String) = javaClass.getResource("/theme/$resourcePath$path")?.let(::ImageIcon)
+    fun icon(path: String): ImageIcon? {
+        val icon = customIcons[path]?.invoke() ?: javaClass.getResource("/theme/$resourcePath$path")
+        return icon?.let(::ImageIcon)
+    }
 
     fun isLocked() = unlockDate != null && now.isBefore(unlockDate)
 

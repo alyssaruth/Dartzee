@@ -1,6 +1,9 @@
 package dartzee.theme
 
 import java.awt.Color
+import java.awt.Point
+import java.awt.Rectangle
+import java.net.URL
 
 object PrideColors {
     val red = Color.decode("#ED1C24")
@@ -68,6 +71,36 @@ private val buttonOverrideColours =
         "Next" to PrideColors.darkGreen,
     )
 
+private val humanFlags =
+    listOf(
+        "humanBlue.png",
+        "humanGreen.png",
+        "humanLightBlue.png",
+        "humanLightGreen.png",
+        "humanOrange.png",
+        "humanPurple.png",
+        "humanRed.png",
+        "humanYellow.png",
+    )
+
+private fun randomHumanFlag(): URL {
+    return Theme::class.java.getResource("/theme/pride/flags/${humanFlags.random()}")
+}
+
+private fun getBannerDetails(
+    svgBounds: Rectangle,
+    dartboardCenter: Point,
+): List<BannerRenderDetails> {
+    val center =
+        Point(
+            dartboardCenter.x + (0.02 * svgBounds.width).toInt(),
+            dartboardCenter.y - (0.15 * svgBounds.height).toInt(),
+        )
+    val topBanner = BannerRenderDetails("Pride", (svgBounds.height * 0.45).toInt(), center)
+
+    return listOf(topBanner)
+}
+
 val Themes.PRIDE: Theme
     get() =
         Theme(
@@ -79,8 +112,8 @@ val Themes.PRIDE: Theme
             fontColor = Color.black,
             lightBackground = PrideColors.pink,
             dartboardColours = PrideDartboardPainter(),
-            svgWidthScaleFactor = 0.8f,
+            bannerTextRenderer = ::getBannerDetails,
             menuFontSize = 15f,
-            linkColour = PrideColors.darkBlue,
             buttonOverrideColours = buttonOverrideColours,
+            customIcons = mapOf("/flags/humanFlag.png" to ::randomHumanFlag),
         )
