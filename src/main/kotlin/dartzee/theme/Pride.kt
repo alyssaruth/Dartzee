@@ -3,6 +3,8 @@ package dartzee.theme
 import java.awt.Color
 import java.awt.Point
 import java.awt.Rectangle
+import java.time.LocalDate
+import java.time.Month
 
 object PrideColors {
     val red: Color = Color.decode("#ED1C24")
@@ -15,6 +17,24 @@ object PrideColors {
     val lightPurple: Color = Color.decode("#B19CD7")
     val purple: Color = Color.decode("#A349A4")
     val pink: Color = Color.decode("#FFAEC9")
+
+    val all =
+        listOf(
+            red,
+            orange,
+            yellow,
+            lightGreen,
+            darkGreen,
+            darkBlue,
+            lightBlue,
+            lightPurple,
+            purple,
+            pink,
+        )
+
+    fun forIndex(index: Int): Color {
+        return all[index % all.size]
+    }
 }
 
 private val buttonOverrideColours =
@@ -68,7 +88,7 @@ private val buttonOverrideColours =
         // Navigation
         "Back" to PrideColors.red,
         "Next" to PrideColors.darkGreen,
-    )
+    ) + (0..20).map { "DARTZEE_TILE_$it" to PrideColors.forIndex(it) }
 
 private val humanFlags =
     listOf(
@@ -113,5 +133,9 @@ val Themes.PRIDE: Theme
             bannerTextRenderer = ::getBannerDetails,
             menuFontSize = 15f,
             buttonOverrideColours = buttonOverrideColours,
+            festivalInfo = FestivalInfo(::findPride, "The next parade begins"),
             customIcons = mapOf("/flags/humanFlag.png" to ::randomHumanFlag),
         )
+
+private fun findPride(year: Int): Pair<LocalDate, LocalDate> =
+    LocalDate.of(year, Month.JUNE, 1) to LocalDate.of(year, Month.JUNE, 30)

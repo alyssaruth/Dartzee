@@ -140,6 +140,14 @@ class ThemeUtilsTest : AbstractTest() {
     }
 
     @Test
+    fun `Should pick Pride in June`() {
+        testPickTheme(LocalDate.of(2026, Month.MAY, 31)) shouldBe Themes.DARTZEE
+        testPickTheme(LocalDate.of(2026, Month.JUNE, 1)) shouldBe Themes.PRIDE
+        testPickTheme(LocalDate.of(2026, Month.JUNE, 30)) shouldBe Themes.PRIDE
+        testPickTheme(LocalDate.of(2026, Month.JULY, 1)) shouldBe Themes.DARTZEE
+    }
+
+    @Test
     fun `Description should be correct for no theme`() {
         val description = themeDescription(ThemeId.None)
         description shouldBe CLASSIC_THEME_DESC

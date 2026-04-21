@@ -10,6 +10,7 @@ import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.`object`.Dart
 import dartzee.screen.game.SegmentStatuses
+import dartzee.theme.applyButtonOverrides
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -177,6 +178,7 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>) :
     private fun displayTiles(tiles: List<DartzeeRuleTile>) {
         tilePanel.removeAll()
         tiles.forEach { tilePanel.add(it) }
+        tilePanel.applyButtonOverrides()
         tilePanel.validate()
         tilePanel.repaint()
         tileScroller.validate()
