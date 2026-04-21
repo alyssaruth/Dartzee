@@ -31,7 +31,7 @@ data class Theme(
     val unlockDate: LocalDate? = null,
     val dartFactory: DartFactory? = null,
     val buttonOverrideColours: Map<String, Color> = emptyMap(),
-    val customIcons: Map<String, () -> URL> = emptyMap(),
+    val customIcons: Map<String, () -> URL?> = emptyMap(),
 ) {
     val name = id.name
     private val resourcePath = name.lowercase()

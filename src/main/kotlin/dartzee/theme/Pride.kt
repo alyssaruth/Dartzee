@@ -3,19 +3,18 @@ package dartzee.theme
 import java.awt.Color
 import java.awt.Point
 import java.awt.Rectangle
-import java.net.URL
 
 object PrideColors {
-    val red = Color.decode("#ED1C24")
-    val orange = Color.decode("#FF7F27")
-    val yellow = Color.decode("#FFF200")
-    val lightGreen = Color.decode("#B5E61D")
-    val darkGreen = Color.decode("#22B14C")
-    val darkBlue = Color.decode("#00A2E8")
-    val lightBlue = Color.decode("#99D9EA")
-    val lightPurple = Color.decode("#B19CD7")
-    val purple = Color.decode("#A349A4")
-    val pink = Color.decode("#FFAEC9")
+    val red: Color = Color.decode("#ED1C24")
+    val orange: Color = Color.decode("#FF7F27")
+    val yellow: Color = Color.decode("#FFF200")
+    val lightGreen: Color = Color.decode("#B5E61D")
+    val darkGreen: Color = Color.decode("#22B14C")
+    val darkBlue: Color = Color.decode("#00A2E8")
+    val lightBlue: Color = Color.decode("#99D9EA")
+    val lightPurple: Color = Color.decode("#B19CD7")
+    val purple: Color = Color.decode("#A349A4")
+    val pink: Color = Color.decode("#FFAEC9")
 }
 
 private val buttonOverrideColours =
@@ -83,9 +82,8 @@ private val humanFlags =
         "humanYellow.png",
     )
 
-private fun randomHumanFlag(): URL {
-    return Theme::class.java.getResource("/theme/pride/flags/${humanFlags.random()}")
-}
+private fun randomHumanFlag() =
+    Theme::class.java.getResource("/theme/pride/flags/${humanFlags.random()}")
 
 private fun getBannerDetails(
     svgBounds: Rectangle,
