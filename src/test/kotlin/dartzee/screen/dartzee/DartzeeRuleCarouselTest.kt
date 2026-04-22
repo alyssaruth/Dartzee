@@ -22,6 +22,9 @@ import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.DartzeeRuleTile
 import dartzee.screen.game.dartzee.IDartzeeCarouselListener
+import dartzee.theme.PRIDE
+import dartzee.theme.PrideColors
+import dartzee.theme.Themes
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -36,7 +39,7 @@ import java.awt.Color
 import java.util.concurrent.locks.ReentrantLock
 import org.junit.jupiter.api.Test
 
-class TestDartzeeRuleCarousel : AbstractTest() {
+class DartzeeRuleCarouselTest : AbstractTest() {
     private val dtos =
         listOf(twoBlackOneWhite, scoreEighteens, innerOuterInner, totalIsFifty, allTwenties)
 
@@ -360,6 +363,37 @@ class TestDartzeeRuleCarousel : AbstractTest() {
         result.ruleNumber shouldBe 2
         result.score shouldBe 39
         result.success shouldBe true
+    }
+
+    @Test
+    fun `Should apply pride colours to pending rule tiles`() {
+        InjectedThings.theme = Themes.PRIDE
+
+        val carousel = makeCarousel()
+        carousel.update(emptyList(), emptyList(), 20)
+
+        carousel.pendingTiles
+            .map { it.background }
+            .shouldContainExactly(
+                PrideColors.red,
+                PrideColors.orange,
+                PrideColors.yellow,
+                PrideColors.lightGreen,
+                PrideColors.darkGreen,
+            )
+
+        val results =
+            makeRoundResultEntities(
+                DartzeeRoundResult(3, true, 36),
+                DartzeeRoundResult(1, false, -38),
+            )
+        carousel.update(results, emptyList(), 38)
+
+        carousel.pendingTiles
+            .map { it.background }
+            .shouldContainExactly(PrideColors.orange, PrideColors.lightGreen, PrideColors.darkGreen)
+
+        carousel.completeTiles.map { it.background }.shouldContainExactly(Color.GREEN, Color.RED)
     }
 
     private class TrackingCarouselListener : IDartzeeCarouselListener {

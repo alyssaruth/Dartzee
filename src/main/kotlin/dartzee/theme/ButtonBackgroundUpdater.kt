@@ -4,7 +4,7 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.JButton
 
-class ButtonHoverListener(private val button: JButton) : MouseAdapter() {
+class ButtonBackgroundUpdater(private val button: JButton) : MouseAdapter() {
     private val bgColour = button.background
 
     override fun mousePressed(e: MouseEvent?) {

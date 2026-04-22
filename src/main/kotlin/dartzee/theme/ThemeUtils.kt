@@ -80,16 +80,17 @@ fun themeDescription(id: ThemeId): String {
 }
 
 fun JPanel.applyButtonOverrides() {
-    val overrides = InjectedThings.theme?.buttonOverrideColours?.mapKeys { it.key.lowercase() }
-    if (overrides != null) {
-        getAllChildComponentsForType<JButton>().forEach { button ->
-            val overrideColour =
-                overrides[button.text.lowercase()] ?: overrides[button.name?.lowercase()]
-            if (overrideColour != null && button.background != overrideColour) {
-                button.background = overrideColour
-                button.addMouseListener(ButtonHoverListener(button))
-            }
-        }
+    getAllChildComponentsForType<JButton>().forEach { it.applyThemeOverride() }
+}
+
+fun JButton.applyThemeOverride() {
+    val overrides =
+        InjectedThings.theme?.buttonOverrideColours?.mapKeys { it.key.lowercase() } ?: return
+
+    val overrideColour = overrides[text.lowercase()] ?: overrides[name?.lowercase()]
+    if (overrideColour != null && background != overrideColour) {
+        background = overrideColour
+        addMouseListener(ButtonBackgroundUpdater(this))
     }
 }
 

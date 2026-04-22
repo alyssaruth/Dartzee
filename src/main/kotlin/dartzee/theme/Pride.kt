@@ -32,9 +32,7 @@ object PrideColors {
             pink,
         )
 
-    fun forIndex(index: Int): Color {
-        return all[index % all.size]
-    }
+    fun forIndex(index: Int) = all[index % all.size]
 }
 
 private val buttonOverrideColours =

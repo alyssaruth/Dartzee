@@ -14,7 +14,6 @@ import dartzee.theme.getMenuFont
 import dartzee.theme.themedIcon
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings
-import java.awt.Color
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ComponentAdapter
@@ -70,8 +69,6 @@ class MenuScreen : EmbeddedScreen() {
         btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
         btnDartzeeTemplates.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
         btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
-
-        btnNewGame.background = Color.red
 
         getAllChildComponentsForType<JButton>().forEach { button -> button.font = getMenuFont() }
 
