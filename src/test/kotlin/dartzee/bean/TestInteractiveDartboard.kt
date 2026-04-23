@@ -2,10 +2,10 @@ package dartzee.bean
 
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.helper.AbstractTest
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.game.SegmentStatuses
+import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAllSegmentsForDartzee
 import java.awt.Point

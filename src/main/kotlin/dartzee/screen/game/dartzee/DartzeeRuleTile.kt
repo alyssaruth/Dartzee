@@ -14,6 +14,7 @@ abstract class DartzeeRuleTile(val dto: DartzeeRuleDto, val ruleNumber: Int) :
     init {
         preferredSize = Dimension(150, 80)
         text = getButtonText(false)
+        name = "DARTZEE_TILE_${ruleNumber - 1}"
 
         addMouseListener(this)
     }

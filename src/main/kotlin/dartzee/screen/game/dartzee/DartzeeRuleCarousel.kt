@@ -10,6 +10,7 @@ import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.`object`.Dart
 import dartzee.screen.game.SegmentStatuses
+import dartzee.theme.applyThemeOverride
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -120,6 +121,7 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>) :
             incompleteRules.map { rule -> DartzeeRuleTilePending(rule, getRuleNumber(rule)) }
         )
         pendingTiles.forEach { tile ->
+            tile.applyThemeOverride()
             tile.addActionListener(this)
             tile.addMouseListener(this)
             tile.updateState(dartsThrown)

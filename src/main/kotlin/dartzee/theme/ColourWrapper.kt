@@ -1,5 +1,6 @@
-package dartzee.`object`
+package dartzee.theme
 
+import dartzee.`object`.DartboardSegment
 import dartzee.utils.DartsColour
 import dartzee.utils.ResourceCache
 import dartzee.utils.hmScoreToOrdinal
@@ -18,13 +19,11 @@ val DEFAULT_COLOUR_WRAPPER =
         Color.GREEN,
     )
 
-val WIREFRAME_COLOUR_WRAPPER =
-    ColourWrapper(DartsColour.TRANSPARENT).also { it.edgeColour = Color.BLACK }
+val WIREFRAME_COLOUR_WRAPPER = ColourWrapper(DartsColour.TRANSPARENT).copy(edgeColour = Color.BLACK)
 
 val GREY_COLOUR_WRAPPER =
-    makeMonochromeWrapper(Color.GRAY.brighter(), Color.LIGHT_GRAY).also {
-        it.outerDartboardColour = Color.GRAY
-    }
+    makeMonochromeWrapper(Color.GRAY.brighter(), Color.LIGHT_GRAY)
+        .copy(outerDartboardColour = Color.GRAY)
 
 fun makeMonochromeWrapper(dark: Color, light: Color) =
     ColourWrapper(dark, light, light, light, dark, dark, dark, light)
@@ -38,12 +37,12 @@ data class ColourWrapper(
     private val oddTrebleColour: Color,
     private val innerBullColour: Color,
     private val outerBullColour: Color,
-    var outerDartboardColour: Color = Color.black,
-    val fontColor: Color = Color.white,
-    val font: Font = ResourceCache.BASE_FONT,
-) {
-    var missedBoardColour: Color = DartsColour.TRANSPARENT
-    var edgeColour: Color? = null
+    override val outerDartboardColour: Color = Color.black,
+    override val missedBoardColour: Color = DartsColour.TRANSPARENT,
+    override val edgeColour: Color? = null,
+    override val fontColor: Color = Color.white,
+    override val font: Font = ResourceCache.BASE_FONT,
+) : IDartboardPainter {
 
     constructor(
         singleColour: Color
@@ -59,6 +58,8 @@ data class ColourWrapper(
         singleColour,
     )
 
+    override fun withFont(font: Font) = copy(font = font)
+
     /** Helpers */
     private fun getBullColour(multiplier: Int): Color {
         return when (multiplier) {
@@ -67,7 +68,8 @@ data class ColourWrapper(
         }
     }
 
-    fun getColour(segment: DartboardSegment) = getColour(segment.getMultiplier(), segment.score)
+    override fun getColour(segment: DartboardSegment) =
+        getColour(segment.getMultiplier(), segment.score)
 
     private fun getColour(multiplier: Int, score: Int): Color {
         if (score == 25) {

@@ -3,6 +3,7 @@ package dartzee.theme
 import com.github.weisj.jsvg.SVGDocument
 import com.github.weisj.jsvg.parser.SVGLoader
 import dartzee.bean.DartLabel
+import dartzee.core.util.getAllChildComponentsForType
 import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
@@ -18,6 +19,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.sound.sampled.AudioSystem
 import javax.swing.ImageIcon
+import javax.swing.JButton
+import javax.swing.JPanel
+import kotlin.collections.get
 
 val DEFAULT_BACKGROUND = Color(214, 217, 223)
 val DEFAULT_BUTTON_COLOUR = Color(169, 176, 190)
@@ -45,7 +49,14 @@ fun simpleBannerRenderer(themeId: ThemeId): BannerTextRenderer = { svgBounds, da
 object Themes
 
 fun themeMap() =
-    listOf(Themes.EASTER, Themes.OKTOBERFEST, Themes.HALLOWEEN, Themes.BIRTHDAY, Themes.DARTZEE)
+    listOf(
+            Themes.EASTER,
+            Themes.OKTOBERFEST,
+            Themes.HALLOWEEN,
+            Themes.BIRTHDAY,
+            Themes.DARTZEE,
+            Themes.PRIDE,
+        )
         .associateBy { it.id }
 
 fun themeDescription(id: ThemeId): String {
@@ -65,6 +76,21 @@ fun themeDescription(id: ThemeId): String {
         "$basicInfo\n\nCurrently active - will end on ${festivalInfo.finder(now.year).second.fmt()}."
     } else {
         "$basicInfo\n\n${festivalInfo.nextDueDesc} on ${nextDue(now, festivalInfo.finder).fmt()}."
+    }
+}
+
+fun JPanel.applyButtonOverrides() {
+    getAllChildComponentsForType<JButton>().forEach { it.applyThemeOverride() }
+}
+
+fun JButton.applyThemeOverride() {
+    val overrides =
+        InjectedThings.theme?.buttonOverrideColours?.mapKeys { it.key.lowercase() } ?: return
+
+    val overrideColour = overrides[text.lowercase()] ?: overrides[name?.lowercase()]
+    if (overrideColour != null && background != overrideColour) {
+        background = overrideColour
+        addMouseListener(ButtonBackgroundUpdater(this))
     }
 }
 
@@ -143,6 +169,9 @@ fun svgForResource(resourcePath: String): SVGDocument? {
 }
 
 fun getBaseFont(): Font = InjectedThings.theme?.font ?: ResourceCache.BASE_FONT
+
+fun getMenuFont(): Font =
+    getBaseFont().deriveFont(Font.PLAIN, InjectedThings.theme?.menuFontSize ?: 18f)
 
 fun themedIcon(path: String, theme: Theme? = InjectedThings.theme): ImageIcon {
     val default = ImageIcon(Theme::class.java.getResource(path))

@@ -4,21 +4,22 @@ import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.core.bean.getPointList
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeSegmentStatuses
-import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputationalDartboard
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
 import dartzee.screen.game.SegmentStatuses
 import dartzee.theme.BIRTHDAY
 import dartzee.theme.BirthdayInfo
+import dartzee.theme.ColourWrapper
 import dartzee.theme.DARTZEE
+import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import dartzee.theme.EASTER
 import dartzee.theme.HALLOWEEN
 import dartzee.theme.OKTOBERFEST
+import dartzee.theme.PRIDE
 import dartzee.theme.Theme
 import dartzee.theme.Themes
+import dartzee.theme.WIREFRAME_COLOUR_WRAPPER
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments
 import io.kotest.matchers.shouldBe
@@ -94,6 +95,12 @@ class PresentationDartboardTest : AbstractTest() {
     @Tag("screenshot")
     fun `Should match snapshot - birthday`() {
         snapshotTheme(Themes.BIRTHDAY)
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should match snapshot - pride`() {
+        snapshotTheme(Themes.PRIDE)
     }
 
     @Test

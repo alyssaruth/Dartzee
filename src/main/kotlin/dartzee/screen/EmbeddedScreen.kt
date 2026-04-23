@@ -1,7 +1,9 @@
 package dartzee.screen
 
 import dartzee.logging.CODE_SWING_ERROR
+import dartzee.theme.applyButtonOverrides
 import dartzee.theme.getBaseFont
+import dartzee.theme.getMenuFont
 import dartzee.theme.themedIcon
 import dartzee.utils.InjectedThings.logger
 import java.awt.BorderLayout
@@ -44,12 +46,13 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
         btnBack.name = "Back"
 
         val baseFont = getBaseFont()
+        val size = minOf(20f, getMenuFont().size2D)
 
         iconNext.icon = themedIcon("/buttons/rightArrow.png")
         btnBack.icon = themedIcon("/buttons/leftArrow.png")
 
-        lblNext.font = baseFont.deriveFont(Font.PLAIN, 20f)
-        btnBack.font = baseFont.deriveFont(Font.PLAIN, 20f)
+        lblNext.font = baseFont.deriveFont(Font.PLAIN, size)
+        btnBack.font = baseFont.deriveFont(Font.PLAIN, size)
 
         btnBack.addActionListener(this)
         btnNext.addActionListener(this)
@@ -59,11 +62,15 @@ abstract class EmbeddedScreen : JPanel(), ActionListener {
 
     abstract fun getScreenName(): String
 
-    /** Called after the new screen has been switched in etc */
+    fun init() {
+        initialise()
+
+        applyButtonOverrides()
+    }
+
     open fun postInit() {
         btnBack.isVisible = showBackButton()
         btnNext.isVisible = showNextButton()
-
         lblNext.text = getNextText()
     }
 

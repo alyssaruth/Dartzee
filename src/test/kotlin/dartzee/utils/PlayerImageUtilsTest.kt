@@ -12,7 +12,7 @@ import javax.swing.ImageIcon
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestPlayerImageUtils : AbstractTest() {
+class PlayerImageUtilsTest : AbstractTest() {
     @Test
     @Tag("screenshot")
     fun `Should match screenshot - 50-50 split, inactive`() {

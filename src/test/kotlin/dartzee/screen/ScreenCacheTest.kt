@@ -12,7 +12,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class TestScreenCache : AbstractTest() {
+class ScreenCacheTest : AbstractTest() {
     @Test
     fun `Should construct an instance and return it on subsequent calls`() {
         val scrn = ScreenCache.get<MenuScreen>()
@@ -40,7 +40,7 @@ class TestScreenCache : AbstractTest() {
         ScreenCache.switch(scrn)
         ScreenCache.currentScreen() shouldBeSameInstanceAs scrn
 
-        verify { scrn.initialise() }
+        verify { scrn.init() }
     }
 
     @Test
@@ -50,7 +50,7 @@ class TestScreenCache : AbstractTest() {
         ScreenCache.switch(scrn, false)
         ScreenCache.currentScreen() shouldBeSameInstanceAs scrn
 
-        verifyNotCalled { scrn.initialise() }
+        verifyNotCalled { scrn.init() }
     }
 
     @Test

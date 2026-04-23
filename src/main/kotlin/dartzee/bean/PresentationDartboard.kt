@@ -3,13 +3,13 @@ package dartzee.bean
 import com.github.weisj.jsvg.view.ViewBox
 import dartzee.logging.CODE_SLOW_DARTBOARD_RENDER
 import dartzee.logging.KEY_DURATION
-import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.DartboardSegment
-import dartzee.`object`.GREY_COLOUR_WRAPPER
 import dartzee.`object`.IDartboard
 import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.getSegmentStatus
+import dartzee.theme.GREY_COLOUR_WRAPPER
+import dartzee.theme.IDartboardPainter
 import dartzee.theme.getBaseFont
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings
@@ -34,7 +34,7 @@ import javax.swing.JComponent
 import kotlin.math.roundToInt
 
 open class PresentationDartboard(
-    private val colourWrapper: ColourWrapper = getColourWrapperFromPrefs(),
+    private val colourWrapper: IDartboardPainter = getColourWrapperFromPrefs(),
     private val renderScoreLabels: Boolean = false,
     private val renderThemeBanner: Boolean = false,
 ) : JComponent(), IDartboard {

@@ -11,13 +11,13 @@ import dartzee.core.helper.verifyNotCalled
 import dartzee.getPointForSegment
 import dartzee.helper.AbstractTest
 import dartzee.listener.DartboardListener
-import dartzee.`object`.ColourWrapper
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.game.FakeDartsScreen
 import dartzee.theme.BIRTHDAY
+import dartzee.theme.DEFAULT_COLOUR_WRAPPER
+import dartzee.theme.IDartboardPainter
 import dartzee.theme.Themes
 import dartzee.throwDartByClick
 import dartzee.utils.InjectedThings
@@ -160,7 +160,9 @@ class TestGameplayDartboard : AbstractTest() {
         dartboard.shouldMatchImage("darts-original-size")
     }
 
-    private fun factoryGameplayDartboard(colourWrapper: ColourWrapper? = null): GameplayDartboard {
+    private fun factoryGameplayDartboard(
+        colourWrapper: IDartboardPainter? = null
+    ): GameplayDartboard {
         val dartboard = GameplayDartboard(colourWrapper ?: DEFAULT_COLOUR_WRAPPER)
         dartboard.setBounds(0, 0, 400, 400)
         flushEdt()

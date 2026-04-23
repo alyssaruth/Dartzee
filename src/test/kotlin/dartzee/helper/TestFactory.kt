@@ -16,8 +16,6 @@ import dartzee.game.state.ClockPlayerState
 import dartzee.game.state.GolfPlayerState
 import dartzee.game.state.SingleParticipant
 import dartzee.game.state.X01PlayerState
-import dartzee.`object`.ColourWrapper
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.`object`.SegmentType
 import dartzee.reporting.IncludedPlayerParameters
@@ -28,12 +26,15 @@ import dartzee.reporting.ReportParametersPlayers
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
 import dartzee.stats.GameWrapper
+import dartzee.theme.ColourWrapper
+import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import dartzee.theme.Theme
 import dartzee.theme.ThemeId
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.isBust
 import io.kotest.matchers.shouldBe
 import java.awt.Color
+import java.net.URL
 import java.sql.Timestamp
 
 fun factoryClockHit(score: Int, multiplier: Int = 1): Dart {
@@ -328,6 +329,8 @@ fun makeTheme(
     fontColor: Color = Color.BLACK,
     menuFontSize: Float? = null,
     animations: Map<IAnimationTrigger, IAnimation> = emptyMap(),
+    buttonOverrideColours: Map<String, Color> = emptyMap(),
+    customIcons: Map<String, () -> URL?> = emptyMap(),
 ) =
     Theme(
         id,
@@ -341,4 +344,6 @@ fun makeTheme(
         fontColor,
         menuFontSize,
         animations,
+        buttonOverrideColours = buttonOverrideColours,
+        customIcons = customIcons,
     )

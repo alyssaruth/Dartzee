@@ -1,7 +1,7 @@
 package dartzee.dartzee.dart
 
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.DartboardSegment
+import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import dartzee.utils.DartsColour
 import java.awt.Color
 import java.awt.FlowLayout

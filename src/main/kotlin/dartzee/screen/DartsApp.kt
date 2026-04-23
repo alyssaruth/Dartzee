@@ -111,7 +111,7 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
     fun switchScreen(scrn: EmbeddedScreen, reInit: Boolean = true) {
         try {
             if (reInit) {
-                scrn.initialise()
+                scrn.init()
             }
         } catch (t: Throwable) {
             logger.error(CODE_SCREEN_LOAD_ERROR, "Failed to load screen ${scrn.getScreenName()}", t)

@@ -84,7 +84,7 @@ class MenuScreenTest : AbstractTest() {
     @Test
     fun `Should go to the player management screen`() {
         val scrn = MenuScreen()
-        scrn.clickChild<JButton>(text = "Manage Players")
+        scrn.clickChild<JButton>(text = "Players")
         ScreenCache.currentScreen().shouldBeInstanceOf<PlayerManagementScreen>()
     }
 
@@ -128,7 +128,7 @@ class MenuScreenTest : AbstractTest() {
     @Test
     fun `Should go to the dartzee template setup screen`() {
         val scrn = MenuScreen()
-        scrn.clickChild<JButton>(text = "Dartzee Rules")
+        scrn.clickChild<JButton>(text = "Dartzee")
         ScreenCache.currentScreen().shouldBeInstanceOf<DartzeeTemplateSetupScreen>()
     }
 
@@ -153,10 +153,10 @@ class MenuScreenTest : AbstractTest() {
         scrn.getChild<JButton>(text = "Leaderboards").shouldBeVisible()
 
         scrn.getChild<JButton>(text = "Sync Setup").shouldNotBeVisible()
-        scrn.getChild<JButton>(text = "Manage Players").shouldNotBeVisible()
+        scrn.getChild<JButton>(text = "Players").shouldNotBeVisible()
         scrn.getChild<JButton>(text = "Game Report").shouldNotBeVisible()
         scrn.getChild<JButton>(text = "Utilities").shouldNotBeVisible()
         scrn.getChild<JButton>(text = "Preferences").shouldNotBeVisible()
-        scrn.getChild<JButton>(text = "Dartzee Rules").shouldNotBeVisible()
+        scrn.getChild<JButton>(text = "Dartzee").shouldNotBeVisible()
     }
 }

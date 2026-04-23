@@ -6,7 +6,7 @@ import dartzee.core.util.runInOtherThread
 import dartzee.db.sanity.DatabaseSanityCheck
 import dartzee.logging.CODE_PARTY_MODE
 import dartzee.`object`.DartsClient
-import dartzee.theme.getBaseFont
+import dartzee.theme.getMenuFont
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DevUtilities
@@ -44,7 +44,7 @@ class UtilitiesScreen : EmbeddedScreen() {
         panel.add(btnAchievementConversion, "cell 0 11,alignx center")
         panel.add(btnPartyMode, "cell 0 12,alignx center")
 
-        val font = getBaseFont().deriveFont(InjectedThings.theme?.menuFontSize ?: 18f)
+        val font = getMenuFont()
         val buttons = panel.getAllChildComponentsForType<AbstractButton>()
         for (button in buttons) {
             button.font = font

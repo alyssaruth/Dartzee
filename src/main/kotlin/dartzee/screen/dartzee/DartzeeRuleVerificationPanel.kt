@@ -5,9 +5,9 @@ import dartzee.core.util.setMargins
 import dartzee.dartzee.DartzeeRuleCalculationResult
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.listener.DartboardListener
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.Dart
 import dartzee.screen.GameplayDartboard
+import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings.dartzeeCalculator
 import dartzee.utils.ResourceCache

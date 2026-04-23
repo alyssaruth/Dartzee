@@ -4,10 +4,10 @@ import dartzee.bean.IMouseListener
 import dartzee.bean.PresentationDartboard
 import dartzee.core.screen.SimpleDialog
 import dartzee.core.util.setMargins
-import dartzee.`object`.DEFAULT_COLOUR_WRAPPER
 import dartzee.`object`.DartboardSegment
-import dartzee.`object`.WIREFRAME_COLOUR_WRAPPER
 import dartzee.screen.ScreenCache
+import dartzee.theme.DEFAULT_COLOUR_WRAPPER
+import dartzee.theme.WIREFRAME_COLOUR_WRAPPER
 import dartzee.utils.DartsColour
 import dartzee.utils.getAllNonMissSegments
 import java.awt.BorderLayout

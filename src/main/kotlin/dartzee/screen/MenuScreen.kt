@@ -10,12 +10,11 @@ import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.stats.overall.SimplifiedLeaderboardScreen
 import dartzee.screen.sync.SyncManagementScreen
-import dartzee.theme.getBaseFont
+import dartzee.theme.getMenuFont
 import dartzee.theme.themedIcon
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings
 import java.awt.Dimension
-import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
@@ -29,10 +28,10 @@ class MenuScreen : EmbeddedScreen() {
     private val changeLog = ChangeLog()
     private val dartboard = PresentationDartboard(renderThemeBanner = true)
     private val btnNewGame = JButton("New Game")
-    private val btnManagePlayers = JButton("Manage Players")
+    private val btnManagePlayers = JButton("Players")
     private val btnLeaderboards = JButton("Leaderboards")
     private val btnPreferences = JButton("Preferences")
-    private val btnDartzeeTemplates = JButton("Dartzee Rules")
+    private val btnDartzeeTemplates = JButton("Dartzee")
     private val btnUtilities = JButton("Utilities")
     private val btnSyncSummary = JButton("Sync Setup")
     private val btnGameReport = JButton("Game Report")
@@ -65,16 +64,13 @@ class MenuScreen : EmbeddedScreen() {
         btnNewGame.icon = themedIcon("/buttons/newGame.png")
         btnManagePlayers.icon = themedIcon("/buttons/playerManagement.png")
         btnUtilities.icon = themedIcon("/buttons/utilities.png")
-        btnPreferences.icon = ImageIcon(javaClass.getResource("/buttons/preferences.png"))
+        btnPreferences.icon = themedIcon("/buttons/preferences.png")
         btnGameReport.icon = themedIcon("/buttons/gameReport.png")
         btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
         btnDartzeeTemplates.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
         btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
 
-        getAllChildComponentsForType<JButton>().forEach { button ->
-            button.font =
-                getBaseFont().deriveFont(Font.PLAIN, InjectedThings.theme?.menuFontSize ?: 18f)
-        }
+        getAllChildComponentsForType<JButton>().forEach { button -> button.font = getMenuFont() }
 
         addComponentListener(
             object : ComponentAdapter() {

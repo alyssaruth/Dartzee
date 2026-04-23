@@ -5,9 +5,9 @@ import dartzee.core.bean.ColourPicker
 import dartzee.core.bean.ColourSelectionListener
 import dartzee.core.util.alignCentrally
 import dartzee.core.util.setFontSize
-import dartzee.`object`.ColourWrapper
 import dartzee.preferences.Preference
 import dartzee.preferences.Preferences
+import dartzee.theme.ColourWrapper
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import java.awt.BorderLayout

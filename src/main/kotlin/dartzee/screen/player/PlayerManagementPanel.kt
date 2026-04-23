@@ -15,7 +15,8 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetupDialog
 import dartzee.stats.getGameCounts
-import dartzee.utils.ResourceCache
+import dartzee.theme.applyButtonOverrides
+import dartzee.theme.getMenuFont
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Font
@@ -74,7 +75,7 @@ class PlayerManagementPanel : JPanel(), ActionListener {
         add(panelNorth, BorderLayout.NORTH)
 
         lblPlayerName.preferredSize = Dimension(0, 25)
-        lblPlayerName.font = ResourceCache.BASE_FONT.deriveFont(Font.BOLD, 20f)
+        lblPlayerName.font = getMenuFont()
         lblPlayerName.horizontalAlignment = SwingConstants.CENTER
 
         add(panelCenter, BorderLayout.CENTER)
@@ -100,6 +101,8 @@ class PlayerManagementPanel : JPanel(), ActionListener {
             avatar.init(player, true)
             addSummaryPanels(player)
         }
+
+        panelCenter.applyButtonOverrides()
 
         repaint()
         revalidate()

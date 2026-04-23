@@ -7,10 +7,10 @@ import dartzee.core.util.getAllChildComponentsForType
 import dartzee.core.util.getParentWindow
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.listener.DartboardListener
-import dartzee.`object`.ColourWrapper
 import dartzee.`object`.ComputedPoint
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.SegmentStatuses
+import dartzee.theme.IDartboardPainter
 import dartzee.theme.makeDartLabel
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getDartForSegment
@@ -25,7 +25,7 @@ import javax.swing.SwingUtilities
 const val LAYER_DARTS = 2
 const val LAYER_DODGY = 3
 
-class GameplayDartboard(colourWrapper: ColourWrapper = getColourWrapperFromPrefs()) :
+class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromPrefs()) :
     JLayeredPane(), IMouseListener {
     var latestClip: Clip? = null
 

@@ -1,7 +1,6 @@
 package dartzee.theme
 
 import dartzee.game.GameType
-import dartzee.`object`.ColourWrapper
 import dartzee.screen.animation.Animation
 import dartzee.screen.animation.DartScoreTrigger
 import dartzee.screen.animation.IAnimation
