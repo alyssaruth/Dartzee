@@ -34,6 +34,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.isBust
 import io.kotest.matchers.shouldBe
 import java.awt.Color
+import java.net.URL
 import java.sql.Timestamp
 
 fun factoryClockHit(score: Int, multiplier: Int = 1): Dart {
@@ -328,6 +329,8 @@ fun makeTheme(
     fontColor: Color = Color.BLACK,
     menuFontSize: Float? = null,
     animations: Map<IAnimationTrigger, IAnimation> = emptyMap(),
+    buttonOverrideColours: Map<String, Color> = emptyMap(),
+    customIcons: Map<String, () -> URL?> = emptyMap(),
 ) =
     Theme(
         id,
@@ -341,4 +344,6 @@ fun makeTheme(
         fontColor,
         menuFontSize,
         animations,
+        buttonOverrideColours = buttonOverrideColours,
+        customIcons = customIcons,
     )

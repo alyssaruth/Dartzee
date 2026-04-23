@@ -16,6 +16,7 @@ import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import dartzee.theme.EASTER
 import dartzee.theme.HALLOWEEN
 import dartzee.theme.OKTOBERFEST
+import dartzee.theme.PRIDE
 import dartzee.theme.Theme
 import dartzee.theme.Themes
 import dartzee.theme.WIREFRAME_COLOUR_WRAPPER
@@ -94,6 +95,12 @@ class PresentationDartboardTest : AbstractTest() {
     @Tag("screenshot")
     fun `Should match snapshot - birthday`() {
         snapshotTheme(Themes.BIRTHDAY)
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should match snapshot - pride`() {
+        snapshotTheme(Themes.PRIDE)
     }
 
     @Test

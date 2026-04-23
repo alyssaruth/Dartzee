@@ -121,7 +121,7 @@ val Themes.PRIDE: Theme
     get() =
         Theme(
             ThemeId.Pride,
-            "Beep boop.",
+            "TODO",
             PrideColors.red,
             PrideColors.purple,
             Color.decode("#FFFFC5"),
@@ -133,6 +133,7 @@ val Themes.PRIDE: Theme
             buttonOverrideColours = buttonOverrideColours,
             festivalInfo = FestivalInfo(::findPride, "The next parade begins"),
             customIcons = mapOf("/flags/humanFlag.png" to ::randomHumanFlag),
+            unlockDate = LocalDate.of(2026, Month.JUNE, 1),
         )
 
 private fun findPride(year: Int): Pair<LocalDate, LocalDate> =

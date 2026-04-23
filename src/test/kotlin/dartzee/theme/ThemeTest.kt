@@ -4,9 +4,11 @@ import com.github.alyssaburlton.swingtest.shouldMatch
 import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeTheme
+import dartzee.utils.InjectedThings
 import io.kotest.matchers.shouldBe
 import java.awt.Color
 import java.awt.Dimension
+import java.net.URL
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -75,5 +77,47 @@ class ThemeTest : AbstractTest() {
     @Test
     fun `Should return null if no resource is found`() {
         Themes.HALLOWEEN.icon("/buttons/blah.png") shouldBe null
+    }
+
+    @Test
+    fun `Should make use of custom icon functions`() {
+        val location = javaClass.getResource("/theme/halloween/buttons/playerManagement.png")
+        val fn =
+            fun(): URL? {
+                return location
+            }
+
+        val theme = makeTheme(customIcons = mapOf("/buttons/newGame.png" to fn))
+
+        theme.icon("/buttons/newGame.png")!!.shouldMatch(ImageIcon(location))
+        theme.icon("/buttons/preferences.png") shouldBe null
+    }
+
+    @Test
+    fun `Should be able to override buttons based on text and name`() {
+        val panel = JPanel()
+
+        val buttonOk = JButton("Ok")
+        val buttonDeleteGame = JButton().also { it.name = "deleteGame" }
+        val buttonOkTwo = JButton("OK")
+        val buttonOther = JButton("Other").also { it.name = "something" }
+
+        val originalBg = buttonOther.background
+
+        panel.add(buttonOk)
+        panel.add(buttonDeleteGame)
+        panel.add(buttonOkTwo)
+        panel.add(buttonOther)
+
+        val buttonOverrideColours = mapOf("ok" to Color.green, "deletegame" to Color.red)
+
+        InjectedThings.theme = makeTheme(buttonOverrideColours = buttonOverrideColours)
+
+        panel.applyButtonOverrides()
+
+        buttonOk.background shouldBe Color.green
+        buttonOkTwo.background shouldBe Color.green
+        buttonDeleteGame.background shouldBe Color.red
+        buttonOther.background shouldBe originalBg
     }
 }
