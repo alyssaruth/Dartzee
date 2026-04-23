@@ -8,7 +8,6 @@ import dartzee.utils.InjectedThings
 import io.kotest.matchers.shouldBe
 import java.awt.Color
 import java.awt.Dimension
-import java.net.URL
 import javax.swing.ImageIcon
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -82,10 +81,7 @@ class ThemeTest : AbstractTest() {
     @Test
     fun `Should make use of custom icon functions`() {
         val location = javaClass.getResource("/theme/halloween/buttons/playerManagement.png")
-        val fn =
-            fun(): URL? {
-                return location
-            }
+        val fn = fun() = location
 
         val theme = makeTheme(customIcons = mapOf("/buttons/newGame.png" to fn))
 
