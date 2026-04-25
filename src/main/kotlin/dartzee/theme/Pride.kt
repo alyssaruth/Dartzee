@@ -121,7 +121,7 @@ val Themes.PRIDE: Theme
     get() =
         Theme(
             ThemeId.Pride,
-            "TODO",
+            "Is there enough rainbow in this theme d'you think?!",
             PrideColors.red,
             PrideColors.purple,
             Color.decode("#FFFFC5"),

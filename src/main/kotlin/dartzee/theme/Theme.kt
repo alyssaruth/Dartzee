@@ -1,5 +1,6 @@
 package dartzee.theme
 
+import com.github.weisj.jsvg.SVGDocument
 import dartzee.logging.CODE_THEME_APPLIED
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
@@ -7,6 +8,7 @@ import dartzee.utils.InjectedThings.logger
 import dartzee.utils.InjectedThings.now
 import dartzee.utils.ResourceCache
 import java.awt.Color
+import java.awt.Font
 import java.awt.GraphicsEnvironment
 import java.net.URL
 import java.time.LocalDate
@@ -36,14 +38,20 @@ data class Theme(
     val name = id.name
     private val resourcePath = name.lowercase()
     val font = fontForResource("/theme/$resourcePath/font.ttf")
-    private val dartboardFont = fontForResource("/theme/$resourcePath/dartboard.ttf") ?: font
-    val banner = svgForResource("/theme/$resourcePath/banner.svg")
+    private val dartboardFont: Font?
+        get() = fontForResource("/theme/$resourcePath/dartboard.ttf") ?: font
 
-    val menuMusic = clipForResource("/theme/$resourcePath/menu.wav")
-    val newGameSfx = clipForResource("/theme/$resourcePath/newGame.wav")
+    val banner: SVGDocument?
+        get() = svgForResource("/theme/$resourcePath/banner.svg")
 
-    val dartboardColourWrapper =
-        dartboardColours?.withFont(dartboardFont ?: ResourceCache.BASE_FONT)
+    val menuMusic: AudioClip?
+        get() = clipForResource("/theme/$resourcePath/menu.wav")
+
+    val newGameSfx: AudioClip?
+        get() = clipForResource("/theme/$resourcePath/newGame.wav")
+
+    val dartboardColourWrapper: IDartboardPainter?
+        get() = dartboardColours?.withFont(dartboardFont ?: ResourceCache.BASE_FONT)
 
     fun apply() {
         logger.info(CODE_THEME_APPLIED, "Applying theme $name")
