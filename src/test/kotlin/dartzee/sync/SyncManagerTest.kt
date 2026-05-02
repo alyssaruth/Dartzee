@@ -259,12 +259,13 @@ class SyncManagerTest : AbstractTest() {
             error.clickOk(async = true)
 
             verifyLog(CODE_FILE_ERROR, Severity.ERROR)
-            LOG_DUMP_FILE.shouldExist()
 
             // Open a test connection so the tidy-up doesn't freak out about the db already being
             // shut down
             t!!.join()
             remoteDb.testConnection()
+
+            LOG_DUMP_FILE.shouldExist()
         }
     }
 
