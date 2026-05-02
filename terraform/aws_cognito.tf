@@ -46,7 +46,7 @@ resource "aws_cognito_identity_pool" "kibana" {
   cognito_identity_providers {
     client_id               = aws_cognito_user_pool_client.dartzee.id
     provider_name           = aws_cognito_user_pool.kibana.endpoint
-    server_side_token_check = false
+    server_side_token_check = true
   }
 }
 
