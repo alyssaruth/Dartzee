@@ -1,9 +1,9 @@
 package dartzee.logging
 
 import com.github.alyssaburlton.swingtest.flushEdt
-import dartzee.CURRENT_TIME
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
+import dartzee.helper.LOG_DUMP_FILE
 import dartzee.makeLogRecord
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
@@ -12,18 +12,15 @@ import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import java.awt.Color
-import java.io.File
 import javax.swing.JLabel
 import javax.swing.text.StyleConstants
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
 class LoggingConsoleTest : AbstractTest() {
-    private val DUMP_FILE = File("logdump-${CURRENT_TIME}.txt")
-
     @AfterEach
     fun afterEach() {
-        DUMP_FILE.delete()
+        LOG_DUMP_FILE.delete()
     }
 
     @Test
@@ -193,8 +190,8 @@ class LoggingConsoleTest : AbstractTest() {
         console.log(recordTwo)
         console.dumpLogs()
 
-        DUMP_FILE.shouldExist()
-        DUMP_FILE.readText() shouldBe "\n$recordOne\n$recordTwo"
+        LOG_DUMP_FILE.shouldExist()
+        LOG_DUMP_FILE.readText() shouldBe "\n$recordOne\n$recordTwo"
     }
 
     private fun LoggingConsole.getTextColour(position: Int = 0): Color {

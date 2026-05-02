@@ -12,6 +12,7 @@ import dartzee.getDialogMessage
 import dartzee.getErrorDialog
 import dartzee.getInfoDialog
 import dartzee.helper.AbstractTest
+import dartzee.helper.LOG_DUMP_FILE
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.TEST_DB_DIRECTORY
 import dartzee.helper.getCountFromTable
@@ -20,6 +21,7 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.shouldUpdateSyncScreen
 import dartzee.helper.syncDirectoryShouldNotExist
 import dartzee.helper.usingInMemoryDatabase
+import dartzee.logging.CODE_FILE_ERROR
 import dartzee.logging.CODE_REVERT_TO_PULL
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.CODE_SYNC_ERROR
@@ -29,6 +31,7 @@ import dartzee.runAsync
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
+import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
@@ -44,7 +47,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class TestSyncManager : AbstractTest() {
+class SyncManagerTest : AbstractTest() {
     @BeforeEach
     fun beforeEach() {
         File(TEST_DB_DIRECTORY).mkdirs()
@@ -53,6 +56,7 @@ class TestSyncManager : AbstractTest() {
     @AfterEach
     fun afterEach() {
         File(TEST_DB_DIRECTORY).deleteRecursively()
+        LOG_DUMP_FILE.delete()
     }
 
     @Test
@@ -240,7 +244,7 @@ class TestSyncManager : AbstractTest() {
     }
 
     @Test
-    fun `Should show an error if something goes wrong swapping the database in`() {
+    fun `Should show an error if something goes wrong swapping the database in, and dump logs`() {
         usingDbWithTestFile { remoteDb ->
             remoteDb.getDirectory().deleteRecursively()
 
@@ -253,6 +257,9 @@ class TestSyncManager : AbstractTest() {
             error.getDialogMessage() shouldBe
                 "Failed to restore database. Error: Failed to rename new file to ${mainDatabase.dbName}"
             error.clickOk(async = true)
+
+            verifyLog(CODE_FILE_ERROR, Severity.ERROR)
+            LOG_DUMP_FILE.shouldExist()
 
             // Open a test connection so the tidy-up doesn't freak out about the db already being
             // shut down
