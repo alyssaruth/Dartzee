@@ -23,6 +23,7 @@ import dartzee.utils.Database
 import dartzee.utils.DatabaseMigrations
 import dartzee.utils.InjectedThings.databaseDirectory
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.InjectedThings.loggingConsole
 import dartzee.utils.InjectedThings.mainDatabase
 import java.io.File
 import java.io.InterruptedIOException
@@ -136,6 +137,7 @@ class SyncManager(private val dbStore: IRemoteDatabaseStore) {
         SyncProgressDialog.dispose()
 
         if (!success) {
+            loggingConsole.dumpLogs()
             return null
         }
 

@@ -6,9 +6,11 @@ import dartzee.core.util.setMargins
 import dartzee.db.SqlStatementType
 import dartzee.screen.FocusableWindow
 import dartzee.utils.DartsDatabaseUtil
+import dartzee.utils.InjectedThings
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Component
+import java.io.File
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JScrollPane
@@ -92,6 +94,20 @@ class LoggingConsole : FocusableWindow(), ILogDestination {
             contextPanel.validate()
             contextPanel.repaint()
         }
+    }
+
+    fun getText(): String =
+        try {
+            doc.getText(0, doc.length)
+        } catch (t: Throwable) {
+            ""
+        }
+
+    fun dumpLogs() {
+        val f =
+            File("${System.getProperty("user.dir")}/logdump-${InjectedThings.clock.instant()}.txt")
+        f.createNewFile()
+        f.writeText(getText())
     }
 
     private fun factoryLabelForContext(field: Map.Entry<String, Any?>): Component {
