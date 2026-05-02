@@ -96,10 +96,11 @@ class LoggingConsole : FocusableWindow(), ILogDestination {
         }
     }
 
+    @Suppress("SwallowedException")
     fun getText(): String =
         try {
             doc.getText(0, doc.length)
-        } catch (t: Throwable) {
+        } catch (_: Throwable) {
             ""
         }
 
