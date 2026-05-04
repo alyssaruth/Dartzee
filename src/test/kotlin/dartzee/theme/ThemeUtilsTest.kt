@@ -21,6 +21,7 @@ import java.time.Month
 import javax.sound.sampled.AudioInputStream
 import javax.sound.sampled.AudioSystem
 import javax.swing.ImageIcon
+import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Test
 
 class ThemeUtilsTest : AbstractTest() {
@@ -53,6 +54,27 @@ class ThemeUtilsTest : AbstractTest() {
         val expected =
             ImageIcon(javaClass.getResource("/theme/halloween/buttons/playerManagement.png"))
         themedIcon("/buttons/playerManagement.png").shouldMatch(expected)
+    }
+
+    @Test
+    fun `all referenced animation resources should exist`() {
+        themeMap().values.forEach { theme ->
+            theme.animations.forEach { (trigger, animation) ->
+                animation.getAllSounds().forEach { sound ->
+                    val result = javaClass.getResource("/wav/$sound.wav")
+                    if (result == null) {
+                        fail("Wav $sound not found for trigger $trigger and theme ${theme.name}")
+                    }
+                }
+
+                animation.getAllImages().forEach { img ->
+                    val result = javaClass.getResource(img)
+                    if (result == null) {
+                        fail("Image $img not found for trigger $trigger and theme ${theme.name}")
+                    }
+                }
+            }
+        }
     }
 
     @Test

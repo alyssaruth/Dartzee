@@ -1,5 +1,13 @@
 package dartzee.theme
 
+import dartzee.game.GameType
+import dartzee.screen.animation.Animation
+import dartzee.screen.animation.BadLuckTrigger
+import dartzee.screen.animation.BruceyBonusTrigger
+import dartzee.screen.animation.CompositeAnimation
+import dartzee.screen.animation.DartScoreTrigger
+import dartzee.screen.animation.IAnimation
+import dartzee.screen.animation.IAnimationTrigger
 import java.awt.Color
 import java.awt.Point
 import java.awt.Rectangle
@@ -117,6 +125,19 @@ private fun getBannerDetails(
     return listOf(topBanner)
 }
 
+private val bingpotAnimation =
+    CompositeAnimation((1..2).map { Animation("bingpot$it", "/theme/pride/horrific/holt.png") })
+
+private val prideAnimations: List<Pair<IAnimationTrigger, IAnimation>> =
+    GameType.values().flatMap { gameType ->
+        listOf(
+            DartScoreTrigger(gameType, 50) to bingpotAnimation,
+            DartScoreTrigger(gameType, 25) to bingpotAnimation,
+            BadLuckTrigger to Animation("hooray", "/theme/pride/horrific/todd.png"),
+            BruceyBonusTrigger to Animation("betterEfforts", "/theme/pride/horrific/julian.png"),
+        )
+    }
+
 val Themes.PRIDE: Theme
     get() =
         Theme(
@@ -134,6 +155,7 @@ val Themes.PRIDE: Theme
             festivalInfo = FestivalInfo(::findPride, "The next parade begins"),
             customIcons = mapOf("/flags/humanFlag.png" to ::randomHumanFlag),
             unlockDate = LocalDate.of(2026, Month.JUNE, 1),
+            animations = prideAnimations.toMap(),
         )
 
 private fun findPride(year: Int): Pair<LocalDate, LocalDate> =

@@ -6,6 +6,8 @@ interface IAnimation {
     fun getAnimation(): Animation
 
     fun getAllSounds(): List<String>
+
+    fun getAllImages(): List<String>
 }
 
 data class Animation(
@@ -18,10 +20,14 @@ data class Animation(
     override fun getAnimation() = this
 
     override fun getAllSounds() = listOf(wavResource)
+
+    override fun getAllImages() = listOfNotNull(imgResourcePath)
 }
 
 data class CompositeAnimation(val animationOptions: List<Animation>) : IAnimation {
     override fun getAnimation() = animationOptions.random()
 
     override fun getAllSounds() = animationOptions.map { it.wavResource }
+
+    override fun getAllImages() = animationOptions.mapNotNull { it.imgResourcePath }
 }
