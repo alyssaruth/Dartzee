@@ -36,6 +36,7 @@ private const val CMD_CLEAR_CONSOLE = "cls"
 private const val CMD_EMPTY_SCREEN_CACHE = "emptyscr"
 private const val CMD_GUID = "guid"
 private const val CMD_TEST = "test"
+private const val CMD_DUMP_LOGS = "dump logs"
 
 val APP_SIZE = Dimension(1000, 700)
 
@@ -166,6 +167,8 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         } else if (cmd == CMD_TEST) {
             val window = TestWindow()
             window.isVisible = true
+        } else if (cmd == CMD_DUMP_LOGS) {
+            InjectedThings.loggingConsole.dumpLogs()
         }
 
         return textToShow

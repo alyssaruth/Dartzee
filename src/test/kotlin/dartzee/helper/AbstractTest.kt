@@ -1,6 +1,7 @@
 package dartzee.helper
 
 import com.github.alyssaburlton.swingtest.SwingTestCleanupExtension
+import dartzee.CURRENT_TIME
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.core.util.DialogUtil
 import dartzee.logging.LogDestinationSystemOut
@@ -20,6 +21,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk
+import java.io.File
 import java.time.LocalDate
 import java.time.Month
 import org.junit.jupiter.api.AfterEach
@@ -32,6 +34,7 @@ private var checkedForExceptions = false
 
 const val TEST_ROOT = "Test/"
 const val TEST_DB_DIRECTORY = "Test/Databases"
+val LOG_DUMP_FILE = File("logdump-${CURRENT_TIME}.txt")
 
 @ExtendWith(BeforeAllTestsExtension::class)
 @ExtendWith(SwingTestCleanupExtension::class)

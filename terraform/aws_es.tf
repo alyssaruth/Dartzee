@@ -8,7 +8,7 @@ data "aws_caller_identity" "current" {}
 
 resource "aws_elasticsearch_domain" "dartzee" {
   domain_name           = "dartzee"
-  elasticsearch_version = "7.4"
+  elasticsearch_version = "7.10"
 
   cluster_config {
     instance_type = "t2.small.elasticsearch"

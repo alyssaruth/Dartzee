@@ -3,18 +3,26 @@ package dartzee.logging
 import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
+import dartzee.helper.LOG_DUMP_FILE
 import dartzee.makeLogRecord
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.comparables.shouldBeGreaterThan
+import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import java.awt.Color
 import javax.swing.JLabel
 import javax.swing.text.StyleConstants
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 
-class TestLoggingConsole : AbstractTest() {
+class LoggingConsoleTest : AbstractTest() {
+    @AfterEach
+    fun afterEach() {
+        LOG_DUMP_FILE.delete()
+    }
+
     @Test
     fun `Should separate log records with a new line`() {
         val recordOne = makeLogRecord(loggingCode = LoggingCode("foo"), message = "log one")
@@ -172,12 +180,19 @@ class TestLoggingConsole : AbstractTest() {
         newLabels.map { it.text }.shouldContainExactly("appVersion: 4.1.1", "devMode: false")
     }
 
-    private fun LoggingConsole.getText(): String =
-        try {
-            doc.getText(0, doc.length)
-        } catch (t: Throwable) {
-            ""
-        }
+    @Test
+    fun `Should dump logs to file`() {
+        val recordOne = makeLogRecord(loggingCode = LoggingCode("foo"), message = "log one")
+        val recordTwo = makeLogRecord(loggingCode = LoggingCode("bar"), message = "log two")
+
+        val console = LoggingConsole()
+        console.log(recordOne)
+        console.log(recordTwo)
+        console.dumpLogs()
+
+        LOG_DUMP_FILE.shouldExist()
+        LOG_DUMP_FILE.readText() shouldBe "\n$recordOne\n$recordTwo"
+    }
 
     private fun LoggingConsole.getTextColour(position: Int = 0): Color {
         val style = doc.getCharacterElement(position)

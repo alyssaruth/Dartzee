@@ -27,13 +27,18 @@ object FileUtil {
         val newFile = File(newFilePath)
         val zzOldFile = File(oldFile.parent, "zz$oldFileName")
 
+        logger.info(CODE_SWITCHING_FILES, "Pre-delete [$zzOldFile] in case it exists already")
+        if (!zzOldFile.deleteRecursively()) {
+            return "Failed to tidy up before move."
+        }
+
         logger.info(CODE_SWITCHING_FILES, "Rename current out of the way [$oldFile -> $zzOldFile]")
-        if (oldFile.exists() && !oldFile.renameTo(zzOldFile)) {
+        if (oldFile.exists() && !oldFile.renameToWithRetries(zzOldFile)) {
             return "Failed to rename old out of the way."
         }
 
         logger.info(CODE_SWITCHING_FILES, "Rename new to current [$newFile -> $oldFile]")
-        if (!newFile.renameTo(File(oldFile.parent, oldFileName))) {
+        if (!newFile.renameToWithRetries(File(oldFile.parent, oldFileName))) {
             return "Failed to rename new file to $oldFileName"
         }
 
@@ -43,6 +48,38 @@ object FileUtil {
         }
 
         return null
+    }
+
+    tailrec fun File.renameToWithRetries(newFile: File, attempt: Int = 1): Boolean {
+        if (!exists()) {
+            logger.error(
+                CODE_FILE_ERROR,
+                "Trying to rename [$this] to [$newFile] but it does not exist",
+            )
+            return false
+        }
+
+        if (newFile.exists()) {
+            logger.error(
+                CODE_FILE_ERROR,
+                "Trying to rename [$this] to [$newFile] but [$newFile] already exists",
+            )
+            return false
+        }
+
+        val success = renameTo(newFile)
+        return if (success) {
+            true
+        } else if (attempt == 5) {
+            false
+        } else {
+            logger.warn(
+                CODE_FILE_ERROR,
+                "Failed to rename [$this] to [$newFile] on attempt $attempt, will retry.",
+            )
+            Thread.sleep(500)
+            renameToWithRetries(newFile, attempt + 1)
+        }
     }
 
     fun getImageDim(file: File): Dimension? {

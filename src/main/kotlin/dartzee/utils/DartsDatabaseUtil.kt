@@ -190,7 +190,6 @@ object DartsDatabaseUtil {
     }
 
     fun swapInDatabase(otherDatabase: Database): Boolean {
-        // Now switch it in
         try {
             mainDatabase.shutDown()
             otherDatabase.shutDown()
