@@ -42,7 +42,7 @@ class PreferencesPanelDartboardTest : AbstractPreferencePanelTest<PreferencesPan
 
         verifyDartboardCenterColour(panel, Color.RED)
 
-        setUiFieldValuesToNonDefaults(panel)
+        runOnEventThreadBlocking { setUiFieldValuesToNonDefaults(panel) }
 
         verifyDartboardCenterColour(panel, Color.MAGENTA)
     }
@@ -79,8 +79,10 @@ class PreferencesPanelDartboardTest : AbstractPreferencePanelTest<PreferencesPan
             dartboard.width shouldBeGreaterThan 0
 
             val center = dartboard.computeCenter()
-            val oldRgb = dartboard.toBufferedImage().getRGB(center.x, center.y)
-            oldRgb shouldBe color.rgb
+            runOnEventThreadBlocking {
+                val oldRgb = dartboard.toBufferedImage().getRGB(center.x, center.y)
+                oldRgb shouldBe color.rgb
+            }
         }
     }
 
