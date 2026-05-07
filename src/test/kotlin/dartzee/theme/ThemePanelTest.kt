@@ -41,7 +41,7 @@ class ThemePanelTest : AbstractTest() {
         panel.background shouldBe Themes.HALLOWEEN.background
 
         panel.nameLabel().text shouldBe "5. Halloween"
-        panel.nameLabel().font shouldBe Themes.HALLOWEEN.font!!.deriveFont(34f)
+        panel.nameLabel().font shouldBe Themes.HALLOWEEN.font!!.deriveFont(30f)
         panel.nameLabel().foreground shouldBe Themes.HALLOWEEN.fontColor
 
         panel.descriptionLabel().text shouldContain Themes.HALLOWEEN.description
@@ -57,7 +57,7 @@ class ThemePanelTest : AbstractTest() {
         panel.background shouldBe null
 
         panel.nameLabel().text shouldBe "1. Classic (none)"
-        panel.nameLabel().font shouldBe ResourceCache.BASE_FONT.deriveFont(34f)
+        panel.nameLabel().font shouldBe ResourceCache.BASE_FONT.deriveFont(30f)
         panel.nameLabel().foreground shouldBe Color.BLACK
 
         panel.descriptionLabel().text shouldBe CLASSIC_THEME_DESC

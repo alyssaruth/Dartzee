@@ -30,7 +30,7 @@ import javax.swing.JLabel
 import javax.swing.JRadioButton
 import org.junit.jupiter.api.Test
 
-class TestReportingGameTab : AbstractTest() {
+class ReportingGameTabTest : AbstractTest() {
     @Test
     fun `Should have the correct initial state`() {
         val scrn = ReportingGameTab()
@@ -228,7 +228,7 @@ class TestReportingGameTab : AbstractTest() {
         tab.getStartDateFilterPanel().cbDateTo.date = endDate
         tab.generateReportParameters().dtStartFrom shouldBe
             Timestamp.valueOf(startDate.atTime(0, 0))
-        tab.generateReportParameters().dtStartTo shouldBe Timestamp.valueOf(endDate.atTime(0, 0))
+        tab.generateReportParameters().dtStartTo shouldBe Timestamp.valueOf(endDate.atTime(23, 59))
     }
 
     @Test
@@ -247,7 +247,7 @@ class TestReportingGameTab : AbstractTest() {
         tab.getFinishDateFilterPanel().cbDateTo.date = endDate
         val rpBetweenDates = tab.generateReportParameters()
         rpBetweenDates.dtFinishFrom shouldBe Timestamp.valueOf(startDate.atTime(0, 0))
-        rpBetweenDates.dtFinishTo shouldBe Timestamp.valueOf(endDate.atTime(0, 0))
+        rpBetweenDates.dtFinishTo shouldBe Timestamp.valueOf(endDate.atTime(23, 59))
         rpBetweenDates.unfinishedOnly shouldBe false
 
         tab.clickChild<JRadioButton>(text = "Unfinished")
