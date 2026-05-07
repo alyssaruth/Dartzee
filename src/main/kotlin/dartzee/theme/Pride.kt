@@ -4,6 +4,7 @@ import dartzee.game.GameType
 import dartzee.screen.animation.Animation
 import dartzee.screen.animation.BadLuckTrigger
 import dartzee.screen.animation.BruceyBonusTrigger
+import dartzee.screen.animation.BustTrigger
 import dartzee.screen.animation.CompositeAnimation
 import dartzee.screen.animation.DartScoreTrigger
 import dartzee.screen.animation.IAnimation
@@ -128,15 +129,30 @@ private fun getBannerDetails(
 private val bingpotAnimation =
     CompositeAnimation((1..2).map { Animation("bingpot$it", "/theme/pride/horrific/holt.png") })
 
+private val bustAnimation =
+    CompositeAnimation((1..3).map { Animation("buster$it", "/theme/pride/horrific/lily.png") })
+
+private val ohMy =
+    CompositeAnimation(
+        (1..3).map { Animation("oh-my$it", "/theme/pride/horrific/george-takei.png") }
+    )
+
 private val prideAnimations: List<Pair<IAnimationTrigger, IAnimation>> =
     GameType.values().flatMap { gameType ->
         listOf(
             DartScoreTrigger(gameType, 50) to bingpotAnimation,
             DartScoreTrigger(gameType, 25) to bingpotAnimation,
+            DartScoreTrigger(gameType, 0) to
+                CompositeAnimation(
+                    listOf(ohMy, Animation("nonsense", "/theme/pride/horrific/ncuti.png"))
+                ),
+        )
+    } +
+        listOf(
             BadLuckTrigger to Animation("hooray", "/theme/pride/horrific/todd.png"),
             BruceyBonusTrigger to Animation("betterEfforts", "/theme/pride/horrific/julian.png"),
+            BustTrigger to bustAnimation,
         )
-    }
 
 val Themes.PRIDE: Theme
     get() =

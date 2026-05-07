@@ -24,10 +24,23 @@ data class Animation(
     override fun getAllImages() = listOfNotNull(imgResourcePath)
 }
 
-data class CompositeAnimation(val animationOptions: List<Animation>) : IAnimation {
-    override fun getAnimation() = animationOptions.random()
+data class CompositeAnimation(val animationOptions: List<IAnimation>) : IAnimation {
+    override fun getAnimation(): Animation {
+        val animation = animationOptions.random()
+        if (animation is Animation) {
+            return animation
+        }
 
-    override fun getAllSounds() = animationOptions.map { it.wavResource }
+        return animation.getAnimation()
+    }
 
-    override fun getAllImages() = animationOptions.mapNotNull { it.imgResourcePath }
+    override fun getAllSounds() =
+        animationOptions.flatMap {
+            if (it is Animation) listOf(it.wavResource) else it.getAllSounds()
+        }
+
+    override fun getAllImages() =
+        animationOptions.flatMap {
+            if (it is Animation) listOfNotNull(it.imgResourcePath) else it.getAllImages()
+        }
 }

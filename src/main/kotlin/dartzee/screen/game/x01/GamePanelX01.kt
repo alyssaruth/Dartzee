@@ -15,6 +15,7 @@ import dartzee.game.state.X01PlayerState
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.Dart
 import dartzee.screen.animation.BadLuckTrigger
+import dartzee.screen.animation.BustTrigger
 import dartzee.screen.animation.TotalScoreTrigger
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.GamePanelPausable
@@ -76,6 +77,8 @@ class GamePanelX01(parent: AbstractDartsGameScreen, game: GameEntity, totalPlaye
                 total,
             )
         } else {
+            dartboard.doDodgy(BustTrigger)
+
             val startingScoreForRound =
                 getCurrentPlayerState().getRemainingScoreForRound(currentRoundNumber - 1)
             AchievementEntity.updateAchievement(

@@ -13,3 +13,5 @@ object BadLuckTrigger : IAnimationTrigger
 object BruceyBonusTrigger : IAnimationTrigger
 
 object PlayerVictory : IAnimationTrigger
+
+object BustTrigger : IAnimationTrigger
