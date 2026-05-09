@@ -1,3 +1,10 @@
+--------- v8.0.0 ---------
+
++ 3 Themes (Dartzee, Birthday, ???)
+= Fixed update process for Windows, also now works on Linux
+= Attempted to make file logic more resilient during sync process
+= 93.9% test coverage (15026 / 16010 by 2577 tests)
+
 --------- v7.3.0 ---------
 
 + Updates to preferences screen to account for themes
