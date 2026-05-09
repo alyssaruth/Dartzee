@@ -18,6 +18,25 @@ class CompositeAnimationTest : AbstractTest() {
     }
 
     @Test
+    fun `should return all images used`() {
+        val animationA = Animation("wav", "/horrific/basil.png")
+        val animationB = Animation("wav", null)
+        val animationC = Animation("wav", "/horrific/chuckle.png")
+        val animationD = Animation("wav", "/horrific/dev.png")
+
+        val compositeOne = CompositeAnimation(listOf(animationC, animationD))
+        val compositeTwo = CompositeAnimation(listOf(animationA, animationB, compositeOne))
+
+        compositeTwo
+            .getAllImages()
+            .shouldContainExactlyInAnyOrder(
+                "/horrific/basil.png",
+                "/horrific/chuckle.png",
+                "/horrific/dev.png",
+            )
+    }
+
+    @Test
     fun `should select a random animation when asked for one`() {
         val animation =
             CompositeAnimation(
