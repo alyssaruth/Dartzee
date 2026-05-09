@@ -303,6 +303,23 @@ class TestGamePanelX01 : AbstractTest() {
     }
 
     @Test
+    fun `Should update highest bust`() {
+        val playerId = randomGuid()
+        val panel = makeX01GamePanel(playerId, gameParams = X01Config(101, FinishType.Doubles))
+
+        panel.addCompletedRound(listOf(Dart(20, 3), Dart(3, 3), Dart(1, 1)))
+        panel.addCompletedRound(listOf(Dart(5, 1), Dart(4, 1), Dart(20, 3)))
+
+        val bustRows =
+            retrieveAchievementsForPlayer(playerId).filter {
+                it.achievementType == AchievementType.X01_HIGHEST_BUST
+            }
+        bustRows.shouldContainExactly(
+            AchievementSummary(AchievementType.X01_HIGHEST_BUST, 31, panel.gameEntity.rowId, "")
+        )
+    }
+
+    @Test
     fun `Should update stylish finish achievement for first dart`() {
         verifyStylishFinish(listOf(Dart(6, 3), Dart(1, 2)))
         verifyStylishFinish(listOf(Dart(6, 2), Dart(4, 0), Dart(4, 2)))

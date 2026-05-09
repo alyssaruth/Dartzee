@@ -9,9 +9,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import org.junit.jupiter.api.Test
 
-class TestDateFilterPanel : AbstractTest() {
-    private val fmt = SimpleDateFormat("dd/MM/yyyy")
-
+class DateFilterPanelTest : AbstractTest() {
     @Test
     fun `Should always be valid if disabled`() {
         val filterPanel = DateFilterPanel()
@@ -62,11 +60,13 @@ class TestDateFilterPanel : AbstractTest() {
         filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-01")
         filterPanel.cbDateTo.date = LocalDate.parse("2020-11-07")
 
+        val fmt = SimpleDateFormat("dd/MM/yyyy HH:mm")
+
         val sqlDtFrom = filterPanel.getSqlDtFrom()
-        fmt.format(sqlDtFrom) shouldBe "01/01/2020"
+        fmt.format(sqlDtFrom) shouldBe "01/01/2020 00:00"
 
         val sqlDtTo = filterPanel.getSqlDtTo()
-        fmt.format(sqlDtTo) shouldBe "07/11/2020"
+        fmt.format(sqlDtTo) shouldBe "07/11/2020 23:59"
     }
 
     @Test

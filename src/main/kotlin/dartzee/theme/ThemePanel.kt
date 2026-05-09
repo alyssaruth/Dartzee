@@ -28,7 +28,7 @@ class ThemePanel(val themeId: ThemeId) : JPanel() {
             theme?.getIfUnlocked(Theme::font, ResourceCache.BASE_FONT) ?: ResourceCache.BASE_FONT
         val fontColor = theme?.getIfUnlocked(Theme::fontColor, Color.LIGHT_GRAY) ?: Color.BLACK
 
-        val menuFontSize = theme?.getIfUnlocked(Theme::menuFontSize, 14f) ?: 14f
+        val menuFontSize = theme?.getIfUnlocked(Theme::menuFontSize, 14f) ?: 10f
 
         val lblLeftIcon = JLabel(getLeftIcon())
         lblLeftIcon.name = "LeftIcon"

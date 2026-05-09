@@ -50,7 +50,7 @@ class DateFilterPanel : JPanel() {
 
     private fun getDtFrom() = cbDateFrom.date.atTime(0, 0)
 
-    private fun getDtTo() = cbDateTo.date.atTime(0, 0)
+    private fun getDtTo() = cbDateTo.date.atTime(23, 59)
 
     private fun makeDatePickerSettings(): DatePickerSettings {
         val settings = DatePickerSettings()

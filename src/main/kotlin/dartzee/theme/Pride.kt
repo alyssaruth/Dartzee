@@ -1,5 +1,14 @@
 package dartzee.theme
 
+import dartzee.game.GameType
+import dartzee.screen.animation.Animation
+import dartzee.screen.animation.BadLuckTrigger
+import dartzee.screen.animation.BruceyBonusTrigger
+import dartzee.screen.animation.BustTrigger
+import dartzee.screen.animation.CompositeAnimation
+import dartzee.screen.animation.DartScoreTrigger
+import dartzee.screen.animation.IAnimation
+import dartzee.screen.animation.IAnimationTrigger
 import java.awt.Color
 import java.awt.Point
 import java.awt.Rectangle
@@ -117,11 +126,39 @@ private fun getBannerDetails(
     return listOf(topBanner)
 }
 
+private val bingpotAnimation =
+    CompositeAnimation((1..2).map { Animation("bingpot$it", "/theme/pride/horrific/holt.png") })
+
+private val bustAnimation =
+    CompositeAnimation((1..3).map { Animation("buster$it", "/theme/pride/horrific/lily.png") })
+
+private val ohMy =
+    CompositeAnimation(
+        (1..3).map { Animation("oh-my$it", "/theme/pride/horrific/george-takei.png") }
+    )
+
+private val prideAnimations: List<Pair<IAnimationTrigger, IAnimation>> =
+    GameType.values().flatMap { gameType ->
+        listOf(
+            DartScoreTrigger(gameType, 50) to bingpotAnimation,
+            DartScoreTrigger(gameType, 25) to bingpotAnimation,
+            DartScoreTrigger(gameType, 0) to
+                CompositeAnimation(
+                    listOf(ohMy, Animation("nonsense", "/theme/pride/horrific/ncuti.png"))
+                ),
+        )
+    } +
+        listOf(
+            BadLuckTrigger to Animation("hooray", "/theme/pride/horrific/todd.png"),
+            BruceyBonusTrigger to Animation("betterEfforts", "/theme/pride/horrific/julian.png"),
+            BustTrigger to bustAnimation,
+        )
+
 val Themes.PRIDE: Theme
     get() =
         Theme(
             ThemeId.Pride,
-            "TODO",
+            "Is there enough rainbow in this theme d'you think?!",
             PrideColors.red,
             PrideColors.purple,
             Color.decode("#FFFFC5"),
@@ -134,6 +171,7 @@ val Themes.PRIDE: Theme
             festivalInfo = FestivalInfo(::findPride, "The next parade begins"),
             customIcons = mapOf("/flags/humanFlag.png" to ::randomHumanFlag),
             unlockDate = LocalDate.of(2026, Month.JUNE, 1),
+            animations = prideAnimations.toMap(),
         )
 
 private fun findPride(year: Int): Pair<LocalDate, LocalDate> =

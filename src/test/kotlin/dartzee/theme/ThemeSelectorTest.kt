@@ -109,7 +109,7 @@ class ThemeSelectorTest : AbstractTest() {
         selector.selectionIsLocked() shouldBe true
     }
 
-    private fun ThemeSelector.nextButton() = getChild<JButton>("Next")
+    private fun ThemeSelector.nextButton() = getChild<JButton>("NextTheme")
 
-    private fun ThemeSelector.previousButton() = getChild<JButton>("Previous")
+    private fun ThemeSelector.previousButton() = getChild<JButton>("PreviousTheme")
 }

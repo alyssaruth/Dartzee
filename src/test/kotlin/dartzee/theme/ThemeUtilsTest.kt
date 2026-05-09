@@ -6,10 +6,14 @@ import dartzee.helper.insertPlayer
 import dartzee.logging.CODE_AUDIO_ERROR
 import dartzee.logging.Severity
 import dartzee.preferences.Preferences
+import dartzee.screen.animation.IAnimation
+import dartzee.screen.animation.IAnimationTrigger
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.ResourceCache
+import io.kotest.assertions.withClue
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -53,6 +57,31 @@ class ThemeUtilsTest : AbstractTest() {
         val expected =
             ImageIcon(javaClass.getResource("/theme/halloween/buttons/playerManagement.png"))
         themedIcon("/buttons/playerManagement.png").shouldMatch(expected)
+    }
+
+    @Test
+    fun `all referenced animation resources should exist`() {
+        themeMap().values.forEach { theme ->
+            withClue("All assets should exist for ${theme.name}") {
+                theme.animations.forEach(::assertAllAssetsExistForAnimations)
+            }
+        }
+    }
+
+    private fun assertAllAssetsExistForAnimations(
+        animationEntry: Map.Entry<IAnimationTrigger, IAnimation>
+    ) {
+        val (trigger, animation) = animationEntry
+
+        animation.getAllSounds().forEach { sound ->
+            val result = javaClass.getResource("/wav/$sound.wav")
+            withClue("Wav $sound should exist for trigger $trigger") { result shouldNotBe null }
+        }
+
+        animation.getAllImages().forEach { img ->
+            val result = javaClass.getResource(img)
+            withClue("Image $img should exist for trigger $trigger") { result shouldNotBe null }
+        }
     }
 
     @Test

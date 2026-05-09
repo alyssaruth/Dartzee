@@ -20,6 +20,8 @@ class ThemeSelector(private val themeIds: List<ThemeId> = ThemeId.values().toLis
     private var themePanel = ThemePanel(themeIds.first())
     private val actionListeners = mutableListOf<ActionListener>()
 
+    private val themePanels = themeIds.map { ThemePanel(it) }
+
     private val titleBorder =
         TitledBorder(null, "Theme", TitledBorder.LEADING, TitledBorder.TOP, null, null)
 
@@ -28,8 +30,8 @@ class ThemeSelector(private val themeIds: List<ThemeId> = ThemeId.values().toLis
 
         setLayout(BorderLayout(20, 0))
 
-        btnNext.name = "Next"
-        btnPrevious.name = "Previous"
+        btnNext.name = "NextTheme"
+        btnPrevious.name = "PreviousTheme"
 
         btnNext.icon = themedIcon("/buttons/rightArrow.png")
         btnPrevious.icon = themedIcon("/buttons/leftArrow.png")
@@ -55,7 +57,7 @@ class ThemeSelector(private val themeIds: List<ThemeId> = ThemeId.values().toLis
 
     private fun selectionChanged(newIndex: Int) {
         remove(themePanel)
-        themePanel = ThemePanel(themeIds[newIndex])
+        themePanel = themePanels[newIndex]
         add(themePanel, BorderLayout.CENTER)
 
         repaint()
