@@ -44,11 +44,9 @@ data class Theme(
     val banner: SVGDocument?
         get() = svgForResource("/theme/$resourcePath/banner.svg")
 
-    val menuMusic: AudioClip?
-        get() = clipForResource("/theme/$resourcePath/menu.wav")
+    var menuMusic: AudioClip? = null
 
-    val newGameSfx: AudioClip?
-        get() = clipForResource("/theme/$resourcePath/newGame.wav")
+    var newGameSfx: AudioClip? = null
 
     val dartboardColourWrapper: IDartboardPainter?
         get() = dartboardColours?.withFont(dartboardFont ?: ResourceCache.BASE_FONT)
@@ -74,6 +72,9 @@ data class Theme(
 
         dartboardFont?.let { GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(it) }
         font?.let { GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(it) }
+
+        menuMusic = clipForResource("/theme/$resourcePath/menu.wav")
+        newGameSfx = clipForResource("/theme/$resourcePath/newGame.wav")
     }
 
     fun icon(path: String): ImageIcon? {
