@@ -38,7 +38,6 @@ class DialogUtilTest : AbstractTest() {
 
         DialogUtil.init(factoryMock)
 
-        DialogUtil.showQuestionOLD("Q")
         DialogUtil.showOption(
             "Free Pizza",
             "Would you like some?",
@@ -47,7 +46,6 @@ class DialogUtilTest : AbstractTest() {
         DialogUtil.chooseDirectory(null)
 
         verifySequence {
-            factoryMock.showQuestion("Q", false)
             factoryMock.showOption(
                 "Free Pizza",
                 "Would you like some?",

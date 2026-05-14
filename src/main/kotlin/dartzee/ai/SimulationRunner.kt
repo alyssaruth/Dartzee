@@ -94,7 +94,7 @@ class SimulationRunner {
         modal: Boolean,
     ) {
         if (DartsClient.devMode) {
-            val ans = DialogUtil.showQuestionOLD("Save real entities?")
+            val ans = DialogUtil.showQuestion("Save real entities?")
             handleSavingEntities(ans == JOptionPane.YES_OPTION, hmGameIdToWrapper)
         }
 

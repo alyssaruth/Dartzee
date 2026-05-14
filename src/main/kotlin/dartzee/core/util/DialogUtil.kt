@@ -58,14 +58,6 @@ object DialogUtil {
         SwingUtilities.invokeLater { showError(errorText) }
     }
 
-    @Deprecated("Use showQuestion")
-    fun showQuestionOLD(message: String, allowCancel: Boolean = false): Int {
-        logDialogShown("Question", "Question", message)
-        val selection = dialogFactory.showQuestion(message, allowCancel)
-        logDialogClosed("Question", selection)
-        return selection
-    }
-
     fun showQuestion(
         message: String,
         allowCancel: Boolean = false,

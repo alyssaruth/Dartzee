@@ -18,14 +18,14 @@ abstract class AbstractSanityCheckResultEntities(val entities: List<AbstractEnti
             val rows = t.selectedModelRows
 
             val ans =
-                DialogUtil.showQuestionOLD(
+                DialogUtil.showQuestion(
                     "Are you sure you want to delete ${rows.size} row(s) from $entityName?",
                     false,
                 )
             if (ans == JOptionPane.YES_OPTION) {
                 val success = deleteSelectedRows(t, rows)
                 if (!success) {
-                    DialogUtil.showErrorOLD(
+                    DialogUtil.showError(
                         "An error occurred deleting the rows. You should re-run the sanity check and check logs."
                     )
                 }
@@ -33,12 +33,7 @@ abstract class AbstractSanityCheckResultEntities(val entities: List<AbstractEnti
         }
 
     private fun deleteSelectedRows(t: ScrollTable, selectedRows: IntArray): Boolean {
-        val rowIds = mutableListOf<String>()
-        for (i in selectedRows.indices) {
-            val rowId = t.getNonNullValueAt(selectedRows[i], 0) as String
-            rowIds.add(rowId)
-        }
-
+        val rowIds = selectedRows.indices.map { t.getNonNullValueAt(selectedRows[it], 0) as String }
         return mainDatabase.deleteRowsFromTable(entityName, rowIds)
     }
 

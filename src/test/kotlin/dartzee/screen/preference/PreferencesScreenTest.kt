@@ -1,21 +1,24 @@
 package dartzee.screen.preference
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickNo
+import com.github.alyssaburlton.swingtest.clickYes
+import dartzee.findQuestionDialog
+import dartzee.getDialogMessage
+import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.screen.MenuScreen
 import dartzee.screen.ScreenCache
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import javax.swing.JButton
-import javax.swing.JOptionPane
 import org.junit.jupiter.api.Test
 
-class TestPreferencesScreen : AbstractTest() {
+class PreferencesScreenTest : AbstractTest() {
     @Test
     fun `Should refresh panels on init`() {
         val mockPanel = mockk<AbstractPreferencesPanel>(relaxed = true)
@@ -27,7 +30,6 @@ class TestPreferencesScreen : AbstractTest() {
 
     @Test
     fun `Should not go back if there are outstanding changes and user cancels`() {
-        dialogFactory.questionOption = JOptionPane.NO_OPTION
         val mockPanel = mockk<AbstractPreferencesPanel>(relaxed = true)
         every { mockPanel.hasOutstandingChanges() } returns true
 
@@ -35,17 +37,18 @@ class TestPreferencesScreen : AbstractTest() {
 
         ScreenCache.switch(screen, true)
 
-        screen.clickChild<JButton>("Back")
-        dialogFactory.questionsShown.shouldContainExactly(
+        screen.clickChild<JButton>("Back", async = true)
+
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe
             "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
-        )
+        question.clickNo(async = true)
 
         ScreenCache.currentScreen() shouldBe screen
     }
 
     @Test
-    fun `Should not go back if there are outstanding changes and user confirms`() {
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
+    fun `Should go back if there are outstanding changes and user confirms`() {
         val mockPanel = mockk<AbstractPreferencesPanel>(relaxed = true)
         every { mockPanel.hasOutstandingChanges() } returns true
 
@@ -53,10 +56,11 @@ class TestPreferencesScreen : AbstractTest() {
 
         ScreenCache.switch(screen, true)
 
-        screen.clickChild<JButton>("Back")
-        dialogFactory.questionsShown.shouldContainExactly(
+        screen.clickChild<JButton>("Back", async = true)
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe
             "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
-        )
+        question.clickYes(async = true)
 
         ScreenCache.currentScreen().shouldBeInstanceOf<MenuScreen>()
     }
@@ -70,8 +74,8 @@ class TestPreferencesScreen : AbstractTest() {
 
         ScreenCache.switch(screen, true)
 
-        screen.clickChild<JButton>("Back")
-        dialogFactory.questionsShown.shouldBeEmpty()
+        screen.clickChild<JButton>("Back", async = true)
+        findQuestionDialog().shouldBeNull()
 
         ScreenCache.currentScreen().shouldBeInstanceOf<MenuScreen>()
     }

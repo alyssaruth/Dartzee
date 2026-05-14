@@ -10,7 +10,7 @@ fun exitApplication() {
     val size = openGames.size
     if (size > 0) {
         val ans =
-            DialogUtil.showQuestionOLD(
+            DialogUtil.showQuestion(
                 "Are you sure you want to exit? There are $size game window(s) still open.",
                 false,
             )

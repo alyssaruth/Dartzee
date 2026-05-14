@@ -8,8 +8,8 @@ import javax.swing.ImageIcon
 import javax.swing.JLabel
 
 /** Test methods */
-fun ScrollTable.processKeyPress(key: Int) {
-    this.table.processKeyPress(key)
+fun ScrollTable.processKeyPress(key: Int, async: Boolean = false) {
+    this.table.processKeyPress(key, async)
 }
 
 fun ScrollTable.doubleClick() {

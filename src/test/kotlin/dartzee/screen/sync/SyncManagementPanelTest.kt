@@ -1,12 +1,20 @@
 package dartzee.screen.sync
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickNo
+import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.CURRENT_TIME
 import dartzee.PAST_TIME
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.formatTimestamp
 import dartzee.db.SyncAuditEntity
+import dartzee.findErrorDialog
+import dartzee.findQuestionDialog
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
+import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.REMOTE_NAME_2
@@ -18,8 +26,6 @@ import dartzee.sync.SyncManager
 import dartzee.sync.resetRemote
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -31,11 +37,10 @@ import java.sql.Timestamp
 import java.time.Duration
 import javax.swing.JButton
 import javax.swing.JLabel
-import javax.swing.JOptionPane
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class TestSyncManagementPanel : AbstractTest() {
+class SyncManagementPanelTest : AbstractTest() {
     private val syncManager = mockk<SyncManager>(relaxed = true)
 
     @BeforeEach
@@ -95,7 +100,7 @@ class TestSyncManagementPanel : AbstractTest() {
     }
 
     @Test
-    fun `Should render pending games in orange if 10 or more pending`() {
+    fun `Should render pending games in red if 10 or more pending`() {
         setUpModifiedGames(10)
 
         val data = LastSyncData(REMOTE_NAME_2, Timestamp.from(PAST_TIME))
@@ -151,45 +156,48 @@ class TestSyncManagementPanel : AbstractTest() {
     private fun SyncManagementPanel.pendingGamesLabel() =
         getChild<JLabel> { it.text.contains("Pending Games") }
 
-    /** Push */
     @Test
     fun `Should validate no open games before pushing`() {
         ScreenCache.addDartsGameScreen("foo", mockk(relaxed = true))
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>(text = "Push")
+        panel.clickChild<JButton>(text = "Push", async = true)
 
-        dialogFactory.errorsShown.shouldContainExactly(
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe
             "You must close all open games before performing this action."
-        )
+        error.clickOk(async = true)
+
         verifyNotCalled { syncManager.doPush(any()) }
     }
 
     @Test
     fun `Should not push if confirmation is cancelled`() {
-        dialogFactory.questionOption = JOptionPane.NO_OPTION
         every { syncManager.databaseExists(REMOTE_NAME) } returns true
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>(text = "Push")
+        panel.clickChild<JButton>(text = "Push", async = true)
 
-        dialogFactory.questionsShown.shouldContainExactly(
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe
             "Are you sure you want to push to $REMOTE_NAME? \n\nThis will overwrite any data that hasn't been synced to this device."
-        )
+        question.clickNo(async = true)
+
         verifyNotCalled { syncManager.doPush(any()) }
     }
 
     @Test
     fun `Should overwrite remote if push is confirmed`() {
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
         every { syncManager.databaseExists(REMOTE_NAME) } returns true
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>(text = "Push")
+        panel.clickChild<JButton>(text = "Push", async = true)
 
-        dialogFactory.questionsShown.shouldContainExactly(
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe
             "Are you sure you want to push to $REMOTE_NAME? \n\nThis will overwrite any data that hasn't been synced to this device."
-        )
+        question.clickYes(async = true)
+
         verify { syncManager.doPush(REMOTE_NAME) }
     }
 
@@ -197,9 +205,9 @@ class TestSyncManagementPanel : AbstractTest() {
     fun `Should push without confirmation if no remote version exists`() {
         every { syncManager.databaseExists(REMOTE_NAME) } returns false
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>(text = "Push")
+        panel.clickChild<JButton>(text = "Push", async = true)
 
-        dialogFactory.questionsShown.shouldBeEmpty()
+        findQuestionDialog().shouldBeNull()
         verify { syncManager.doPush(REMOTE_NAME) }
     }
 
@@ -209,37 +217,39 @@ class TestSyncManagementPanel : AbstractTest() {
         ScreenCache.addDartsGameScreen("foo", mockk(relaxed = true))
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>(text = "Pull")
+        panel.clickChild<JButton>(text = "Pull", async = true)
 
-        dialogFactory.errorsShown.shouldContainExactly(
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe
             "You must close all open games before performing this action."
-        )
+        error.clickOk(async = true)
+
         verifyNotCalled { syncManager.doPull(any()) }
     }
 
     @Test
     fun `Should not pull if confirmation is cancelled`() {
-        dialogFactory.questionOption = JOptionPane.NO_OPTION
-
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>(text = "Pull")
+        panel.clickChild<JButton>(text = "Pull", async = true)
 
-        dialogFactory.questionsShown.shouldContainExactly(
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe
             "Are you sure you want to pull from $REMOTE_NAME? \n\nThis will overwrite any local data that hasn't been synced to $REMOTE_NAME from this device."
-        )
+        question.clickNo(async = true)
+
         verifyNotCalled { syncManager.doPull(any()) }
     }
 
     @Test
     fun `Should overwrite local if pull is confirmed`() {
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
-
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>(text = "Pull")
+        panel.clickChild<JButton>(text = "Pull", async = true)
 
-        dialogFactory.questionsShown.shouldContainExactly(
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe
             "Are you sure you want to pull from $REMOTE_NAME? \n\nThis will overwrite any local data that hasn't been synced to $REMOTE_NAME from this device."
-        )
+        question.clickYes(async = true)
+
         verify { syncManager.doPull(REMOTE_NAME) }
     }
 
@@ -249,48 +259,48 @@ class TestSyncManagementPanel : AbstractTest() {
         ScreenCache.addDartsGameScreen("foo", mockk(relaxed = true))
 
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>(text = "Perform Sync")
+        panel.clickChild<JButton>(text = "Perform Sync", async = true)
 
-        dialogFactory.errorsShown.shouldContainExactly(
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe
             "You must close all open games before performing this action."
-        )
+        error.clickOk(async = true)
+
         verifyNotCalled { syncManager.doSyncIfNecessary(any()) }
     }
 
     @Test
     fun `Should carry out a sync`() {
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>(text = "Perform Sync")
+        panel.clickChild<JButton>(text = "Perform Sync", async = true)
 
-        dialogFactory.errorsShown.shouldBeEmpty()
+        findErrorDialog().shouldBeNull()
         verify { syncManager.doSyncIfNecessary(REMOTE_NAME) }
     }
 
     /** Reset */
     @Test
     fun `Should not carry out a reset if cancelled`() {
-        dialogFactory.questionOption = JOptionPane.NO_OPTION
-
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>(text = "Reset")
+        panel.clickChild<JButton>(text = "Reset", async = true)
 
-        dialogFactory.questionsShown.shouldContainExactly(
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe
             "Are you sure you want to reset?\n\nThis will not delete any local data, but will sever the link with $REMOTE_NAME, requiring you to set it up again."
-        )
+        question.clickNo(async = true)
 
         SyncAuditEntity.getLastSyncData(mainDatabase).shouldNotBeNull()
     }
 
     @Test
     fun `Should reset if confirmed`() {
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
-
         val panel = makeSyncManagementPanel()
-        panel.clickChild<JButton>(text = "Reset")
+        panel.clickChild<JButton>(text = "Reset", async = true)
 
-        dialogFactory.questionsShown.shouldContainExactly(
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe
             "Are you sure you want to reset?\n\nThis will not delete any local data, but will sever the link with $REMOTE_NAME, requiring you to set it up again."
-        )
+        question.clickYes(async = true)
 
         SyncAuditEntity.getLastSyncData(mainDatabase).shouldBeNull()
     }

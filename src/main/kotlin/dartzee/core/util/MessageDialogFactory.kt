@@ -43,18 +43,6 @@ class MessageDialogFactory : IMessageDialogFactory {
         return if (selection > -1) typedArray[selection] else null
     }
 
-    override fun showQuestion(text: String, allowCancel: Boolean): Int {
-        val option =
-            if (allowCancel) JOptionPane.YES_NO_CANCEL_OPTION else JOptionPane.YES_NO_OPTION
-        return JOptionPane.showConfirmDialog(
-            null,
-            text,
-            "Question",
-            option,
-            JOptionPane.QUESTION_MESSAGE,
-        )
-    }
-
     override fun chooseDirectory(parent: Component?): File? {
         val fc = JFileChooser()
         fc.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY

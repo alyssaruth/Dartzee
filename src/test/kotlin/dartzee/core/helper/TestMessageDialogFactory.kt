@@ -3,7 +3,6 @@ package dartzee.core.helper
 import dartzee.core.util.IMessageDialogFactory
 import java.awt.Component
 import java.io.File
-import javax.swing.JOptionPane
 
 class TestMessageDialogFactory : IMessageDialogFactory {
     // Directory
@@ -13,10 +12,6 @@ class TestMessageDialogFactory : IMessageDialogFactory {
     var inputSelection: Any? = null
     var inputOptionsPresented: Array<*>? = null
     val inputsShown = mutableListOf<String>()
-
-    // Questions
-    var questionOption = JOptionPane.NO_OPTION
-    val questionsShown = mutableListOf<String>()
 
     val optionSequence = mutableListOf<String?>()
     val optionsShown = mutableListOf<String>()
@@ -49,11 +44,6 @@ class TestMessageDialogFactory : IMessageDialogFactory {
         errorsShown.add(text)
     }
 
-    override fun showQuestion(text: String, allowCancel: Boolean): Int {
-        questionsShown.add(text)
-        return questionOption
-    }
-
     override fun showOption(title: String, message: String, options: List<String>): String? {
         optionsShown.add(message)
         val selection = optionSequence.removeAt(0)
@@ -66,7 +56,6 @@ class TestMessageDialogFactory : IMessageDialogFactory {
         inputsShown.clear()
         inputOptionsPresented = arrayOf<Any>()
         errorsShown.clear()
-        questionsShown.clear()
         optionSequence.clear()
         optionsShown.clear()
         directoryToSelect = null

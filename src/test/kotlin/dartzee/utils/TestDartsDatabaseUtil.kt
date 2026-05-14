@@ -38,7 +38,6 @@ import io.mockk.every
 import io.mockk.mockk
 import java.io.File
 import javax.swing.JDialog
-import javax.swing.JOptionPane
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -193,7 +192,6 @@ class TestDartsDatabaseUtil : AbstractTest() {
     @Test
     fun `Should abort the restore if cancelled after validation succeeds`() {
         usingInMemoryDatabase(withSchema = true) { db ->
-            dialogFactory.questionOption = JOptionPane.NO_OPTION
             runAsync { DartsDatabaseUtil.validateAndRestoreDatabase(db) }
 
             val question = getQuestionDialog()

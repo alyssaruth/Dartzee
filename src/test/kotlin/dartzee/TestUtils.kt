@@ -12,6 +12,7 @@ import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.shouldMatch
 import com.github.alyssaburlton.swingtest.typeText
+import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.InteractiveDartboard
 import dartzee.bean.PlayerImageRadio
@@ -40,6 +41,7 @@ import dartzee.utils.getAverage
 import io.kotest.matchers.doubles.shouldBeBetween
 import io.kotest.matchers.maps.shouldContainExactly
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.MockKMatcherScope
 import java.awt.Color
 import java.awt.Component
@@ -255,6 +257,8 @@ fun getErrorDialog() = findErrorDialog()!!
 
 fun findErrorDialog() = findOptionPaneDialog("Error")
 
+fun waitForQuestionDialog(): JDialog = waitForWindow<JDialog> { it.title == "Question" }
+
 private fun findOptionPaneDialog(title: String) = findWindow<JDialog> { it.title == title }
 
 fun JDialog.getDialogMessage(): String {
@@ -328,6 +332,14 @@ fun ImageIcon.toLabel(): JLabel {
     label.size = Dimension(iconWidth, iconHeight)
     label.repaint()
     return label
+}
+
+inline fun <reified W : Window> waitForWindow(
+    noinline predicate: (window: W) -> Boolean = { true }
+): W {
+    waitForAssertion { findWindow<W>(predicate) shouldNotBe null }
+    flushEdt()
+    return getWindow<W>(predicate)
 }
 
 inline fun <reified W : Window> getWindow(

@@ -1,7 +1,9 @@
 package dartzee.screen
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickNo
 import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeDisabled
@@ -15,6 +17,8 @@ import dartzee.bean.PlayerSelector
 import dartzee.bean.getAllPlayers
 import dartzee.core.bean.selectedItemTyped
 import dartzee.core.screen.ProgressDialog
+import dartzee.getDialogMessage
+import dartzee.getQuestionDialog
 import dartzee.getWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.preparePlayers
@@ -22,16 +26,14 @@ import dartzee.logging.CODE_ACHIEVEMENT_CONVERSION_FINISHED
 import dartzee.logging.CODE_ACHIEVEMENT_CONVERSION_STARTED
 import dartzee.logging.KEY_ACHIEVEMENT_TYPES
 import dartzee.logging.KEY_PLAYER_IDS
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import javax.swing.JButton
 import javax.swing.JComboBox
-import javax.swing.JOptionPane
 import javax.swing.JRadioButton
 import org.junit.jupiter.api.Test
 
-class TestAchievementConversionDialog : AbstractTest() {
+class AchievementConversionDialogTest : AbstractTest() {
     @Test
     fun `Should populate the player selector from the db`() {
         val players = preparePlayers(5).map { it.name }
@@ -57,26 +59,32 @@ class TestAchievementConversionDialog : AbstractTest() {
     @Test
     fun `Should validate and not dispose if cancelling running on all players`() {
         preparePlayers(2)
-        dialogFactory.questionOption = JOptionPane.NO_OPTION
 
         val dlg = AchievementConversionDialog()
         dlg.isVisible = true
-        dlg.clickOk()
+        dlg.clickOk(async = true)
+
+        val questionDialog = getQuestionDialog()
+        questionDialog.getDialogMessage() shouldBe
+            "This will run the conversion(s) for ALL players. Proceed?"
+        questionDialog.clickNo()
+        flushEdt()
 
         dlg.shouldBeVisible()
-        dialogFactory.questionsShown.shouldContainExactly(
-            "This will run the conversion(s) for ALL players. Proceed?"
-        )
     }
 
     @Test
     fun `Should run for all achievements and players`() {
         preparePlayers(3)
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
 
         val dlg = AchievementConversionDialog()
         dlg.isVisible = true
-        dlg.clickOk()
+        dlg.clickOk(async = true)
+
+        val questionDialog = getQuestionDialog()
+        questionDialog.getDialogMessage() shouldBe
+            "This will run the conversion(s) for ALL players. Proceed?"
+        questionDialog.clickYes()
 
         waitForConversionToFinish()
 

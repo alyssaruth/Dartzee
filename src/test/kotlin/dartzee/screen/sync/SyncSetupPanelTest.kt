@@ -1,7 +1,10 @@
 package dartzee.screen.sync
 
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.core.helper.verifyNotCalled
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.screen.ScreenCache
@@ -10,14 +13,14 @@ import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
 import dartzee.sync.SyncMode
 import dartzee.utils.InjectedThings
-import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import javax.swing.JButton
 import org.junit.jupiter.api.Test
 
-class TestSyncSetupPanel : AbstractTest() {
+class SyncSetupPanelTest : AbstractTest() {
     @Test
     fun `Should validate there are no open games`() {
         ScreenCache.addDartsGameScreen("foo", mockk(relaxed = true))
@@ -26,11 +29,13 @@ class TestSyncSetupPanel : AbstractTest() {
         InjectedThings.syncConfigurer = configurer
 
         val panel = SyncSetupPanel()
-        panel.clickChild<JButton>(text = "Get Started > ")
+        panel.clickChild<JButton>(text = "Get Started > ", async = true)
 
-        dialogFactory.errorsShown.shouldContainExactly(
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe
             "You must close all open games before performing this action."
-        )
+        error.clickOk(async = true)
+
         verifyNotCalled { configurer.doFirstTimeSetup() }
     }
 

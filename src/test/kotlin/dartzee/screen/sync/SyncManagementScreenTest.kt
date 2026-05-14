@@ -12,7 +12,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import javax.swing.JLabel
 import org.junit.jupiter.api.Test
 
-class TestSyncManagementScreen : AbstractTest() {
+class SyncManagementScreenTest : AbstractTest() {
     @Test
     fun `Should show the setup screen if never synced before`() {
         val scrn = SyncManagementScreen()

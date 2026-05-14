@@ -24,7 +24,7 @@ import io.mockk.mockk
 import java.io.IOException
 import org.junit.jupiter.api.Test
 
-class TestSyncManagerPush : AbstractTest() {
+class SyncManagerPushTest : AbstractTest() {
     @Test
     fun `Should log an error, dismiss the loading dialog and tidy up SyncAudit if an error occurs`() {
         val exception = IOException("Boom.")
