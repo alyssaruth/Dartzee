@@ -28,10 +28,10 @@ import dartzee.logging.KEY_ACHIEVEMENT_TYPES
 import dartzee.logging.KEY_PLAYER_IDS
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JRadioButton
+import org.junit.jupiter.api.Test
 
 class AchievementConversionDialogTest : AbstractTest() {
     @Test
@@ -65,7 +65,8 @@ class AchievementConversionDialogTest : AbstractTest() {
         dlg.clickOk(async = true)
 
         val questionDialog = getQuestionDialog()
-        questionDialog.getDialogMessage() shouldBe "This will run the conversion(s) for ALL players. Proceed?"
+        questionDialog.getDialogMessage() shouldBe
+            "This will run the conversion(s) for ALL players. Proceed?"
         questionDialog.clickNo()
         flushEdt()
 
@@ -81,7 +82,8 @@ class AchievementConversionDialogTest : AbstractTest() {
         dlg.clickOk(async = true)
 
         val questionDialog = getQuestionDialog()
-        questionDialog.getDialogMessage() shouldBe "This will run the conversion(s) for ALL players. Proceed?"
+        questionDialog.getDialogMessage() shouldBe
+            "This will run the conversion(s) for ALL players. Proceed?"
         questionDialog.clickYes()
 
         waitForConversionToFinish()

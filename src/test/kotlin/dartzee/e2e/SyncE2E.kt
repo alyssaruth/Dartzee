@@ -41,12 +41,12 @@ import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import java.io.File
 import java.util.UUID
 import javax.swing.JButton
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class SyncE2E : AbstractE2ETest() {
     @BeforeEach

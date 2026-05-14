@@ -69,9 +69,7 @@ class SyncUtilsTest : AbstractTest() {
     fun `Should allow sync action when no open games`() {
         var success = false
 
-        runAsync {
-            success = validateSyncAction()
-        }
+        runAsync { success = validateSyncAction() }
 
         success shouldBe true
         findErrorDialog().shouldBeNull()
@@ -82,12 +80,11 @@ class SyncUtilsTest : AbstractTest() {
         ScreenCache.addDartsGameScreen("foo", mockk(relaxed = true))
 
         var success = true
-        runAsync {
-            success = validateSyncAction()
-        }
+        runAsync { success = validateSyncAction() }
 
         val errorDialog = getErrorDialog()
-        errorDialog.getDialogMessage() shouldBe "You must close all open games before performing this action."
+        errorDialog.getDialogMessage() shouldBe
+            "You must close all open games before performing this action."
         errorDialog.clickOk(async = true)
 
         success shouldBe false

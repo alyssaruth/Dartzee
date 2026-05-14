@@ -36,11 +36,11 @@ import io.kotest.matchers.file.shouldNotExist
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import java.io.File
+import javax.swing.JDialog
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.File
-import javax.swing.JDialog
 
 const val BACKUP_LOCATION = "Test/Backup/Databases"
 

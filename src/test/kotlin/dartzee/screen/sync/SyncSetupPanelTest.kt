@@ -17,8 +17,8 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
 class SyncSetupPanelTest : AbstractTest() {
     @Test
@@ -32,7 +32,8 @@ class SyncSetupPanelTest : AbstractTest() {
         panel.clickChild<JButton>(text = "Get Started > ", async = true)
 
         val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "You must close all open games before performing this action."
+        error.getDialogMessage() shouldBe
+            "You must close all open games before performing this action."
         error.clickOk(async = true)
 
         verifyNotCalled { configurer.doFirstTimeSetup() }

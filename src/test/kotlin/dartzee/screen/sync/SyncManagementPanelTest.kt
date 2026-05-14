@@ -33,12 +33,12 @@ import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import java.sql.Timestamp
 import java.time.Duration
 import javax.swing.JButton
 import javax.swing.JLabel
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class SyncManagementPanelTest : AbstractTest() {
     private val syncManager = mockk<SyncManager>(relaxed = true)
@@ -164,7 +164,8 @@ class SyncManagementPanelTest : AbstractTest() {
         panel.clickChild<JButton>(text = "Push", async = true)
 
         val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "You must close all open games before performing this action."
+        error.getDialogMessage() shouldBe
+            "You must close all open games before performing this action."
         error.clickOk(async = true)
 
         verifyNotCalled { syncManager.doPush(any()) }
@@ -178,7 +179,8 @@ class SyncManagementPanelTest : AbstractTest() {
         panel.clickChild<JButton>(text = "Push", async = true)
 
         val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe "Are you sure you want to push to $REMOTE_NAME? \n\nThis will overwrite any data that hasn't been synced to this device."
+        question.getDialogMessage() shouldBe
+            "Are you sure you want to push to $REMOTE_NAME? \n\nThis will overwrite any data that hasn't been synced to this device."
         question.clickNo(async = true)
 
         verifyNotCalled { syncManager.doPush(any()) }
@@ -192,7 +194,8 @@ class SyncManagementPanelTest : AbstractTest() {
         panel.clickChild<JButton>(text = "Push", async = true)
 
         val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe "Are you sure you want to push to $REMOTE_NAME? \n\nThis will overwrite any data that hasn't been synced to this device."
+        question.getDialogMessage() shouldBe
+            "Are you sure you want to push to $REMOTE_NAME? \n\nThis will overwrite any data that hasn't been synced to this device."
         question.clickYes(async = true)
 
         verify { syncManager.doPush(REMOTE_NAME) }
@@ -217,7 +220,8 @@ class SyncManagementPanelTest : AbstractTest() {
         panel.clickChild<JButton>(text = "Pull", async = true)
 
         val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "You must close all open games before performing this action."
+        error.getDialogMessage() shouldBe
+            "You must close all open games before performing this action."
         error.clickOk(async = true)
 
         verifyNotCalled { syncManager.doPull(any()) }
@@ -229,7 +233,8 @@ class SyncManagementPanelTest : AbstractTest() {
         panel.clickChild<JButton>(text = "Pull", async = true)
 
         val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe "Are you sure you want to pull from $REMOTE_NAME? \n\nThis will overwrite any local data that hasn't been synced to $REMOTE_NAME from this device."
+        question.getDialogMessage() shouldBe
+            "Are you sure you want to pull from $REMOTE_NAME? \n\nThis will overwrite any local data that hasn't been synced to $REMOTE_NAME from this device."
         question.clickNo(async = true)
 
         verifyNotCalled { syncManager.doPull(any()) }
@@ -241,7 +246,8 @@ class SyncManagementPanelTest : AbstractTest() {
         panel.clickChild<JButton>(text = "Pull", async = true)
 
         val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe "Are you sure you want to pull from $REMOTE_NAME? \n\nThis will overwrite any local data that hasn't been synced to $REMOTE_NAME from this device."
+        question.getDialogMessage() shouldBe
+            "Are you sure you want to pull from $REMOTE_NAME? \n\nThis will overwrite any local data that hasn't been synced to $REMOTE_NAME from this device."
         question.clickYes(async = true)
 
         verify { syncManager.doPull(REMOTE_NAME) }
@@ -256,7 +262,8 @@ class SyncManagementPanelTest : AbstractTest() {
         panel.clickChild<JButton>(text = "Perform Sync", async = true)
 
         val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "You must close all open games before performing this action."
+        error.getDialogMessage() shouldBe
+            "You must close all open games before performing this action."
         error.clickOk(async = true)
 
         verifyNotCalled { syncManager.doSyncIfNecessary(any()) }
@@ -278,7 +285,8 @@ class SyncManagementPanelTest : AbstractTest() {
         panel.clickChild<JButton>(text = "Reset", async = true)
 
         val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe "Are you sure you want to reset?\n\nThis will not delete any local data, but will sever the link with $REMOTE_NAME, requiring you to set it up again."
+        question.getDialogMessage() shouldBe
+            "Are you sure you want to reset?\n\nThis will not delete any local data, but will sever the link with $REMOTE_NAME, requiring you to set it up again."
         question.clickNo(async = true)
 
         SyncAuditEntity.getLastSyncData(mainDatabase).shouldNotBeNull()
@@ -290,7 +298,8 @@ class SyncManagementPanelTest : AbstractTest() {
         panel.clickChild<JButton>(text = "Reset", async = true)
 
         val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe "Are you sure you want to reset?\n\nThis will not delete any local data, but will sever the link with $REMOTE_NAME, requiring you to set it up again."
+        question.getDialogMessage() shouldBe
+            "Are you sure you want to reset?\n\nThis will not delete any local data, but will sever the link with $REMOTE_NAME, requiring you to set it up again."
         question.clickYes(async = true)
 
         SyncAuditEntity.getLastSyncData(mainDatabase).shouldBeNull()

@@ -15,8 +15,8 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
 class PreferencesScreenTest : AbstractTest() {
     @Test
@@ -40,7 +40,8 @@ class PreferencesScreenTest : AbstractTest() {
         screen.clickChild<JButton>("Back", async = true)
 
         val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
+        question.getDialogMessage() shouldBe
+            "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
         question.clickNo(async = true)
 
         ScreenCache.currentScreen() shouldBe screen
@@ -57,7 +58,8 @@ class PreferencesScreenTest : AbstractTest() {
 
         screen.clickChild<JButton>("Back", async = true)
         val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
+        question.getDialogMessage() shouldBe
+            "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
         question.clickYes(async = true)
 
         ScreenCache.currentScreen().shouldBeInstanceOf<MenuScreen>()

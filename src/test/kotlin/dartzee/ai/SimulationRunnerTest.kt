@@ -37,10 +37,10 @@ import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.util.concurrent.locks.ReentrantLock
 import javax.swing.JDialog
 import javax.swing.JFrame
+import org.junit.jupiter.api.Test
 
 class SimulationRunnerTest : AbstractTest() {
     @Test

@@ -35,10 +35,10 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 import javax.swing.JButton
 import javax.swing.JTextField
+import org.junit.jupiter.api.Test
 
 class DartzeeTemplateSetupScreenTest : AbstractTest() {
     @Test
@@ -170,7 +170,8 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.clickChild<JButton>("deleteTemplate", async = true)
 
         val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe "You have played 2 games using the ABC Template." +
+        question.getDialogMessage() shouldBe
+            "You have played 2 games using the ABC Template." +
                 "\n\nThese will become custom games if you delete it. Are you sure you want to continue?"
         question.clickYes(async = true)
 
