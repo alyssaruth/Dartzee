@@ -29,7 +29,7 @@ class PreferencesScreen(private val tabs: List<AbstractPreferencesPanel> = getPr
         val outstandingChanges = tabs.any { it.hasOutstandingChanges() }
         if (outstandingChanges) {
             val ans =
-                DialogUtil.showQuestionOLD(
+                DialogUtil.showQuestion(
                     "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
                 )
             if (ans != JOptionPane.YES_OPTION) {

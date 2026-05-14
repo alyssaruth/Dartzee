@@ -83,7 +83,7 @@ fun deleteDartzeeTemplate(template: DartzeeTemplateEntity, gameCount: Int): Bool
                     "\n\nThese will become custom games if you delete it. Are you sure you want to continue?"
         }
 
-    val ans = DialogUtil.showQuestionOLD(message)
+    val ans = DialogUtil.showQuestion(message)
     if (ans != JOptionPane.YES_OPTION) {
         return false
     }

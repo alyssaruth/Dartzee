@@ -38,12 +38,11 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
-import javax.swing.JButton
-import javax.swing.JOptionPane
-import javax.swing.JTextField
 import org.junit.jupiter.api.Test
+import javax.swing.JButton
+import javax.swing.JTextField
 
-class TestPlayerManagementPanel : AbstractTest() {
+class PlayerManagementPanelTest : AbstractTest() {
     @Test
     fun `Should clear down when refreshed with a null player`() {
         val player = insertPlayer()
@@ -84,8 +83,6 @@ class TestPlayerManagementPanel : AbstractTest() {
         val player = insertPlayer(name = "BTBF")
         val managementScreen = ScreenCache.get<PlayerManagementScreen>()
         managementScreen.initialise()
-
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)

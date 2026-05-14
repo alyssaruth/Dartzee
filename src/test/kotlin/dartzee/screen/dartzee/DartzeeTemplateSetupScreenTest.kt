@@ -2,7 +2,9 @@ package dartzee.screen.dartzee
 
 import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.clickNo
 import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeDisabled
 import com.github.alyssaburlton.swingtest.shouldBeEnabled
@@ -15,7 +17,10 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
+import dartzee.findQuestionDialog
 import dartzee.game.GameType
+import dartzee.getDialogMessage
+import dartzee.getQuestionDialog
 import dartzee.getWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
@@ -28,14 +33,14 @@ import dartzee.helper.totalIsFifty
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 import javax.swing.JButton
-import javax.swing.JOptionPane
 import javax.swing.JTextField
-import org.junit.jupiter.api.Test
 
-class TestDartzeeTemplateSetupScreen : AbstractTest() {
+class DartzeeTemplateSetupScreenTest : AbstractTest() {
     @Test
     fun `Should pull through a game count of 0 for templates where no games have been played`() {
         insertTemplateAndRule()
@@ -84,17 +89,17 @@ class TestDartzeeTemplateSetupScreen : AbstractTest() {
     @Test
     fun `Should leave template alone if delete is cancelled`() {
         insertTemplateAndRule(name = "ABC")
-        dialogFactory.questionOption = JOptionPane.NO_OPTION
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("deleteTemplate")
+        scrn.clickChild<JButton>("deleteTemplate", async = true)
 
-        dialogFactory.questionsShown.shouldContainExactly(
-            "Are you sure you want to delete the ABC Template?"
-        )
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe "Are you sure you want to delete the ABC Template?"
+        question.clickNo()
+
         scrn.getChild<ScrollTable>().rowCount shouldBe 1
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 1
     }
@@ -102,17 +107,16 @@ class TestDartzeeTemplateSetupScreen : AbstractTest() {
     @Test
     fun `Should delete a template and associated rules on confirmation`() {
         insertTemplateAndRule(name = "ABC")
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("deleteTemplate")
+        scrn.clickChild<JButton>("deleteTemplate", async = true)
 
-        dialogFactory.questionsShown.shouldContainExactly(
-            "Are you sure you want to delete the ABC Template?"
-        )
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe "Are you sure you want to delete the ABC Template?"
+        question.clickYes(async = true)
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 0
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
@@ -122,17 +126,16 @@ class TestDartzeeTemplateSetupScreen : AbstractTest() {
     @Test
     fun `Should support deleting by using the keyboard shortcut`() {
         insertTemplateAndRule(name = "ABC")
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE)
+        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE, async = true)
 
-        dialogFactory.questionsShown.shouldContainExactly(
-            "Are you sure you want to delete the ABC Template?"
-        )
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe "Are you sure you want to delete the ABC Template?"
+        question.clickYes(async = true)
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 0
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
@@ -142,23 +145,19 @@ class TestDartzeeTemplateSetupScreen : AbstractTest() {
     @Test
     fun `Pressing delete with no row selected should do nothing`() {
         insertTemplateAndRule(name = "ABC")
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(-1)
-        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE)
+        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE, async = true)
 
-        dialogFactory.questionsShown.shouldBeEmpty()
-
+        findQuestionDialog().shouldBeNull()
         scrn.getChild<ScrollTable>().rowCount shouldBe 1
     }
 
     @Test
     fun `Should revert games to Custom on deletion and show a different confirmation message`() {
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
-
         val templateId = insertTemplateAndRule(name = "ABC").rowId
 
         insertGame(gameType = GameType.DARTZEE, gameParams = templateId)
@@ -168,12 +167,12 @@ class TestDartzeeTemplateSetupScreen : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("deleteTemplate")
+        scrn.clickChild<JButton>("deleteTemplate", async = true)
 
-        dialogFactory.questionsShown.shouldContainExactly(
-            "You have played 2 games using the ABC Template." +
+        val question = getQuestionDialog()
+        question.getDialogMessage() shouldBe "You have played 2 games using the ABC Template." +
                 "\n\nThese will become custom games if you delete it. Are you sure you want to continue?"
-        )
+        question.clickYes(async = true)
 
         GameEntity().retrieveEntities().forEach { it.gameParams shouldBe "" }
     }

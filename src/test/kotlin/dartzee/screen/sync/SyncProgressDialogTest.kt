@@ -10,7 +10,7 @@ import io.kotest.matchers.shouldBe
 import javax.swing.JProgressBar
 import org.junit.jupiter.api.Test
 
-class TestSyncProgressDialog : AbstractTest() {
+class SyncProgressDialogTest : AbstractTest() {
     @Test
     fun `Should show and hide`() {
         val dlg = SyncProgressDialog()

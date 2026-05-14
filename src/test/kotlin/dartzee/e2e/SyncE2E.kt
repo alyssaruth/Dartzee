@@ -2,6 +2,7 @@ package dartzee.e2e
 
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.clickOk
+import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.AchievementType
@@ -16,6 +17,7 @@ import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.getDialogMessage
 import dartzee.getInfoDialog
+import dartzee.getQuestionDialog
 import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.TEST_DB_DIRECTORY
 import dartzee.helper.TEST_ROOT
@@ -39,13 +41,12 @@ import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import java.io.File
-import java.util.*
-import javax.swing.JButton
-import javax.swing.JOptionPane
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.io.File
+import java.util.UUID
+import javax.swing.JButton
 
 class SyncE2E : AbstractE2ETest() {
     @BeforeEach
@@ -133,7 +134,6 @@ class SyncE2E : AbstractE2ETest() {
     private fun deleteGame(mainScreen: DartsApp) {
         ScreenCache.switch<UtilitiesScreen>()
         dialogFactory.inputSelection = 1L
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
         mainScreen.clickChild<JButton>(text = "Delete Game", async = true)
         confirmGameDeletion(1)
     }
@@ -185,8 +185,11 @@ class SyncE2E : AbstractE2ETest() {
         wipeTable(EntityName.DeletionAudit)
         wipeTable(EntityName.Achievement)
 
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
-        mainScreen.clickChild<JButton>(text = "Reset")
+        mainScreen.clickChild<JButton>(text = "Reset", async = true)
+
+        val question = getQuestionDialog()
+        question.clickYes(async = true)
+
         waitForAssertion { mainScreen.findChild<SyncSetupPanel>() shouldNotBe null }
     }
 }

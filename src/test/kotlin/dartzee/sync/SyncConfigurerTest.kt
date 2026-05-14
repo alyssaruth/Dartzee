@@ -6,7 +6,7 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestSyncConfigurer : AbstractTest() {
+class SyncConfigurerTest : AbstractTest() {
     @Test
     fun `Should return return correct config when creating remote database for the first time`() {
         dialogFactory.inputSelection = "Goomba"

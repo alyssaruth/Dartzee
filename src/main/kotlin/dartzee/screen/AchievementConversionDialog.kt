@@ -72,7 +72,7 @@ class AchievementConversionDialog : SimpleDialog() {
     private fun valid(): Boolean {
         if (playerSelector.getSelectedPlayers().isEmpty()) {
             val ans =
-                DialogUtil.showQuestionOLD(
+                DialogUtil.showQuestion(
                     "This will run the conversion(s) for ALL players. Proceed?",
                     false,
                 )

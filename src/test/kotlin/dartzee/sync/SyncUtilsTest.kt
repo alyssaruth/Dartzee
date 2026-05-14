@@ -1,9 +1,13 @@
 package dartzee.sync
 
+import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.PAST_TIME
 import dartzee.core.helper.getFutureTime
 import dartzee.db.ParticipantEntity
 import dartzee.db.SyncAuditEntity
+import dartzee.findErrorDialog
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.getCountFromTable
@@ -18,16 +22,16 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.helper.makeSyncAudit
 import dartzee.helper.shouldUpdateSyncScreen
+import dartzee.runAsync
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.mainDatabase
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import java.sql.Timestamp
 import org.junit.jupiter.api.Test
 
-class TestSyncUtils : AbstractTest() {
+class SyncUtilsTest : AbstractTest() {
     @Test
     fun `Should return the count of games modified since last sync`() {
         makeSyncAudit(mainDatabase).saveToDatabase(Timestamp(2000))
@@ -63,18 +67,30 @@ class TestSyncUtils : AbstractTest() {
 
     @Test
     fun `Should allow sync action when no open games`() {
-        validateSyncAction() shouldBe true
-        dialogFactory.errorsShown.shouldBeEmpty()
+        var success = false
+
+        runAsync {
+            success = validateSyncAction()
+        }
+
+        success shouldBe true
+        findErrorDialog().shouldBeNull()
     }
 
     @Test
     fun `Should not allow sync action if there are open games`() {
         ScreenCache.addDartsGameScreen("foo", mockk(relaxed = true))
 
-        validateSyncAction() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
-            "You must close all open games before performing this action."
-        )
+        var success = true
+        runAsync {
+            success = validateSyncAction()
+        }
+
+        val errorDialog = getErrorDialog()
+        errorDialog.getDialogMessage() shouldBe "You must close all open games before performing this action."
+        errorDialog.clickOk(async = true)
+
+        success shouldBe false
     }
 
     @Test

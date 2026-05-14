@@ -12,6 +12,7 @@ import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.screen.ProgressDialog
 import dartzee.db.EntityName
+import dartzee.findQuestionDialog
 import dartzee.game.GameType
 import dartzee.getDialogMessage
 import dartzee.getErrorDialog
@@ -30,17 +31,16 @@ import dartzee.`object`.DartsClient
 import dartzee.screen.stats.player.PlayerStatisticsScreen
 import dartzee.waitForQuestionDialog
 import dartzee.waitForWindow
-import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.junit.jupiter.api.Test
 import java.util.concurrent.locks.ReentrantLock
 import javax.swing.JDialog
 import javax.swing.JFrame
-import org.junit.jupiter.api.Test
 
 class SimulationRunnerTest : AbstractTest() {
     @Test
@@ -143,7 +143,7 @@ class SimulationRunnerTest : AbstractTest() {
         runner.runSimulation(simulation, 1, true)
         waitForSimulation()
 
-        dialogFactory.questionsShown.shouldBeEmpty()
+        findQuestionDialog().shouldBeNull()
     }
 
     @Test
