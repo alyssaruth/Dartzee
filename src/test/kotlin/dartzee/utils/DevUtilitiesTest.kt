@@ -40,12 +40,15 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
-class TestDevUtilities : AbstractTest() {
+class DevUtilitiesTest : AbstractTest() {
     @Test
     fun `Should show an error and return out if there are no games in the DB`() {
-        DevUtilities.purgeGame()
+        runAsync { DevUtilities.purgeGame() }
 
-        dialogFactory.errorsShown.shouldContainExactly("No games to delete.")
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "No games to delete."
+        error.clickOk(async = true)
+
         dialogFactory.inputsShown.shouldBeEmpty()
     }
 

@@ -253,13 +253,13 @@ fun getQuestionDialog() = findQuestionDialog()!!
 
 fun findQuestionDialog() = findOptionPaneDialog("Question")
 
-fun getErrorDialog() = findErrorDialog()!!
+fun getErrorDialog(predicate: (window: JDialog) -> Boolean = { true }) = findErrorDialog(predicate)!!
 
-fun findErrorDialog() = findOptionPaneDialog("Error")
+fun findErrorDialog(predicate: (window: JDialog) -> Boolean = { true }) = findOptionPaneDialog("Error", predicate)
 
 fun waitForQuestionDialog(): JDialog = waitForWindow<JDialog> { it.title == "Question" }
 
-private fun findOptionPaneDialog(title: String) = findWindow<JDialog> { it.title == title }
+private fun findOptionPaneDialog(title: String, predicate: (window: JDialog) -> Boolean = { true }) = findWindow<JDialog> { it.title == title && predicate(it) }
 
 fun JDialog.getDialogMessage(): String {
     val messageLabels = findAll<JLabel>().filter { it.name == "OptionPane.label" }

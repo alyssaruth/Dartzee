@@ -25,6 +25,9 @@ import dartzee.dartzee.dart.DartzeeDartRuleInner
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.dart.DartzeeDartRuleOuter
 import dartzee.dartzee.dart.DartzeeDartRuleScore
+import dartzee.findErrorDialog
+import dartzee.getDialogMessage
+import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeColourRule
 import dartzee.helper.makeDartzeeRuleDto
@@ -35,6 +38,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldNotContain
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -45,7 +49,7 @@ import javax.swing.JCheckBox
 import javax.swing.SwingUtilities
 import org.junit.jupiter.api.Test
 
-class TestDartzeeRuleAmendment : AbstractTest() {
+class DartzeeRuleCreationDialogAmendTest : AbstractTest() {
     @Test
     fun `Should adjust the dialog title appropriately`() {
         val dlg = DartzeeRuleCreationDialog()
@@ -210,14 +214,17 @@ class TestDartzeeRuleAmendment : AbstractTest() {
     }
 }
 
-class TestDartzeeRuleCreationDialogValidation : AbstractTest() {
+class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
     @Test
     fun `Should prevent an empty rule name`() {
         val dlg = showRuleCreationDialog()
         dlg.clickChild<JCheckBox>(text = "Custom rule name")
-        dlg.clickOk()
+        dlg.clickOk(async = true)
 
-        dialogFactory.errorsShown.shouldContainExactly("You cannot have an empty rule name.")
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "You cannot have an empty rule name."
+        error.clickOk(async = true)
+
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
     }
@@ -229,9 +236,12 @@ class TestDartzeeRuleCreationDialogValidation : AbstractTest() {
         val dlg = showRuleCreationDialog()
         dlg.clickChild<JCheckBox>(text = "Custom rule name")
         dlg.tfRuleName.text = ruleName
-        dlg.clickOk()
+        dlg.clickOk(async = true)
 
-        dialogFactory.errorsShown.shouldContainExactly("Rule name cannot exceed 1000 characters.")
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "Rule name cannot exceed 1000 characters."
+        error.clickOk(async = true)
+
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
     }
@@ -244,36 +254,39 @@ class TestDartzeeRuleCreationDialogValidation : AbstractTest() {
             dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         }
 
-        dlg.clickOk()
-        dialogFactory.errorsShown.shouldContainExactly(
-            "Dart 1: You must select at least one colour."
-        )
+        dlg.clickOk(async = true)
+
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "Dart 1: You must select at least one colour."
+        error.clickOk(async = true)
+
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
 
-        dialogFactory.errorsShown.clear()
         SwingUtilities.invokeAndWait {
             dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
             dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         }
 
-        dlg.clickOk()
-        dialogFactory.errorsShown.shouldContainExactly(
-            "Dart 2: You must select at least one colour."
-        )
+        dlg.clickOk(async = true)
+
+        val error2 = getErrorDialog { it.isVisible }
+        error2.getDialogMessage() shouldBe "Dart 2: You must select at least one colour."
+        error2.clickOk(async = true)
+
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
 
-        dialogFactory.errorsShown.clear()
         SwingUtilities.invokeAndWait {
             dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleAny>()
             dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         }
 
-        dlg.clickOk()
-        dialogFactory.errorsShown.shouldContainExactly(
-            "Dart 3: You must select at least one colour."
-        )
+        dlg.clickOk(async = true)
+        val error3 = getErrorDialog { it.isVisible }
+        error3.getDialogMessage() shouldBe "Dart 3: You must select at least one colour."
+        error3.clickOk(async = true)
+
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
     }
@@ -287,10 +300,12 @@ class TestDartzeeRuleCreationDialogValidation : AbstractTest() {
             dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         }
 
-        dlg.clickOk()
-        dialogFactory.errorsShown.shouldContainExactly(
-            "Target: You must select at least one colour."
-        )
+        dlg.clickOk(async = true)
+
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "Target: You must select at least one colour."
+        error.clickOk(async = true)
+
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
     }
@@ -309,8 +324,12 @@ class TestDartzeeRuleCreationDialogValidation : AbstractTest() {
             dlg.aggregateSelector.comboBoxRuleType.selectByClass<DartzeeTotalRuleOdd>()
         }
 
-        dlg.clickOk()
-        dialogFactory.errorsShown.shouldContainExactly("This rule is impossible!")
+        dlg.clickOk(async = true)
+
+        val error = getErrorDialog()
+        error.getDialogMessage() shouldBe "This rule is impossible!"
+        error.clickOk(async = true)
+
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
     }
@@ -318,9 +337,9 @@ class TestDartzeeRuleCreationDialogValidation : AbstractTest() {
     @Test
     fun `Should dispose if valid`() {
         val dlg = showRuleCreationDialog()
-        dlg.clickOk()
+        dlg.clickOk(async = true)
 
-        dialogFactory.errorsShown.shouldBeEmpty()
+        findErrorDialog().shouldBeNull()
         dlg.shouldNotBeVisible()
     }
 
@@ -333,7 +352,7 @@ class TestDartzeeRuleCreationDialogValidation : AbstractTest() {
     }
 }
 
-class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest() {
+class DartzeeRuleCreationDialogDtoPopulationTest : AbstractTest() {
     @Test
     fun `Should populate an 'at least one' rule correctly`() {
         val dlg = DartzeeRuleCreationDialog()
@@ -433,7 +452,7 @@ class TestDartzeeRuleCreationDialogDtoPopulation : AbstractTest() {
     }
 }
 
-class TestDartzeeRuleCreationDialogInteraction : AbstractTest() {
+class DartzeeRuleCreationDialogInteractionTest : AbstractTest() {
     @Test
     fun `Should not return a rule when cancelled`() {
         val dlg = DartzeeRuleCreationDialog()
