@@ -11,8 +11,6 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import io.mockk.every
-import io.mockk.mockk
 import java.sql.Timestamp
 import java.util.*
 import org.junit.jupiter.api.AfterEach
@@ -203,17 +201,4 @@ class TestAbstractEntity : AbstractTest() {
         entity.saveToDatabase(dtLastUpdate)
         return entity
     }
-}
-
-class FakeEntity(database: Database = mainDatabase) : AbstractEntity<FakeEntity>(database) {
-    var testString = ""
-
-    override fun getTableName(): EntityName {
-        val result = mockk<EntityName>(relaxed = true)
-        every { result.name } returns "TestTable"
-        every { result.toString() } returns "TestTable"
-        return result
-    }
-
-    override fun getCreateTableSqlSpecific() = "TestString VARCHAR(10) NOT NULL"
 }

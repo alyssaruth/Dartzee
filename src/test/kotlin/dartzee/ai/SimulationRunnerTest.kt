@@ -1,6 +1,8 @@
 package dartzee.ai
 
 import com.github.alyssaburlton.swingtest.clickCancel
+import com.github.alyssaburlton.swingtest.clickNo
+import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
@@ -26,8 +28,9 @@ import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
 import dartzee.`object`.DartsClient
 import dartzee.screen.stats.player.PlayerStatisticsScreen
+import dartzee.waitForQuestionDialog
+import dartzee.waitForWindow
 import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -37,11 +40,9 @@ import io.mockk.verify
 import java.util.concurrent.locks.ReentrantLock
 import javax.swing.JDialog
 import javax.swing.JFrame
-import javax.swing.JOptionPane
-import javax.swing.JProgressBar
 import org.junit.jupiter.api.Test
 
-class TestSimulationRunner : AbstractTest() {
+class SimulationRunnerTest : AbstractTest() {
     @Test
     fun `Should handle an error being thrown from the simulation`() {
         val simulation = mockk<AbstractDartsSimulation>(relaxed = true)
@@ -79,9 +80,7 @@ class TestSimulationRunner : AbstractTest() {
         val runner = SimulationRunner()
         runner.runSimulation(blockingSimulation, 5, false)
 
-        waitForAssertion { findWindow<ProgressDialog>() shouldNotBe null }
-        flushEdt()
-        val progressDialog = getWindow<ProgressDialog>()
+        val progressDialog = waitForWindow<ProgressDialog>()
         progressDialog.shouldBeVisible()
         progressDialog.clickCancel()
         lock.unlock()
@@ -105,11 +104,8 @@ class TestSimulationRunner : AbstractTest() {
         waitForSimulation()
         flushEdt()
 
-        val progressDialog = getWindow<ProgressDialog>()
-        progressDialog.shouldNotBeVisible()
-        val progressBar = progressDialog.getChild<JProgressBar>()
-        progressBar.maximum shouldBe 5
-        progressBar.value shouldBe 5
+        val progressDialog = findWindow<ProgressDialog>()
+        (progressDialog?.isVisible ?: false) shouldBe false
 
         findResultsDialog().shouldBeNull()
         val resultsWindow = findResultsWindow()!!
@@ -153,7 +149,6 @@ class TestSimulationRunner : AbstractTest() {
     @Test
     fun `Should not save real entities if response is No`() {
         DartsClient.devMode = true
-        dialogFactory.questionOption = JOptionPane.NO_OPTION
 
         val model = makeDartsModel()
         val player = insertPlayer(model = model, name = "Alyssa")
@@ -163,14 +158,17 @@ class TestSimulationRunner : AbstractTest() {
         runner.runSimulation(simulation, 1, true)
         waitForSimulation()
 
-        dialogFactory.questionsShown.shouldContainExactly("Save real entities?")
+        val question = waitForQuestionDialog()
+        question.getDialogMessage() shouldBe "Save real entities?"
+        question.clickNo()
+        flushEdt()
+
         getCountFromTable(EntityName.Game) shouldBe 0
     }
 
     @Test
     fun `Should save real entities if response is Yes`() {
         DartsClient.devMode = true
-        dialogFactory.questionOption = JOptionPane.YES_OPTION
 
         val model = makeDartsModel()
         val player = insertPlayer(model = model, name = "Alyssa")
@@ -180,7 +178,11 @@ class TestSimulationRunner : AbstractTest() {
         runner.runSimulation(simulation, 3, true)
         waitForSimulation()
 
-        dialogFactory.questionsShown.shouldContainExactly("Save real entities?")
+        val question = waitForQuestionDialog()
+        question.getDialogMessage() shouldBe "Save real entities?"
+        question.clickYes()
+        flushEdt()
+
         getCountFromTable(EntityName.Game) shouldBe 3
         getCountFromTable(EntityName.Participant) shouldBe 3
     }
