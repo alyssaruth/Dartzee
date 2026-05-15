@@ -16,7 +16,6 @@ import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
-import java.util.Collections
 import javax.swing.ButtonGroup
 import javax.swing.ImageIcon
 import javax.swing.JPanel
@@ -33,10 +32,8 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>) :
     val toggleButtonComplete = JToggleButton()
 
     val dartsThrown = mutableListOf<Dart>()
-    val pendingTiles: MutableList<DartzeeRuleTilePending> =
-        Collections.synchronizedList(mutableListOf<DartzeeRuleTilePending>())
-    val completeTiles: MutableList<DartzeeRuleTile> =
-        Collections.synchronizedList(mutableListOf<DartzeeRuleTile>())
+    val pendingTiles = mutableListOf<DartzeeRuleTilePending>()
+    val completeTiles = mutableListOf<DartzeeRuleTile>()
 
     @Volatile var initialised = false
 
@@ -93,13 +90,16 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>) :
     }
 
     private fun initialiseTiles(results: List<DartzeeRoundResultEntity>, currentScore: Int) {
-        completeTiles.clear()
-        pendingTiles.clear()
+        synchronized(completeTiles) {
+            completeTiles.clear()
+            populateCompleteTiles(results)
+        }
 
-        populateCompleteTiles(results)
-        populateIncompleteTiles(results)
-
-        updateIncompleteTilesBasedOnDarts(currentScore)
+        synchronized(pendingTiles) {
+            pendingTiles.clear()
+            populateIncompleteTiles(results)
+            updateIncompleteTilesBasedOnDarts(currentScore)
+        }
     }
 
     private fun populateCompleteTiles(results: List<DartzeeRoundResultEntity>) {
@@ -151,14 +151,17 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>) :
     private fun getFirstIncompleteRule(): DartzeeRuleTilePending? = pendingTiles.firstOrNull()
 
     fun getSegmentStatus(): SegmentStatuses {
-        val statuses = pendingTiles.map { it.getSegmentStatus(dartsThrown) }
-        return SegmentStatuses(
-            statuses.flatMap { it.scoringSegments },
-            statuses.flatMap { it.validSegments },
-        )
+        synchronized(pendingTiles) {
+            val statuses = pendingTiles.map { it.getSegmentStatus(dartsThrown) }
+            return SegmentStatuses(
+                statuses.flatMap { it.scoringSegments },
+                statuses.flatMap { it.validSegments },
+            )
+        }
     }
 
-    fun getAvailableRuleTiles() = pendingTiles.filter { it.isVisible }
+    fun getAvailableRuleTiles() =
+        synchronized(pendingTiles) { pendingTiles.filter { it.isVisible } }
 
     fun selectRule(model: DartsAiModel) {
         val aggressive = model.dartzeePlayStyle == DartzeePlayStyle.AGGRESSIVE
@@ -178,7 +181,9 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>) :
 
     private fun displayTiles(tiles: List<DartzeeRuleTile>) {
         tilePanel.removeAll()
-        tiles.forEach { tilePanel.add(it) }
+
+        synchronized(tiles) { tiles.forEach { tilePanel.add(it) } }
+
         tilePanel.validate()
         tilePanel.repaint()
         tileScroller.validate()

@@ -73,7 +73,7 @@ import io.mockk.verifySequence
 import javax.swing.JButton
 import org.junit.jupiter.api.Test
 
-class TestGamePanelDartzee : AbstractTest() {
+class GamePanelDartzeeTest : AbstractTest() {
     private val ruleResults =
         listOf(
             DartzeeRoundResult(2, true, 50),
