@@ -1,7 +1,7 @@
 # Dartzee
 
 [![Build Status](https://github.com/alyssaruth/Dartzee/workflows/CI/badge.svg)](https://github.com/alyssaruth/dartzee/actions)
-![Coverage: 94.05%](https://img.shields.io/badge/coverage-94.05%25-brightgreen)
+![Coverage: 94.36%](https://img.shields.io/badge/coverage-94.36%25-brightgreen)
 
 All rights reserved
 
