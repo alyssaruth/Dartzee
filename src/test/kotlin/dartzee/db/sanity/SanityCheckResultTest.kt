@@ -66,8 +66,6 @@ class SanityCheckResultTest : AbstractTest() {
     class ResultWithDeleteAction(model: DefaultTableModel, private val action: (() -> Unit)) :
         SanityCheckResult(model, "Bah") {
 
-        override fun getDeleteAction(t: ScrollTable): (() -> Unit) {
-            return action
-        }
+        override fun getDeleteAction(t: ScrollTable): (() -> Unit) = action
     }
 }
