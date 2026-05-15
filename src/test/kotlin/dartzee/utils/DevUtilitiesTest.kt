@@ -1,7 +1,6 @@
 package dartzee.utils
 
 import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.db.DartzeeRoundResultEntity
@@ -9,10 +8,9 @@ import dartzee.db.DartzeeRuleEntity
 import dartzee.db.EntityName
 import dartzee.db.ParticipantEntity
 import dartzee.db.TeamEntity
+import dartzee.expectErrorDialog
 import dartzee.game.loadParticipants
 import dartzee.game.prepareParticipants
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
@@ -40,12 +38,13 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
-class TestDevUtilities : AbstractTest() {
+class DevUtilitiesTest : AbstractTest() {
     @Test
     fun `Should show an error and return out if there are no games in the DB`() {
-        DevUtilities.purgeGame()
+        runAsync { DevUtilities.purgeGame() }
 
-        dialogFactory.errorsShown.shouldContainExactly("No games to delete.")
+        expectErrorDialog("No games to delete.")
+
         dialogFactory.inputsShown.shouldBeEmpty()
     }
 
@@ -87,9 +86,7 @@ class TestDevUtilities : AbstractTest() {
 
         runAsync { DevUtilities.purgeGame(10) }
 
-        val dlg = getErrorDialog()
-        dlg.getDialogMessage() shouldBe "No game exists for ID 10"
-        dlg.clickOk()
+        expectErrorDialog("No game exists for ID 10")
         getCountFromTable(EntityName.Game) shouldBe 1
     }
 
@@ -101,9 +98,7 @@ class TestDevUtilities : AbstractTest() {
 
         runAsync { DevUtilities.purgeGame(5) }
 
-        val dlg = getErrorDialog()
-        dlg.getDialogMessage() shouldBe "Cannot delete a game that's open."
-        dlg.clickOk()
+        expectErrorDialog("Cannot delete a game that's open.")
         getCountFromTable(EntityName.Game) shouldBe 1
     }
 

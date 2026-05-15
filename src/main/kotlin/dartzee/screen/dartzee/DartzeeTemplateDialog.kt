@@ -48,13 +48,13 @@ class DartzeeTemplateDialog(private val confirmedCallback: () -> Unit) : SimpleD
 
     private fun valid(): Boolean {
         if (tfName.text.isEmpty()) {
-            DialogUtil.showErrorOLD("You must enter a name.")
+            DialogUtil.showError("You must enter a name.")
             tfName.requestFocus()
             return false
         }
 
         if (rulePanel.getRules().size < 2) {
-            DialogUtil.showErrorOLD("You must create at least 2 rules.")
+            DialogUtil.showError("You must create at least 2 rules.")
             return false
         }
 

@@ -8,15 +8,17 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleInner
 import dartzee.dartzee.dart.DartzeeDartRuleScore
 import dartzee.dartzee.getAllDartRules
+import dartzee.expectErrorDialog
+import dartzee.findErrorDialog
 import dartzee.helper.AbstractTest
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContain
+import dartzee.runAsync
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 
-class TestAbstractDartzeeRuleSelector : AbstractTest() {
+class AbstractDartzeeRuleSelectorTest : AbstractTest() {
     @Test
     fun `Should render the description passed to it`() {
         val selector = FakeDartzeeRuleSelector("foo")
@@ -40,8 +42,12 @@ class TestAbstractDartzeeRuleSelector : AbstractTest() {
         val selector = FakeDartzeeRuleSelector("foo")
         selector.populate(DartzeeDartRuleColour())
 
-        selector.valid() shouldBe false
-        dialogFactory.errorsShown shouldContain "foo: You must select at least one colour."
+        var valid: Boolean? = null
+        runAsync { valid = selector.valid() }
+
+        expectErrorDialog("foo: You must select at least one colour.")
+
+        valid shouldBe false
     }
 
     @Test
@@ -49,8 +55,11 @@ class TestAbstractDartzeeRuleSelector : AbstractTest() {
         val selector = FakeDartzeeRuleSelector("foo")
         selector.populate(DartzeeDartRuleEven())
 
-        selector.valid() shouldBe true
-        dialogFactory.errorsShown.shouldBeEmpty()
+        var valid: Boolean? = null
+        runAsync { valid = selector.valid() }
+
+        findErrorDialog().shouldBeNull()
+        valid shouldBe true
     }
 
     @Test

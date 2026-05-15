@@ -243,23 +243,52 @@ fun FileUploader.uploadFileFromResource(resourceName: String) {
     flushEdt()
 }
 
+fun expectErrorDialog(message: String) {
+    val error = getErrorDialog { it.isVisible }
+    error.getDialogMessage() shouldBe message
+    error.clickOk(async = true)
+}
+
+fun waitForErrorDialog(message: String) {
+    waitForAssertion { findErrorDialog() shouldNotBe null }
+
+    expectErrorDialog(message)
+}
+
+fun expectInfoDialog(message: String) {
+    val info = getInfoDialog()
+    info.getDialogMessage() shouldBe message
+    info.clickOk(async = true)
+}
+
+fun waitForInfoDialog(message: String) {
+    waitForAssertion { findInfoDialog() shouldNotBe null }
+
+    expectInfoDialog(message)
+}
+
 fun findLoadingDialog(text: String) = findWindow<LoadingDialog> { it.message == text }
 
-fun getInfoDialog() = findInfoDialog()!!
+private fun getInfoDialog() = findInfoDialog()!!
 
-fun findInfoDialog() = findOptionPaneDialog("Information")
+private fun findInfoDialog() = findOptionPaneDialog("Information")
 
 fun getQuestionDialog() = findQuestionDialog()!!
 
 fun findQuestionDialog() = findOptionPaneDialog("Question")
 
-fun getErrorDialog() = findErrorDialog()!!
+fun getErrorDialog(predicate: (window: JDialog) -> Boolean = { true }) =
+    findErrorDialog(predicate)!!
 
-fun findErrorDialog() = findOptionPaneDialog("Error")
+fun findErrorDialog(predicate: (window: JDialog) -> Boolean = { true }) =
+    findOptionPaneDialog("Error", predicate)
 
 fun waitForQuestionDialog(): JDialog = waitForWindow<JDialog> { it.title == "Question" }
 
-private fun findOptionPaneDialog(title: String) = findWindow<JDialog> { it.title == title }
+private fun findOptionPaneDialog(
+    title: String,
+    predicate: (window: JDialog) -> Boolean = { true },
+) = findWindow<JDialog> { it.title == title && predicate(it) }
 
 fun JDialog.getDialogMessage(): String {
     val messageLabels = findAll<JLabel>().filter { it.name == "OptionPane.label" }

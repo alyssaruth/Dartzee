@@ -6,16 +6,15 @@ import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.screen.ProgressDialog
 import dartzee.db.EntityName
+import dartzee.expectErrorDialog
 import dartzee.findQuestionDialog
 import dartzee.game.GameType
 import dartzee.getDialogMessage
-import dartzee.getErrorDialog
 import dartzee.getWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
@@ -54,8 +53,7 @@ class SimulationRunnerTest : AbstractTest() {
 
         verifyLog(CODE_SIMULATION_ERROR, Severity.ERROR)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "A serious problem has occurred with the simulation."
+        expectErrorDialog("A serious problem has occurred with the simulation.")
 
         findResultsWindow() shouldBe null
         getWindow<ProgressDialog>().shouldNotBeVisible()
@@ -80,8 +78,7 @@ class SimulationRunnerTest : AbstractTest() {
         val runner = SimulationRunner()
         runner.runSimulation(blockingSimulation, 5, false)
 
-        val progressDialog = waitForWindow<ProgressDialog>()
-        progressDialog.shouldBeVisible()
+        val progressDialog = waitForWindow<ProgressDialog> { it.isVisible }
         progressDialog.clickCancel()
         lock.unlock()
 

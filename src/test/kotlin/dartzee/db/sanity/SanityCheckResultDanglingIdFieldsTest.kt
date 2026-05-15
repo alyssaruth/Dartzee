@@ -4,21 +4,23 @@ import com.github.alyssaburlton.swingtest.clickNo
 import com.github.alyssaburlton.swingtest.clickYes
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
+import dartzee.expectErrorDialog
+import dartzee.expectInfoDialog
 import dartzee.getDialogMessage
-import dartzee.getErrorDialog
-import dartzee.getInfoDialog
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertGame
 import dartzee.helper.randomGuid
+import dartzee.logging.CODE_SQL_EXCEPTION
+import dartzee.logging.Severity
 import dartzee.runAsync
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
-class TestSanityCheckResultDanglingIdFields : AbstractTest() {
+class SanityCheckResultDanglingIdFieldsTest : AbstractTest() {
     @Test
     fun `Should allow auto fix to be cancelled`() {
         val games = (1..10).map { insertGame() }
@@ -45,9 +47,7 @@ class TestSanityCheckResultDanglingIdFields : AbstractTest() {
         getCountFromTable(EntityName.Game) shouldBe 0
         getCountFromTable(EntityName.DeletionAudit) shouldBe 10
 
-        val i = getInfoDialog()
-        i.getDialogMessage() shouldBe
-            "Rows deleted successfully. You should re-run the sanity check."
+        expectInfoDialog("Rows deleted successfully. You should re-run the sanity check.")
     }
 
     @Test
@@ -68,8 +68,7 @@ class TestSanityCheckResultDanglingIdFields : AbstractTest() {
         q.getDialogMessage() shouldBe "Are you sure you want to delete 1 rows from Foo?"
         q.clickYes(async = true)
 
-        val e = getErrorDialog()
-        e.getDialogMessage() shouldBe "An error occurred deleting the rows."
-        errorLogged() shouldBe true
+        expectErrorDialog("An error occurred deleting the rows.")
+        verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
     }
 }

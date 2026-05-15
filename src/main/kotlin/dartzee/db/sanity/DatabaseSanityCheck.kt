@@ -62,7 +62,7 @@ object DatabaseSanityCheck {
         val dlg = ProgressDialog.factory("Running Sanity Check", "checks remaining", checks.size)
         dlg.setVisibleLater()
 
-        val sanityErrors = mutableListOf<AbstractSanityCheckResult>()
+        val sanityErrors = mutableListOf<SanityCheckResult>()
 
         try {
             checks.forEach { check ->
@@ -79,7 +79,7 @@ object DatabaseSanityCheck {
         runOnEventThread { sanityCheckComplete(sanityErrors) }
     }
 
-    private fun sanityCheckComplete(sanityErrors: List<AbstractSanityCheckResult>) {
+    private fun sanityCheckComplete(sanityErrors: List<SanityCheckResult>) {
         logger.info(
             CODE_SANITY_CHECK_COMPLETED,
             "Completed sanity check and found ${sanityErrors.size} issues",
@@ -88,8 +88,8 @@ object DatabaseSanityCheck {
         sanityErrors.forEach { error ->
             logger.info(
                 CODE_SANITY_CHECK_RESULT,
-                "${error.getCount()} ${error.getDescription()}",
-                KEY_SANITY_DESCRIPTION to error.getDescription(),
+                "${error.getCount()} ${error.description}",
+                KEY_SANITY_DESCRIPTION to error.description,
                 KEY_SANITY_COUNT to error.getCount(),
             )
         }
@@ -129,9 +129,7 @@ object DatabaseSanityCheck {
         }
     }
 
-    private fun buildResultsModel(
-        sanityErrors: List<AbstractSanityCheckResult>
-    ): DefaultTableModel {
+    private fun buildResultsModel(sanityErrors: List<SanityCheckResult>): DefaultTableModel {
         val model = DefaultModel()
         model.addColumn("Description")
         model.addColumn("Count")
@@ -140,19 +138,14 @@ object DatabaseSanityCheck {
 
         for (result in sanityErrors) {
             val row =
-                arrayOf<Any>(
-                    result.getDescription(),
-                    result.getCount(),
-                    "View Results >",
-                    "Auto-fix",
-                )
+                arrayOf<Any>(result.description, result.getCount(), "View Results >", "Auto-fix")
             model.addRow(row)
         }
 
         return model
     }
 
-    private fun showResultsBreakdown(result: AbstractSanityCheckResult) {
+    private fun showResultsBreakdown(result: SanityCheckResult) {
         val dlg = result.getResultsDialog()
         dlg.setSize(800, 600)
         dlg.setLocationRelativeTo(ScreenCache.mainScreen)

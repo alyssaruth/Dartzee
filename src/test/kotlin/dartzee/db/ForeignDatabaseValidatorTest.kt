@@ -1,8 +1,6 @@
 package dartzee.db
 
-import com.github.alyssaburlton.swingtest.clickOk
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
+import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_MERGE_ERROR
@@ -15,7 +13,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
-class TestForeignDatabaseValidator : AbstractTest() {
+class ForeignDatabaseValidatorTest : AbstractTest() {
     @Test
     fun `Should return false if connecting to remote database fails`() {
         val remote = mockk<Database>()
@@ -25,10 +23,7 @@ class TestForeignDatabaseValidator : AbstractTest() {
         var result = true
         runAsync { result = validator.validateAndMigrateForeignDatabase(remote, "remote") }
 
-        val dlg = getErrorDialog()
-        dlg.getDialogMessage() shouldBe "An error occurred connecting to the remote database."
-        dlg.clickOk(async = true)
-
+        expectErrorDialog("An error occurred connecting to the remote database.")
         result shouldBe false
     }
 
@@ -44,9 +39,7 @@ class TestForeignDatabaseValidator : AbstractTest() {
             result = validator.validateAndMigrateForeignDatabase(remoteDatabase, "selected")
         }
 
-        val dlg = getErrorDialog()
-        dlg.getDialogMessage() shouldBe "An error occurred connecting to the selected database."
-        dlg.clickOk(async = true)
+        expectErrorDialog("An error occurred connecting to the selected database.")
 
         val log = verifyLog(CODE_MERGE_ERROR, Severity.ERROR)
         log.message shouldBe
@@ -65,11 +58,9 @@ class TestForeignDatabaseValidator : AbstractTest() {
                 result = validator.validateAndMigrateForeignDatabase(remoteDatabase, "other")
             }
 
-            val dlg = getErrorDialog()
-            dlg.getDialogMessage() shouldBe
+            expectErrorDialog(
                 "The other database contains data written by a higher Dartzee version. \n\nYou will need to update to the latest version of Dartzee before continuing."
-            dlg.clickOk(async = true)
-
+            )
             result shouldBe false
         }
     }
@@ -90,12 +81,10 @@ class TestForeignDatabaseValidator : AbstractTest() {
             val dbDetails =
                 "Other version: $dbVersion, min supported: ${DartsDatabaseUtil.DATABASE_VERSION}, current: ${DartsDatabaseUtil.DATABASE_VERSION}"
 
-            val dlg = getErrorDialog()
-            dlg.getDialogMessage() shouldBe
+            expectErrorDialog(
                 "Other database is too out-of-date to be upgraded by this version of Dartzee. " +
                     "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails"
-
-            dlg.clickOk(async = true)
+            )
             result shouldBe false
         }
     }

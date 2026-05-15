@@ -2,15 +2,13 @@ package dartzee.bean
 
 import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.purgeWindows
 import dartzee.core.bean.FileUploader
 import dartzee.core.bean.IFileUploadListener
 import dartzee.core.bean.selectedItemTyped
 import dartzee.core.helper.verifyNotCalled
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
+import dartzee.expectErrorDialog
 import dartzee.getFileChooser
 import dartzee.helper.AbstractTest
 import dartzee.preferences.Preferences
@@ -28,7 +26,7 @@ import javax.swing.JTextField
 import javax.swing.filechooser.FileNameExtensionFilter
 import org.junit.jupiter.api.Test
 
-class TestFileUploader : AbstractTest() {
+class FileUploaderTest : AbstractTest() {
     @Test
     fun `Should error if upload is pressed with no file`() {
         val uploader = FileUploader(FileNameExtensionFilter("all", "*"))
@@ -36,9 +34,7 @@ class TestFileUploader : AbstractTest() {
         uploader.addFileUploadListener(listener)
         uploader.clickChild<JButton>(text = "Upload", async = true)
 
-        val dlg = getErrorDialog()
-        dlg.getDialogMessage() shouldBe "You must select a file to upload."
-        dlg.clickOk()
+        expectErrorDialog("You must select a file to upload.")
 
         verifyNotCalled { listener.fileUploaded(any()) }
     }

@@ -1,20 +1,17 @@
 package dartzee.screen
 
 import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.GameSetupPlayerSelector
 import dartzee.core.helper.verifyNotCalled
+import dartzee.expectErrorDialog
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.game.X01_PARTY_CONFIG
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.preparePlayers
 import dartzee.utils.InjectedThings
-import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import javax.swing.JButton
@@ -35,9 +32,7 @@ class TestSimplePlayerSelectionScreen : AbstractTest() {
         screen.postInit()
         screen.clickChild<JButton>("Next", async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "You must select at least 1 player."
-        error.clickOk()
+        expectErrorDialog("You must select at least 1 player.")
         verifyNotCalled { gameLauncher.launchNewGame(any()) }
     }
 

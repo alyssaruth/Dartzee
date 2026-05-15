@@ -1,16 +1,10 @@
 package dartzee.sync
 
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DeletionAuditEntity
 import dartzee.db.EntityName
 import dartzee.db.SyncAuditEntity
-import dartzee.findErrorDialog
-import dartzee.findInfoDialog
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
-import dartzee.getInfoDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.LOG_DUMP_FILE
 import dartzee.helper.REMOTE_NAME
@@ -31,9 +25,10 @@ import dartzee.runAsync
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
+import dartzee.waitForErrorDialog
+import dartzee.waitForInfoDialog
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.mockk.every
 import io.mockk.mockk
@@ -93,12 +88,9 @@ class SyncManagerTest : AbstractTest() {
         var t: Thread? = null
         runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
 
-        waitForAssertion { findErrorDialog() shouldNotBe null }
-
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe
+        waitForErrorDialog(
             "A connection error occurred. Check your internet connection and try again."
-        error.clickOk(async = true)
+        )
 
         waitForAssertion {
             val log = verifyLog(CODE_SYNC_ERROR, Severity.WARN)
@@ -118,11 +110,8 @@ class SyncManagerTest : AbstractTest() {
 
         var t: Thread? = null
         runAsync { t = SyncManager(store).doSync("Goomba") }
-        waitForAssertion { findErrorDialog() shouldNotBe null }
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "An error occurred connecting to the remote database."
-        error.clickOk(async = true)
+        waitForErrorDialog("An error occurred connecting to the remote database.")
 
         waitForAssertion { syncDirectoryShouldNotExist() }
         t!!.join()
@@ -138,12 +127,8 @@ class SyncManagerTest : AbstractTest() {
 
             var t: Thread? = null
             runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
-            waitForAssertion { findErrorDialog() shouldNotBe null }
 
-            val error = getErrorDialog()
-            error.getDialogMessage() shouldBe
-                "An unexpected error occurred - no data has been changed."
-            error.clickOk(async = true)
+            waitForErrorDialog("An unexpected error occurred - no data has been changed.")
 
             waitForAssertion {
                 val log = verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
@@ -168,12 +153,8 @@ class SyncManagerTest : AbstractTest() {
 
             var t: Thread? = null
             runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
-            waitForAssertion { findErrorDialog() shouldNotBe null }
 
-            val error = getErrorDialog()
-            error.getDialogMessage() shouldBe
-                "Sync resulted in missing data. \n\nResults have been discarded."
-            error.clickOk(async = true)
+            waitForErrorDialog("Sync resulted in missing data. \n\nResults have been discarded.")
 
             waitForAssertion {
                 val log = verifyLog(CODE_SYNC_ERROR, Severity.ERROR)
@@ -199,8 +180,7 @@ class SyncManagerTest : AbstractTest() {
 
             var t: Thread? = null
             runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
-            waitForAssertion { findInfoDialog() shouldNotBe null }
-            getInfoDialog().clickOk(async = true)
+            waitForInfoDialog("Sync completed successfully!\n\nGames pushed: 0\n\nGames pulled: 0")
 
             waitForAssertion {
                 syncDirectoryShouldNotExist()
@@ -222,14 +202,10 @@ class SyncManagerTest : AbstractTest() {
 
             var t: Thread? = null
             runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
-            waitForAssertion { findErrorDialog() shouldNotBe null }
 
-            val error = getErrorDialog()
-            error.getDialogMessage() shouldBe
-                "Another sync has been performed since this one started. \n" +
-                    "\n" +
-                    "Results have been discarded."
-            error.clickOk(async = true)
+            waitForErrorDialog(
+                "Another sync has been performed since this one started. \n\nResults have been discarded."
+            )
 
             waitForAssertion {
                 val log = verifyLog(CODE_SYNC_ERROR, Severity.WARN)
@@ -251,12 +227,10 @@ class SyncManagerTest : AbstractTest() {
             val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to remoteDb)
             var t: Thread? = null
             runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
-            waitForAssertion { findErrorDialog() shouldNotBe null }
 
-            val error = getErrorDialog()
-            error.getDialogMessage() shouldBe
+            waitForErrorDialog(
                 "Failed to restore database. Error: Failed to rename new file to ${mainDatabase.dbName}"
-            error.clickOk(async = true)
+            )
 
             verifyLog(CODE_FILE_ERROR, Severity.ERROR)
 
@@ -278,8 +252,7 @@ class SyncManagerTest : AbstractTest() {
 
             val manager = SyncManager(dbStore)
             runAsync { manager.doSync(REMOTE_NAME) }
-            waitForAssertion { findErrorDialog() shouldNotBe null }
-            getErrorDialog().clickOk(async = true)
+            waitForErrorDialog("An unexpected error occurred - no data has been changed.")
 
             errorLogged() shouldBe true
         }
@@ -294,13 +267,10 @@ class SyncManagerTest : AbstractTest() {
             val store = InMemoryRemoteDatabaseStore(REMOTE_NAME to remoteDb)
             var t: Thread? = null
             runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
-            waitForAssertion { findInfoDialog() shouldNotBe null }
 
             val summary = "\n\nGames pushed: 1\n\nGames pulled: 1"
             val expectedInfoText = "Sync completed successfully!$summary"
-            val info = getInfoDialog()
-            info.getDialogMessage() shouldBe expectedInfoText
-            info.clickOk(async = true)
+            waitForInfoDialog(expectedInfoText)
 
             waitForAssertion {
                 val resultingRemote = store.fetchDatabase(REMOTE_NAME).database

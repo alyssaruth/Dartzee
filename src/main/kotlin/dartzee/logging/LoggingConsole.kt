@@ -106,7 +106,9 @@ class LoggingConsole : FocusableWindow(), ILogDestination {
 
     fun dumpLogs() {
         val f =
-            File("${System.getProperty("user.dir")}/logdump-${InjectedThings.clock.instant()}.txt")
+            File(
+                "${System.getProperty("user.dir")}/logdump-${InjectedThings.clock.instant().toEpochMilli()}.txt"
+            )
         f.createNewFile()
         f.writeText(getText())
     }

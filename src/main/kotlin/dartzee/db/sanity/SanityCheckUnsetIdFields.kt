@@ -3,9 +3,9 @@ package dartzee.db.sanity
 import dartzee.db.AbstractEntity
 
 class SanityCheckUnsetIdFields(val entity: AbstractEntity<*>) : ISanityCheck {
-    private val sanityErrors = mutableListOf<AbstractSanityCheckResult>()
+    private val sanityErrors = mutableListOf<SanityCheckResult>()
 
-    override fun runCheck(): List<AbstractSanityCheckResult> {
+    override fun runCheck(): List<SanityCheckResult> {
         val idColumns = getIdColumns(entity)
 
         idColumns.forEach { column ->
@@ -23,7 +23,7 @@ class SanityCheckUnsetIdFields(val entity: AbstractEntity<*>) : ISanityCheck {
 
         val count = entities.size
         if (count > 0) {
-            sanityErrors.add(SanityCheckResultUnsetColumns(idColumn, entities))
+            sanityErrors.add(SanityCheckResultEntities(entities, "$idColumn is unset"))
         }
     }
 }

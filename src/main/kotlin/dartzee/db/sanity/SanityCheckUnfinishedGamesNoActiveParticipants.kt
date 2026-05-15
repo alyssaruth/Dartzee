@@ -4,7 +4,7 @@ import dartzee.core.util.getEndOfTimeSqlString
 import dartzee.db.GameEntity
 
 class SanityCheckUnfinishedGamesNoActiveParticipants : ISanityCheck {
-    override fun runCheck(): List<AbstractSanityCheckResult> {
+    override fun runCheck(): List<SanityCheckResult> {
         val sb = StringBuilder()
         sb.append("DtFinish = ${getEndOfTimeSqlString()}")
         sb.append(" AND NOT EXISTS ")
@@ -17,9 +17,12 @@ class SanityCheckUnfinishedGamesNoActiveParticipants : ISanityCheck {
 
         val whereSql = sb.toString()
         val games = GameEntity().retrieveEntities(whereSql, "g")
-        if (games.size > 0) {
+        if (games.isNotEmpty()) {
             return listOf(
-                SanityCheckResultEntitiesSimple(games, "Unfinished games without active players")
+                SanityCheckResultEntities(
+                    games,
+                    "DtFinish is unset but there are no active players",
+                )
             )
         }
 

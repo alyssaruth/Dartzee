@@ -30,7 +30,6 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertTemplateAndRule
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.helper.totalIsFifty
-import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.nulls.shouldBeNull
@@ -235,7 +234,6 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
 
         val dlg = getWindow<DartzeeTemplateDialog>()
         dlg.clickOk()
-        dialogFactory.errorsShown.shouldBeEmpty()
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 2
         val templates = listOf(scrn.getTemplate(0), scrn.getTemplate(1)).map { it.name }

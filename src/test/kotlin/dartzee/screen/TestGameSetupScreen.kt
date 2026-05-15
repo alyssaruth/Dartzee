@@ -1,7 +1,6 @@
 package dartzee.screen
 
 import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
@@ -18,14 +17,13 @@ import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartsMatchEntity
 import dartzee.db.EntityName
 import dartzee.db.PlayerEntity
+import dartzee.expectErrorDialog
 import dartzee.game.FinishType
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
 import dartzee.game.GameType
 import dartzee.game.MatchMode
 import dartzee.game.X01Config
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.insertDartzeeTemplate
@@ -75,9 +73,7 @@ class TestGameSetupScreen : AbstractTest() {
         val screen = GameSetupScreen()
         screen.clickChild<JButton>(text = "Launch Game", async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "You must select at least 1 player."
-        error.clickOk()
+        expectErrorDialog("You must select at least 1 player.")
         verifyNotCalled { gameLauncher.launchNewGame(any()) }
     }
 
@@ -260,9 +256,7 @@ class TestGameSetupScreen : AbstractTest() {
         setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
         setupScreen.clickChild<JButton>("Next", async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "You must select at least 1 player."
-        error.clickOk()
+        expectErrorDialog("You must select at least 1 player.")
 
         val currentScreen = ScreenCache.currentScreen()
         currentScreen.shouldNotBeInstanceOf<DartzeeRuleSetupScreen>()

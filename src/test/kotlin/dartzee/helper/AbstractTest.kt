@@ -34,7 +34,7 @@ private var checkedForExceptions = false
 
 const val TEST_ROOT = "Test/"
 const val TEST_DB_DIRECTORY = "Test/Databases"
-val LOG_DUMP_FILE = File("logdump-${CURRENT_TIME}.txt")
+val LOG_DUMP_FILE = File("logdump-${CURRENT_TIME.toEpochMilli()}.txt")
 
 @ExtendWith(BeforeAllTestsExtension::class)
 @ExtendWith(SwingTestCleanupExtension::class)

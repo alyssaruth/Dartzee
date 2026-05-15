@@ -1,15 +1,13 @@
 package dartzee.screen
 
 import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.lgooddatepicker.components.DatePicker
 import dartzee.bean.PlayerAvatar
 import dartzee.core.helper.verifyNotCalled
 import dartzee.db.EntityName
 import dartzee.db.PlayerEntity
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
+import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertPlayer
@@ -63,10 +61,7 @@ class HumanConfigurationDialogTest : AbstractTest() {
         dlg.getChild<JTextField>("nameField").text = "Barry"
         dlg.clickOk(async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "You must select an avatar."
-        error.clickOk()
-        flushEdt()
+        expectErrorDialog("You must select an avatar.")
 
         verifyNotCalled { callback(any()) }
         player.name shouldBe ""

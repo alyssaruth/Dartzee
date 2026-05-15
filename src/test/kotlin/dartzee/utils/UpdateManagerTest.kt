@@ -8,6 +8,7 @@ import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.core.bean.LinkLabel
 import dartzee.core.helper.verifyNotCalled
+import dartzee.expectErrorDialog
 import dartzee.findLoadingDialog
 import dartzee.getDialogMessage
 import dartzee.getErrorDialog
@@ -67,8 +68,7 @@ class UpdateManagerTest : AbstractTest() {
             MockResponse().setResponseCode(HttpStatus.NOT_FOUND).setBody("{ \"foo\": \"bar\" }")
         val server = startWebServer(response)
 
-        val errorMessage = queryLatestReleaseJsonExpectingError(server.url("root").toString())
-        errorMessage shouldBe "Failed to check for updates (unable to connect)."
+        queryLatestReleaseJsonExpectingError(server.url("root").toString())
 
         val log = verifyLog(CODE_UPDATE_ERROR, Severity.ERROR)
         log.message shouldBe "Received non-success HTTP status: 404 - Client Error"
@@ -82,8 +82,7 @@ class UpdateManagerTest : AbstractTest() {
         val server =
             startWebServer(MockResponse().apply { socketPolicy = SocketPolicy.DISCONNECT_AT_START })
 
-        val errorMessage = queryLatestReleaseJsonExpectingError(server.url("root").toString())
-        errorMessage shouldBe "Failed to check for updates (unable to connect)."
+        queryLatestReleaseJsonExpectingError(server.url("root").toString())
 
         val errorLog = verifyLog(CODE_UPDATE_ERROR, Severity.ERROR)
         errorLog.errorObject.shouldBeInstanceOf<UnirestException>()
@@ -91,17 +90,12 @@ class UpdateManagerTest : AbstractTest() {
         findLoadingDialog("Checking for updates...")!!.shouldNotBeVisible()
     }
 
-    private fun queryLatestReleaseJsonExpectingError(repositoryUrl: String): String {
+    private fun queryLatestReleaseJsonExpectingError(repositoryUrl: String) {
         val result = runAsync { UpdateManager.queryLatestReleaseJson(repositoryUrl) }
 
-        val error = getErrorDialog()
-        val errorText = error.getDialogMessage()
-
-        error.clickOk()
-        flushEdt()
+        expectErrorDialog("Failed to check for updates (unable to connect).")
 
         result shouldBe null
-        return errorText
     }
 
     @Test
@@ -272,10 +266,9 @@ class UpdateManagerTest : AbstractTest() {
             }
         }
 
-        val errorDialog = getErrorDialog()
-        errorDialog.getDialogMessage() shouldBe
+        expectErrorDialog(
             "Failed to swap in updated file. \n\nDelete the old Dartzee.jar and rename $TEST_JAR_FILE_NAME -> Dartzee.jar"
-        errorDialog.clickOk(async = true)
+        )
 
         val log = verifyLog(CODE_EXEC_ERROR, Severity.ERROR)
         log.errorObject shouldBe error
@@ -366,10 +359,9 @@ class UpdateManagerTest : AbstractTest() {
         request.method shouldBe "GET"
         request.path shouldBe "/root/releases/assets/12345"
 
-        val errorDialog = getErrorDialog()
-        errorDialog.getDialogMessage() shouldBe
+        expectErrorDialog(
             "Failed to swap in updated file. \n\nDelete the old Dartzee.jar and rename $TEST_JAR_FILE_NAME -> Dartzee.jar"
-        errorDialog.clickOk(async = true)
+        )
 
         val log = verifyLog(CODE_EXEC_ERROR, Severity.ERROR)
         log.message shouldBe "Operating system unsupported: foo"

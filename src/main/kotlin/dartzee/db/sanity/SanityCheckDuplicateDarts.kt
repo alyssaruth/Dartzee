@@ -3,7 +3,7 @@ package dartzee.db.sanity
 import dartzee.db.DartEntity
 
 class SanityCheckDuplicateDarts : ISanityCheck {
-    override fun runCheck(): List<AbstractSanityCheckResult> {
+    override fun runCheck(): List<SanityCheckResult> {
         val sb = StringBuilder()
         sb.append(" EXISTS (")
         sb.append(" SELECT 1")
@@ -18,7 +18,7 @@ class SanityCheckDuplicateDarts : ISanityCheck {
         val whereSql = sb.toString()
         val darts = DartEntity().retrieveEntities(whereSql, "drt")
         if (!darts.isEmpty()) {
-            return listOf(SanityCheckResultEntitiesSimple(darts, "Duplicate darts"))
+            return listOf(SanityCheckResultEntities(darts, "a duplicate exists"))
         }
 
         return listOf()

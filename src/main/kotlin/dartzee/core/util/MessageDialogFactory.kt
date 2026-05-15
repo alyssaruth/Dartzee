@@ -23,10 +23,6 @@ class MessageDialogFactory : IMessageDialogFactory {
             defaultOption,
         ) as K?
 
-    override fun showError(text: String) {
-        JOptionPane.showMessageDialog(null, text, "Error", JOptionPane.ERROR_MESSAGE)
-    }
-
     override fun showOption(title: String, message: String, options: List<String>): String? {
         val typedArray = options.toTypedArray()
         val selection =

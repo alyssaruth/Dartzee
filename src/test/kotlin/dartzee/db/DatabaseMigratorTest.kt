@@ -1,8 +1,6 @@
 package dartzee.db
 
-import com.github.alyssaburlton.swingtest.clickOk
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
+import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getTableNames
 import dartzee.helper.usingInMemoryDatabase
@@ -22,7 +20,7 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestDatabaseMigrator : AbstractTest() {
+class DatabaseMigratorTest : AbstractTest() {
     @Test
     fun `Should initialise a fresh database if no version is found`() {
         clearLogs()
@@ -81,11 +79,10 @@ class TestDatabaseMigrator : AbstractTest() {
             val dbDetails =
                 "Test version: $oldVersion, min supported: 13, current: $DATABASE_VERSION"
 
-            val errorDialog = getErrorDialog()
-            errorDialog.getDialogMessage() shouldBe
+            expectErrorDialog(
                 "Test database is too out-of-date to be upgraded by this version of Dartzee. " +
                     "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails"
-            errorDialog.clickOk(async = true)
+            )
 
             verifyLog(CODE_DATABASE_TOO_OLD, Severity.WARN)
             database.getTableNames().shouldContainExactly("VERSION")

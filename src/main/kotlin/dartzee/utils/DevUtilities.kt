@@ -18,7 +18,7 @@ object DevUtilities {
     fun purgeGame() {
         val gameIds = getAllGameIds()
         if (gameIds == null) {
-            DialogUtil.showErrorOLD("No games to delete.")
+            DialogUtil.showError("No games to delete.")
             return
         }
 

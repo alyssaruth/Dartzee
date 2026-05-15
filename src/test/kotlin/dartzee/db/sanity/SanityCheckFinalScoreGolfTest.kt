@@ -13,7 +13,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test
 
-class TestSanityCheckFinalScoreGolf : AbstractTest() {
+class SanityCheckFinalScoreGolfTest : AbstractTest() {
     @Test
     fun `Should take the score from the latest dart thrown`() {
         val pt = setUpParticipant(4)
@@ -104,7 +104,7 @@ class TestSanityCheckFinalScoreGolf : AbstractTest() {
 
         val result = results.first()
         result.shouldBeInstanceOf<SanityCheckResultFinalScoreMismatch>()
-        result.getDescription() shouldBe "FinalScores that don't match the raw data (Golf)"
+        result.description shouldBe "FinalScores that don't match the raw data (Golf)"
         result.getCount() shouldBe 1
     }
 

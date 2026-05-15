@@ -9,7 +9,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import org.junit.jupiter.api.Test
 
-class TestSanityCheckUnsetIdFields : AbstractTest() {
+class SanityCheckUnsetIdFieldsTest : AbstractTest() {
     @Test
     fun `Should not flag up ID fields which are allowed to be unset`() {
         insertGame(dartsMatchId = "")
@@ -24,7 +24,7 @@ class TestSanityCheckUnsetIdFields : AbstractTest() {
 
         val results = SanityCheckUnsetIdFields(ParticipantEntity()).runCheck()
         results
-            .map { it.getDescription() }
+            .map { it.description }
             .shouldContainExactlyInAnyOrder(
                 "Participant rows where GameId is unset",
                 "Participant rows where PlayerId is unset",

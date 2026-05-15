@@ -182,7 +182,7 @@ class DartzeeRuleCreationDialog(
         val calculationResult = rule.runStrengthCalculation()
         val combinations = calculationResult.validCombinations
         if (combinations == 0) {
-            DialogUtil.showErrorOLD("This rule is impossible!")
+            DialogUtil.showError("This rule is impossible!")
             return
         }
 
@@ -224,12 +224,12 @@ class DartzeeRuleCreationDialog(
             val ruleName = tfRuleName.text
 
             if (ruleName.isBlank()) {
-                DialogUtil.showErrorOLD("You cannot have an empty rule name.")
+                DialogUtil.showError("You cannot have an empty rule name.")
                 return false
             }
 
             if (ruleName.length > MAX_RULE_NAME) {
-                DialogUtil.showErrorOLD("Rule name cannot exceed $MAX_RULE_NAME characters.")
+                DialogUtil.showError("Rule name cannot exceed $MAX_RULE_NAME characters.")
                 return false
             }
         }

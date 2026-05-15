@@ -1,7 +1,6 @@
 package dartzee.screen.game
 
 import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
@@ -22,10 +21,9 @@ import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
+import dartzee.expectInfoDialog
 import dartzee.game.GameType
 import dartzee.game.loadParticipants
-import dartzee.getDialogMessage
-import dartzee.getInfoDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.AchievementSummary
 import dartzee.helper.beastDartsModel
@@ -117,9 +115,7 @@ class TestGamePanelDartzee : AbstractTest() {
         val panel = makeGamePanel(testRules, game = g, parentWindow = parentWindow)
         panel.clickChild<JButton>("convertToTemplate", async = true)
 
-        val info = getInfoDialog()
-        info.getDialogMessage() shouldBe "Template 'The Jeneration Game' successfully created."
-        info.clickOk(async = true)
+        expectInfoDialog("Template 'The Jeneration Game' successfully created.")
 
         val templateId = panel.gameEntity.gameParams
         templateId.shouldNotBeEmpty()

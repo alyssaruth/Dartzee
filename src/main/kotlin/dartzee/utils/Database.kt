@@ -192,7 +192,7 @@ class Database(
                     )
             ) {
                 logger.warn(CODE_DATABASE_IN_USE, "Failed multiple instance check, exiting.")
-                DialogUtil.showErrorOLD("Database already in use - Dartzee will now exit.")
+                DialogUtil.showError("Database already in use - Dartzee will now exit.")
                 InjectedThings.exiter.exit(1)
             } else {
                 logger.logSqlException("", "", sqle)

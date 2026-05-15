@@ -1,7 +1,6 @@
 package dartzee.db.sanity
 
 import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
@@ -10,8 +9,8 @@ import dartzee.core.helper.processKeyPress
 import dartzee.db.EntityName
 import dartzee.db.FakeEntity
 import dartzee.db.PlayerEntity
+import dartzee.expectErrorDialog
 import dartzee.getDialogMessage
-import dartzee.getErrorDialog
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
@@ -22,12 +21,12 @@ import io.kotest.matchers.shouldBe
 import java.awt.event.KeyEvent
 import org.junit.jupiter.api.Test
 
-class SanityCheckResultEntitiesSimpleTest : AbstractTest() {
+class SanityCheckResultEntitiesTest : AbstractTest() {
     @Test
     fun `Should not delete an entity if not confirmed`() {
         val p = insertPlayer(name = "Alyssa")
 
-        val result = SanityCheckResultEntitiesSimple(listOf(p), "No Alyssas allowed!")
+        val result = SanityCheckResultEntities(listOf(p), "No Alyssas allowed!")
         val dialog = result.getResultsDialog()
 
         val scrollTable = dialog.getChild<ScrollTable>()
@@ -48,7 +47,7 @@ class SanityCheckResultEntitiesSimpleTest : AbstractTest() {
         val p2 = insertPlayer(name = "Bob")
         val p3 = insertPlayer(name = "Claire")
 
-        val result = SanityCheckResultEntitiesSimple(listOf(p1, p3), "foo")
+        val result = SanityCheckResultEntities(listOf(p1, p3), "foo")
         val dialog = result.getResultsDialog()
 
         val scrollTable = dialog.getChild<ScrollTable>()
@@ -72,7 +71,7 @@ class SanityCheckResultEntitiesSimpleTest : AbstractTest() {
         val p2 = insertPlayer(name = "Bob")
         val p3 = insertPlayer(name = "Claire")
 
-        val result = SanityCheckResultEntitiesSimple(listOf(p1, p2, p3), "foo")
+        val result = SanityCheckResultEntities(listOf(p1, p2, p3), "foo")
         val dialog = result.getResultsDialog()
 
         val scrollTable = dialog.getChild<ScrollTable>()
@@ -95,7 +94,7 @@ class SanityCheckResultEntitiesSimpleTest : AbstractTest() {
     fun `Should show an error if deletion fails`() {
         val p1 = FakeEntity()
 
-        val result = SanityCheckResultEntitiesSimple(listOf(p1), "foo")
+        val result = SanityCheckResultEntities(listOf(p1), "foo")
         val dialog = result.getResultsDialog()
 
         val scrollTable = dialog.getChild<ScrollTable>()
@@ -109,10 +108,9 @@ class SanityCheckResultEntitiesSimpleTest : AbstractTest() {
         question.clickYes()
         flushEdt()
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe
+        expectErrorDialog(
             "An error occurred deleting the rows. You should re-run the sanity check and check logs."
-        error.clickOk()
+        )
 
         verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
     }

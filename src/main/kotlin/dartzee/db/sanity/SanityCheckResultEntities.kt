@@ -7,11 +7,12 @@ import dartzee.db.AbstractEntity
 import dartzee.utils.InjectedThings.mainDatabase
 import javax.swing.JOptionPane
 
-abstract class AbstractSanityCheckResultEntities(val entities: List<AbstractEntity<*>>) :
-    AbstractSanityCheckResult() {
+open class SanityCheckResultEntities(val entities: List<AbstractEntity<*>>, description: String) :
+    SanityCheckResult(
+        TableModelEntity(entities),
+        "${entities.first().getTableName()} rows where $description",
+    ) {
     val entityName = entities.first().getTableName()
-
-    override fun getResultsModel() = TableModelEntity(entities)
 
     override fun getDeleteAction(t: ScrollTable): (() -> Unit)? =
         fun() {
@@ -36,6 +37,4 @@ abstract class AbstractSanityCheckResultEntities(val entities: List<AbstractEnti
         val rowIds = selectedRows.indices.map { t.getNonNullValueAt(selectedRows[it], 0) as String }
         return mainDatabase.deleteRowsFromTable(entityName, rowIds)
     }
-
-    override fun getCount() = entities.size
 }

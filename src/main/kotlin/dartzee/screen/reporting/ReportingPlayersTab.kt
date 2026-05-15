@@ -35,9 +35,9 @@ class ReportingPlayersTab : JPanel(), ActionListener, RowSelectionListener {
     val rdbtnExclude = JRadioButton("None of the selected players")
     private val panelTable = JPanel()
     private val panelTableButtons = JPanel()
-    val scrollTable = ScrollTable()
+    private val scrollTable = ScrollTable()
     private val btnAddPlayer = JButton("")
-    val btnRemovePlayer = JButton("")
+    private val btnRemovePlayer = JButton("")
 
     var includedPlayerPanel = PlayerParametersPanel().also { it.disableAll() }
 
@@ -60,6 +60,7 @@ class ReportingPlayersTab : JPanel(), ActionListener, RowSelectionListener {
         btnAddPlayer.icon =
             ImageIcon(ReportingSetupScreen::class.java.getResource("/buttons/addPlayer.png"))
         panelTableButtons.add(btnAddPlayer)
+        btnRemovePlayer.name = "RemovePlayer"
         btnRemovePlayer.icon =
             ImageIcon(ReportingSetupScreen::class.java.getResource("/buttons/removePlayer.png"))
         btnRemovePlayer.preferredSize = Dimension(30, 30)
@@ -114,7 +115,7 @@ class ReportingPlayersTab : JPanel(), ActionListener, RowSelectionListener {
     private fun removePlayers() {
         val playersToRemove = scrollTable.getSelectedPlayers()
         if (playersToRemove.isEmpty()) {
-            DialogUtil.showErrorOLD("You must select player(s) to remove.")
+            DialogUtil.showError("You must select player(s) to remove.")
             return
         }
 

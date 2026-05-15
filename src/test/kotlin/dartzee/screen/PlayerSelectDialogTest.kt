@@ -3,16 +3,16 @@ package dartzee.screen
 import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.bean.getAllPlayers
 import dartzee.core.helper.doubleClick
+import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
-import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import javax.swing.ListSelectionModel
 import org.junit.jupiter.api.Test
 
-class TestPlayerSelectDialog : AbstractTest() {
+class PlayerSelectDialogTest : AbstractTest() {
     @Test
     fun `Should not display excluded players`() {
         val bob = insertPlayer(name = "Bob")
@@ -48,8 +48,8 @@ class TestPlayerSelectDialog : AbstractTest() {
         val dlg = PlayerSelectDialog(ListSelectionModel.SINGLE_SELECTION)
         dlg.buildTable()
 
-        dlg.clickOk()
-        dialogFactory.errorsShown.shouldContainExactly("You must select at least one player.")
+        dlg.clickOk(async = true)
+        expectErrorDialog("You must select at least one player.")
     }
 
     @Test
@@ -62,7 +62,6 @@ class TestPlayerSelectDialog : AbstractTest() {
         dlg.tablePlayers.selectRow(0)
         dlg.clickOk()
 
-        dialogFactory.errorsShown.shouldBeEmpty()
         dlg.selectedPlayers.size shouldBe 1
     }
 
@@ -76,7 +75,6 @@ class TestPlayerSelectDialog : AbstractTest() {
         dlg.tablePlayers.selectRow(0)
         dlg.tablePlayers.doubleClick()
 
-        dialogFactory.errorsShown.shouldBeEmpty()
         dlg.selectedPlayers.size shouldBe 1
     }
 

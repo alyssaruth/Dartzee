@@ -1,35 +1,43 @@
 package dartzee.screen.reporting
 
+import com.github.alyssaburlton.swingtest.clickChild
+import com.github.alyssaburlton.swingtest.getChild
+import dartzee.core.bean.ScrollTable
+import dartzee.expectErrorDialog
+import dartzee.findErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeIncludedPlayerParameters
 import dartzee.reporting.IncludedPlayerParameters
+import dartzee.runAsync
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.maps.shouldBeEmpty
 import io.kotest.matchers.maps.shouldContainExactly
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
+import javax.swing.JButton
 import org.junit.jupiter.api.Test
 
-class TestReportingPlayersTab : AbstractTest() {
+class ReportingPlayersTabTest : AbstractTest() {
     @Test
     fun `Should initialise with an empty player table`() {
         val tab = ReportingPlayersTab()
-        tab.scrollTable.lblRowCount.text shouldBe "0 players"
+        tab.getChild<ScrollTable>().lblRowCount.text shouldBe "0 players"
     }
 
     @Test
     fun `Should show an error if trying to remove without a selected row`() {
         val tab = ReportingPlayersTab()
         tab.addPlayers(listOf(insertPlayer()))
-        tab.scrollTable.selectRow(-1)
+        tab.getChild<ScrollTable>().selectRow(-1)
 
-        tab.btnRemovePlayer.doClick()
+        tab.clickChild<JButton>("RemovePlayer", async = true)
 
-        tab.scrollTable.rowCount shouldBe 1
-        dialogFactory.errorsShown.shouldContainExactly("You must select player(s) to remove.")
+        expectErrorDialog("You must select player(s) to remove.")
+        tab.getChild<ScrollTable>().rowCount shouldBe 1
     }
 
     @Test
@@ -41,8 +49,9 @@ class TestReportingPlayersTab : AbstractTest() {
         tab.includedPlayerPanel.enabled() shouldBe true
         tab.includedPlayerPanel.chckbxFinalScore.doClick()
 
-        tab.btnRemovePlayer.doClick()
-        tab.scrollTable.rowCount shouldBe 0
+        tab.clickChild<JButton>("RemovePlayer", async = true)
+        findErrorDialog().shouldBeNull()
+        tab.getChild<ScrollTable>().rowCount shouldBe 0
 
         tab.addPlayers(listOf(p))
 
@@ -60,15 +69,15 @@ class TestReportingPlayersTab : AbstractTest() {
         tab.includedPlayerPanel.enabled() shouldBe true
         tab.includedPlayerPanel.chckbxFinalScore.doClick()
 
-        tab.scrollTable.selectRow(1)
+        tab.getChild<ScrollTable>().selectRow(1)
         tab.includedPlayerPanel.enabled() shouldBe true
         tab.includedPlayerPanel.chckbxFinalScore.isSelected shouldBe false
 
-        tab.scrollTable.selectRow(0)
+        tab.getChild<ScrollTable>().selectRow(0)
         tab.includedPlayerPanel.enabled() shouldBe true
         tab.includedPlayerPanel.chckbxFinalScore.isSelected shouldBe true
 
-        tab.scrollTable.selectRow(-1)
+        tab.getChild<ScrollTable>().selectRow(-1)
         tab.includedPlayerPanel.enabled() shouldBe false
         tab.includedPlayerPanel.chckbxFinalScore.isSelected shouldBe false
 
@@ -77,7 +86,7 @@ class TestReportingPlayersTab : AbstractTest() {
         tab.rdbtnExclude.doClick()
         tab.components.toList().shouldNotContain(tab.includedPlayerPanel)
 
-        tab.scrollTable.selectRow(0)
+        tab.getChild<ScrollTable>().selectRow(0)
         tab.components.toList().shouldNotContain(tab.includedPlayerPanel)
 
         tab.rdbtnInclude.doClick()
@@ -153,27 +162,27 @@ class TestReportingPlayersTab : AbstractTest() {
 
         // Make both invalid
         tab.includedPlayerPanel.chckbxPosition.doClick()
-        tab.scrollTable.selectRow(1)
+        tab.getChild<ScrollTable>().selectRow(1)
         tab.includedPlayerPanel.chckbxPosition.doClick()
 
-        tab.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
-            "You must select at least one finishing position for player Alice"
-        )
+        var valid: Boolean? = null
+        runAsync { valid = tab.valid() }
 
-        dialogFactory.errorsShown.clear()
-        tab.scrollTable.selectRow(0)
-        tab.includedPlayerPanel.chckbxPosition.doClick()
-        tab.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
-            "You must select at least one finishing position for player Bob"
-        )
+        expectErrorDialog("You must select at least one finishing position for player Alice")
+        valid shouldBe false
 
-        dialogFactory.errorsShown.clear()
-        tab.scrollTable.selectRow(1)
+        tab.getChild<ScrollTable>().selectRow(0)
         tab.includedPlayerPanel.chckbxPosition.doClick()
-        tab.valid() shouldBe true
-        dialogFactory.errorsShown.shouldBeEmpty()
+        runAsync { valid = tab.valid() }
+
+        expectErrorDialog("You must select at least one finishing position for player Bob")
+        valid shouldBe false
+
+        tab.getChild<ScrollTable>().selectRow(1)
+        tab.includedPlayerPanel.chckbxPosition.doClick()
+        runAsync { valid = tab.valid() }
+        findErrorDialog { it.isVisible }.shouldBeNull()
+        valid shouldBe true
     }
 
     @Test
@@ -188,7 +197,6 @@ class TestReportingPlayersTab : AbstractTest() {
         tab.rdbtnExclude.doClick()
 
         tab.valid() shouldBe true
-        dialogFactory.errorsShown.shouldBeEmpty()
     }
 
     private fun PlayerParametersPanel.enabled() = chckbxFinalScore.isEnabled

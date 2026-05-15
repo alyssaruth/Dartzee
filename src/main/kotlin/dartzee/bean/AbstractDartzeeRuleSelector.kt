@@ -52,10 +52,6 @@ abstract class AbstractDartzeeRuleSelector<BaseRuleType : AbstractDartzeeRule>(v
 
     fun getSelection() = comboBoxRuleType.selectedItemTyped()
 
-    fun setSelected(selected: Boolean) {
-        cbDesc.isSelected = selected
-    }
-
     open fun populate(rule: BaseRuleType?) {
         if (rule != null) {
             val item = comboBoxRuleType.findByConcreteClass(rule.javaClass)!!
@@ -72,7 +68,7 @@ abstract class AbstractDartzeeRuleSelector<BaseRuleType : AbstractDartzeeRule>(v
     fun valid(): Boolean {
         val errorStr = getSelection().validate()
         if (errorStr.isNotEmpty()) {
-            DialogUtil.showErrorOLD("$desc: $errorStr")
+            DialogUtil.showError("$desc: $errorStr")
             return false
         }
 
