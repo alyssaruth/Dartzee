@@ -1,13 +1,11 @@
 package dartzee.utils
 
-import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
+import dartzee.expectInfoDialog
 import dartzee.game.GameType
-import dartzee.getDialogMessage
-import dartzee.getInfoDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.innerOuterInner
@@ -115,9 +113,7 @@ class TestDartzeeUtils : AbstractTest() {
         var result: DartzeeTemplateEntity? = null
         runAsync { result = generateDartzeeTemplateFromGame(g, dtos) }
 
-        val info = getInfoDialog()
-        info.getDialogMessage() shouldBe "Template 'My Template' successfully created."
-        info.clickOk(async = true)
+        expectInfoDialog("Template 'My Template' successfully created.")
 
         result.shouldNotBeNull()
 

@@ -1,11 +1,9 @@
 package dartzee.db.sanity
 
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.ScrollTable
 import dartzee.core.helper.processKeyPress
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
+import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.runAsync
 import io.kotest.matchers.shouldBe
@@ -40,9 +38,7 @@ class SanityCheckResultTest : AbstractTest() {
         val result = SanityCheckResult(DefaultTableModel(), "Things with problems")
         runAsync { result.autoFix() }
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "No auto-fix available."
-        error.clickOk(async = true)
+        expectErrorDialog("No auto-fix available.")
     }
 
     @Test
@@ -67,10 +63,10 @@ class SanityCheckResultTest : AbstractTest() {
         called shouldBe true
     }
 
-    inner class ResultWithDeleteAction(model: DefaultTableModel, private val action: (() -> Unit)) :
+    class ResultWithDeleteAction(model: DefaultTableModel, private val action: (() -> Unit)) :
         SanityCheckResult(model, "Bah") {
 
-        override fun getDeleteAction(t: ScrollTable): (() -> Unit)? {
+        override fun getDeleteAction(t: ScrollTable): (() -> Unit) {
             return action
         }
     }

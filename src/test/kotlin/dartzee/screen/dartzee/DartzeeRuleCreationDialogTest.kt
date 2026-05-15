@@ -25,9 +25,8 @@ import dartzee.dartzee.dart.DartzeeDartRuleInner
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.dart.DartzeeDartRuleOuter
 import dartzee.dartzee.dart.DartzeeDartRuleScore
+import dartzee.expectErrorDialog
 import dartzee.findErrorDialog
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeColourRule
 import dartzee.helper.makeDartzeeRuleDto
@@ -221,9 +220,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
         dlg.clickChild<JCheckBox>(text = "Custom rule name")
         dlg.clickOk(async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "You cannot have an empty rule name."
-        error.clickOk(async = true)
+        expectErrorDialog("You cannot have an empty rule name.")
 
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
@@ -238,9 +235,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
         dlg.tfRuleName.text = ruleName
         dlg.clickOk(async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "Rule name cannot exceed 1000 characters."
-        error.clickOk(async = true)
+        expectErrorDialog("Rule name cannot exceed 1000 characters.")
 
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
@@ -256,9 +251,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
 
         dlg.clickOk(async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "Dart 1: You must select at least one colour."
-        error.clickOk(async = true)
+        expectErrorDialog("Dart 1: You must select at least one colour.")
 
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
@@ -270,10 +263,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
 
         dlg.clickOk(async = true)
 
-        val error2 = getErrorDialog { it.isVisible }
-        error2.getDialogMessage() shouldBe "Dart 2: You must select at least one colour."
-        error2.clickOk(async = true)
-
+        expectErrorDialog("Dart 2: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
 
@@ -283,10 +273,8 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
         }
 
         dlg.clickOk(async = true)
-        val error3 = getErrorDialog { it.isVisible }
-        error3.getDialogMessage() shouldBe "Dart 3: You must select at least one colour."
-        error3.clickOk(async = true)
 
+        expectErrorDialog("Dart 3: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
     }
@@ -302,9 +290,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
 
         dlg.clickOk(async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "Target: You must select at least one colour."
-        error.clickOk(async = true)
+        expectErrorDialog("Target: You must select at least one colour.")
 
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()
@@ -326,9 +312,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
 
         dlg.clickOk(async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "This rule is impossible!"
-        error.clickOk(async = true)
+        expectErrorDialog("This rule is impossible!")
 
         dlg.dartzeeRule shouldBe null
         dlg.shouldBeVisible()

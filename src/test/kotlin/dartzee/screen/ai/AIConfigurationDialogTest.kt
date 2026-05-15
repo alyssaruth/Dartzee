@@ -2,7 +2,6 @@ package dartzee.screen.ai
 
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
@@ -12,8 +11,7 @@ import dartzee.core.bean.selectedItemTyped
 import dartzee.core.helper.verifyNotCalled
 import dartzee.db.EntityName
 import dartzee.db.PlayerEntity
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
+import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertPlayer
@@ -115,10 +113,7 @@ class AIConfigurationDialogTest : AbstractTest() {
         dlg.getChild<JTextField>("nameField").text = "Name"
         dlg.clickOk(async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "You must select an avatar."
-        error.clickOk()
-        flushEdt()
+        expectErrorDialog("You must select an avatar.")
 
         verifyNotCalled { callback(any()) }
         player.name shouldBe ""

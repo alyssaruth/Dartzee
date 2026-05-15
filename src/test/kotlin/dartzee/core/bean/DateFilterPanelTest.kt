@@ -1,8 +1,9 @@
 package dartzee.core.bean
 
 import dartzee.core.util.enableChildren
+import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
-import io.kotest.matchers.collections.shouldContainExactly
+import dartzee.runAsync
 import io.kotest.matchers.shouldBe
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
@@ -26,10 +27,11 @@ class DateFilterPanelTest : AbstractTest() {
         filterPanel.cbDateFrom.date = LocalDate.parse("2020-01-04")
         filterPanel.cbDateTo.date = LocalDate.parse("2020-01-01")
 
-        filterPanel.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
-            "The 'date from' cannot be after the 'date to'"
-        )
+        var valid: Boolean? = null
+        runAsync { valid = filterPanel.valid() }
+
+        expectErrorDialog("The 'date from' cannot be after the 'date to'")
+        valid shouldBe false
     }
 
     @Test

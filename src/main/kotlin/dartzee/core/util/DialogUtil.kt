@@ -39,13 +39,6 @@ object DialogUtil {
         logDialogClosed("CustomError", null)
     }
 
-    @Deprecated("Use showError")
-    fun showErrorOLD(errorText: String) {
-        logDialogShown("Error", "Error", errorText)
-        dialogFactory.showError(errorText)
-        logDialogClosed("Error", null)
-    }
-
     fun showError(errorText: String, parent: Component? = ScreenCache.mainScreen) {
         dismissLoadingDialog()
 

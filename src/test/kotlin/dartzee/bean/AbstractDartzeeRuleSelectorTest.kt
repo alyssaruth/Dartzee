@@ -1,6 +1,5 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.core.bean.findByClass
 import dartzee.core.bean.items
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
@@ -9,9 +8,8 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleInner
 import dartzee.dartzee.dart.DartzeeDartRuleScore
 import dartzee.dartzee.getAllDartRules
+import dartzee.expectErrorDialog
 import dartzee.findErrorDialog
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.runAsync
 import io.kotest.matchers.nulls.shouldBeNull
@@ -47,9 +45,7 @@ class AbstractDartzeeRuleSelectorTest : AbstractTest() {
         var valid: Boolean? = null
         runAsync { valid = selector.valid() }
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "foo: You must select at least one colour."
-        error.clickOk(async = true)
+        expectErrorDialog("foo: You must select at least one colour.")
 
         valid shouldBe false
     }

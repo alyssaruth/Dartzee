@@ -46,7 +46,7 @@ class PlayerParametersPanel : JPanel(), ActionListener {
 
     fun valid(player: PlayerEntity): Boolean {
         if (chckbxPosition.isSelected && getFinishingPositions().isEmpty()) {
-            DialogUtil.showErrorOLD(
+            DialogUtil.showError(
                 "You must select at least one finishing position for player " + player.name
             )
             return false

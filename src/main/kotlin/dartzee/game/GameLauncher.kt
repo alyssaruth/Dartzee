@@ -78,7 +78,7 @@ class GameLauncher {
         // Screen isn't currently visible, so look for the game on the DB
         val gameEntity = GameEntity().retrieveForId(gameId, false)
         if (gameEntity == null) {
-            DialogUtil.showErrorOLD("Game $gameId does not exist.")
+            DialogUtil.showError("Game $gameId does not exist.")
             return
         }
 
@@ -101,7 +101,7 @@ class GameLauncher {
             scrn.gamePanel.loadGame(participants)
         } catch (t: Throwable) {
             logger.error(CODE_LOAD_ERROR, "Failed to load Game ${gameEntity.rowId}", t)
-            DialogUtil.showErrorOLD("Failed to load Game #${gameEntity.localId}")
+            DialogUtil.showError("Failed to load Game #${gameEntity.localId}")
             scrn.dispose()
             ScreenCache.removeDartsGameScreen(scrn)
         }
@@ -126,7 +126,7 @@ class GameLauncher {
             scrn.displayGame(originalGameId)
         } catch (t: Throwable) {
             logger.error(CODE_LOAD_ERROR, "Failed to load Match $matchId", t)
-            DialogUtil.showErrorOLD("Failed to load Match #${match.localId}")
+            DialogUtil.showError("Failed to load Match #${match.localId}")
             scrn.dispose()
             ScreenCache.removeDartsGameScreen(scrn)
         }

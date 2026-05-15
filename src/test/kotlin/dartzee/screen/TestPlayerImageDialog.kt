@@ -9,8 +9,7 @@ import dartzee.core.bean.FileUploader
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerImageEntity
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
+import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayerImage
 import dartzee.only
@@ -50,10 +49,7 @@ class TestPlayerImageDialog : AbstractTest() {
         val dlg = PlayerImageDialog(callback)
         dlg.clickOk(async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "You must select an image."
-        error.clickOk()
-
+        expectErrorDialog("You must select an image.")
         verifyNotCalled { callback(any()) }
     }
 
@@ -82,10 +78,7 @@ class TestPlayerImageDialog : AbstractTest() {
         dlg.getChild<JTabbedPane>().selectTab<JPanel>("uploadTab")
         dlg.uploadResource("/aiModel.json")
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "You must select a valid image file."
-        error.clickOk()
-
+        expectErrorDialog("You must select a valid image file.")
         PlayerImageEntity().retrieveEntities().shouldBeEmpty()
     }
 
@@ -95,10 +88,9 @@ class TestPlayerImageDialog : AbstractTest() {
         dlg.getChild<JTabbedPane>().selectTab<JPanel>("uploadTab")
         dlg.uploadResource("/stats_large.png")
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe
+        expectErrorDialog(
             "The image is too small - it must be at least $PLAYER_IMAGE_WIDTH x $PLAYER_IMAGE_HEIGHT px."
-        error.clickOk()
+        )
 
         dlg.getAllChildComponentsForType<PlayerImageRadio>().shouldBeEmpty()
         PlayerImageEntity().retrieveEntities().shouldBeEmpty()

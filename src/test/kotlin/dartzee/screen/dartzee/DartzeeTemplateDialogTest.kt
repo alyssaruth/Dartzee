@@ -12,27 +12,27 @@ import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
+import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.makeDartzeeRuleCalculationResult
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.only
-import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import javax.swing.JTextField
 import org.junit.jupiter.api.Test
 
-class TestDartzeeTemplateDialog : AbstractTest() {
+class DartzeeTemplateDialogTest : AbstractTest() {
     @Test
     fun `Should show an error if template name not specified`() {
         val (dialog, callback) = showDialog()
-        dialog.clickOk()
+        dialog.clickOk(async = true)
 
-        dialogFactory.errorsShown.shouldContainExactly("You must enter a name.")
+        expectErrorDialog("You must enter a name.")
+
         dialog.shouldBeVisible()
         verifyNotCalled { callback() }
     }
@@ -41,9 +41,9 @@ class TestDartzeeTemplateDialog : AbstractTest() {
     fun `Should show an error if 0 rules are specified`() {
         val (dialog) = showDialog()
         dialog.getChild<JTextField>().typeText("My template")
-        dialog.clickOk()
+        dialog.clickOk(async = true)
 
-        dialogFactory.errorsShown.shouldContainExactly("You must create at least 2 rules.")
+        expectErrorDialog("You must create at least 2 rules.")
         dialog.shouldBeVisible()
     }
 
@@ -53,9 +53,9 @@ class TestDartzeeTemplateDialog : AbstractTest() {
 
         dialog.getChild<JTextField>().typeText("My template")
         dialog.rulePanel.addRulesToTable(listOf(makeDartzeeRuleDto()))
-        dialog.clickOk()
+        dialog.clickOk(async = true)
 
-        dialogFactory.errorsShown.shouldContainExactly("You must create at least 2 rules.")
+        expectErrorDialog("You must create at least 2 rules.")
         dialog.shouldBeVisible()
     }
 
@@ -79,7 +79,6 @@ class TestDartzeeTemplateDialog : AbstractTest() {
         dialog.rulePanel.addRulesToTable(listOf(twentyPercentRule, tenPercentRule))
         dialog.clickOk()
 
-        dialogFactory.errorsShown.shouldBeEmpty()
         dialog.shouldNotBeVisible()
         verify { callback() }
 

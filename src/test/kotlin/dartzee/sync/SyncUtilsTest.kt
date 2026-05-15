@@ -1,13 +1,11 @@
 package dartzee.sync
 
-import com.github.alyssaburlton.swingtest.clickOk
 import dartzee.PAST_TIME
 import dartzee.core.helper.getFutureTime
 import dartzee.db.ParticipantEntity
 import dartzee.db.SyncAuditEntity
+import dartzee.expectErrorDialog
 import dartzee.findErrorDialog
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.getCountFromTable
@@ -82,11 +80,7 @@ class SyncUtilsTest : AbstractTest() {
         var success = true
         runAsync { success = validateSyncAction() }
 
-        val errorDialog = getErrorDialog()
-        errorDialog.getDialogMessage() shouldBe
-            "You must close all open games before performing this action."
-        errorDialog.clickOk(async = true)
-
+        expectErrorDialog("You must close all open games before performing this action.")
         success shouldBe false
     }
 

@@ -135,8 +135,8 @@ object UpdateManager {
         val success =
             runCommand(
                 windows =
-                    arrayOf("cmd", "/c", "start", "$jarDirectory/update.bat", metadata.fileName),
-                linux = arrayOf("sh", "$jarDirectory/update.sh", metadata.fileName),
+                    arrayOf("cmd", "/c", "start", "$jarDirectory\\update.bat", metadata.fileName),
+                linux = arrayOf("sh", "$jarDirectory\\update.sh", metadata.fileName),
                 runtime,
             )
 

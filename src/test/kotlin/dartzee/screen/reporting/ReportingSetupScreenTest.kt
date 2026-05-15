@@ -4,20 +4,19 @@ import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.util.getAllChildComponentsForType
+import dartzee.expectErrorDialog
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.makeInvalid
 import dartzee.screen.ScreenCache
-import io.kotest.matchers.collections.shouldContainExactly
-import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import javax.swing.JButton
 import javax.swing.JCheckBox
 import org.junit.jupiter.api.Test
 
-class TestReportingSetupScreen : AbstractTest() {
+class ReportingSetupScreenTest : AbstractTest() {
     @Test
     fun `Should not progress if game tab is invalid`() {
         val scrn = ReportingSetupScreen()
@@ -27,10 +26,10 @@ class TestReportingSetupScreen : AbstractTest() {
         gameTab.clickChild<JCheckBox>(text = "Start Date")
         gameTab.getStartDateFilterPanel().makeInvalid()
 
-        scrn.clickChild<JButton>("Next")
+        scrn.clickChild<JButton>("Next", async = true)
+        expectErrorDialog("The 'date from' cannot be after the 'date to'")
 
         ScreenCache.currentScreen() shouldBe scrn
-        dialogFactory.errorsShown.shouldNotBeEmpty()
     }
 
     @Test
@@ -44,11 +43,9 @@ class TestReportingSetupScreen : AbstractTest() {
         tab.addPlayers(listOf(playerOne))
         tab.includedPlayerPanel.chckbxPosition.doClick()
 
-        scrn.clickChild<JButton>("Next")
+        scrn.clickChild<JButton>("Next", async = true)
+        expectErrorDialog("You must select at least one finishing position for player Alice")
         ScreenCache.currentScreen() shouldBe scrn
-        dialogFactory.errorsShown.shouldContainExactly(
-            "You must select at least one finishing position for player Alice"
-        )
     }
 
     @Test

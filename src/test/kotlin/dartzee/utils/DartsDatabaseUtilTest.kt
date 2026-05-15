@@ -1,15 +1,14 @@
 package dartzee.utils
 
 import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.findWindow
 import dartzee.db.DatabaseMigrator
 import dartzee.db.EntityName
 import dartzee.db.MigrationResult
+import dartzee.expectErrorDialog
+import dartzee.expectInfoDialog
 import dartzee.getDialogMessage
-import dartzee.getErrorDialog
-import dartzee.getInfoDialog
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.TEST_DB_DIRECTORY
@@ -44,7 +43,7 @@ import org.junit.jupiter.api.Test
 
 const val BACKUP_LOCATION = "Test/Backup/Databases"
 
-class TestDartsDatabaseUtil : AbstractTest() {
+class DartsDatabaseUtilTest : AbstractTest() {
     @BeforeEach
     fun beforeEach() {
         File(TEST_DB_DIRECTORY).deleteRecursively()
@@ -98,10 +97,7 @@ class TestDartsDatabaseUtil : AbstractTest() {
 
         runAsync { DartsDatabaseUtil.backupCurrentDatabase() }
 
-        val dlg = getErrorDialog()
-        dlg.getDialogMessage() shouldBe "There was a problem creating the backup."
-        dlg.clickOk()
-
+        expectErrorDialog("There was a problem creating the backup.")
         verifyLog(CODE_BACKUP_ERROR, Severity.ERROR)
     }
 
@@ -115,10 +111,9 @@ class TestDartsDatabaseUtil : AbstractTest() {
 
         runAsync { DartsDatabaseUtil.backupCurrentDatabase() }
 
-        val dlg = getInfoDialog()
-        dlg.getDialogMessage() shouldBe
+        expectInfoDialog(
             "Database successfully backed up to ${File("${selectedDir.absolutePath}/$DATABASE_NAME")}"
-        dlg.clickOk()
+        )
 
         File("${selectedDir.absolutePath}/$DATABASE_NAME/File.txt").shouldExist()
     }
@@ -129,9 +124,7 @@ class TestDartsDatabaseUtil : AbstractTest() {
 
         runAsync { DartsDatabaseUtil.restoreDatabase() }
 
-        val dlg = getErrorDialog()
-        dlg.getDialogMessage() shouldBe "You must close all open games before continuing."
-        dlg.clickOk()
+        expectErrorDialog("You must close all open games before continuing.")
     }
 
     @Test
@@ -139,8 +132,7 @@ class TestDartsDatabaseUtil : AbstractTest() {
         dialogFactory.directoryToSelect = null
 
         runAsync { DartsDatabaseUtil.restoreDatabase() }
-        val info = getInfoDialog()
-        info.clickOk(async = true)
+        expectInfoDialog("Select the 'Darts' folder you want to restore from.")
     }
 
     @Test
@@ -148,11 +140,11 @@ class TestDartsDatabaseUtil : AbstractTest() {
         dialogFactory.directoryToSelect = File(BACKUP_LOCATION)
 
         runAsync { DartsDatabaseUtil.restoreDatabase() }
-        getInfoDialog().clickOk(async = true)
+        expectInfoDialog("Select the 'Darts' folder you want to restore from.")
 
-        val dlg = getErrorDialog()
-        dlg.getDialogMessage() shouldBe
+        expectErrorDialog(
             "Selected path is not valid - you must select a folder named '$DATABASE_NAME'"
+        )
     }
 
     @Test
@@ -162,11 +154,9 @@ class TestDartsDatabaseUtil : AbstractTest() {
         dialogFactory.directoryToSelect = File("$BACKUP_LOCATION/Darts")
 
         runAsync { DartsDatabaseUtil.restoreDatabase() }
-        getInfoDialog().clickOk(async = true)
+        expectInfoDialog("Select the 'Darts' folder you want to restore from.")
 
-        val dlg = getErrorDialog()
-        dlg.getDialogMessage() shouldBe "There was a problem restoring the database."
-        dlg.clickOk(async = true)
+        expectErrorDialog("There was a problem restoring the database.")
 
         verifyLog(CODE_RESTORE_ERROR, Severity.ERROR)
         Database(DartsDatabaseUtil.OTHER_DATABASE_NAME).getDirectory().shouldNotExist()
@@ -180,12 +170,9 @@ class TestDartsDatabaseUtil : AbstractTest() {
         dialogFactory.directoryToSelect = backupLocation
 
         runAsync { DartsDatabaseUtil.restoreDatabase() }
-        getInfoDialog().clickOk(async = true)
+        expectInfoDialog("Select the 'Darts' folder you want to restore from.")
 
-        val dlg = getErrorDialog()
-        dlg.getDialogMessage() shouldBe "An error occurred connecting to the selected database."
-        dlg.clickOk(async = true)
-
+        expectErrorDialog("An error occurred connecting to the selected database.")
         verifyLog(CODE_TEST_CONNECTION_ERROR, Severity.ERROR)
     }
 
@@ -220,9 +207,7 @@ class TestDartsDatabaseUtil : AbstractTest() {
                 "Successfully connected to target database.\n\nAre you sure you want to restore this database? All current data will be lost."
             question.clickYes(async = true)
 
-            val info = getInfoDialog()
-            info.getDialogMessage() shouldBe "Database restored successfully."
-            info.clickOk(async = true)
+            expectInfoDialog("Database restored successfully.")
 
             File("${InjectedThings.databaseDirectory}/Darts/SomeFile.txt").shouldExist()
             mainDatabase.generateLocalId(EntityName.Game) shouldBe 6L

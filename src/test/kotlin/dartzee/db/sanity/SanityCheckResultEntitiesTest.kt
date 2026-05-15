@@ -1,7 +1,6 @@
 package dartzee.db.sanity
 
 import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
@@ -10,8 +9,8 @@ import dartzee.core.helper.processKeyPress
 import dartzee.db.EntityName
 import dartzee.db.FakeEntity
 import dartzee.db.PlayerEntity
+import dartzee.expectErrorDialog
 import dartzee.getDialogMessage
-import dartzee.getErrorDialog
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
@@ -109,10 +108,9 @@ class SanityCheckResultEntitiesTest : AbstractTest() {
         question.clickYes()
         flushEdt()
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe
+        expectErrorDialog(
             "An error occurred deleting the rows. You should re-run the sanity check and check logs."
-        error.clickOk()
+        )
 
         verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)
     }

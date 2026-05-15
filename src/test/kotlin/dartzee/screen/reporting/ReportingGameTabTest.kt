@@ -12,14 +12,15 @@ import dartzee.bean.GameParamFilterPanelX01
 import dartzee.bean.SpinnerX01
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.util.getAllChildComponentsForType
+import dartzee.expectErrorDialog
 import dartzee.game.FinishType
 import dartzee.game.GameType
 import dartzee.game.X01Config
 import dartzee.helper.AbstractTest
 import dartzee.makeInvalid
 import dartzee.reporting.MatchFilter
+import dartzee.runAsync
 import dartzee.updateSelection
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import java.sql.Timestamp
@@ -140,10 +141,11 @@ class ReportingGameTabTest : AbstractTest() {
         tab.clickChild<JCheckBox>(text = "Start Date")
         tab.getStartDateFilterPanel().makeInvalid()
 
-        tab.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
-            "The 'date from' cannot be after the 'date to'"
-        )
+        var valid: Boolean? = null
+        runAsync { valid = tab.valid() }
+
+        expectErrorDialog("The 'date from' cannot be after the 'date to'")
+        valid shouldBe false
     }
 
     @Test
@@ -152,10 +154,11 @@ class ReportingGameTabTest : AbstractTest() {
         tab.clickChild<JCheckBox>(text = "Finish Date")
         tab.getFinishDateFilterPanel().makeInvalid()
 
-        tab.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
-            "The 'date from' cannot be after the 'date to'"
-        )
+        var valid: Boolean? = null
+        runAsync { valid = tab.valid() }
+
+        expectErrorDialog("The 'date from' cannot be after the 'date to'")
+        valid shouldBe false
     }
 
     @Test

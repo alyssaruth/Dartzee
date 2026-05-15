@@ -2,7 +2,6 @@ package dartzee.screen.sync
 
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.CURRENT_TIME
@@ -10,10 +9,10 @@ import dartzee.PAST_TIME
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.formatTimestamp
 import dartzee.db.SyncAuditEntity
+import dartzee.expectErrorDialog
 import dartzee.findErrorDialog
 import dartzee.findQuestionDialog
 import dartzee.getDialogMessage
-import dartzee.getErrorDialog
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
@@ -163,11 +162,7 @@ class SyncManagementPanelTest : AbstractTest() {
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>(text = "Push", async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe
-            "You must close all open games before performing this action."
-        error.clickOk(async = true)
-
+        expectErrorDialog("You must close all open games before performing this action.")
         verifyNotCalled { syncManager.doPush(any()) }
     }
 
@@ -219,11 +214,7 @@ class SyncManagementPanelTest : AbstractTest() {
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>(text = "Pull", async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe
-            "You must close all open games before performing this action."
-        error.clickOk(async = true)
-
+        expectErrorDialog("You must close all open games before performing this action.")
         verifyNotCalled { syncManager.doPull(any()) }
     }
 
@@ -261,11 +252,7 @@ class SyncManagementPanelTest : AbstractTest() {
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>(text = "Perform Sync", async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe
-            "You must close all open games before performing this action."
-        error.clickOk(async = true)
-
+        expectErrorDialog("You must close all open games before performing this action.")
         verifyNotCalled { syncManager.doSyncIfNecessary(any()) }
     }
 

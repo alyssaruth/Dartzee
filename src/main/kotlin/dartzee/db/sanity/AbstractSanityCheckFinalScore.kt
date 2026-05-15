@@ -71,7 +71,7 @@ abstract class AbstractSanityCheckFinalScore : ISanityCheck {
             val gameId = pt.gameId
             val dtLastUpdate = pt.dtLastUpdate
             val finalScore = pt.finalScore
-            val finalScoreRaw = hmParticipantToActualCount[pt]!!
+            val finalScoreRaw = hmParticipantToActualCount.getValue(pt)
 
             val row =
                 arrayOf<Any>(

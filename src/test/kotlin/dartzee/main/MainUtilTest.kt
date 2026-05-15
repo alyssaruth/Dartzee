@@ -1,8 +1,7 @@
 package dartzee.main
 
+import dartzee.expectErrorDialog
 import dartzee.game.GameType
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.logger
 import dartzee.helper.makeTheme
@@ -38,7 +37,7 @@ import javax.swing.plaf.metal.MetalLookAndFeel
 import javax.swing.plaf.nimbus.NimbusLookAndFeel
 import org.junit.jupiter.api.Test
 
-class TestMainUtil : AbstractTest() {
+class MainUtilTest : AbstractTest() {
     @Test
     fun `Should not attempt to set look and feel for Apple OS`() {
         UIManager.setLookAndFeel(MetalLookAndFeel())
@@ -77,8 +76,7 @@ class TestMainUtil : AbstractTest() {
         error.message shouldContain "invalid"
         error.errorObject?.shouldBeInstanceOf<ClassNotFoundException>()
 
-        val errorDialog = getErrorDialog()
-        errorDialog.getDialogMessage() shouldBe "Failed to load Look & Feel 'Nimbus'."
+        expectErrorDialog("Failed to load Look & Feel 'Nimbus'.")
     }
 
     @Test

@@ -1,16 +1,15 @@
 package dartzee.screen.reporting
 
 import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.ScrollTable
+import dartzee.expectErrorDialog
 import dartzee.findErrorDialog
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeIncludedPlayerParameters
 import dartzee.reporting.IncludedPlayerParameters
+import dartzee.runAsync
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactly
@@ -37,10 +36,7 @@ class ReportingPlayersTabTest : AbstractTest() {
 
         tab.clickChild<JButton>("RemovePlayer", async = true)
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "You must select player(s) to remove."
-        error.clickOk(async = true)
-
+        expectErrorDialog("You must select player(s) to remove.")
         tab.getChild<ScrollTable>().rowCount shouldBe 1
     }
 
@@ -169,24 +165,24 @@ class ReportingPlayersTabTest : AbstractTest() {
         tab.getChild<ScrollTable>().selectRow(1)
         tab.includedPlayerPanel.chckbxPosition.doClick()
 
-        tab.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
-            "You must select at least one finishing position for player Alice"
-        )
+        var valid: Boolean? = null
+        runAsync { valid = tab.valid() }
 
-        dialogFactory.errorsShown.clear()
+        expectErrorDialog("You must select at least one finishing position for player Alice")
+        valid shouldBe false
+
         tab.getChild<ScrollTable>().selectRow(0)
         tab.includedPlayerPanel.chckbxPosition.doClick()
-        tab.valid() shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
-            "You must select at least one finishing position for player Bob"
-        )
+        runAsync { valid = tab.valid() }
 
-        dialogFactory.errorsShown.clear()
+        expectErrorDialog("You must select at least one finishing position for player Bob")
+        valid shouldBe false
+
         tab.getChild<ScrollTable>().selectRow(1)
         tab.includedPlayerPanel.chckbxPosition.doClick()
-        tab.valid() shouldBe true
-        dialogFactory.errorsShown.shouldBeEmpty()
+        runAsync { valid = tab.valid() }
+        findErrorDialog { it.isVisible }.shouldBeNull()
+        valid shouldBe true
     }
 
     @Test
@@ -201,7 +197,6 @@ class ReportingPlayersTabTest : AbstractTest() {
         tab.rdbtnExclude.doClick()
 
         tab.valid() shouldBe true
-        dialogFactory.errorsShown.shouldBeEmpty()
     }
 
     private fun PlayerParametersPanel.enabled() = chckbxFinalScore.isEnabled

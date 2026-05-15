@@ -1,14 +1,11 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.lgooddatepicker.components.DatePicker
 import dartzee.bean.PlayerAvatar
 import dartzee.core.util.DateStatics
 import dartzee.db.PlayerEntity
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
+import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
@@ -92,11 +89,7 @@ class PlayerDemographicsPanelTest : AbstractTest() {
         var result = true
         runAsync { result = valid() }
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe expectedMessage
-        error.clickOk()
-        flushEdt()
-
+        expectErrorDialog(expectedMessage)
         result shouldBe false
     }
 

@@ -56,7 +56,7 @@ class PlayerSelectDialog(selectionMode: Int) : SimpleDialog(), IDoubleClickListe
     override fun okPressed() {
         selectedPlayers = tablePlayers.getSelectedPlayers()
         if (selectedPlayers.isEmpty()) {
-            DialogUtil.showErrorOLD("You must select at least one player.")
+            DialogUtil.showError("You must select at least one player.")
             return
         }
 

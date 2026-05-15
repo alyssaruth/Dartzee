@@ -9,8 +9,8 @@ import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import dartzee.core.helper.TestMessageDialogFactory
+import dartzee.expectInfoDialog
 import dartzee.getErrorDialog
-import dartzee.getInfoDialog
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.TEST_ROOT
@@ -55,12 +55,6 @@ class DialogUtilTest : AbstractTest() {
         }
 
         clearAllMocks()
-
-        DialogUtil.showErrorOLD("Test")
-
-        verifySequence { factoryMock.showError("Test") }
-
-        clearAllMocks()
     }
 
     @Test
@@ -70,8 +64,8 @@ class DialogUtilTest : AbstractTest() {
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Info dialog shown: Something useful"
 
-        getInfoDialog().clickOk()
-        flushEdt()
+        expectInfoDialog("Something useful")
+
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Info dialog closed"
     }
 

@@ -1,12 +1,8 @@
 package dartzee.sync
 
-import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import com.github.alyssaburlton.swingtest.waitForAssertion
-import dartzee.findErrorDialog
 import dartzee.findLoadingDialog
-import dartzee.getDialogMessage
-import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.TEST_DB_DIRECTORY
@@ -19,9 +15,9 @@ import dartzee.logging.Severity
 import dartzee.runAsync
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.databaseDirectory
+import dartzee.waitForErrorDialog
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import java.io.File
@@ -50,11 +46,8 @@ class SyncManagerPullTest : AbstractTest() {
         val manager = SyncManager(dbStore)
         var t: Thread? = null
         runAsync { t = manager.doPull(REMOTE_NAME) }
-        waitForAssertion { findErrorDialog() shouldNotBe null }
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "An unexpected error occurred - no data has been changed."
-        error.clickOk(async = true)
+        waitForErrorDialog("An unexpected error occurred - no data has been changed.")
 
         waitForAssertion { t != null }
         t!!.join()
@@ -76,11 +69,8 @@ class SyncManagerPullTest : AbstractTest() {
         val manager = SyncManager(store)
         var t: Thread? = null
         runAsync { t = manager.doPull(REMOTE_NAME) }
-        waitForAssertion { findErrorDialog() shouldNotBe null }
 
-        val error = getErrorDialog()
-        error.getDialogMessage() shouldBe "An error occurred connecting to the remote database."
-        error.clickOk(async = true)
+        waitForErrorDialog("An error occurred connecting to the remote database.")
 
         waitForAssertion { t != null }
         t!!.join()
@@ -94,11 +84,8 @@ class SyncManagerPullTest : AbstractTest() {
             val manager = SyncManager(store)
             var t: Thread? = null
             runAsync { t = manager.doPull(REMOTE_NAME) }
-            waitForAssertion { findErrorDialog() shouldNotBe null }
 
-            val error = getErrorDialog()
-            error.getDialogMessage() shouldBe "An error occurred connecting to the remote database."
-            error.clickOk(async = true)
+            waitForErrorDialog("An error occurred connecting to the remote database.")
 
             waitForAssertion { t != null }
             t!!.join()
@@ -135,9 +122,8 @@ class SyncManagerPullTest : AbstractTest() {
             val manager = SyncManager(dbStore)
             var t: Thread? = null
             runAsync { t = manager.doPull(REMOTE_NAME) }
-            waitForAssertion { findErrorDialog() shouldNotBe null }
+            waitForErrorDialog("An unexpected error occurred - no data has been changed.")
 
-            getErrorDialog().clickOk(async = true)
             waitForAssertion { t != null }
             t!!.join()
 

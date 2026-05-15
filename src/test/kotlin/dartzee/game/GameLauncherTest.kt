@@ -3,6 +3,7 @@ package dartzee.game
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.EntityName
+import dartzee.expectErrorDialog
 import dartzee.game.state.GolfPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.DEFAULT_X01_CONFIG
@@ -16,6 +17,7 @@ import dartzee.helper.scoreEighteens
 import dartzee.helper.twoBlackOneWhite
 import dartzee.logging.CODE_LOAD_ERROR
 import dartzee.logging.Severity
+import dartzee.runAsync
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.DartsGamePanel
@@ -26,14 +28,13 @@ import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.x01.GamePanelX01
 import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class TestGameLauncher : AbstractTest() {
+class GameLauncherTest : AbstractTest() {
     @Test
     fun `Should launch a new game of X01 successfully`() {
         testNewGameLaunch<GamePanelX01>(GameType.X01, DEFAULT_X01_CONFIG.toJson())
@@ -114,19 +115,20 @@ class TestGameLauncher : AbstractTest() {
 
     @Test
     fun `Should show an error and return if no game exists for the id`() {
-        GameLauncher().loadAndDisplayGame("foo")
+        runAsync { GameLauncher().loadAndDisplayGame("foo") }
 
-        dialogFactory.errorsShown.shouldContainExactly("Game foo does not exist.")
+        expectErrorDialog("Game foo does not exist.")
     }
 
     @Test
     fun `Should handle an error when trying to load a single game`() {
         val g = insertGame()
 
-        GameLauncher().loadAndDisplayGame(g.rowId)
+        runAsync { GameLauncher().loadAndDisplayGame(g.rowId) }
+
+        expectErrorDialog("Failed to load Game #${g.localId}")
 
         verifyLog(CODE_LOAD_ERROR, Severity.ERROR)
-        dialogFactory.errorsShown.shouldContainExactly("Failed to load Game #${g.localId}")
         ScreenCache.getDartsGameScreens().shouldBeEmpty()
     }
 
@@ -135,10 +137,11 @@ class TestGameLauncher : AbstractTest() {
         val match = insertDartsMatch()
         val g = insertGame(dartsMatchId = match.rowId)
 
-        GameLauncher().loadAndDisplayGame(g.rowId)
+        runAsync { GameLauncher().loadAndDisplayGame(g.rowId) }
+
+        expectErrorDialog("Failed to load Match #${match.localId}")
 
         verifyLog(CODE_LOAD_ERROR, Severity.ERROR)
-        dialogFactory.errorsShown.shouldContainExactly("Failed to load Match #${match.localId}")
         ScreenCache.getDartsGameScreens().shouldBeEmpty()
     }
 }

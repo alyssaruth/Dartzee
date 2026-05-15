@@ -243,11 +243,35 @@ fun FileUploader.uploadFileFromResource(resourceName: String) {
     flushEdt()
 }
 
+fun expectErrorDialog(message: String) {
+    val error = getErrorDialog { it.isVisible }
+    error.getDialogMessage() shouldBe message
+    error.clickOk(async = true)
+}
+
+fun waitForErrorDialog(message: String) {
+    waitForAssertion { findErrorDialog() shouldNotBe null }
+
+    expectErrorDialog(message)
+}
+
+fun expectInfoDialog(message: String) {
+    val info = getInfoDialog()
+    info.getDialogMessage() shouldBe message
+    info.clickOk(async = true)
+}
+
+fun waitForInfoDialog(message: String) {
+    waitForAssertion { findInfoDialog() shouldNotBe null }
+
+    expectInfoDialog(message)
+}
+
 fun findLoadingDialog(text: String) = findWindow<LoadingDialog> { it.message == text }
 
-fun getInfoDialog() = findInfoDialog()!!
+private fun getInfoDialog() = findInfoDialog()!!
 
-fun findInfoDialog() = findOptionPaneDialog("Information")
+private fun findInfoDialog() = findOptionPaneDialog("Information")
 
 fun getQuestionDialog() = findQuestionDialog()!!
 

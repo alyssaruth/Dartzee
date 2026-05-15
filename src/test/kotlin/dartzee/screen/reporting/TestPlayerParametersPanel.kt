@@ -2,11 +2,12 @@ package dartzee.screen.reporting
 
 import com.github.alyssaburlton.swingtest.clickChild
 import dartzee.core.bean.ComboBoxNumberComparison
+import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeIncludedPlayerParameters
 import dartzee.reporting.COMPARATOR_SCORE_UNSET
-import io.kotest.matchers.collections.shouldBeEmpty
+import dartzee.runAsync
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import javax.swing.JCheckBox
@@ -81,20 +82,18 @@ class TestPlayerParametersPanel : AbstractTest() {
         panel.valid(player) shouldBe true
 
         panel.clickChild<JCheckBox>(text = "Position")
-        panel.valid(player) shouldBe false
-        dialogFactory.errorsShown.shouldContainExactly(
-            "You must select at least one finishing position for player Gordon"
-        )
-        dialogFactory.errorsShown.clear()
+        var valid: Boolean? = null
+        runAsync { valid = panel.valid(player) }
+
+        expectErrorDialog("You must select at least one finishing position for player Gordon")
+        valid shouldBe false
 
         panel.clickChild<JCheckBox>(text = "Undecided")
         panel.valid(player) shouldBe true
-        dialogFactory.errorsShown.shouldBeEmpty()
 
         panel.cbUndecided.doClick()
         panel.clickChild<JCheckBox>(text = "1st")
         panel.valid(player) shouldBe true
-        dialogFactory.errorsShown.shouldBeEmpty()
     }
 
     @Test
