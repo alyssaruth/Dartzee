@@ -8,7 +8,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestSanityCheckPlayerIdMismatch : AbstractTest() {
+class SanityCheckPlayerIdMismatchTest : AbstractTest() {
     @Test
     fun `Should not flag up matching rows`() {
         val pt = insertParticipant()
@@ -29,7 +29,7 @@ class TestSanityCheckPlayerIdMismatch : AbstractTest() {
         val drt = insertDart(pt)
 
         val results = SanityCheckPlayerIdMismatch().runCheck()
-        val tm = results.first().getResultsModel()
+        val tm = results.first().resultsModel
 
         tm.getValueAt(0, 0) shouldBe drt.rowId
         tm.getValueAt(0, 1) shouldBe pt.rowId

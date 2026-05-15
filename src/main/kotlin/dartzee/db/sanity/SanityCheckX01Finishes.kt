@@ -8,7 +8,7 @@ import dartzee.utils.InjectedThings.mainDatabase
 class SanityCheckX01Finishes : ISanityCheck {
     data class X01Finish(val playerId: String, val gameId: String, val finish: Int)
 
-    override fun runCheck(): List<AbstractSanityCheckResult> {
+    override fun runCheck(): List<SanityCheckResult> {
         ensureX01RoundsTableExists(emptyList(), mainDatabase)
 
         var sb = StringBuilder()
@@ -38,7 +38,7 @@ class SanityCheckX01Finishes : ISanityCheck {
         extra.forEach { model.addRow(arrayOf<Any>("EXTRA", it.playerId, it.gameId, it.finish)) }
 
         if (model.rowCount > 0) {
-            return listOf(SanityCheckResultSimpleTableModel(model, "X01 Finish mismatches"))
+            return listOf(SanityCheckResult(model, "X01 Finish mismatches"))
         }
 
         return emptyList()

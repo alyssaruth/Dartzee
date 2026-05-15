@@ -3,7 +3,7 @@ package dartzee.db.sanity
 import dartzee.core.util.TableUtil
 
 class SanityCheckColumnsThatAllowDefaults : ISanityCheck {
-    override fun runCheck(): List<AbstractSanityCheckResult> {
+    override fun runCheck(): List<SanityCheckResult> {
         val model = TableUtil.DefaultModel()
         model.addColumn("TableName")
         model.addColumn("ColumnName")
@@ -12,7 +12,7 @@ class SanityCheckColumnsThatAllowDefaults : ISanityCheck {
         results.forEach { model.addRow(it) }
 
         if (model.rowCount > 0) {
-            return listOf(SanityCheckResultSimpleTableModel(model, "Columns that allow defaults"))
+            return listOf(SanityCheckResult(model, "Columns that allow defaults"))
         }
 
         return listOf()

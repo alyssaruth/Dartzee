@@ -11,15 +11,14 @@ import javax.swing.JOptionPane
  * bug where the ordinal reset upon re-loading an incomplete match
  */
 class SanityCheckResultDuplicateMatchOrdinals(entities: List<AbstractEntity<*>>) :
-    AbstractSanityCheckResultEntities(entities) {
+    SanityCheckResultEntities(entities, "MatchOrdinal overlaps") {
     override fun autoFix() {
-        val tm = getResultsModel()
-        val rowCount = tm.rowCount
+        val rowCount = resultsModel.rowCount
 
         // Get the distinct matches affected
         val matchIds = mutableListOf<String>()
         for (i in 0 until rowCount) {
-            val matchId = tm.getValueAt(i, 7).toString()
+            val matchId = resultsModel.getValueAt(i, 7).toString()
             matchIds.addUnique(matchId)
         }
 
@@ -48,6 +47,4 @@ class SanityCheckResultDuplicateMatchOrdinals(entities: List<AbstractEntity<*>>)
             "Auto-fix complete. You should re-run the sanity check and check there are no errors."
         )
     }
-
-    override fun getDescription() = "Games with duplicate MatchOrdinals"
 }

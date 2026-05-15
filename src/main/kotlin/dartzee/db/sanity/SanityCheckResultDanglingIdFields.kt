@@ -7,13 +7,14 @@ import dartzee.utils.InjectedThings.mainDatabase
 import javax.swing.JOptionPane
 
 class SanityCheckResultDanglingIdFields(
-    private val idColumn: String,
-    private val referencedEntity: EntityName,
+    idColumn: String,
+    referencedEntity: EntityName,
     entities: List<AbstractEntity<*>>,
-) : AbstractSanityCheckResultEntities(entities) {
-    override fun getDescription() =
-        "$entityName rows where the $idColumn points at a non-existent $referencedEntity"
-
+) :
+    SanityCheckResultEntities(
+        entities,
+        "the $idColumn points at a non-existent $referencedEntity",
+    ) {
     override fun autoFix() {
         val rowIds = entities.map { it.rowId }
 

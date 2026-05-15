@@ -18,7 +18,7 @@ import java.util.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class TestSanityCheckX01Finishes : AbstractTest() {
+class SanityCheckX01FinishesTest : AbstractTest() {
     @BeforeEach
     fun beforeEach() {
         mainDatabase.dropUnexpectedTables()
@@ -96,7 +96,7 @@ class TestSanityCheckX01Finishes : AbstractTest() {
         insertFinishForPlayer(p, 60, game = g)
 
         val result = assertPositiveResult()
-        val rows = result.getResultsModel().getRows()
+        val rows = result.resultsModel.getRows()
         rows.size shouldBe 1
         rows[0].shouldContainExactly("EXTRA", p.rowId, g.rowId, 60)
     }
@@ -111,7 +111,7 @@ class TestSanityCheckX01Finishes : AbstractTest() {
         insertDart(pt, startingScore = 40, score = 20, multiplier = 2, roundNumber = 1, ordinal = 2)
 
         val result = assertPositiveResult()
-        val rows = result.getResultsModel().getRows()
+        val rows = result.resultsModel.getRows()
         rows.size shouldBe 1
         rows[0].shouldContainExactly("MISSING", p.rowId, g.rowId, 60)
     }
@@ -128,13 +128,13 @@ class TestSanityCheckX01Finishes : AbstractTest() {
         insertDart(pt, startingScore = 40, score = 20, multiplier = 2, roundNumber = 1, ordinal = 2)
 
         val result = assertPositiveResult()
-        val rows = result.getResultsModel().getRows()
+        val rows = result.resultsModel.getRows()
         rows.shouldContainExactlyInAnyOrder(
             listOf("MISSING", p.rowId, g.rowId, 55),
             listOf("EXTRA", p.rowId, g.rowId, 60),
         )
     }
 
-    private fun assertPositiveResult(): SanityCheckResultSimpleTableModel =
-        SanityCheckX01Finishes().runCheck().first() as SanityCheckResultSimpleTableModel
+    private fun assertPositiveResult(): SanityCheckResult =
+        SanityCheckX01Finishes().runCheck().first() as SanityCheckResult
 }

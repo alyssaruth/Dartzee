@@ -27,7 +27,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 
-class TestDatabaseSanityCheck : AbstractTest() {
+class DatabaseSanityCheckTest : AbstractTest() {
     @Test
     fun `Should produce no results on an empty database, and tidy up all temp tables`() {
         DatabaseSanityCheck.runSanityCheck()
@@ -58,16 +58,15 @@ class TestDatabaseSanityCheck : AbstractTest() {
         val resultsWindow = findResultsWindow()!!
         val rows = resultsWindow.table.getRows()
         rows.shouldContainExactly(
-            listOf("Games where something's wrong", 1, "View Results >", "Auto-fix"),
-            listOf("Players with thing one wrong", 2, "View Results >", "Auto-fix"),
-            listOf("Players with thing two wrong", 2, "View Results >", "Auto-fix"),
+            listOf("Game rows where something's wrong", 1, "View Results >", "Auto-fix"),
+            listOf("Player rows where thing one is wrong", 2, "View Results >", "Auto-fix"),
+            listOf("Player rows where thing two is wrong", 2, "View Results >", "Auto-fix"),
         )
     }
 
     @Test
     fun `Should support auto-fixing`() {
-        val mockResult = mockk<AbstractSanityCheckResult>(relaxed = true)
-        every { mockResult.getDescription() } returns "Foo"
+        val mockResult = mockk<SanityCheckResult>(relaxed = true)
 
         val check = mockk<ISanityCheck>()
         every { check.runCheck() } returns listOf(mockResult)
@@ -85,8 +84,7 @@ class TestDatabaseSanityCheck : AbstractTest() {
         val breakdownDialog = TableModelDialog("Mock breakdown", ScrollTable())
         breakdownDialog.shouldNotBeVisible()
 
-        val mockResult = mockk<AbstractSanityCheckResult>(relaxed = true)
-        every { mockResult.getDescription() } returns "Foo"
+        val mockResult = mockk<SanityCheckResult>(relaxed = true)
         every { mockResult.getResultsDialog() } returns breakdownDialog
 
         val check = mockk<ISanityCheck>()
@@ -110,16 +108,16 @@ class TestDatabaseSanityCheck : AbstractTest() {
 }
 
 private class DummySanityCheckBadGames(private val games: List<GameEntity>) : ISanityCheck {
-    override fun runCheck(): List<AbstractSanityCheckResult> =
-        listOf(SanityCheckResultEntitiesSimple(games, "Games where something's wrong"))
+    override fun runCheck(): List<SanityCheckResult> =
+        listOf(SanityCheckResultEntities(games, "something's wrong"))
 }
 
 private class DummySanityCheckMultipleThings(private val players: List<PlayerEntity>) :
     ISanityCheck {
-    override fun runCheck(): List<AbstractSanityCheckResult> {
+    override fun runCheck(): List<SanityCheckResult> {
         return listOf(
-            SanityCheckResultEntitiesSimple(players, "Players with thing one wrong"),
-            SanityCheckResultEntitiesSimple(players, "Players with thing two wrong"),
+            SanityCheckResultEntities(players, "thing one is wrong"),
+            SanityCheckResultEntities(players, "thing two is wrong"),
         )
     }
 }

@@ -14,7 +14,7 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestSanityCheckDanglingIdFields : AbstractTest() {
+class SanityCheckDanglingIdFieldsTest : AbstractTest() {
     @Test
     fun `Should flag up ID fields that point at non-existent rows`() {
         val gameId = insertGame(dartsMatchId = "foo").rowId
@@ -24,7 +24,7 @@ class TestSanityCheckDanglingIdFields : AbstractTest() {
 
         val result = results.first() as SanityCheckResultDanglingIdFields
         result.entities.first().rowId shouldBe gameId
-        result.getDescription() shouldBe
+        result.description shouldBe
             "Game rows where the DartsMatchId points at a non-existent DartsMatch"
     }
 
@@ -55,7 +55,7 @@ class TestSanityCheckDanglingIdFields : AbstractTest() {
         results.size shouldBe 2
 
         results
-            .map { it.getDescription() }
+            .map { it.description }
             .shouldContainExactlyInAnyOrder(
                 "DartzeeRule rows where the EntityId points at a non-existent Game",
                 "DartzeeRule rows where the EntityId points at a non-existent Player",

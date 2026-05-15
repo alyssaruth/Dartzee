@@ -5,9 +5,9 @@ import dartzee.db.EntityName
 import dartzee.utils.DartsDatabaseUtil
 
 class SanityCheckDanglingIdFields(val entity: AbstractEntity<*>) : ISanityCheck {
-    private val sanityErrors = mutableListOf<AbstractSanityCheckResult>()
+    private val sanityErrors = mutableListOf<SanityCheckResult>()
 
-    override fun runCheck(): List<AbstractSanityCheckResult> {
+    override fun runCheck(): List<SanityCheckResult> {
         if (entity.getTableName() == EntityName.DeletionAudit) {
             return emptyList()
         }

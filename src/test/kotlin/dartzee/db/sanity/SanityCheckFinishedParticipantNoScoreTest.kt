@@ -9,7 +9,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestSanityCheckFinishedParticipantNoScore : AbstractTest() {
+class SanityCheckFinishedParticipantNoScoreTest : AbstractTest() {
     @Test
     fun `should flag unexpected rows`() {
         insertParticipant(dtFinished = getSqlDateNow(), finalScore = -1, resigned = false)

@@ -3,7 +3,7 @@ package dartzee.db.sanity
 import dartzee.db.GameEntity
 
 class SanityCheckDuplicateMatchOrdinals : ISanityCheck {
-    override fun runCheck(): List<AbstractSanityCheckResult> {
+    override fun runCheck(): List<SanityCheckResult> {
         val sb = StringBuilder()
         sb.append(" g.MatchOrdinal > -1")
         sb.append(" AND EXISTS (")

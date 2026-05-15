@@ -18,7 +18,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
-class TestSanityCheckResultDanglingIdFields : AbstractTest() {
+class SanityCheckResultDanglingIdFieldsTest : AbstractTest() {
     @Test
     fun `Should allow auto fix to be cancelled`() {
         val games = (1..10).map { insertGame() }

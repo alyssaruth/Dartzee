@@ -22,12 +22,12 @@ import io.kotest.matchers.shouldBe
 import java.awt.event.KeyEvent
 import org.junit.jupiter.api.Test
 
-class SanityCheckResultEntitiesSimpleTest : AbstractTest() {
+class SanityCheckResultEntitiesTest : AbstractTest() {
     @Test
     fun `Should not delete an entity if not confirmed`() {
         val p = insertPlayer(name = "Alyssa")
 
-        val result = SanityCheckResultEntitiesSimple(listOf(p), "No Alyssas allowed!")
+        val result = SanityCheckResultEntities(listOf(p), "No Alyssas allowed!")
         val dialog = result.getResultsDialog()
 
         val scrollTable = dialog.getChild<ScrollTable>()
@@ -48,7 +48,7 @@ class SanityCheckResultEntitiesSimpleTest : AbstractTest() {
         val p2 = insertPlayer(name = "Bob")
         val p3 = insertPlayer(name = "Claire")
 
-        val result = SanityCheckResultEntitiesSimple(listOf(p1, p3), "foo")
+        val result = SanityCheckResultEntities(listOf(p1, p3), "foo")
         val dialog = result.getResultsDialog()
 
         val scrollTable = dialog.getChild<ScrollTable>()
@@ -72,7 +72,7 @@ class SanityCheckResultEntitiesSimpleTest : AbstractTest() {
         val p2 = insertPlayer(name = "Bob")
         val p3 = insertPlayer(name = "Claire")
 
-        val result = SanityCheckResultEntitiesSimple(listOf(p1, p2, p3), "foo")
+        val result = SanityCheckResultEntities(listOf(p1, p2, p3), "foo")
         val dialog = result.getResultsDialog()
 
         val scrollTable = dialog.getChild<ScrollTable>()
@@ -95,7 +95,7 @@ class SanityCheckResultEntitiesSimpleTest : AbstractTest() {
     fun `Should show an error if deletion fails`() {
         val p1 = FakeEntity()
 
-        val result = SanityCheckResultEntitiesSimple(listOf(p1), "foo")
+        val result = SanityCheckResultEntities(listOf(p1), "foo")
         val dialog = result.getResultsDialog()
 
         val scrollTable = dialog.getChild<ScrollTable>()

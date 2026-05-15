@@ -6,7 +6,7 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-class TestSanityCheckSanityCheckColumnsThatAllowDefaults : AbstractTest() {
+class SanityCheckColumnsThatAllowDefaultsTest : AbstractTest() {
     @Test
     fun `Should return no results by default`() {
         val check = SanityCheckColumnsThatAllowDefaults()
@@ -23,7 +23,7 @@ class TestSanityCheckSanityCheckColumnsThatAllowDefaults : AbstractTest() {
 
         val results = SanityCheckColumnsThatAllowDefaults().runCheck()
 
-        val tm = results.first().getResultsModel()
+        val tm = results.first().resultsModel
 
         tm.getValueAt(0, 0) shouldBe "BADTABLE"
         tm.getValueAt(0, 1) shouldBe "OTHERFIELD"

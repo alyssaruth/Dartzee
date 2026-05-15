@@ -4,7 +4,7 @@ import dartzee.core.util.TableUtil
 import dartzee.utils.InjectedThings.mainDatabase
 
 class SanityCheckPlayerIdMismatch : ISanityCheck {
-    override fun runCheck(): List<AbstractSanityCheckResult> {
+    override fun runCheck(): List<SanityCheckResult> {
         val sb = StringBuilder()
 
         sb.append(
@@ -34,10 +34,7 @@ class SanityCheckPlayerIdMismatch : ISanityCheck {
 
         if (tm.rowCount > 0) {
             return listOf(
-                SanityCheckResultSimpleTableModel(
-                    tm,
-                    "Darts where PlayerId doesn't match the Participant row",
-                )
+                SanityCheckResult(tm, "Darts where PlayerId doesn't match the Participant row")
             )
         }
 
