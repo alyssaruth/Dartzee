@@ -52,6 +52,7 @@ class SyncManagementPanel : JPanel(), ActionListener {
 
         panelSyncStatus.background = Color.WHITE
         panelSyncStatus.border = LineBorder(Color.BLACK, 3)
+        lblSharedDatabaseName.foreground = Color.BLACK
         lblSharedDatabaseName.setFontSize(14)
         lblPendingGames.setFontSize(14)
         lblLastSynced.setFontSize(14)
