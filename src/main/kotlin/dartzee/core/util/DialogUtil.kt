@@ -11,6 +11,7 @@ import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
 import java.awt.Component
 import java.io.File
+import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
 
@@ -106,7 +107,16 @@ object DialogUtil {
 
     fun chooseDirectory(parent: Component?): File? {
         logDialogShown("File selector", "", "")
-        val file = dialogFactory.chooseDirectory(parent)
+
+        val fc = JFileChooser()
+        fc.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+        val option = fc.showDialog(parent, "Select")
+        if (option != JFileChooser.APPROVE_OPTION) {
+            logDialogClosed("File selector", null)
+            return null
+        }
+
+        val file = fc.selectedFile
         logDialogClosed("File selector", file?.absolutePath)
         return file
     }

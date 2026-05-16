@@ -48,7 +48,7 @@ class FileUploaderTest : AbstractTest() {
 
         uploader.clickChild<JButton>(text = "...", async = true)
 
-        val chooserDialog = getFileChooser()
+        val chooserDialog = getFileChooser("Open")
         chooserDialog.clickCancel()
 
         InjectedThings.preferenceService.find(Preferences.imageUploadDirectory) shouldBe null
@@ -93,7 +93,7 @@ class FileUploaderTest : AbstractTest() {
 
         uploader.clickChild<JButton>(text = "...", async = true)
 
-        val chooserDialog = getFileChooser()
+        val chooserDialog = getFileChooser("Open")
         val combo =
             chooserDialog.getChild<JComboBox<FileNameExtensionFilter>> {
                 it.selectedItem is FileNameExtensionFilter
@@ -121,7 +121,7 @@ class FileUploaderTest : AbstractTest() {
         uploaderTwo.getChild<JTextField>().text shouldBe rsrcDirectory
 
         uploaderTwo.clickChild<JButton>(text = "...", async = true)
-        val chooser = getFileChooser()
+        val chooser = getFileChooser("Open")
         val combo = chooser.getChild<JComboBox<File>> { it.selectedItem is File }
         combo.selectedItemTyped() shouldBe File(rsrcDirectory)
     }

@@ -1,13 +1,8 @@
 package dartzee.core.helper
 
 import dartzee.core.util.IMessageDialogFactory
-import java.awt.Component
-import java.io.File
 
 class TestMessageDialogFactory : IMessageDialogFactory {
-    // Directory
-    var directoryToSelect: File? = null
-
     // Inputs
     var inputSelection: Any? = null
     var inputOptionsPresented: Array<*>? = null
@@ -44,13 +39,10 @@ class TestMessageDialogFactory : IMessageDialogFactory {
         return selection
     }
 
-    override fun chooseDirectory(parent: Component?) = directoryToSelect
-
     fun reset() {
         inputsShown.clear()
         inputOptionsPresented = arrayOf<Any>()
         optionSequence.clear()
         optionsShown.clear()
-        directoryToSelect = null
     }
 }

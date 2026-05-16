@@ -1,8 +1,5 @@
 package dartzee.core.util
 
-import java.awt.Component
-import java.io.File
-import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 
 class MessageDialogFactory : IMessageDialogFactory {
@@ -37,16 +34,5 @@ class MessageDialogFactory : IMessageDialogFactory {
                 options.first(),
             )
         return if (selection > -1) typedArray[selection] else null
-    }
-
-    override fun chooseDirectory(parent: Component?): File? {
-        val fc = JFileChooser()
-        fc.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-        val option = fc.showDialog(parent, "Select")
-        if (option != JFileChooser.APPROVE_OPTION) {
-            return null
-        }
-
-        return fc.selectedFile
     }
 }

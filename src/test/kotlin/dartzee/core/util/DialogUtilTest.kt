@@ -11,6 +11,7 @@ import com.github.alyssaburlton.swingtest.shouldBeVisible
 import dartzee.core.helper.TestMessageDialogFactory
 import dartzee.expectInfoDialog
 import dartzee.getErrorDialog
+import dartzee.getFileChooser
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.TEST_ROOT
@@ -18,6 +19,8 @@ import dartzee.logging.CODE_DIALOG_CLOSED
 import dartzee.logging.CODE_DIALOG_SHOWN
 import dartzee.logging.Severity
 import dartzee.runAsync
+import dartzee.selectFile
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.spyk
@@ -32,7 +35,6 @@ class DialogUtilTest : AbstractTest() {
     @Test
     fun `Should pass method calls on to implementation`() {
         factoryMock.optionSequence.add("1")
-        factoryMock.directoryToSelect = File("/")
 
         clearAllMocks()
 
@@ -43,7 +45,6 @@ class DialogUtilTest : AbstractTest() {
             "Would you like some?",
             listOf("Yes please", "No thanks"),
         )
-        DialogUtil.chooseDirectory(null)
 
         verifySequence {
             factoryMock.showOption(
@@ -51,7 +52,6 @@ class DialogUtilTest : AbstractTest() {
                 "Would you like some?",
                 listOf("Yes please", "No thanks"),
             )
-            factoryMock.chooseDirectory(null)
         }
 
         clearAllMocks()
@@ -153,25 +153,32 @@ class DialogUtilTest : AbstractTest() {
     }
 
     @Test
-    fun `Should handle a null file when logging file selection`() {
-        dialogFactory.directoryToSelect = null
+    fun `Should handle a cancelling directory selection`() {
+        var selected: File? = null
+        runAsync { selected = DialogUtil.chooseDirectory(null) }
 
-        DialogUtil.chooseDirectory(null)
+        getFileChooser("Select").clickCancel(async = true)
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "File selector dialog shown: "
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "File selector dialog closed"
+
+        selected.shouldBeNull()
     }
 
     @Test
-    fun `Should log the file path when selecting a directory`() {
+    fun `Should be able to select a directory`() {
         val f = File(TEST_ROOT)
-        dialogFactory.directoryToSelect = f
 
-        DialogUtil.chooseDirectory(null)
+        var selected: File? = null
+        runAsync { selected = DialogUtil.chooseDirectory(null) }
+
+        selectFile(f.absolutePath, "Select")
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "File selector dialog shown: "
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
             "File selector dialog closed - selected ${f.absolutePath}"
+
+        selected shouldBe File(f.absolutePath)
     }
 
     @Test
