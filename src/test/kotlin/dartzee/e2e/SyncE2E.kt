@@ -29,6 +29,7 @@ import dartzee.screen.sync.SyncManagementPanel
 import dartzee.screen.sync.SyncManagementScreen
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.screen.sync.SyncSetupPanel
+import dartzee.selectFromOptionDialog
 import dartzee.sync.AmazonS3RemoteDatabaseStore
 import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
@@ -152,8 +153,9 @@ class SyncE2E : AbstractE2ETest() {
     private fun performPush(mainScreen: DartsApp): String {
         val remoteName = UUID.randomUUID().toString()
         dialogFactory.inputSelection = remoteName
-        dialogFactory.optionSequence.add("Create '$remoteName'")
-        mainScreen.clickChild<JButton>(text = "Get Started > ")
+        mainScreen.clickChild<JButton>(text = "Get Started > ", async = true)
+
+        selectFromOptionDialog("Database not found", "Create '$remoteName'")
 
         waitForAssertion { mainScreen.findChild<SyncManagementPanel>() shouldNotBe null }
 
@@ -161,8 +163,9 @@ class SyncE2E : AbstractE2ETest() {
     }
 
     private fun performSync(mainScreen: DartsApp) {
-        dialogFactory.optionSequence.add("Sync with local data")
-        mainScreen.clickChild<JButton>(text = "Get Started > ")
+        mainScreen.clickChild<JButton>(text = "Get Started > ", async = true)
+
+        selectFromOptionDialog("Database found", "Sync with local data")
 
         waitForInfoDialog("Sync completed successfully!\n\nGames pushed: 1\n\nGames pulled: 1")
 

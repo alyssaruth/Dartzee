@@ -141,7 +141,8 @@ class DialogUtilTest : AbstractTest() {
 
         cancelOptionDialog("Free Pizza")
 
-        verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Option dialog closed"
+        verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
+            "Option dialog closed - selected Cancel"
         selection shouldBe null
     }
 

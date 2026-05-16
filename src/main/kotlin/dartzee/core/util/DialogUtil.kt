@@ -89,7 +89,7 @@ object DialogUtil {
     fun showOption(title: String, message: String, options: List<String>): String? {
         logDialogShown("Option", title, message)
 
-        val typedArray = options.toTypedArray()
+        val typedArray = (options + "Cancel").toTypedArray()
         val selection =
             JOptionPane.showOptionDialog(
                 null,
@@ -104,7 +104,7 @@ object DialogUtil {
 
         val result = if (selection > -1) typedArray[selection] else null
         logDialogClosed("Option", result)
-        return result
+        return if (result == "Cancel") null else result
     }
 
     fun <K> showInput(

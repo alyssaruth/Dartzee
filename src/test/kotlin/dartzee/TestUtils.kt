@@ -280,12 +280,12 @@ private fun getInfoDialog() = findInfoDialog()!!
 fun findInfoDialog(predicate: (window: JDialog) -> Boolean = { true }) =
     findOptionPaneDialog("Information", predicate)
 
-fun getQuestionDialog() = findQuestionDialog()!!
+fun getQuestionDialog() = getOptionPaneDialog("Question")
 
 fun findQuestionDialog() = findOptionPaneDialog("Question")
 
 fun getErrorDialog(predicate: (window: JDialog) -> Boolean = { true }) =
-    findErrorDialog(predicate)!!
+    getOptionPaneDialog("Error", predicate)
 
 fun findErrorDialog(predicate: (window: JDialog) -> Boolean = { true }) =
     findOptionPaneDialog("Error", predicate)
@@ -293,20 +293,23 @@ fun findErrorDialog(predicate: (window: JDialog) -> Boolean = { true }) =
 fun waitForQuestionDialog(): JDialog = waitForWindow<JDialog> { it.title == "Question" }
 
 fun selectFromOptionDialog(title: String, selection: String) {
-    val dialog = findOptionPaneDialog(title) { it.isVisible }!!
+    val dialog = getOptionPaneDialog(title) { it.isVisible }
     dialog.clickButton(text = selection, async = true)
 }
 
 fun cancelOptionDialog(title: String) {
-    val dialog = findOptionPaneDialog(title) { it.isVisible }!!
+    val dialog = getOptionPaneDialog(title) { it.isVisible }
     dialog.clickCancel(async = true)
 }
 
 fun dismissOptionDialog(title: String) {
-    val dialog = findOptionPaneDialog(title) { it.isVisible }!!
+    val dialog = getOptionPaneDialog(title) { it.isVisible }
     dialog.dispose()
     flushEdt()
 }
+
+private fun getOptionPaneDialog(title: String, predicate: (window: JDialog) -> Boolean = { true }) =
+    getWindow<JDialog> { it.title == title && predicate(it) }
 
 private fun findOptionPaneDialog(
     title: String,

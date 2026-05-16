@@ -19,20 +19,4 @@ class MessageDialogFactory : IMessageDialogFactory {
             options,
             defaultOption,
         ) as K?
-
-    override fun showOption(title: String, message: String, options: List<String>): String? {
-        val typedArray = options.toTypedArray()
-        val selection =
-            JOptionPane.showOptionDialog(
-                null,
-                message,
-                title,
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                typedArray,
-                options.first(),
-            )
-        return if (selection > -1) typedArray[selection] else null
-    }
 }

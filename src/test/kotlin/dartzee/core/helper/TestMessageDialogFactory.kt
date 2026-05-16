@@ -8,9 +8,6 @@ class TestMessageDialogFactory : IMessageDialogFactory {
     var inputOptionsPresented: Array<*>? = null
     val inputsShown = mutableListOf<String>()
 
-    val optionSequence = mutableListOf<String?>()
-    val optionsShown = mutableListOf<String>()
-
     override fun <K> showInput(
         title: String,
         message: String,
@@ -33,16 +30,8 @@ class TestMessageDialogFactory : IMessageDialogFactory {
         )
     }
 
-    override fun showOption(title: String, message: String, options: List<String>): String? {
-        optionsShown.add(message)
-        val selection = optionSequence.removeAt(0)
-        return selection
-    }
-
     fun reset() {
         inputsShown.clear()
         inputOptionsPresented = arrayOf<Any>()
-        optionSequence.clear()
-        optionsShown.clear()
     }
 }
