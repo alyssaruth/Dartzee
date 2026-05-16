@@ -8,12 +8,14 @@ import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.shouldBeVisible
+import com.github.alyssaburlton.swingtest.typeText
 import dartzee.cancelOptionDialog
 import dartzee.dismissOptionDialog
 import dartzee.expectInfoDialog
 import dartzee.getErrorDialog
 import dartzee.getFileChooser
 import dartzee.getQuestionDialog
+import dartzee.getWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.TEST_ROOT
 import dartzee.logging.CODE_DIALOG_CLOSED
@@ -25,7 +27,11 @@ import dartzee.selectFromOptionDialog
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import java.io.File
+import javax.swing.JComboBox
+import javax.swing.JDialog
 import javax.swing.JLabel
+import javax.swing.JList
+import javax.swing.text.JTextComponent
 import org.junit.jupiter.api.Test
 
 class DialogUtilTest : AbstractTest() {
@@ -168,14 +174,53 @@ class DialogUtilTest : AbstractTest() {
     }
 
     @Test
-    fun `Should log for INPUT dialogs, with the selection`() {
-        dialogFactory.inputSelection = "Camembert"
-        DialogUtil.showInput<String>("Cheezoid", "Enter your favourite cheese")
+    fun `Should show an input with a free-text entry`() {
+        var option: String? = null
+        runAsync {
+            option = DialogUtil.showInput<String>("Cheezoid", "Enter your favourite cheese")
+        }
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Input dialog shown: Enter your favourite cheese"
+
+        val dlg = getWindow<JDialog> { it.title == "Cheezoid" }
+        dlg.getChild<JTextComponent>().typeText("Camembert")
+        dlg.clickOk(async = true)
+
+        option shouldBe "Camembert"
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
             "Input dialog closed - selected Camembert"
+    }
+
+    @Test
+    fun `Should show an input with a small number of options in a combo box`() {
+        var option: Int? = null
+        runAsync { option = DialogUtil.showInput("Game", "Pick GameId", arrayOf(1, 2, 3, 4, 5)) }
+
+        val dlg = getWindow<JDialog> { it.title == "Game" }
+        val combo = dlg.getChild<JComboBox<Int>>()
+        combo.selectedItem = 3
+        dlg.clickOk(async = true)
+
+        option shouldBe 3
+        verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
+            "Input dialog closed - selected 3"
+    }
+
+    @Test
+    fun `Should show an input with many options in a list`() {
+        val options = (1..100).toList().toTypedArray()
+        var option: Int? = null
+        runAsync { option = DialogUtil.showInput("Game", "Pick GameId", options) }
+
+        val dlg = getWindow<JDialog> { it.title == "Game" }
+        val list = dlg.getChild<JList<Int>>()
+        list.setSelectedValue(77, true)
+        dlg.clickOk(async = true)
+
+        option shouldBe 77
+        verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
+            "Input dialog closed - selected 77"
     }
 
     @Test
