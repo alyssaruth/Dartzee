@@ -8,7 +8,8 @@ import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.shouldBeVisible
-import dartzee.core.helper.TestMessageDialogFactory
+import dartzee.cancelOptionDialog
+import dartzee.dismissOptionDialog
 import dartzee.expectInfoDialog
 import dartzee.getErrorDialog
 import dartzee.getFileChooser
@@ -20,43 +21,14 @@ import dartzee.logging.CODE_DIALOG_SHOWN
 import dartzee.logging.Severity
 import dartzee.runAsync
 import dartzee.selectFile
+import dartzee.selectFromOptionDialog
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import io.mockk.clearAllMocks
-import io.mockk.spyk
-import io.mockk.verifySequence
 import java.io.File
 import javax.swing.JLabel
 import org.junit.jupiter.api.Test
 
 class DialogUtilTest : AbstractTest() {
-    var factoryMock = spyk<TestMessageDialogFactory>()
-
-    @Test
-    fun `Should pass method calls on to implementation`() {
-        factoryMock.optionSequence.add("1")
-
-        clearAllMocks()
-
-        DialogUtil.init(factoryMock)
-
-        DialogUtil.showOption(
-            "Free Pizza",
-            "Would you like some?",
-            listOf("Yes please", "No thanks"),
-        )
-
-        verifySequence {
-            factoryMock.showOption(
-                "Free Pizza",
-                "Would you like some?",
-                listOf("Yes please", "No thanks"),
-            )
-        }
-
-        clearAllMocks()
-    }
-
     @Test
     fun `Should log for INFO dialogs`() {
         runAsync { DialogUtil.showInfo("Something useful") }
@@ -131,14 +103,67 @@ class DialogUtilTest : AbstractTest() {
     }
 
     @Test
-    fun `Should log for OPTION dialogs, with the selection`() {
-        dialogFactory.optionSequence.add("Yes please")
+    fun `Should show an option pane and return the selection`() {
+        var selection: String? = null
+        runAsync {
+            selection =
+                DialogUtil.showOption(
+                    "Free Pizza",
+                    "Would you like some?",
+                    listOf("Yes please", "No thanks", "Maybe later"),
+                )
+        }
 
-        DialogUtil.showOption("Free Pizza", "Free pizza?", listOf("Yes please", "No thanks"))
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
-            "Option dialog shown: Free pizza?"
+            "Option dialog shown: Would you like some?"
+
+        selectFromOptionDialog("Free Pizza", "Yes please")
+
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
             "Option dialog closed - selected Yes please"
+        selection shouldBe "Yes please"
+    }
+
+    @Test
+    fun `Should handle cancelling an option dialog`() {
+        var selection: String? = null
+        runAsync {
+            selection =
+                DialogUtil.showOption(
+                    "Free Pizza",
+                    "Would you like some?",
+                    listOf("Yes please", "No thanks", "Maybe later"),
+                )
+        }
+
+        verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
+            "Option dialog shown: Would you like some?"
+
+        cancelOptionDialog("Free Pizza")
+
+        verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Option dialog closed"
+        selection shouldBe null
+    }
+
+    @Test
+    fun `Should handle dismissing an option dialog`() {
+        var selection: String? = null
+        runAsync {
+            selection =
+                DialogUtil.showOption(
+                    "Free Pizza",
+                    "Would you like some?",
+                    listOf("Yes please", "No thanks", "Maybe later"),
+                )
+        }
+
+        verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
+            "Option dialog shown: Would you like some?"
+
+        dismissOptionDialog("Free Pizza")
+
+        verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Option dialog closed"
+        selection shouldBe null
     }
 
     @Test

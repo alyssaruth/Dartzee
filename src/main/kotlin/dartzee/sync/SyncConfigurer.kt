@@ -22,7 +22,7 @@ class SyncConfigurer(private val dbStore: IRemoteDatabaseStore) {
                     options,
                 )
 
-            if (response == null || response == "Cancel") {
+            if (response == null) {
                 return null
             }
 

@@ -1,6 +1,9 @@
 package dartzee.sync
 
+import dartzee.cancelOptionDialog
 import dartzee.helper.AbstractTest
+import dartzee.runAsync
+import dartzee.selectFromOptionDialog
 import dartzee.utils.InjectedThings.mainDatabase
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -12,34 +15,22 @@ class SyncConfigurerTest : AbstractTest() {
         dialogFactory.inputSelection = "Goomba"
         dialogFactory.optionSequence.add("Create 'Goomba'")
 
-        val result = makeSyncConfigurer().doFirstTimeSetup()
-        dialogFactory.optionsShown.shouldContainExactly(
-            "No shared database found called 'Goomba'. Would you like to create it?"
-        )
+        var result: SyncConfig? = null
+        runAsync { result = makeSyncConfigurer().doFirstTimeSetup() }
+
+        selectFromOptionDialog("Database not found", "Create 'Goomba'")
+
         result shouldBe SyncConfig(SyncMode.CREATE_REMOTE, "Goomba")
     }
 
     @Test
     fun `Should return null if prompt to create new remote database is cancelled`() {
         dialogFactory.inputSelection = "Goomba"
-        dialogFactory.optionSequence.add("Cancel")
 
-        val result = makeSyncConfigurer().doFirstTimeSetup()
-        dialogFactory.optionsShown.shouldContainExactly(
-            "No shared database found called 'Goomba'. Would you like to create it?"
-        )
-        result shouldBe null
-    }
+        var result: SyncConfig? = null
+        runAsync { result = makeSyncConfigurer().doFirstTimeSetup() }
 
-    @Test
-    fun `Should return null if prompt to create new remote database is escaped`() {
-        dialogFactory.inputSelection = "Goomba"
-        dialogFactory.optionSequence.add(null)
-
-        val result = makeSyncConfigurer().doFirstTimeSetup()
-        dialogFactory.optionsShown.shouldContainExactly(
-            "No shared database found called 'Goomba'. Would you like to create it?"
-        )
+        cancelOptionDialog("Database not found")
         result shouldBe null
     }
 

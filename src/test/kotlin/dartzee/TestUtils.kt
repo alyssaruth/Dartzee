@@ -1,5 +1,6 @@
 package dartzee
 
+import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.clickYes
@@ -290,6 +291,22 @@ fun findErrorDialog(predicate: (window: JDialog) -> Boolean = { true }) =
     findOptionPaneDialog("Error", predicate)
 
 fun waitForQuestionDialog(): JDialog = waitForWindow<JDialog> { it.title == "Question" }
+
+fun selectFromOptionDialog(title: String, selection: String) {
+    val dialog = findOptionPaneDialog(title) { it.isVisible }!!
+    dialog.clickButton(text = selection, async = true)
+}
+
+fun cancelOptionDialog(title: String) {
+    val dialog = findOptionPaneDialog(title) { it.isVisible }!!
+    dialog.clickCancel(async = true)
+}
+
+fun dismissOptionDialog(title: String) {
+    val dialog = findOptionPaneDialog(title) { it.isVisible }!!
+    dialog.dispose()
+    flushEdt()
+}
 
 private fun findOptionPaneDialog(
     title: String,

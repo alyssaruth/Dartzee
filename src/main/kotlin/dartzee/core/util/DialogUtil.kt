@@ -88,9 +88,23 @@ object DialogUtil {
 
     fun showOption(title: String, message: String, options: List<String>): String? {
         logDialogShown("Option", title, message)
-        val selectionStr = dialogFactory.showOption(title, message, options)
-        logDialogClosed("Option", selectionStr)
-        return selectionStr
+
+        val typedArray = options.toTypedArray()
+        val selection =
+            JOptionPane.showOptionDialog(
+                null,
+                message,
+                title,
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                typedArray,
+                options.first(),
+            )
+
+        val result = if (selection > -1) typedArray[selection] else null
+        logDialogClosed("Option", result)
+        return result
     }
 
     fun <K> showInput(
