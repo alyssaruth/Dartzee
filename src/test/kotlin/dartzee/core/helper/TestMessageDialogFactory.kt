@@ -1,20 +1,12 @@
 package dartzee.core.helper
 
 import dartzee.core.util.IMessageDialogFactory
-import java.awt.Component
-import java.io.File
 
 class TestMessageDialogFactory : IMessageDialogFactory {
-    // Directory
-    var directoryToSelect: File? = null
-
     // Inputs
     var inputSelection: Any? = null
     var inputOptionsPresented: Array<*>? = null
     val inputsShown = mutableListOf<String>()
-
-    val optionSequence = mutableListOf<String?>()
-    val optionsShown = mutableListOf<String>()
 
     override fun <K> showInput(
         title: String,
@@ -38,19 +30,8 @@ class TestMessageDialogFactory : IMessageDialogFactory {
         )
     }
 
-    override fun showOption(title: String, message: String, options: List<String>): String? {
-        optionsShown.add(message)
-        val selection = optionSequence.removeAt(0)
-        return selection
-    }
-
-    override fun chooseDirectory(parent: Component?) = directoryToSelect
-
     fun reset() {
         inputsShown.clear()
         inputOptionsPresented = arrayOf<Any>()
-        optionSequence.clear()
-        optionsShown.clear()
-        directoryToSelect = null
     }
 }

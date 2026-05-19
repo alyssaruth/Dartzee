@@ -8,9 +8,11 @@ import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.shouldBeVisible
-import dartzee.core.helper.TestMessageDialogFactory
+import dartzee.cancelOptionDialog
+import dartzee.dismissOptionDialog
 import dartzee.expectInfoDialog
 import dartzee.getErrorDialog
+import dartzee.getFileChooser
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.TEST_ROOT
@@ -18,45 +20,15 @@ import dartzee.logging.CODE_DIALOG_CLOSED
 import dartzee.logging.CODE_DIALOG_SHOWN
 import dartzee.logging.Severity
 import dartzee.runAsync
+import dartzee.selectFile
+import dartzee.selectFromOptionDialog
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import io.mockk.clearAllMocks
-import io.mockk.spyk
-import io.mockk.verifySequence
 import java.io.File
 import javax.swing.JLabel
 import org.junit.jupiter.api.Test
 
 class DialogUtilTest : AbstractTest() {
-    var factoryMock = spyk<TestMessageDialogFactory>()
-
-    @Test
-    fun `Should pass method calls on to implementation`() {
-        factoryMock.optionSequence.add("1")
-        factoryMock.directoryToSelect = File("/")
-
-        clearAllMocks()
-
-        DialogUtil.init(factoryMock)
-
-        DialogUtil.showOption(
-            "Free Pizza",
-            "Would you like some?",
-            listOf("Yes please", "No thanks"),
-        )
-        DialogUtil.chooseDirectory(null)
-
-        verifySequence {
-            factoryMock.showOption(
-                "Free Pizza",
-                "Would you like some?",
-                listOf("Yes please", "No thanks"),
-            )
-            factoryMock.chooseDirectory(null)
-        }
-
-        clearAllMocks()
-    }
-
     @Test
     fun `Should log for INFO dialogs`() {
         runAsync { DialogUtil.showInfo("Something useful") }
@@ -131,14 +103,68 @@ class DialogUtilTest : AbstractTest() {
     }
 
     @Test
-    fun `Should log for OPTION dialogs, with the selection`() {
-        dialogFactory.optionSequence.add("Yes please")
+    fun `Should show an option pane and return the selection`() {
+        var selection: String? = null
+        runAsync {
+            selection =
+                DialogUtil.showOption(
+                    "Free Pizza",
+                    "Would you like some?",
+                    listOf("Yes please", "No thanks", "Maybe later"),
+                )
+        }
 
-        DialogUtil.showOption("Free Pizza", "Free pizza?", listOf("Yes please", "No thanks"))
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
-            "Option dialog shown: Free pizza?"
+            "Option dialog shown: Would you like some?"
+
+        selectFromOptionDialog("Free Pizza", "Yes please")
+
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
             "Option dialog closed - selected Yes please"
+        selection shouldBe "Yes please"
+    }
+
+    @Test
+    fun `Should handle cancelling an option dialog`() {
+        var selection: String? = null
+        runAsync {
+            selection =
+                DialogUtil.showOption(
+                    "Free Pizza",
+                    "Would you like some?",
+                    listOf("Yes please", "No thanks", "Maybe later"),
+                )
+        }
+
+        verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
+            "Option dialog shown: Would you like some?"
+
+        cancelOptionDialog("Free Pizza")
+
+        verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
+            "Option dialog closed - selected Cancel"
+        selection shouldBe null
+    }
+
+    @Test
+    fun `Should handle dismissing an option dialog`() {
+        var selection: String? = null
+        runAsync {
+            selection =
+                DialogUtil.showOption(
+                    "Free Pizza",
+                    "Would you like some?",
+                    listOf("Yes please", "No thanks", "Maybe later"),
+                )
+        }
+
+        verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
+            "Option dialog shown: Would you like some?"
+
+        dismissOptionDialog("Free Pizza")
+
+        verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Option dialog closed"
+        selection shouldBe null
     }
 
     @Test
@@ -153,25 +179,32 @@ class DialogUtilTest : AbstractTest() {
     }
 
     @Test
-    fun `Should handle a null file when logging file selection`() {
-        dialogFactory.directoryToSelect = null
+    fun `Should handle a cancelling directory selection`() {
+        var selected: File? = null
+        runAsync { selected = DialogUtil.chooseDirectory(null) }
 
-        DialogUtil.chooseDirectory(null)
+        getFileChooser("Select").clickCancel(async = true)
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "File selector dialog shown: "
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "File selector dialog closed"
+
+        selected.shouldBeNull()
     }
 
     @Test
-    fun `Should log the file path when selecting a directory`() {
+    fun `Should be able to select a directory`() {
         val f = File(TEST_ROOT)
-        dialogFactory.directoryToSelect = f
 
-        DialogUtil.chooseDirectory(null)
+        var selected: File? = null
+        runAsync { selected = DialogUtil.chooseDirectory(null) }
+
+        selectFile(f.absolutePath, "Select")
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "File selector dialog shown: "
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
             "File selector dialog closed - selected ${f.absolutePath}"
+
+        selected shouldBe File(f.absolutePath)
     }
 
     @Test

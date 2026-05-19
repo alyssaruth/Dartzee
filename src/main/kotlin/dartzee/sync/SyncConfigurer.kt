@@ -14,7 +14,7 @@ class SyncConfigurer(private val dbStore: IRemoteDatabaseStore) {
         }
 
         if (dbStore.databaseExists(remoteName)) {
-            val options = listOf("Overwrite local data", "Sync with local data", "Cancel")
+            val options = listOf("Overwrite local data", "Sync with local data")
             val response =
                 DialogUtil.showOption(
                     "Database found",
@@ -22,7 +22,7 @@ class SyncConfigurer(private val dbStore: IRemoteDatabaseStore) {
                     options,
                 )
 
-            if (response == null || response == "Cancel") {
+            if (response == null) {
                 return null
             }
 
@@ -31,7 +31,7 @@ class SyncConfigurer(private val dbStore: IRemoteDatabaseStore) {
                 else SyncMode.NORMAL_SYNC
             return SyncConfig(choice, remoteName)
         } else {
-            val options = listOf("Create '$remoteName'", "Cancel")
+            val options = listOf("Create '$remoteName'")
             val response =
                 DialogUtil.showOption(
                     "Database not found",
@@ -39,7 +39,7 @@ class SyncConfigurer(private val dbStore: IRemoteDatabaseStore) {
                     options,
                 )
 
-            if (response == null || response == "Cancel") {
+            if (response == null) {
                 return null
             }
 

@@ -1,5 +1,6 @@
 package dartzee
 
+import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickChild
 import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.clickYes
@@ -68,6 +69,7 @@ import javax.swing.JTextField
 import javax.swing.SwingUtilities
 import javax.swing.table.DefaultTableModel
 import javax.swing.text.JTextComponent
+import kotlin.jvm.javaClass
 
 val bullseye = DartboardSegment(SegmentType.DOUBLE, 25)
 val outerBull = DartboardSegment(SegmentType.OUTER_SINGLE, 25)
@@ -213,11 +215,18 @@ fun GameplayDartboard.throwDartByClick(
 
 fun GameplayDartboard.segmentStatuses() = getChild<PresentationDartboard>().segmentStatuses
 
-fun getFileChooser() = getWindow<JDialog> { it.title == "Open" }
+fun getFileChooser(title: String) = getWindow<JDialog> { it.title == title }
 
 fun <T> List<T>.only(): T {
     size shouldBe 1
     return first()
+}
+
+fun selectFile(path: String, title: String) {
+    val chooserDialog = getFileChooser(title)
+    chooserDialog.getChild<JTextComponent>().typeText(path)
+    chooserDialog.clickChild<JButton>(text = title)
+    flushEdt()
 }
 
 fun PlayerImageDialog.selectImage(playerImageId: String) {
@@ -232,11 +241,8 @@ fun PlayerImageDialog.selectImage(playerImageId: String) {
 fun FileUploader.uploadFileFromResource(resourceName: String) {
     clickChild<JButton>(text = "...", async = true)
 
-    val chooserDialog = getFileChooser()
     val rsrcPath = javaClass.getResource(resourceName)!!.path
-    chooserDialog.getChild<JTextComponent>().typeText(rsrcPath)
-    chooserDialog.clickChild<JButton>(text = "Open")
-    flushEdt()
+    selectFile(rsrcPath, "Open")
 
     getChild<JTextField>().text shouldBe File(rsrcPath).path
     clickChild<JButton>(text = "Upload", async = true)
@@ -271,19 +277,39 @@ fun findLoadingDialog(text: String) = findWindow<LoadingDialog> { it.message == 
 
 private fun getInfoDialog() = findInfoDialog()!!
 
-private fun findInfoDialog() = findOptionPaneDialog("Information")
+fun findInfoDialog(predicate: (window: JDialog) -> Boolean = { true }) =
+    findOptionPaneDialog("Information", predicate)
 
-fun getQuestionDialog() = findQuestionDialog()!!
+fun getQuestionDialog() = getOptionPaneDialog("Question")
 
 fun findQuestionDialog() = findOptionPaneDialog("Question")
 
 fun getErrorDialog(predicate: (window: JDialog) -> Boolean = { true }) =
-    findErrorDialog(predicate)!!
+    getOptionPaneDialog("Error", predicate)
 
 fun findErrorDialog(predicate: (window: JDialog) -> Boolean = { true }) =
     findOptionPaneDialog("Error", predicate)
 
 fun waitForQuestionDialog(): JDialog = waitForWindow<JDialog> { it.title == "Question" }
+
+fun selectFromOptionDialog(title: String, selection: String) {
+    val dialog = getOptionPaneDialog(title) { it.isVisible }
+    dialog.clickButton(text = selection, async = true)
+}
+
+fun cancelOptionDialog(title: String) {
+    val dialog = getOptionPaneDialog(title) { it.isVisible }
+    dialog.clickCancel(async = true)
+}
+
+fun dismissOptionDialog(title: String) {
+    val dialog = getOptionPaneDialog(title) { it.isVisible }
+    dialog.dispose()
+    flushEdt()
+}
+
+private fun getOptionPaneDialog(title: String, predicate: (window: JDialog) -> Boolean = { true }) =
+    getWindow<JDialog> { it.title == title && predicate(it) }
 
 private fun findOptionPaneDialog(
     title: String,

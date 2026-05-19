@@ -11,6 +11,7 @@ import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
 import java.awt.Component
 import java.io.File
+import javax.swing.JFileChooser
 import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
 
@@ -87,9 +88,23 @@ object DialogUtil {
 
     fun showOption(title: String, message: String, options: List<String>): String? {
         logDialogShown("Option", title, message)
-        val selectionStr = dialogFactory.showOption(title, message, options)
-        logDialogClosed("Option", selectionStr)
-        return selectionStr
+
+        val typedArray = (options + "Cancel").toTypedArray()
+        val selection =
+            JOptionPane.showOptionDialog(
+                null,
+                message,
+                title,
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                typedArray,
+                options.first(),
+            )
+
+        val result = if (selection > -1) typedArray[selection] else null
+        logDialogClosed("Option", result)
+        return if (result == "Cancel") null else result
     }
 
     fun <K> showInput(
@@ -106,7 +121,16 @@ object DialogUtil {
 
     fun chooseDirectory(parent: Component?): File? {
         logDialogShown("File selector", "", "")
-        val file = dialogFactory.chooseDirectory(parent)
+
+        val fc = JFileChooser()
+        fc.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+        val option = fc.showDialog(parent, "Select")
+        if (option != JFileChooser.APPROVE_OPTION) {
+            logDialogClosed("File selector", null)
+            return null
+        }
+
+        val file = fc.selectedFile
         logDialogClosed("File selector", file?.absolutePath)
         return file
     }

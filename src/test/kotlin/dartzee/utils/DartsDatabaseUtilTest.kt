@@ -1,14 +1,17 @@
 package dartzee.utils
 
+import com.github.alyssaburlton.swingtest.clickCancel
 import com.github.alyssaburlton.swingtest.clickNo
 import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.findWindow
 import dartzee.db.DatabaseMigrator
 import dartzee.db.EntityName
 import dartzee.db.MigrationResult
 import dartzee.expectErrorDialog
 import dartzee.expectInfoDialog
+import dartzee.findErrorDialog
+import dartzee.findInfoDialog
 import dartzee.getDialogMessage
+import dartzee.getFileChooser
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.TEST_DB_DIRECTORY
@@ -25,6 +28,7 @@ import dartzee.logging.Severity
 import dartzee.runAsync
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGameScreen
+import dartzee.selectFile
 import dartzee.utils.DartsDatabaseUtil.DATABASE_NAME
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import dartzee.utils.InjectedThings.mainDatabase
@@ -32,11 +36,11 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.file.shouldNotExist
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import java.io.File
-import javax.swing.JDialog
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -83,19 +87,20 @@ class DartsDatabaseUtilTest : AbstractTest() {
 
     @Test
     fun `Should not back up any files if file selection cancelled`() {
-        dialogFactory.directoryToSelect = null
+        runAsync { DartsDatabaseUtil.backupCurrentDatabase() }
 
-        DartsDatabaseUtil.backupCurrentDatabase()
+        getFileChooser("Select").clickCancel(async = true)
 
-        findWindow<JDialog>() shouldBe null
+        findInfoDialog().shouldBeNull()
+        findErrorDialog().shouldBeNull()
     }
 
     @Test
     fun `Should show an error if an error is thrown when copying the files`() {
         File(TEST_DB_DIRECTORY).deleteRecursively()
-        dialogFactory.directoryToSelect = File(TEST_DB_DIRECTORY)
 
         runAsync { DartsDatabaseUtil.backupCurrentDatabase() }
+        selectFile(TEST_DB_DIRECTORY, "Select")
 
         expectErrorDialog("There was a problem creating the backup.")
         verifyLog(CODE_BACKUP_ERROR, Severity.ERROR)
@@ -107,10 +112,10 @@ class DartsDatabaseUtilTest : AbstractTest() {
         file.createNewFile()
 
         val selectedDir = File(BACKUP_LOCATION)
-        dialogFactory.directoryToSelect = selectedDir
 
         runAsync { DartsDatabaseUtil.backupCurrentDatabase() }
 
+        selectFile(selectedDir.absolutePath, "Select")
         expectInfoDialog(
             "Database successfully backed up to ${File("${selectedDir.absolutePath}/$DATABASE_NAME")}"
         )
@@ -129,18 +134,23 @@ class DartsDatabaseUtilTest : AbstractTest() {
 
     @Test
     fun `Should not do a restore if file selection is cancelled`() {
-        dialogFactory.directoryToSelect = null
-
         runAsync { DartsDatabaseUtil.restoreDatabase() }
+
         expectInfoDialog("Select the 'Darts' folder you want to restore from.")
+
+        val chooserDialog = getFileChooser("Select")
+        chooserDialog.clickCancel(async = true)
+
+        findInfoDialog { it.isVisible }.shouldBeNull()
+        findErrorDialog().shouldBeNull()
     }
 
     @Test
     fun `Should show an error and not do the restore if the selected folder has the wrong name`() {
-        dialogFactory.directoryToSelect = File(BACKUP_LOCATION)
-
         runAsync { DartsDatabaseUtil.restoreDatabase() }
         expectInfoDialog("Select the 'Darts' folder you want to restore from.")
+
+        selectFile(File(BACKUP_LOCATION).absolutePath, "Select")
 
         expectErrorDialog(
             "Selected path is not valid - you must select a folder named '$DATABASE_NAME'"
@@ -151,10 +161,12 @@ class DartsDatabaseUtilTest : AbstractTest() {
     fun `Should show an error and tidy up if an exception is thrown during the copy`() {
         Database(DartsDatabaseUtil.OTHER_DATABASE_NAME).getDirectory().mkdirs()
 
-        dialogFactory.directoryToSelect = File("$BACKUP_LOCATION/Darts")
+        val path = File("$BACKUP_LOCATION/Darts").absolutePath
 
         runAsync { DartsDatabaseUtil.restoreDatabase() }
         expectInfoDialog("Select the 'Darts' folder you want to restore from.")
+
+        selectFile(path, "Select")
 
         expectErrorDialog("There was a problem restoring the database.")
 
@@ -167,10 +179,10 @@ class DartsDatabaseUtilTest : AbstractTest() {
         val backupLocation = File("$BACKUP_LOCATION/Darts")
         backupLocation.mkdirs()
 
-        dialogFactory.directoryToSelect = backupLocation
-
         runAsync { DartsDatabaseUtil.restoreDatabase() }
         expectInfoDialog("Select the 'Darts' folder you want to restore from.")
+
+        selectFile(backupLocation.absolutePath, "Select")
 
         expectErrorDialog("An error occurred connecting to the selected database.")
         verifyLog(CODE_TEST_CONNECTION_ERROR, Severity.ERROR)
