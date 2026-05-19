@@ -17,11 +17,6 @@ import javax.swing.SwingUtilities
 
 object DialogUtil {
     private var loadingDialog: LoadingDialog? = null
-    private var dialogFactory: IMessageDialogFactory = MessageDialogFactory()
-
-    fun init(implementation: IMessageDialogFactory) {
-        dialogFactory = implementation
-    }
 
     fun showInfo(infoText: String, parent: Component = ScreenCache.mainScreen) {
         logDialogShown("Info", "Information", infoText)

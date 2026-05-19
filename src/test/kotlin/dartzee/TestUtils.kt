@@ -6,6 +6,7 @@ import com.github.alyssaburlton.swingtest.clickOk
 import com.github.alyssaburlton.swingtest.clickYes
 import com.github.alyssaburlton.swingtest.doClick
 import com.github.alyssaburlton.swingtest.findAll
+import com.github.alyssaburlton.swingtest.findChild
 import com.github.alyssaburlton.swingtest.findWindow
 import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.generateComponentTree
@@ -59,9 +60,11 @@ import java.util.*
 import javax.swing.Icon
 import javax.swing.ImageIcon
 import javax.swing.JButton
+import javax.swing.JComboBox
 import javax.swing.JComponent
 import javax.swing.JDialog
 import javax.swing.JLabel
+import javax.swing.JList
 import javax.swing.JPanel
 import javax.swing.JRadioButton
 import javax.swing.JTabbedPane
@@ -297,12 +300,48 @@ fun selectFromOptionDialog(title: String, selection: String) {
     dialog.clickButton(text = selection, async = true)
 }
 
+fun typeIntoInputDialog(title: String, text: String) {
+    val dlg = getOptionPaneDialog(title) { it.isVisible }
+    dlg.getChild<JTextComponent>().typeText(text)
+    dlg.clickOk(async = true)
+}
+
+inline fun <reified E : Any> selectOptionFromInputDialog(title: String, value: E) {
+    val dlg = getWindow<JDialog> { it.title == title && it.isVisible }
+
+    val combo = dlg.findChild<JComboBox<E>>()
+    if (combo != null) {
+        if (!combo.items().contains(value)) {
+            throw AssertionError(
+                "Input dialog did not contain desired option $value. Options: ${combo.items()}"
+            )
+        }
+        combo.selectedItem = value
+    } else {
+        val list = dlg.getChild<JList<E>>()
+        if (list.items().contains(value)) {
+            throw AssertionError(
+                "Input dialog did not contain desired option $value. Options: ${list.items()}"
+            )
+        }
+
+        list.setSelectedValue(value, true)
+    }
+
+    dlg.clickOk(async = true)
+}
+
+inline fun <reified E> JList<E>.items(): List<E> {
+    val size = model.size
+    return (0 until size).map { model.getElementAt(it) }
+}
+
 fun cancelOptionDialog(title: String) {
     val dialog = getOptionPaneDialog(title) { it.isVisible }
     dialog.clickCancel(async = true)
 }
 
-fun dismissOptionDialog(title: String) {
+fun dismissDialog(title: String) {
     val dialog = getOptionPaneDialog(title) { it.isVisible }
     dialog.dispose()
     flushEdt()

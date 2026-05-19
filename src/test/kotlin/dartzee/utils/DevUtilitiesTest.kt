@@ -8,6 +8,7 @@ import dartzee.db.DartzeeRuleEntity
 import dartzee.db.EntityName
 import dartzee.db.ParticipantEntity
 import dartzee.db.TeamEntity
+import dartzee.dismissDialog
 import dartzee.expectErrorDialog
 import dartzee.game.loadParticipants
 import dartzee.game.prepareParticipants
@@ -31,9 +32,9 @@ import dartzee.purgeGameAndConfirm
 import dartzee.runAsync
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.FakeDartsScreen
+import dartzee.selectOptionFromInputDialog
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.collections.shouldBeEmpty
-import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
@@ -44,19 +45,15 @@ class DevUtilitiesTest : AbstractTest() {
         runAsync { DevUtilities.purgeGame() }
 
         expectErrorDialog("No games to delete.")
-
-        dialogFactory.inputsShown.shouldBeEmpty()
     }
 
     @Test
     fun `Should not delete any games if info dialog is cancelled`() {
-        dialogFactory.inputSelection = null
         insertGame(localId = 1)
 
-        DevUtilities.purgeGame()
+        runAsync { DevUtilities.purgeGame() }
 
-        dialogFactory.inputsShown.shouldContainExactly("Delete Game")
-        dialogFactory.inputOptionsPresented?.size shouldBe 1
+        dismissDialog("Delete Game")
 
         getCountFromTable(EntityName.Game) shouldBe 1
     }
@@ -66,15 +63,11 @@ class DevUtilitiesTest : AbstractTest() {
         insertGame(localId = 1)
         insertGame(localId = 2)
 
-        dialogFactory.inputSelection = 2L
-
         runAsync { DevUtilities.purgeGame() }
 
-        dialogFactory.inputsShown.shouldContainExactly("Delete Game")
-        dialogFactory.inputOptionsPresented?.size shouldBe 2
+        selectOptionFromInputDialog("Delete Game", 2L)
 
-        getQuestionDialog().clickYes()
-        flushEdt()
+        getQuestionDialog().clickYes(async = true)
 
         getCountFromTable(EntityName.Game) shouldBe 1
         retrieveGame().localId shouldBe 1

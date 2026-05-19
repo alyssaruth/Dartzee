@@ -30,9 +30,11 @@ import dartzee.screen.sync.SyncManagementScreen
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.screen.sync.SyncSetupPanel
 import dartzee.selectFromOptionDialog
+import dartzee.selectOptionFromInputDialog
 import dartzee.sync.AmazonS3RemoteDatabaseStore
 import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
+import dartzee.typeIntoInputDialog
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
@@ -79,12 +81,13 @@ class SyncE2E : AbstractE2ETest() {
         ScreenCache.switch<SyncManagementScreen>()
         mainScreen.isVisible = true
 
-        performPush(mainScreen)
+        val remoteName = UUID.randomUUID().toString()
+        performPush(mainScreen, remoteName)
         wipeGamesAndResetRemote(mainScreen)
 
         val secondGameId = runGame(winner, loser)
 
-        performSync(mainScreen)
+        performSync(mainScreen, remoteName)
 
         GameEntity().retrieveForId(gameId)!!.localId shouldBe 1
         GameEntity().retrieveForId(secondGameId)!!.localId shouldBe 2
@@ -108,7 +111,7 @@ class SyncE2E : AbstractE2ETest() {
         ScreenCache.switch<SyncManagementScreen>()
         mainScreen.isVisible = true
 
-        performPush(mainScreen)
+        performPush(mainScreen, UUID.randomUUID().toString())
         deleteGame(mainScreen)
 
         ScreenCache.switch<SyncManagementScreen>()
@@ -127,8 +130,9 @@ class SyncE2E : AbstractE2ETest() {
 
     private fun deleteGame(mainScreen: DartsApp) {
         ScreenCache.switch<UtilitiesScreen>()
-        dialogFactory.inputSelection = 1L
         mainScreen.clickChild<JButton>(text = "Delete Game", async = true)
+
+        selectOptionFromInputDialog("Delete Game", 1L)
         confirmGameDeletion(1)
     }
 
@@ -150,11 +154,10 @@ class SyncE2E : AbstractE2ETest() {
         return gameId
     }
 
-    private fun performPush(mainScreen: DartsApp): String {
-        val remoteName = UUID.randomUUID().toString()
-        dialogFactory.inputSelection = remoteName
+    private fun performPush(mainScreen: DartsApp, remoteName: String): String {
         mainScreen.clickChild<JButton>(text = "Get Started > ", async = true)
 
+        typeIntoInputDialog("Sync Setup", remoteName)
         selectFromOptionDialog("Database not found", "Create '$remoteName'")
 
         waitForAssertion { mainScreen.findChild<SyncManagementPanel>() shouldNotBe null }
@@ -162,9 +165,10 @@ class SyncE2E : AbstractE2ETest() {
         return remoteName
     }
 
-    private fun performSync(mainScreen: DartsApp) {
+    private fun performSync(mainScreen: DartsApp, remoteName: String) {
         mainScreen.clickChild<JButton>(text = "Get Started > ", async = true)
 
+        typeIntoInputDialog("Sync Setup", remoteName)
         selectFromOptionDialog("Database found", "Sync with local data")
 
         waitForInfoDialog("Sync completed successfully!\n\nGames pushed: 1\n\nGames pulled: 1")

@@ -8,14 +8,12 @@ import com.github.alyssaburlton.swingtest.flushEdt
 import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.typeText
 import dartzee.cancelOptionDialog
-import dartzee.dismissOptionDialog
+import dartzee.dismissDialog
 import dartzee.expectInfoDialog
 import dartzee.getErrorDialog
 import dartzee.getFileChooser
 import dartzee.getQuestionDialog
-import dartzee.getWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.TEST_ROOT
 import dartzee.logging.CODE_DIALOG_CLOSED
@@ -24,14 +22,12 @@ import dartzee.logging.Severity
 import dartzee.runAsync
 import dartzee.selectFile
 import dartzee.selectFromOptionDialog
+import dartzee.selectOptionFromInputDialog
+import dartzee.typeIntoInputDialog
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import java.io.File
-import javax.swing.JComboBox
-import javax.swing.JDialog
 import javax.swing.JLabel
-import javax.swing.JList
-import javax.swing.text.JTextComponent
 import org.junit.jupiter.api.Test
 
 class DialogUtilTest : AbstractTest() {
@@ -167,7 +163,7 @@ class DialogUtilTest : AbstractTest() {
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Option dialog shown: Would you like some?"
 
-        dismissOptionDialog("Free Pizza")
+        dismissDialog("Free Pizza")
 
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Option dialog closed"
         selection shouldBe null
@@ -183,9 +179,7 @@ class DialogUtilTest : AbstractTest() {
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Input dialog shown: Enter your favourite cheese"
 
-        val dlg = getWindow<JDialog> { it.title == "Cheezoid" }
-        dlg.getChild<JTextComponent>().typeText("Camembert")
-        dlg.clickOk(async = true)
+        typeIntoInputDialog("Cheezoid", "Camembert")
 
         option shouldBe "Camembert"
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
@@ -197,10 +191,7 @@ class DialogUtilTest : AbstractTest() {
         var option: Int? = null
         runAsync { option = DialogUtil.showInput("Game", "Pick GameId", arrayOf(1, 2, 3, 4, 5)) }
 
-        val dlg = getWindow<JDialog> { it.title == "Game" }
-        val combo = dlg.getChild<JComboBox<Int>>()
-        combo.selectedItem = 3
-        dlg.clickOk(async = true)
+        selectOptionFromInputDialog("Game", 3)
 
         option shouldBe 3
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
@@ -213,14 +204,24 @@ class DialogUtilTest : AbstractTest() {
         var option: Int? = null
         runAsync { option = DialogUtil.showInput("Game", "Pick GameId", options) }
 
-        val dlg = getWindow<JDialog> { it.title == "Game" }
-        val list = dlg.getChild<JList<Int>>()
-        list.setSelectedValue(77, true)
-        dlg.clickOk(async = true)
+        selectOptionFromInputDialog("Game", 77)
 
         option shouldBe 77
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
             "Input dialog closed - selected 77"
+    }
+
+    @Test
+    fun `Should handle cancelling an input`() {
+        val options = (1..100).toList().toTypedArray()
+        var option: Int? = null
+        runAsync { option = DialogUtil.showInput("Game", "Pick GameId", options) }
+
+        dismissDialog("Game")
+
+        option shouldBe null
+
+        verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Input dialog closed"
     }
 
     @Test

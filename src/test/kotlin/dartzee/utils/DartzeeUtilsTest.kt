@@ -1,5 +1,6 @@
 package dartzee.utils
 
+import dartzee.cancelOptionDialog
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
@@ -13,6 +14,7 @@ import dartzee.helper.insertGame
 import dartzee.helper.twoBlackOneWhite
 import dartzee.`object`.Dart
 import dartzee.runAsync
+import dartzee.typeIntoInputDialog
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -21,7 +23,7 @@ import java.awt.Color
 import javax.swing.JButton
 import org.junit.jupiter.api.Test
 
-class TestDartzeeUtils : AbstractTest() {
+class DartzeeUtilsTest : AbstractTest() {
     @Test
     fun `Should set the right colours based on dartzee result`() {
         val c = JButton()
@@ -97,22 +99,24 @@ class TestDartzeeUtils : AbstractTest() {
 
     @Test
     fun `Should return null when generating a template if no name is entered`() {
-        dialogFactory.inputSelection = null
+        var result: DartzeeTemplateEntity? = null
 
-        val result = generateDartzeeTemplateFromGame(insertGame(), listOf())
+        runAsync { result = generateDartzeeTemplateFromGame(insertGame(), listOf()) }
+
+        cancelOptionDialog("Template Name")
+
         result shouldBe null
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
     }
 
     @Test
     fun `Should generate a template and update the game to point at it`() {
-        dialogFactory.inputSelection = "My Template"
-
         val g = insertGame(gameType = GameType.DARTZEE, gameParams = "")
         val dtos = listOf(innerOuterInner, twoBlackOneWhite)
         var result: DartzeeTemplateEntity? = null
         runAsync { result = generateDartzeeTemplateFromGame(g, dtos) }
 
+        typeIntoInputDialog("Template Name", "My Template")
         expectInfoDialog("Template 'My Template' successfully created.")
 
         result.shouldNotBeNull()
