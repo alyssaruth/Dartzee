@@ -319,7 +319,7 @@ inline fun <reified E : Any> selectOptionFromInputDialog(title: String, value: E
         combo.selectedItem = value
     } else {
         val list = dlg.getChild<JList<E>>()
-        if (list.items().contains(value)) {
+        if (!list.items().contains(value)) {
             throw AssertionError(
                 "Input dialog did not contain desired option $value. Options: ${list.items()}"
             )
