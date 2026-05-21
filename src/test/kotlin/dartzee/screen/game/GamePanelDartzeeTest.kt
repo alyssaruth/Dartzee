@@ -19,6 +19,7 @@ import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
+import dartzee.dismissDialog
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
 import dartzee.expectInfoDialog
@@ -53,6 +54,7 @@ import dartzee.screen.game.dartzee.DartzeeRuleTile
 import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.segmentStatuses
 import dartzee.singleTwenty
+import dartzee.typeIntoInputDialog
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAllPossibleSegments
@@ -110,11 +112,10 @@ class GamePanelDartzeeTest : AbstractTest() {
         val g = insertGame(gameType = GameType.DARTZEE, gameParams = "")
         val parentWindow = FakeDartsScreen()
 
-        dialogFactory.inputSelection = "The Jeneration Game"
-
         val panel = makeGamePanel(testRules, game = g, parentWindow = parentWindow)
         panel.clickChild<JButton>("convertToTemplate", async = true)
 
+        typeIntoInputDialog("Template Name", "The Jeneration Game")
         expectInfoDialog("Template 'The Jeneration Game' successfully created.")
 
         val templateId = panel.gameEntity.gameParams
@@ -131,10 +132,10 @@ class GamePanelDartzeeTest : AbstractTest() {
         val g = insertGame(gameType = GameType.DARTZEE, gameParams = "")
         val parentWindow = FakeDartsScreen()
 
-        dialogFactory.inputSelection = null
-
         val panel = makeGamePanel(testRules, game = g, parentWindow = parentWindow)
-        panel.clickChild<JButton>("convertToTemplate")
+        panel.clickChild<JButton>("convertToTemplate", async = true)
+
+        dismissDialog("Template Name")
 
         val templateId = panel.gameEntity.gameParams
         templateId.shouldBeEmpty()

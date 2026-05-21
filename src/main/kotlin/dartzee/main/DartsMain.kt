@@ -2,7 +2,6 @@ package dartzee.main
 
 import dartzee.core.util.DialogUtil
 import dartzee.core.util.EdtMonitor
-import dartzee.core.util.MessageDialogFactory
 import dartzee.logging.CODE_JAVA_UNSUPPORTED
 import dartzee.logging.LoggerUncaughtExceptionHandler
 import dartzee.`object`.DartsClient
@@ -42,8 +41,6 @@ fun main(args: Array<String>) {
 
     setLookAndFeel()
     initialiseAnimations()
-
-    DialogUtil.init(MessageDialogFactory())
 
     DartsClient.checkForUpdatesIfRequired()
     EdtMonitor.start()

@@ -9,7 +9,7 @@ import com.github.alyssaburlton.swingtest.getChild
 import com.github.alyssaburlton.swingtest.purgeWindows
 import com.github.alyssaburlton.swingtest.shouldBeVisible
 import dartzee.cancelOptionDialog
-import dartzee.dismissOptionDialog
+import dartzee.dismissDialog
 import dartzee.expectInfoDialog
 import dartzee.getErrorDialog
 import dartzee.getFileChooser
@@ -22,6 +22,8 @@ import dartzee.logging.Severity
 import dartzee.runAsync
 import dartzee.selectFile
 import dartzee.selectFromOptionDialog
+import dartzee.selectOptionFromInputDialog
+import dartzee.typeIntoInputDialog
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import java.io.File
@@ -161,21 +163,65 @@ class DialogUtilTest : AbstractTest() {
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Option dialog shown: Would you like some?"
 
-        dismissOptionDialog("Free Pizza")
+        dismissDialog("Free Pizza")
 
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Option dialog closed"
         selection shouldBe null
     }
 
     @Test
-    fun `Should log for INPUT dialogs, with the selection`() {
-        dialogFactory.inputSelection = "Camembert"
-        DialogUtil.showInput<String>("Cheezoid", "Enter your favourite cheese")
+    fun `Should show an input with a free-text entry`() {
+        var option: String? = null
+        runAsync {
+            option = DialogUtil.showInput<String>("Cheezoid", "Enter your favourite cheese")
+        }
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Input dialog shown: Enter your favourite cheese"
+
+        typeIntoInputDialog("Cheezoid", "Camembert")
+
+        option shouldBe "Camembert"
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
             "Input dialog closed - selected Camembert"
+    }
+
+    @Test
+    fun `Should show an input with a small number of options in a combo box`() {
+        var option: Int? = null
+        runAsync { option = DialogUtil.showInput("Game", "Pick GameId", arrayOf(1, 2, 3, 4, 5)) }
+
+        selectOptionFromInputDialog("Game", 3)
+
+        option shouldBe 3
+        verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
+            "Input dialog closed - selected 3"
+    }
+
+    @Test
+    fun `Should show an input with many options in a list`() {
+        val options = (1..100).toList().toTypedArray()
+        var option: Int? = null
+        runAsync { option = DialogUtil.showInput("Game", "Pick GameId", options) }
+
+        selectOptionFromInputDialog("Game", 77)
+
+        option shouldBe 77
+        verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
+            "Input dialog closed - selected 77"
+    }
+
+    @Test
+    fun `Should handle cancelling an input`() {
+        val options = (1..100).toList().toTypedArray()
+        var option: Int? = null
+        runAsync { option = DialogUtil.showInput("Game", "Pick GameId", options) }
+
+        dismissDialog("Game")
+
+        option shouldBe null
+
+        verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Input dialog closed"
     }
 
     @Test

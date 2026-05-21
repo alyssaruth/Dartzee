@@ -2,8 +2,6 @@ package dartzee.helper
 
 import com.github.alyssaburlton.swingtest.SwingTestCleanupExtension
 import dartzee.CURRENT_TIME
-import dartzee.core.helper.TestMessageDialogFactory
-import dartzee.core.util.DialogUtil
 import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.LogRecord
 import dartzee.logging.Logger
@@ -39,17 +37,14 @@ val LOG_DUMP_FILE = File("logdump-${CURRENT_TIME.toEpochMilli()}.txt")
 @ExtendWith(BeforeAllTestsExtension::class)
 @ExtendWith(SwingTestCleanupExtension::class)
 open class AbstractTest {
-    val dialogFactory = TestMessageDialogFactory()
 
     @BeforeEach
     fun beforeEachTest() {
         ScreenCache.emptyCache()
         ResourceCache.resetCache()
-        dialogFactory.reset()
         clearLogs()
         clearAllMocks()
 
-        DialogUtil.init(dialogFactory)
         DartsClient.devMode = false
 
         mainDatabase.localIdGenerator.clearCache()

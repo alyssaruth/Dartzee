@@ -1,8 +1,6 @@
 package dartzee.helper
 
 import dartzee.CURRENT_TIME
-import dartzee.core.helper.TestMessageDialogFactory
-import dartzee.core.util.DialogUtil
 import dartzee.logging.LoggerUncaughtExceptionHandler
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
@@ -24,7 +22,6 @@ class BeforeAllTestsExtension : BeforeAllCallback {
     }
 
     private fun doOneTimeSetup() {
-        DialogUtil.init(TestMessageDialogFactory())
         Thread.setDefaultUncaughtExceptionHandler(LoggerUncaughtExceptionHandler())
 
         InjectedThings.allowModalDialogs = false

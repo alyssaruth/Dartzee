@@ -17,11 +17,6 @@ import javax.swing.SwingUtilities
 
 object DialogUtil {
     private var loadingDialog: LoadingDialog? = null
-    private var dialogFactory: IMessageDialogFactory = MessageDialogFactory()
-
-    fun init(implementation: IMessageDialogFactory) {
-        dialogFactory = implementation
-    }
 
     fun showInfo(infoText: String, parent: Component = ScreenCache.mainScreen) {
         logDialogShown("Info", "Information", infoText)
@@ -114,7 +109,18 @@ object DialogUtil {
         defaultOption: K? = null,
     ): K? {
         logDialogShown("Input", title, message)
-        val selection = dialogFactory.showInput(title, message, options, defaultOption)
+
+        val selection =
+            JOptionPane.showInputDialog(
+                null,
+                message,
+                title,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                options,
+                defaultOption,
+            ) as K?
+
         logDialogClosed("Input", selection)
         return selection
     }

@@ -17,6 +17,7 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
+import dartzee.dismissDialog
 import dartzee.findQuestionDialog
 import dartzee.game.GameType
 import dartzee.getDialogMessage
@@ -30,6 +31,7 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertTemplateAndRule
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.helper.totalIsFifty
+import dartzee.typeIntoInputDialog
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.nulls.shouldBeNull
@@ -244,15 +246,14 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
     fun `Should support renaming a template`() {
         val id = insertTemplateAndRule(name = "Old").rowId
 
-        dialogFactory.inputSelection = "New"
-
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("rename")
+        scrn.clickChild<JButton>("rename", async = true)
 
-        dialogFactory.inputsShown.shouldContainExactly("Rename Template")
+        typeIntoInputDialog("Rename Template", "New")
+
         scrn.getTemplate(0).name shouldBe "New"
 
         val newEntity = DartzeeTemplateEntity().retrieveForId(id)
@@ -262,15 +263,15 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
     @Test
     fun `Should do nothing if rename is cancelled`() {
         insertTemplateAndRule(name = "ABC")
-        dialogFactory.inputSelection = null
 
         val scrn = DartzeeTemplateSetupScreen()
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("rename")
+        scrn.clickChild<JButton>("rename", async = true)
 
-        dialogFactory.inputsShown.shouldContainExactly("Rename Template")
+        dismissDialog("Rename Template")
+
         scrn.getTemplate(0).name shouldBe "ABC"
     }
 
