@@ -259,7 +259,7 @@ fun expectErrorDialog(message: String) {
 }
 
 fun waitForErrorDialog(message: String) {
-    waitForAssertion { findErrorDialog() shouldNotBe null }
+    waitForAssertion { findErrorDialog { it.isVisible } shouldNotBe null }
 
     expectErrorDialog(message)
 }
@@ -271,7 +271,7 @@ fun expectInfoDialog(message: String) {
 }
 
 fun waitForInfoDialog(message: String) {
-    waitForAssertion { findInfoDialog() shouldNotBe null }
+    waitForAssertion { findInfoDialog { it.isVisible } shouldNotBe null }
 
     expectInfoDialog(message)
 }
