@@ -1,6 +1,6 @@
 package dartzee.e2e
 
-import com.github.alyssaburlton.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.achievements.AchievementType
 import dartzee.game.FinishType
 import dartzee.game.GameType

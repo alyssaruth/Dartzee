@@ -1,6 +1,6 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.clickOk
+import io.github.alyssaruth.swingtest.clickOk
 import dartzee.bean.getAllPlayers
 import dartzee.core.helper.doubleClick
 import dartzee.expectErrorDialog

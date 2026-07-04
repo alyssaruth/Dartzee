@@ -1,6 +1,6 @@
 package dartzee.screen.dartzee
 
-import com.github.alyssaburlton.swingtest.makeMouseEvent
+import io.github.alyssaruth.swingtest.makeMouseEvent
 import dartzee.ai.DartzeePlayStyle
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.getAllChildComponentsForType

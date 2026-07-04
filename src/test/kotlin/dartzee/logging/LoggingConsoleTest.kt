@@ -1,6 +1,6 @@
 package dartzee.logging
 
-import com.github.alyssaburlton.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.flushEdt
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
 import dartzee.helper.LOG_DUMP_FILE

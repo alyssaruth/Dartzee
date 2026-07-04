@@ -1,14 +1,5 @@
 package dartzee.screen.dartzee
 
-import com.github.alyssaburlton.swingtest.clickCancel
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeDisabled
-import com.github.alyssaburlton.swingtest.shouldBeEnabled
-import com.github.alyssaburlton.swingtest.typeText
 import dartzee.core.bean.ScrollTable
 import dartzee.core.helper.processKeyPress
 import dartzee.dartzee.DartzeeRuleDto
@@ -22,7 +13,6 @@ import dartzee.findQuestionDialog
 import dartzee.game.GameType
 import dartzee.getDialogMessage
 import dartzee.getQuestionDialog
-import dartzee.getWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.innerOuterInner
@@ -31,15 +21,25 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertTemplateAndRule
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.helper.totalIsFifty
-import dartzee.typeIntoInputDialog
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.getWindow
+import io.github.alyssaruth.swingtest.shouldBeDisabled
+import io.github.alyssaruth.swingtest.shouldBeEnabled
+import io.github.alyssaruth.swingtest.typeIntoInputDialog
+import io.github.alyssaruth.swingtest.typeText
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 import javax.swing.JButton
 import javax.swing.JTextField
-import org.junit.jupiter.api.Test
 
 class DartzeeTemplateSetupScreenTest : AbstractTest() {
     @Test

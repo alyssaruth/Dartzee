@@ -1,8 +1,8 @@
 package dartzee.core.screen
 
-import com.github.alyssaburlton.swingtest.clickCancel
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.helper.AbstractTest
 import dartzee.helper.logger
 import dartzee.logging.LoggingCode

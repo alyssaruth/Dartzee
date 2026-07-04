@@ -1,7 +1,7 @@
 package dartzee.core.helper
 
-import com.github.alyssaburlton.swingtest.doubleClick
-import com.github.alyssaburlton.swingtest.processKeyPress
+import io.github.alyssaruth.swingtest.doubleClick
+import io.github.alyssaruth.swingtest.processKeyPress
 import dartzee.core.bean.ScrollTable
 import java.awt.image.BufferedImage
 import javax.swing.ImageIcon

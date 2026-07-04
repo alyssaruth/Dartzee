@@ -1,8 +1,8 @@
 package dartzee.screen.ai
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 import dartzee.bean.PlayerAvatar

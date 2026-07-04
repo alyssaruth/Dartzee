@@ -1,7 +1,7 @@
 package dartzee.db.sanity
 
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickYes
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
 import dartzee.expectErrorDialog

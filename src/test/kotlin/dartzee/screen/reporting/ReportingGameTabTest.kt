@@ -1,9 +1,9 @@
 package dartzee.screen.reporting
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeDisabled
-import com.github.alyssaburlton.swingtest.shouldBeEnabled
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeDisabled
+import io.github.alyssaruth.swingtest.shouldBeEnabled
 import com.github.lgooddatepicker.components.DatePicker
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.GameParamFilterPanel

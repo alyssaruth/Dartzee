@@ -1,8 +1,8 @@
 package dartzee.main
 
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.flushEdt
 import dartzee.getDialogMessage
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest

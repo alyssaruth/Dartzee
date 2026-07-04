@@ -1,7 +1,7 @@
 package dartzee.core.screen
 
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.TableUtil
 import dartzee.core.util.getAllChildComponentsForType

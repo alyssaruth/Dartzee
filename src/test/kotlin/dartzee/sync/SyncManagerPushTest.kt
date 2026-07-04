@@ -1,8 +1,8 @@
 package dartzee.sync
 
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
-import com.github.alyssaburlton.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.db.SyncAuditEntity
 import dartzee.findLoadingDialog
 import dartzee.helper.AbstractTest

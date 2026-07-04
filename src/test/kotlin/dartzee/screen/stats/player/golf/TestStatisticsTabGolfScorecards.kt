@@ -1,7 +1,7 @@
 package dartzee.screen.stats.player.golf
 
-import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items

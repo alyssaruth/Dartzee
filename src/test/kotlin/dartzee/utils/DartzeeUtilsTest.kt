@@ -14,14 +14,14 @@ import dartzee.helper.insertGame
 import dartzee.helper.twoBlackOneWhite
 import dartzee.`object`.Dart
 import dartzee.runAsync
-import dartzee.typeIntoInputDialog
+import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Test
 import java.awt.Color
 import javax.swing.JButton
-import org.junit.jupiter.api.Test
 
 class DartzeeUtilsTest : AbstractTest() {
     @Test

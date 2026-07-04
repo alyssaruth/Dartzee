@@ -1,6 +1,6 @@
 package dartzee.dartzee
 
-import com.github.alyssaburlton.swingtest.shouldMatchImage
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.ai.AI_DARTBOARD
 import dartzee.ai.DELIBERATE_MISS
 import dartzee.bean.PresentationDartboard

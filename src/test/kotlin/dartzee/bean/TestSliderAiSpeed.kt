@@ -1,6 +1,6 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import javax.swing.JSlider

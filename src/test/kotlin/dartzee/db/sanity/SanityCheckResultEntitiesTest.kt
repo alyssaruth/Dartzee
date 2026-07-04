@@ -1,9 +1,9 @@
 package dartzee.db.sanity
 
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.core.bean.ScrollTable
 import dartzee.core.helper.processKeyPress
 import dartzee.db.EntityName

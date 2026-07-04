@@ -1,6 +1,6 @@
 package dartzee.db
 
-import com.github.alyssaburlton.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldMatch
 import dartzee.DEFAULT_HUMAN_ICON
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics

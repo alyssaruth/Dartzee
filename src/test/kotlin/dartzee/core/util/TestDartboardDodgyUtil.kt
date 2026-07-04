@@ -1,10 +1,10 @@
 package dartzee.core.util
 
-import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.shouldMatch
-import com.github.alyssaburlton.swingtest.shouldMatchImage
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.core.helper.verifyNotCalled
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest

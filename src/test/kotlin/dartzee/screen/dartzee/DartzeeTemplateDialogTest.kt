@@ -1,11 +1,11 @@
 package dartzee.screen.dartzee
 
-import com.github.alyssaburlton.swingtest.clickCancel
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
-import com.github.alyssaburlton.swingtest.typeText
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.typeText
 import dartzee.core.helper.verifyNotCalled
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd

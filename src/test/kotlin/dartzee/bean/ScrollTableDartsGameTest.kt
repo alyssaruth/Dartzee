@@ -1,6 +1,6 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.doClick
+import io.github.alyssaruth.swingtest.doClick
 import dartzee.core.helper.verifyNotCalled
 import dartzee.expectErrorDialog
 import dartzee.game.GameLauncher

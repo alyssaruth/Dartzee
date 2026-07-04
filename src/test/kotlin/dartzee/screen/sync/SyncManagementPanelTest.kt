@@ -1,9 +1,9 @@
 package dartzee.screen.sync
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.CURRENT_TIME
 import dartzee.PAST_TIME
 import dartzee.core.helper.verifyNotCalled

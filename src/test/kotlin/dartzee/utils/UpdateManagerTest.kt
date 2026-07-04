@@ -1,11 +1,11 @@
 package dartzee.utils
 
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import dartzee.core.bean.LinkLabel
 import dartzee.core.helper.verifyNotCalled
 import dartzee.expectErrorDialog

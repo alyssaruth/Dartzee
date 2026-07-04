@@ -1,9 +1,9 @@
 package dartzee.screen.ai
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeDisabled
-import com.github.alyssaburlton.swingtest.shouldBeEnabled
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeDisabled
+import io.github.alyssaruth.swingtest.shouldBeEnabled
 import dartzee.ai.DartsAiModel
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel

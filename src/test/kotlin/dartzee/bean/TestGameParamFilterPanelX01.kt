@@ -1,7 +1,7 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.core.helper.verifyNotCalled
 import dartzee.game.FinishType
 import dartzee.game.X01Config

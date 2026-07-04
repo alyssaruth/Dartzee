@@ -1,6 +1,6 @@
 package dartzee.screen.ai
 
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
 import dartzee.core.bean.selectedItemTyped

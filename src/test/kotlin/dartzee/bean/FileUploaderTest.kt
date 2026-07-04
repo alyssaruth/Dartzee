@@ -1,9 +1,9 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.clickCancel
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.purgeWindows
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.purgeWindows
 import dartzee.core.bean.FileUploader
 import dartzee.core.bean.IFileUploadListener
 import dartzee.core.bean.selectedItemTyped

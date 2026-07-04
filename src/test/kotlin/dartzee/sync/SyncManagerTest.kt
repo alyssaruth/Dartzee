@@ -1,6 +1,6 @@
 package dartzee.sync
 
-import com.github.alyssaburlton.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DeletionAuditEntity
 import dartzee.db.EntityName

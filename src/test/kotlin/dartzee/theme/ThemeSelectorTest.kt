@@ -1,9 +1,9 @@
 package dartzee.theme
 
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeDisabled
-import com.github.alyssaburlton.swingtest.shouldBeEnabled
-import com.github.alyssaburlton.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeDisabled
+import io.github.alyssaruth.swingtest.shouldBeEnabled
+import io.github.alyssaruth.swingtest.shouldMatch
 import dartzee.helper.AbstractTest
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.shouldBe

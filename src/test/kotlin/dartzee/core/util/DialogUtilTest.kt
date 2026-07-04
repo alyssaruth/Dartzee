@@ -1,13 +1,13 @@
 package dartzee.core.util
 
-import com.github.alyssaburlton.swingtest.clickCancel
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.purgeWindows
-import com.github.alyssaburlton.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.purgeWindows
+import io.github.alyssaruth.swingtest.shouldBeVisible
 import dartzee.cancelOptionDialog
 import dartzee.dismissDialog
 import dartzee.expectInfoDialog
@@ -22,8 +22,8 @@ import dartzee.logging.Severity
 import dartzee.runAsync
 import dartzee.selectFile
 import dartzee.selectFromOptionDialog
-import dartzee.selectOptionFromInputDialog
-import dartzee.typeIntoInputDialog
+import io.github.alyssaruth.swingtest.selectOptionFromInputDialog
+import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import java.io.File

@@ -1,7 +1,7 @@
 package dartzee.screen.preference
 
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeDisabled
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeDisabled
 import dartzee.preferences.Preferences
 import dartzee.theme.ThemeId
 import dartzee.theme.ThemeSelector

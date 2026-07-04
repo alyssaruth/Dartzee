@@ -1,6 +1,6 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickChild
 import dartzee.core.helper.doubleClick
 import dartzee.core.helper.processKeyPress
 import dartzee.helper.AbstractTest

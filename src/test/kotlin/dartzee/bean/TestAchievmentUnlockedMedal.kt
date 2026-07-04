@@ -1,6 +1,6 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.shouldMatchImage
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.achievements.x01.AchievementX01HotelInspector
 import dartzee.helper.AbstractTest
 import org.junit.jupiter.api.Tag

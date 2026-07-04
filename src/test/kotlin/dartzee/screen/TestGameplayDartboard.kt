@@ -1,10 +1,10 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.doClick
-import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldMatchImage
+import io.github.alyssaruth.swingtest.doClick
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.bean.DartLabel
 import dartzee.bean.InteractiveDartboard
 import dartzee.core.helper.verifyNotCalled

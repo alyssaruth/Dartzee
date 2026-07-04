@@ -1,19 +1,19 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.clickCancel
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.doClick
-import com.github.alyssaburlton.swingtest.doHover
-import com.github.alyssaburlton.swingtest.doHoverAway
-import com.github.alyssaburlton.swingtest.findWindow
-import com.github.alyssaburlton.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.doClick
+import io.github.alyssaruth.swingtest.doHover
+import io.github.alyssaruth.swingtest.doHoverAway
+import io.github.alyssaruth.swingtest.findWindow
+import io.github.alyssaruth.swingtest.shouldMatch
 import dartzee.db.PlayerEntity
-import dartzee.getWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.screen.PlayerImageDialog
 import dartzee.selectImage
+import io.github.alyssaruth.swingtest.getWindow
 import io.kotest.matchers.shouldBe
 import java.awt.Cursor
 import javax.swing.Icon

@@ -1,6 +1,6 @@
 package dartzee.utils
 
-import com.github.alyssaburlton.swingtest.shouldMatchImage
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.DEFAULT_HUMAN_ICON
 import dartzee.core.util.FileUtil
 import dartzee.db.PlayerEntity

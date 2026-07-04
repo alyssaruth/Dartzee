@@ -1,8 +1,5 @@
 package dartzee.utils
 
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.EntityName
@@ -32,7 +29,10 @@ import dartzee.purgeGameAndConfirm
 import dartzee.runAsync
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.FakeDartsScreen
-import dartzee.selectOptionFromInputDialog
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.selectOptionFromInputDialog
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
@@ -65,7 +65,7 @@ class DevUtilitiesTest : AbstractTest() {
 
         runAsync { DevUtilities.purgeGame() }
 
-        selectOptionFromInputDialog("Delete Game", 2L)
+        selectOptionFromInputDialog("Select Game ID", 2L, title = "Delete Game")
 
         getQuestionDialog().clickYes(async = true)
 

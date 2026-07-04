@@ -1,7 +1,7 @@
 package dartzee.e2e
 
-import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.core.util.DateStatics
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher

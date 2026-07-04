@@ -1,7 +1,7 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.bean.GameSetupPlayerSelector
 import dartzee.core.helper.verifyNotCalled
 import dartzee.expectErrorDialog

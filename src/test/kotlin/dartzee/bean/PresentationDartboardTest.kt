@@ -1,6 +1,6 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.shouldMatchImage
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.core.bean.getPointList
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeSegmentStatuses

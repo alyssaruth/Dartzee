@@ -1,7 +1,7 @@
 package dartzee.screen.player
 
-import com.github.alyssaburlton.swingtest.doHover
-import com.github.alyssaburlton.swingtest.doHoverAway
+import io.github.alyssaruth.swingtest.doHover
+import io.github.alyssaruth.swingtest.doHoverAway
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer

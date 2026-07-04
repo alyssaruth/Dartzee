@@ -1,12 +1,12 @@
 package dartzee.screen.player
 
-import com.github.alyssaburlton.swingtest.clickCancel
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.findWindow
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.typeText
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.findWindow
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.typeText
 import dartzee.bean.PlayerAvatar
 import dartzee.bean.getAllPlayers
 import dartzee.core.bean.ScrollTable

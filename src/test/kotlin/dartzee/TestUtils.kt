@@ -1,20 +1,5 @@
 package dartzee
 
-import com.github.alyssaburlton.swingtest.clickCancel
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.doClick
-import com.github.alyssaburlton.swingtest.findAll
-import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.findWindow
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.generateComponentTree
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.purgeWindows
-import com.github.alyssaburlton.swingtest.shouldMatch
-import com.github.alyssaburlton.swingtest.typeText
-import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.InteractiveDartboard
 import dartzee.bean.PlayerImageRadio
@@ -40,6 +25,23 @@ import dartzee.screen.PlayerImageDialog
 import dartzee.theme.Theme
 import dartzee.utils.DevUtilities
 import dartzee.utils.getAverage
+import io.github.alyssaruth.swingtest.clickButton
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.doClick
+import io.github.alyssaruth.swingtest.findAll
+import io.github.alyssaruth.swingtest.findWindow
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.generateComponentTree
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.getWindow
+import io.github.alyssaruth.swingtest.purgeWindows
+import io.github.alyssaruth.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.typeText
+import io.github.alyssaruth.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.waitForWindow
 import io.kotest.matchers.doubles.shouldBeBetween
 import io.kotest.matchers.maps.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -47,20 +49,17 @@ import io.kotest.matchers.shouldNotBe
 import io.mockk.MockKMatcherScope
 import java.awt.Color
 import java.awt.Component
-import java.awt.Container
 import java.awt.Dimension
 import java.awt.Point
-import java.awt.Window
 import java.io.File
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
 import javax.swing.Icon
 import javax.swing.ImageIcon
 import javax.swing.JButton
-import javax.swing.JComboBox
 import javax.swing.JComponent
 import javax.swing.JDialog
 import javax.swing.JLabel
@@ -72,7 +71,6 @@ import javax.swing.JTextField
 import javax.swing.SwingUtilities
 import javax.swing.table.DefaultTableModel
 import javax.swing.text.JTextComponent
-import kotlin.jvm.javaClass
 
 val bullseye = DartboardSegment(SegmentType.DOUBLE, 25)
 val outerBull = DartboardSegment(SegmentType.OUTER_SINGLE, 25)
@@ -252,6 +250,8 @@ fun FileUploader.uploadFileFromResource(resourceName: String) {
     flushEdt()
 }
 
+fun findLoadingDialog(text: String) = findWindow<LoadingDialog> { it.message == text }
+
 fun expectErrorDialog(message: String) {
     val error = getErrorDialog { it.isVisible }
     error.getDialogMessage() shouldBe message
@@ -276,9 +276,7 @@ fun waitForInfoDialog(message: String) {
     expectInfoDialog(message)
 }
 
-fun findLoadingDialog(text: String) = findWindow<LoadingDialog> { it.message == text }
-
-private fun getInfoDialog() = findInfoDialog()!!
+private fun getInfoDialog() = getOptionPaneDialog("Information")
 
 fun findInfoDialog(predicate: (window: JDialog) -> Boolean = { true }) =
     findOptionPaneDialog("Information", predicate)
@@ -298,37 +296,6 @@ fun waitForQuestionDialog(): JDialog = waitForWindow<JDialog> { it.title == "Que
 fun selectFromOptionDialog(title: String, selection: String) {
     val dialog = getOptionPaneDialog(title) { it.isVisible }
     dialog.clickButton(text = selection, async = true)
-}
-
-fun typeIntoInputDialog(title: String, text: String) {
-    val dlg = getOptionPaneDialog(title) { it.isVisible }
-    dlg.getChild<JTextComponent>().typeText(text)
-    dlg.clickOk(async = true)
-}
-
-inline fun <reified E : Any> selectOptionFromInputDialog(title: String, value: E) {
-    val dlg = getWindow<JDialog> { it.title == title && it.isVisible }
-
-    val combo = dlg.findChild<JComboBox<E>>()
-    if (combo != null) {
-        if (!combo.items().contains(value)) {
-            throw AssertionError(
-                "Input dialog did not contain desired option $value. Options: ${combo.items()}"
-            )
-        }
-        combo.selectedItem = value
-    } else {
-        val list = dlg.getChild<JList<E>>()
-        if (!list.items().contains(value)) {
-            throw AssertionError(
-                "Input dialog did not contain desired option $value. Options: ${list.items()}"
-            )
-        }
-
-        list.setSelectedValue(value, true)
-    }
-
-    dlg.clickOk(async = true)
 }
 
 inline fun <reified E> JList<E>.items(): List<E> {
@@ -428,28 +395,6 @@ fun ImageIcon.toLabel(): JLabel {
     return label
 }
 
-inline fun <reified W : Window> waitForWindow(
-    noinline predicate: (window: W) -> Boolean = { true }
-): W {
-    waitForAssertion { findWindow<W>(predicate) shouldNotBe null }
-    flushEdt()
-    return getWindow<W>(predicate)
-}
-
-inline fun <reified W : Window> getWindow(
-    noinline predicate: (window: W) -> Boolean = { true }
-): W {
-    val result = findWindow<W>(predicate)
-
-    if (result == null) {
-        val trees = Window.getWindows().joinToString("------\n") { it.generateComponentTree() }
-
-        throw Exception("Window not found for predicate. All windows:\n\n$trees")
-    }
-
-    return result
-}
-
 fun <T> waitForAssertionWithReturn(timeout: Int = 10000, assertion: (() -> T)): T {
     val startTime = System.currentTimeMillis()
     while (true) {
@@ -464,13 +409,4 @@ fun <T> waitForAssertionWithReturn(timeout: Int = 10000, assertion: (() -> T)): 
             }
         }
     }
-}
-
-fun Container.clickButton(
-    name: String? = null,
-    text: String? = null,
-    async: Boolean = false,
-    filterFn: ((JButton) -> Boolean)? = null,
-) {
-    clickChild<JButton>(name, text, async, filterFn)
 }

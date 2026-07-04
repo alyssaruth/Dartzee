@@ -1,10 +1,10 @@
 package dartzee.db.sanity
 
-import com.github.alyssaburlton.swingtest.findWindow
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
-import com.github.alyssaburlton.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.findWindow
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.clickTableButton
 import dartzee.core.bean.ScrollTable
 import dartzee.core.screen.TableModelDialog

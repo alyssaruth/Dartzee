@@ -1,6 +1,6 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.getChild
 import com.github.lgooddatepicker.components.DatePicker
 import dartzee.bean.PlayerAvatar
 import dartzee.core.util.DateStatics

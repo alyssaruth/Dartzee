@@ -1,9 +1,9 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldMatch
-import com.github.alyssaburlton.swingtest.shouldMatchImage
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.bean.PlayerImageRadio
 import dartzee.core.bean.FileUploader
 import dartzee.core.helper.verifyNotCalled

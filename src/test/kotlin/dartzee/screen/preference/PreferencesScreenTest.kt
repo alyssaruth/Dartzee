@@ -1,8 +1,8 @@
 package dartzee.screen.preference
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickYes
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
 import dartzee.findQuestionDialog
 import dartzee.getDialogMessage
 import dartzee.getQuestionDialog

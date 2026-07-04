@@ -1,6 +1,6 @@
 package dartzee.screen.ai
 
-import com.github.alyssaburlton.swingtest.shouldMatchImage
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
 import java.awt.Dimension

@@ -1,6 +1,6 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickChild
 import dartzee.helper.AbstractTest
 import dartzee.utils.InjectedThings
 import io.kotest.matchers.shouldBe

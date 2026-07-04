@@ -1,6 +1,6 @@
 package dartzee.screen.dartzee
 
-import com.github.alyssaburlton.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.flushEdt
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.helper.AbstractTest
 import dartzee.helper.getFakeValidSegment

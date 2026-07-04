@@ -1,6 +1,6 @@
 package dartzee.core.bean
 
-import com.github.alyssaburlton.swingtest.doLoseFocus
+import io.github.alyssaruth.swingtest.doLoseFocus
 import dartzee.core.helper.processKeyPress
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest

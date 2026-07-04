@@ -1,6 +1,6 @@
 package dartzee.screen.reporting
 
-import com.github.alyssaburlton.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickChild
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.collections.shouldBeEmpty

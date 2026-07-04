@@ -1,6 +1,6 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.helper.AbstractTest
 import dartzee.utils.DARTS_VERSION_NUMBER
 import io.kotest.matchers.string.shouldContain

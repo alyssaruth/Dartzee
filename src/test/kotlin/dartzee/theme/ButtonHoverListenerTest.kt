@@ -1,8 +1,8 @@
 package dartzee.theme
 
-import com.github.alyssaburlton.swingtest.doHover
-import com.github.alyssaburlton.swingtest.doHoverAway
-import com.github.alyssaburlton.swingtest.makeMouseEvent
+import io.github.alyssaruth.swingtest.doHover
+import io.github.alyssaruth.swingtest.doHoverAway
+import io.github.alyssaruth.swingtest.makeMouseEvent
 import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import java.awt.Color

@@ -1,6 +1,6 @@
 package dartzee.screen.dartzee
 
-import com.github.alyssaburlton.swingtest.makeMouseEvent
+import io.github.alyssaruth.swingtest.makeMouseEvent
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.dartzee.aggregate.DartzeeTotalRuleLessThan
 import dartzee.helper.AbstractTest

@@ -1,14 +1,14 @@
 package dartzee.screen.game
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.purgeWindows
-import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.purgeWindows
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import dartzee.achievements.AchievementType
 import dartzee.achievements.x01.AchievementX01BestThreeDarts
 import dartzee.ai.DartsAiModel

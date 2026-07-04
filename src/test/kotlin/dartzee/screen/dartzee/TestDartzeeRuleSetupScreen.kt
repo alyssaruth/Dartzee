@@ -1,7 +1,7 @@
 package dartzee.screen.dartzee
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartsMatchEntity

@@ -1,8 +1,8 @@
 package dartzee.screen.ai
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.ai.AbstractDartsSimulation
 import dartzee.ai.DartsSimulationGolf
 import dartzee.ai.DartsSimulationX01

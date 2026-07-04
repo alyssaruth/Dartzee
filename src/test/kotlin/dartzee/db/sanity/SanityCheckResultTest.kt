@@ -1,6 +1,6 @@
 package dartzee.db.sanity
 
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.core.bean.ScrollTable
 import dartzee.core.helper.processKeyPress
 import dartzee.expectErrorDialog

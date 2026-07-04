@@ -1,6 +1,6 @@
 package dartzee.helper
 
-import com.github.alyssaburlton.swingtest.toBufferedImage
+import io.github.alyssaruth.swingtest.toBufferedImage
 import dartzee.bean.PresentationDartboard
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleCalculationResult

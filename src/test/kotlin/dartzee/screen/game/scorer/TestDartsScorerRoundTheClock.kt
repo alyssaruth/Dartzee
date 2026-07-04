@@ -1,6 +1,6 @@
 package dartzee.screen.game.scorer
 
-import com.github.alyssaburlton.swingtest.findChild
+import io.github.alyssaruth.swingtest.findChild
 import dartzee.achievements.rtc.AchievementClockBestGame
 import dartzee.firstRow
 import dartzee.game.ClockType

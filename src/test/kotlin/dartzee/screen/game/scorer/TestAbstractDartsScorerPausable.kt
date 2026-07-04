@@ -1,9 +1,9 @@
 package dartzee.screen.game.scorer
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow

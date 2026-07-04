@@ -1,6 +1,6 @@
 package dartzee.core.bean
 
-import com.github.alyssaburlton.swingtest.makeMouseEvent
+import io.github.alyssaruth.swingtest.makeMouseEvent
 import dartzee.helper.AbstractTest
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe

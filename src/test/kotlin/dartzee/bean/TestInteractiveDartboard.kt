@@ -1,6 +1,6 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.shouldMatchImage
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.helper.AbstractTest
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType

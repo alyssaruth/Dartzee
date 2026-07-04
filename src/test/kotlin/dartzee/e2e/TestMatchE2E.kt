@@ -1,7 +1,7 @@
 package dartzee.e2e
 
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.core.util.DateStatics
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity

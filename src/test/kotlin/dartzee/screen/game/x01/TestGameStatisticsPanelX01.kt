@@ -1,6 +1,6 @@
 package dartzee.screen.game.x01
 
-import com.github.alyssaburlton.swingtest.findChild
+import io.github.alyssaruth.swingtest.findChild
 import dartzee.core.bean.NumberField
 import dartzee.game.FinishType
 import dartzee.game.X01Config

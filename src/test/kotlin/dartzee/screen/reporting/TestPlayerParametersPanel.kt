@@ -1,6 +1,6 @@
 package dartzee.screen.reporting
 
-import com.github.alyssaburlton.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickChild
 import dartzee.core.bean.ComboBoxNumberComparison
 import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest

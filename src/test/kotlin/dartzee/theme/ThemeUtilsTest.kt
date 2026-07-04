@@ -1,6 +1,6 @@
 package dartzee.theme
 
-import com.github.alyssaburlton.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldMatch
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.logging.CODE_AUDIO_ERROR

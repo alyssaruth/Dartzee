@@ -1,6 +1,6 @@
 package dartzee.screen.stats.overall
 
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.core.bean.ScrollTable
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertFinishForPlayer

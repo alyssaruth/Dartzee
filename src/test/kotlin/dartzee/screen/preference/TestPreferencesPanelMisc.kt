@@ -1,6 +1,6 @@
 package dartzee.screen.preference
 
-import com.github.alyssaburlton.swingtest.uncheck
+import io.github.alyssaruth.swingtest.uncheck
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings.preferenceService
 import io.kotest.matchers.shouldBe

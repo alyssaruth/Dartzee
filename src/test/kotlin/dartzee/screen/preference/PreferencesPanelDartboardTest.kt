@@ -1,9 +1,9 @@
 package dartzee.screen.preference
 
-import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.toBufferedImage
-import com.github.alyssaburlton.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.toBufferedImage
+import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.bean.PresentationDartboard
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.helper.makeTheme

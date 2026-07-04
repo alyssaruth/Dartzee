@@ -1,6 +1,6 @@
 package dartzee.screen.game.scorer
 
-import com.github.alyssaburlton.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickChild
 import dartzee.core.util.DateStatics
 import dartzee.db.ParticipantEntity
 import dartzee.game.state.SingleParticipant

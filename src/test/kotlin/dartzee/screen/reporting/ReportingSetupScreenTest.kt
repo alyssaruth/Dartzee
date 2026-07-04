@@ -1,7 +1,7 @@
 package dartzee.screen.reporting
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.expectErrorDialog

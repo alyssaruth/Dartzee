@@ -1,7 +1,7 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.shouldMatch
-import com.github.alyssaburlton.swingtest.shouldMatchImage
+import io.github.alyssaruth.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.DEFAULT_HUMAN_ICON
 import dartzee.core.bean.ScrollTable
 import dartzee.db.PlayerEntity

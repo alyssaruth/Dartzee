@@ -1,6 +1,6 @@
 package dartzee.screen.sync
 
-import com.github.alyssaburlton.swingtest.findChild
+import io.github.alyssaruth.swingtest.findChild
 import dartzee.db.SyncAuditEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME

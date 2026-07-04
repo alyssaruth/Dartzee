@@ -5,8 +5,8 @@ import dartzee.dismissDialog
 import dartzee.helper.AbstractTest
 import dartzee.runAsync
 import dartzee.selectFromOptionDialog
-import dartzee.typeIntoInputDialog
 import dartzee.utils.InjectedThings.mainDatabase
+import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 

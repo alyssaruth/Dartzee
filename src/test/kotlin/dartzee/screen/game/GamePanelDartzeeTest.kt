@@ -1,9 +1,5 @@
 package dartzee.screen.game
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.achievements.AchievementType
 import dartzee.achievements.retrieveAchievementForDetail
 import dartzee.ai.DartzeePlayStyle
@@ -54,11 +50,15 @@ import dartzee.screen.game.dartzee.DartzeeRuleTile
 import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.segmentStatuses
 import dartzee.singleTwenty
-import dartzee.typeIntoInputDialog
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.insertDartzeeRules
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -72,8 +72,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
-import javax.swing.JButton
 import org.junit.jupiter.api.Test
+import javax.swing.JButton
 
 class GamePanelDartzeeTest : AbstractTest() {
     private val ruleResults =

@@ -1,9 +1,5 @@
 package dartzee.e2e
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.AchievementType
 import dartzee.confirmGameDeletion
 import dartzee.db.AchievementEntity
@@ -30,23 +26,27 @@ import dartzee.screen.sync.SyncManagementScreen
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.screen.sync.SyncSetupPanel
 import dartzee.selectFromOptionDialog
-import dartzee.selectOptionFromInputDialog
 import dartzee.sync.AmazonS3RemoteDatabaseStore
 import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
-import dartzee.typeIntoInputDialog
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import dartzee.waitForInfoDialog
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.selectOptionFromInputDialog
+import io.github.alyssaruth.swingtest.typeIntoInputDialog
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import java.io.File
-import java.util.UUID
-import javax.swing.JButton
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.io.File
+import java.util.UUID
+import javax.swing.JButton
 
 class SyncE2E : AbstractE2ETest() {
     @BeforeEach

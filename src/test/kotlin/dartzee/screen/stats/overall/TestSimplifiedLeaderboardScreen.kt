@@ -1,7 +1,7 @@
 package dartzee.screen.stats.overall
 
-import com.github.alyssaburlton.swingtest.findAll
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.findAll
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.core.bean.ScrollTable
 import dartzee.game.GameType
 import dartzee.game.X01_PARTY_CONFIG

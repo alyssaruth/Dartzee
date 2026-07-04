@@ -1,8 +1,8 @@
 package dartzee.e2e
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.game.FinishType
 import dartzee.game.GameType
 import dartzee.game.X01Config

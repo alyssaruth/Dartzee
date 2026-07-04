@@ -1,6 +1,6 @@
 package dartzee.helper
 
-import com.github.alyssaburlton.swingtest.SwingTestCleanupExtension
+import io.github.alyssaruth.swingtest.SwingTestCleanupExtension
 import dartzee.CURRENT_TIME
 import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.LogRecord

@@ -1,6 +1,6 @@
 package dartzee.theme
 
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.getChild
 import dartzee.helper.AbstractTest
 import dartzee.shouldMatch
 import dartzee.utils.InjectedThings

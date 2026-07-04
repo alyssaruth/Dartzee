@@ -1,6 +1,6 @@
 package dartzee.screen.sync
 
-import com.github.alyssaburlton.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickChild
 import dartzee.core.helper.verifyNotCalled
 import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest

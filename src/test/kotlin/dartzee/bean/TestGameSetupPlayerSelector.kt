@@ -1,6 +1,6 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickChild
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
