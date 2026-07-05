@@ -15,7 +15,6 @@ import dartzee.dartzee.dart.DartzeeDartRuleInner
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.dart.DartzeeDartRuleOuter
 import dartzee.dartzee.dart.DartzeeDartRuleScore
-import dartzee.expectErrorDialog
 import dartzee.findErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeColourRule
@@ -26,6 +25,7 @@ import dartzee.utils.InjectedThings
 import io.github.alyssaruth.swingtest.clickCancel
 import io.github.alyssaruth.swingtest.clickChild
 import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.makeActionEvent

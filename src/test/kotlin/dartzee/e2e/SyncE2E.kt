@@ -25,20 +25,20 @@ import dartzee.screen.sync.SyncManagementPanel
 import dartzee.screen.sync.SyncManagementScreen
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.screen.sync.SyncSetupPanel
-import dartzee.selectFromOptionDialog
 import dartzee.sync.AmazonS3RemoteDatabaseStore
 import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
-import dartzee.waitForInfoDialog
 import io.github.alyssaruth.swingtest.clickChild
 import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.findChild
 import io.github.alyssaruth.swingtest.selectOptionFromInputDialog
 import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.github.alyssaruth.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.waitForInfoDialog
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import java.io.File
@@ -162,7 +162,11 @@ class SyncE2E : AbstractE2ETest() {
             remoteName,
             title = "Sync Setup",
         )
-        selectFromOptionDialog("Database not found", "Create '$remoteName'")
+        expectQuestionDialog(
+            "No shared database found called '$remoteName'. Would you like to create it?",
+            "Create '$remoteName'",
+            title = "Database not found",
+        )
 
         waitForAssertion { mainScreen.findChild<SyncManagementPanel>() shouldNotBe null }
 
@@ -177,7 +181,12 @@ class SyncE2E : AbstractE2ETest() {
             remoteName,
             title = "Sync Setup",
         )
-        selectFromOptionDialog("Database found", "Sync with local data")
+
+        expectQuestionDialog(
+            "Shared database '$remoteName' already exists. How would you like to proceed?",
+            "Sync with local data",
+            title = "Database found",
+        )
 
         waitForInfoDialog("Sync completed successfully!\n\nGames pushed: 1\n\nGames pulled: 1")
 

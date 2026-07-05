@@ -8,7 +8,6 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
-import dartzee.dismissDialog
 import dartzee.findQuestionDialog
 import dartzee.game.GameType
 import dartzee.getDialogMessage
@@ -26,6 +25,7 @@ import io.github.alyssaruth.swingtest.clickChild
 import io.github.alyssaruth.swingtest.clickNo
 import io.github.alyssaruth.swingtest.clickOk
 import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.dismissDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.getWindow
 import io.github.alyssaruth.swingtest.shouldBeDisabled

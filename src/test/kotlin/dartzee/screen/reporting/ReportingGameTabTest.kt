@@ -8,7 +8,6 @@ import dartzee.bean.GameParamFilterPanelX01
 import dartzee.bean.SpinnerX01
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.util.getAllChildComponentsForType
-import dartzee.expectErrorDialog
 import dartzee.game.FinishType
 import dartzee.game.GameType
 import dartzee.game.X01Config
@@ -18,6 +17,7 @@ import dartzee.reporting.MatchFilter
 import dartzee.runAsync
 import dartzee.updateSelection
 import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.shouldBeDisabled
 import io.github.alyssaruth.swingtest.shouldBeEnabled

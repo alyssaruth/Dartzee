@@ -2,7 +2,6 @@ package dartzee.utils
 
 import dartzee.core.bean.LinkLabel
 import dartzee.core.helper.verifyNotCalled
-import dartzee.expectErrorDialog
 import dartzee.findLoadingDialog
 import dartzee.getDialogMessage
 import dartzee.getErrorDialog
@@ -21,6 +20,7 @@ import dartzee.runAsync
 import io.github.alyssaruth.swingtest.clickNo
 import io.github.alyssaruth.swingtest.clickOk
 import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.shouldNotBeVisible

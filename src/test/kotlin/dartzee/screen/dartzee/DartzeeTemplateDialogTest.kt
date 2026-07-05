@@ -6,7 +6,6 @@ import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
-import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDartzeeTemplate
@@ -15,6 +14,7 @@ import dartzee.helper.makeDartzeeRuleDto
 import dartzee.only
 import io.github.alyssaruth.swingtest.clickCancel
 import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.shouldBeVisible
 import io.github.alyssaruth.swingtest.shouldNotBeVisible

@@ -13,9 +13,9 @@ import dartzee.logging.Severity
 import dartzee.runAsync
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.databaseDirectory
-import dartzee.waitForErrorDialog
 import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.github.alyssaruth.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.waitForErrorDialog
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
 import io.mockk.every

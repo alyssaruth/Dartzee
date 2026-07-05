@@ -3,7 +3,6 @@ package dartzee.ai
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.screen.ProgressDialog
 import dartzee.db.EntityName
-import dartzee.expectErrorDialog
 import dartzee.findQuestionDialog
 import dartzee.game.GameType
 import dartzee.getDialogMessage
@@ -23,6 +22,7 @@ import dartzee.waitForQuestionDialog
 import io.github.alyssaruth.swingtest.clickCancel
 import io.github.alyssaruth.swingtest.clickNo
 import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.findWindow
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.getChild

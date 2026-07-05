@@ -15,10 +15,8 @@ import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.dismissDialog
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
-import dartzee.expectInfoDialog
 import dartzee.game.GameType
 import dartzee.game.loadParticipants
 import dartzee.helper.AbstractTest
@@ -55,6 +53,8 @@ import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.insertDartzeeRules
 import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.dismissDialog
+import io.github.alyssaruth.swingtest.expectInfoDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.shouldBeVisible
 import io.github.alyssaruth.swingtest.shouldNotBeVisible

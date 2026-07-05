@@ -4,7 +4,6 @@ import dartzee.core.bean.FileUploader
 import dartzee.core.bean.IFileUploadListener
 import dartzee.core.bean.selectedItemTyped
 import dartzee.core.helper.verifyNotCalled
-import dartzee.expectErrorDialog
 import dartzee.getFileChooser
 import dartzee.helper.AbstractTest
 import dartzee.preferences.Preferences
@@ -12,6 +11,7 @@ import dartzee.uploadFileFromResource
 import dartzee.utils.InjectedThings
 import io.github.alyssaruth.swingtest.clickCancel
 import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.purgeWindows
 import io.kotest.matchers.shouldBe

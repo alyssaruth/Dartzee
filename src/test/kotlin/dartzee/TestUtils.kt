@@ -25,12 +25,11 @@ import dartzee.screen.PlayerImageDialog
 import dartzee.theme.Theme
 import dartzee.utils.DevUtilities
 import dartzee.utils.getAverage
-import io.github.alyssaruth.swingtest.clickButton
-import io.github.alyssaruth.swingtest.clickCancel
 import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickOk
 import io.github.alyssaruth.swingtest.clickYes
 import io.github.alyssaruth.swingtest.doClick
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.expectInfoDialog
 import io.github.alyssaruth.swingtest.findAll
 import io.github.alyssaruth.swingtest.findWindow
 import io.github.alyssaruth.swingtest.flushEdt
@@ -40,12 +39,10 @@ import io.github.alyssaruth.swingtest.getWindow
 import io.github.alyssaruth.swingtest.purgeWindows
 import io.github.alyssaruth.swingtest.shouldMatch
 import io.github.alyssaruth.swingtest.typeText
-import io.github.alyssaruth.swingtest.waitForAssertion
 import io.github.alyssaruth.swingtest.waitForWindow
 import io.kotest.matchers.doubles.shouldBeBetween
 import io.kotest.matchers.maps.shouldContainExactly
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.mockk.MockKMatcherScope
 import java.awt.Color
 import java.awt.Component
@@ -63,7 +60,6 @@ import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JDialog
 import javax.swing.JLabel
-import javax.swing.JList
 import javax.swing.JPanel
 import javax.swing.JRadioButton
 import javax.swing.JTabbedPane
@@ -252,32 +248,6 @@ fun FileUploader.uploadFileFromResource(resourceName: String) {
 
 fun findLoadingDialog(text: String) = findWindow<LoadingDialog> { it.message == text }
 
-fun expectErrorDialog(message: String) {
-    val error = getErrorDialog { it.isVisible }
-    error.getDialogMessage() shouldBe message
-    error.clickOk(async = true)
-}
-
-fun waitForErrorDialog(message: String) {
-    waitForAssertion { findErrorDialog { it.isVisible } shouldNotBe null }
-
-    expectErrorDialog(message)
-}
-
-fun expectInfoDialog(message: String) {
-    val info = getInfoDialog()
-    info.getDialogMessage() shouldBe message
-    info.clickOk(async = true)
-}
-
-fun waitForInfoDialog(message: String) {
-    waitForAssertion { findInfoDialog { it.isVisible } shouldNotBe null }
-
-    expectInfoDialog(message)
-}
-
-private fun getInfoDialog() = getOptionPaneDialog("Information")
-
 fun findInfoDialog(predicate: (window: JDialog) -> Boolean = { true }) =
     findOptionPaneDialog("Information", predicate)
 
@@ -292,27 +262,6 @@ fun findErrorDialog(predicate: (window: JDialog) -> Boolean = { true }) =
     findOptionPaneDialog("Error", predicate)
 
 fun waitForQuestionDialog(): JDialog = waitForWindow<JDialog> { it.title == "Question" }
-
-fun selectFromOptionDialog(title: String, selection: String) {
-    val dialog = getOptionPaneDialog(title) { it.isVisible }
-    dialog.clickButton(text = selection, async = true)
-}
-
-inline fun <reified E> JList<E>.items(): List<E> {
-    val size = model.size
-    return (0 until size).map { model.getElementAt(it) }
-}
-
-fun cancelOptionDialog(title: String) {
-    val dialog = getOptionPaneDialog(title) { it.isVisible }
-    dialog.clickCancel(async = true)
-}
-
-fun dismissDialog(title: String) {
-    val dialog = getOptionPaneDialog(title) { it.isVisible }
-    dialog.dispose()
-    flushEdt()
-}
 
 private fun getOptionPaneDialog(title: String, predicate: (window: JDialog) -> Boolean = { true }) =
     getWindow<JDialog> { it.title == title && predicate(it) }
@@ -345,10 +294,7 @@ fun runExpectingError(errorText: String, block: () -> Boolean) {
     SwingUtilities.invokeLater { result = block() }
 
     flushEdt()
-    getErrorDialog().getDialogMessage() shouldBe errorText
-
-    getErrorDialog().clickOk()
-    flushEdt()
+    expectErrorDialog(errorText)
     purgeWindows()
 
     result shouldBe false
@@ -366,10 +312,7 @@ fun confirmGameDeletion(localId: Long): String {
     dlg.clickYes()
     flushEdt()
 
-    val info = getInfoDialog()
-    info.getDialogMessage() shouldBe "Game #$localId has been purged."
-    info.clickOk()
-    flushEdt()
+    expectInfoDialog("Game #$localId has been purged.")
     purgeWindows()
 
     return questionText

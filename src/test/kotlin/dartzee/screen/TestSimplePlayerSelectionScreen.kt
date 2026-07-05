@@ -2,7 +2,6 @@ package dartzee.screen
 
 import dartzee.bean.GameSetupPlayerSelector
 import dartzee.core.helper.verifyNotCalled
-import dartzee.expectErrorDialog
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
 import dartzee.game.GameType
@@ -11,6 +10,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.preparePlayers
 import dartzee.utils.InjectedThings
 import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.mockk.mockk
 import io.mockk.verify

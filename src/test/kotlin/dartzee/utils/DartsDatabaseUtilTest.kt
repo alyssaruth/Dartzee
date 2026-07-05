@@ -3,8 +3,6 @@ package dartzee.utils
 import dartzee.db.DatabaseMigrator
 import dartzee.db.EntityName
 import dartzee.db.MigrationResult
-import dartzee.expectErrorDialog
-import dartzee.expectInfoDialog
 import dartzee.findErrorDialog
 import dartzee.findInfoDialog
 import dartzee.getDialogMessage
@@ -32,6 +30,8 @@ import dartzee.utils.InjectedThings.mainDatabase
 import io.github.alyssaruth.swingtest.clickCancel
 import io.github.alyssaruth.swingtest.clickNo
 import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.expectInfoDialog
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.file.shouldExist

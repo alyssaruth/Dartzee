@@ -2,9 +2,9 @@ package dartzee.db.sanity
 
 import dartzee.core.bean.ScrollTable
 import dartzee.core.helper.processKeyPress
-import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.runAsync
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import java.awt.event.KeyEvent

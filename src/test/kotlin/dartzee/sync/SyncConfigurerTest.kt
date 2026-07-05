@@ -1,11 +1,11 @@
 package dartzee.sync
 
-import dartzee.cancelOptionDialog
-import dartzee.dismissDialog
 import dartzee.helper.AbstractTest
 import dartzee.runAsync
-import dartzee.selectFromOptionDialog
 import dartzee.utils.InjectedThings.mainDatabase
+import io.github.alyssaruth.swingtest.cancelDialog
+import io.github.alyssaruth.swingtest.dismissDialog
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -31,7 +31,12 @@ class SyncConfigurerTest : AbstractTest() {
             "Goomba",
             title = "Sync Setup",
         )
-        selectFromOptionDialog("Database not found", "Create 'Goomba'")
+
+        expectQuestionDialog(
+            "No shared database found called 'Goomba'. Would you like to create it?",
+            "Create 'Goomba'",
+            title = "Database not found",
+        )
 
         result shouldBe SyncConfig(SyncMode.CREATE_REMOTE, "Goomba")
     }
@@ -46,7 +51,7 @@ class SyncConfigurerTest : AbstractTest() {
             "Goomba",
             title = "Sync Setup",
         )
-        cancelOptionDialog("Database not found")
+        cancelDialog("Database not found")
 
         result shouldBe null
     }
@@ -64,7 +69,11 @@ class SyncConfigurerTest : AbstractTest() {
             "Goomba",
             title = "Sync Setup",
         )
-        selectFromOptionDialog("Database found", "Overwrite local data")
+        expectQuestionDialog(
+            "Shared database 'Goomba' already exists. How would you like to proceed?",
+            "Overwrite local data",
+            title = "Database found",
+        )
 
         result shouldBe SyncConfig(SyncMode.OVERWRITE_LOCAL, "Goomba")
     }
@@ -82,7 +91,11 @@ class SyncConfigurerTest : AbstractTest() {
             "Goomba",
             title = "Sync Setup",
         )
-        selectFromOptionDialog("Database found", "Sync with local data")
+        expectQuestionDialog(
+            "Shared database 'Goomba' already exists. How would you like to proceed?",
+            "Sync with local data",
+            title = "Database found",
+        )
 
         result shouldBe SyncConfig(SyncMode.NORMAL_SYNC, "Goomba")
     }
@@ -100,7 +113,7 @@ class SyncConfigurerTest : AbstractTest() {
             "Goomba",
             title = "Sync Setup",
         )
-        cancelOptionDialog("Database found")
+        cancelDialog("Database found")
 
         result shouldBe null
     }

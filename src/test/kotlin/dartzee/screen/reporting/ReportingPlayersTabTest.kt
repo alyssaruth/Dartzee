@@ -1,7 +1,6 @@
 package dartzee.screen.reporting
 
 import dartzee.core.bean.ScrollTable
-import dartzee.expectErrorDialog
 import dartzee.findErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
@@ -9,6 +8,7 @@ import dartzee.helper.makeIncludedPlayerParameters
 import dartzee.reporting.IncludedPlayerParameters
 import dartzee.runAsync
 import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain

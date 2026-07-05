@@ -3,7 +3,6 @@ package dartzee.game
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.db.DartsMatchEntity
 import dartzee.db.EntityName
-import dartzee.expectErrorDialog
 import dartzee.game.state.GolfPlayerState
 import dartzee.helper.AbstractTest
 import dartzee.helper.DEFAULT_X01_CONFIG
@@ -27,6 +26,7 @@ import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.screen.game.golf.GamePanelGolf
 import dartzee.screen.game.rtc.GamePanelRoundTheClock
 import dartzee.screen.game.x01.GamePanelX01
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf

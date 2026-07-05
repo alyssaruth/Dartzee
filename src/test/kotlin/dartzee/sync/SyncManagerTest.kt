@@ -24,9 +24,9 @@ import dartzee.runAsync
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.waitForErrorDialog
-import dartzee.waitForInfoDialog
 import io.github.alyssaruth.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.waitForErrorDialog
+import io.github.alyssaruth.swingtest.waitForInfoDialog
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain

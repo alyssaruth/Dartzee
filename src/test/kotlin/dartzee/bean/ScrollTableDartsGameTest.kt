@@ -1,12 +1,12 @@
 package dartzee.bean
 
 import dartzee.core.helper.verifyNotCalled
-import dartzee.expectErrorDialog
 import dartzee.game.GameLauncher
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.utils.InjectedThings
 import io.github.alyssaruth.swingtest.doClick
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.mockk.mockk
 import io.mockk.verify
 import javax.swing.table.DefaultTableModel

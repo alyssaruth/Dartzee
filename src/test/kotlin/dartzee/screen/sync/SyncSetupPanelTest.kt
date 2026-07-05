@@ -1,7 +1,6 @@
 package dartzee.screen.sync
 
 import dartzee.core.helper.verifyNotCalled
-import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.screen.ScreenCache
@@ -11,6 +10,7 @@ import dartzee.sync.SyncManager
 import dartzee.sync.SyncMode
 import dartzee.utils.InjectedThings
 import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

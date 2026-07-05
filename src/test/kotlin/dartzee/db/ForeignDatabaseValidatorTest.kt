@@ -1,6 +1,5 @@
 package dartzee.db
 
-import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.usingInMemoryDatabase
 import dartzee.logging.CODE_MERGE_ERROR
@@ -8,6 +7,7 @@ import dartzee.logging.Severity
 import dartzee.runAsync
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk

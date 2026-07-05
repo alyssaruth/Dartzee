@@ -5,13 +5,13 @@ import dartzee.bean.PlayerAvatar
 import dartzee.core.helper.verifyNotCalled
 import dartzee.db.EntityName
 import dartzee.db.PlayerEntity
-import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.helper.randomGuid
 import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk

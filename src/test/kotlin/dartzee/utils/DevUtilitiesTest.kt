@@ -5,8 +5,6 @@ import dartzee.db.DartzeeRuleEntity
 import dartzee.db.EntityName
 import dartzee.db.ParticipantEntity
 import dartzee.db.TeamEntity
-import dartzee.dismissDialog
-import dartzee.expectErrorDialog
 import dartzee.game.loadParticipants
 import dartzee.game.prepareParticipants
 import dartzee.getQuestionDialog
@@ -31,6 +29,8 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.game.FakeDartsScreen
 import io.github.alyssaruth.swingtest.clickNo
 import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.dismissDialog
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.selectOptionFromInputDialog
 import io.kotest.inspectors.forAll

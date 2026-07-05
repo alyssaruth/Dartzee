@@ -10,10 +10,10 @@ import dartzee.logging.CODE_PUSH_ERROR
 import dartzee.logging.Severity
 import dartzee.runAsync
 import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.waitForErrorDialog
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.github.alyssaruth.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.waitForErrorDialog
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every

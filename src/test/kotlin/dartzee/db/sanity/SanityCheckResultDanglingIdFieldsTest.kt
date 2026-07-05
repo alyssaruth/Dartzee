@@ -2,8 +2,6 @@ package dartzee.db.sanity
 
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
-import dartzee.expectErrorDialog
-import dartzee.expectInfoDialog
 import dartzee.getDialogMessage
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
@@ -15,6 +13,8 @@ import dartzee.logging.Severity
 import dartzee.runAsync
 import io.github.alyssaruth.swingtest.clickNo
 import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.expectInfoDialog
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk

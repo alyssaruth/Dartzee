@@ -1,9 +1,9 @@
 package dartzee.core.bean
 
 import dartzee.core.util.enableChildren
-import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.runAsync
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.kotest.matchers.shouldBe
 import java.sql.Timestamp
 import java.text.SimpleDateFormat

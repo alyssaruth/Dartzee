@@ -5,13 +5,13 @@ import dartzee.core.bean.ScrollTable
 import dartzee.core.screen.TableModelDialog
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.expectInfoDialog
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.logging.CODE_SANITY_CHECK_COMPLETED
 import dartzee.utils.InjectedThings.mainDatabase
+import io.github.alyssaruth.swingtest.expectInfoDialog
 import io.github.alyssaruth.swingtest.findWindow
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.shouldBeVisible

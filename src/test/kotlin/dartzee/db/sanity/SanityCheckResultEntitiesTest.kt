@@ -5,7 +5,6 @@ import dartzee.core.helper.processKeyPress
 import dartzee.db.EntityName
 import dartzee.db.FakeEntity
 import dartzee.db.PlayerEntity
-import dartzee.expectErrorDialog
 import dartzee.getDialogMessage
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
@@ -15,6 +14,7 @@ import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
 import io.github.alyssaruth.swingtest.clickNo
 import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe

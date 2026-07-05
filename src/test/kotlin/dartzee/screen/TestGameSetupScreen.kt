@@ -13,7 +13,6 @@ import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartsMatchEntity
 import dartzee.db.EntityName
 import dartzee.db.PlayerEntity
-import dartzee.expectErrorDialog
 import dartzee.game.FinishType
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
@@ -30,6 +29,7 @@ import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.updateSelection
 import dartzee.utils.InjectedThings
 import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.shouldBeVisible
 import io.github.alyssaruth.swingtest.shouldNotBeVisible
