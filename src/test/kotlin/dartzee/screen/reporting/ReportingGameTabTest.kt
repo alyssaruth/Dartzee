@@ -1,9 +1,5 @@
 package dartzee.screen.reporting
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.shouldBeDisabled
-import io.github.alyssaruth.swingtest.shouldBeEnabled
 import com.github.lgooddatepicker.components.DatePicker
 import dartzee.bean.ComboBoxGameType
 import dartzee.bean.GameParamFilterPanel
@@ -21,6 +17,10 @@ import dartzee.makeInvalid
 import dartzee.reporting.MatchFilter
 import dartzee.runAsync
 import dartzee.updateSelection
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeDisabled
+import io.github.alyssaruth.swingtest.shouldBeEnabled
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import java.sql.Timestamp

@@ -1,10 +1,10 @@
 package dartzee.screen.game.scorer
 
-import io.github.alyssaruth.swingtest.shouldBeVisible
 import dartzee.game.state.IWrappedParticipant
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.screen.game.makeSingleParticipant
+import io.github.alyssaruth.swingtest.shouldBeVisible
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe

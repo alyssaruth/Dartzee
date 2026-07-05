@@ -1,11 +1,5 @@
 package dartzee.screen.dartzee
 
-import io.github.alyssaruth.swingtest.clickCancel
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.shouldBeVisible
-import io.github.alyssaruth.swingtest.shouldNotBeVisible
-import io.github.alyssaruth.swingtest.typeText
 import dartzee.core.helper.verifyNotCalled
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
@@ -19,6 +13,12 @@ import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.makeDartzeeRuleCalculationResult
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.only
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.typeText
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify

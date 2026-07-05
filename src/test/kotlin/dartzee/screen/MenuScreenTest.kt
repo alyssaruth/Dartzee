@@ -1,11 +1,5 @@
 package dartzee.screen
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.doClick
-import io.github.alyssaruth.swingtest.findWindow
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.shouldBeVisible
-import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeTheme
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
@@ -17,6 +11,12 @@ import dartzee.screen.stats.overall.SimplifiedLeaderboardScreen
 import dartzee.screen.sync.SyncManagementScreen
 import dartzee.theme.AudioClip
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.doClick
+import io.github.alyssaruth.swingtest.findWindow
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every

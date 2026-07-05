@@ -1,13 +1,13 @@
 package dartzee.bean
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.shouldBeDisabled
-import io.github.alyssaruth.swingtest.shouldBeEnabled
 import dartzee.core.helper.verifyNotCalled
 import dartzee.game.ClockType
 import dartzee.game.RoundTheClockConfig
 import dartzee.helper.AbstractTest
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeDisabled
+import io.github.alyssaruth.swingtest.shouldBeEnabled
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk

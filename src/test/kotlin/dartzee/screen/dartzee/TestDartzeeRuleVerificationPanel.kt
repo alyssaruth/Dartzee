@@ -1,6 +1,5 @@
 package dartzee.screen.dartzee
 
-import io.github.alyssaruth.swingtest.flushEdt
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.helper.AbstractTest
 import dartzee.helper.getFakeValidSegment
@@ -15,6 +14,7 @@ import dartzee.throwDartByClick
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments
+import io.github.alyssaruth.swingtest.flushEdt
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe

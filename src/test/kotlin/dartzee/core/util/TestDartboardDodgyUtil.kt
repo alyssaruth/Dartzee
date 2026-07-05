@@ -1,10 +1,5 @@
 package dartzee.core.util
 
-import io.github.alyssaruth.swingtest.findChild
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.shouldBeVisible
-import io.github.alyssaruth.swingtest.shouldMatch
-import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.core.helper.verifyNotCalled
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
@@ -21,6 +16,11 @@ import dartzee.screen.animation.TotalScoreTrigger
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.ResourceCache
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.mockk.every

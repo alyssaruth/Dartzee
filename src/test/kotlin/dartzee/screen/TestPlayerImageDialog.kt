@@ -1,9 +1,5 @@
 package dartzee.screen
 
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.shouldMatch
-import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.bean.PlayerImageRadio
 import dartzee.core.bean.FileUploader
 import dartzee.core.helper.verifyNotCalled
@@ -18,6 +14,10 @@ import dartzee.selectTab
 import dartzee.uploadFileFromResource
 import dartzee.utils.PLAYER_IMAGE_HEIGHT
 import dartzee.utils.PLAYER_IMAGE_WIDTH
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk

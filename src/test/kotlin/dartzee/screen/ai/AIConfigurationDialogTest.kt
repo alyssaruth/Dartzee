@@ -1,8 +1,5 @@
 package dartzee.screen.ai
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.ai.DartsAiModel
 import dartzee.ai.DartzeePlayStyle
 import dartzee.bean.PlayerAvatar
@@ -17,6 +14,9 @@ import dartzee.helper.getCountFromTable
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartsModel
 import dartzee.`object`.SegmentType
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify

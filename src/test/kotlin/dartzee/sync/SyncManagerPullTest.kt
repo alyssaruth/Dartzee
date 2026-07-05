@@ -1,7 +1,5 @@
 package dartzee.sync
 
-import io.github.alyssaruth.swingtest.shouldNotBeVisible
-import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.findLoadingDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
@@ -16,6 +14,8 @@ import dartzee.runAsync
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings.databaseDirectory
 import dartzee.waitForErrorDialog
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
 import io.mockk.every

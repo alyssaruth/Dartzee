@@ -1,11 +1,11 @@
 package dartzee.screen.sync
 
+import dartzee.helper.AbstractTest
+import dartzee.sync.SyncStage
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.shouldBeVisible
 import io.github.alyssaruth.swingtest.shouldNotBeVisible
-import dartzee.helper.AbstractTest
-import dartzee.sync.SyncStage
 import io.kotest.matchers.shouldBe
 import javax.swing.JProgressBar
 import org.junit.jupiter.api.Test

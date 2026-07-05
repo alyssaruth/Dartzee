@@ -1,7 +1,5 @@
 package dartzee.bean
 
-import io.github.alyssaruth.swingtest.shouldMatch
-import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.DEFAULT_HUMAN_ICON
 import dartzee.core.bean.ScrollTable
 import dartzee.db.PlayerEntity
@@ -9,6 +7,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.toLabel
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import javax.swing.ImageIcon

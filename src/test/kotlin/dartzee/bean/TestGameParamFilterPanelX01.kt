@@ -1,11 +1,11 @@
 package dartzee.bean
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.core.helper.verifyNotCalled
 import dartzee.game.FinishType
 import dartzee.game.X01Config
 import dartzee.helper.AbstractTest
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.mockk

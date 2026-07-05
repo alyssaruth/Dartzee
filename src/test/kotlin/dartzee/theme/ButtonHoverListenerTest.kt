@@ -1,9 +1,9 @@
 package dartzee.theme
 
+import dartzee.helper.AbstractTest
 import io.github.alyssaruth.swingtest.doHover
 import io.github.alyssaruth.swingtest.doHoverAway
 import io.github.alyssaruth.swingtest.makeMouseEvent
-import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import java.awt.Color
 import javax.swing.JButton

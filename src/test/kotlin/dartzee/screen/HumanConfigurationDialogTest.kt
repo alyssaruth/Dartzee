@@ -1,7 +1,5 @@
 package dartzee.screen
 
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.getChild
 import com.github.lgooddatepicker.components.DatePicker
 import dartzee.bean.PlayerAvatar
 import dartzee.core.helper.verifyNotCalled
@@ -13,6 +11,8 @@ import dartzee.helper.getCountFromTable
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.helper.randomGuid
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify

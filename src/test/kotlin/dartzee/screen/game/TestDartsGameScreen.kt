@@ -1,7 +1,5 @@
 package dartzee.screen.game
 
-import io.github.alyssaruth.swingtest.findChild
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.achievements.x01.AchievementX01BestGame
 import dartzee.core.helper.verifyNotCalled
 import dartzee.helper.AbstractTest
@@ -9,6 +7,8 @@ import dartzee.helper.insertGame
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
 import io.github.alyssaruth.swingtest.clickButton
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe

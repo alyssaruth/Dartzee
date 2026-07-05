@@ -1,6 +1,5 @@
 package dartzee.core.util
 
-import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import dartzee.core.screen.ProgressDialog
 import dartzee.dartzee.DartzeeCalculator
 import dartzee.db.DartzeeRuleEntity
@@ -13,6 +12,7 @@ import dartzee.helper.randomGuid
 import dartzee.utils.DartzeeRuleConversion
 import dartzee.utils.InjectedThings
 import io.github.alyssaruth.swingtest.getWindow
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe

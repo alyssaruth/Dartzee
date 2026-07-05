@@ -36,10 +36,10 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 import javax.swing.JButton
 import javax.swing.JTextField
+import org.junit.jupiter.api.Test
 
 class DartzeeTemplateSetupScreenTest : AbstractTest() {
     @Test
@@ -252,7 +252,7 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.getChild<ScrollTable>().selectRow(0)
         scrn.clickChild<JButton>("rename", async = true)
 
-        typeIntoInputDialog("Rename Template", "New")
+        typeIntoInputDialog("Name", "New", title = "Rename Template")
 
         scrn.getTemplate(0).name shouldBe "New"
 

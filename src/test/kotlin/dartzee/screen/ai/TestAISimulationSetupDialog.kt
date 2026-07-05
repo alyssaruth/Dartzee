@@ -1,8 +1,5 @@
 package dartzee.screen.ai
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.ai.AbstractDartsSimulation
 import dartzee.ai.DartsSimulationGolf
 import dartzee.ai.DartsSimulationX01
@@ -12,6 +9,9 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartsModel
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.CapturingSlot

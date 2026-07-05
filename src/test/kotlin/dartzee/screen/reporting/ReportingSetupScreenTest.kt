@@ -1,7 +1,5 @@
 package dartzee.screen.reporting
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.core.bean.DateFilterPanel
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.expectErrorDialog
@@ -10,6 +8,8 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.makeInvalid
 import dartzee.screen.ScreenCache
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import javax.swing.JButton

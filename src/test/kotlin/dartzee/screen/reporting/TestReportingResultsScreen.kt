@@ -1,7 +1,5 @@
 package dartzee.screen.reporting
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.core.bean.ScrollTable
 import dartzee.game.FinishType
 import dartzee.game.GameType
@@ -15,6 +13,8 @@ import dartzee.helper.makeReportParameters
 import dartzee.helper.makeReportParametersGame
 import dartzee.logging.CODE_SQL
 import dartzee.screen.ScreenCache
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every

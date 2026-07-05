@@ -1,9 +1,5 @@
 package dartzee.bean
 
-import io.github.alyssaruth.swingtest.clickCancel
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.purgeWindows
 import dartzee.core.bean.FileUploader
 import dartzee.core.bean.IFileUploadListener
 import dartzee.core.bean.selectedItemTyped
@@ -14,6 +10,10 @@ import dartzee.helper.AbstractTest
 import dartzee.preferences.Preferences
 import dartzee.uploadFileFromResource
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.purgeWindows
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every

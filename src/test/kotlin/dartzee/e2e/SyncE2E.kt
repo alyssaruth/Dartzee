@@ -41,12 +41,12 @@ import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import java.io.File
 import java.util.UUID
 import javax.swing.JButton
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class SyncE2E : AbstractE2ETest() {
     @BeforeEach
@@ -132,7 +132,7 @@ class SyncE2E : AbstractE2ETest() {
         ScreenCache.switch<UtilitiesScreen>()
         mainScreen.clickChild<JButton>(text = "Delete Game", async = true)
 
-        selectOptionFromInputDialog("Delete Game", 1L)
+        selectOptionFromInputDialog("Select Game ID", 1L, title = "Delete Game")
         confirmGameDeletion(1)
     }
 
@@ -157,7 +157,11 @@ class SyncE2E : AbstractE2ETest() {
     private fun performPush(mainScreen: DartsApp, remoteName: String): String {
         mainScreen.clickChild<JButton>(text = "Get Started > ", async = true)
 
-        typeIntoInputDialog("Sync Setup", remoteName)
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            remoteName,
+            title = "Sync Setup",
+        )
         selectFromOptionDialog("Database not found", "Create '$remoteName'")
 
         waitForAssertion { mainScreen.findChild<SyncManagementPanel>() shouldNotBe null }
@@ -168,7 +172,11 @@ class SyncE2E : AbstractE2ETest() {
     private fun performSync(mainScreen: DartsApp, remoteName: String) {
         mainScreen.clickChild<JButton>(text = "Get Started > ", async = true)
 
-        typeIntoInputDialog("Sync Setup", remoteName)
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            remoteName,
+            title = "Sync Setup",
+        )
         selectFromOptionDialog("Database found", "Sync with local data")
 
         waitForInfoDialog("Sync completed successfully!\n\nGames pushed: 1\n\nGames pulled: 1")

@@ -1,7 +1,7 @@
 package dartzee.bean
 
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.helper.AbstractTest
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import javax.swing.JSlider
 import org.junit.jupiter.api.Test

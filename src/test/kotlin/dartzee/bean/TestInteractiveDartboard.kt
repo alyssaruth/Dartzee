@@ -1,6 +1,5 @@
 package dartzee.bean
 
-import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.helper.AbstractTest
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
@@ -8,6 +7,7 @@ import dartzee.screen.game.SegmentStatuses
 import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAllSegmentsForDartzee
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import java.awt.Point
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test

@@ -19,9 +19,9 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.Color
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
 class DartzeeUtilsTest : AbstractTest() {
     @Test
@@ -116,7 +116,11 @@ class DartzeeUtilsTest : AbstractTest() {
         var result: DartzeeTemplateEntity? = null
         runAsync { result = generateDartzeeTemplateFromGame(g, dtos) }
 
-        typeIntoInputDialog("Template Name", "My Template")
+        typeIntoInputDialog(
+            "Please enter a name for the template",
+            "My Template",
+            title = "Template Name",
+        )
         expectInfoDialog("Template 'My Template' successfully created.")
 
         result.shouldNotBeNull()

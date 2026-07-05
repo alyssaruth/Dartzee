@@ -1,10 +1,5 @@
 package dartzee.screen.stats.player
 
-import io.github.alyssaruth.swingtest.findChild
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.shouldBeVisible
-import io.github.alyssaruth.swingtest.shouldMatch
-import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import dartzee.achievements.AchievementType
 import dartzee.achievements.dartzee.AchievementDartzeeTeamGamesWon
 import dartzee.achievements.getAchievementMaximum
@@ -18,6 +13,11 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.screen.ScreenCache
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe

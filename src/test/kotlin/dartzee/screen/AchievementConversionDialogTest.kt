@@ -28,10 +28,10 @@ import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JRadioButton
+import org.junit.jupiter.api.Test
 
 class AchievementConversionDialogTest : AbstractTest() {
     @Test

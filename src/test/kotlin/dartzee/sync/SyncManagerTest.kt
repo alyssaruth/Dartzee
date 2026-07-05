@@ -1,6 +1,5 @@
 package dartzee.sync
 
-import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DeletionAuditEntity
 import dartzee.db.EntityName
@@ -27,6 +26,7 @@ import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.waitForErrorDialog
 import dartzee.waitForInfoDialog
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain

@@ -72,8 +72,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
 class GamePanelDartzeeTest : AbstractTest() {
     private val ruleResults =
@@ -115,7 +115,11 @@ class GamePanelDartzeeTest : AbstractTest() {
         val panel = makeGamePanel(testRules, game = g, parentWindow = parentWindow)
         panel.clickChild<JButton>("convertToTemplate", async = true)
 
-        typeIntoInputDialog("Template Name", "The Jeneration Game")
+        typeIntoInputDialog(
+            "Please enter a name for the template",
+            "The Jeneration Game",
+            title = "Template Name",
+        )
         expectInfoDialog("Template 'The Jeneration Game' successfully created.")
 
         val templateId = panel.gameEntity.gameParams

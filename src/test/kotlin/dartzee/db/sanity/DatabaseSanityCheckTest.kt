@@ -1,10 +1,5 @@
 package dartzee.db.sanity
 
-import io.github.alyssaruth.swingtest.findWindow
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.shouldBeVisible
-import io.github.alyssaruth.swingtest.shouldNotBeVisible
-import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.clickTableButton
 import dartzee.core.bean.ScrollTable
 import dartzee.core.screen.TableModelDialog
@@ -17,6 +12,11 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.logging.CODE_SANITY_CHECK_COMPLETED
 import dartzee.utils.InjectedThings.mainDatabase
+import io.github.alyssaruth.swingtest.findWindow
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe

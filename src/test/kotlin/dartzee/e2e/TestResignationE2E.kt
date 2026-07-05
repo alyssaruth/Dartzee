@@ -1,8 +1,5 @@
 package dartzee.e2e
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickYes
-import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.game.FinishType
 import dartzee.game.GameType
 import dartzee.game.X01Config
@@ -11,6 +8,9 @@ import dartzee.getQuestionDialog
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.`object`.SegmentType
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import javax.swing.JButton

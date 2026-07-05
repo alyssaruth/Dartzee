@@ -1,13 +1,5 @@
 package dartzee.core.util
 
-import io.github.alyssaruth.swingtest.clickCancel
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.clickYes
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.purgeWindows
-import io.github.alyssaruth.swingtest.shouldBeVisible
 import dartzee.cancelOptionDialog
 import dartzee.dismissDialog
 import dartzee.expectInfoDialog
@@ -22,7 +14,15 @@ import dartzee.logging.Severity
 import dartzee.runAsync
 import dartzee.selectFile
 import dartzee.selectFromOptionDialog
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.purgeWindows
 import io.github.alyssaruth.swingtest.selectOptionFromInputDialog
+import io.github.alyssaruth.swingtest.shouldBeVisible
 import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
@@ -179,7 +179,7 @@ class DialogUtilTest : AbstractTest() {
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Input dialog shown: Enter your favourite cheese"
 
-        typeIntoInputDialog("Cheezoid", "Camembert")
+        typeIntoInputDialog("Enter your favourite cheese", "Camembert", title = "Cheezoid")
 
         option shouldBe "Camembert"
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
@@ -191,7 +191,7 @@ class DialogUtilTest : AbstractTest() {
         var option: Int? = null
         runAsync { option = DialogUtil.showInput("Game", "Pick GameId", arrayOf(1, 2, 3, 4, 5)) }
 
-        selectOptionFromInputDialog("Game", 3)
+        selectOptionFromInputDialog("Pick GameId", 3, title = "Game")
 
         option shouldBe 3
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
@@ -204,7 +204,7 @@ class DialogUtilTest : AbstractTest() {
         var option: Int? = null
         runAsync { option = DialogUtil.showInput("Game", "Pick GameId", options) }
 
-        selectOptionFromInputDialog("Game", 77)
+        selectOptionFromInputDialog("Pick GameId", 77, title = "Game")
 
         option shouldBe 77
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe

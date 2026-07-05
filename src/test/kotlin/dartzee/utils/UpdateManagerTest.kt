@@ -1,11 +1,5 @@
 package dartzee.utils
 
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.clickYes
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import dartzee.core.bean.LinkLabel
 import dartzee.core.helper.verifyNotCalled
 import dartzee.expectErrorDialog
@@ -24,6 +18,12 @@ import dartzee.logging.KEY_RESPONSE_BODY
 import dartzee.logging.Severity
 import dartzee.`object`.DartsClient
 import dartzee.runAsync
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldStartWith

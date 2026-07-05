@@ -1,6 +1,5 @@
 package dartzee.screen.reporting
 
-import io.github.alyssaruth.swingtest.clickChild
 import dartzee.core.bean.ComboBoxNumberComparison
 import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
@@ -8,6 +7,7 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.makeIncludedPlayerParameters
 import dartzee.reporting.COMPARATOR_SCORE_UNSET
 import dartzee.runAsync
+import io.github.alyssaruth.swingtest.clickChild
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import javax.swing.JCheckBox

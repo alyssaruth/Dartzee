@@ -1,11 +1,11 @@
 package dartzee.core.screen
 
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.TableUtil
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test

@@ -1,11 +1,11 @@
 package dartzee.core.screen
 
-import io.github.alyssaruth.swingtest.clickCancel
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.helper.AbstractTest
 import dartzee.helper.logger
 import dartzee.logging.LoggingCode
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import javax.swing.JButton
 import org.junit.jupiter.api.Test

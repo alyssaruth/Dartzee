@@ -1,8 +1,5 @@
 package dartzee.utils
 
-import io.github.alyssaruth.swingtest.clickCancel
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
 import dartzee.db.DatabaseMigrator
 import dartzee.db.EntityName
 import dartzee.db.MigrationResult
@@ -32,6 +29,9 @@ import dartzee.selectFile
 import dartzee.utils.DartsDatabaseUtil.DATABASE_NAME
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import dartzee.utils.InjectedThings.mainDatabase
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.file.shouldExist

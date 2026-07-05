@@ -1,7 +1,5 @@
 package dartzee.db.sanity
 
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
 import dartzee.expectErrorDialog
@@ -15,6 +13,8 @@ import dartzee.helper.randomGuid
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
 import dartzee.runAsync
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk

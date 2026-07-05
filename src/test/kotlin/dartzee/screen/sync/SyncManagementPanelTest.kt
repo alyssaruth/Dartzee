@@ -1,9 +1,5 @@
 package dartzee.screen.sync
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.CURRENT_TIME
 import dartzee.PAST_TIME
 import dartzee.core.helper.verifyNotCalled
@@ -25,6 +21,10 @@ import dartzee.sync.SyncManager
 import dartzee.sync.resetRemote
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe

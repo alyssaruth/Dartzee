@@ -1,9 +1,5 @@
 package dartzee.e2e
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.achievements.getAllAchievements
 import dartzee.achievements.runConversionsWithProgressBar
 import dartzee.ai.AI_DARTBOARD
@@ -41,6 +37,10 @@ import dartzee.screen.game.scorer.AbstractDartsScorerPausable
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.ResourceCache.ICON_RESUME
 import io.github.alyssaruth.swingtest.clickButton
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe

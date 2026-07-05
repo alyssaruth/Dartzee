@@ -1,6 +1,5 @@
 package dartzee.screen.game.scorer
 
-import io.github.alyssaruth.swingtest.doClick
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSqlDateNow
@@ -19,6 +18,7 @@ import dartzee.screen.game.makeTeam
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import dartzee.utils.factoryHighScoreResult
+import io.github.alyssaruth.swingtest.doClick
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain

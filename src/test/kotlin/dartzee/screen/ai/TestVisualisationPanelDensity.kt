@@ -1,8 +1,8 @@
 package dartzee.screen.ai
 
-import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import java.awt.Dimension
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test

@@ -1,6 +1,5 @@
 package dartzee.screen
 
-import io.github.alyssaruth.swingtest.getChild
 import com.github.lgooddatepicker.components.DatePicker
 import dartzee.bean.PlayerAvatar
 import dartzee.core.util.DateStatics
@@ -11,6 +10,7 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.runAsync
 import dartzee.shouldMatch
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import java.sql.Timestamp
 import java.time.LocalDate

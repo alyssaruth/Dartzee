@@ -1,9 +1,5 @@
 package dartzee.db.sanity
 
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.core.bean.ScrollTable
 import dartzee.core.helper.processKeyPress
 import dartzee.db.EntityName
@@ -17,6 +13,10 @@ import dartzee.helper.getCountFromTable
 import dartzee.helper.insertPlayer
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import java.awt.event.KeyEvent
 import org.junit.jupiter.api.Test

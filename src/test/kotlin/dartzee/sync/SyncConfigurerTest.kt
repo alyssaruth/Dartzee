@@ -26,7 +26,11 @@ class SyncConfigurerTest : AbstractTest() {
         var result: SyncConfig? = null
         runAsync { result = makeSyncConfigurer().doFirstTimeSetup() }
 
-        typeIntoInputDialog("Sync Setup", "Goomba")
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            "Goomba",
+            title = "Sync Setup",
+        )
         selectFromOptionDialog("Database not found", "Create 'Goomba'")
 
         result shouldBe SyncConfig(SyncMode.CREATE_REMOTE, "Goomba")
@@ -37,7 +41,11 @@ class SyncConfigurerTest : AbstractTest() {
         var result: SyncConfig? = null
         runAsync { result = makeSyncConfigurer().doFirstTimeSetup() }
 
-        typeIntoInputDialog("Sync Setup", "Goomba")
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            "Goomba",
+            title = "Sync Setup",
+        )
         cancelOptionDialog("Database not found")
 
         result shouldBe null
@@ -51,7 +59,11 @@ class SyncConfigurerTest : AbstractTest() {
         var result: SyncConfig? = null
         runAsync { result = makeSyncConfigurer(store).doFirstTimeSetup() }
 
-        typeIntoInputDialog("Sync Setup", "Goomba")
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            "Goomba",
+            title = "Sync Setup",
+        )
         selectFromOptionDialog("Database found", "Overwrite local data")
 
         result shouldBe SyncConfig(SyncMode.OVERWRITE_LOCAL, "Goomba")
@@ -65,7 +77,11 @@ class SyncConfigurerTest : AbstractTest() {
         var result: SyncConfig? = null
         runAsync { result = makeSyncConfigurer(store).doFirstTimeSetup() }
 
-        typeIntoInputDialog("Sync Setup", "Goomba")
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            "Goomba",
+            title = "Sync Setup",
+        )
         selectFromOptionDialog("Database found", "Sync with local data")
 
         result shouldBe SyncConfig(SyncMode.NORMAL_SYNC, "Goomba")
@@ -79,7 +95,11 @@ class SyncConfigurerTest : AbstractTest() {
         var result: SyncConfig? = null
         runAsync { result = makeSyncConfigurer(store).doFirstTimeSetup() }
 
-        typeIntoInputDialog("Sync Setup", "Goomba")
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            "Goomba",
+            title = "Sync Setup",
+        )
         cancelOptionDialog("Database found")
 
         result shouldBe null

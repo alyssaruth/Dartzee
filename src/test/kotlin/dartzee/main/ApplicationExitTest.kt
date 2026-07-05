@@ -1,8 +1,5 @@
 package dartzee.main
 
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
-import io.github.alyssaruth.swingtest.flushEdt
 import dartzee.getDialogMessage
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
@@ -12,6 +9,9 @@ import dartzee.logging.LogDestinationElasticsearch
 import dartzee.runAsync
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.flushEdt
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
