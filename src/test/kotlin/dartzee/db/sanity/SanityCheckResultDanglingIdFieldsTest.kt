@@ -42,7 +42,7 @@ class SanityCheckResultDanglingIdFieldsTest : AbstractTest() {
 
         val q = getQuestionDialog()
         q.getDialogMessage() shouldBe "Are you sure you want to delete 10 rows from Game?"
-        q.clickYes(async = true)
+        q.clickYes()
 
         getCountFromTable(EntityName.Game) shouldBe 0
         getCountFromTable(EntityName.DeletionAudit) shouldBe 10
@@ -66,7 +66,7 @@ class SanityCheckResultDanglingIdFieldsTest : AbstractTest() {
 
         val q = getQuestionDialog()
         q.getDialogMessage() shouldBe "Are you sure you want to delete 1 rows from Foo?"
-        q.clickYes(async = true)
+        q.clickYes()
 
         expectErrorDialog("An error occurred deleting the rows.")
         verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)

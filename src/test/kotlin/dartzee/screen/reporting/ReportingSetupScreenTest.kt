@@ -26,7 +26,7 @@ class ReportingSetupScreenTest : AbstractTest() {
         gameTab.clickChild<JCheckBox>(text = "Start Date")
         gameTab.getStartDateFilterPanel().makeInvalid()
 
-        scrn.clickChild<JButton>("Next", async = true)
+        scrn.clickChild<JButton>("Next")
         expectErrorDialog("The 'date from' cannot be after the 'date to'")
 
         ScreenCache.currentScreen() shouldBe scrn
@@ -43,7 +43,7 @@ class ReportingSetupScreenTest : AbstractTest() {
         tab.addPlayers(listOf(playerOne))
         tab.includedPlayerPanel.chckbxPosition.doClick()
 
-        scrn.clickChild<JButton>("Next", async = true)
+        scrn.clickChild<JButton>("Next")
         expectErrorDialog("You must select at least one finishing position for player Alice")
         ScreenCache.currentScreen() shouldBe scrn
     }

@@ -59,7 +59,7 @@ class HumanConfigurationDialogTest : AbstractTest() {
 
         val dlg = HumanConfigurationDialog(callback, player)
         dlg.getChild<JTextField>("nameField").text = "Barry"
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("You must select an avatar.")
 

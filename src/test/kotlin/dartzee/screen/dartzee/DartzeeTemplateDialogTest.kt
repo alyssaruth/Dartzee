@@ -29,7 +29,7 @@ class DartzeeTemplateDialogTest : AbstractTest() {
     @Test
     fun `Should show an error if template name not specified`() {
         val (dialog, callback) = showDialog()
-        dialog.clickOk(async = true)
+        dialog.clickOk()
 
         expectErrorDialog("You must enter a name.")
 
@@ -41,7 +41,7 @@ class DartzeeTemplateDialogTest : AbstractTest() {
     fun `Should show an error if 0 rules are specified`() {
         val (dialog) = showDialog()
         dialog.getChild<JTextField>().typeText("My template")
-        dialog.clickOk(async = true)
+        dialog.clickOk()
 
         expectErrorDialog("You must create at least 2 rules.")
         dialog.shouldBeVisible()
@@ -53,7 +53,7 @@ class DartzeeTemplateDialogTest : AbstractTest() {
 
         dialog.getChild<JTextField>().typeText("My template")
         dialog.rulePanel.addRulesToTable(listOf(makeDartzeeRuleDto()))
-        dialog.clickOk(async = true)
+        dialog.clickOk()
 
         expectErrorDialog("You must create at least 2 rules.")
         dialog.shouldBeVisible()

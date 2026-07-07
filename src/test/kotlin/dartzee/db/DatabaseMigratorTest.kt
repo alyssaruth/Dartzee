@@ -81,7 +81,7 @@ class DatabaseMigratorTest : AbstractTest() {
 
             expectErrorDialog(
                 "Test database is too out-of-date to be upgraded by this version of Dartzee. " +
-                    "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails"
+                    "Please downgrade to an earlier version so that the data can be converted.\n$dbDetails"
             )
 
             verifyLog(CODE_DATABASE_TOO_OLD, Severity.WARN)

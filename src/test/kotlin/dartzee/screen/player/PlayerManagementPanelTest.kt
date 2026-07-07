@@ -66,7 +66,7 @@ class PlayerManagementPanelTest : AbstractTest() {
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>(text = "Delete", async = true)
+        panel.clickChild<JButton>(text = "Delete")
 
         val dlg = getQuestionDialog()
         dlg.getDialogMessage() shouldBe "Are you sure you want to delete Leah?"
@@ -86,7 +86,7 @@ class PlayerManagementPanelTest : AbstractTest() {
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>(text = "Delete", async = true)
+        panel.clickChild<JButton>(text = "Delete")
 
         val dlg = getQuestionDialog()
         dlg.getDialogMessage() shouldBe "Are you sure you want to delete BTBF?"

@@ -26,7 +26,7 @@ class SyncSetupPanelTest : AbstractTest() {
         InjectedThings.syncConfigurer = configurer
 
         val panel = SyncSetupPanel()
-        panel.clickChild<JButton>(text = "Get Started > ", async = true)
+        panel.clickChild<JButton>(text = "Get Started > ")
 
         expectErrorDialog("You must close all open games before performing this action.")
         verifyNotCalled { configurer.doFirstTimeSetup() }

@@ -71,7 +71,7 @@ class TestGameSetupScreen : AbstractTest() {
     @Test
     fun `Should perform player selector validation when attempting to launch a game`() {
         val screen = GameSetupScreen()
-        screen.clickChild<JButton>(text = "Launch Game", async = true)
+        screen.clickChild<JButton>(text = "Launch Game")
 
         expectErrorDialog("You must select at least 1 player.")
         verifyNotCalled { gameLauncher.launchNewGame(any()) }
@@ -254,7 +254,7 @@ class TestGameSetupScreen : AbstractTest() {
         setupScreen.playerSelector.init(listOf())
 
         setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
-        setupScreen.clickChild<JButton>("Next", async = true)
+        setupScreen.clickChild<JButton>("Next")
 
         expectErrorDialog("You must select at least 1 player.")
 

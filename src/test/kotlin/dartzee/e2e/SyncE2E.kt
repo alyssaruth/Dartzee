@@ -120,7 +120,7 @@ class SyncE2E : AbstractE2ETest() {
         waitForAssertion { SyncProgressDialog.isVisible() shouldBe true }
         waitForAssertion { SyncProgressDialog.isVisible() shouldBe false }
 
-        waitForInfoDialog("Sync completed successfully!\n\nGames pushed: 0\n\nGames pulled: 0")
+        waitForInfoDialog("Sync completed successfully!\nGames pushed: 0\nGames pulled: 0")
 
         getCountFromTable(EntityName.Game) shouldBe 0
         getCountFromTable(EntityName.Dart) shouldBe 0
@@ -130,7 +130,7 @@ class SyncE2E : AbstractE2ETest() {
 
     private fun deleteGame(mainScreen: DartsApp) {
         ScreenCache.switch<UtilitiesScreen>()
-        mainScreen.clickChild<JButton>(text = "Delete Game", async = true)
+        mainScreen.clickChild<JButton>(text = "Delete Game")
 
         selectOptionFromInputDialog("Select Game ID", 1L, title = "Delete Game")
         confirmGameDeletion(1)
@@ -155,7 +155,7 @@ class SyncE2E : AbstractE2ETest() {
     }
 
     private fun performPush(mainScreen: DartsApp, remoteName: String): String {
-        mainScreen.clickChild<JButton>(text = "Get Started > ", async = true)
+        mainScreen.clickChild<JButton>(text = "Get Started > ")
 
         typeIntoInputDialog(
             "Enter a unique name for the shared database (case-sensitive)",
@@ -174,7 +174,7 @@ class SyncE2E : AbstractE2ETest() {
     }
 
     private fun performSync(mainScreen: DartsApp, remoteName: String) {
-        mainScreen.clickChild<JButton>(text = "Get Started > ", async = true)
+        mainScreen.clickChild<JButton>(text = "Get Started > ")
 
         typeIntoInputDialog(
             "Enter a unique name for the shared database (case-sensitive)",
@@ -188,7 +188,7 @@ class SyncE2E : AbstractE2ETest() {
             title = "Database found",
         )
 
-        waitForInfoDialog("Sync completed successfully!\n\nGames pushed: 1\n\nGames pulled: 1")
+        waitForInfoDialog("Sync completed successfully!\nGames pushed: 1\nGames pulled: 1")
 
         waitForAssertion { mainScreen.findChild<SyncManagementPanel>() shouldNotBe null }
     }
@@ -198,10 +198,10 @@ class SyncE2E : AbstractE2ETest() {
         wipeTable(EntityName.DeletionAudit)
         wipeTable(EntityName.Achievement)
 
-        mainScreen.clickChild<JButton>(text = "Reset", async = true)
+        mainScreen.clickChild<JButton>(text = "Reset")
 
         val question = getQuestionDialog()
-        question.clickYes(async = true)
+        question.clickYes()
 
         waitForAssertion { mainScreen.findChild<SyncSetupPanel>() shouldNotBe null }
     }

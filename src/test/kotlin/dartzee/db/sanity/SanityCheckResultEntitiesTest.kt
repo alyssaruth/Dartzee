@@ -31,7 +31,7 @@ class SanityCheckResultEntitiesTest : AbstractTest() {
 
         val scrollTable = dialog.getChild<ScrollTable>()
         scrollTable.selectRow(0)
-        scrollTable.processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrollTable.processKeyPress(KeyEvent.VK_DELETE)
 
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe "Are you sure you want to delete 1 row(s) from Player?"
@@ -52,7 +52,7 @@ class SanityCheckResultEntitiesTest : AbstractTest() {
 
         val scrollTable = dialog.getChild<ScrollTable>()
         scrollTable.selectRow(0)
-        scrollTable.processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrollTable.processKeyPress(KeyEvent.VK_DELETE)
 
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe "Are you sure you want to delete 1 row(s) from Player?"
@@ -77,7 +77,7 @@ class SanityCheckResultEntitiesTest : AbstractTest() {
         val scrollTable = dialog.getChild<ScrollTable>()
         scrollTable.table.addRowSelectionInterval(0, 0)
         scrollTable.table.addRowSelectionInterval(2, 2)
-        scrollTable.processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrollTable.processKeyPress(KeyEvent.VK_DELETE)
 
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe "Are you sure you want to delete 2 row(s) from Player?"
@@ -99,7 +99,7 @@ class SanityCheckResultEntitiesTest : AbstractTest() {
 
         val scrollTable = dialog.getChild<ScrollTable>()
         scrollTable.selectRow(0)
-        scrollTable.processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrollTable.processKeyPress(KeyEvent.VK_DELETE)
 
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe

@@ -95,7 +95,7 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("deleteTemplate", async = true)
+        scrn.clickChild<JButton>("deleteTemplate")
 
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe "Are you sure you want to delete the ABC Template?"
@@ -113,11 +113,11 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("deleteTemplate", async = true)
+        scrn.clickChild<JButton>("deleteTemplate")
 
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe "Are you sure you want to delete the ABC Template?"
-        question.clickYes(async = true)
+        question.clickYes()
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 0
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
@@ -132,11 +132,11 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE)
 
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe "Are you sure you want to delete the ABC Template?"
-        question.clickYes(async = true)
+        question.clickYes()
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 0
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
@@ -151,7 +151,7 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(-1)
-        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE)
 
         findQuestionDialog().shouldBeNull()
         scrn.getChild<ScrollTable>().rowCount shouldBe 1
@@ -168,13 +168,13 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("deleteTemplate", async = true)
+        scrn.clickChild<JButton>("deleteTemplate")
 
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe
             "You have played 2 games using the ABC Template." +
                 "\n\nThese will become custom games if you delete it. Are you sure you want to continue?"
-        question.clickYes(async = true)
+        question.clickYes()
 
         GameEntity().retrieveEntities().forEach { it.gameParams shouldBe "" }
     }
@@ -250,7 +250,7 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("rename", async = true)
+        scrn.clickChild<JButton>("rename")
 
         typeIntoInputDialog("Name", "New", title = "Rename Template")
 
@@ -268,7 +268,7 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("rename", async = true)
+        scrn.clickChild<JButton>("rename")
 
         dismissDialog("Rename Template")
 

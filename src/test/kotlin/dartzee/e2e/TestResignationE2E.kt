@@ -39,7 +39,7 @@ class TestResignationE2E : AbstractE2ETest() {
         gamePanel.confirmRound()
 
         gamePanel.awaitTurn(ptResignee)
-        gamePanel.clickChild<JButton>(async = true) { it.toolTipText == "Resign" }
+        gamePanel.clickChild<JButton>() { it.toolTipText == "Resign" }
         getQuestionDialog().clickYes()
 
         awaitGameFinish(game)
@@ -64,7 +64,7 @@ class TestResignationE2E : AbstractE2ETest() {
         gamePanel.clickChild<JButton> { it.toolTipText == "Confirm round" }
 
         gamePanel.awaitTurn(ptResignee)
-        gamePanel.clickChild<JButton>(async = true) { it.toolTipText == "Resign" }
+        gamePanel.clickChild<JButton>() { it.toolTipText == "Resign" }
         getQuestionDialog().clickYes()
 
         awaitGameFinish(game)

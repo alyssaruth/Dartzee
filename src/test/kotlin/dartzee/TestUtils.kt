@@ -236,13 +236,13 @@ fun PlayerImageDialog.selectImage(playerImageId: String) {
 }
 
 fun FileUploader.uploadFileFromResource(resourceName: String) {
-    clickChild<JButton>(text = "...", async = true)
+    clickChild<JButton>(text = "...")
 
     val rsrcPath = javaClass.getResource(resourceName)!!.path
     selectFile(rsrcPath, "Open")
 
     getChild<JTextField>().text shouldBe File(rsrcPath).path
-    clickChild<JButton>(text = "Upload", async = true)
+    clickChild<JButton>(text = "Upload")
     flushEdt()
 }
 

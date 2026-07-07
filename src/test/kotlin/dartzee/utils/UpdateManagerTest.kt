@@ -211,7 +211,7 @@ class UpdateManagerTest : AbstractTest() {
         val errorDialog = getErrorDialog()
         val linkLabel = errorDialog.getChild<LinkLabel>()
         linkLabel.text shouldBe "<html><u>$DARTZEE_MANUAL_DOWNLOAD_URL/tag/v7.3.0</u></html>"
-        errorDialog.clickOk(async = true)
+        errorDialog.clickOk()
 
         verifyNotCalled { runtime.exec(any<Array<String>>()) }
 
@@ -240,7 +240,7 @@ class UpdateManagerTest : AbstractTest() {
         val errorDialog = getErrorDialog()
         val linkLabel = errorDialog.getChild<LinkLabel>()
         linkLabel.text shouldBe "<html><u>$DARTZEE_MANUAL_DOWNLOAD_URL/tag/v7.3.0</u></html>"
-        errorDialog.clickOk(async = true)
+        errorDialog.clickOk()
 
         verifyNotCalled { runtime.exec(any<Array<String>>()) }
 
@@ -267,7 +267,7 @@ class UpdateManagerTest : AbstractTest() {
         }
 
         expectErrorDialog(
-            "Failed to swap in updated file. \n\nDelete the old Dartzee.jar and rename $TEST_JAR_FILE_NAME -> Dartzee.jar"
+            "Failed to swap in updated file. \nDelete the old Dartzee.jar and rename $TEST_JAR_FILE_NAME -> Dartzee.jar"
         )
 
         val log = verifyLog(CODE_EXEC_ERROR, Severity.ERROR)
@@ -360,7 +360,7 @@ class UpdateManagerTest : AbstractTest() {
         request.path shouldBe "/root/releases/assets/12345"
 
         expectErrorDialog(
-            "Failed to swap in updated file. \n\nDelete the old Dartzee.jar and rename $TEST_JAR_FILE_NAME -> Dartzee.jar"
+            "Failed to swap in updated file. \nDelete the old Dartzee.jar and rename $TEST_JAR_FILE_NAME -> Dartzee.jar"
         )
 
         val log = verifyLog(CODE_EXEC_ERROR, Severity.ERROR)

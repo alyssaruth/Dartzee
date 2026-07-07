@@ -230,7 +230,7 @@ class DialogUtilTest : AbstractTest() {
         var selected: File? = null
         runAsync { selected = DialogUtil.chooseDirectory(null) }
 
-        getFileChooser("Select").clickCancel(async = true)
+        getFileChooser("Select").clickCancel()
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "File selector dialog shown: "
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "File selector dialog closed"
@@ -266,7 +266,7 @@ class DialogUtilTest : AbstractTest() {
         val dlg = getWindow<JDialog> { it.title == "Error" }
         dlg.shouldBeVisible()
         dlg.getChild<JLabel>(text = "My custom message") shouldBe component
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         verifyLog(CODE_DIALOG_CLOSED).message shouldBe "CustomError dialog closed"
     }

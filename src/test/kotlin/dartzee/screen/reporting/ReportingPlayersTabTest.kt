@@ -34,7 +34,7 @@ class ReportingPlayersTabTest : AbstractTest() {
         tab.addPlayers(listOf(insertPlayer()))
         tab.getChild<ScrollTable>().selectRow(-1)
 
-        tab.clickChild<JButton>("RemovePlayer", async = true)
+        tab.clickChild<JButton>("RemovePlayer")
 
         expectErrorDialog("You must select player(s) to remove.")
         tab.getChild<ScrollTable>().rowCount shouldBe 1
@@ -49,7 +49,7 @@ class ReportingPlayersTabTest : AbstractTest() {
         tab.includedPlayerPanel.enabled() shouldBe true
         tab.includedPlayerPanel.chckbxFinalScore.doClick()
 
-        tab.clickChild<JButton>("RemovePlayer", async = true)
+        tab.clickChild<JButton>("RemovePlayer")
         findErrorDialog().shouldBeNull()
         tab.getChild<ScrollTable>().rowCount shouldBe 0
 

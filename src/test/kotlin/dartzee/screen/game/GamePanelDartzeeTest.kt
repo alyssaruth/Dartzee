@@ -113,7 +113,7 @@ class GamePanelDartzeeTest : AbstractTest() {
         val parentWindow = FakeDartsScreen()
 
         val panel = makeGamePanel(testRules, game = g, parentWindow = parentWindow)
-        panel.clickChild<JButton>("convertToTemplate", async = true)
+        panel.clickChild<JButton>("convertToTemplate")
 
         typeIntoInputDialog(
             "Please enter a name for the template",
@@ -137,7 +137,7 @@ class GamePanelDartzeeTest : AbstractTest() {
         val parentWindow = FakeDartsScreen()
 
         val panel = makeGamePanel(testRules, game = g, parentWindow = parentWindow)
-        panel.clickChild<JButton>("convertToTemplate", async = true)
+        panel.clickChild<JButton>("convertToTemplate")
 
         dismissDialog("Template Name")
 

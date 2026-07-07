@@ -47,7 +47,7 @@ class TestPlayerImageDialog : AbstractTest() {
     fun `Should show an error if no selection is made`() {
         val callback = makeCallback()
         val dlg = PlayerImageDialog(callback)
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("You must select an image.")
         verifyNotCalled { callback(any()) }

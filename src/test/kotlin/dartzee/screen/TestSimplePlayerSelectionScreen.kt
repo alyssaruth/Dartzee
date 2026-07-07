@@ -30,7 +30,7 @@ class TestSimplePlayerSelectionScreen : AbstractTest() {
     fun `Should perform player selector validation when attempting to launch a game`() {
         val screen = SimplePlayerSelectionScreen()
         screen.postInit()
-        screen.clickChild<JButton>("Next", async = true)
+        screen.clickChild<JButton>("Next")
 
         expectErrorDialog("You must select at least 1 player.")
         verifyNotCalled { gameLauncher.launchNewGame(any()) }

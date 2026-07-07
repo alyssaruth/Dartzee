@@ -218,7 +218,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
     fun `Should prevent an empty rule name`() {
         val dlg = showRuleCreationDialog()
         dlg.clickChild<JCheckBox>(text = "Custom rule name")
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("You cannot have an empty rule name.")
 
@@ -233,7 +233,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
         val dlg = showRuleCreationDialog()
         dlg.clickChild<JCheckBox>(text = "Custom rule name")
         dlg.tfRuleName.text = ruleName
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("Rule name cannot exceed 1000 characters.")
 
@@ -249,7 +249,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
             dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         }
 
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("Dart 1: You must select at least one colour.")
 
@@ -261,7 +261,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
             dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         }
 
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("Dart 2: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
@@ -272,7 +272,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
             dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         }
 
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("Dart 3: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
@@ -288,7 +288,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
             dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         }
 
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("Target: You must select at least one colour.")
 
@@ -310,7 +310,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
             dlg.aggregateSelector.comboBoxRuleType.selectByClass<DartzeeTotalRuleOdd>()
         }
 
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("This rule is impossible!")
 
@@ -321,7 +321,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
     @Test
     fun `Should dispose if valid`() {
         val dlg = showRuleCreationDialog()
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         findErrorDialog().shouldBeNull()
         dlg.shouldNotBeVisible()

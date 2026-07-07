@@ -62,7 +62,7 @@ class AchievementConversionDialogTest : AbstractTest() {
 
         val dlg = AchievementConversionDialog()
         dlg.isVisible = true
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         val questionDialog = getQuestionDialog()
         questionDialog.getDialogMessage() shouldBe
@@ -79,7 +79,7 @@ class AchievementConversionDialogTest : AbstractTest() {
 
         val dlg = AchievementConversionDialog()
         dlg.isVisible = true
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         val questionDialog = getQuestionDialog()
         questionDialog.getDialogMessage() shouldBe

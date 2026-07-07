@@ -67,7 +67,7 @@ class DevUtilitiesTest : AbstractTest() {
 
         selectOptionFromInputDialog("Select Game ID", 2L, title = "Delete Game")
 
-        getQuestionDialog().clickYes(async = true)
+        getQuestionDialog().clickYes()
 
         getCountFromTable(EntityName.Game) shouldBe 1
         retrieveGame().localId shouldBe 1

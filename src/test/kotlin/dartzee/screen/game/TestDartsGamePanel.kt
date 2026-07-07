@@ -221,12 +221,12 @@ class TestDartsGamePanel : AbstractTest() {
         panel.startNewGame(listOf(human1, human2, human3))
         panel.resignButton().shouldBeVisible()
         panel.clickResign()
-        getQuestionDialog().clickYes(async = true)
+        getQuestionDialog().clickYes()
         purgeWindows()
 
         panel.resignButton().shouldBeVisible()
         panel.clickResign()
-        getQuestionDialog().clickYes(async = true)
+        getQuestionDialog().clickYes()
 
         panel.resignButton().shouldNotBeVisible()
     }
@@ -241,7 +241,7 @@ class TestDartsGamePanel : AbstractTest() {
         panel.startNewGame(listOf(human1, human2))
         panel.resignButton().shouldBeVisible()
         panel.clickResign()
-        getQuestionDialog().clickNo(async = true)
+        getQuestionDialog().clickNo()
 
         panel.getPlayerStates().count { it.hasResigned() } shouldBe 0
     }
@@ -257,7 +257,7 @@ class TestDartsGamePanel : AbstractTest() {
         panel.dartThrown(Dart(20, 1))
         panel.resignButton().shouldBeVisible()
         panel.clickResign()
-        getQuestionDialog().clickYes(async = true)
+        getQuestionDialog().clickYes()
 
         val human1State = panel.getPlayerStates().filter { it.wrappedParticipant == human1 }.only()
         human1State.hasResigned() shouldBe true
@@ -303,8 +303,7 @@ class TestDartsGamePanel : AbstractTest() {
         panel.getChild<JLabel>("DodgyLabel").shouldBeVisible()
     }
 
-    private fun TestGamePanel.clickResign() =
-        clickChild<JButton>(async = true) { it.toolTipText == "Resign" }
+    private fun TestGamePanel.clickResign() = clickChild<JButton>() { it.toolTipText == "Resign" }
 
     private fun TestGamePanel.confirmButton() =
         getChild<JButton> { it.toolTipText == "Confirm round" }

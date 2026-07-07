@@ -26,7 +26,7 @@ class ScrollTableDartsGameTest : AbstractTest() {
 
         val table = ScrollTableDartsGame()
         table.model = tm
-        table.table.doClick(async = true)
+        table.table.doClick()
 
         verify { launcher.loadAndDisplayGame(game.rowId) }
     }
@@ -43,7 +43,7 @@ class ScrollTableDartsGameTest : AbstractTest() {
 
         val table = ScrollTableDartsGame()
         table.model = tm
-        table.table.doClick(async = true)
+        table.table.doClick()
 
         expectErrorDialog("It isn't possible to display individual games from a simulation.")
         verifyNotCalled { launcher.loadAndDisplayGame(any()) }

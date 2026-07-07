@@ -32,7 +32,7 @@ class FileUploaderTest : AbstractTest() {
         val uploader = FileUploader(FileNameExtensionFilter("all", "*"))
         val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
-        uploader.clickChild<JButton>(text = "Upload", async = true)
+        uploader.clickChild<JButton>(text = "Upload")
 
         expectErrorDialog("You must select a file to upload.")
 
@@ -46,7 +46,7 @@ class FileUploaderTest : AbstractTest() {
         val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
 
-        uploader.clickChild<JButton>(text = "...", async = true)
+        uploader.clickChild<JButton>(text = "...")
 
         val chooserDialog = getFileChooser("Open")
         chooserDialog.clickCancel()
@@ -91,7 +91,7 @@ class FileUploaderTest : AbstractTest() {
         val listener = makeFileListener(false)
         uploader.addFileUploadListener(listener)
 
-        uploader.clickChild<JButton>(text = "...", async = true)
+        uploader.clickChild<JButton>(text = "...")
 
         val chooserDialog = getFileChooser("Open")
         val combo =
@@ -120,7 +120,7 @@ class FileUploaderTest : AbstractTest() {
         val uploaderTwo = FileUploader(FileNameExtensionFilter("all", "*"))
         uploaderTwo.getChild<JTextField>().text shouldBe rsrcDirectory
 
-        uploaderTwo.clickChild<JButton>(text = "...", async = true)
+        uploaderTwo.clickChild<JButton>(text = "...")
         val chooser = getFileChooser("Open")
         val combo = chooser.getChild<JComboBox<File>> { it.selectedItem is File }
         combo.selectedItemTyped() shouldBe File(rsrcDirectory)

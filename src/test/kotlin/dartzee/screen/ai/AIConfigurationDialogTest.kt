@@ -111,7 +111,7 @@ class AIConfigurationDialogTest : AbstractTest() {
 
         val dlg = AIConfigurationDialog(callback, player)
         dlg.getChild<JTextField>("nameField").text = "Name"
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("You must select an avatar.")
 

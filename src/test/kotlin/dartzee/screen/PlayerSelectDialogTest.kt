@@ -48,7 +48,7 @@ class PlayerSelectDialogTest : AbstractTest() {
         val dlg = PlayerSelectDialog(ListSelectionModel.SINGLE_SELECTION)
         dlg.buildTable()
 
-        dlg.clickOk(async = true)
+        dlg.clickOk()
         expectErrorDialog("You must select at least one player.")
     }
 

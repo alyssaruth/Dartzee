@@ -37,12 +37,12 @@ class PreferencesScreenTest : AbstractTest() {
 
         ScreenCache.switch(screen, true)
 
-        screen.clickChild<JButton>("Back", async = true)
+        screen.clickChild<JButton>("Back")
 
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe
             "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
-        question.clickNo(async = true)
+        question.clickNo()
 
         ScreenCache.currentScreen() shouldBe screen
     }
@@ -56,11 +56,11 @@ class PreferencesScreenTest : AbstractTest() {
 
         ScreenCache.switch(screen, true)
 
-        screen.clickChild<JButton>("Back", async = true)
+        screen.clickChild<JButton>("Back")
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe
             "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
-        question.clickYes(async = true)
+        question.clickYes()
 
         ScreenCache.currentScreen().shouldBeInstanceOf<MenuScreen>()
     }
@@ -74,7 +74,7 @@ class PreferencesScreenTest : AbstractTest() {
 
         ScreenCache.switch(screen, true)
 
-        screen.clickChild<JButton>("Back", async = true)
+        screen.clickChild<JButton>("Back")
         findQuestionDialog().shouldBeNull()
 
         ScreenCache.currentScreen().shouldBeInstanceOf<MenuScreen>()

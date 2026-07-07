@@ -89,7 +89,7 @@ class DartsDatabaseUtilTest : AbstractTest() {
     fun `Should not back up any files if file selection cancelled`() {
         runAsync { DartsDatabaseUtil.backupCurrentDatabase() }
 
-        getFileChooser("Select").clickCancel(async = true)
+        getFileChooser("Select").clickCancel()
 
         findInfoDialog().shouldBeNull()
         findErrorDialog().shouldBeNull()
@@ -139,7 +139,7 @@ class DartsDatabaseUtilTest : AbstractTest() {
         expectInfoDialog("Select the 'Darts' folder you want to restore from.")
 
         val chooserDialog = getFileChooser("Select")
-        chooserDialog.clickCancel(async = true)
+        chooserDialog.clickCancel()
 
         findInfoDialog { it.isVisible }.shouldBeNull()
         findErrorDialog().shouldBeNull()
@@ -196,7 +196,7 @@ class DartsDatabaseUtilTest : AbstractTest() {
             val question = getQuestionDialog()
             question.getDialogMessage() shouldBe
                 "Successfully connected to target database.\n\nAre you sure you want to restore this database? All current data will be lost."
-            question.clickNo(async = true)
+            question.clickNo()
 
             // Main DB connection should be intact
             shouldNotThrowAny { mainDatabase.borrowConnection() }
@@ -217,7 +217,7 @@ class DartsDatabaseUtilTest : AbstractTest() {
             val question = getQuestionDialog()
             question.getDialogMessage() shouldBe
                 "Successfully connected to target database.\n\nAre you sure you want to restore this database? All current data will be lost."
-            question.clickYes(async = true)
+            question.clickYes()
 
             expectInfoDialog("Database restored successfully.")
 

@@ -59,7 +59,7 @@ class ForeignDatabaseValidatorTest : AbstractTest() {
             }
 
             expectErrorDialog(
-                "The other database contains data written by a higher Dartzee version. \n\nYou will need to update to the latest version of Dartzee before continuing."
+                "The other database contains data written by a higher Dartzee version. \nYou will need to update to the latest version of Dartzee before continuing."
             )
             result shouldBe false
         }
@@ -83,7 +83,7 @@ class ForeignDatabaseValidatorTest : AbstractTest() {
 
             expectErrorDialog(
                 "Other database is too out-of-date to be upgraded by this version of Dartzee. " +
-                    "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails"
+                    "Please downgrade to an earlier version so that the data can be converted.\n$dbDetails"
             )
             result shouldBe false
         }
