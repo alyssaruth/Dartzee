@@ -10,7 +10,6 @@ import dartzee.core.bean.FileUploader
 import dartzee.core.bean.ScrollTable
 import dartzee.core.bean.items
 import dartzee.core.screen.LoadingDialog
-import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.db.PlayerEntity
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameType
@@ -38,8 +37,9 @@ import io.github.alyssaruth.swingtest.generateComponentTree
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.getWindow
 import io.github.alyssaruth.swingtest.purgeWindows
+import io.github.alyssaruth.swingtest.selectFile
+import io.github.alyssaruth.swingtest.selectTab
 import io.github.alyssaruth.swingtest.shouldMatch
-import io.github.alyssaruth.swingtest.typeText
 import io.github.alyssaruth.swingtest.waitForAssertion
 import io.github.alyssaruth.swingtest.waitForWindow
 import io.kotest.matchers.doubles.shouldBeBetween
@@ -70,7 +70,6 @@ import javax.swing.JTabbedPane
 import javax.swing.JTextField
 import javax.swing.SwingUtilities
 import javax.swing.table.DefaultTableModel
-import javax.swing.text.JTextComponent
 
 val bullseye = DartboardSegment(SegmentType.DOUBLE, 25)
 val outerBull = DartboardSegment(SegmentType.OUTER_SINGLE, 25)
@@ -223,13 +222,6 @@ fun <T> List<T>.only(): T {
     return first()
 }
 
-fun selectFile(path: String, title: String) {
-    val chooserDialog = getFileChooser(title)
-    chooserDialog.getChild<JTextComponent>().typeText(path)
-    chooserDialog.clickChild<JButton>(text = title)
-    flushEdt()
-}
-
 fun PlayerImageDialog.selectImage(playerImageId: String) {
     getChild<JTabbedPane>().selectTab<JPanel>("uploadTab")
 
@@ -373,14 +365,6 @@ fun confirmGameDeletion(localId: Long): String {
     purgeWindows()
 
     return questionText
-}
-
-/** TODO - Add to swing-test */
-inline fun <reified T : Component> JTabbedPane.selectTab(
-    name: String,
-    noinline filterFn: ((T) -> Boolean)? = null,
-) {
-    runOnEventThreadBlocking { selectedComponent = getChild<T>(name, filterFn = filterFn) }
 }
 
 fun Icon.shouldMatch(otherPath: String) {

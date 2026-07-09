@@ -18,6 +18,7 @@ import io.github.alyssaruth.swingtest.clickChild
 import io.github.alyssaruth.swingtest.clickNo
 import io.github.alyssaruth.swingtest.clickOk
 import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.getWindow
@@ -64,11 +65,7 @@ class AchievementConversionDialogTest : AbstractTest() {
         dlg.isVisible = true
         dlg.clickOk(async = true)
 
-        val questionDialog = getQuestionDialog()
-        questionDialog.getDialogMessage() shouldBe
-            "This will run the conversion(s) for ALL players. Proceed?"
-        questionDialog.clickNo()
-        flushEdt()
+        expectQuestionDialog("This will run the conversion(s) for ALL players. Proceed?", "No")
 
         dlg.shouldBeVisible()
     }
@@ -81,10 +78,7 @@ class AchievementConversionDialogTest : AbstractTest() {
         dlg.isVisible = true
         dlg.clickOk(async = true)
 
-        val questionDialog = getQuestionDialog()
-        questionDialog.getDialogMessage() shouldBe
-            "This will run the conversion(s) for ALL players. Proceed?"
-        questionDialog.clickYes()
+        expectQuestionDialog("This will run the conversion(s) for ALL players. Proceed?", "Yes")
 
         waitForConversionToFinish()
 

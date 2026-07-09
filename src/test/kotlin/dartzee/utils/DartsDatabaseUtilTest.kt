@@ -1,8 +1,5 @@
 package dartzee.utils
 
-import io.github.alyssaruth.swingtest.clickCancel
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
 import dartzee.db.DatabaseMigrator
 import dartzee.db.EntityName
 import dartzee.db.MigrationResult
@@ -10,9 +7,7 @@ import dartzee.expectErrorDialog
 import dartzee.expectInfoDialog
 import dartzee.findErrorDialog
 import dartzee.findInfoDialog
-import dartzee.getDialogMessage
 import dartzee.getFileChooser
-import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.TEST_DB_DIRECTORY
 import dartzee.helper.TEST_ROOT
@@ -28,10 +23,12 @@ import dartzee.logging.Severity
 import dartzee.runAsync
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.DartsGameScreen
-import dartzee.selectFile
 import dartzee.utils.DartsDatabaseUtil.DATABASE_NAME
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import dartzee.utils.InjectedThings.mainDatabase
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.expectQuestionDialog
+import io.github.alyssaruth.swingtest.selectFile
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.file.shouldExist
@@ -40,10 +37,10 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import java.io.File
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.io.File
 
 const val BACKUP_LOCATION = "Test/Backup/Databases"
 
@@ -193,10 +190,7 @@ class DartsDatabaseUtilTest : AbstractTest() {
         usingInMemoryDatabase(withSchema = true) { db ->
             runAsync { DartsDatabaseUtil.validateAndRestoreDatabase(db) }
 
-            val question = getQuestionDialog()
-            question.getDialogMessage() shouldBe
-                "Successfully connected to target database.\n\nAre you sure you want to restore this database? All current data will be lost."
-            question.clickNo(async = true)
+            expectQuestionDialog("Successfully connected to target database.\nAre you sure you want to restore this database? All current data will be lost.", "No")
 
             // Main DB connection should be intact
             shouldNotThrowAny { mainDatabase.borrowConnection() }
@@ -214,10 +208,7 @@ class DartsDatabaseUtilTest : AbstractTest() {
 
             runAsync { DartsDatabaseUtil.validateAndRestoreDatabase(db) }
 
-            val question = getQuestionDialog()
-            question.getDialogMessage() shouldBe
-                "Successfully connected to target database.\n\nAre you sure you want to restore this database? All current data will be lost."
-            question.clickYes(async = true)
+            expectQuestionDialog("Successfully connected to target database.\nAre you sure you want to restore this database? All current data will be lost.", "Yes")
 
             expectInfoDialog("Database restored successfully.")
 

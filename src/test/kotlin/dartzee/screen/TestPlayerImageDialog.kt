@@ -1,9 +1,5 @@
 package dartzee.screen
 
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.shouldMatch
-import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.bean.PlayerImageRadio
 import dartzee.core.bean.FileUploader
 import dartzee.core.helper.verifyNotCalled
@@ -14,18 +10,22 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayerImage
 import dartzee.only
 import dartzee.selectImage
-import dartzee.selectTab
 import dartzee.uploadFileFromResource
 import dartzee.utils.PLAYER_IMAGE_HEIGHT
 import dartzee.utils.PLAYER_IMAGE_WIDTH
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.selectTab
+import io.github.alyssaruth.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
-import javax.swing.JPanel
-import javax.swing.JTabbedPane
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
+import javax.swing.JPanel
+import javax.swing.JTabbedPane
 
 class TestPlayerImageDialog : AbstractTest() {
     @Test

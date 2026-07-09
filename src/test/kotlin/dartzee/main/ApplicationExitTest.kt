@@ -12,6 +12,7 @@ import dartzee.logging.LogDestinationElasticsearch
 import dartzee.runAsync
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
@@ -30,11 +31,7 @@ class ApplicationExitTest : AbstractTest() {
         assertDoesNotExit {
             runAsync { exitApplication() }
 
-            val question = getQuestionDialog()
-            question.getDialogMessage() shouldBe
-                "Are you sure you want to exit? There are 1 game window(s) still open."
-            question.clickNo()
-            flushEdt()
+            expectQuestionDialog("Are you sure you want to exit? There are 1 game window(s) still open.", "No")
         }
     }
 
@@ -46,11 +43,7 @@ class ApplicationExitTest : AbstractTest() {
         assertExits(0) {
             runAsync { exitApplication() }
 
-            val question = getQuestionDialog()
-            question.getDialogMessage() shouldBe
-                "Are you sure you want to exit? There are 2 game window(s) still open."
-            question.clickYes()
-            flushEdt()
+            expectQuestionDialog("Are you sure you want to exit? There are 1 game window(s) still open.", "Yes")
         }
     }
 

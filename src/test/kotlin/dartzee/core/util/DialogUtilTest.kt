@@ -20,8 +20,8 @@ import dartzee.logging.CODE_DIALOG_CLOSED
 import dartzee.logging.CODE_DIALOG_SHOWN
 import dartzee.logging.Severity
 import dartzee.runAsync
-import dartzee.selectFile
 import dartzee.selectFromOptionDialog
+import io.github.alyssaruth.swingtest.selectFile
 import io.github.alyssaruth.swingtest.selectOptionFromInputDialog
 import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.kotest.matchers.nulls.shouldBeNull
@@ -179,7 +179,7 @@ class DialogUtilTest : AbstractTest() {
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Input dialog shown: Enter your favourite cheese"
 
-        typeIntoInputDialog("Cheezoid", "Camembert")
+        typeIntoInputDialog("Enter your favourite cheese", "Camembert")
 
         option shouldBe "Camembert"
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
@@ -191,7 +191,7 @@ class DialogUtilTest : AbstractTest() {
         var option: Int? = null
         runAsync { option = DialogUtil.showInput("Game", "Pick GameId", arrayOf(1, 2, 3, 4, 5)) }
 
-        selectOptionFromInputDialog("Game", 3)
+        selectOptionFromInputDialog("Pick GameId", 3)
 
         option shouldBe 3
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
@@ -204,7 +204,7 @@ class DialogUtilTest : AbstractTest() {
         var option: Int? = null
         runAsync { option = DialogUtil.showInput("Game", "Pick GameId", options) }
 
-        selectOptionFromInputDialog("Game", 77)
+        selectOptionFromInputDialog("Pick GameId", 77)
 
         option shouldBe 77
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
