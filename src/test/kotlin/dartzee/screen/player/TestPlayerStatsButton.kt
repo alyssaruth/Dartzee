@@ -1,12 +1,12 @@
 package dartzee.screen.player
 
-import io.github.alyssaruth.swingtest.doHover
-import io.github.alyssaruth.swingtest.doHoverAway
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerStatisticsScreen
+import io.github.alyssaruth.swingtest.doHover
+import io.github.alyssaruth.swingtest.doHoverAway
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test

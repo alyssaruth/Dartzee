@@ -1,11 +1,11 @@
 package dartzee.sync
 
-import dartzee.cancelOptionDialog
-import dartzee.dismissDialog
 import dartzee.helper.AbstractTest
 import dartzee.runAsync
-import dartzee.selectFromOptionDialog
 import dartzee.utils.InjectedThings.mainDatabase
+import io.github.alyssaruth.swingtest.cancelDialog
+import io.github.alyssaruth.swingtest.dismissDialog
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
@@ -26,8 +26,17 @@ class SyncConfigurerTest : AbstractTest() {
         var result: SyncConfig? = null
         runAsync { result = makeSyncConfigurer().doFirstTimeSetup() }
 
-        typeIntoInputDialog("Sync Setup", "Goomba")
-        selectFromOptionDialog("Database not found", "Create 'Goomba'")
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            "Goomba",
+            title = "Sync Setup",
+        )
+
+        expectQuestionDialog(
+            "No shared database found called 'Goomba'. Would you like to create it?",
+            "Create 'Goomba'",
+            title = "Database not found",
+        )
 
         result shouldBe SyncConfig(SyncMode.CREATE_REMOTE, "Goomba")
     }
@@ -37,8 +46,12 @@ class SyncConfigurerTest : AbstractTest() {
         var result: SyncConfig? = null
         runAsync { result = makeSyncConfigurer().doFirstTimeSetup() }
 
-        typeIntoInputDialog("Sync Setup", "Goomba")
-        cancelOptionDialog("Database not found")
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            "Goomba",
+            title = "Sync Setup",
+        )
+        cancelDialog("Database not found")
 
         result shouldBe null
     }
@@ -51,8 +64,16 @@ class SyncConfigurerTest : AbstractTest() {
         var result: SyncConfig? = null
         runAsync { result = makeSyncConfigurer(store).doFirstTimeSetup() }
 
-        typeIntoInputDialog("Sync Setup", "Goomba")
-        selectFromOptionDialog("Database found", "Overwrite local data")
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            "Goomba",
+            title = "Sync Setup",
+        )
+        expectQuestionDialog(
+            "Shared database 'Goomba' already exists. How would you like to proceed?",
+            "Overwrite local data",
+            title = "Database found",
+        )
 
         result shouldBe SyncConfig(SyncMode.OVERWRITE_LOCAL, "Goomba")
     }
@@ -65,8 +86,16 @@ class SyncConfigurerTest : AbstractTest() {
         var result: SyncConfig? = null
         runAsync { result = makeSyncConfigurer(store).doFirstTimeSetup() }
 
-        typeIntoInputDialog("Sync Setup", "Goomba")
-        selectFromOptionDialog("Database found", "Sync with local data")
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            "Goomba",
+            title = "Sync Setup",
+        )
+        expectQuestionDialog(
+            "Shared database 'Goomba' already exists. How would you like to proceed?",
+            "Sync with local data",
+            title = "Database found",
+        )
 
         result shouldBe SyncConfig(SyncMode.NORMAL_SYNC, "Goomba")
     }
@@ -79,8 +108,12 @@ class SyncConfigurerTest : AbstractTest() {
         var result: SyncConfig? = null
         runAsync { result = makeSyncConfigurer(store).doFirstTimeSetup() }
 
-        typeIntoInputDialog("Sync Setup", "Goomba")
-        cancelOptionDialog("Database found")
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            "Goomba",
+            title = "Sync Setup",
+        )
+        cancelDialog("Database found")
 
         result shouldBe null
     }

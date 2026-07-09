@@ -1,11 +1,9 @@
 package dartzee.utils
 
-import dartzee.cancelOptionDialog
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
-import dartzee.expectInfoDialog
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
@@ -14,14 +12,16 @@ import dartzee.helper.insertGame
 import dartzee.helper.twoBlackOneWhite
 import dartzee.`object`.Dart
 import dartzee.runAsync
+import io.github.alyssaruth.swingtest.cancelDialog
+import io.github.alyssaruth.swingtest.expectInfoDialog
 import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.Color
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
 class DartzeeUtilsTest : AbstractTest() {
     @Test
@@ -103,7 +103,7 @@ class DartzeeUtilsTest : AbstractTest() {
 
         runAsync { result = generateDartzeeTemplateFromGame(insertGame(), listOf()) }
 
-        cancelOptionDialog("Template Name")
+        cancelDialog("Template Name")
 
         result shouldBe null
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
@@ -116,7 +116,11 @@ class DartzeeUtilsTest : AbstractTest() {
         var result: DartzeeTemplateEntity? = null
         runAsync { result = generateDartzeeTemplateFromGame(g, dtos) }
 
-        typeIntoInputDialog("Template Name", "My Template")
+        typeIntoInputDialog(
+            "Please enter a name for the template",
+            "My Template",
+            title = "Template Name",
+        )
         expectInfoDialog("Template 'My Template' successfully created.")
 
         result.shouldNotBeNull()

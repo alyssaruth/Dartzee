@@ -1,6 +1,5 @@
 package dartzee.theme
 
-import io.github.alyssaruth.swingtest.shouldMatch
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.logging.CODE_AUDIO_ERROR
@@ -11,6 +10,7 @@ import dartzee.screen.animation.IAnimationTrigger
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
 import dartzee.utils.ResourceCache
+import io.github.alyssaruth.swingtest.shouldMatch
 import io.kotest.assertions.withClue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe

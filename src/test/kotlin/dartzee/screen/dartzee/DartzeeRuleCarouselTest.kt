@@ -1,6 +1,5 @@
 package dartzee.screen.dartzee
 
-import io.github.alyssaruth.swingtest.makeMouseEvent
 import dartzee.ai.DartzeePlayStyle
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.getAllChildComponentsForType
@@ -27,6 +26,7 @@ import dartzee.theme.PrideColors
 import dartzee.theme.Themes
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments
+import io.github.alyssaruth.swingtest.makeMouseEvent
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.collections.shouldContainExactly

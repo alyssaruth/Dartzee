@@ -8,10 +8,10 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleInner
 import dartzee.dartzee.dart.DartzeeDartRuleScore
 import dartzee.dartzee.getAllDartRules
-import dartzee.expectErrorDialog
 import dartzee.findErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.runAsync
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe

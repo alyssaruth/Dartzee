@@ -1,9 +1,9 @@
 package dartzee.core.screen
 
+import dartzee.helper.AbstractTest
 import io.github.alyssaruth.swingtest.clickCancel
 import io.github.alyssaruth.swingtest.clickOk
 import io.github.alyssaruth.swingtest.shouldNotBeVisible
-import dartzee.helper.AbstractTest
 import io.kotest.matchers.shouldBe
 import java.awt.Color
 import org.junit.jupiter.api.Test

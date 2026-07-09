@@ -1,17 +1,8 @@
 package dartzee.ai
 
-import io.github.alyssaruth.swingtest.clickCancel
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
-import io.github.alyssaruth.swingtest.findWindow
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.shouldNotBeVisible
-import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.screen.ProgressDialog
 import dartzee.db.EntityName
-import dartzee.expectErrorDialog
 import dartzee.findQuestionDialog
 import dartzee.game.GameType
 import dartzee.getDialogMessage
@@ -28,7 +19,16 @@ import dartzee.logging.Severity
 import dartzee.`object`.DartsClient
 import dartzee.screen.stats.player.PlayerStatisticsScreen
 import dartzee.waitForQuestionDialog
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.findWindow
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.getWindow
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.github.alyssaruth.swingtest.waitForWindow
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe

@@ -1,12 +1,12 @@
 package dartzee.core.bean
 
-import io.github.alyssaruth.swingtest.doClick
-import io.github.alyssaruth.swingtest.doHover
-import io.github.alyssaruth.swingtest.doHoverAway
 import dartzee.helper.AbstractTest
 import dartzee.theme.HALLOWEEN
 import dartzee.theme.Themes
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.doClick
+import io.github.alyssaruth.swingtest.doHover
+import io.github.alyssaruth.swingtest.doHoverAway
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify

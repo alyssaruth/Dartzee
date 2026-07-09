@@ -1,10 +1,10 @@
 package dartzee.bean
 
-import io.github.alyssaruth.swingtest.clickChild
 import dartzee.db.PlayerEntity
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.runExpectingError
+import io.github.alyssaruth.swingtest.clickChild
 import io.kotest.matchers.shouldBe
 import javax.swing.JToggleButton
 import org.junit.jupiter.api.Test

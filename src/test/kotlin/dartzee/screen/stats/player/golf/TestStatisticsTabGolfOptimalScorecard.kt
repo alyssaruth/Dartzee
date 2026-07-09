@@ -1,7 +1,5 @@
 package dartzee.screen.stats.player.golf
 
-import io.github.alyssaruth.swingtest.findChild
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.getRenderedRows
 import dartzee.getRows
 import dartzee.helper.AbstractTest
@@ -14,6 +12,8 @@ import dartzee.helper.golfFull31_22
 import dartzee.helper.golfFullOptimal
 import dartzee.stats.GameWrapper
 import dartzee.stats.GolfMode
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe

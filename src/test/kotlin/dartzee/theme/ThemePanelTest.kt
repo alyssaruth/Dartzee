@@ -1,10 +1,10 @@
 package dartzee.theme
 
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.helper.AbstractTest
 import dartzee.shouldMatch
 import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import java.awt.Color

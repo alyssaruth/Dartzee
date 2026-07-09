@@ -3,8 +3,6 @@ package dartzee.utils
 import dartzee.db.DatabaseMigrator
 import dartzee.db.EntityName
 import dartzee.db.MigrationResult
-import dartzee.expectErrorDialog
-import dartzee.expectInfoDialog
 import dartzee.findErrorDialog
 import dartzee.findInfoDialog
 import dartzee.getFileChooser
@@ -27,6 +25,8 @@ import dartzee.utils.DartsDatabaseUtil.DATABASE_NAME
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import dartzee.utils.InjectedThings.mainDatabase
 import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.expectInfoDialog
 import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.selectFile
 import io.kotest.assertions.throwables.shouldNotThrowAny
@@ -86,7 +86,7 @@ class DartsDatabaseUtilTest : AbstractTest() {
     fun `Should not back up any files if file selection cancelled`() {
         runAsync { DartsDatabaseUtil.backupCurrentDatabase() }
 
-        getFileChooser("Select").clickCancel(async = true)
+        getFileChooser("Select").clickCancel()
 
         findInfoDialog().shouldBeNull()
         findErrorDialog().shouldBeNull()
@@ -136,7 +136,7 @@ class DartsDatabaseUtilTest : AbstractTest() {
         expectInfoDialog("Select the 'Darts' folder you want to restore from.")
 
         val chooserDialog = getFileChooser("Select")
-        chooserDialog.clickCancel(async = true)
+        chooserDialog.clickCancel()
 
         findInfoDialog { it.isVisible }.shouldBeNull()
         findErrorDialog().shouldBeNull()

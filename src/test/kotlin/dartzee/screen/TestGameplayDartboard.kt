@@ -1,10 +1,5 @@
 package dartzee.screen
 
-import io.github.alyssaruth.swingtest.doClick
-import io.github.alyssaruth.swingtest.findChild
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.bean.DartLabel
 import dartzee.bean.InteractiveDartboard
 import dartzee.core.helper.verifyNotCalled
@@ -21,6 +16,11 @@ import dartzee.theme.IDartboardPainter
 import dartzee.theme.Themes
 import dartzee.throwDartByClick
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.doClick
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe

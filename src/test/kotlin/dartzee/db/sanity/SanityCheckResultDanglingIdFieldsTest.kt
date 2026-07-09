@@ -1,11 +1,7 @@
 package dartzee.db.sanity
 
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
-import dartzee.expectErrorDialog
-import dartzee.expectInfoDialog
 import dartzee.getDialogMessage
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
@@ -15,6 +11,10 @@ import dartzee.helper.randomGuid
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
 import dartzee.runAsync
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.expectInfoDialog
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -42,7 +42,7 @@ class SanityCheckResultDanglingIdFieldsTest : AbstractTest() {
 
         val q = getQuestionDialog()
         q.getDialogMessage() shouldBe "Are you sure you want to delete 10 rows from Game?"
-        q.clickYes(async = true)
+        q.clickYes()
 
         getCountFromTable(EntityName.Game) shouldBe 0
         getCountFromTable(EntityName.DeletionAudit) shouldBe 10
@@ -66,7 +66,7 @@ class SanityCheckResultDanglingIdFieldsTest : AbstractTest() {
 
         val q = getQuestionDialog()
         q.getDialogMessage() shouldBe "Are you sure you want to delete 1 rows from Foo?"
-        q.clickYes(async = true)
+        q.clickYes()
 
         expectErrorDialog("An error occurred deleting the rows.")
         verifyLog(CODE_SQL_EXCEPTION, Severity.ERROR)

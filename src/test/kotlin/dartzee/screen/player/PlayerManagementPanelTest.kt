@@ -1,16 +1,5 @@
 package dartzee.screen.player
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.clickYes
-import io.github.alyssaruth.swingtest.findWindow
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.shouldBeVisible
-import io.github.alyssaruth.swingtest.shouldMatch
-import io.github.alyssaruth.swingtest.shouldNotBeVisible
-import io.github.alyssaruth.swingtest.typeText
 import dartzee.achievements.AchievementType
 import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.golf.AchievementGolfBestGame
@@ -33,6 +22,17 @@ import dartzee.screen.HumanConfigurationDialog
 import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetupDialog
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.findWindow
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.typeText
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -66,7 +66,7 @@ class PlayerManagementPanelTest : AbstractTest() {
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>(text = "Delete", async = true)
+        panel.clickChild<JButton>(text = "Delete")
 
         val dlg = getQuestionDialog()
         dlg.getDialogMessage() shouldBe "Are you sure you want to delete Leah?"
@@ -86,7 +86,7 @@ class PlayerManagementPanelTest : AbstractTest() {
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>(text = "Delete", async = true)
+        panel.clickChild<JButton>(text = "Delete")
 
         val dlg = getQuestionDialog()
         dlg.getDialogMessage() shouldBe "Are you sure you want to delete BTBF?"

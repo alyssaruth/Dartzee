@@ -8,7 +8,6 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
-import dartzee.dismissDialog
 import dartzee.findQuestionDialog
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
@@ -22,6 +21,7 @@ import dartzee.helper.totalIsFifty
 import io.github.alyssaruth.swingtest.clickCancel
 import io.github.alyssaruth.swingtest.clickChild
 import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.dismissDialog
 import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.getWindow
@@ -33,10 +33,10 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 import java.awt.event.KeyEvent
 import javax.swing.JButton
 import javax.swing.JTextField
+import org.junit.jupiter.api.Test
 
 class DartzeeTemplateSetupScreenTest : AbstractTest() {
     @Test
@@ -92,7 +92,7 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("deleteTemplate", async = true)
+        scrn.clickChild<JButton>("deleteTemplate")
 
         expectQuestionDialog("Are you sure you want to delete the ABC Template?", "No")
 
@@ -108,7 +108,7 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("deleteTemplate", async = true)
+        scrn.clickChild<JButton>("deleteTemplate")
 
         expectQuestionDialog("Are you sure you want to delete the ABC Template?", "Yes")
 
@@ -125,7 +125,7 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE)
 
         expectQuestionDialog("Are you sure you want to delete the ABC Template?", "Yes")
 
@@ -142,7 +142,7 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(-1)
-        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE)
 
         findQuestionDialog().shouldBeNull()
         scrn.getChild<ScrollTable>().rowCount shouldBe 1
@@ -159,7 +159,7 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("deleteTemplate", async = true)
+        scrn.clickChild<JButton>("deleteTemplate")
 
         expectQuestionDialog("You have played 2 games using the ABC Template." +
                 "\nThese will become custom games if you delete it. Are you sure you want to continue?", "Yes")
@@ -238,9 +238,9 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("rename", async = true)
+        scrn.clickChild<JButton>("rename")
 
-        typeIntoInputDialog("Rename Template", "New")
+        typeIntoInputDialog("Name", "New", title = "Rename Template")
 
         scrn.getTemplate(0).name shouldBe "New"
 
@@ -256,7 +256,7 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("rename", async = true)
+        scrn.clickChild<JButton>("rename")
 
         dismissDialog("Rename Template")
 

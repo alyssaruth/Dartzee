@@ -1,6 +1,5 @@
 package dartzee.bean
 
-import io.github.alyssaruth.swingtest.shouldMatchImage
 import dartzee.game.state.SingleParticipant
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertParticipant
@@ -10,6 +9,7 @@ import dartzee.screen.game.makeTeam
 import dartzee.theme.HALLOWEEN
 import dartzee.theme.Themes
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 

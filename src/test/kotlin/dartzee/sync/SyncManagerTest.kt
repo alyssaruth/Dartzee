@@ -1,6 +1,5 @@
 package dartzee.sync
 
-import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.core.util.getSqlDateNow
 import dartzee.db.DeletionAuditEntity
 import dartzee.db.EntityName
@@ -25,8 +24,9 @@ import dartzee.runAsync
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
-import dartzee.waitForErrorDialog
-import dartzee.waitForInfoDialog
+import io.github.alyssaruth.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.waitForErrorDialog
+import io.github.alyssaruth.swingtest.waitForInfoDialog
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -154,7 +154,7 @@ class SyncManagerTest : AbstractTest() {
             var t: Thread? = null
             runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
 
-            waitForErrorDialog("Sync resulted in missing data. \n\nResults have been discarded.")
+            waitForErrorDialog("Sync resulted in missing data. \nResults have been discarded.")
 
             waitForAssertion {
                 val log = verifyLog(CODE_SYNC_ERROR, Severity.ERROR)
@@ -180,7 +180,7 @@ class SyncManagerTest : AbstractTest() {
 
             var t: Thread? = null
             runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
-            waitForInfoDialog("Sync completed successfully!\n\nGames pushed: 0\n\nGames pulled: 0")
+            waitForInfoDialog("Sync completed successfully!\nGames pushed: 0\nGames pulled: 0")
 
             waitForAssertion {
                 syncDirectoryShouldNotExist()
@@ -204,7 +204,7 @@ class SyncManagerTest : AbstractTest() {
             runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
 
             waitForErrorDialog(
-                "Another sync has been performed since this one started. \n\nResults have been discarded."
+                "Another sync has been performed since this one started. \nResults have been discarded."
             )
 
             waitForAssertion {
@@ -268,7 +268,7 @@ class SyncManagerTest : AbstractTest() {
             var t: Thread? = null
             runAsync { t = SyncManager(store).doSync(REMOTE_NAME) }
 
-            val summary = "\n\nGames pushed: 1\n\nGames pulled: 1"
+            val summary = "\nGames pushed: 1\nGames pulled: 1"
             val expectedInfoText = "Sync completed successfully!$summary"
             waitForInfoDialog(expectedInfoText)
 

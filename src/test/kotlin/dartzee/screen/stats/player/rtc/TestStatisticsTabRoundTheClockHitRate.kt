@@ -1,6 +1,5 @@
 package dartzee.screen.stats.player.rtc
 
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.core.bean.ScrollTable
 import dartzee.getFooterRow
 import dartzee.getRows
@@ -9,6 +8,7 @@ import dartzee.helper.GAME_WRAPPER_RTC_IN_ORDER_2
 import dartzee.helper.GAME_WRAPPER_RTC_OUT_OF_ORDER
 import dartzee.helper.makeClockGameWrapper
 import dartzee.screen.stats.player.AbstractStatsPieBreakdownTest
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.collections.shouldContainExactly
 import org.junit.jupiter.api.Test
 

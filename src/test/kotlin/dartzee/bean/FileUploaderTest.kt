@@ -1,19 +1,19 @@
 package dartzee.bean
 
-import io.github.alyssaruth.swingtest.clickCancel
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.purgeWindows
 import dartzee.core.bean.FileUploader
 import dartzee.core.bean.IFileUploadListener
 import dartzee.core.bean.selectedItemTyped
 import dartzee.core.helper.verifyNotCalled
-import dartzee.expectErrorDialog
 import dartzee.getFileChooser
 import dartzee.helper.AbstractTest
 import dartzee.preferences.Preferences
 import dartzee.uploadFileFromResource
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.purgeWindows
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
@@ -32,7 +32,7 @@ class FileUploaderTest : AbstractTest() {
         val uploader = FileUploader(FileNameExtensionFilter("all", "*"))
         val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
-        uploader.clickChild<JButton>(text = "Upload", async = true)
+        uploader.clickChild<JButton>(text = "Upload")
 
         expectErrorDialog("You must select a file to upload.")
 
@@ -46,7 +46,7 @@ class FileUploaderTest : AbstractTest() {
         val listener = makeFileListener(true)
         uploader.addFileUploadListener(listener)
 
-        uploader.clickChild<JButton>(text = "...", async = true)
+        uploader.clickChild<JButton>(text = "...")
 
         val chooserDialog = getFileChooser("Open")
         chooserDialog.clickCancel()
@@ -91,7 +91,7 @@ class FileUploaderTest : AbstractTest() {
         val listener = makeFileListener(false)
         uploader.addFileUploadListener(listener)
 
-        uploader.clickChild<JButton>(text = "...", async = true)
+        uploader.clickChild<JButton>(text = "...")
 
         val chooserDialog = getFileChooser("Open")
         val combo =
@@ -120,7 +120,7 @@ class FileUploaderTest : AbstractTest() {
         val uploaderTwo = FileUploader(FileNameExtensionFilter("all", "*"))
         uploaderTwo.getChild<JTextField>().text shouldBe rsrcDirectory
 
-        uploaderTwo.clickChild<JButton>(text = "...", async = true)
+        uploaderTwo.clickChild<JButton>(text = "...")
         val chooser = getFileChooser("Open")
         val combo = chooser.getChild<JComboBox<File>> { it.selectedItem is File }
         combo.selectedItemTyped() shouldBe File(rsrcDirectory)

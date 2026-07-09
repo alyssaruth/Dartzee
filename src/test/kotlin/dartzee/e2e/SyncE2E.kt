@@ -25,28 +25,28 @@ import dartzee.screen.sync.SyncManagementPanel
 import dartzee.screen.sync.SyncManagementScreen
 import dartzee.screen.sync.SyncProgressDialog
 import dartzee.screen.sync.SyncSetupPanel
-import dartzee.selectFromOptionDialog
 import dartzee.sync.AmazonS3RemoteDatabaseStore
 import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
-import dartzee.waitForInfoDialog
 import io.github.alyssaruth.swingtest.clickChild
 import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.findChild
 import io.github.alyssaruth.swingtest.selectOptionFromInputDialog
 import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.github.alyssaruth.swingtest.waitForAssertion
+import io.github.alyssaruth.swingtest.waitForInfoDialog
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import java.io.File
 import java.util.UUID
 import javax.swing.JButton
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class SyncE2E : AbstractE2ETest() {
     @BeforeEach
@@ -120,7 +120,7 @@ class SyncE2E : AbstractE2ETest() {
         waitForAssertion { SyncProgressDialog.isVisible() shouldBe true }
         waitForAssertion { SyncProgressDialog.isVisible() shouldBe false }
 
-        waitForInfoDialog("Sync completed successfully!\n\nGames pushed: 0\n\nGames pulled: 0")
+        waitForInfoDialog("Sync completed successfully!\nGames pushed: 0\nGames pulled: 0")
 
         getCountFromTable(EntityName.Game) shouldBe 0
         getCountFromTable(EntityName.Dart) shouldBe 0
@@ -130,9 +130,9 @@ class SyncE2E : AbstractE2ETest() {
 
     private fun deleteGame(mainScreen: DartsApp) {
         ScreenCache.switch<UtilitiesScreen>()
-        mainScreen.clickChild<JButton>(text = "Delete Game", async = true)
+        mainScreen.clickChild<JButton>(text = "Delete Game")
 
-        selectOptionFromInputDialog("Delete Game", 1L)
+        selectOptionFromInputDialog("Select Game ID", 1L, title = "Delete Game")
         confirmGameDeletion(1)
     }
 
@@ -155,10 +155,18 @@ class SyncE2E : AbstractE2ETest() {
     }
 
     private fun performPush(mainScreen: DartsApp, remoteName: String): String {
-        mainScreen.clickChild<JButton>(text = "Get Started > ", async = true)
+        mainScreen.clickChild<JButton>(text = "Get Started > ")
 
-        typeIntoInputDialog("Sync Setup", remoteName)
-        selectFromOptionDialog("Database not found", "Create '$remoteName'")
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            remoteName,
+            title = "Sync Setup",
+        )
+        expectQuestionDialog(
+            "No shared database found called '$remoteName'. Would you like to create it?",
+            "Create '$remoteName'",
+            title = "Database not found",
+        )
 
         waitForAssertion { mainScreen.findChild<SyncManagementPanel>() shouldNotBe null }
 
@@ -166,12 +174,21 @@ class SyncE2E : AbstractE2ETest() {
     }
 
     private fun performSync(mainScreen: DartsApp, remoteName: String) {
-        mainScreen.clickChild<JButton>(text = "Get Started > ", async = true)
+        mainScreen.clickChild<JButton>(text = "Get Started > ")
 
-        typeIntoInputDialog("Sync Setup", remoteName)
-        selectFromOptionDialog("Database found", "Sync with local data")
+        typeIntoInputDialog(
+            "Enter a unique name for the shared database (case-sensitive)",
+            remoteName,
+            title = "Sync Setup",
+        )
 
-        waitForInfoDialog("Sync completed successfully!\n\nGames pushed: 1\n\nGames pulled: 1")
+        expectQuestionDialog(
+            "Shared database '$remoteName' already exists. How would you like to proceed?",
+            "Sync with local data",
+            title = "Database found",
+        )
+
+        waitForInfoDialog("Sync completed successfully!\nGames pushed: 1\nGames pulled: 1")
 
         waitForAssertion { mainScreen.findChild<SyncManagementPanel>() shouldNotBe null }
     }
@@ -181,10 +198,10 @@ class SyncE2E : AbstractE2ETest() {
         wipeTable(EntityName.DeletionAudit)
         wipeTable(EntityName.Achievement)
 
-        mainScreen.clickChild<JButton>(text = "Reset", async = true)
+        mainScreen.clickChild<JButton>(text = "Reset")
 
         val question = getQuestionDialog()
-        question.clickYes(async = true)
+        question.clickYes()
 
         waitForAssertion { mainScreen.findChild<SyncSetupPanel>() shouldNotBe null }
     }

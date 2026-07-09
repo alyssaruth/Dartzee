@@ -1,9 +1,9 @@
 package dartzee.bean
 
-import io.github.alyssaruth.swingtest.doClick
 import dartzee.db.PlayerImageEntity
 import dartzee.db.getBlobValue
 import dartzee.helper.AbstractTest
+import io.github.alyssaruth.swingtest.doClick
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf

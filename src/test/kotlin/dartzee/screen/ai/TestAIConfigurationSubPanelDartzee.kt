@@ -1,10 +1,10 @@
 package dartzee.screen.ai
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.ai.DartzeePlayStyle
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import javax.swing.JRadioButton
 import org.junit.jupiter.api.Test

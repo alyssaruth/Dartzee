@@ -1,14 +1,7 @@
 package dartzee.utils
 
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.clickYes
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import dartzee.core.bean.LinkLabel
 import dartzee.core.helper.verifyNotCalled
-import dartzee.expectErrorDialog
 import dartzee.findLoadingDialog
 import dartzee.getDialogMessage
 import dartzee.getErrorDialog
@@ -24,6 +17,13 @@ import dartzee.logging.KEY_RESPONSE_BODY
 import dartzee.logging.Severity
 import dartzee.`object`.DartsClient
 import dartzee.runAsync
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldStartWith
@@ -211,7 +211,7 @@ class UpdateManagerTest : AbstractTest() {
         val errorDialog = getErrorDialog()
         val linkLabel = errorDialog.getChild<LinkLabel>()
         linkLabel.text shouldBe "<html><u>$DARTZEE_MANUAL_DOWNLOAD_URL/tag/v7.3.0</u></html>"
-        errorDialog.clickOk(async = true)
+        errorDialog.clickOk()
 
         verifyNotCalled { runtime.exec(any<Array<String>>()) }
 
@@ -240,7 +240,7 @@ class UpdateManagerTest : AbstractTest() {
         val errorDialog = getErrorDialog()
         val linkLabel = errorDialog.getChild<LinkLabel>()
         linkLabel.text shouldBe "<html><u>$DARTZEE_MANUAL_DOWNLOAD_URL/tag/v7.3.0</u></html>"
-        errorDialog.clickOk(async = true)
+        errorDialog.clickOk()
 
         verifyNotCalled { runtime.exec(any<Array<String>>()) }
 
@@ -267,7 +267,7 @@ class UpdateManagerTest : AbstractTest() {
         }
 
         expectErrorDialog(
-            "Failed to swap in updated file. \n\nDelete the old Dartzee.jar and rename $TEST_JAR_FILE_NAME -> Dartzee.jar"
+            "Failed to swap in updated file. \nDelete the old Dartzee.jar and rename $TEST_JAR_FILE_NAME -> Dartzee.jar"
         )
 
         val log = verifyLog(CODE_EXEC_ERROR, Severity.ERROR)
@@ -360,7 +360,7 @@ class UpdateManagerTest : AbstractTest() {
         request.path shouldBe "/root/releases/assets/12345"
 
         expectErrorDialog(
-            "Failed to swap in updated file. \n\nDelete the old Dartzee.jar and rename $TEST_JAR_FILE_NAME -> Dartzee.jar"
+            "Failed to swap in updated file. \nDelete the old Dartzee.jar and rename $TEST_JAR_FILE_NAME -> Dartzee.jar"
         )
 
         val log = verifyLog(CODE_EXEC_ERROR, Severity.ERROR)

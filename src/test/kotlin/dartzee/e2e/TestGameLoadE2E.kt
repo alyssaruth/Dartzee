@@ -1,7 +1,5 @@
 package dartzee.e2e
 
-import io.github.alyssaruth.swingtest.shouldBeVisible
-import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.core.util.DateStatics
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
@@ -15,6 +13,8 @@ import dartzee.preferences.Preferences
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe

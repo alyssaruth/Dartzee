@@ -21,10 +21,10 @@ import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import java.awt.Dimension
 import javax.swing.JButton
 import javax.swing.JLabel
+import org.junit.jupiter.api.Test
 
 class TestTutorialPanel : AbstractTest() {
     @Test

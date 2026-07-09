@@ -5,7 +5,6 @@ import dartzee.core.bean.FileUploader
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerImageEntity
-import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayerImage
 import dartzee.only
@@ -14,6 +13,7 @@ import dartzee.uploadFileFromResource
 import dartzee.utils.PLAYER_IMAGE_HEIGHT
 import dartzee.utils.PLAYER_IMAGE_WIDTH
 import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.selectTab
 import io.github.alyssaruth.swingtest.shouldMatch
@@ -47,7 +47,7 @@ class TestPlayerImageDialog : AbstractTest() {
     fun `Should show an error if no selection is made`() {
         val callback = makeCallback()
         val dlg = PlayerImageDialog(callback)
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("You must select an image.")
         verifyNotCalled { callback(any()) }

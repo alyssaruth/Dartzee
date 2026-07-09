@@ -1,12 +1,5 @@
 package dartzee.screen.player
 
-import io.github.alyssaruth.swingtest.clickCancel
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.findWindow
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.typeText
 import dartzee.bean.PlayerAvatar
 import dartzee.bean.getAllPlayers
 import dartzee.core.bean.ScrollTable
@@ -15,6 +8,13 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.randomGuid
 import dartzee.screen.HumanConfigurationDialog
 import dartzee.screen.ai.AIConfigurationDialog
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.findWindow
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.typeText
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe

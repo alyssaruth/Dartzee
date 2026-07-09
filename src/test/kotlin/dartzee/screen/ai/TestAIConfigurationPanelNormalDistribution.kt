@@ -1,12 +1,12 @@
 package dartzee.screen.ai
 
+import dartzee.ai.DartsAiModel
+import dartzee.helper.AbstractTest
+import dartzee.helper.makeDartsModel
 import io.github.alyssaruth.swingtest.clickChild
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.shouldBeDisabled
 import io.github.alyssaruth.swingtest.shouldBeEnabled
-import dartzee.ai.DartsAiModel
-import dartzee.helper.AbstractTest
-import dartzee.helper.makeDartsModel
 import io.kotest.matchers.shouldBe
 import javax.swing.JCheckBox
 import javax.swing.JSlider

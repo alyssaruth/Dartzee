@@ -1,6 +1,5 @@
 package dartzee.main
 
-import dartzee.expectErrorDialog
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.logger
@@ -26,6 +25,7 @@ import dartzee.theme.ThemeId
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.kotest.matchers.maps.shouldContainAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain

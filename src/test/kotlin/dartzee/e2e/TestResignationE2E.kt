@@ -1,8 +1,5 @@
 package dartzee.e2e
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickYes
-import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.game.FinishType
 import dartzee.game.GameType
 import dartzee.game.X01Config
@@ -11,6 +8,9 @@ import dartzee.getQuestionDialog
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.`object`.SegmentType
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import javax.swing.JButton
@@ -39,7 +39,7 @@ class TestResignationE2E : AbstractE2ETest() {
         gamePanel.confirmRound()
 
         gamePanel.awaitTurn(ptResignee)
-        gamePanel.clickChild<JButton>(async = true) { it.toolTipText == "Resign" }
+        gamePanel.clickChild<JButton>() { it.toolTipText == "Resign" }
         getQuestionDialog().clickYes()
 
         awaitGameFinish(game)
@@ -64,7 +64,7 @@ class TestResignationE2E : AbstractE2ETest() {
         gamePanel.clickChild<JButton> { it.toolTipText == "Confirm round" }
 
         gamePanel.awaitTurn(ptResignee)
-        gamePanel.clickChild<JButton>(async = true) { it.toolTipText == "Resign" }
+        gamePanel.clickChild<JButton>() { it.toolTipText == "Resign" }
         getQuestionDialog().clickYes()
 
         awaitGameFinish(game)

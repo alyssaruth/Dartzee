@@ -1,15 +1,10 @@
 package dartzee.db.sanity
 
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.getChild
 import dartzee.core.bean.ScrollTable
 import dartzee.core.helper.processKeyPress
 import dartzee.db.EntityName
 import dartzee.db.FakeEntity
 import dartzee.db.PlayerEntity
-import dartzee.expectErrorDialog
 import dartzee.getDialogMessage
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
@@ -17,6 +12,11 @@ import dartzee.helper.getCountFromTable
 import dartzee.helper.insertPlayer
 import dartzee.logging.CODE_SQL_EXCEPTION
 import dartzee.logging.Severity
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import java.awt.event.KeyEvent
 import org.junit.jupiter.api.Test
@@ -31,7 +31,7 @@ class SanityCheckResultEntitiesTest : AbstractTest() {
 
         val scrollTable = dialog.getChild<ScrollTable>()
         scrollTable.selectRow(0)
-        scrollTable.processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrollTable.processKeyPress(KeyEvent.VK_DELETE)
 
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe "Are you sure you want to delete 1 row(s) from Player?"
@@ -52,7 +52,7 @@ class SanityCheckResultEntitiesTest : AbstractTest() {
 
         val scrollTable = dialog.getChild<ScrollTable>()
         scrollTable.selectRow(0)
-        scrollTable.processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrollTable.processKeyPress(KeyEvent.VK_DELETE)
 
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe "Are you sure you want to delete 1 row(s) from Player?"
@@ -77,7 +77,7 @@ class SanityCheckResultEntitiesTest : AbstractTest() {
         val scrollTable = dialog.getChild<ScrollTable>()
         scrollTable.table.addRowSelectionInterval(0, 0)
         scrollTable.table.addRowSelectionInterval(2, 2)
-        scrollTable.processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrollTable.processKeyPress(KeyEvent.VK_DELETE)
 
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe "Are you sure you want to delete 2 row(s) from Player?"
@@ -99,7 +99,7 @@ class SanityCheckResultEntitiesTest : AbstractTest() {
 
         val scrollTable = dialog.getChild<ScrollTable>()
         scrollTable.selectRow(0)
-        scrollTable.processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrollTable.processKeyPress(KeyEvent.VK_DELETE)
 
         val question = getQuestionDialog()
         question.getDialogMessage() shouldBe

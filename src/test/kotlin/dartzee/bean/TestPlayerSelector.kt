@@ -1,10 +1,10 @@
 package dartzee.bean
 
-import io.github.alyssaruth.swingtest.clickChild
 import dartzee.core.helper.doubleClick
 import dartzee.core.helper.processKeyPress
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
+import io.github.alyssaruth.swingtest.clickChild
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe

@@ -1,17 +1,5 @@
 package dartzee.core.util
 
-import io.github.alyssaruth.swingtest.clickCancel
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.clickYes
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.purgeWindows
-import io.github.alyssaruth.swingtest.shouldBeVisible
-import dartzee.cancelOptionDialog
-import dartzee.dismissDialog
-import dartzee.expectInfoDialog
-import dartzee.getErrorDialog
 import dartzee.getFileChooser
 import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
@@ -20,13 +8,27 @@ import dartzee.logging.CODE_DIALOG_CLOSED
 import dartzee.logging.CODE_DIALOG_SHOWN
 import dartzee.logging.Severity
 import dartzee.runAsync
-import dartzee.selectFromOptionDialog
+import io.github.alyssaruth.swingtest.cancelDialog
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.dismissDialog
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.expectInfoDialog
+import io.github.alyssaruth.swingtest.expectQuestionDialog
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.getWindow
+import io.github.alyssaruth.swingtest.purgeWindows
 import io.github.alyssaruth.swingtest.selectFile
 import io.github.alyssaruth.swingtest.selectOptionFromInputDialog
+import io.github.alyssaruth.swingtest.shouldBeVisible
 import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import java.io.File
+import javax.swing.JDialog
 import javax.swing.JLabel
 import org.junit.jupiter.api.Test
 
@@ -49,8 +51,7 @@ class DialogUtilTest : AbstractTest() {
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Error dialog shown: Something bad"
-        getErrorDialog().clickOk()
-        flushEdt()
+        expectErrorDialog("Something bad")
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "Error dialog closed"
     }
 
@@ -119,7 +120,7 @@ class DialogUtilTest : AbstractTest() {
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Option dialog shown: Would you like some?"
 
-        selectFromOptionDialog("Free Pizza", "Yes please")
+        expectQuestionDialog("Would you like some?", "Yes please", title = "Free Pizza")
 
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
             "Option dialog closed - selected Yes please"
@@ -141,7 +142,7 @@ class DialogUtilTest : AbstractTest() {
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Option dialog shown: Would you like some?"
 
-        cancelOptionDialog("Free Pizza")
+        cancelDialog("Free Pizza")
 
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
             "Option dialog closed - selected Cancel"
@@ -179,7 +180,7 @@ class DialogUtilTest : AbstractTest() {
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Input dialog shown: Enter your favourite cheese"
 
-        typeIntoInputDialog("Enter your favourite cheese", "Camembert")
+        typeIntoInputDialog("Enter your favourite cheese", "Camembert", title = "Cheezoid")
 
         option shouldBe "Camembert"
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
@@ -191,7 +192,7 @@ class DialogUtilTest : AbstractTest() {
         var option: Int? = null
         runAsync { option = DialogUtil.showInput("Game", "Pick GameId", arrayOf(1, 2, 3, 4, 5)) }
 
-        selectOptionFromInputDialog("Pick GameId", 3)
+        selectOptionFromInputDialog("Pick GameId", 3, title = "Game")
 
         option shouldBe 3
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
@@ -204,7 +205,7 @@ class DialogUtilTest : AbstractTest() {
         var option: Int? = null
         runAsync { option = DialogUtil.showInput("Game", "Pick GameId", options) }
 
-        selectOptionFromInputDialog("Pick GameId", 77)
+        selectOptionFromInputDialog("Pick GameId", 77, title = "Game")
 
         option shouldBe 77
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
@@ -229,7 +230,7 @@ class DialogUtilTest : AbstractTest() {
         var selected: File? = null
         runAsync { selected = DialogUtil.chooseDirectory(null) }
 
-        getFileChooser("Select").clickCancel(async = true)
+        getFileChooser("Select").clickCancel()
 
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe "File selector dialog shown: "
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe "File selector dialog closed"
@@ -262,10 +263,10 @@ class DialogUtilTest : AbstractTest() {
         val log = verifyLog(CODE_DIALOG_SHOWN)
         log.message shouldBe "CustomError dialog shown: ?"
 
-        val dlg = getErrorDialog()
+        val dlg = getWindow<JDialog> { it.title == "Error" }
         dlg.shouldBeVisible()
         dlg.getChild<JLabel>(text = "My custom message") shouldBe component
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         verifyLog(CODE_DIALOG_CLOSED).message shouldBe "CustomError dialog closed"
     }

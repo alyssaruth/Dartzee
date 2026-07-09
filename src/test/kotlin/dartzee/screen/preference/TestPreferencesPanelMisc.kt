@@ -1,8 +1,8 @@
 package dartzee.screen.preference
 
-import io.github.alyssaruth.swingtest.uncheck
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings.preferenceService
+import io.github.alyssaruth.swingtest.uncheck
 import io.kotest.matchers.shouldBe
 
 class TestPreferencesPanelMisc : AbstractPreferencePanelTest<PreferencesPanelMisc>() {

@@ -1,14 +1,5 @@
 package dartzee.screen.game
 
-import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
-import io.github.alyssaruth.swingtest.findChild
-import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.purgeWindows
-import io.github.alyssaruth.swingtest.shouldBeVisible
-import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import dartzee.achievements.AchievementType
 import dartzee.achievements.x01.AchievementX01BestThreeDarts
 import dartzee.ai.DartsAiModel
@@ -38,6 +29,15 @@ import dartzee.screen.game.scorer.AchievementOverlay
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.screen.game.x01.GameStatisticsPanelX01
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickNo
+import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.purgeWindows
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.nulls.shouldBeNull
@@ -221,12 +221,12 @@ class TestDartsGamePanel : AbstractTest() {
         panel.startNewGame(listOf(human1, human2, human3))
         panel.resignButton().shouldBeVisible()
         panel.clickResign()
-        getQuestionDialog().clickYes(async = true)
+        getQuestionDialog().clickYes()
         purgeWindows()
 
         panel.resignButton().shouldBeVisible()
         panel.clickResign()
-        getQuestionDialog().clickYes(async = true)
+        getQuestionDialog().clickYes()
 
         panel.resignButton().shouldNotBeVisible()
     }
@@ -241,7 +241,7 @@ class TestDartsGamePanel : AbstractTest() {
         panel.startNewGame(listOf(human1, human2))
         panel.resignButton().shouldBeVisible()
         panel.clickResign()
-        getQuestionDialog().clickNo(async = true)
+        getQuestionDialog().clickNo()
 
         panel.getPlayerStates().count { it.hasResigned() } shouldBe 0
     }
@@ -257,7 +257,7 @@ class TestDartsGamePanel : AbstractTest() {
         panel.dartThrown(Dart(20, 1))
         panel.resignButton().shouldBeVisible()
         panel.clickResign()
-        getQuestionDialog().clickYes(async = true)
+        getQuestionDialog().clickYes()
 
         val human1State = panel.getPlayerStates().filter { it.wrappedParticipant == human1 }.only()
         human1State.hasResigned() shouldBe true
@@ -303,8 +303,7 @@ class TestDartsGamePanel : AbstractTest() {
         panel.getChild<JLabel>("DodgyLabel").shouldBeVisible()
     }
 
-    private fun TestGamePanel.clickResign() =
-        clickChild<JButton>(async = true) { it.toolTipText == "Resign" }
+    private fun TestGamePanel.clickResign() = clickChild<JButton>() { it.toolTipText == "Resign" }
 
     private fun TestGamePanel.confirmButton() =
         getChild<JButton> { it.toolTipText == "Confirm round" }

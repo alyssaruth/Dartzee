@@ -1,7 +1,5 @@
 package dartzee.e2e
 
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.core.util.DateStatics
 import dartzee.db.GameEntity
 import dartzee.db.ParticipantEntity
@@ -21,6 +19,8 @@ import dartzee.screen.game.MatchSummaryPanel
 import dartzee.screen.game.scorer.MatchScorer
 import dartzee.screen.game.x01.X01MatchScreen
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe

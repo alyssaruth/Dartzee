@@ -1,6 +1,5 @@
 package dartzee.e2e
 
-import io.github.alyssaruth.swingtest.waitForAssertion
 import dartzee.achievements.AchievementType
 import dartzee.game.FinishType
 import dartzee.game.GameType
@@ -17,6 +16,7 @@ import dartzee.helper.retrieveAchievementsForPlayer
 import dartzee.helper.retrieveTeam
 import dartzee.`object`.Dart
 import dartzee.zipDartRounds
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe

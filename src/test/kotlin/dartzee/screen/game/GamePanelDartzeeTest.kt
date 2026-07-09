@@ -15,10 +15,8 @@ import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.dismissDialog
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
-import dartzee.expectInfoDialog
 import dartzee.game.GameType
 import dartzee.game.loadParticipants
 import dartzee.helper.AbstractTest
@@ -55,6 +53,8 @@ import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.insertDartzeeRules
 import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.dismissDialog
+import io.github.alyssaruth.swingtest.expectInfoDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.shouldBeVisible
 import io.github.alyssaruth.swingtest.shouldNotBeVisible
@@ -72,8 +72,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
-import org.junit.jupiter.api.Test
 import javax.swing.JButton
+import org.junit.jupiter.api.Test
 
 class GamePanelDartzeeTest : AbstractTest() {
     private val ruleResults =
@@ -113,9 +113,13 @@ class GamePanelDartzeeTest : AbstractTest() {
         val parentWindow = FakeDartsScreen()
 
         val panel = makeGamePanel(testRules, game = g, parentWindow = parentWindow)
-        panel.clickChild<JButton>("convertToTemplate", async = true)
+        panel.clickChild<JButton>("convertToTemplate")
 
-        typeIntoInputDialog("Template Name", "The Jeneration Game")
+        typeIntoInputDialog(
+            "Please enter a name for the template",
+            "The Jeneration Game",
+            title = "Template Name",
+        )
         expectInfoDialog("Template 'The Jeneration Game' successfully created.")
 
         val templateId = panel.gameEntity.gameParams
@@ -133,7 +137,7 @@ class GamePanelDartzeeTest : AbstractTest() {
         val parentWindow = FakeDartsScreen()
 
         val panel = makeGamePanel(testRules, game = g, parentWindow = parentWindow)
-        panel.clickChild<JButton>("convertToTemplate", async = true)
+        panel.clickChild<JButton>("convertToTemplate")
 
         dismissDialog("Template Name")
 

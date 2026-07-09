@@ -1,8 +1,5 @@
 package dartzee.screen.stats.player.x01
 
-import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.shouldBeVisible
-import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.ScrollTable
 import dartzee.drtDoubleSixteen
@@ -31,6 +28,9 @@ import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeGameWrapper
 import dartzee.helper.makeX01RoundsMap
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.jfree.chart.ChartPanel
