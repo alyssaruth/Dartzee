@@ -1,7 +1,5 @@
 package dartzee.main
 
-import dartzee.getDialogMessage
-import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.assertDoesNotExit
 import dartzee.helper.assertExits
@@ -10,7 +8,6 @@ import dartzee.runAsync
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings
 import io.github.alyssaruth.swingtest.expectQuestionDialog
-import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -28,7 +25,10 @@ class ApplicationExitTest : AbstractTest() {
         assertDoesNotExit {
             runAsync { exitApplication() }
 
-            expectQuestionDialog("Are you sure you want to exit? There are 1 game window(s) still open.", "No")
+            expectQuestionDialog(
+                "Are you sure you want to exit? There are 1 game window(s) still open.",
+                "No",
+            )
         }
     }
 
@@ -40,7 +40,10 @@ class ApplicationExitTest : AbstractTest() {
         assertExits(0) {
             runAsync { exitApplication() }
 
-            expectQuestionDialog("Are you sure you want to exit? There are 1 game window(s) still open.", "Yes")
+            expectQuestionDialog(
+                "Are you sure you want to exit? There are 1 game window(s) still open.",
+                "Yes",
+            )
         }
     }
 

@@ -5,7 +5,6 @@ import dartzee.core.screen.ProgressDialog
 import dartzee.db.EntityName
 import dartzee.findQuestionDialog
 import dartzee.game.GameType
-import dartzee.getDialogMessage
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertPlayer
@@ -18,11 +17,9 @@ import dartzee.logging.LoggingCode
 import dartzee.logging.Severity
 import dartzee.`object`.DartsClient
 import dartzee.screen.stats.player.PlayerStatisticsScreen
-import dartzee.waitForQuestionDialog
 import io.github.alyssaruth.swingtest.clickCancel
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
 import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.findWindow
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.getChild
@@ -155,10 +152,7 @@ class SimulationRunnerTest : AbstractTest() {
         runner.runSimulation(simulation, 1, true)
         waitForSimulation()
 
-        val question = waitForQuestionDialog()
-        question.getDialogMessage() shouldBe "Save real entities?"
-        question.clickNo()
-        flushEdt()
+        expectQuestionDialog("Save real entities?", "No")
 
         getCountFromTable(EntityName.Game) shouldBe 0
     }
@@ -175,10 +169,7 @@ class SimulationRunnerTest : AbstractTest() {
         runner.runSimulation(simulation, 3, true)
         waitForSimulation()
 
-        val question = waitForQuestionDialog()
-        question.getDialogMessage() shouldBe "Save real entities?"
-        question.clickYes()
-        flushEdt()
+        expectQuestionDialog("Save real entities?", "Yes")
 
         getCountFromTable(EntityName.Game) shouldBe 3
         getCountFromTable(EntityName.Participant) shouldBe 3

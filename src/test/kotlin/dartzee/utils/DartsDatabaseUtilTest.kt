@@ -37,10 +37,10 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import java.io.File
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.File
 
 const val BACKUP_LOCATION = "Test/Backup/Databases"
 
@@ -190,7 +190,10 @@ class DartsDatabaseUtilTest : AbstractTest() {
         usingInMemoryDatabase(withSchema = true) { db ->
             runAsync { DartsDatabaseUtil.validateAndRestoreDatabase(db) }
 
-            expectQuestionDialog("Successfully connected to target database.\nAre you sure you want to restore this database? All current data will be lost.", "No")
+            expectQuestionDialog(
+                "Successfully connected to target database.\nAre you sure you want to restore this database? All current data will be lost.",
+                "No",
+            )
 
             // Main DB connection should be intact
             shouldNotThrowAny { mainDatabase.borrowConnection() }
@@ -208,7 +211,10 @@ class DartsDatabaseUtilTest : AbstractTest() {
 
             runAsync { DartsDatabaseUtil.validateAndRestoreDatabase(db) }
 
-            expectQuestionDialog("Successfully connected to target database.\nAre you sure you want to restore this database? All current data will be lost.", "Yes")
+            expectQuestionDialog(
+                "Successfully connected to target database.\nAre you sure you want to restore this database? All current data will be lost.",
+                "Yes",
+            )
 
             expectInfoDialog("Database restored successfully.")
 

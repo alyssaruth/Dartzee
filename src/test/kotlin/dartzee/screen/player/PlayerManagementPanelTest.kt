@@ -10,8 +10,6 @@ import dartzee.core.util.DateStatics
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.getDialogMessage
-import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertGameForPlayer
@@ -23,9 +21,8 @@ import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetupDialog
 import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickNo
 import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.findWindow
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.getChild
@@ -68,10 +65,7 @@ class PlayerManagementPanelTest : AbstractTest() {
         panel.refresh(player)
         panel.clickChild<JButton>(text = "Delete")
 
-        val dlg = getQuestionDialog()
-        dlg.getDialogMessage() shouldBe "Are you sure you want to delete Leah?"
-        dlg.clickNo()
-        flushEdt()
+        expectQuestionDialog("Are you sure you want to delete Leah?", "No")
 
         player.dtDeleted shouldBe DateStatics.END_OF_TIME
         managementScreen.getChild<ScrollTable>().rowCount shouldBe 1
@@ -88,10 +82,7 @@ class PlayerManagementPanelTest : AbstractTest() {
         panel.refresh(player)
         panel.clickChild<JButton>(text = "Delete")
 
-        val dlg = getQuestionDialog()
-        dlg.getDialogMessage() shouldBe "Are you sure you want to delete BTBF?"
-        dlg.clickYes()
-        flushEdt()
+        expectQuestionDialog("Are you sure you want to delete BTBF?", "Yes")
 
         player.dtDeleted shouldNotBe DateStatics.END_OF_TIME
         managementScreen.getChild<ScrollTable>().rowCount shouldBe 0

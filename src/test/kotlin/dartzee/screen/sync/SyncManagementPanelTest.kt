@@ -7,8 +7,6 @@ import dartzee.core.util.formatTimestamp
 import dartzee.db.SyncAuditEntity
 import dartzee.findErrorDialog
 import dartzee.findQuestionDialog
-import dartzee.getDialogMessage
-import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.REMOTE_NAME_2
@@ -21,9 +19,8 @@ import dartzee.sync.resetRemote
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
 import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -173,10 +170,10 @@ class SyncManagementPanelTest : AbstractTest() {
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>(text = "Push")
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe
-            "Are you sure you want to push to $REMOTE_NAME? \n\nThis will overwrite any data that hasn't been synced to this device."
-        question.clickNo()
+        expectQuestionDialog(
+            "Are you sure you want to push to $REMOTE_NAME? \nThis will overwrite any data that hasn't been synced to this device.",
+            "No",
+        )
 
         verifyNotCalled { syncManager.doPush(any()) }
     }
@@ -188,10 +185,10 @@ class SyncManagementPanelTest : AbstractTest() {
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>(text = "Push")
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe
-            "Are you sure you want to push to $REMOTE_NAME? \n\nThis will overwrite any data that hasn't been synced to this device."
-        question.clickYes()
+        expectQuestionDialog(
+            "Are you sure you want to push to $REMOTE_NAME? \nThis will overwrite any data that hasn't been synced to this device.",
+            "Yes",
+        )
 
         verify { syncManager.doPush(REMOTE_NAME) }
     }
@@ -223,10 +220,10 @@ class SyncManagementPanelTest : AbstractTest() {
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>(text = "Pull")
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe
-            "Are you sure you want to pull from $REMOTE_NAME? \n\nThis will overwrite any local data that hasn't been synced to $REMOTE_NAME from this device."
-        question.clickNo()
+        expectQuestionDialog(
+            "Are you sure you want to pull from $REMOTE_NAME? \nThis will overwrite any local data that hasn't been synced to $REMOTE_NAME from this device.",
+            "No",
+        )
 
         verifyNotCalled { syncManager.doPull(any()) }
     }
@@ -236,10 +233,10 @@ class SyncManagementPanelTest : AbstractTest() {
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>(text = "Pull")
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe
-            "Are you sure you want to pull from $REMOTE_NAME? \n\nThis will overwrite any local data that hasn't been synced to $REMOTE_NAME from this device."
-        question.clickYes()
+        expectQuestionDialog(
+            "Are you sure you want to pull from $REMOTE_NAME? \nThis will overwrite any local data that hasn't been synced to $REMOTE_NAME from this device.",
+            "Yes",
+        )
 
         verify { syncManager.doPull(REMOTE_NAME) }
     }
@@ -271,10 +268,10 @@ class SyncManagementPanelTest : AbstractTest() {
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>(text = "Reset")
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe
-            "Are you sure you want to reset?\n\nThis will not delete any local data, but will sever the link with $REMOTE_NAME, requiring you to set it up again."
-        question.clickNo()
+        expectQuestionDialog(
+            "Are you sure you want to reset?\nThis will not delete any local data, but will sever the link with $REMOTE_NAME, requiring you to set it up again.",
+            "No",
+        )
 
         SyncAuditEntity.getLastSyncData(mainDatabase).shouldNotBeNull()
     }
@@ -284,10 +281,10 @@ class SyncManagementPanelTest : AbstractTest() {
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>(text = "Reset")
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe
-            "Are you sure you want to reset?\n\nThis will not delete any local data, but will sever the link with $REMOTE_NAME, requiring you to set it up again."
-        question.clickYes()
+        expectQuestionDialog(
+            "Are you sure you want to reset?\nThis will not delete any local data, but will sever the link with $REMOTE_NAME, requiring you to set it up again.",
+            "Yes",
+        )
 
         SyncAuditEntity.getLastSyncData(mainDatabase).shouldBeNull()
     }

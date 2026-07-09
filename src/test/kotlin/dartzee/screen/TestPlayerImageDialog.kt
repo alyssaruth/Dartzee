@@ -22,10 +22,10 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Tag
-import org.junit.jupiter.api.Test
 import javax.swing.JPanel
 import javax.swing.JTabbedPane
+import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 
 class TestPlayerImageDialog : AbstractTest() {
     @Test

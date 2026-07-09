@@ -3,9 +3,7 @@ package dartzee.utils
 import dartzee.core.bean.LinkLabel
 import dartzee.core.helper.verifyNotCalled
 import dartzee.findLoadingDialog
-import dartzee.getDialogMessage
 import dartzee.getErrorDialog
-import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.assertDoesNotExit
 import dartzee.helper.assertExits
@@ -17,10 +15,9 @@ import dartzee.logging.KEY_RESPONSE_BODY
 import dartzee.logging.Severity
 import dartzee.`object`.DartsClient
 import dartzee.runAsync
-import io.github.alyssaruth.swingtest.clickNo
 import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.clickYes
 import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.shouldNotBeVisible
@@ -156,11 +153,10 @@ class UpdateManagerTest : AbstractTest() {
         val metadata = UpdateMetadata("foo", 123456, "Dartzee_x_y.jar")
         val result = shouldUpdateAsync("bar", metadata)
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe
-            "An update is available (foo). Would you like to download it now?"
-        question.clickNo()
-        flushEdt()
+        expectQuestionDialog(
+            "An update is available (foo). Would you like to download it now?",
+            "No",
+        )
 
         result.get() shouldBe false
     }
@@ -172,11 +168,10 @@ class UpdateManagerTest : AbstractTest() {
         val metadata = UpdateMetadata("foo", 123456, "Dartzee_x_y.jar")
         val result = shouldUpdateAsync("bar", metadata)
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe
-            "An update is available (foo). Would you like to download it now?"
-        question.clickYes()
-        flushEdt()
+        expectQuestionDialog(
+            "An update is available (foo). Would you like to download it now?",
+            "Yes",
+        )
 
         result.get() shouldBe true
     }

@@ -6,8 +6,6 @@ import dartzee.bean.PlayerSelector
 import dartzee.bean.getAllPlayers
 import dartzee.core.bean.selectedItemTyped
 import dartzee.core.screen.ProgressDialog
-import dartzee.getDialogMessage
-import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.preparePlayers
 import dartzee.logging.CODE_ACHIEVEMENT_CONVERSION_FINISHED
@@ -15,9 +13,7 @@ import dartzee.logging.CODE_ACHIEVEMENT_CONVERSION_STARTED
 import dartzee.logging.KEY_ACHIEVEMENT_TYPES
 import dartzee.logging.KEY_PLAYER_IDS
 import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickNo
 import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.clickYes
 import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.getChild

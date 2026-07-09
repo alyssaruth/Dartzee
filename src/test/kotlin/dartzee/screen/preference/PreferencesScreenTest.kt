@@ -1,14 +1,11 @@
 package dartzee.screen.preference
 
 import dartzee.findQuestionDialog
-import dartzee.getDialogMessage
-import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.screen.MenuScreen
 import dartzee.screen.ScreenCache
 import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -39,10 +36,10 @@ class PreferencesScreenTest : AbstractTest() {
 
         screen.clickChild<JButton>("Back")
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe
-            "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
-        question.clickNo()
+        expectQuestionDialog(
+            "Are you sure you want to go back?\nYou have unsaved changes that will be discarded.",
+            "No",
+        )
 
         ScreenCache.currentScreen() shouldBe screen
     }
@@ -57,10 +54,10 @@ class PreferencesScreenTest : AbstractTest() {
         ScreenCache.switch(screen, true)
 
         screen.clickChild<JButton>("Back")
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe
-            "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
-        question.clickYes()
+        expectQuestionDialog(
+            "Are you sure you want to go back?\nYou have unsaved changes that will be discarded.",
+            "Yes",
+        )
 
         ScreenCache.currentScreen().shouldBeInstanceOf<MenuScreen>()
     }

@@ -161,8 +161,11 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.getChild<ScrollTable>().selectRow(0)
         scrn.clickChild<JButton>("deleteTemplate")
 
-        expectQuestionDialog("You have played 2 games using the ABC Template." +
-                "\nThese will become custom games if you delete it. Are you sure you want to continue?", "Yes")
+        expectQuestionDialog(
+            "You have played 2 games using the ABC Template." +
+                "\nThese will become custom games if you delete it. Are you sure you want to continue?",
+            "Yes",
+        )
 
         GameEntity().retrieveEntities().forEach { it.gameParams shouldBe "" }
     }
