@@ -1,5 +1,6 @@
 package dartzee.screen.dartzee
 
+import dartzee.assertNoOptionPanes
 import dartzee.core.bean.ScrollTable
 import dartzee.core.helper.processKeyPress
 import dartzee.dartzee.DartzeeRuleDto
@@ -8,7 +9,6 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
-import dartzee.findQuestionDialog
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
@@ -31,7 +31,6 @@ import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.github.alyssaruth.swingtest.typeText
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import java.awt.event.KeyEvent
 import javax.swing.JButton
@@ -144,7 +143,7 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.getChild<ScrollTable>().selectRow(-1)
         scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE)
 
-        findQuestionDialog().shouldBeNull()
+        assertNoOptionPanes()
         scrn.getChild<ScrollTable>().rowCount shouldBe 1
     }
 

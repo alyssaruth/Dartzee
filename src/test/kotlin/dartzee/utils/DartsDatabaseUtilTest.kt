@@ -1,10 +1,9 @@
 package dartzee.utils
 
+import dartzee.assertNoOptionPanes
 import dartzee.db.DatabaseMigrator
 import dartzee.db.EntityName
 import dartzee.db.MigrationResult
-import dartzee.findErrorDialog
-import dartzee.findInfoDialog
 import dartzee.getFileChooser
 import dartzee.helper.AbstractTest
 import dartzee.helper.TEST_DB_DIRECTORY
@@ -33,7 +32,6 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.file.shouldNotExist
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -88,8 +86,7 @@ class DartsDatabaseUtilTest : AbstractTest() {
 
         getFileChooser("Select").clickCancel()
 
-        findInfoDialog().shouldBeNull()
-        findErrorDialog().shouldBeNull()
+        assertNoOptionPanes()
     }
 
     @Test
@@ -138,8 +135,7 @@ class DartsDatabaseUtilTest : AbstractTest() {
         val chooserDialog = getFileChooser("Select")
         chooserDialog.clickCancel()
 
-        findInfoDialog { it.isVisible }.shouldBeNull()
-        findErrorDialog().shouldBeNull()
+        assertNoOptionPanes()
     }
 
     @Test

@@ -3,7 +3,6 @@ package dartzee.utils
 import dartzee.core.bean.LinkLabel
 import dartzee.core.helper.verifyNotCalled
 import dartzee.findLoadingDialog
-import dartzee.getErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.assertDoesNotExit
 import dartzee.helper.assertExits
@@ -20,6 +19,7 @@ import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.getWindow
 import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.kotest.matchers.file.shouldExist
 import io.kotest.matchers.shouldBe
@@ -31,6 +31,7 @@ import io.mockk.verify
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.swing.JDialog
 import javax.swing.SwingUtilities
 import kong.unirest.HttpStatus
 import kong.unirest.Unirest
@@ -203,7 +204,7 @@ class UpdateManagerTest : AbstractTest() {
 
         flushEdt()
         findLoadingDialog("Downloading v7.3.0...")!!.shouldNotBeVisible()
-        val errorDialog = getErrorDialog()
+        val errorDialog = getWindow<JDialog> { it.title == "Error" }
         val linkLabel = errorDialog.getChild<LinkLabel>()
         linkLabel.text shouldBe "<html><u>$DARTZEE_MANUAL_DOWNLOAD_URL/tag/v7.3.0</u></html>"
         errorDialog.clickOk()
@@ -232,7 +233,7 @@ class UpdateManagerTest : AbstractTest() {
 
         flushEdt()
         findLoadingDialog("Downloading v7.3.0...")!!.shouldNotBeVisible()
-        val errorDialog = getErrorDialog()
+        val errorDialog = getWindow<JDialog> { it.title == "Error" }
         val linkLabel = errorDialog.getChild<LinkLabel>()
         linkLabel.text shouldBe "<html><u>$DARTZEE_MANUAL_DOWNLOAD_URL/tag/v7.3.0</u></html>"
         errorDialog.clickOk()

@@ -25,21 +25,19 @@ import dartzee.theme.Theme
 import dartzee.utils.DevUtilities
 import dartzee.utils.getAverage
 import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickYes
 import io.github.alyssaruth.swingtest.doClick
 import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.expectInfoDialog
-import io.github.alyssaruth.swingtest.findAll
+import io.github.alyssaruth.swingtest.expectQuestionDialog
+import io.github.alyssaruth.swingtest.findChild
 import io.github.alyssaruth.swingtest.findWindow
 import io.github.alyssaruth.swingtest.flushEdt
-import io.github.alyssaruth.swingtest.generateComponentTree
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.getWindow
 import io.github.alyssaruth.swingtest.purgeWindows
 import io.github.alyssaruth.swingtest.selectFile
 import io.github.alyssaruth.swingtest.selectTab
 import io.github.alyssaruth.swingtest.shouldMatch
-import io.github.alyssaruth.swingtest.waitForWindow
 import io.kotest.matchers.doubles.shouldBeBetween
 import io.kotest.matchers.maps.shouldContainExactly
 import io.kotest.matchers.shouldBe
@@ -48,6 +46,7 @@ import java.awt.Color
 import java.awt.Component
 import java.awt.Dimension
 import java.awt.Point
+import java.awt.Window
 import java.io.File
 import java.time.Instant
 import java.time.LocalDate
@@ -60,6 +59,7 @@ import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JDialog
 import javax.swing.JLabel
+import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.JRadioButton
 import javax.swing.JTabbedPane
@@ -240,38 +240,8 @@ fun FileUploader.uploadFileFromResource(resourceName: String) {
 
 fun findLoadingDialog(text: String) = findWindow<LoadingDialog> { it.message == text }
 
-fun findInfoDialog(predicate: (window: JDialog) -> Boolean = { true }) =
-    findOptionPaneDialog("Information", predicate)
-
-fun getQuestionDialog() = getOptionPaneDialog("Question")
-
-fun findQuestionDialog() = findOptionPaneDialog("Question")
-
-fun getErrorDialog(predicate: (window: JDialog) -> Boolean = { true }) =
-    getOptionPaneDialog("Error", predicate)
-
-fun findErrorDialog(predicate: (window: JDialog) -> Boolean = { true }) =
-    findOptionPaneDialog("Error", predicate)
-
-fun waitForQuestionDialog(): JDialog = waitForWindow<JDialog> { it.title == "Question" }
-
-private fun getOptionPaneDialog(title: String, predicate: (window: JDialog) -> Boolean = { true }) =
-    getWindow<JDialog> { it.title == title && predicate(it) }
-
-private fun findOptionPaneDialog(
-    title: String,
-    predicate: (window: JDialog) -> Boolean = { true },
-) = findWindow<JDialog> { it.title == title && predicate(it) }
-
-fun JDialog.getDialogMessage(): String {
-    val messageLabels = findAll<JLabel>().filter { it.name == "OptionPane.label" }
-    if (messageLabels.isEmpty()) {
-        throw Exception(
-            "Dialog unexpectedly had no message.\n\nComponent tree:\n\n${generateComponentTree()}"
-        )
-    }
-    return messageLabels.joinToString("\n\n") { it.text }
-}
+fun assertNoOptionPanes() =
+    findWindow<Window> { it.isVisible && it.findChild<JOptionPane>() != null } shouldBe null
 
 fun <T> runAsync(block: () -> T?): T? {
     var result: T? = null
@@ -292,22 +262,39 @@ fun runExpectingError(errorText: String, block: () -> Boolean) {
     result shouldBe false
 }
 
-fun purgeGameAndConfirm(localId: Long): String {
+fun purgeGameAndConfirm(
+    localId: Long,
+    participants: Int = 0,
+    teams: Int = 0,
+    darts: Int = 0,
+    dartzeeRoundResults: Int = 0,
+    dartzeeRules: Int = 0,
+) {
     runAsync { DevUtilities.purgeGame(localId) }
 
-    return confirmGameDeletion(localId)
+    confirmGameDeletion(localId, participants, teams, darts, dartzeeRoundResults, dartzeeRules)
 }
 
-fun confirmGameDeletion(localId: Long): String {
-    val dlg = getQuestionDialog()
-    val questionText = dlg.getDialogMessage()
-    dlg.clickYes()
-    flushEdt()
+fun confirmGameDeletion(
+    localId: Long,
+    participants: Int = 0,
+    teams: Int = 0,
+    darts: Int = 0,
+    dartzeeRoundResults: Int = 0,
+    dartzeeRules: Int = 0,
+) {
+    expectQuestionDialog(
+        """Purge all data for Game #$localId? The following rows will be deleted:
+Participant: $participants rows
+Team: $teams rows
+Dart: $darts rows
+DartzeeRoundResult: $dartzeeRoundResults rows
+DartzeeRule: $dartzeeRules rows""",
+        "Yes",
+    )
 
     expectInfoDialog("Game #$localId has been purged.")
     purgeWindows()
-
-    return questionText
 }
 
 fun Icon.shouldMatch(otherPath: String) {

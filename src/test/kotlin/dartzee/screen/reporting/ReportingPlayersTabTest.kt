@@ -1,7 +1,7 @@
 package dartzee.screen.reporting
 
+import dartzee.assertNoOptionPanes
 import dartzee.core.bean.ScrollTable
-import dartzee.findErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeIncludedPlayerParameters
@@ -16,7 +16,6 @@ import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.maps.shouldBeEmpty
 import io.kotest.matchers.maps.shouldContainExactly
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import javax.swing.JButton
 import org.junit.jupiter.api.Test
@@ -50,7 +49,7 @@ class ReportingPlayersTabTest : AbstractTest() {
         tab.includedPlayerPanel.chckbxFinalScore.doClick()
 
         tab.clickChild<JButton>("RemovePlayer")
-        findErrorDialog().shouldBeNull()
+        assertNoOptionPanes()
         tab.getChild<ScrollTable>().rowCount shouldBe 0
 
         tab.addPlayers(listOf(p))
@@ -181,7 +180,7 @@ class ReportingPlayersTabTest : AbstractTest() {
         tab.getChild<ScrollTable>().selectRow(1)
         tab.includedPlayerPanel.chckbxPosition.doClick()
         runAsync { valid = tab.valid() }
-        findErrorDialog { it.isVisible }.shouldBeNull()
+        assertNoOptionPanes()
         valid shouldBe true
     }
 

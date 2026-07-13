@@ -2,11 +2,10 @@ package dartzee.screen.sync
 
 import dartzee.CURRENT_TIME
 import dartzee.PAST_TIME
+import dartzee.assertNoOptionPanes
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.formatTimestamp
 import dartzee.db.SyncAuditEntity
-import dartzee.findErrorDialog
-import dartzee.findQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.REMOTE_NAME_2
@@ -199,7 +198,7 @@ class SyncManagementPanelTest : AbstractTest() {
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>(text = "Push")
 
-        findQuestionDialog().shouldBeNull()
+        assertNoOptionPanes()
         verify { syncManager.doPush(REMOTE_NAME) }
     }
 
@@ -258,7 +257,7 @@ class SyncManagementPanelTest : AbstractTest() {
         val panel = makeSyncManagementPanel()
         panel.clickChild<JButton>(text = "Perform Sync")
 
-        findErrorDialog().shouldBeNull()
+        assertNoOptionPanes()
         verify { syncManager.doSyncIfNecessary(REMOTE_NAME) }
     }
 

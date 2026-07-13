@@ -7,7 +7,6 @@ import dartzee.db.ParticipantEntity
 import dartzee.db.TeamEntity
 import dartzee.game.loadParticipants
 import dartzee.game.prepareParticipants
-import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDart
@@ -27,16 +26,13 @@ import dartzee.purgeGameAndConfirm
 import dartzee.runAsync
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.FakeDartsScreen
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
 import io.github.alyssaruth.swingtest.dismissDialog
 import io.github.alyssaruth.swingtest.expectErrorDialog
-import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.selectOptionFromInputDialog
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
 class DevUtilitiesTest : AbstractTest() {
@@ -67,7 +63,15 @@ class DevUtilitiesTest : AbstractTest() {
 
         selectOptionFromInputDialog("Select Game ID", 2L, title = "Delete Game")
 
-        getQuestionDialog().clickYes()
+        expectQuestionDialog(
+            """Purge all data for Game #2? The following rows will be deleted:
+Participant: 0 rows
+Team: 0 rows
+Dart: 0 rows
+DartzeeRoundResult: 0 rows
+DartzeeRule: 0 rows""",
+            "Yes",
+        )
 
         getCountFromTable(EntityName.Game) shouldBe 1
         retrieveGame().localId shouldBe 1
@@ -101,9 +105,15 @@ class DevUtilitiesTest : AbstractTest() {
 
         runAsync { DevUtilities.purgeGame(5) }
 
-        val dlg = getQuestionDialog()
-        dlg.clickNo()
-        flushEdt()
+        expectQuestionDialog(
+            """Purge all data for Game #5? The following rows will be deleted:
+Participant: 0 rows
+Team: 0 rows
+Dart: 0 rows
+DartzeeRoundResult: 0 rows
+DartzeeRule: 0 rows""",
+            "No",
+        )
 
         getCountFromTable(EntityName.Game) shouldBe 1
     }
@@ -135,11 +145,7 @@ class DevUtilitiesTest : AbstractTest() {
         insertDart(pt2, ordinal = 1, score = 20, multiplier = 2, startingScore = 501)
         insertDart(pt2, ordinal = 2, score = 20, multiplier = 3, startingScore = 461)
 
-        val q = purgeGameAndConfirm(2)
-
-        q.shouldContain("Purge all data for Game #2?")
-        q.shouldContain("Participant: 1 rows")
-        q.shouldContain("Dart: 2 rows")
+        purgeGameAndConfirm(2, participants = 1, darts = 2)
 
         getCountFromTable(EntityName.Game) shouldBe 1
         getCountFromTable(EntityName.Participant) shouldBe 1
@@ -162,7 +168,7 @@ class DevUtilitiesTest : AbstractTest() {
 
         getCountFromTable(EntityName.Team) shouldBe 4
 
-        purgeGameAndConfirm(gameA.localId)
+        purgeGameAndConfirm(gameA.localId, participants = 5, teams = 2)
 
         loadParticipants(gameA.rowId).shouldBeEmpty()
         loadParticipants(gameB.rowId).size shouldBe 3
@@ -189,7 +195,7 @@ class DevUtilitiesTest : AbstractTest() {
         getCountFromTable(EntityName.DartzeeRule) shouldBe testRules.size * 2
         getCountFromTable(EntityName.DartzeeRoundResult) shouldBe 2
 
-        purgeGameAndConfirm(g1.localId)
+        purgeGameAndConfirm(g1.localId, participants = 1, dartzeeRoundResults = 1, dartzeeRules = 4)
 
         getCountFromTable(EntityName.DartzeeRule) shouldBe testRules.size
 

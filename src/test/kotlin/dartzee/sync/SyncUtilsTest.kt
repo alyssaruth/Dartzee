@@ -1,10 +1,10 @@
 package dartzee.sync
 
 import dartzee.PAST_TIME
+import dartzee.assertNoOptionPanes
 import dartzee.core.helper.getFutureTime
 import dartzee.db.ParticipantEntity
 import dartzee.db.SyncAuditEntity
-import dartzee.findErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.helper.getCountFromTable
@@ -23,7 +23,6 @@ import dartzee.runAsync
 import dartzee.screen.ScreenCache
 import dartzee.utils.InjectedThings.mainDatabase
 import io.github.alyssaruth.swingtest.expectErrorDialog
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import java.sql.Timestamp
@@ -70,7 +69,7 @@ class SyncUtilsTest : AbstractTest() {
         runAsync { success = validateSyncAction() }
 
         success shouldBe true
-        findErrorDialog().shouldBeNull()
+        assertNoOptionPanes()
     }
 
     @Test

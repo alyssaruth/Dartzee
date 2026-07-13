@@ -1,12 +1,11 @@
 package dartzee.screen.preference
 
-import dartzee.findQuestionDialog
+import dartzee.assertNoOptionPanes
 import dartzee.helper.AbstractTest
 import dartzee.screen.MenuScreen
 import dartzee.screen.ScreenCache
 import io.github.alyssaruth.swingtest.clickChild
 import io.github.alyssaruth.swingtest.expectQuestionDialog
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
@@ -72,7 +71,7 @@ class PreferencesScreenTest : AbstractTest() {
         ScreenCache.switch(screen, true)
 
         screen.clickChild<JButton>("Back")
-        findQuestionDialog().shouldBeNull()
+        assertNoOptionPanes()
 
         ScreenCache.currentScreen().shouldBeInstanceOf<MenuScreen>()
     }

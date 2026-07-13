@@ -1,9 +1,9 @@
 package dartzee.ai
 
+import dartzee.assertNoOptionPanes
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.screen.ProgressDialog
 import dartzee.db.EntityName
-import dartzee.findQuestionDialog
 import dartzee.game.GameType
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
@@ -137,7 +137,7 @@ class SimulationRunnerTest : AbstractTest() {
         runner.runSimulation(simulation, 1, true)
         waitForSimulation()
 
-        findQuestionDialog().shouldBeNull()
+        assertNoOptionPanes()
     }
 
     @Test

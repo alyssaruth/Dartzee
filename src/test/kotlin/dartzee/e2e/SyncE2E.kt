@@ -9,7 +9,6 @@ import dartzee.db.PlayerEntity
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
 import dartzee.game.GameType
-import dartzee.getQuestionDialog
 import dartzee.helper.DEFAULT_X01_CONFIG
 import dartzee.helper.TEST_DB_DIRECTORY
 import dartzee.helper.TEST_ROOT
@@ -32,7 +31,6 @@ import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.Database
 import dartzee.utils.InjectedThings
 import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickYes
 import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.findChild
 import io.github.alyssaruth.swingtest.selectOptionFromInputDialog
@@ -83,7 +81,7 @@ class SyncE2E : AbstractE2ETest() {
 
         val remoteName = UUID.randomUUID().toString()
         performPush(mainScreen, remoteName)
-        wipeGamesAndResetRemote(mainScreen)
+        wipeGamesAndResetRemote(mainScreen, remoteName)
 
         val secondGameId = runGame(winner, loser)
 
@@ -129,11 +127,12 @@ class SyncE2E : AbstractE2ETest() {
     }
 
     private fun deleteGame(mainScreen: DartsApp) {
+        val darts = getCountFromTable(EntityName.Dart)
         ScreenCache.switch<UtilitiesScreen>()
         mainScreen.clickChild<JButton>(text = "Delete Game")
 
         selectOptionFromInputDialog("Select Game ID", 1L, title = "Delete Game")
-        confirmGameDeletion(1)
+        confirmGameDeletion(1, participants = 2, darts = darts)
     }
 
     private fun runGame(winner: PlayerEntity, loser: PlayerEntity): String {
@@ -188,20 +187,27 @@ class SyncE2E : AbstractE2ETest() {
             title = "Database found",
         )
 
-        waitForInfoDialog("Sync completed successfully!\nGames pushed: 1\nGames pulled: 1")
+        waitForInfoDialog(
+            "Sync completed successfully!\nGames pushed: 1\nGames pulled: 1",
+            timeout = 10000,
+        )
 
         waitForAssertion { mainScreen.findChild<SyncManagementPanel>() shouldNotBe null }
     }
 
-    private fun wipeGamesAndResetRemote(mainScreen: DartsApp) {
-        purgeGameAndConfirm(1)
+    private fun wipeGamesAndResetRemote(mainScreen: DartsApp, remoteName: String) {
+        val darts = getCountFromTable(EntityName.Dart)
+        purgeGameAndConfirm(1, participants = 2, darts = darts)
+
         wipeTable(EntityName.DeletionAudit)
         wipeTable(EntityName.Achievement)
 
         mainScreen.clickChild<JButton>(text = "Reset")
 
-        val question = getQuestionDialog()
-        question.clickYes()
+        expectQuestionDialog(
+            "Are you sure you want to reset?\nThis will not delete any local data, but will sever the link with $remoteName, requiring you to set it up again.",
+            "Yes",
+        )
 
         waitForAssertion { mainScreen.findChild<SyncSetupPanel>() shouldNotBe null }
     }

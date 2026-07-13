@@ -11,7 +11,6 @@ import dartzee.game.X01Config
 import dartzee.game.prepareParticipants
 import dartzee.game.state.IWrappedParticipant
 import dartzee.game.state.X01PlayerState
-import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.AchievementSummary
 import dartzee.helper.getCountFromTable
@@ -30,12 +29,10 @@ import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.screen.game.x01.GameStatisticsPanelX01
 import dartzee.utils.InjectedThings
 import io.github.alyssaruth.swingtest.clickChild
-import io.github.alyssaruth.swingtest.clickNo
-import io.github.alyssaruth.swingtest.clickYes
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.github.alyssaruth.swingtest.findChild
 import io.github.alyssaruth.swingtest.flushEdt
 import io.github.alyssaruth.swingtest.getChild
-import io.github.alyssaruth.swingtest.purgeWindows
 import io.github.alyssaruth.swingtest.shouldBeVisible
 import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.kotest.matchers.collections.shouldContainExactly
@@ -221,12 +218,17 @@ class TestDartsGamePanel : AbstractTest() {
         panel.startNewGame(listOf(human1, human2, human3))
         panel.resignButton().shouldBeVisible()
         panel.clickResign()
-        getQuestionDialog().clickYes()
-        purgeWindows()
+        expectQuestionDialog(
+            "Are you sure you want to resign Clive from this game? They will not be able to return.",
+            "Yes",
+        )
 
         panel.resignButton().shouldBeVisible()
         panel.clickResign()
-        getQuestionDialog().clickYes()
+        expectQuestionDialog(
+            "Are you sure you want to resign Clive from this game? They will not be able to return.",
+            "Yes",
+        )
 
         panel.resignButton().shouldNotBeVisible()
     }
@@ -241,7 +243,10 @@ class TestDartsGamePanel : AbstractTest() {
         panel.startNewGame(listOf(human1, human2))
         panel.resignButton().shouldBeVisible()
         panel.clickResign()
-        getQuestionDialog().clickNo()
+        expectQuestionDialog(
+            "Are you sure you want to resign Clive from this game? They will not be able to return.",
+            "No",
+        )
 
         panel.getPlayerStates().count { it.hasResigned() } shouldBe 0
     }
@@ -257,7 +262,10 @@ class TestDartsGamePanel : AbstractTest() {
         panel.dartThrown(Dart(20, 1))
         panel.resignButton().shouldBeVisible()
         panel.clickResign()
-        getQuestionDialog().clickYes()
+        expectQuestionDialog(
+            "Are you sure you want to resign Clive from this game? They will not be able to return.",
+            "Yes",
+        )
 
         val human1State = panel.getPlayerStates().filter { it.wrappedParticipant == human1 }.only()
         human1State.hasResigned() shouldBe true

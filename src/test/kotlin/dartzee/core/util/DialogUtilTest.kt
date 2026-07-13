@@ -1,7 +1,6 @@
 package dartzee.core.util
 
 import dartzee.getFileChooser
-import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.TEST_ROOT
 import dartzee.logging.CODE_DIALOG_CLOSED
@@ -10,9 +9,7 @@ import dartzee.logging.Severity
 import dartzee.runAsync
 import io.github.alyssaruth.swingtest.cancelDialog
 import io.github.alyssaruth.swingtest.clickCancel
-import io.github.alyssaruth.swingtest.clickNo
 import io.github.alyssaruth.swingtest.clickOk
-import io.github.alyssaruth.swingtest.clickYes
 import io.github.alyssaruth.swingtest.dismissDialog
 import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.github.alyssaruth.swingtest.expectInfoDialog
@@ -60,19 +57,16 @@ class DialogUtilTest : AbstractTest() {
         runAsync { DialogUtil.showQuestion("Do you like cheese?") }
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Question dialog shown: Do you like cheese?"
-        getQuestionDialog().clickYes()
-        flushEdt()
+        expectQuestionDialog("Do you like cheese?", "Yes")
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
             "Question dialog closed - selected Yes"
 
         clearLogs()
-        purgeWindows()
 
         runAsync { DialogUtil.showQuestion("Do you like mushrooms?") }
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Question dialog shown: Do you like mushrooms?"
-        getQuestionDialog().clickNo()
-        flushEdt()
+        expectQuestionDialog("Do you like mushrooms?", "No")
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
             "Question dialog closed - selected No"
 
@@ -82,8 +76,7 @@ class DialogUtilTest : AbstractTest() {
         runAsync { DialogUtil.showQuestion("Do you want to delete all data?", true) }
         verifyLog(CODE_DIALOG_SHOWN, Severity.INFO).message shouldBe
             "Question dialog shown: Do you want to delete all data?"
-        getQuestionDialog().clickCancel()
-        flushEdt()
+        cancelDialog("Question")
         verifyLog(CODE_DIALOG_CLOSED, Severity.INFO).message shouldBe
             "Question dialog closed - selected Cancel"
     }

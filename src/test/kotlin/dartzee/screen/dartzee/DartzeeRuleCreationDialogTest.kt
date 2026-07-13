@@ -1,5 +1,6 @@
 package dartzee.screen.dartzee
 
+import dartzee.assertNoOptionPanes
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.core.bean.selectByClass
 import dartzee.core.util.getAllChildComponentsForType
@@ -15,7 +16,6 @@ import dartzee.dartzee.dart.DartzeeDartRuleInner
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.dart.DartzeeDartRuleOuter
 import dartzee.dartzee.dart.DartzeeDartRuleScore
-import dartzee.findErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeColourRule
 import dartzee.helper.makeDartzeeRuleDto
@@ -37,7 +37,6 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldNotContain
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -323,7 +322,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
         val dlg = showRuleCreationDialog()
         dlg.clickOk()
 
-        findErrorDialog().shouldBeNull()
+        assertNoOptionPanes()
         dlg.shouldNotBeVisible()
     }
 
