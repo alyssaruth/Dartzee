@@ -1,9 +1,5 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.bean.GameParamFilterPanelDartzee
 import dartzee.bean.GameParamFilterPanelGolf
 import dartzee.bean.GameParamFilterPanelX01
@@ -17,7 +13,6 @@ import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartsMatchEntity
 import dartzee.db.EntityName
 import dartzee.db.PlayerEntity
-import dartzee.expectErrorDialog
 import dartzee.game.FinishType
 import dartzee.game.GameLaunchParams
 import dartzee.game.GameLauncher
@@ -33,6 +28,11 @@ import dartzee.launchParamsEqual
 import dartzee.screen.dartzee.DartzeeRuleSetupScreen
 import dartzee.updateSelection
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
@@ -71,7 +71,7 @@ class TestGameSetupScreen : AbstractTest() {
     @Test
     fun `Should perform player selector validation when attempting to launch a game`() {
         val screen = GameSetupScreen()
-        screen.clickChild<JButton>(text = "Launch Game", async = true)
+        screen.clickChild<JButton>(text = "Launch Game")
 
         expectErrorDialog("You must select at least 1 player.")
         verifyNotCalled { gameLauncher.launchNewGame(any()) }
@@ -254,7 +254,7 @@ class TestGameSetupScreen : AbstractTest() {
         setupScreen.playerSelector.init(listOf())
 
         setupScreen.gameTypeComboBox.updateSelection(GameType.DARTZEE)
-        setupScreen.clickChild<JButton>("Next", async = true)
+        setupScreen.clickChild<JButton>("Next")
 
         expectErrorDialog("You must select at least 1 player.")
 

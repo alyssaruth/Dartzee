@@ -1,5 +1,6 @@
 package dartzee.bean
 
+import dartzee.assertNoOptionPanes
 import dartzee.core.bean.findByClass
 import dartzee.core.bean.items
 import dartzee.dartzee.dart.AbstractDartzeeDartRule
@@ -8,11 +9,9 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleInner
 import dartzee.dartzee.dart.DartzeeDartRuleScore
 import dartzee.dartzee.getAllDartRules
-import dartzee.expectErrorDialog
-import dartzee.findErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.runAsync
-import io.kotest.matchers.nulls.shouldBeNull
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -58,7 +57,7 @@ class AbstractDartzeeRuleSelectorTest : AbstractTest() {
         var valid: Boolean? = null
         runAsync { valid = selector.valid() }
 
-        findErrorDialog().shouldBeNull()
+        assertNoOptionPanes()
         valid shouldBe true
     }
 

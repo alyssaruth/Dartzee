@@ -1,24 +1,24 @@
 package dartzee.screen.dartzee
 
-import com.github.alyssaburlton.swingtest.clickCancel
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
-import com.github.alyssaburlton.swingtest.typeText
 import dartzee.core.helper.verifyNotCalled
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartzeeRuleEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
-import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.insertDartzeeTemplate
 import dartzee.helper.makeDartzeeRuleCalculationResult
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.only
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.typeText
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
@@ -29,7 +29,7 @@ class DartzeeTemplateDialogTest : AbstractTest() {
     @Test
     fun `Should show an error if template name not specified`() {
         val (dialog, callback) = showDialog()
-        dialog.clickOk(async = true)
+        dialog.clickOk()
 
         expectErrorDialog("You must enter a name.")
 
@@ -41,7 +41,7 @@ class DartzeeTemplateDialogTest : AbstractTest() {
     fun `Should show an error if 0 rules are specified`() {
         val (dialog) = showDialog()
         dialog.getChild<JTextField>().typeText("My template")
-        dialog.clickOk(async = true)
+        dialog.clickOk()
 
         expectErrorDialog("You must create at least 2 rules.")
         dialog.shouldBeVisible()
@@ -53,7 +53,7 @@ class DartzeeTemplateDialogTest : AbstractTest() {
 
         dialog.getChild<JTextField>().typeText("My template")
         dialog.rulePanel.addRulesToTable(listOf(makeDartzeeRuleDto()))
-        dialog.clickOk(async = true)
+        dialog.clickOk()
 
         expectErrorDialog("You must create at least 2 rules.")
         dialog.shouldBeVisible()

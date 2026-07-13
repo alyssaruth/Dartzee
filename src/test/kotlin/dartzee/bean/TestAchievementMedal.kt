@@ -1,10 +1,5 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.doClick
-import com.github.alyssaburlton.swingtest.doHover
-import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.achievements.x01.AchievementX01BestThreeDarts
 import dartzee.game.GameLauncher
 import dartzee.helper.AbstractTest
@@ -12,6 +7,11 @@ import dartzee.helper.insertPlayer
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerAchievementBreakdown
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.doClick
+import io.github.alyssaruth.swingtest.doHover
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf

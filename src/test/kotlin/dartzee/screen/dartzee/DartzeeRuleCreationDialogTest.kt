@@ -1,15 +1,6 @@
 package dartzee.screen.dartzee
 
-import com.github.alyssaburlton.swingtest.clickCancel
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.makeActionEvent
-import com.github.alyssaburlton.swingtest.shouldBeDisabled
-import com.github.alyssaburlton.swingtest.shouldBeEnabled
-import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
+import dartzee.assertNoOptionPanes
 import dartzee.bean.DartzeeDartRuleSelector
 import dartzee.core.bean.selectByClass
 import dartzee.core.util.getAllChildComponentsForType
@@ -25,19 +16,27 @@ import dartzee.dartzee.dart.DartzeeDartRuleInner
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.dartzee.dart.DartzeeDartRuleOuter
 import dartzee.dartzee.dart.DartzeeDartRuleScore
-import dartzee.expectErrorDialog
-import dartzee.findErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeColourRule
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.helper.makeScoreRule
 import dartzee.helper.makeTotalScoreRule
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.makeActionEvent
+import io.github.alyssaruth.swingtest.shouldBeDisabled
+import io.github.alyssaruth.swingtest.shouldBeEnabled
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldNotContain
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -218,7 +217,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
     fun `Should prevent an empty rule name`() {
         val dlg = showRuleCreationDialog()
         dlg.clickChild<JCheckBox>(text = "Custom rule name")
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("You cannot have an empty rule name.")
 
@@ -233,7 +232,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
         val dlg = showRuleCreationDialog()
         dlg.clickChild<JCheckBox>(text = "Custom rule name")
         dlg.tfRuleName.text = ruleName
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("Rule name cannot exceed 1000 characters.")
 
@@ -249,7 +248,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
             dlg.dartOneSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         }
 
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("Dart 1: You must select at least one colour.")
 
@@ -261,7 +260,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
             dlg.dartTwoSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         }
 
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("Dart 2: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
@@ -272,7 +271,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
             dlg.dartThreeSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         }
 
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("Dart 3: You must select at least one colour.")
         dlg.dartzeeRule shouldBe null
@@ -288,7 +287,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
             dlg.targetSelector.comboBoxRuleType.selectByClass<DartzeeDartRuleColour>()
         }
 
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("Target: You must select at least one colour.")
 
@@ -310,7 +309,7 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
             dlg.aggregateSelector.comboBoxRuleType.selectByClass<DartzeeTotalRuleOdd>()
         }
 
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
         expectErrorDialog("This rule is impossible!")
 
@@ -321,9 +320,9 @@ class DartzeeRuleCreationDialogValidationTest : AbstractTest() {
     @Test
     fun `Should dispose if valid`() {
         val dlg = showRuleCreationDialog()
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
-        findErrorDialog().shouldBeNull()
+        assertNoOptionPanes()
         dlg.shouldNotBeVisible()
     }
 

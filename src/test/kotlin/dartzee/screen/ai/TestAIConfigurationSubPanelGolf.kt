@@ -1,12 +1,12 @@
 package dartzee.screen.ai
 
-import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
 import dartzee.core.bean.selectedItemTyped
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
 import dartzee.`object`.SegmentType
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import javax.swing.JComboBox
 import javax.swing.JSpinner

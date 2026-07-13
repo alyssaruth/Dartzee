@@ -1,6 +1,5 @@
 package dartzee.bean
 
-import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.core.bean.getPointList
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeSegmentStatuses
@@ -22,6 +21,7 @@ import dartzee.theme.Themes
 import dartzee.theme.WIREFRAME_COLOUR_WRAPPER
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import io.kotest.matchers.shouldBe
 import java.awt.Color
 import java.awt.Dimension

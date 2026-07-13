@@ -1,10 +1,10 @@
 package dartzee.theme
 
-import com.github.alyssaburlton.swingtest.shouldMatch
-import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeTheme
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import io.kotest.matchers.shouldBe
 import java.awt.Color
 import java.awt.Dimension

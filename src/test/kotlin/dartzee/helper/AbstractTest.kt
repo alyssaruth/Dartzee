@@ -1,6 +1,5 @@
 package dartzee.helper
 
-import com.github.alyssaburlton.swingtest.SwingTestCleanupExtension
 import dartzee.CURRENT_TIME
 import dartzee.logging.LogDestinationSystemOut
 import dartzee.logging.LogRecord
@@ -14,6 +13,7 @@ import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.mainDatabase
 import dartzee.utils.ResourceCache
+import io.github.alyssaruth.swingtest.SwingTestCleanupExtension
 import io.kotest.assertions.fail
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe

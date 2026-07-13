@@ -1,15 +1,11 @@
 package dartzee.screen.preference
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickYes
-import dartzee.findQuestionDialog
-import dartzee.getDialogMessage
-import dartzee.getQuestionDialog
+import dartzee.assertNoOptionPanes
 import dartzee.helper.AbstractTest
 import dartzee.screen.MenuScreen
 import dartzee.screen.ScreenCache
-import io.kotest.matchers.nulls.shouldBeNull
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.expectQuestionDialog
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
@@ -37,12 +33,12 @@ class PreferencesScreenTest : AbstractTest() {
 
         ScreenCache.switch(screen, true)
 
-        screen.clickChild<JButton>("Back", async = true)
+        screen.clickChild<JButton>("Back")
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe
-            "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
-        question.clickNo(async = true)
+        expectQuestionDialog(
+            "Are you sure you want to go back?\nYou have unsaved changes that will be discarded.",
+            "No",
+        )
 
         ScreenCache.currentScreen() shouldBe screen
     }
@@ -56,11 +52,11 @@ class PreferencesScreenTest : AbstractTest() {
 
         ScreenCache.switch(screen, true)
 
-        screen.clickChild<JButton>("Back", async = true)
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe
-            "Are you sure you want to go back?\n\nYou have unsaved changes that will be discarded."
-        question.clickYes(async = true)
+        screen.clickChild<JButton>("Back")
+        expectQuestionDialog(
+            "Are you sure you want to go back?\nYou have unsaved changes that will be discarded.",
+            "Yes",
+        )
 
         ScreenCache.currentScreen().shouldBeInstanceOf<MenuScreen>()
     }
@@ -74,8 +70,8 @@ class PreferencesScreenTest : AbstractTest() {
 
         ScreenCache.switch(screen, true)
 
-        screen.clickChild<JButton>("Back", async = true)
-        findQuestionDialog().shouldBeNull()
+        screen.clickChild<JButton>("Back")
+        assertNoOptionPanes()
 
         ScreenCache.currentScreen().shouldBeInstanceOf<MenuScreen>()
     }

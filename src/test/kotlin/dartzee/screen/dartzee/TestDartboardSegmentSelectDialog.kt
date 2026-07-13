@@ -1,11 +1,5 @@
 package dartzee.screen.dartzee
 
-import com.github.alyssaburlton.swingtest.clickCancel
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.makeMouseEvent
-import com.github.alyssaburlton.swingtest.toBufferedImage
-import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.bean.PresentationDartboard
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.doClick
@@ -15,6 +9,12 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.utils.DartsColour
 import dartzee.utils.getAllNonMissSegments
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.makeMouseEvent
+import io.github.alyssaruth.swingtest.toBufferedImage
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder

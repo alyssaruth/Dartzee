@@ -1,16 +1,5 @@
 package dartzee.screen.player
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.findWindow
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.shouldMatch
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
-import com.github.alyssaburlton.swingtest.typeText
 import dartzee.achievements.AchievementType
 import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.golf.AchievementGolfBestGame
@@ -21,8 +10,6 @@ import dartzee.core.util.DateStatics
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.db.PlayerEntity
 import dartzee.game.GameType
-import dartzee.getDialogMessage
-import dartzee.getQuestionDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertAchievement
 import dartzee.helper.insertGameForPlayer
@@ -33,6 +20,16 @@ import dartzee.screen.HumanConfigurationDialog
 import dartzee.screen.ScreenCache
 import dartzee.screen.ai.AIConfigurationDialog
 import dartzee.screen.ai.AISimulationSetupDialog
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.expectQuestionDialog
+import io.github.alyssaruth.swingtest.findWindow
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.typeText
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -66,12 +63,9 @@ class PlayerManagementPanelTest : AbstractTest() {
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>(text = "Delete", async = true)
+        panel.clickChild<JButton>(text = "Delete")
 
-        val dlg = getQuestionDialog()
-        dlg.getDialogMessage() shouldBe "Are you sure you want to delete Leah?"
-        dlg.clickNo()
-        flushEdt()
+        expectQuestionDialog("Are you sure you want to delete Leah?", "No")
 
         player.dtDeleted shouldBe DateStatics.END_OF_TIME
         managementScreen.getChild<ScrollTable>().rowCount shouldBe 1
@@ -86,12 +80,9 @@ class PlayerManagementPanelTest : AbstractTest() {
 
         val panel = PlayerManagementPanel()
         panel.refresh(player)
-        panel.clickChild<JButton>(text = "Delete", async = true)
+        panel.clickChild<JButton>(text = "Delete")
 
-        val dlg = getQuestionDialog()
-        dlg.getDialogMessage() shouldBe "Are you sure you want to delete BTBF?"
-        dlg.clickYes()
-        flushEdt()
+        expectQuestionDialog("Are you sure you want to delete BTBF?", "Yes")
 
         player.dtDeleted shouldNotBe DateStatics.END_OF_TIME
         managementScreen.getChild<ScrollTable>().rowCount shouldBe 0

@@ -1,9 +1,5 @@
 package dartzee.screen.preference
 
-import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.toBufferedImage
-import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.bean.PresentationDartboard
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.helper.makeTheme
@@ -13,6 +9,10 @@ import dartzee.theme.ThemeId
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.toBufferedImage
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe

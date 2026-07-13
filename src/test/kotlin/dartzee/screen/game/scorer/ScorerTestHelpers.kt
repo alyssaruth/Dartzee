@@ -1,8 +1,8 @@
 package dartzee.screen.game.scorer
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.getChild
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.getChild
 import javax.swing.JButton
 import javax.swing.JLabel
 

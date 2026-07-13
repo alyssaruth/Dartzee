@@ -1,14 +1,14 @@
 package dartzee.core.helper
 
-import com.github.alyssaburlton.swingtest.doubleClick
-import com.github.alyssaburlton.swingtest.processKeyPress
 import dartzee.core.bean.ScrollTable
+import io.github.alyssaruth.swingtest.doubleClick
+import io.github.alyssaruth.swingtest.processKeyPress
 import java.awt.image.BufferedImage
 import javax.swing.ImageIcon
 import javax.swing.JLabel
 
 /** Test methods */
-fun ScrollTable.processKeyPress(key: Int, async: Boolean = false) {
+fun ScrollTable.processKeyPress(key: Int, async: Boolean = true) {
     this.table.processKeyPress(key, async)
 }
 

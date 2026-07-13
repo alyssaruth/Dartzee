@@ -1,13 +1,13 @@
 package dartzee.screen.stats.player.x01
 
-import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.NumberField
 import dartzee.core.bean.ScrollTable
 import dartzee.getRows
 import dartzee.helper.AbstractTest
 import dartzee.helper.GAME_WRAPPER_301_1
 import dartzee.helper.GAME_WRAPPER_301_2
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.nulls.shouldBeNull

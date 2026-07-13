@@ -1,6 +1,5 @@
 package dartzee.screen.game.scorer
 
-import com.github.alyssaburlton.swingtest.clickChild
 import dartzee.core.util.DateStatics
 import dartzee.db.ParticipantEntity
 import dartzee.game.state.SingleParticipant
@@ -13,6 +12,7 @@ import dartzee.`object`.Dart
 import dartzee.`object`.DartHint
 import dartzee.utils.ResourceCache.ICON_PAUSE
 import dartzee.utils.ResourceCache.ICON_RESUME
+import io.github.alyssaruth.swingtest.clickChild
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk

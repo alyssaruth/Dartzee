@@ -1,11 +1,11 @@
 package dartzee.ai
 
-import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.bean.PresentationDartboard
 import dartzee.helper.AbstractTest
 import dartzee.helper.markPoints
 import dartzee.`object`.SegmentType
 import dartzee.theme.DEFAULT_COLOUR_WRAPPER
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 

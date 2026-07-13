@@ -1,8 +1,6 @@
 package dartzee.screen.sync
 
-import com.github.alyssaburlton.swingtest.clickChild
 import dartzee.core.helper.verifyNotCalled
-import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.REMOTE_NAME
 import dartzee.screen.ScreenCache
@@ -11,6 +9,8 @@ import dartzee.sync.SyncConfigurer
 import dartzee.sync.SyncManager
 import dartzee.sync.SyncMode
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -26,7 +26,7 @@ class SyncSetupPanelTest : AbstractTest() {
         InjectedThings.syncConfigurer = configurer
 
         val panel = SyncSetupPanel()
-        panel.clickChild<JButton>(text = "Get Started > ", async = true)
+        panel.clickChild<JButton>(text = "Get Started > ")
 
         expectErrorDialog("You must close all open games before performing this action.")
         verifyNotCalled { configurer.doFirstTimeSetup() }

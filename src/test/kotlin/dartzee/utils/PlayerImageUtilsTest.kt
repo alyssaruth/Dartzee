@@ -1,6 +1,5 @@
 package dartzee.utils
 
-import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.DEFAULT_HUMAN_ICON
 import dartzee.core.util.FileUtil
 import dartzee.db.PlayerEntity
@@ -8,6 +7,7 @@ import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.insertPlayerImage
 import dartzee.toLabel
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import javax.swing.ImageIcon
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test

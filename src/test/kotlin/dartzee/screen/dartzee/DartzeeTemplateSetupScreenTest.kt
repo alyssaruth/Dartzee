@@ -1,14 +1,6 @@
 package dartzee.screen.dartzee
 
-import com.github.alyssaburlton.swingtest.clickCancel
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeDisabled
-import com.github.alyssaburlton.swingtest.shouldBeEnabled
-import com.github.alyssaburlton.swingtest.typeText
+import dartzee.assertNoOptionPanes
 import dartzee.core.bean.ScrollTable
 import dartzee.core.helper.processKeyPress
 import dartzee.dartzee.DartzeeRuleDto
@@ -17,12 +9,7 @@ import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.EntityName
 import dartzee.db.GameEntity
-import dartzee.dismissDialog
-import dartzee.findQuestionDialog
 import dartzee.game.GameType
-import dartzee.getDialogMessage
-import dartzee.getQuestionDialog
-import dartzee.getWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.getCountFromTable
 import dartzee.helper.innerOuterInner
@@ -31,10 +18,19 @@ import dartzee.helper.insertGame
 import dartzee.helper.insertTemplateAndRule
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.helper.totalIsFifty
-import dartzee.typeIntoInputDialog
+import io.github.alyssaruth.swingtest.clickCancel
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.dismissDialog
+import io.github.alyssaruth.swingtest.expectQuestionDialog
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.getWindow
+import io.github.alyssaruth.swingtest.shouldBeDisabled
+import io.github.alyssaruth.swingtest.shouldBeEnabled
+import io.github.alyssaruth.swingtest.typeIntoInputDialog
+import io.github.alyssaruth.swingtest.typeText
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import java.awt.event.KeyEvent
 import javax.swing.JButton
@@ -95,11 +91,9 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("deleteTemplate", async = true)
+        scrn.clickChild<JButton>("deleteTemplate")
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe "Are you sure you want to delete the ABC Template?"
-        question.clickNo()
+        expectQuestionDialog("Are you sure you want to delete the ABC Template?", "No")
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 1
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 1
@@ -113,11 +107,9 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("deleteTemplate", async = true)
+        scrn.clickChild<JButton>("deleteTemplate")
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe "Are you sure you want to delete the ABC Template?"
-        question.clickYes(async = true)
+        expectQuestionDialog("Are you sure you want to delete the ABC Template?", "Yes")
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 0
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
@@ -132,11 +124,9 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE)
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe "Are you sure you want to delete the ABC Template?"
-        question.clickYes(async = true)
+        expectQuestionDialog("Are you sure you want to delete the ABC Template?", "Yes")
 
         scrn.getChild<ScrollTable>().rowCount shouldBe 0
         getCountFromTable(EntityName.DartzeeTemplate) shouldBe 0
@@ -151,9 +141,9 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(-1)
-        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE, async = true)
+        scrn.getChild<ScrollTable>().processKeyPress(KeyEvent.VK_DELETE)
 
-        findQuestionDialog().shouldBeNull()
+        assertNoOptionPanes()
         scrn.getChild<ScrollTable>().rowCount shouldBe 1
     }
 
@@ -168,13 +158,13 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("deleteTemplate", async = true)
+        scrn.clickChild<JButton>("deleteTemplate")
 
-        val question = getQuestionDialog()
-        question.getDialogMessage() shouldBe
+        expectQuestionDialog(
             "You have played 2 games using the ABC Template." +
-                "\n\nThese will become custom games if you delete it. Are you sure you want to continue?"
-        question.clickYes(async = true)
+                "\nThese will become custom games if you delete it. Are you sure you want to continue?",
+            "Yes",
+        )
 
         GameEntity().retrieveEntities().forEach { it.gameParams shouldBe "" }
     }
@@ -250,9 +240,9 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("rename", async = true)
+        scrn.clickChild<JButton>("rename")
 
-        typeIntoInputDialog("Rename Template", "New")
+        typeIntoInputDialog("Name", "New", title = "Rename Template")
 
         scrn.getTemplate(0).name shouldBe "New"
 
@@ -268,7 +258,7 @@ class DartzeeTemplateSetupScreenTest : AbstractTest() {
         scrn.initialise()
 
         scrn.getChild<ScrollTable>().selectRow(0)
-        scrn.clickChild<JButton>("rename", async = true)
+        scrn.clickChild<JButton>("rename")
 
         dismissDialog("Rename Template")
 

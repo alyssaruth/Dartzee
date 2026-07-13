@@ -1,6 +1,5 @@
 package dartzee.screen.game.x01
 
-import com.github.alyssaburlton.swingtest.findChild
 import dartzee.core.bean.NumberField
 import dartzee.game.FinishType
 import dartzee.game.X01Config
@@ -14,6 +13,7 @@ import dartzee.screen.game.AbstractGameStatisticsPanelTest
 import dartzee.screen.game.getRowIndex
 import dartzee.screen.game.getValueForRow
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.findChild
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test

@@ -1,10 +1,5 @@
 package dartzee.screen.stats.overall
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldMatch
-import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.DEFAULT_HUMAN_ICON
 import dartzee.bean.GameParamFilterPanel
 import dartzee.bean.GameParamFilterPanelRoundTheClock
@@ -26,6 +21,11 @@ import dartzee.preferences.Preferences
 import dartzee.toLabel
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldMatch
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import io.kotest.matchers.shouldBe
 import javax.swing.ImageIcon
 import javax.swing.JCheckBox

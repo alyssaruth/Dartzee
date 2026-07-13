@@ -1,7 +1,5 @@
 package dartzee.screen.dartzee
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
 import dartzee.dartzee.dart.DartzeeDartRuleEven
 import dartzee.dartzee.dart.DartzeeDartRuleOdd
 import dartzee.db.DartsMatchEntity
@@ -15,6 +13,8 @@ import dartzee.helper.insertPlayer
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.screen.GameSetupScreen
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.mockk

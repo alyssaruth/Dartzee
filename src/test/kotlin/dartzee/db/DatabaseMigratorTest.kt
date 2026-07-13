@@ -1,6 +1,5 @@
 package dartzee.db
 
-import dartzee.expectErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.getTableNames
 import dartzee.helper.usingInMemoryDatabase
@@ -14,6 +13,7 @@ import dartzee.runAsync
 import dartzee.utils.DartsDatabaseUtil
 import dartzee.utils.DartsDatabaseUtil.DATABASE_VERSION
 import dartzee.utils.Database
+import io.github.alyssaruth.swingtest.expectErrorDialog
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -81,7 +81,7 @@ class DatabaseMigratorTest : AbstractTest() {
 
             expectErrorDialog(
                 "Test database is too out-of-date to be upgraded by this version of Dartzee. " +
-                    "Please downgrade to an earlier version so that the data can be converted.\n\n$dbDetails"
+                    "Please downgrade to an earlier version so that the data can be converted.\n$dbDetails"
             )
 
             verifyLog(CODE_DATABASE_TOO_OLD, Severity.WARN)

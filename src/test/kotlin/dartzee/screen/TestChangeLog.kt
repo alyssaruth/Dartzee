@@ -1,8 +1,8 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.getChild
 import dartzee.helper.AbstractTest
 import dartzee.utils.DARTS_VERSION_NUMBER
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.string.shouldContain
 import javax.swing.JTextArea
 import org.junit.jupiter.api.Test

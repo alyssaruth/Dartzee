@@ -1,22 +1,21 @@
 package dartzee.screen.reporting
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
+import dartzee.assertNoOptionPanes
 import dartzee.core.bean.ScrollTable
-import dartzee.expectErrorDialog
-import dartzee.findErrorDialog
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertPlayer
 import dartzee.helper.makeIncludedPlayerParameters
 import dartzee.reporting.IncludedPlayerParameters
 import dartzee.runAsync
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.expectErrorDialog
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.maps.shouldBeEmpty
 import io.kotest.matchers.maps.shouldContainExactly
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import javax.swing.JButton
 import org.junit.jupiter.api.Test
@@ -34,7 +33,7 @@ class ReportingPlayersTabTest : AbstractTest() {
         tab.addPlayers(listOf(insertPlayer()))
         tab.getChild<ScrollTable>().selectRow(-1)
 
-        tab.clickChild<JButton>("RemovePlayer", async = true)
+        tab.clickChild<JButton>("RemovePlayer")
 
         expectErrorDialog("You must select player(s) to remove.")
         tab.getChild<ScrollTable>().rowCount shouldBe 1
@@ -49,8 +48,8 @@ class ReportingPlayersTabTest : AbstractTest() {
         tab.includedPlayerPanel.enabled() shouldBe true
         tab.includedPlayerPanel.chckbxFinalScore.doClick()
 
-        tab.clickChild<JButton>("RemovePlayer", async = true)
-        findErrorDialog().shouldBeNull()
+        tab.clickChild<JButton>("RemovePlayer")
+        assertNoOptionPanes()
         tab.getChild<ScrollTable>().rowCount shouldBe 0
 
         tab.addPlayers(listOf(p))
@@ -181,7 +180,7 @@ class ReportingPlayersTabTest : AbstractTest() {
         tab.getChild<ScrollTable>().selectRow(1)
         tab.includedPlayerPanel.chckbxPosition.doClick()
         runAsync { valid = tab.valid() }
-        findErrorDialog { it.isVisible }.shouldBeNull()
+        assertNoOptionPanes()
         valid shouldBe true
     }
 

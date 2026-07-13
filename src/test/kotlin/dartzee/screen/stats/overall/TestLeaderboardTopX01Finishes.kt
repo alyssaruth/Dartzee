@@ -1,12 +1,12 @@
 package dartzee.screen.stats.overall
 
-import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.ScrollTable
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertFinishForPlayer
 import dartzee.helper.insertPlayer
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings.preferenceService
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import java.sql.Timestamp
 import org.junit.jupiter.api.Test

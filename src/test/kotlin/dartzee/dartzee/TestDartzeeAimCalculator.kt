@@ -1,6 +1,5 @@
 package dartzee.dartzee
 
-import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.ai.AI_DARTBOARD
 import dartzee.ai.DELIBERATE_MISS
 import dartzee.bean.PresentationDartboard
@@ -13,6 +12,7 @@ import dartzee.screen.game.SegmentStatuses
 import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import dartzee.utils.DurationTimer
 import dartzee.utils.getAllNonMissSegments
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Tag

@@ -1,31 +1,28 @@
 package dartzee.screen
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickNo
-import com.github.alyssaburlton.swingtest.clickOk
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeDisabled
-import com.github.alyssaburlton.swingtest.shouldBeEnabled
-import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
-import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.AbstractAchievement
 import dartzee.achievements.getAllAchievements
 import dartzee.bean.PlayerSelector
 import dartzee.bean.getAllPlayers
 import dartzee.core.bean.selectedItemTyped
 import dartzee.core.screen.ProgressDialog
-import dartzee.getDialogMessage
-import dartzee.getQuestionDialog
-import dartzee.getWindow
 import dartzee.helper.AbstractTest
 import dartzee.helper.preparePlayers
 import dartzee.logging.CODE_ACHIEVEMENT_CONVERSION_FINISHED
 import dartzee.logging.CODE_ACHIEVEMENT_CONVERSION_STARTED
 import dartzee.logging.KEY_ACHIEVEMENT_TYPES
 import dartzee.logging.KEY_PLAYER_IDS
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.clickOk
+import io.github.alyssaruth.swingtest.expectQuestionDialog
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.getWindow
+import io.github.alyssaruth.swingtest.shouldBeDisabled
+import io.github.alyssaruth.swingtest.shouldBeEnabled
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import javax.swing.JButton
@@ -62,13 +59,9 @@ class AchievementConversionDialogTest : AbstractTest() {
 
         val dlg = AchievementConversionDialog()
         dlg.isVisible = true
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
-        val questionDialog = getQuestionDialog()
-        questionDialog.getDialogMessage() shouldBe
-            "This will run the conversion(s) for ALL players. Proceed?"
-        questionDialog.clickNo()
-        flushEdt()
+        expectQuestionDialog("This will run the conversion(s) for ALL players. Proceed?", "No")
 
         dlg.shouldBeVisible()
     }
@@ -79,12 +72,9 @@ class AchievementConversionDialogTest : AbstractTest() {
 
         val dlg = AchievementConversionDialog()
         dlg.isVisible = true
-        dlg.clickOk(async = true)
+        dlg.clickOk()
 
-        val questionDialog = getQuestionDialog()
-        questionDialog.getDialogMessage() shouldBe
-            "This will run the conversion(s) for ALL players. Proceed?"
-        questionDialog.clickYes()
+        expectQuestionDialog("This will run the conversion(s) for ALL players. Proceed?", "Yes")
 
         waitForConversionToFinish()
 

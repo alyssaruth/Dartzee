@@ -1,6 +1,5 @@
 package dartzee.db
 
-import com.github.alyssaburlton.swingtest.shouldMatch
 import dartzee.DEFAULT_HUMAN_ICON
 import dartzee.ai.DartsAiModel
 import dartzee.core.util.DateStatics
@@ -11,6 +10,7 @@ import dartzee.helper.makeDartsModel
 import dartzee.theme.HALLOWEEN
 import dartzee.theme.Themes
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.shouldMatch
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf

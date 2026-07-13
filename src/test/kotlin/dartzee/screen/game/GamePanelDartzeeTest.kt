@@ -1,9 +1,5 @@
 package dartzee.screen.game
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeVisible
-import com.github.alyssaburlton.swingtest.shouldNotBeVisible
 import dartzee.achievements.AchievementType
 import dartzee.achievements.retrieveAchievementForDetail
 import dartzee.ai.DartzeePlayStyle
@@ -19,10 +15,8 @@ import dartzee.db.DartzeeRoundResultEntity
 import dartzee.db.DartzeeTemplateEntity
 import dartzee.db.GameEntity
 import dartzee.db.PlayerEntity
-import dartzee.dismissDialog
 import dartzee.doubleNineteen
 import dartzee.doubleTwenty
-import dartzee.expectInfoDialog
 import dartzee.game.GameType
 import dartzee.game.loadParticipants
 import dartzee.helper.AbstractTest
@@ -54,11 +48,17 @@ import dartzee.screen.game.dartzee.DartzeeRuleTile
 import dartzee.screen.game.dartzee.GamePanelDartzee
 import dartzee.segmentStatuses
 import dartzee.singleTwenty
-import dartzee.typeIntoInputDialog
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAllPossibleSegments
 import dartzee.utils.insertDartzeeRules
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.dismissDialog
+import io.github.alyssaruth.swingtest.expectInfoDialog
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeVisible
+import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.github.alyssaruth.swingtest.typeIntoInputDialog
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -113,9 +113,13 @@ class GamePanelDartzeeTest : AbstractTest() {
         val parentWindow = FakeDartsScreen()
 
         val panel = makeGamePanel(testRules, game = g, parentWindow = parentWindow)
-        panel.clickChild<JButton>("convertToTemplate", async = true)
+        panel.clickChild<JButton>("convertToTemplate")
 
-        typeIntoInputDialog("Template Name", "The Jeneration Game")
+        typeIntoInputDialog(
+            "Please enter a name for the template",
+            "The Jeneration Game",
+            title = "Template Name",
+        )
         expectInfoDialog("Template 'The Jeneration Game' successfully created.")
 
         val templateId = panel.gameEntity.gameParams
@@ -133,7 +137,7 @@ class GamePanelDartzeeTest : AbstractTest() {
         val parentWindow = FakeDartsScreen()
 
         val panel = makeGamePanel(testRules, game = g, parentWindow = parentWindow)
-        panel.clickChild<JButton>("convertToTemplate", async = true)
+        panel.clickChild<JButton>("convertToTemplate")
 
         dismissDialog("Template Name")
 

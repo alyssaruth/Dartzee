@@ -1,12 +1,12 @@
 package dartzee.core.bean
 
-import com.github.alyssaburlton.swingtest.doClick
-import com.github.alyssaburlton.swingtest.doHover
-import com.github.alyssaburlton.swingtest.doHoverAway
 import dartzee.core.helper.getIconImage
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.InjectedDesktopCore
 import dartzee.helper.AbstractTest
+import io.github.alyssaruth.swingtest.doClick
+import io.github.alyssaruth.swingtest.doHover
+import io.github.alyssaruth.swingtest.doHoverAway
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk

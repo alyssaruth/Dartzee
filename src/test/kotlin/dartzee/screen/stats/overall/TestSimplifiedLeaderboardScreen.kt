@@ -1,13 +1,13 @@
 package dartzee.screen.stats.overall
 
-import com.github.alyssaburlton.swingtest.findAll
-import com.github.alyssaburlton.swingtest.getChild
 import dartzee.core.bean.ScrollTable
 import dartzee.game.GameType
 import dartzee.game.X01_PARTY_CONFIG
 import dartzee.helper.AbstractTest
 import dartzee.helper.insertFinishedParticipant
 import dartzee.only
+import io.github.alyssaruth.swingtest.findAll
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test

@@ -1,12 +1,12 @@
 package dartzee.screen.dartzee
 
-import com.github.alyssaburlton.swingtest.makeMouseEvent
 import dartzee.dartzee.DartzeeRuleDto
 import dartzee.dartzee.aggregate.DartzeeTotalRuleLessThan
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartzeeRuleDto
 import dartzee.helper.makeTotalScoreRule
 import dartzee.screen.game.dartzee.DartzeeRuleTile
+import io.github.alyssaruth.swingtest.makeMouseEvent
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 

@@ -1,16 +1,15 @@
 package dartzee.e2e
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.clickYes
-import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.game.FinishType
 import dartzee.game.GameType
 import dartzee.game.X01Config
 import dartzee.game.state.IWrappedParticipant
-import dartzee.getQuestionDialog
 import dartzee.helper.insertGame
 import dartzee.helper.insertPlayer
 import dartzee.`object`.SegmentType
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.expectQuestionDialog
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import javax.swing.JButton
@@ -26,7 +25,7 @@ class TestResignationE2E : AbstractE2ETest() {
             )
 
         val (winner, loser) = createPlayers()
-        val resignee = insertPlayer(strategy = "")
+        val resignee = insertPlayer(name = "Coward", strategy = "")
 
         val (gamePanel, _, participants) =
             setUpGamePanelAndStartGame(game, listOf(winner, resignee, loser))
@@ -39,8 +38,11 @@ class TestResignationE2E : AbstractE2ETest() {
         gamePanel.confirmRound()
 
         gamePanel.awaitTurn(ptResignee)
-        gamePanel.clickChild<JButton>(async = true) { it.toolTipText == "Resign" }
-        getQuestionDialog().clickYes()
+        gamePanel.clickChild<JButton>() { it.toolTipText == "Resign" }
+        expectQuestionDialog(
+            "Are you sure you want to resign Coward from this game? They will not be able to return.",
+            "Yes",
+        )
 
         awaitGameFinish(game)
         waitForAssertion { ptLoser.participant.isActive() shouldBe false }
@@ -53,7 +55,7 @@ class TestResignationE2E : AbstractE2ETest() {
         val game = insertGame(gameType = GameType.GOLF, gameParams = "9")
 
         val (winner, loser) = createPlayers()
-        val resignee = insertPlayer(strategy = "")
+        val resignee = insertPlayer(name = "Coward", strategy = "")
 
         val (gamePanel, _, participants) =
             setUpGamePanelAndStartGame(game, listOf(winner, resignee, loser))
@@ -64,8 +66,11 @@ class TestResignationE2E : AbstractE2ETest() {
         gamePanel.clickChild<JButton> { it.toolTipText == "Confirm round" }
 
         gamePanel.awaitTurn(ptResignee)
-        gamePanel.clickChild<JButton>(async = true) { it.toolTipText == "Resign" }
-        getQuestionDialog().clickYes()
+        gamePanel.clickChild<JButton>() { it.toolTipText == "Resign" }
+        expectQuestionDialog(
+            "Are you sure you want to resign Coward from this game? They will not be able to return.",
+            "Yes",
+        )
 
         awaitGameFinish(game)
 

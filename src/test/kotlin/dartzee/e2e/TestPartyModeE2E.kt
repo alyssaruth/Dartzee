@@ -1,12 +1,7 @@
 package dartzee.e2e
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.findWindow
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeVisible
 import dartzee.bean.GameSetupPlayerSelector
 import dartzee.bean.ScrollTableDartsGame
-import dartzee.clickButton
 import dartzee.drtDoubleTwenty
 import dartzee.drtInnerFourteen
 import dartzee.drtInnerSeven
@@ -28,6 +23,11 @@ import dartzee.screen.game.DartsGamePanel
 import dartzee.screen.game.DartsGameScreen
 import dartzee.screen.game.x01.GameStatisticsPanelX01
 import dartzee.waitForAssertionWithReturn
+import io.github.alyssaruth.swingtest.clickButton
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.findWindow
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeVisible
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe

@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.KeyDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.github.alyssaburlton.swingtest.shouldMatchImage
 import dartzee.core.util.jsonMapper
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeDartsModel
+import io.github.alyssaruth.swingtest.shouldMatchImage
 import java.awt.Dimension
 import java.awt.Point
 import org.junit.jupiter.api.Tag
@@ -19,7 +19,7 @@ class TestVisualisationPanelScatter : AbstractTest() {
     @Test
     @Tag("screenshot")
     fun `Should match its snapshot`() {
-        val jsonString = javaClass.getResource("/scatterPreset.json").readText()
+        val jsonString = javaClass.getResource("/scatterPreset.json")!!.readText()
         val module =
             SimpleModule().also {
                 it.addKeyDeserializer(Point::class.java, JsonPointDeserializer())
@@ -35,8 +35,8 @@ class TestVisualisationPanelScatter : AbstractTest() {
         panel.shouldMatchImage("scatter")
     }
 
-    internal inner class JsonPointDeserializer : KeyDeserializer() {
-        override fun deserializeKey(key: String, ctxt: DeserializationContext): Any? {
+    internal class JsonPointDeserializer : KeyDeserializer() {
+        override fun deserializeKey(key: String, ctxt: DeserializationContext): Any {
             val x = key.substringAfter("x=").substringBefore(",").toInt()
             val y = key.substringAfter("y=").substringBefore(")").toInt()
 

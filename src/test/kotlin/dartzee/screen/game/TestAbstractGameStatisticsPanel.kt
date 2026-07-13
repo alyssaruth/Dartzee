@@ -1,6 +1,5 @@
 package dartzee.screen.game
 
-import com.github.alyssaburlton.swingtest.findChild
 import dartzee.core.util.getSqlDateNow
 import dartzee.core.util.maxOrZero
 import dartzee.game.state.X01PlayerState
@@ -12,6 +11,7 @@ import dartzee.helper.makeX01PlayerState
 import dartzee.shouldHaveColours
 import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings
+import io.github.alyssaruth.swingtest.findChild
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -341,7 +341,7 @@ private class FakeGameStatisticsPanel(
     private fun getDartsThrownRow() =
         prepareRow("Darts Thrown") { playerName ->
             val darts = hmPlayerToDarts[playerName].orEmpty()
-            darts.map { it.size }.sum()
+            darts.sumOf { it.size }
         }
 
     private fun getNullRow() = prepareRow("Nulls") { null }

@@ -1,10 +1,10 @@
 package dartzee.logging
 
-import com.github.alyssaburlton.swingtest.flushEdt
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.helper.AbstractTest
 import dartzee.helper.LOG_DUMP_FILE
 import dartzee.makeLogRecord
+import io.github.alyssaruth.swingtest.flushEdt
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.comparables.shouldBeGreaterThan

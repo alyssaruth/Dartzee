@@ -1,7 +1,5 @@
 package dartzee.screen.player
 
-import com.github.alyssaburlton.swingtest.doHover
-import com.github.alyssaburlton.swingtest.doHoverAway
 import dartzee.achievements.AchievementType
 import dartzee.achievements.getAchievementMaximum
 import dartzee.achievements.golf.AchievementGolfBestGame
@@ -12,6 +10,8 @@ import dartzee.helper.insertAchievement
 import dartzee.helper.insertPlayer
 import dartzee.screen.ScreenCache
 import dartzee.screen.stats.player.PlayerAchievementsScreen
+import io.github.alyssaruth.swingtest.doHover
+import io.github.alyssaruth.swingtest.doHoverAway
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.Test

@@ -1,11 +1,6 @@
 package dartzee.screen.game
 
-import com.github.alyssaburlton.swingtest.findAll
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.shouldBeDisabled
-import com.github.alyssaburlton.swingtest.shouldBeEnabled
 import dartzee.bean.DartLabel
-import dartzee.clickButton
 import dartzee.drtDoubleTwenty
 import dartzee.drtOuterOne
 import dartzee.drtOuterTwenty
@@ -16,6 +11,11 @@ import dartzee.e2e.throwHumanRound
 import dartzee.helper.AbstractTest
 import dartzee.`object`.SegmentType
 import dartzee.screen.GameplayDartboard
+import io.github.alyssaruth.swingtest.clickButton
+import io.github.alyssaruth.swingtest.findAll
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.shouldBeDisabled
+import io.github.alyssaruth.swingtest.shouldBeEnabled
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.shouldBe

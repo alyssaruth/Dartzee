@@ -1,9 +1,5 @@
 package dartzee.e2e
 
-import com.github.alyssaburlton.swingtest.clickChild
-import com.github.alyssaburlton.swingtest.flushEdt
-import com.github.alyssaburlton.swingtest.getChild
-import com.github.alyssaburlton.swingtest.waitForAssertion
 import dartzee.achievements.getAllAchievements
 import dartzee.achievements.runConversionsWithProgressBar
 import dartzee.ai.AI_DARTBOARD
@@ -11,7 +7,6 @@ import dartzee.ai.DartsAiModel
 import dartzee.ai.getPointForScore
 import dartzee.bean.GameSetupPlayerSelector
 import dartzee.bean.ParticipantAvatar
-import dartzee.clickButton
 import dartzee.core.bean.ScrollTable
 import dartzee.core.util.DateStatics
 import dartzee.core.util.getSortedValues
@@ -41,6 +36,11 @@ import dartzee.screen.game.scorer.AbstractDartsScorer
 import dartzee.screen.game.scorer.AbstractDartsScorerPausable
 import dartzee.screen.game.scorer.DartsScorerX01
 import dartzee.utils.ResourceCache.ICON_RESUME
+import io.github.alyssaruth.swingtest.clickButton
+import io.github.alyssaruth.swingtest.clickChild
+import io.github.alyssaruth.swingtest.flushEdt
+import io.github.alyssaruth.swingtest.getChild
+import io.github.alyssaruth.swingtest.waitForAssertion
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe

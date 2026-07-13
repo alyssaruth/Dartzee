@@ -1,6 +1,5 @@
 package dartzee.screen.game.scorer
 
-import com.github.alyssaburlton.swingtest.findChild
 import dartzee.achievements.rtc.AchievementClockBestGame
 import dartzee.firstRow
 import dartzee.game.ClockType
@@ -11,6 +10,7 @@ import dartzee.helper.makeClockPlayerState
 import dartzee.`object`.Dart
 import dartzee.`object`.DartNotThrown
 import dartzee.screen.game.makeSingleParticipant
+import io.github.alyssaruth.swingtest.findChild
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull

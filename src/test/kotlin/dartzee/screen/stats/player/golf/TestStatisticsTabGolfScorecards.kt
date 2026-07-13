@@ -1,7 +1,5 @@
 package dartzee.screen.stats.player.golf
 
-import com.github.alyssaburlton.swingtest.findChild
-import com.github.alyssaburlton.swingtest.getChild
 import dartzee.bean.ScrollTableDartsGame
 import dartzee.core.bean.ComboBoxItem
 import dartzee.core.bean.items
@@ -15,6 +13,8 @@ import dartzee.helper.golfFull28_29
 import dartzee.helper.golfFull31_22
 import dartzee.stats.GameWrapper
 import dartzee.stats.GolfMode
+import io.github.alyssaruth.swingtest.findChild
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe

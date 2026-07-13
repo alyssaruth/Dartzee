@@ -1,6 +1,5 @@
 package dartzee.screen.game
 
-import com.github.alyssaburlton.swingtest.getChild
 import dartzee.achievements.x01.AchievementX01BestFinish
 import dartzee.core.helper.verifyNotCalled
 import dartzee.core.util.DateStatics
@@ -19,6 +18,7 @@ import dartzee.helper.makeX01PlayerState
 import dartzee.screen.ScreenCache
 import dartzee.screen.game.x01.GamePanelX01
 import dartzee.screen.game.x01.MatchStatisticsPanelX01
+import io.github.alyssaruth.swingtest.getChild
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf

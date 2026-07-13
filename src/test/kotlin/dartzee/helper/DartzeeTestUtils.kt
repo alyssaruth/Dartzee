@@ -1,6 +1,5 @@
 package dartzee.helper
 
-import com.github.alyssaburlton.swingtest.toBufferedImage
 import dartzee.bean.PresentationDartboard
 import dartzee.dartzee.DartzeeRoundResult
 import dartzee.dartzee.DartzeeRuleCalculationResult
@@ -24,6 +23,7 @@ import dartzee.`object`.SegmentType
 import dartzee.screen.game.SegmentStatuses
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAllPossibleSegments
+import io.github.alyssaruth.swingtest.toBufferedImage
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Dimension
