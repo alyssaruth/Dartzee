@@ -8,7 +8,7 @@ import javax.swing.ImageIcon
 import javax.swing.JLabel
 
 /** Test methods */
-fun ScrollTable.processKeyPress(key: Int, async: Boolean = false) {
+fun ScrollTable.processKeyPress(key: Int, async: Boolean = true) {
     this.table.processKeyPress(key, async)
 }
 

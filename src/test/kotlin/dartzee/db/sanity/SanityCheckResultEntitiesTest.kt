@@ -69,7 +69,7 @@ class SanityCheckResultEntitiesTest : AbstractTest() {
         scrollTable.table.addRowSelectionInterval(2, 2)
         scrollTable.processKeyPress(KeyEvent.VK_DELETE)
 
-        expectQuestionDialog("Are you sure you want to delete 2 row(s) from Player?", "No")
+        expectQuestionDialog("Are you sure you want to delete 2 row(s) from Player?", "Yes")
 
         getCountFromTable(EntityName.Player) shouldBe 1
         PlayerEntity.retrieveForName("Alyssa") shouldBe null

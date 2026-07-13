@@ -41,7 +41,7 @@ class ApplicationExitTest : AbstractTest() {
             runAsync { exitApplication() }
 
             expectQuestionDialog(
-                "Are you sure you want to exit? There are 1 game window(s) still open.",
+                "Are you sure you want to exit? There are 2 game window(s) still open.",
                 "Yes",
             )
         }
