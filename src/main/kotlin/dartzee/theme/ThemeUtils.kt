@@ -56,6 +56,7 @@ fun themeMap() =
             Themes.BIRTHDAY,
             Themes.DARTZEE,
             Themes.PRIDE,
+            Themes.CHRISTMAS,
         )
         .associateBy { it.id }
 
