@@ -25,6 +25,8 @@ private val dartboardColours =
         darkGreen,
         Color.RED,
         darkGreen,
+        fontColor = Color.BLACK,
+        outerDartboardColour = Color.decode("#FFFAFA"),
     )
 
 private val animations: List<Pair<IAnimationTrigger, IAnimation>> =
@@ -50,7 +52,7 @@ val Themes.CHRISTMAS: Theme
             linkColour = Color.BLUE,
             fontColor = Color.DARK_GRAY,
             dartboardColours = dartboardColours,
-            menuFontSize = 20f,
+            menuFontSize = 24f,
             animations = animations.toMap(),
             bannerTextRenderer = easterBannerRenderer,
             festivalInfo = FestivalInfo(::findChristmas, "Will next pop up"),
