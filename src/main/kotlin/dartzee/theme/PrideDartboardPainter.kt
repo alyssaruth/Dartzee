@@ -10,7 +10,8 @@ data class PrideDartboardPainter(override val font: Font = getBaseFont()) : IDar
     override val outerDartboardColour: Color = Color.BLACK
     override val missedBoardColour = DartsColour.TRANSPARENT
     override val edgeColour = null
-    override val fontColor: Color = Color.WHITE
+
+    override fun getFontColour(score: Int): Color = Color.WHITE
 
     override fun getColour(segment: DartboardSegment): Color =
         if (segment.isMiss()) Color.BLACK

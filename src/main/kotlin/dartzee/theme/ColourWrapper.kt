@@ -40,7 +40,7 @@ data class ColourWrapper(
     override val outerDartboardColour: Color = Color.black,
     override val missedBoardColour: Color = DartsColour.TRANSPARENT,
     override val edgeColour: Color? = null,
-    override val fontColor: Color = Color.white,
+    private val fontColor: Color = Color.white,
     override val font: Font = ResourceCache.BASE_FONT,
 ) : IDartboardPainter {
 
@@ -57,6 +57,10 @@ data class ColourWrapper(
         singleColour,
         singleColour,
     )
+
+    override fun getFontColour(score: Int): Color {
+        return fontColor
+    }
 
     override fun withFont(font: Font) = copy(font = font)
 

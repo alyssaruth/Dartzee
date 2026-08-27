@@ -265,10 +265,10 @@ open class PresentationDartboard(
         paintLabel(
             g,
             avgPoint,
-            lblHeight,
-            lblHeight,
+            lblHeight * 2,
+            lblHeight * 2,
             colourWrapper.font,
-            colourWrapper.fontColor,
+            colourWrapper.getFontColour(score),
             score.toString(),
         )
     }
