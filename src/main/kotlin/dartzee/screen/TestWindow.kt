@@ -11,6 +11,7 @@ import dartzee.screen.animation.CHUCKLEVISION
 import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.dartzee.DartzeeRuleCarousel
 import dartzee.screen.game.dartzee.IDartzeeCarouselListener
+import dartzee.theme.Snowfall
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -30,17 +31,18 @@ class TestWindow : JFrame(), ActionListener, DartboardListener, IDartzeeCarousel
     private val btnRepaint = JButton("Repaint dartboard")
     private val btnChucklevision = JButton("Chucklevision")
     private val btnBadLuck = JButton("Bad luck")
+    val snowfall = Snowfall()
 
     init {
         contentPane.layout = BorderLayout(0, 0)
         size = Dimension(1000, 800)
         preferredSize = Dimension(1000, 800)
 
-        contentPane.add(carousel, BorderLayout.NORTH)
+        // contentPane.add(carousel, BorderLayout.NORTH)
         carousel.update(emptyList(), emptyList(), 100)
         dartboard.refreshValidSegments(carousel.getSegmentStatus())
 
-        contentPane.add(dartboard, BorderLayout.CENTER)
+        contentPane.add(snowfall, BorderLayout.CENTER)
 
         val panelSouth = JPanel()
         contentPane.add(panelSouth, BorderLayout.SOUTH)
