@@ -12,7 +12,7 @@ import java.awt.Rectangle
 import java.time.LocalDate
 import java.time.Month
 
-private val gold = Color.decode("#f2c49b")
+val gold = Color.decode("#f2c49b")
 
 private val animations: List<Pair<IAnimationTrigger, IAnimation>> =
     listOf(PlayerVictory to Animation("thats-all-folks", "/theme/easter/horrific/bugs-bunny.png")) +
@@ -36,7 +36,7 @@ val Themes.CHRISTMAS: Theme
             Color.decode("#385025"),
             linkColour = gold,
             fontColor = Color.WHITE,
-            dartboardColours = dartboardColours,
+            dartboardColours = ChristmasDartboardPainter(),
             menuFontSize = 24f,
             animations = animations.toMap(),
             bannerTextRenderer = easterBannerRenderer,
