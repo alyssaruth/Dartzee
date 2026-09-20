@@ -7,7 +7,7 @@ import java.awt.Graphics2D
 import javax.swing.SwingUtilities
 import kotlin.random.Random
 
-private const val MAX_FLAKE_CHANCE = 5
+private const val MAX_FLAKE_CHANCE = 4
 
 class Snowfall : AbstractMenuAnimation() {
     private val sync = Any()
@@ -96,7 +96,7 @@ class Snowfall : AbstractMenuAnimation() {
         }
 
         val newParticles =
-            (-5..width + 5).mapNotNull { x ->
+            (0..width).mapNotNull { x ->
                 val spawnSnow = Random.nextInt(1000) >= (1000 - flakeChance)
                 if (spawnSnow) {
                     val offness = Random.nextInt(150)
@@ -146,24 +146,17 @@ class Snowfall : AbstractMenuAnimation() {
                 .filter { x -> x in 0 until width }
                 .sortedByDescending { snowHeap.getValue(it) }
 
-        val touched = mutableSetOf<Int>()
         peaks.forEach { x ->
-            if (!touched.contains(x)) {
-                touched.add(x)
+            val current = snowHeap.getValue(x)
+            snowHeap[x] = current - 1
 
-                val current = snowHeap.getValue(x)
-                snowHeap[x] = current - 1
+            val left = snowHeap.getSnowCount(x - 1)
+            val right = snowHeap.getSnowCount(x + 1)
 
-                val left = snowHeap.getSnowCount(x - 1)
-                val right = snowHeap.getSnowCount(x + 1)
-
-                if (left > right) {
-                    touched.add(x + 1)
-                    snowHeap[x + 1] = right + 1
-                } else {
-                    touched.add(x - 1)
-                    snowHeap[x - 1] = left + 1
-                }
+            if (left > right) {
+                snowHeap[x + 1] = right + 1
+            } else {
+                snowHeap[x - 1] = left + 1
             }
         }
     }
