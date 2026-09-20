@@ -34,6 +34,7 @@ data class Theme(
     val dartFactory: DartFactory? = null,
     val buttonOverrideColours: Map<String, Color> = emptyMap(),
     val customIcons: Map<String, () -> URL?> = emptyMap(),
+    val menuAnimation: AbstractMenuAnimation? = null,
 ) {
     val name = id.name
     private val resourcePath = name.lowercase()

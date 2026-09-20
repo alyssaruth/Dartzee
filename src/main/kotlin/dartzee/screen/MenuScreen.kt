@@ -41,6 +41,11 @@ class MenuScreen : EmbeddedScreen() {
         layout = null
         layoutScreen(1000, 663)
 
+        InjectedThings.theme?.menuAnimation?.let { animation ->
+            add(animation)
+            animation.start()
+        }
+
         add(dartboard)
 
         add(btnNewGame)
@@ -89,10 +94,12 @@ class MenuScreen : EmbeddedScreen() {
         super.postInit()
         layoutScreen()
 
+        InjectedThings.theme?.menuAnimation?.active = true
         InjectedThings.theme?.menuMusic?.loop()
     }
 
     override fun unInit() {
+        InjectedThings.theme?.menuAnimation?.active = false
         InjectedThings.theme?.menuMusic?.stop()
     }
 
@@ -102,6 +109,8 @@ class MenuScreen : EmbeddedScreen() {
         } else {
             layoutFullScreen(width, height)
         }
+
+        InjectedThings.theme?.menuAnimation?.size = Dimension(width, height)
     }
 
     private fun layoutSimplifiedScreen(width: Int, height: Int) {

@@ -42,6 +42,7 @@ val Themes.CHRISTMAS: Theme
             bannerTextRenderer = easterBannerRenderer,
             festivalInfo = FestivalInfo(::findChristmas, "Will next pop up"),
             // unlockDate = LocalDate.of(2026, Month.DECEMBER, 1),
+            menuAnimation = Snowfall(),
         )
 
 private fun getBannerDetails(

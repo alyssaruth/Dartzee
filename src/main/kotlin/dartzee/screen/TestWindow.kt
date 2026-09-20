@@ -1,16 +1,6 @@
 package dartzee.screen
 
-import dartzee.core.util.doDodgy
-import dartzee.dartzee.DartzeeRoundResult
-import dartzee.db.DartzeeRuleEntity
-import dartzee.db.DartzeeTemplateEntity
-import dartzee.listener.DartboardListener
-import dartzee.`object`.Dart
-import dartzee.screen.animation.BRUCEY_BAD_LUCK
-import dartzee.screen.animation.CHUCKLEVISION
-import dartzee.screen.game.SegmentStatuses
-import dartzee.screen.game.dartzee.DartzeeRuleCarousel
-import dartzee.screen.game.dartzee.IDartzeeCarouselListener
+import dartzee.core.bean.NumberField
 import dartzee.theme.Snowfall
 import java.awt.BorderLayout
 import java.awt.Dimension
@@ -20,76 +10,43 @@ import javax.swing.JButton
 import javax.swing.JFrame
 import javax.swing.JPanel
 
-class TestWindow : JFrame(), ActionListener, DartboardListener, IDartzeeCarouselListener {
-    private val dartsThrown = mutableListOf<Dart>()
-    private val template = DartzeeTemplateEntity().retrieveEntities().first()
-    private val rules = DartzeeRuleEntity().retrieveForTemplate(template.rowId).map { it.toDto() }
-
-    private val dartboard = GameplayDartboard()
-    private val carousel = DartzeeRuleCarousel(rules)
-    private val btnClear = JButton("Clear darts")
-    private val btnRepaint = JButton("Repaint dartboard")
-    private val btnChucklevision = JButton("Chucklevision")
-    private val btnBadLuck = JButton("Bad luck")
+class TestWindow : JFrame(), ActionListener {
     val snowfall = Snowfall()
+
+    private val btnClear = JButton("Clear")
+    private val flakeChance = NumberField(0, 100)
+    private val sleepTime = NumberField()
 
     init {
         contentPane.layout = BorderLayout(0, 0)
         size = Dimension(1000, 800)
         preferredSize = Dimension(1000, 800)
 
-        // contentPane.add(carousel, BorderLayout.NORTH)
-        carousel.update(emptyList(), emptyList(), 100)
-        dartboard.refreshValidSegments(carousel.getSegmentStatus())
-
         contentPane.add(snowfall, BorderLayout.CENTER)
 
         val panelSouth = JPanel()
         contentPane.add(panelSouth, BorderLayout.SOUTH)
 
+        panelSouth.add(flakeChance)
+        panelSouth.add(sleepTime)
         panelSouth.add(btnClear)
-        panelSouth.add(btnRepaint)
-        panelSouth.add(btnChucklevision)
-        panelSouth.add(btnBadLuck)
 
-        dartboard.addDartboardListener(this)
-        carousel.listener = this
+        //        snowfall.flakeChance = flakeChance.getNumber()
+        //        flakeChance.addPropertyChangeListener { snowfall.flakeChance =
+        // flakeChance.getNumber() }
+        //        snowfall.rate = (sleepTime.value as Number).toLong()
+        //        sleepTime.addPropertyChangeListener { snowfall.rate = (sleepTime.value as
+        // Number).toLong() }
         btnClear.addActionListener(this)
-        btnRepaint.addActionListener(this)
-        btnChucklevision.addActionListener(this)
-        btnBadLuck.addActionListener(this)
     }
 
     override fun actionPerformed(e: ActionEvent?) {
         when (e?.source) {
-            btnClear -> clearDarts()
-            btnRepaint -> dartboard.repaint()
-            btnChucklevision -> dartboard.doDodgy(CHUCKLEVISION)
-            btnBadLuck -> dartboard.doDodgy(BRUCEY_BAD_LUCK)
+            btnClear -> clear()
         }
     }
 
-    private fun clearDarts() {
-        dartboard.clearDarts()
-        dartsThrown.clear()
-        carousel.update(emptyList(), dartsThrown, 100)
-        dartboard.refreshValidSegments(carousel.getSegmentStatus())
-    }
-
-    override fun dartThrown(dart: Dart) {
-        dartsThrown.add(dart)
-
-        if (dartsThrown.size <= 3) {
-            carousel.update(emptyList(), dartsThrown, 100)
-            dartboard.refreshValidSegments(carousel.getSegmentStatus())
-        }
-    }
-
-    override fun hoverChanged(segmentStatuses: SegmentStatuses) {
-        dartboard.refreshValidSegments(segmentStatuses)
-    }
-
-    override fun tilePressed(dartzeeRoundResult: DartzeeRoundResult) {
-        // do nothing
+    private fun clear() {
+        snowfall.reset()
     }
 }
