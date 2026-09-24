@@ -10,7 +10,7 @@ import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.getSegmentStatus
 import dartzee.theme.GREY_COLOUR_WRAPPER
 import dartzee.theme.IDartboardPainter
-import dartzee.theme.getBaseFont
+import dartzee.theme.fontForResource
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
@@ -147,7 +147,7 @@ open class PresentationDartboard(
                 details.textCenter,
                 details.fontHeight,
                 svgBounds.height,
-                getBaseFont(),
+                fontForResource("/theme/christmas/banner.ttf")!!,
                 theme.fontColor,
                 details.text,
                 details.maxWidth,
