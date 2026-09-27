@@ -35,11 +35,7 @@ class Snowfall : AbstractMenuAnimation() {
         val r = Runnable {
             while (true) {
                 Thread.sleep(10)
-                SwingUtilities.invokeAndWait {
-                    synchronized(sync) {
-                        doTick()
-                    }
-                }
+                SwingUtilities.invokeAndWait { synchronized(sync) { doTick() } }
             }
         }
 
@@ -68,11 +64,7 @@ class Snowfall : AbstractMenuAnimation() {
         }
 
         g.paint = Color.WHITE
-        snowHeap.forEach { (x, snowflakes) ->
-            (0 until snowflakes).forEach { index ->
-                g.drawLine(x, height - index, x, height - index)
-            }
-        }
+        snowHeap.forEach { (x, snowflakes) -> g.drawRect(x, height - snowflakes, 1, snowflakes) }
     }
 
     private fun doTick() {
@@ -84,16 +76,18 @@ class Snowfall : AbstractMenuAnimation() {
         val computedRate = (timePassed / 5000).toInt() + 1
         val flakeChance = minOf(MAX_FLAKE_CHANCE, computedRate)
 
-        val updatedParticles = particles.map { snow ->
-            val windEffect = Random.nextInt(-10, 11)
-            val windImpact = windEffect / 10
+        val updatedParticles =
+            particles.map { snow ->
+                val windEffect = Random.nextInt(-10, 11)
+                val windImpact = windEffect / 10
 
-            val newWindDirection =
-                if (windImpact == 0) 0 else if (snow.windEffect == -windImpact) 0 else windImpact
-            val newY = snow.y + snow.speed
-            val newX = snow.x + newWindDirection
-            snow.copy(x = newX, y = newY, windEffect = newWindDirection)
-        }
+                val newWindDirection =
+                    if (windImpact == 0) 0
+                    else if (snow.windEffect == -windImpact) 0 else windImpact
+                val newY = snow.y + snow.speed
+                val newX = snow.x + newWindDirection
+                snow.copy(x = newX, y = newY, windEffect = newWindDirection)
+            }
 
         val newParticles =
             (0..width).mapNotNull { x ->
@@ -107,9 +101,10 @@ class Snowfall : AbstractMenuAnimation() {
                 }
             }
 
-        val newHeapParticles = updatedParticles.filter {
-            (height - snowHeap.getSnowCount(it.x) == it.y.toInt() || it.y >= height)
-        }
+        val newHeapParticles =
+            updatedParticles.filter {
+                (height - snowHeap.getSnowCount(it.x) == it.y.toInt() || it.y >= height)
+            }
         val fallingParticles = updatedParticles - newHeapParticles
 
         particles = fallingParticles + newParticles
