@@ -69,6 +69,15 @@ open class PresentationDartboard(
         pt.setLocation(x, y)
     }
 
+    fun overrideSegmentColours(segments: Map<DartboardSegment, Color>) {
+        dirtySegments.addAll(overriddenSegmentColours.keys)
+        overriddenSegmentColours.clear()
+        overriddenSegmentColours.putAll(segments)
+        dirtySegments.addAll(segments.keys)
+
+        repaint()
+    }
+
     fun overrideSegmentColour(segment: DartboardSegment, colour: Color) {
         overriddenSegmentColours[segment] = colour
         dirtySegments.add(segment)

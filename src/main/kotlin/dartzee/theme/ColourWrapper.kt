@@ -3,7 +3,7 @@ package dartzee.theme
 import dartzee.`object`.DartboardSegment
 import dartzee.utils.DartsColour
 import dartzee.utils.ResourceCache
-import dartzee.utils.hmScoreToOrdinal
+import dartzee.utils.isEven
 import java.awt.Color
 import java.awt.Font
 
@@ -73,14 +73,13 @@ data class ColourWrapper(
     }
 
     override fun getColour(segment: DartboardSegment) =
-        getColour(segment.getMultiplier(), segment.score)
+        getColour(segment.getMultiplier(), segment.score, segment.isEven())
 
-    private fun getColour(multiplier: Int, score: Int): Color {
+    private fun getColour(multiplier: Int, score: Int, even: Boolean): Color {
         if (score == 25) {
             return getBullColour(multiplier)
         }
 
-        val even = hmScoreToOrdinal[Integer.valueOf(score)] ?: false
         return when (multiplier) {
             1 -> getSingleColour(even)
             2 -> getDoubleColour(even)
