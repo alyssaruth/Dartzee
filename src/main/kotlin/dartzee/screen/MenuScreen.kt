@@ -89,7 +89,7 @@ class MenuScreen : EmbeddedScreen() {
         btnPreferences.icon = themedIcon("/buttons/preferences.png")
         btnGameReport.icon = themedIcon("/buttons/gameReport.png")
         btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
-        btnDartzeeTemplates.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
+        btnDartzeeTemplates.icon = themedIcon("/buttons/dartzeeTemplates.png")
         btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
 
         getAllChildComponentsForType<JButton>().forEach { button -> button.font = getMenuFont() }
