@@ -10,21 +10,17 @@ import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.stats.overall.SimplifiedLeaderboardScreen
 import dartzee.screen.sync.SyncManagementScreen
-import dartzee.theme.ChristmasDartboardPainter
+import dartzee.theme.ChristmasDartboardFlasher
 import dartzee.theme.getMenuFont
 import dartzee.theme.themedIcon
 import dartzee.utils.DARTS_VERSION_NUMBER
 import dartzee.utils.InjectedThings
-import dartzee.utils.getAllNonMissSegments
-import dartzee.utils.getHighlightedColour
-import dartzee.utils.isEven
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import javax.swing.ImageIcon
 import javax.swing.JButton
-import javax.swing.SwingUtilities
 
 private const val BUTTON_WIDTH = 220
 private const val BUTTON_HEIGHT = 80
@@ -42,7 +38,7 @@ class MenuScreen : EmbeddedScreen() {
     private val btnGameReport = JButton("Game Report")
     private val lblVersion = LinkLabel("Dartzee $DARTS_VERSION_NUMBER", ::linkClicked)
 
-    private var odd = false
+    private val flasher = ChristmasDartboardFlasher(dartboard)
 
     init {
         layout = null
@@ -72,16 +68,6 @@ class MenuScreen : EmbeddedScreen() {
             button.size = Dimension(BUTTON_WIDTH, BUTTON_HEIGHT)
             button.addActionListener(this)
         }
-
-        val r = Runnable {
-            while (true) {
-                Thread.sleep(500)
-                SwingUtilities.invokeAndWait { flashDartboard() }
-            }
-        }
-
-        val t = Thread(r)
-        t.start()
 
         btnNewGame.icon = themedIcon("/buttons/newGame.png")
         btnManagePlayers.icon = themedIcon("/buttons/playerManagement.png")
@@ -199,10 +185,11 @@ class MenuScreen : EmbeddedScreen() {
     }
 
     private fun linkClicked() {
-        changeLog.run {
-            setLocationRelativeTo(this)
-            isVisible = true
-        }
+        //        changeLog.run {
+        //            setLocationRelativeTo(this)
+        //            isVisible = true
+        //        }
+        flasher.toggleMode()
     }
 
     private fun newGame() {
@@ -237,18 +224,5 @@ class MenuScreen : EmbeddedScreen() {
             btnDartzeeTemplates -> ScreenCache.switch<DartzeeTemplateSetupScreen>()
             else -> super.actionPerformed(arg0)
         }
-    }
-
-    private fun flashDartboard() {
-        odd = !odd
-
-        val wrapper = ChristmasDartboardPainter()
-        val overrides =
-            getAllNonMissSegments()
-                .filter { it.score == 25 || it.getMultiplier() > 1 }
-                .filter { it.isEven() != odd }
-                .associateWith { getHighlightedColour(wrapper.getColour(it)) }
-
-        dartboard.overrideSegmentColours(overrides)
     }
 }

@@ -7,16 +7,17 @@ import java.awt.Font
 
 private val darkRed = Color.decode("#800020")
 private val darkGreen = Color.decode("#39AD48")
+// private val medRed = Color.red.darker()
 
 private val dartboardColours =
     ColourWrapper(
+        Color.GREEN,
+        darkRed,
         darkRed,
         Color.RED,
-        Color.RED,
-        Color.GREEN,
         darkGreen,
         darkGreen,
-        Color.RED,
+        darkRed,
         darkGreen,
         fontColor = Color.BLACK,
         outerDartboardColour = Color.decode("#385025"),
@@ -35,6 +36,13 @@ data class ChristmasDartboardPainter(override val font: Font = getBaseFont()) : 
     }
 
     override fun getColour(segment: DartboardSegment) = dartboardColours.getColour(segment)
+
+    fun getFlashColour(segment: DartboardSegment): Color =
+        when (dartboardColours.getColour(segment)) {
+            darkRed -> Color.RED
+            darkGreen -> Color.GREEN
+            else -> Color.WHITE
+        }
 
     override fun withFont(font: Font) = copy(font = font)
 }
