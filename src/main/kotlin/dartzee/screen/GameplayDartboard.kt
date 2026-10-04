@@ -10,6 +10,7 @@ import dartzee.listener.DartboardListener
 import dartzee.`object`.ComputedPoint
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.SegmentStatuses
+import dartzee.theme.ChristmasDartboardFlasher
 import dartzee.theme.IDartboardPainter
 import dartzee.theme.makeDartLabel
 import dartzee.utils.getColourWrapperFromPrefs
@@ -39,6 +40,8 @@ class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromP
         add(dartboard, Integer.valueOf(-1))
 
         dartboard.addMouseListener(this)
+
+        ChristmasDartboardFlasher(dartboard)
 
         addComponentListener(
             object : ComponentAdapter() {

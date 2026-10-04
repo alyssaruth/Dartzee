@@ -11,10 +11,10 @@ private val darkGreen = Color.decode("#39AD48")
 
 private val dartboardColours =
     ColourWrapper(
-        Color.GREEN,
+        darkGreen,
         darkRed,
         darkRed,
-        Color.RED,
+        darkRed,
         darkGreen,
         darkGreen,
         darkRed,
@@ -26,7 +26,7 @@ private val dartboardColours =
 data class ChristmasDartboardPainter(override val font: Font = getBaseFont()) : IDartboardPainter {
     override val outerDartboardColour: Color = Color.decode("#385025")
     override val missedBoardColour: Color = DartsColour.TRANSPARENT
-    override val edgeColour = null
+    override val edgeColour: Color = Color.BLACK
 
     private val baubleColours = listOf(gold, Color.decode("#C0C0C0"), Color.red)
 

@@ -10,7 +10,6 @@ import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.stats.overall.SimplifiedLeaderboardScreen
 import dartzee.screen.sync.SyncManagementScreen
-import dartzee.theme.ChristmasDartboardFlasher
 import dartzee.theme.getMenuFont
 import dartzee.theme.themedIcon
 import dartzee.utils.DARTS_VERSION_NUMBER
@@ -37,8 +36,6 @@ class MenuScreen : EmbeddedScreen() {
     private val btnSyncSummary = JButton("Sync Setup")
     private val btnGameReport = JButton("Game Report")
     private val lblVersion = LinkLabel("Dartzee $DARTS_VERSION_NUMBER", ::linkClicked)
-
-    private val flasher = ChristmasDartboardFlasher(dartboard)
 
     init {
         layout = null
@@ -185,11 +182,10 @@ class MenuScreen : EmbeddedScreen() {
     }
 
     private fun linkClicked() {
-        //        changeLog.run {
-        //            setLocationRelativeTo(this)
-        //            isVisible = true
-        //        }
-        flasher.toggleMode()
+        changeLog.run {
+            setLocationRelativeTo(this)
+            isVisible = true
+        }
     }
 
     private fun newGame() {

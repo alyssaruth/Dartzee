@@ -1,5 +1,6 @@
 package dartzee.theme
 
+import dartzee.core.util.toRomanNumerals
 import dartzee.game.GameType
 import dartzee.screen.animation.Animation
 import dartzee.screen.animation.DartScoreTrigger
@@ -39,6 +40,7 @@ val Themes.CHRISTMAS: Theme
             festivalInfo = FestivalInfo(::findChristmas, "Will next pop up"),
             // unlockDate = LocalDate.of(2026, Month.DECEMBER, 1),
             menuAnimation = Snowfall(),
+            resultConverter = { toRomanNumerals(it) + " " },
         )
 
 private fun findChristmas(year: Int) =
