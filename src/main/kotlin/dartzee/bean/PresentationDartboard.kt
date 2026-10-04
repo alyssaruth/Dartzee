@@ -259,23 +259,37 @@ open class PresentationDartboard(
     private fun paintScoreLabels(g: Graphics2D) {
         if (!renderScoreLabels) return
 
+        repaintScoreLabels(colourWrapper, g)
+    }
+
+    fun repaintScoreLabels(wrapper: IDartboardPainter, g: Graphics2D? = null) {
+        val graphics = g ?: lastPaintImage?.graphics as? Graphics2D ?: return
+
         val radius = computeRadius()
         val outerRadius = UPPER_BOUND_OUTSIDE_BOARD_RATIO * radius
         val lblHeight = ((outerRadius - radius) / 2).roundToInt()
 
-        (1..20).forEach { paintScoreLabel(it, g, lblHeight) }
+        (1..20).forEach { paintScoreLabel(it, graphics, lblHeight, wrapper) }
     }
 
-    private fun paintScoreLabel(score: Int, g: Graphics2D, lblHeight: Int) {
+    private fun paintScoreLabel(
+        score: Int,
+        g: Graphics2D,
+        lblHeight: Int,
+        colourWrapper: IDartboardPainter,
+    ) {
         val angle = getAnglesForScore(score).toList().average()
         val radiusForLabel = computeRadius() + lblHeight
         val avgPoint = translatePoint(computeCenter(), radiusForLabel, angle)
 
+        g.color = colourWrapper.outerDartboardColour
+        g.fillRect(avgPoint.x - width / 30, avgPoint.y - lblHeight / 2, width / 15, lblHeight)
+
         paintLabel(
             g,
             avgPoint,
-            lblHeight * 2,
-            lblHeight * 2,
+            lblHeight,
+            lblHeight,
             colourWrapper.font,
             colourWrapper.getFontColour(score),
             score.toString(),

@@ -40,7 +40,7 @@ data class Theme(
     val name = id.name
     private val resourcePath = name.lowercase()
     val font = fontForResource("/theme/$resourcePath/font.ttf")
-    private val dartboardFont: Font?
+    val dartboardFont: Font?
         get() = fontForResource("/theme/$resourcePath/dartboard.ttf") ?: font
 
     val banner: SVGDocument?

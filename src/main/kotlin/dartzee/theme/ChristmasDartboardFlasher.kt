@@ -4,6 +4,7 @@ import dartzee.bean.PresentationDartboard
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.utils.getAllNonMissSegments
+import dartzee.utils.hmScoreToOrdinal
 import dartzee.utils.isEven
 import dartzee.utils.numberOrder
 import java.awt.Dimension
@@ -16,9 +17,11 @@ import javax.swing.SwingUtilities
 
 enum class FlashMode {
     ALTERNATE_SLOW,
-    ALL_FAST,
     CIRCUIT,
+    OUT_AND_IN,
+    ALL_FAST,
     DOUBLE_CIRCUIT,
+    ALL_ON,
 }
 
 class ChristmasDartboardFlasher(private val dartboard: PresentationDartboard) : ActionListener {
@@ -66,7 +69,10 @@ class ChristmasDartboardFlasher(private val dartboard: PresentationDartboard) : 
     private fun flashDartboard() {
         step = (step + 1) % 20 // 0-19
 
-        val wrapper = ChristmasDartboardPainter()
+        val litNumbers = (1..20).filter { isNumberLit(it, mode, step) }
+        val wrapper =
+            ChristmasDartboardPainter(litNumbers = litNumbers)
+                .withFont(Themes.CHRISTMAS.dartboardFont!!)
         val overrides =
             getAllNonMissSegments()
                 .filter { it.score == 25 || it.getMultiplier() > 1 }
@@ -74,7 +80,24 @@ class ChristmasDartboardFlasher(private val dartboard: PresentationDartboard) : 
                 .associateWith { wrapper.getFlashColour(it) }
 
         dartboard.overrideSegmentColours(overrides)
+        dartboard.repaintScoreLabels(wrapper)
     }
+
+    private fun isNumberLit(number: Int, mode: FlashMode, step: Int): Boolean =
+        when (mode) {
+            FlashMode.ALTERNATE_SLOW -> hmScoreToOrdinal[number] == step < 10
+            FlashMode.ALL_FAST -> step % 4 == 0 || step % 4 == 1
+            FlashMode.CIRCUIT ->
+                numberOrder[step] == number || numberOrder[(20 - step) % 20] == number
+            FlashMode.DOUBLE_CIRCUIT -> {
+                val targets = listOf(step / 2, (20 - (step / 2)) % 20)
+                val allTargets =
+                    targets.flatMap { listOf(numberOrder[it], numberOrder[(it + 10) % 20]) }
+                allTargets.contains(number)
+            }
+            FlashMode.OUT_AND_IN -> step in listOf(0, 1, 18, 19)
+            FlashMode.ALL_ON -> true
+        }
 
     private fun isLit(segment: DartboardSegment, mode: FlashMode, step: Int): Boolean =
         when (mode) {
@@ -98,5 +121,15 @@ class ChristmasDartboardFlasher(private val dartboard: PresentationDartboard) : 
                 litScores.contains(segment.score) ||
                     segment.score == 25 && (litScores.contains(20) || litScores.contains(6))
             }
+            FlashMode.OUT_AND_IN ->
+                when (step) {
+                    in listOf(0, 1, 18, 19) -> false
+                    in listOf(2, 3, 16, 17) -> segment.isDoubleExcludingBull()
+                    in listOf(4, 5, 14, 15) -> segment.getMultiplier() == 3
+                    in listOf(6, 7, 12, 13) -> segment.getMultiplier() == 1 && segment.score == 25
+                    // in listOf(8, 9, 10, 11)
+                    else -> segment.getMultiplier() == 2 && segment.score == 25
+                }
+            FlashMode.ALL_ON -> true
         }
 }
