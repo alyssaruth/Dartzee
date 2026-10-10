@@ -58,7 +58,7 @@ val Themes.HALLOWEEN: Theme
             bannerTextRenderer = bannerTextRenderer,
             animations = halloweenAnimations.toMap(),
             festivalInfo = FestivalInfo(::findHalloween, "Next haunting will start"),
-            unlockDate = LocalDate.of(2026, Month.OCTOBER, 24),
+            // unlockDate = LocalDate.of(2026, Month.OCTOBER, 24),
         )
 
 private fun findHalloween(year: Int): Pair<LocalDate, LocalDate> =

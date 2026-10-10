@@ -169,6 +169,38 @@ class ThemeUtilsTest : AbstractTest() {
     }
 
     @Test
+    fun `Should pick christmas for the relevant dates`() {
+        testPickTheme(LocalDate.of(2026, Month.NOVEMBER, 30)) shouldBe Themes.DARTZEE
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 1)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 2)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 3)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 4)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 5)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 6)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 7)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 8)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 9)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 10)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 11)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 12)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 13)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 14)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 15)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 16)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 17)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 18)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 19)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 20)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 21)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 22)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 23)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 24)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 25)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 26)) shouldBe Themes.CHRISTMAS
+        testPickTheme(LocalDate.of(2026, Month.DECEMBER, 27)) shouldBe Themes.DARTZEE
+    }
+
+    @Test
     fun `Should pick Pride in June`() {
         testPickTheme(LocalDate.of(2026, Month.MAY, 31)) shouldBe Themes.DARTZEE
         testPickTheme(LocalDate.of(2026, Month.JUNE, 1)) shouldBe Themes.PRIDE

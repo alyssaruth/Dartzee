@@ -34,12 +34,17 @@ data class Theme(
     val dartFactory: DartFactory? = null,
     val buttonOverrideColours: Map<String, Color> = emptyMap(),
     val customIcons: Map<String, () -> URL?> = emptyMap(),
+    val resultConverter: ((Int) -> String)? = null,
+    val menuAnimation: AbstractMenuAnimation? = null,
 ) {
     val name = id.name
     private val resourcePath = name.lowercase()
     val font = fontForResource("/theme/$resourcePath/font.ttf")
-    private val dartboardFont: Font?
+    val dartboardFont: Font?
         get() = fontForResource("/theme/$resourcePath/dartboard.ttf") ?: font
+
+    val bannerFont: Font?
+        get() = fontForResource("/theme/$resourcePath/banner.ttf") ?: font
 
     val banner: SVGDocument?
         get() = svgForResource("/theme/$resourcePath/banner.svg")

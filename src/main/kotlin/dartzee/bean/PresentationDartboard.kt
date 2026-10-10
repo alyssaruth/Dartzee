@@ -10,10 +10,10 @@ import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.getSegmentStatus
 import dartzee.theme.GREY_COLOUR_WRAPPER
 import dartzee.theme.IDartboardPainter
-import dartzee.theme.getBaseFont
 import dartzee.utils.DurationTimer
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
+import dartzee.utils.ResourceCache
 import dartzee.utils.UPPER_BOUND_DOUBLE_RATIO
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.computeEdgePoints
@@ -67,6 +67,15 @@ open class PresentationDartboard(
         val y = pt.y.coerceIn(0, height - 1)
 
         pt.setLocation(x, y)
+    }
+
+    fun overrideSegmentColours(segments: Map<DartboardSegment, Color>) {
+        dirtySegments.addAll(overriddenSegmentColours.keys)
+        overriddenSegmentColours.clear()
+        overriddenSegmentColours.putAll(segments)
+        dirtySegments.addAll(segments.keys)
+
+        repaint()
     }
 
     fun overrideSegmentColour(segment: DartboardSegment, colour: Color) {
@@ -147,7 +156,7 @@ open class PresentationDartboard(
                 details.textCenter,
                 details.fontHeight,
                 svgBounds.height,
-                getBaseFont(),
+                InjectedThings.theme?.bannerFont ?: ResourceCache.BASE_FONT,
                 theme.fontColor,
                 details.text,
                 details.maxWidth,
@@ -250,17 +259,31 @@ open class PresentationDartboard(
     private fun paintScoreLabels(g: Graphics2D) {
         if (!renderScoreLabels) return
 
+        repaintScoreLabels(colourWrapper, g)
+    }
+
+    fun repaintScoreLabels(wrapper: IDartboardPainter, g: Graphics2D? = null) {
+        val graphics = g ?: lastPaintImage?.graphics as? Graphics2D ?: return
+
         val radius = computeRadius()
         val outerRadius = UPPER_BOUND_OUTSIDE_BOARD_RATIO * radius
         val lblHeight = ((outerRadius - radius) / 2).roundToInt()
 
-        (1..20).forEach { paintScoreLabel(it, g, lblHeight) }
+        (1..20).forEach { paintScoreLabel(it, graphics, lblHeight, wrapper) }
     }
 
-    private fun paintScoreLabel(score: Int, g: Graphics2D, lblHeight: Int) {
+    private fun paintScoreLabel(
+        score: Int,
+        g: Graphics2D,
+        lblHeight: Int,
+        colourWrapper: IDartboardPainter,
+    ) {
         val angle = getAnglesForScore(score).toList().average()
         val radiusForLabel = computeRadius() + lblHeight
         val avgPoint = translatePoint(computeCenter(), radiusForLabel, angle)
+
+        g.color = colourWrapper.outerDartboardColour
+        g.fillRect(avgPoint.x - width / 30, avgPoint.y - lblHeight / 2, width / 15, lblHeight)
 
         paintLabel(
             g,
@@ -268,7 +291,7 @@ open class PresentationDartboard(
             lblHeight,
             lblHeight,
             colourWrapper.font,
-            colourWrapper.fontColor,
+            colourWrapper.getFontColour(score),
             score.toString(),
         )
     }

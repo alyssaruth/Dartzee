@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://web.resource.org/cc/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg" id="svg2" viewBox="0 0 684.69 104.02" version="1.0">
+  <defs id="defs4">
+    <linearGradient id="linearGradient5356" y2="60.621" gradientUnits="userSpaceOnUse" x2="427.44" y1="232.35" x1="469.05">
+      <stop id="stop3388" stop-color="#8f5902" offset="0"/>
+      <stop id="stop3390" stop-color="#c17d11" offset="1"/>
+    </linearGradient>
+  </defs>
+  <g id="layer1" transform="translate(-21.549 -8.6094)">
+    <path id="path2160" d="m33.03 10.76c101.83-0.9212 201.9 11.029 305.54 7.316 52.01 0.535 112.26-7.756 158.87 4.633 30.45 8.096 197.33-17.421 198.69 3.317-6.9 34.758 26.96 74.484-8.4 72.989-35.33-1.494-78.74 13.045-145.78 11.385-67.08-1.66-94.17-10.746-152.02-8.22-57.91 2.52-92.43-1.69-115.89 0.1-23.36 1.78-74.67-3.233-133.62-0.28-58.95 2.96-74.316-1.42-103.48-6.966-14.583-2.772 7.585-20.07-1.108-45.226-8.144-23.568-21.281-24.797-2.802-39.048z" fill-rule="evenodd" stroke="#2e3436" stroke-width="4.2" fill="url(#linearGradient5356)"/>
+    <path id="path5360" d="m41.416 33.313c60.614-11.111 45.277 1.01 116.16 1.01 32.33 0 42.43-9.091 42.43-9.091" transform="translate(21.549 8.6094)" stroke="#2e3436" stroke-width="2.1" fill="none"/>
+    <path id="path6331" d="m260.57 70.712c11.11 1.01-13.8 30.958 54.54 12.122 128.29-35.356 116.17-8.081 116.17-8.081" stroke="#2e3436" stroke-width="2.1" fill="none"/>
+    <path id="path8294" d="m266.16 42.417c-9.28-1.697-11.66-0.175-15.36 0.893-7.99 2.308-1.87 3.606 0.09 19.107 1.41 11.158 3.73 13.461 9.38 11.25 6.39-2.505 15.71-4.465 14.55-6.607-1.16-2.143 0.61-16.091 0.54-19.018-0.04-1.661-9.11-5.447-9.2-5.625z" fill-rule="evenodd" fill-opacity=".75" transform="translate(21.549 8.6094)" fill="#8f5902"/>
+    <path id="path6339" d="m288.23 62.146c10.1 12.122-17.17 13.132-10.1 0s20.2-15.152 20.2 0c0 5.051-9.03 32.003-21.21 16.415-17.49-22.377 1.01-30.557 1.01-30.557" stroke="#2e3436" stroke-width="2.1" fill="none"/>
+    <path id="path7319" d="m308.15 61.422c29.01 2.193 42.72-19.604 61.17-24.894l18.45-5.29" stroke="#2e3436" stroke-width="2.1" fill="none"/>
+    <path id="path8290" d="m569.96 80.948c27.42 9.701 46.35-7.751 65.55-8.032l19.19-0.281" stroke="#2e3436" stroke-width="2.1" fill="none"/>
+    <path id="path8297" d="m445.86 92.097c32.51-17.076 60.33-4.452 97.08-21.791 16.62-7.842 17.79-14.745 41.99-23.508 18.99-6.879 43.39-2.702 43.39-2.702" stroke="#2e3436" stroke-width="2.1" fill="none"/>
+    <path id="path9268" d="m105.06 59.577c29.29-7.071 35.35 7.071 58.58 7.071 23.24 0 38.39 5.051 38.39 5.051" transform="translate(21.549 8.6094)" stroke="#2e3436" stroke-width="2.1" fill="none"/>
+  </g>
+  <metadata>
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>Wood Plank</dc:title>
+        <dc:date>2008-10-31T00:20:22</dc:date>
+        <dc:description>A simple clipart of a wooden board.</dc:description>
+        <dc:source>http://openclipart.org/detail/19875/wood-plank-by-iammisc</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>iammisc</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>board</rdf:li>
+            <rdf:li>building</rdf:li>
+            <rdf:li>cartoon</rdf:li>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+            <rdf:li>color</rdf:li>
+            <rdf:li>construction</rdf:li>
+            <rdf:li>image</rdf:li>
+            <rdf:li>media</rdf:li>
+            <rdf:li>outline</rdf:li>
+            <rdf:li>plank</rdf:li>
+            <rdf:li>public domain</rdf:li>
+            <rdf:li>svg</rdf:li>
+            <rdf:li>tree</rdf:li>
+            <rdf:li>wood</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>
