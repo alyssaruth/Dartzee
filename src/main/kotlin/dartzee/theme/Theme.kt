@@ -43,6 +43,9 @@ data class Theme(
     val dartboardFont: Font?
         get() = fontForResource("/theme/$resourcePath/dartboard.ttf") ?: font
 
+    val bannerFont: Font?
+        get() = fontForResource("/theme/$resourcePath/banner.ttf") ?: font
+
     val banner: SVGDocument?
         get() = svgForResource("/theme/$resourcePath/banner.svg")
 

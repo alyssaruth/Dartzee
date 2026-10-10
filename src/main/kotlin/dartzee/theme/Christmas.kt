@@ -6,7 +6,6 @@ import dartzee.screen.animation.Animation
 import dartzee.screen.animation.DartScoreTrigger
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
-import dartzee.screen.animation.PlayerVictory
 import java.awt.Color
 import java.time.LocalDate
 import java.time.Month
@@ -14,13 +13,14 @@ import java.time.Month
 val gold = Color.decode("#f2c49b")
 
 private val animations: List<Pair<IAnimationTrigger, IAnimation>> =
-    listOf(PlayerVictory to Animation("thats-all-folks", "/theme/easter/horrific/bugs-bunny.png")) +
-        GameType.values().flatMap { gameType ->
-            listOf(
-                DartScoreTrigger(gameType, 0) to
-                    Animation("egg-crack", "/theme/easter/horrific/egg-crack.png")
-            )
-        }
+    GameType.values().flatMap { gameType ->
+        listOf(
+            DartScoreTrigger(gameType, 3) to
+                Animation("hans3", "/theme/christmas/horrific/hans-gruber.png"),
+            DartScoreTrigger(gameType, 4) to
+                Animation("hans4", "/theme/christmas/horrific/hans-gruber.png"),
+        )
+    }
 
 val Themes.CHRISTMAS: Theme
     get() =
