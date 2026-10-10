@@ -36,6 +36,7 @@ data class Theme(
     val customIcons: Map<String, () -> URL?> = emptyMap(),
     val resultConverter: ((Int) -> String)? = null,
     val menuAnimation: AbstractMenuAnimation? = null,
+    val dartboardFlasher: Boolean = false,
 ) {
     val name = id.name
     private val resourcePath = name.lowercase()

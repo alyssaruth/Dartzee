@@ -58,9 +58,7 @@ data class ColourWrapper(
         singleColour,
     )
 
-    override fun getFontColour(score: Int): Color {
-        return fontColor
-    }
+    override fun getFontColour(score: Int) = fontColor
 
     override fun withFont(font: Font) = copy(font = font)
 

@@ -6,6 +6,7 @@ import dartzee.logging.KEY_DURATION
 import dartzee.`object`.ComputedPoint
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.IDartboard
+import dartzee.`object`.SegmentType
 import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.getSegmentStatus
 import dartzee.theme.GREY_COLOUR_WRAPPER
@@ -177,9 +178,11 @@ open class PresentationDartboard(
     }
 
     private fun paintSegment(segment: DartboardSegment, bi: BufferedImage) {
-        val colour = overriddenSegmentColours[segment] ?: defaultColourForSegment(segment)
-        colourSegment(segment, colour, bi)
+        colourSegment(segment, colourForSegment(segment), bi)
     }
+
+    private fun colourForSegment(segment: DartboardSegment): Color =
+        overriddenSegmentColours[segment] ?: defaultColourForSegment(segment)
 
     protected fun defaultColourForSegment(segment: DartboardSegment): Color {
         val default = colourWrapper.getColour(segment)
@@ -282,7 +285,7 @@ open class PresentationDartboard(
         val radiusForLabel = computeRadius() + lblHeight
         val avgPoint = translatePoint(computeCenter(), radiusForLabel, angle)
 
-        g.color = colourWrapper.outerDartboardColour
+        g.color = colourForSegment(DartboardSegment(SegmentType.MISS, 20))
         g.fillRect(avgPoint.x - width / 30, avgPoint.y - lblHeight / 2, width / 15, lblHeight)
 
         paintLabel(

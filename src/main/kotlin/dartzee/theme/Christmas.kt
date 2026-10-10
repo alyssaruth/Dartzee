@@ -10,7 +10,7 @@ import java.awt.Color
 import java.time.LocalDate
 import java.time.Month
 
-val gold = Color.decode("#f2c49b")
+val gold: Color = Color.decode("#f2c49b")
 
 private val animations: List<Pair<IAnimationTrigger, IAnimation>> =
     GameType.values().flatMap { gameType ->
@@ -41,6 +41,7 @@ val Themes.CHRISTMAS: Theme
             // unlockDate = LocalDate.of(2026, Month.DECEMBER, 1),
             menuAnimation = Snowfall(),
             resultConverter = { toRomanNumerals(it) + " " },
+            dartboardFlasher = true,
         )
 
 private fun findChristmas(year: Int) =
