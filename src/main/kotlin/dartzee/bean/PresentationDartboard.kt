@@ -7,6 +7,7 @@ import dartzee.`object`.ComputedPoint
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.IDartboard
 import dartzee.`object`.SegmentType
+import dartzee.screen.game.SegmentStatus
 import dartzee.screen.game.SegmentStatuses
 import dartzee.screen.game.getSegmentStatus
 import dartzee.theme.GREY_COLOUR_WRAPPER
@@ -40,7 +41,7 @@ open class PresentationDartboard(
     private val renderThemeBanner: Boolean = false,
 ) : JComponent(), IDartboard {
     var segmentStatuses: SegmentStatuses? = null
-    private val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
+    protected val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
     private val dirtySegments = mutableSetOf<DartboardSegment>()
     private var lastPaintImage: BufferedImage? = null
 
@@ -70,14 +71,25 @@ open class PresentationDartboard(
         pt.setLocation(x, y)
     }
 
-    fun overrideSegmentColours(segments: Map<DartboardSegment, Color>) {
+    fun overrideScoringSegmentColours(segments: Map<DartboardSegment, Color>) {
         dirtySegments.addAll(overriddenSegmentColours.keys)
         overriddenSegmentColours.clear()
-        overriddenSegmentColours.putAll(segments)
-        dirtySegments.addAll(segments.keys)
+
+        val scoring =
+            segments.filter {
+                segmentStatuses == null ||
+                    segmentStatuses.getSegmentStatus(it.key) == SegmentStatus.SCORING
+            }
+
+        overriddenSegmentColours.putAll(scoring)
+        dirtySegments.addAll(scoring.keys)
+
+        resolveClashingOverrides()
 
         repaint()
     }
+
+    open fun resolveClashingOverrides() {}
 
     fun overrideSegmentColour(segment: DartboardSegment, colour: Color) {
         overriddenSegmentColours[segment] = colour
@@ -197,7 +209,9 @@ open class PresentationDartboard(
 
     private fun colourSegment(segment: DartboardSegment, color: Color, bi: BufferedImage) {
         if (segment.isMiss()) {
-            paintOuterRing(bi.createGraphics(), color)
+            val g = bi.createGraphics()
+            paintOuterRing(g, color)
+            paintScoreLabels(g)
             return
         }
 
@@ -231,8 +245,6 @@ open class PresentationDartboard(
         g.paint = color
         val ring = createOuterRing()
         g.fill(ring)
-
-        paintScoreLabels(g)
     }
 
     private fun createOuterRing(): Shape {
@@ -259,20 +271,22 @@ open class PresentationDartboard(
         return area
     }
 
-    private fun paintScoreLabels(g: Graphics2D) {
+    private fun paintScoreLabels(g: Graphics2D, wrapper: IDartboardPainter = colourWrapper) {
         if (!renderScoreLabels) return
-
-        repaintScoreLabels(colourWrapper, g)
-    }
-
-    fun repaintScoreLabels(wrapper: IDartboardPainter, g: Graphics2D? = null) {
-        val graphics = g ?: lastPaintImage?.graphics as? Graphics2D ?: return
 
         val radius = computeRadius()
         val outerRadius = UPPER_BOUND_OUTSIDE_BOARD_RATIO * radius
         val lblHeight = ((outerRadius - radius) / 2).roundToInt()
 
-        (1..20).forEach { paintScoreLabel(it, graphics, lblHeight, wrapper) }
+        (1..20).forEach { paintScoreLabel(it, g, lblHeight, wrapper) }
+    }
+
+    fun repaintScoreLabels(wrapper: IDartboardPainter) {
+        val graphics = lastPaintImage?.graphics as? Graphics2D ?: return
+        val outerRingColour = colourForSegment(DartboardSegment(SegmentType.MISS, 20))
+
+        paintOuterRing(graphics, outerRingColour)
+        paintScoreLabels(graphics, wrapper)
     }
 
     private fun paintScoreLabel(
@@ -285,8 +299,9 @@ open class PresentationDartboard(
         val radiusForLabel = computeRadius() + lblHeight
         val avgPoint = translatePoint(computeCenter(), radiusForLabel, angle)
 
-        g.color = colourForSegment(DartboardSegment(SegmentType.MISS, 20))
-        g.fillRect(avgPoint.x - width / 30, avgPoint.y - lblHeight / 2, width / 15, lblHeight)
+        //        g.color = colourForSegment(DartboardSegment(SegmentType.MISS, 20))
+        //        g.fillRect(avgPoint.x - width / 30, avgPoint.y - lblHeight / 2, width / 15,
+        // lblHeight)
 
         paintLabel(
             g,

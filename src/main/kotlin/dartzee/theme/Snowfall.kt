@@ -143,15 +143,17 @@ class Snowfall : AbstractMenuAnimation() {
 
         peaks.forEach { x ->
             val current = snowHeap.getValue(x)
-            snowHeap[x] = current - 1
 
             val left = snowHeap.getSnowCount(x - 1)
             val right = snowHeap.getSnowCount(x + 1)
 
+            val step = (current - minOf(left, right)) / 2
+
+            snowHeap[x] = current - step
             if (left > right) {
-                snowHeap[x + 1] = right + 1
+                snowHeap[x + 1] = right + step
             } else {
-                snowHeap[x - 1] = left + 1
+                snowHeap[x - 1] = left + step
             }
         }
     }
