@@ -3,6 +3,7 @@ package dartzee.theme
 import dartzee.core.util.toRomanNumerals
 import dartzee.game.GameType
 import dartzee.screen.animation.Animation
+import dartzee.screen.animation.CompositeAnimation
 import dartzee.screen.animation.DartScoreTrigger
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
@@ -12,6 +13,14 @@ import java.time.Month
 
 val gold: Color = Color.decode("#f2c49b")
 
+private val humbugAnimation =
+    CompositeAnimation(
+        listOf(Animation("humbug-muppet", "/theme/christmas/horrific/scrooge-muppet.png")) +
+            (1..2).map {
+                Animation("humbug-stewart-$it", "/theme/christmas/horrific/scrooge-stewart.png")
+            }
+    )
+
 private val animations: List<Pair<IAnimationTrigger, IAnimation>> =
     GameType.values().flatMap { gameType ->
         listOf(
@@ -19,6 +28,7 @@ private val animations: List<Pair<IAnimationTrigger, IAnimation>> =
                 Animation("hans3", "/theme/christmas/horrific/hans-gruber.png"),
             DartScoreTrigger(gameType, 4) to
                 Animation("hans4", "/theme/christmas/horrific/hans-gruber.png"),
+            DartScoreTrigger(gameType, 0) to humbugAnimation,
         )
     }
 
