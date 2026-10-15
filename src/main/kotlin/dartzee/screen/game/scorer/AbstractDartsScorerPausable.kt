@@ -73,7 +73,7 @@ abstract class AbstractDartsScorerPausable<PlayerState : AbstractPlayerState<Pla
         }
 
         val dartCount = state.getScoreSoFar()
-        lblResult.text = "$dartCount Darts"
+        lblResult.text = "${convertResultNumeric(dartCount)} Darts"
 
         if (participant.finishingPosition == -1) {
             return

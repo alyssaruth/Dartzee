@@ -56,6 +56,7 @@ fun themeMap() =
             Themes.BIRTHDAY,
             Themes.DARTZEE,
             Themes.PRIDE,
+            Themes.CHRISTMAS,
         )
         .associateBy { it.id }
 
@@ -119,6 +120,10 @@ private fun nextDue(now: LocalDate, finder: FestivalFinder): LocalDate {
 }
 
 fun pickTheme(): Theme? {
+    //    if (DartsClient.devMode) {
+    //        return Themes.CHRISTMAS
+    //    }
+
     if (InjectedThings.birthdayInfo != null) {
         return makeBirthdayTheme()
     }

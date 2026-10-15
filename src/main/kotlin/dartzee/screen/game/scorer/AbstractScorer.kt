@@ -81,4 +81,7 @@ abstract class AbstractScorer(val participant: IWrappedParticipant) : JPanel(), 
     protected fun updateResultColourForPosition(pos: Int) {
         DartsColour.setFgAndBgColoursForPosition(lblResult, pos)
     }
+
+    protected fun convertResultNumeric(result: Int) =
+        InjectedThings.theme?.resultConverter?.invoke(result) ?: "$result"
 }
