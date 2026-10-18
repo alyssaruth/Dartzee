@@ -76,9 +76,9 @@ open class PresentationDartboard(
         overriddenSegmentColours.clear()
 
         val scoring =
-            segments.filter {
+            segments.filter { (segment, _) ->
                 segmentStatuses == null ||
-                    segmentStatuses.getSegmentStatus(it.key) == SegmentStatus.SCORING
+                    segmentStatuses.getSegmentStatus(segment) == SegmentStatus.SCORING
             }
 
         overriddenSegmentColours.putAll(scoring)
@@ -298,10 +298,6 @@ open class PresentationDartboard(
         val angle = getAnglesForScore(score).toList().average()
         val radiusForLabel = computeRadius() + lblHeight
         val avgPoint = translatePoint(computeCenter(), radiusForLabel, angle)
-
-        //        g.color = colourForSegment(DartboardSegment(SegmentType.MISS, 20))
-        //        g.fillRect(avgPoint.x - width / 30, avgPoint.y - lblHeight / 2, width / 15,
-        // lblHeight)
 
         paintLabel(
             g,

@@ -5,6 +5,7 @@ import com.github.weisj.jsvg.parser.SVGLoader
 import dartzee.bean.DartLabel
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.logging.CODE_AUDIO_ERROR
+import dartzee.`object`.DartsClient
 import dartzee.preferences.Preferences
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.logger
@@ -120,9 +121,9 @@ private fun nextDue(now: LocalDate, finder: FestivalFinder): LocalDate {
 }
 
 fun pickTheme(): Theme? {
-    //    if (DartsClient.devMode) {
-    //        return Themes.CHRISTMAS
-    //    }
+    if (DartsClient.devMode) {
+        return Themes.CHRISTMAS
+    }
 
     if (InjectedThings.birthdayInfo != null) {
         return makeBirthdayTheme()

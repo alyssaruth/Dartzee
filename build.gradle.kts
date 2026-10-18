@@ -30,7 +30,6 @@ detekt {
 ktfmt { kotlinLangStyle() }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
     implementation("com.miglayout:miglayout-swing:11.0")
     implementation("org.jfree:jfreechart:1.5.4")

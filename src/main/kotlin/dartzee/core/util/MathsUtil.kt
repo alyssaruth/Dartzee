@@ -2,6 +2,7 @@ package dartzee.core.util
 
 import kotlin.math.ceil
 import kotlin.math.pow
+import kotlin.math.roundToInt
 
 fun Int.ceilDiv(other: Int) = ceil(this.toDouble() / other).toInt()
 
@@ -18,7 +19,8 @@ fun <T> Pair<Double, Double>.mapStepped(stepSize: Double, mapFunction: (Double) 
 }
 
 tailrec fun toRomanNumerals(value: Int, numeralsSoFar: String = ""): String =
-    if (value >= 1000) toRomanNumerals(value - 1000, numeralsSoFar + "M")
+    if (value < 1) numeralsSoFar.ifEmpty { "-" }
+    else if (value >= 1000) toRomanNumerals(value - 1000, numeralsSoFar + "M")
     else if (value >= 900) toRomanNumerals(value - 900, numeralsSoFar + "CM")
     else if (value >= 500) toRomanNumerals(value - 500, numeralsSoFar + "D")
     else if (value >= 400) toRomanNumerals(value - 400, numeralsSoFar + "CD")
@@ -29,14 +31,13 @@ tailrec fun toRomanNumerals(value: Int, numeralsSoFar: String = ""): String =
     else if (value >= 10) toRomanNumerals(value - 10, numeralsSoFar + "X")
     else if (value >= 9) numeralsSoFar + "IX"
     else if (value >= 5) toRomanNumerals(value - 5, numeralsSoFar + "V")
-    else if (value >= 4) numeralsSoFar + "IV"
-    else if (value >= 1) toRomanNumerals(value - 1, numeralsSoFar + "I") else numeralsSoFar
+    else if (value >= 4) numeralsSoFar + "IV" else toRomanNumerals(value - 1, numeralsSoFar + "I")
 
 object MathsUtil {
     fun round(number: Double, decimalPlaces: Int): Double {
         val powerOfTen = 10.0.pow(decimalPlaces.toDouble())
 
-        val rounded = Math.round(powerOfTen * number)
+        val rounded = (powerOfTen * number).roundToInt()
 
         return rounded / powerOfTen
     }

@@ -8,6 +8,8 @@ import dartzee.screen.animation.DartScoreTrigger
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
 import java.awt.Color
+import java.awt.Point
+import java.awt.Rectangle
 import java.time.LocalDate
 import java.time.Month
 
@@ -38,6 +40,27 @@ private val animations: List<Pair<IAnimationTrigger, IAnimation>> =
         )
     }
 
+private fun getBannerDetails(
+    svgBounds: Rectangle,
+    dartboardCenter: Point,
+): List<BannerRenderDetails> {
+    val topBanner =
+        BannerRenderDetails(
+            "Merry",
+            (svgBounds.height * 0.15).toInt(),
+            Point(dartboardCenter.x, dartboardCenter.y - (0.05 * svgBounds.height).toInt()),
+        )
+
+    val bottomBanner =
+        BannerRenderDetails(
+            "Christmas!",
+            (svgBounds.height * 0.15).toInt(),
+            Point(dartboardCenter.x, dartboardCenter.y + (0.1 * svgBounds.height).toInt()),
+        )
+
+    return listOf(topBanner, bottomBanner)
+}
+
 val Themes.CHRISTMAS: Theme
     get() =
         Theme(
@@ -52,7 +75,7 @@ val Themes.CHRISTMAS: Theme
             dartboardColours = ChristmasDartboardPainter(),
             menuFontSize = 24f,
             animations = animations.toMap(),
-            bannerTextRenderer = simpleBannerRenderer(ThemeId.Christmas),
+            bannerTextRenderer = ::getBannerDetails,
             festivalInfo = FestivalInfo(::findChristmas, "Will next pop up"),
             // unlockDate = LocalDate.of(2026, Month.DECEMBER, 1),
             menuAnimation = Snowfall(),

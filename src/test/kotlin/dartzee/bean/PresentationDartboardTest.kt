@@ -9,6 +9,7 @@ import dartzee.`object`.SegmentType
 import dartzee.screen.game.SegmentStatuses
 import dartzee.theme.BIRTHDAY
 import dartzee.theme.BirthdayInfo
+import dartzee.theme.CHRISTMAS
 import dartzee.theme.ColourWrapper
 import dartzee.theme.DARTZEE
 import dartzee.theme.DEFAULT_COLOUR_WRAPPER
@@ -21,6 +22,7 @@ import dartzee.theme.Themes
 import dartzee.theme.WIREFRAME_COLOUR_WRAPPER
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments
+import dartzee.utils.isEven
 import io.github.alyssaruth.swingtest.shouldMatchImage
 import io.kotest.matchers.shouldBe
 import java.awt.Color
@@ -101,6 +103,12 @@ class PresentationDartboardTest : AbstractTest() {
     @Tag("screenshot")
     fun `Should match snapshot - pride`() {
         snapshotTheme(Themes.PRIDE)
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should match snapshot - christmas`() {
+        snapshotTheme(Themes.CHRISTMAS)
     }
 
     @Test
@@ -195,6 +203,44 @@ class PresentationDartboardTest : AbstractTest() {
 
     @Test
     @Tag("screenshot")
+    fun `Should support bulk replacing overridden segment colours`() {
+        val segment = DartboardSegment(SegmentType.OUTER_SINGLE, 11)
+
+        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.overrideSegmentColour(segment, Color.PINK)
+
+        val bulkOverrides =
+            getAllNonMissSegments()
+                .filter { it.isEven() && it.getMultiplier() == 3 }
+                .associateWith { Color.PINK }
+        dartboard.overrideScoringSegmentColours(bulkOverrides)
+
+        dartboard.setBounds(0, 0, 400, 400)
+        dartboard.shouldMatchImage("bulk-override")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should not override non-scoring segments when bulk replacing overridden segment colours`() {
+        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.setBounds(0, 0, 600, 600)
+
+        val scoringSegments = getAllNonMissSegments().filter { listOf(1, 20, 5).contains(it.score) }
+        val validSegments = getAllNonMissSegments().filter { !listOf(19, 3, 17).contains(it.score) }
+        dartboard.updateSegmentStatus(SegmentStatuses(scoringSegments, validSegments))
+
+        val bulkOverrides =
+            getAllNonMissSegments()
+                .filter { it.isEven() && it.getMultiplier() == 3 }
+                .associateWith { Color.PINK }
+        dartboard.overrideScoringSegmentColours(bulkOverrides)
+
+        dartboard.setBounds(0, 0, 400, 400)
+        dartboard.shouldMatchImage("bulk-override-vs-segment-status")
+    }
+
+    @Test
+    @Tag("screenshot")
     fun `Should draw edges with segment statuses set`() {
         val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
         dartboard.setBounds(0, 0, 400, 400)
@@ -215,4 +261,8 @@ class PresentationDartboardTest : AbstractTest() {
         dartboard.updateSegmentStatus(SegmentStatuses(scoringSegments, validSegments))
         dartboard.shouldMatchImage("segment-statuses")
     }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should be able to repaint score labels with a different colour`() {}
 }
