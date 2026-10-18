@@ -13,6 +13,14 @@ import java.time.Month
 
 val gold: Color = Color.decode("#f2c49b")
 
+private val humbugAnimation =
+    CompositeAnimation(
+        listOf(Animation("humbug-muppet", "/theme/christmas/horrific/scrooge-muppet.png")) +
+            (1..2).map {
+                Animation("humbug-stewart-$it", "/theme/christmas/horrific/scrooge-stewart.png")
+            }
+    )
+
 private val numberOneCustomer =
     CompositeAnimation(
         (1..3).map { Animation("number-one-customer$it", "/theme/christmas/horrific/arnold.png") }
@@ -26,6 +34,7 @@ private val animations: List<Pair<IAnimationTrigger, IAnimation>> =
                 Animation("hans3", "/theme/christmas/horrific/hans-gruber.png"),
             DartScoreTrigger(gameType, 4) to
                 Animation("hans4", "/theme/christmas/horrific/hans-gruber.png"),
+            DartScoreTrigger(gameType, 0) to humbugAnimation,
         )
     }
 

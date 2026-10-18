@@ -79,7 +79,7 @@ class ChristmasDartboardFlasher(private val dartboard: PresentationDartboard) : 
                 .filter { isLit(it, mode, step) }
                 .associateWith { wrapper.getFlashColour(it) }
 
-        dartboard.overrideSegmentColours(overrides)
+        dartboard.overrideScoringSegmentColours(overrides)
         dartboard.repaintScoreLabels(wrapper)
     }
 
