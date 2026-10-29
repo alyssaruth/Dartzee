@@ -95,9 +95,8 @@ class ChristmasDartboardFlasher(
                 numberOrder[step] == number || numberOrder[(20 - step) % 20] == number
             FlashMode.DOUBLE_CIRCUIT -> {
                 val targets = listOf(step / 2, (20 - (step / 2)) % 20)
-                val allTargets = targets.flatMap {
-                    listOf(numberOrder[it], numberOrder[(it + 10) % 20])
-                }
+                val allTargets =
+                    targets.flatMap { listOf(numberOrder[it], numberOrder[(it + 10) % 20]) }
                 allTargets.contains(number)
             }
             FlashMode.OUT_AND_IN -> step in listOf(0, 1, 18, 19)
