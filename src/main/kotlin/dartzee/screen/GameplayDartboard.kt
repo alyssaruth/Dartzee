@@ -10,8 +10,10 @@ import dartzee.listener.DartboardListener
 import dartzee.`object`.ComputedPoint
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.SegmentStatuses
+import dartzee.theme.ChristmasDartboardFlasher
 import dartzee.theme.IDartboardPainter
 import dartzee.theme.makeDartLabel
+import dartzee.utils.InjectedThings
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getDartForSegment
 import java.awt.Dimension
@@ -39,6 +41,10 @@ class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromP
         add(dartboard, Integer.valueOf(-1))
 
         dartboard.addMouseListener(this)
+
+        if (InjectedThings.theme?.dartboardFlasher ?: false) {
+            ChristmasDartboardFlasher(dartboard).startFlashing()
+        }
 
         addComponentListener(
             object : ComponentAdapter() {

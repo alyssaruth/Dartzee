@@ -25,6 +25,8 @@ private const val LOWER_BOUND_DOUBLE_RATIO = 0.953
 const val UPPER_BOUND_DOUBLE_RATIO = 1.0
 const val UPPER_BOUND_OUTSIDE_BOARD_RATIO = 1.3
 
+fun DartboardSegment.isEven() = hmScoreToOrdinal[score] ?: false
+
 fun getDartForSegment(segment: DartboardSegment): Dart {
     val score = segment.score
     val multiplier = segment.getMultiplier()

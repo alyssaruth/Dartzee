@@ -31,7 +31,7 @@ class MatchScorer(pt: IWrappedParticipant, private val match: DartsMatchEntity) 
         }
 
         lblResult.isVisible = true
-        lblResult.text = "" + totalScore
+        lblResult.text = convertResultNumeric(totalScore)
 
         // Also update the screen
         tableScores.repaint()

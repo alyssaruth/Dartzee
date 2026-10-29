@@ -18,6 +18,10 @@ class InteractiveDartboard(colourWrapper: IDartboardPainter = getColourWrapperFr
         addMouseMotionListener(this)
     }
 
+    override fun resolveClashingOverrides() {
+        hoveredSegment?.let { overriddenSegmentColours[it] = hoverColour(it) }
+    }
+
     fun highlightDartboard(pt: Point) {
         if (!allowInteraction) {
             return
@@ -38,14 +42,14 @@ class InteractiveDartboard(colourWrapper: IDartboardPainter = getColourWrapperFr
 
         if (newHoveredSegment != null && isValidSegmentForHover(newHoveredSegment)) {
             hoveredSegment = newHoveredSegment
-            overrideSegmentColour(
-                newHoveredSegment,
-                getHighlightedColour(defaultColourForSegment(newHoveredSegment)),
-            )
+            overrideSegmentColour(newHoveredSegment, hoverColour(newHoveredSegment))
         } else {
             hoveredSegment = null
         }
     }
+
+    private fun hoverColour(segment: DartboardSegment) =
+        getHighlightedColour(defaultColourForSegment(segment))
 
     private fun isValidSegmentForHover(segment: DartboardSegment): Boolean {
         val statuses = segmentStatuses
