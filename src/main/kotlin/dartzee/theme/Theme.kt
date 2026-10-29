@@ -84,7 +84,8 @@ data class Theme(
     }
 
     fun icon(path: String): ImageIcon? {
-        val icon = customIcons[path]?.invoke() ?: javaClass.getResource("/theme/$resourcePath$path")
+        val icon: URL? =
+            customIcons[path]?.invoke() ?: javaClass.getResource("/theme/$resourcePath$path")
         return icon?.let(::ImageIcon)
     }
 

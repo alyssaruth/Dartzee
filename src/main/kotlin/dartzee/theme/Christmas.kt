@@ -29,7 +29,7 @@ private val numberOneCustomer =
     )
 
 private val animations: List<Pair<IAnimationTrigger, IAnimation>> =
-    GameType.values().flatMap { gameType ->
+    GameType.entries.flatMap { gameType ->
         listOf(
             DartScoreTrigger(gameType, 1) to numberOneCustomer,
             DartScoreTrigger(gameType, 3) to
@@ -76,8 +76,8 @@ val Themes.CHRISTMAS: Theme
             menuFontSize = 24f,
             animations = animations.toMap(),
             bannerTextRenderer = ::getBannerDetails,
-            festivalInfo = FestivalInfo(::findChristmas, "Will next pop up"),
-            // unlockDate = LocalDate.of(2026, Month.DECEMBER, 1),
+            festivalInfo = FestivalInfo(::findChristmas, "Santa's next visit will be "),
+            unlockDate = LocalDate.of(2026, Month.DECEMBER, 1),
             menuAnimation = Snowfall(),
             resultConverter = { toRomanNumerals(it) + " " },
             dartboardFlasher = true,

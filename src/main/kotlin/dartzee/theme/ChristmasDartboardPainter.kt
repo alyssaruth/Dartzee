@@ -8,7 +8,6 @@ import java.awt.Font
 
 private val darkRed = Color.decode("#800020")
 private val darkGreen = Color.decode("#39AD48")
-// private val medRed = Color.red.darker()
 
 private val dartboardColours =
     ColourWrapper(

@@ -24,9 +24,11 @@ enum class FlashMode {
     ALL_ON,
 }
 
-class ChristmasDartboardFlasher(private val dartboard: PresentationDartboard) : ActionListener {
-    private var mode: FlashMode = FlashMode.ALTERNATE_SLOW
-    private var step = 0
+class ChristmasDartboardFlasher(
+    private val dartboard: PresentationDartboard,
+    private var mode: FlashMode = FlashMode.ALTERNATE_SLOW,
+) : ActionListener {
+    private var step: Int = 0
     private val toggleButton = JButton("X")
 
     init {
@@ -41,7 +43,9 @@ class ChristmasDartboardFlasher(private val dartboard: PresentationDartboard) : 
                 }
             }
         )
+    }
 
+    fun startFlashing() {
         val r = Runnable {
             while (true) {
                 Thread.sleep(100)
@@ -60,13 +64,13 @@ class ChristmasDartboardFlasher(private val dartboard: PresentationDartboard) : 
     }
 
     fun toggleMode() {
-        val modes = FlashMode.values().toList()
+        val modes = FlashMode.entries
         val currentIx = modes.indexOf(mode)
         val newIx = (currentIx + 1) % modes.size
         mode = modes[newIx]
     }
 
-    private fun flashDartboard() {
+    fun flashDartboard() {
         step = (step + 1) % 20 // 0-19
 
         val litNumbers = (1..20).filter { isNumberLit(it, mode, step) }
@@ -91,8 +95,9 @@ class ChristmasDartboardFlasher(private val dartboard: PresentationDartboard) : 
                 numberOrder[step] == number || numberOrder[(20 - step) % 20] == number
             FlashMode.DOUBLE_CIRCUIT -> {
                 val targets = listOf(step / 2, (20 - (step / 2)) % 20)
-                val allTargets =
-                    targets.flatMap { listOf(numberOrder[it], numberOrder[(it + 10) % 20]) }
+                val allTargets = targets.flatMap {
+                    listOf(numberOrder[it], numberOrder[(it + 10) % 20])
+                }
                 allTargets.contains(number)
             }
             FlashMode.OUT_AND_IN -> step in listOf(0, 1, 18, 19)
@@ -127,7 +132,6 @@ class ChristmasDartboardFlasher(private val dartboard: PresentationDartboard) : 
                     in listOf(2, 3, 16, 17) -> segment.isDoubleExcludingBull()
                     in listOf(4, 5, 14, 15) -> segment.getMultiplier() == 3
                     in listOf(6, 7, 12, 13) -> segment.getMultiplier() == 1 && segment.score == 25
-                    // in listOf(8, 9, 10, 11)
                     else -> segment.getMultiplier() == 2 && segment.score == 25
                 }
             FlashMode.ALL_ON -> true

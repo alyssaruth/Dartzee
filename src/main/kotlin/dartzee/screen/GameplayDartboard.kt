@@ -43,7 +43,7 @@ class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromP
         dartboard.addMouseListener(this)
 
         if (InjectedThings.theme?.dartboardFlasher ?: false) {
-            ChristmasDartboardFlasher(dartboard)
+            ChristmasDartboardFlasher(dartboard).startFlashing()
         }
 
         addComponentListener(

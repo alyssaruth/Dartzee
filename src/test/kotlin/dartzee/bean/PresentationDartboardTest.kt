@@ -10,6 +10,7 @@ import dartzee.screen.game.SegmentStatuses
 import dartzee.theme.BIRTHDAY
 import dartzee.theme.BirthdayInfo
 import dartzee.theme.CHRISTMAS
+import dartzee.theme.ChristmasDartboardPainter
 import dartzee.theme.ColourWrapper
 import dartzee.theme.DARTZEE
 import dartzee.theme.DEFAULT_COLOUR_WRAPPER
@@ -24,6 +25,7 @@ import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.isEven
 import io.github.alyssaruth.swingtest.shouldMatchImage
+import io.github.alyssaruth.swingtest.toBufferedImage
 import io.kotest.matchers.shouldBe
 import java.awt.Color
 import java.awt.Dimension
@@ -264,5 +266,14 @@ class PresentationDartboardTest : AbstractTest() {
 
     @Test
     @Tag("screenshot")
-    fun `Should be able to repaint score labels with a different colour`() {}
+    fun `Should be able to repaint score labels with a different colour`() {
+        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER, renderScoreLabels = true)
+        dartboard.setBounds(0, 0, 600, 600)
+        dartboard.toBufferedImage()
+
+        dartboard.repaintScoreLabels(ChristmasDartboardPainter())
+        dartboard.repaint()
+
+        dartboard.shouldMatchImage("christmas-scores")
+    }
 }
