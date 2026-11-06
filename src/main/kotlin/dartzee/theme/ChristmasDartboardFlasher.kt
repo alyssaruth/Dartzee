@@ -3,15 +3,18 @@ package dartzee.theme
 import dartzee.bean.PresentationDartboard
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
+import dartzee.utils.RADIUS_RATIO
+import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
 import dartzee.utils.getAllNonMissSegments
+import dartzee.utils.getAnglesForScore
 import dartzee.utils.hmScoreToOrdinal
 import dartzee.utils.isEven
 import dartzee.utils.numberOrder
-import java.awt.Dimension
+import dartzee.utils.translatePoint
+import java.awt.Color
+import java.awt.Graphics2D
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.awt.event.ComponentAdapter
-import java.awt.event.ComponentEvent
 import javax.swing.JButton
 import javax.swing.SwingUtilities
 
@@ -33,15 +36,38 @@ class ChristmasDartboardFlasher(
 
     init {
         toggleButton.addActionListener(this)
-        toggleButton.size = Dimension(20, 20)
         dartboard.add(toggleButton)
+    }
 
-        dartboard.addComponentListener(
-            object : ComponentAdapter() {
-                override fun componentResized(evt: ComponentEvent) {
-                    toggleButton.setLocation(dartboard.width - 40, dartboard.height - 40)
-                }
-            }
+    fun paintCable(g: Graphics2D) {
+        val radius = dartboard.computeRadius()
+        val btnSize = radius.toInt() / 5
+        val (_, angle) = getAnglesForScore(15)
+        val ratio = 1.0 / RADIUS_RATIO
+        val buttonTopLeft =
+            translatePoint(dartboard.computeCenter(), radius * ratio, angle.toDouble())
+        toggleButton.setSize(btnSize, btnSize)
+        toggleButton.setLocation(
+            buttonTopLeft.x,
+            buttonTopLeft.y,
+        )
+
+        val (wireAngle, _) = getAnglesForScore(17)
+        val wirePt =
+            translatePoint(
+                dartboard.computeCenter(),
+                radius * UPPER_BOUND_OUTSIDE_BOARD_RATIO,
+                wireAngle.toDouble(),
+            )
+
+        g.color = Color.WHITE
+        g.drawArc(
+            wirePt.x,
+            wirePt.y - btnSize / 2,
+            buttonTopLeft.x + (btnSize / 2) - wirePt.x,
+            btnSize,
+            0,
+            -180,
         )
     }
 
@@ -95,8 +121,9 @@ class ChristmasDartboardFlasher(
                 numberOrder[step] == number || numberOrder[(20 - step) % 20] == number
             FlashMode.DOUBLE_CIRCUIT -> {
                 val targets = listOf(step / 2, (20 - (step / 2)) % 20)
-                val allTargets =
-                    targets.flatMap { listOf(numberOrder[it], numberOrder[(it + 10) % 20]) }
+                val allTargets = targets.flatMap {
+                    listOf(numberOrder[it], numberOrder[(it + 10) % 20])
+                }
                 allTargets.contains(number)
             }
             FlashMode.OUT_AND_IN -> step in listOf(0, 1, 18, 19)

@@ -44,6 +44,7 @@ open class PresentationDartboard(
     protected val overriddenSegmentColours = mutableMapOf<DartboardSegment, Color>()
     private val dirtySegments = mutableSetOf<DartboardSegment>()
     private var lastPaintImage: BufferedImage? = null
+    var paintExtraComponents: (Graphics2D) -> Unit = {}
 
     override fun computeRadius() = computeRadius(width, height)
 
@@ -75,11 +76,10 @@ open class PresentationDartboard(
         dirtySegments.addAll(overriddenSegmentColours.keys)
         overriddenSegmentColours.clear()
 
-        val scoring =
-            segments.filter { (segment, _) ->
-                segmentStatuses == null ||
-                    segmentStatuses.getSegmentStatus(segment) == SegmentStatus.SCORING
-            }
+        val scoring = segments.filter { (segment, _) ->
+            segmentStatuses == null ||
+                segmentStatuses.getSegmentStatus(segment) == SegmentStatus.SCORING
+        }
 
         overriddenSegmentColours.putAll(scoring)
         dirtySegments.addAll(scoring.keys)
@@ -131,6 +131,8 @@ open class PresentationDartboard(
             val g2d = bi.createGraphics()
             paintOuterBoard(g2d)
             getAllSegmentsForDartzee().paintAll(bi)
+
+            paintExtraComponents(g2d)
 
             if (renderThemeBanner) {
                 renderBanner(g2d)
