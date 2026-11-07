@@ -35,6 +35,10 @@ tailrec fun toRomanNumerals(value: Int, numeralsSoFar: String = ""): String =
 
 object MathsUtil {
     fun round(number: Double, decimalPlaces: Int): Double {
+        if (number.isNaN()) {
+            return number
+        }
+
         val powerOfTen = 10.0.pow(decimalPlaces.toDouble())
 
         val rounded = (powerOfTen * number).roundToInt()

@@ -2,6 +2,7 @@ package dartzee.theme
 
 import com.github.weisj.jsvg.SVGDocument
 import dartzee.logging.CODE_THEME_APPLIED
+import dartzee.`object`.DartsClient
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
 import dartzee.utils.InjectedThings.logger
@@ -89,7 +90,7 @@ data class Theme(
         return icon?.let(::ImageIcon)
     }
 
-    fun isLocked() = unlockDate != null && now.isBefore(unlockDate)
+    fun isLocked() = !DartsClient.devMode && unlockDate != null && now.isBefore(unlockDate)
 
     fun <T> getIfUnlocked(getter: (Theme) -> T, lockedValue: T) =
         if (isLocked()) lockedValue else getter(this)

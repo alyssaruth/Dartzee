@@ -173,10 +173,10 @@ class DartzeeRuleCarousel(private val dtos: List<DartzeeRuleDto>) :
                     availableTiles.sortedWith(compareBy({ it.pendingScore }, { it.ruleNumber }))
                 sortedTiles.last()
             } else {
-                availableTiles.maxByOrNull { it.ruleNumber }
+                availableTiles.maxBy { it.ruleNumber }
             }
 
-        selectedTile!!.doClick()
+        selectedTile.doClick()
     }
 
     private fun displayTiles(tiles: List<DartzeeRuleTile>) {
