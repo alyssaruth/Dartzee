@@ -35,6 +35,7 @@ class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromP
     private val dartsThrown = mutableListOf<ComputedPoint>()
     private val listeners: MutableList<DartboardListener> = mutableListOf()
     private var allowInteraction = true
+    private var flasher: ChristmasDartboardFlasher? = null
 
     init {
         preferredSize = Dimension(500, 500)
@@ -44,6 +45,7 @@ class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromP
 
         if (InjectedThings.theme?.dartboardFlasher ?: false) {
             val flasher = ChristmasDartboardFlasher(dartboard)
+            this.flasher = flasher
             flasher.startFlashing()
 
             dartboard.paintExtraComponents = flasher::paintCable
@@ -84,8 +86,12 @@ class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromP
             addDartLabel(pt)
         }
 
+        flasher?.dartThrown(pt.pt)
+
         listeners.forEach { it.dartThrown(getDartForSegment(pt.segment)) }
     }
+
+    fun shouldAnimateMiss(): Boolean = flasher?.shouldAnimateMiss() ?: true
 
     private fun addDartLabel(computedPt: ComputedPoint) {
         if (dartboard.isVisible && dartboard.width > 80 && dartboard.height > 80) {

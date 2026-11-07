@@ -14,6 +14,7 @@ import java.time.LocalDate
 import java.time.Month
 
 val gold: Color = Color.decode("#f2c49b")
+val christmasBackground: Color = Color.decode("#062601")
 
 private val humbugAnimation =
     CompositeAnimation(
@@ -68,7 +69,7 @@ val Themes.CHRISTMAS: Theme
             "Ho ho ho",
             Color.decode("#9e000e"),
             Color.decode("#73020c"),
-            Color.decode("#062601"),
+            christmasBackground,
             Color.decode("#385025"),
             linkColour = gold,
             fontColor = Color.WHITE,

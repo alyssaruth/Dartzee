@@ -11,12 +11,15 @@ import dartzee.utils.hmScoreToOrdinal
 import dartzee.utils.isEven
 import dartzee.utils.numberOrder
 import dartzee.utils.translatePoint
+import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
+import java.awt.Point
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
 import javax.swing.SwingUtilities
+import kotlin.random.Random
 
 enum class FlashMode {
     ALTERNATE_SLOW,
@@ -32,7 +35,11 @@ class ChristmasDartboardFlasher(
     private var mode: FlashMode = FlashMode.ALTERNATE_SLOW,
 ) : ActionListener {
     private var step: Int = 0
-    private val toggleButton = JButton("X")
+    private var cableBroken: Boolean = false
+    private var cableBrokenChecked: Boolean = false
+    private val toggleButton = JButton()
+    private val electricitySound = clipForResource("/theme/christmas/electricity.wav")
+    private var g: Graphics2D? = null
 
     init {
         toggleButton.addActionListener(this)
@@ -47,10 +54,7 @@ class ChristmasDartboardFlasher(
         val buttonTopLeft =
             translatePoint(dartboard.computeCenter(), radius * ratio, angle.toDouble())
         toggleButton.setSize(btnSize, btnSize)
-        toggleButton.setLocation(
-            buttonTopLeft.x,
-            buttonTopLeft.y,
-        )
+        toggleButton.setLocation(buttonTopLeft.x, buttonTopLeft.y)
 
         val (wireAngle, _) = getAnglesForScore(17)
         val wirePt =
@@ -60,15 +64,23 @@ class ChristmasDartboardFlasher(
                 wireAngle.toDouble(),
             )
 
-        g.color = Color.WHITE
-        g.drawArc(
-            wirePt.x,
-            wirePt.y - btnSize / 2,
-            buttonTopLeft.x + (btnSize / 2) - wirePt.x,
-            btnSize,
-            0,
-            -180,
-        )
+        val cableWidth = buttonTopLeft.x + (btnSize / 2) - wirePt.x
+        g.color = Color.BLACK
+        g.stroke = BasicStroke(2f)
+        g.drawArc(wirePt.x, wirePt.y - btnSize / 2, cableWidth, btnSize, 0, -180)
+
+        if (cableBroken) {
+            val brokenSectionWidth = cableWidth / 4
+            g.color = christmasBackground
+            g.fillRect(
+                wirePt.x + cableWidth / 2 - brokenSectionWidth / 2,
+                wirePt.y,
+                brokenSectionWidth,
+                btnSize,
+            )
+        }
+
+        this.g = g
     }
 
     fun startFlashing() {
@@ -81,6 +93,24 @@ class ChristmasDartboardFlasher(
 
         val t = Thread(r)
         t.start()
+    }
+
+    fun dartThrown(pt: Point) {
+        val color = dartboard.colorAt(pt)
+        if (color == Color.BLACK && !cableBroken) {
+            cableBroken = true
+            electricitySound?.playOnce()
+            g?.let(::paintCable)
+        }
+    }
+
+    fun shouldAnimateMiss(): Boolean {
+        if (cableBroken && !cableBrokenChecked) {
+            cableBrokenChecked = true
+            return false
+        }
+
+        return true
     }
 
     override fun actionPerformed(e: ActionEvent) {
@@ -114,52 +144,58 @@ class ChristmasDartboardFlasher(
     }
 
     private fun isNumberLit(number: Int, mode: FlashMode, step: Int): Boolean =
-        when (mode) {
-            FlashMode.ALTERNATE_SLOW -> hmScoreToOrdinal[number] == step < 10
-            FlashMode.ALL_FAST -> step % 4 == 0 || step % 4 == 1
-            FlashMode.CIRCUIT ->
-                numberOrder[step] == number || numberOrder[(20 - step) % 20] == number
-            FlashMode.DOUBLE_CIRCUIT -> {
-                val targets = listOf(step / 2, (20 - (step / 2)) % 20)
-                val allTargets = targets.flatMap {
-                    listOf(numberOrder[it], numberOrder[(it + 10) % 20])
+        if (cableBroken) {
+            if (step % 2 == 0) number == Random.nextInt(50) else false
+        } else
+            when (mode) {
+                FlashMode.ALTERNATE_SLOW -> hmScoreToOrdinal[number] == step < 10
+                FlashMode.ALL_FAST -> step % 4 == 0 || step % 4 == 1
+                FlashMode.CIRCUIT ->
+                    numberOrder[step] == number || numberOrder[(20 - step) % 20] == number
+                FlashMode.DOUBLE_CIRCUIT -> {
+                    val targets = listOf(step / 2, (20 - (step / 2)) % 20)
+                    val allTargets =
+                        targets.flatMap { listOf(numberOrder[it], numberOrder[(it + 10) % 20]) }
+                    allTargets.contains(number)
                 }
-                allTargets.contains(number)
+                FlashMode.OUT_AND_IN -> step in listOf(0, 1, 18, 19)
+                FlashMode.ALL_ON -> true
             }
-            FlashMode.OUT_AND_IN -> step in listOf(0, 1, 18, 19)
-            FlashMode.ALL_ON -> true
-        }
 
     private fun isLit(segment: DartboardSegment, mode: FlashMode, step: Int): Boolean =
-        when (mode) {
-            FlashMode.ALTERNATE_SLOW -> (segment.isEven() || segment.getTotal() == 50) == step < 10
-            FlashMode.ALL_FAST -> step % 4 == 0 || step % 4 == 1
-            FlashMode.CIRCUIT ->
-                if (segment.type == SegmentType.DOUBLE) {
-                    numberOrder[step] == segment.score
-                } else {
-                    numberOrder[(20 - step) % 20] == segment.score
-                }
-            FlashMode.DOUBLE_CIRCUIT -> {
-                val target =
+        if (cableBroken) false
+        else
+            when (mode) {
+                FlashMode.ALTERNATE_SLOW ->
+                    (segment.isEven() || segment.getTotal() == 50) == step < 10
+                FlashMode.ALL_FAST -> step % 4 == 0 || step % 4 == 1
+                FlashMode.CIRCUIT ->
                     if (segment.type == SegmentType.DOUBLE) {
-                        step / 2
+                        numberOrder[step] == segment.score
                     } else {
-                        (20 - (step / 2)) % 20
+                        numberOrder[(20 - step) % 20] == segment.score
                     }
+                FlashMode.DOUBLE_CIRCUIT -> {
+                    val target =
+                        if (segment.type == SegmentType.DOUBLE) {
+                            step / 2
+                        } else {
+                            (20 - (step / 2)) % 20
+                        }
 
-                val litScores = listOf(numberOrder[target], numberOrder[(target + 10) % 20])
-                litScores.contains(segment.score) ||
-                    segment.score == 25 && (litScores.contains(20) || litScores.contains(6))
-            }
-            FlashMode.OUT_AND_IN ->
-                when (step) {
-                    in listOf(0, 1, 18, 19) -> false
-                    in listOf(2, 3, 16, 17) -> segment.isDoubleExcludingBull()
-                    in listOf(4, 5, 14, 15) -> segment.getMultiplier() == 3
-                    in listOf(6, 7, 12, 13) -> segment.getMultiplier() == 1 && segment.score == 25
-                    else -> segment.getMultiplier() == 2 && segment.score == 25
+                    val litScores = listOf(numberOrder[target], numberOrder[(target + 10) % 20])
+                    litScores.contains(segment.score) ||
+                        segment.score == 25 && (litScores.contains(20) || litScores.contains(6))
                 }
-            FlashMode.ALL_ON -> true
-        }
+                FlashMode.OUT_AND_IN ->
+                    when (step) {
+                        in listOf(0, 1, 18, 19) -> false
+                        in listOf(2, 3, 16, 17) -> segment.isDoubleExcludingBull()
+                        in listOf(4, 5, 14, 15) -> segment.getMultiplier() == 3
+                        in listOf(6, 7, 12, 13) ->
+                            segment.getMultiplier() == 1 && segment.score == 25
+                        else -> segment.getMultiplier() == 2 && segment.score == 25
+                    }
+                FlashMode.ALL_ON -> true
+            }
 }

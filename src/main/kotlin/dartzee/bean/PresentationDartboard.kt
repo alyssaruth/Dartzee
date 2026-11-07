@@ -76,10 +76,11 @@ open class PresentationDartboard(
         dirtySegments.addAll(overriddenSegmentColours.keys)
         overriddenSegmentColours.clear()
 
-        val scoring = segments.filter { (segment, _) ->
-            segmentStatuses == null ||
-                segmentStatuses.getSegmentStatus(segment) == SegmentStatus.SCORING
-        }
+        val scoring =
+            segments.filter { (segment, _) ->
+                segmentStatuses == null ||
+                    segmentStatuses.getSegmentStatus(segment) == SegmentStatus.SCORING
+            }
 
         overriddenSegmentColours.putAll(scoring)
         dirtySegments.addAll(scoring.keys)
@@ -116,6 +117,11 @@ open class PresentationDartboard(
         dirtySegments.addAll(changed)
 
         repaint()
+    }
+
+    fun colorAt(pt: Point): Color? {
+        val rgb = lastPaintImage?.getRGB(pt.x, pt.y)
+        return rgb?.let { Color(rgb, true) }
     }
 
     override fun paintComponent(g: Graphics) {
