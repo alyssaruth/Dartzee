@@ -8,6 +8,7 @@ import dartzee.core.util.getParentWindow
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.listener.DartboardListener
 import dartzee.`object`.ComputedPoint
+import dartzee.`object`.DartboardSegment
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.SegmentStatuses
 import dartzee.theme.ChristmasDartboardFlasher
@@ -16,7 +17,9 @@ import dartzee.theme.makeDartLabel
 import dartzee.utils.InjectedThings
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getDartForSegment
+import java.awt.Color
 import java.awt.Dimension
+import java.awt.Point
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.awt.event.MouseEvent
@@ -44,7 +47,7 @@ class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromP
         dartboard.addMouseListener(this)
 
         if (InjectedThings.theme?.dartboardFlasher ?: false) {
-            val flasher = ChristmasDartboardFlasher(dartboard)
+            val flasher = ChristmasDartboardFlasher(this)
             this.flasher = flasher
             flasher.startFlashing()
 
@@ -131,4 +134,15 @@ class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromP
 
         return false
     }
+
+    fun computeCenter() = dartboard.computeCenter()
+
+    fun computeRadius() = dartboard.computeRadius()
+
+    fun colorAt(pt: Point) = dartboard.colorAt(pt)
+
+    fun overrideScoringSegmentColours(segments: Map<DartboardSegment, Color>) =
+        dartboard.overrideScoringSegmentColours(segments)
+
+    fun repaintScoreLabels(wrapper: IDartboardPainter) = dartboard.repaintScoreLabels(wrapper)
 }

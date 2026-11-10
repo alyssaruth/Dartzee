@@ -67,6 +67,8 @@ private fun GameplayDartboard.doDodgyOnEdt(animation: Animation) {
         dodgyLabel.icon = img
         dodgyLabel.setSize(img.iconWidth, img.iconHeight)
 
+        println("Painting image for ${animation.imgResourcePath}")
+
         val x = (getWidth() - img.iconWidth) / 2
         val y = getHeight() - img.iconHeight
         dodgyLabel.setLocation(x, y)
@@ -81,8 +83,8 @@ private fun GameplayDartboard.doDodgyOnEdt(animation: Animation) {
     playDodgySound(animation.wavResource)
 }
 
-private fun GameplayDartboard.playDodgySound(soundName: String) {
-    if (!preferenceService.get(Preferences.showAnimations)) {
+private fun GameplayDartboard.playDodgySound(soundName: String?) {
+    if (!preferenceService.get(Preferences.showAnimations) || soundName == null) {
         return
     }
 
@@ -138,7 +140,7 @@ private fun GameplayDartboard.initialiseAudioClip(
     return myClip
 }
 
-private fun GameplayDartboard.resetDodgy() {
+fun GameplayDartboard.resetDodgy() {
     removeDodgyLabels()
     repaint()
     revalidate()
