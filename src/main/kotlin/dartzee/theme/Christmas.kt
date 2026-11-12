@@ -45,6 +45,9 @@ private fun getBannerDetails(
     svgBounds: Rectangle,
     dartboardCenter: Point,
 ): List<BannerRenderDetails> {
+    println("Dartboard center: $dartboardCenter")
+    println("SVG Bounds: $svgBounds")
+
     val topBanner =
         BannerRenderDetails(
             "Merry",
@@ -58,6 +61,8 @@ private fun getBannerDetails(
             (svgBounds.height * 0.15).toInt(),
             Point(dartboardCenter.x, dartboardCenter.y + (0.1 * svgBounds.height).toInt()),
         )
+
+    println("Results:\n $topBanner \n $bottomBanner")
 
     return listOf(topBanner, bottomBanner)
 }

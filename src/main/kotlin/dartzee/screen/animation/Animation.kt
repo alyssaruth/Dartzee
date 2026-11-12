@@ -14,6 +14,7 @@ data class Animation(
     val wavResource: String? = null,
     val imgResourcePath: String? = null,
     val text: String? = null,
+    val xOffsetPercent: Double = 0.0,
 ) : IAnimation {
     val img = imgResourcePath?.let { ImageIcon(javaClass.getResource(it)) }
 
@@ -34,11 +35,13 @@ data class CompositeAnimation(val animationOptions: List<IAnimation>) : IAnimati
         return animation.getAnimation()
     }
 
-    override fun getAllSounds() = animationOptions.flatMap {
-        if (it is Animation) listOfNotNull(it.wavResource) else it.getAllSounds()
-    }
+    override fun getAllSounds() =
+        animationOptions.flatMap {
+            if (it is Animation) listOfNotNull(it.wavResource) else it.getAllSounds()
+        }
 
-    override fun getAllImages() = animationOptions.flatMap {
-        if (it is Animation) listOfNotNull(it.imgResourcePath) else it.getAllImages()
-    }
+    override fun getAllImages() =
+        animationOptions.flatMap {
+            if (it is Animation) listOfNotNull(it.imgResourcePath) else it.getAllImages()
+        }
 }

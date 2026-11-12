@@ -1,10 +1,8 @@
 package dartzee.theme
 
-import dartzee.core.util.doDodgy
-import dartzee.core.util.resetDodgy
+import dartzee.bean.PresentationDartboard
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
-import dartzee.screen.GameplayDartboard
 import dartzee.screen.animation.Animation
 import dartzee.utils.RADIUS_RATIO
 import dartzee.utils.UPPER_BOUND_OUTSIDE_BOARD_RATIO
@@ -34,7 +32,9 @@ enum class FlashMode {
 }
 
 class ChristmasDartboardFlasher(
-    private val dartboard: GameplayDartboard,
+    private val dartboard: PresentationDartboard,
+    private val showAnimation: (Animation) -> Unit,
+    private val resetAnimation: () -> Unit,
     private var mode: FlashMode = FlashMode.ALTERNATE_SLOW,
 ) : ActionListener {
     private var step: Int = 0
@@ -109,17 +109,24 @@ class ChristmasDartboardFlasher(
     }
 
     private fun doExplosionAnimation() {
-        Thread().run {
-            dartboard.resetDodgy()
+        val t = Thread {
+            resetAnimation()
 
-            (1..7).forEach {
-                val animation = Animation(null, "/theme/christmas/horrific/explosion$it.png")
-                dartboard.doDodgy(animation)
+            (1..7).forEach { index ->
+                val animation =
+                    Animation(
+                        null,
+                        "/theme/christmas/horrific/explosion$index.png",
+                        xOffsetPercent = 0.2,
+                    )
+                showAnimation(animation)
                 Thread.sleep(100)
             }
 
-            dartboard.resetDodgy()
+            resetAnimation()
         }
+
+        t.start()
     }
 
     fun shouldAnimateMiss(): Boolean {
@@ -172,9 +179,8 @@ class ChristmasDartboardFlasher(
                     numberOrder[step] == number || numberOrder[(20 - step) % 20] == number
                 FlashMode.DOUBLE_CIRCUIT -> {
                     val targets = listOf(step / 2, (20 - (step / 2)) % 20)
-                    val allTargets = targets.flatMap {
-                        listOf(numberOrder[it], numberOrder[(it + 10) % 20])
-                    }
+                    val allTargets =
+                        targets.flatMap { listOf(numberOrder[it], numberOrder[(it + 10) % 20]) }
                     allTargets.contains(number)
                 }
                 FlashMode.OUT_AND_IN -> step in listOf(0, 1, 18, 19)

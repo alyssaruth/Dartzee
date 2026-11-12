@@ -23,7 +23,7 @@ class ChristmasDartboardFlasherTest {
         val dartboard = PresentationDartboard(ChristmasDartboardPainter(), renderScoreLabels = true)
         dartboard.setBounds(0, 0, 400, 400)
         var lastImg = dartboard.toBufferedImage()
-        val flasher = ChristmasDartboardFlasher(dartboard, mode)
+        val flasher = ChristmasDartboardFlasher(dartboard, {}, {}, mode)
 
         (0..19).forEach { step ->
             flasher.flashDartboard()

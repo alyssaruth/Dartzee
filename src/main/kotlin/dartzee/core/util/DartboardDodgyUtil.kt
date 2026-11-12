@@ -67,9 +67,7 @@ private fun GameplayDartboard.doDodgyOnEdt(animation: Animation) {
         dodgyLabel.icon = img
         dodgyLabel.setSize(img.iconWidth, img.iconHeight)
 
-        println("Painting image for ${animation.imgResourcePath}")
-
-        val x = (getWidth() - img.iconWidth) / 2
+        val x = (getWidth() - img.iconWidth) / 2 + (getWidth() * animation.xOffsetPercent).toInt()
         val y = getHeight() - img.iconHeight
         dodgyLabel.setLocation(x, y)
         add(dodgyLabel)
