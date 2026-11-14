@@ -139,9 +139,11 @@ private fun GameplayDartboard.initialiseAudioClip(
 }
 
 fun GameplayDartboard.resetDodgy() {
-    removeDodgyLabels()
-    repaint()
-    revalidate()
+    runOnEventThread {
+        removeDodgyLabels()
+        repaint()
+        revalidate()
+    }
 }
 
 private fun GameplayDartboard.removeDodgyLabels() {

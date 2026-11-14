@@ -43,6 +43,7 @@ class ChristmasDartboardFlasher(
     private val toggleButton = JButton()
     private val electricitySound = clipForResource("/theme/christmas/electricity.wav")
     private var g: Graphics2D? = null
+    private val clickTimes = mutableListOf<Long>()
 
     init {
         toggleButton.addActionListener(this)
@@ -100,12 +101,20 @@ class ChristmasDartboardFlasher(
 
     fun dartThrown(pt: Point) {
         val color = dartboard.colorAt(pt)
-        if (color == Color.BLACK && !cableBroken) {
-            cableBroken = true
-            electricitySound?.playOnce()
-            g?.let(::paintCable)
-            doExplosionAnimation()
+        if (color == Color.BLACK) {
+            triggerExplosion()
         }
+    }
+
+    private fun triggerExplosion() {
+        if (cableBroken) {
+            return
+        }
+
+        cableBroken = true
+        electricitySound?.playOnce()
+        g?.let(::paintCable)
+        doExplosionAnimation()
     }
 
     private fun doExplosionAnimation() {
@@ -149,6 +158,14 @@ class ChristmasDartboardFlasher(
         val currentIx = modes.indexOf(mode)
         val newIx = (currentIx + 1) % modes.size
         mode = modes[newIx]
+
+        val currentTime = System.currentTimeMillis()
+        clickTimes.add(currentTime)
+        clickTimes.removeIf { (currentTime - it) > 3000 }
+
+        if (clickTimes.size >= 10) {
+            triggerExplosion()
+        }
     }
 
     fun flashDartboard() {
