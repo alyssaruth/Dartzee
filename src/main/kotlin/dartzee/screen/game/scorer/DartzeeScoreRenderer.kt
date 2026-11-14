@@ -17,6 +17,7 @@ class DartzeeScoreRenderer(val maxScore: Int) : AbstractTableRenderer<Int>() {
 
         val percent = if (typedValue == 0) 0f else typedValue.toFloat() / maxScore
         background = Color.getHSBColor(0.5.toFloat(), percent, 1f)
+        foreground = Color.black
     }
 
     override fun setFontsAndAlignment() {

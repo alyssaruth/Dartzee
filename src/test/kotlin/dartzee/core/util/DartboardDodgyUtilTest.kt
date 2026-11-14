@@ -41,7 +41,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestDartboardDodgyUtil : AbstractTest() {
+class DartboardDodgyUtilTest : AbstractTest() {
     @BeforeEach
     fun before() {
         InjectedThings.animations = DEFAULT_ANIMATIONS

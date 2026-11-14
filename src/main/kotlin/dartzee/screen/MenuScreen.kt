@@ -41,6 +41,11 @@ class MenuScreen : EmbeddedScreen() {
         layout = null
         layoutScreen(1000, 663)
 
+        InjectedThings.theme?.menuAnimation?.let { animation ->
+            add(animation)
+            animation.start()
+        }
+
         add(dartboard)
 
         add(btnNewGame)
@@ -67,7 +72,7 @@ class MenuScreen : EmbeddedScreen() {
         btnPreferences.icon = themedIcon("/buttons/preferences.png")
         btnGameReport.icon = themedIcon("/buttons/gameReport.png")
         btnSyncSummary.icon = ImageIcon(javaClass.getResource("/buttons/sync.png"))
-        btnDartzeeTemplates.icon = ImageIcon(javaClass.getResource("/buttons/dartzeeTemplates.png"))
+        btnDartzeeTemplates.icon = themedIcon("/buttons/dartzeeTemplates.png")
         btnLeaderboards.icon = ImageIcon(javaClass.getResource("/buttons/leaderboards.png"))
 
         getAllChildComponentsForType<JButton>().forEach { button -> button.font = getMenuFont() }
@@ -89,10 +94,12 @@ class MenuScreen : EmbeddedScreen() {
         super.postInit()
         layoutScreen()
 
+        InjectedThings.theme?.menuAnimation?.active = true
         InjectedThings.theme?.menuMusic?.loop()
     }
 
     override fun unInit() {
+        InjectedThings.theme?.menuAnimation?.active = false
         InjectedThings.theme?.menuMusic?.stop()
     }
 
@@ -102,6 +109,8 @@ class MenuScreen : EmbeddedScreen() {
         } else {
             layoutFullScreen(width, height)
         }
+
+        InjectedThings.theme?.menuAnimation?.size = Dimension(width, height)
     }
 
     private fun layoutSimplifiedScreen(width: Int, height: Int) {

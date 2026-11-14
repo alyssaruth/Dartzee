@@ -7,7 +7,7 @@ import java.awt.Color
 import javax.swing.SwingConstants
 import org.junit.jupiter.api.Test
 
-class TestDartzeeScoreRenderer : AbstractTest() {
+class DartzeeScoreRendererTest : AbstractTest() {
     @Test
     fun `Should set the background colour saturation to a percentage of the maximum`() {
         val renderer = DartzeeScoreRenderer(50)

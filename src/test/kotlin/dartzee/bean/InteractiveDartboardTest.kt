@@ -8,11 +8,12 @@ import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.getAllSegmentsForDartzee
 import io.github.alyssaruth.swingtest.shouldMatchImage
+import java.awt.Color
 import java.awt.Point
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
-class TestInteractiveDartboard : AbstractTest() {
+class InteractiveDartboardTest : AbstractTest() {
     @Test
     @Tag("screenshot")
     fun `Should match snapshot - hovered`() {
@@ -88,6 +89,23 @@ class TestInteractiveDartboard : AbstractTest() {
 
         dartboard.highlightDartboard(Point(200, 0))
         dartboard.shouldMatchImage("hover-nothing")
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should maintain hover state when bulk overriding segment colours`() {
+        val dartboard = InteractiveDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.setBounds(0, 0, 400, 400)
+
+        dartboard.hoverSegment(DartboardSegment(SegmentType.OUTER_SINGLE, 1))
+
+        val segments =
+            getAllNonMissSegments()
+                .filter { it.type == SegmentType.OUTER_SINGLE }
+                .associateWith { Color.CYAN }
+        dartboard.overrideScoringSegmentColours(segments)
+
+        dartboard.shouldMatchImage("hover-vs-overrides")
     }
 
     private fun InteractiveDartboard.hoverSegment(segment: DartboardSegment) {

@@ -30,7 +30,6 @@ detekt {
 ktfmt { kotlinLangStyle() }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")
     implementation("org.apache.commons:commons-math3:3.6.1")
     implementation("com.miglayout:miglayout-swing:11.0")
     implementation("org.jfree:jfreechart:1.5.4")
@@ -52,6 +51,7 @@ dependencies {
     testImplementation("io.github.alyssaruth:swing-test:5.1.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.14.3")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    testImplementation("com.github.romankh3:image-comparison:4.4.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

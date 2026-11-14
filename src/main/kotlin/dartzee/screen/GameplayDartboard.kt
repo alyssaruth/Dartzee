@@ -3,15 +3,19 @@ package dartzee.screen
 import dartzee.bean.DartLabel
 import dartzee.bean.IMouseListener
 import dartzee.bean.InteractiveDartboard
+import dartzee.core.util.doDodgy
 import dartzee.core.util.getAllChildComponentsForType
 import dartzee.core.util.getParentWindow
+import dartzee.core.util.resetDodgy
 import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.listener.DartboardListener
 import dartzee.`object`.ComputedPoint
 import dartzee.screen.game.AbstractDartsGameScreen
 import dartzee.screen.game.SegmentStatuses
+import dartzee.theme.ChristmasDartboardFlasher
 import dartzee.theme.IDartboardPainter
 import dartzee.theme.makeDartLabel
+import dartzee.utils.InjectedThings
 import dartzee.utils.getColourWrapperFromPrefs
 import dartzee.utils.getDartForSegment
 import java.awt.Dimension
@@ -33,12 +37,21 @@ class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromP
     private val dartsThrown = mutableListOf<ComputedPoint>()
     private val listeners: MutableList<DartboardListener> = mutableListOf()
     private var allowInteraction = true
+    private var flasher: ChristmasDartboardFlasher? = null
 
     init {
         preferredSize = Dimension(500, 500)
         add(dartboard, Integer.valueOf(-1))
 
         dartboard.addMouseListener(this)
+
+        if (InjectedThings.theme?.dartboardFlasher ?: false) {
+            val flasher = ChristmasDartboardFlasher(dartboard, ::doDodgy, ::resetDodgy)
+            this.flasher = flasher
+            flasher.startFlashing()
+
+            dartboard.paintExtraComponents = flasher::paintCable
+        }
 
         addComponentListener(
             object : ComponentAdapter() {
@@ -75,8 +88,12 @@ class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromP
             addDartLabel(pt)
         }
 
+        flasher?.dartThrown(pt.pt)
+
         listeners.forEach { it.dartThrown(getDartForSegment(pt.segment)) }
     }
+
+    fun shouldAnimateMiss(): Boolean = flasher?.shouldAnimateMiss() ?: true
 
     private fun addDartLabel(computedPt: ComputedPoint) {
         if (dartboard.isVisible && dartboard.width > 80 && dartboard.height > 80) {

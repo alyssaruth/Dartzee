@@ -35,6 +35,10 @@ fun paintLabel(
     val lblX = center.getX().toInt() - lblWidth / 2
     val lblY = center.getY().toInt() - labelHeight / 2
 
+    if (text == "Merry" || text == "Christmas!") {
+        println("$text: ${font.size} $metrics $lblWidth $labelHeight $lblX $lblY")
+    }
+
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g.translate(lblX, lblY)
     lbl.paint(g)

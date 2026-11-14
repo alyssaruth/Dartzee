@@ -2,6 +2,7 @@ package dartzee.theme
 
 import com.github.weisj.jsvg.SVGDocument
 import dartzee.logging.CODE_THEME_APPLIED
+import dartzee.`object`.DartsClient
 import dartzee.screen.animation.IAnimation
 import dartzee.screen.animation.IAnimationTrigger
 import dartzee.utils.InjectedThings.logger
@@ -34,12 +35,18 @@ data class Theme(
     val dartFactory: DartFactory? = null,
     val buttonOverrideColours: Map<String, Color> = emptyMap(),
     val customIcons: Map<String, () -> URL?> = emptyMap(),
+    val resultConverter: ((Int) -> String)? = null,
+    val menuAnimation: AbstractMenuAnimation? = null,
+    val dartboardFlasher: Boolean = false,
 ) {
     val name = id.name
     private val resourcePath = name.lowercase()
     val font = fontForResource("/theme/$resourcePath/font.ttf")
-    private val dartboardFont: Font?
+    val dartboardFont: Font?
         get() = fontForResource("/theme/$resourcePath/dartboard.ttf") ?: font
+
+    val bannerFont: Font?
+        get() = fontForResource("/theme/$resourcePath/banner.ttf") ?: font
 
     val banner: SVGDocument?
         get() = svgForResource("/theme/$resourcePath/banner.svg")
@@ -78,11 +85,12 @@ data class Theme(
     }
 
     fun icon(path: String): ImageIcon? {
-        val icon = customIcons[path]?.invoke() ?: javaClass.getResource("/theme/$resourcePath$path")
+        val icon: URL? =
+            customIcons[path]?.invoke() ?: javaClass.getResource("/theme/$resourcePath$path")
         return icon?.let(::ImageIcon)
     }
 
-    fun isLocked() = unlockDate != null && now.isBefore(unlockDate)
+    fun isLocked() = !DartsClient.devMode && unlockDate != null && now.isBefore(unlockDate)
 
     fun <T> getIfUnlocked(getter: (Theme) -> T, lockedValue: T) =
         if (isLocked()) lockedValue else getter(this)

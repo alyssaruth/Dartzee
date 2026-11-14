@@ -16,6 +16,7 @@ val numberOrder = listOf(20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11
 val hmScoreToOrdinal = initialiseOrdinalHashMap()
 private var colourWrapperFromPrefs: ColourWrapper? = null
 
+const val RADIUS_RATIO = 0.7
 private const val RATIO_INNER_BULL = 0.038
 private const val RATIO_OUTER_BULL = 0.094
 private const val LOWER_BOUND_TRIPLE_RATIO = 0.582
@@ -24,6 +25,8 @@ private const val LOWER_BOUND_DOUBLE_RATIO = 0.953
 
 const val UPPER_BOUND_DOUBLE_RATIO = 1.0
 const val UPPER_BOUND_OUTSIDE_BOARD_RATIO = 1.3
+
+fun DartboardSegment.isEven() = hmScoreToOrdinal[score] ?: false
 
 fun getDartForSegment(segment: DartboardSegment): Dart {
     val score = segment.score

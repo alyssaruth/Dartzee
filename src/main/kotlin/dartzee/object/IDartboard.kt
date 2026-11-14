@@ -1,6 +1,7 @@
 package dartzee.`object`
 
 import dartzee.utils.AimPoint
+import dartzee.utils.RADIUS_RATIO
 import dartzee.utils.computePointsForSegment
 import dartzee.utils.factorySegmentForPoint
 import dartzee.utils.getAngleForPoint
@@ -11,7 +12,7 @@ interface IDartboard {
 
     fun computeCenter(): Point
 
-    fun computeRadius(width: Int, height: Int) = 0.7 * minOf(width, height) / 2.0
+    fun computeRadius(width: Int, height: Int) = RADIUS_RATIO * minOf(width, height) / 2.0
 
     fun getPointsForSegment(segment: DartboardSegment) =
         computePointsForSegment(segment, computeCenter(), computeRadius())

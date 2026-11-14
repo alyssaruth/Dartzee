@@ -38,7 +38,8 @@ abstract class AbstractDartsScorer<PlayerState : AbstractPlayerState<PlayerState
     protected fun setScoreAndFinishingPosition(state: PlayerState) {
         val scoreSoFar = state.getScoreSoFar()
         lblResult.text =
-            if (state.hasResigned()) "RESIGNED" else if (scoreSoFar > 0) "$scoreSoFar" else ""
+            if (state.hasResigned()) "RESIGNED"
+            else if (scoreSoFar > 0) convertResultNumeric(scoreSoFar) else ""
         updateResultColourForPosition(state.wrappedParticipant.participant.finishingPosition)
     }
 
