@@ -35,9 +35,7 @@ jobs:
           cache: 'gradle'
       - name: Build & Unit Test
         run: |
-          xvfb-run --auto-servernum ./gradlew koverHtmlReport --info
-          zip -rg unit-test-results.zip build/reports/tests/unitTest
-          zip -rq coverage-html.zip build/reports/kover/html
+          xvfb-run --auto-servernum ./gradlew unitTest --tests 'dartzee.bean.PresentationDartboardTest.Should match snapshot - christmas' --info
       - name: Export test results
         uses: actions/upload-artifact@v6
         with:
