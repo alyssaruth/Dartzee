@@ -6,7 +6,6 @@ import java.awt.Font
 import java.awt.Graphics2D
 import java.awt.Point
 import java.awt.RenderingHints
-import java.awt.Toolkit
 import java.awt.font.TextLayout
 import javax.swing.JLabel
 import javax.swing.SwingConstants
@@ -40,17 +39,6 @@ fun paintLabel(
     val lblX = center.getX().toInt() - lblWidth / 2
     val lblY = center.getY().toInt() - labelHeight / 2
 
-    if (text == "Merry" || text == "Christmas!") {
-        println("$text: ${font.size} $metrics $lblWidth $labelHeight $lblX $lblY")
-
-        val lblMetrics = lbl.getFontMetrics(font)
-        println(
-            "${lblMetrics.stringWidth(text)} ${lblMetrics.fontRenderContext.isAntiAliased} ${lblMetrics.fontRenderContext.usesFractionalMetrics()} ${Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")}"
-        )
-    }
-
-    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
     g.translate(lblX, lblY)
     lbl.paint(g)
     g.translate(-lblX, -lblY)
