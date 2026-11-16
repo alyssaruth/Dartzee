@@ -27,6 +27,10 @@ fun paintLabel(
     lbl.foreground = color
     lbl.horizontalAlignment = SwingConstants.CENTER
     lbl.font = font
+    lbl.putClientProperty(
+        RenderingHints.KEY_TEXT_ANTIALIASING,
+        RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB,
+    )
 
     // Work out the width for this label, based on the text
     val metrics = Canvas().getFontMetrics(font)
