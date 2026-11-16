@@ -40,6 +40,7 @@ fun paintLabel(
     }
 
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
     g.translate(lblX, lblY)
     lbl.paint(g)
     g.translate(-lblX, -lblY)
