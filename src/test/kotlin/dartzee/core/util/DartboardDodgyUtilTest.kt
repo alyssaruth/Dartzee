@@ -96,6 +96,8 @@ class DartboardDodgyUtilTest : AbstractTest() {
         dartboard.dodgyLabelShouldExist()
 
         clip.simulateFinish()
+        flushEdt()
+
         dartboard.dodgyLabelShouldNotExist()
     }
 
@@ -153,6 +155,7 @@ class DartboardDodgyUtilTest : AbstractTest() {
         dartboard.dodgyLabelShouldExist()
 
         clip2.simulateFinish()
+        flushEdt()
         dartboard.dodgyLabelShouldNotExist()
     }
 
