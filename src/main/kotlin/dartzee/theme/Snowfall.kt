@@ -9,10 +9,14 @@ import kotlin.random.Random
 
 private const val MAX_FLAKE_CHANCE = 4
 
-class Snowfall : AbstractMenuAnimation() {
+class Snowfall(
+    private val snowHeap: MutableMap<Int, Int> = mutableMapOf(),
+    private var particles: List<Particle> = listOf(),
+    private val maxFlakeChance: Int = MAX_FLAKE_CHANCE,
+    private val random: Random = Random.Default,
+) : AbstractMenuAnimation() {
     private val sync = Any()
 
-    private val snowHeap: MutableMap<Int, Int> = mutableMapOf()
     var startTime: Long = -1
 
     data class Particle(
@@ -27,8 +31,6 @@ class Snowfall : AbstractMenuAnimation() {
         isOpaque = false
     }
 
-    private var particles = listOf<Particle>()
-
     override fun start() {
         startTime = System.currentTimeMillis()
 
@@ -41,14 +43,6 @@ class Snowfall : AbstractMenuAnimation() {
 
         val t = Thread(r)
         t.start()
-    }
-
-    override fun reset() {
-        synchronized(sync) {
-            snowHeap.clear()
-            particles = emptyList()
-            startTime = System.currentTimeMillis()
-        }
     }
 
     override fun paintComponent(g: Graphics) {
@@ -67,18 +61,18 @@ class Snowfall : AbstractMenuAnimation() {
         snowHeap.forEach { (x, snowflakes) -> g.drawRect(x, height - snowflakes, 1, snowflakes) }
     }
 
-    private fun doTick() {
+    fun doTick() {
         if (!active) {
             return
         }
 
         val timePassed = System.currentTimeMillis() - startTime
         val computedRate = (timePassed / 5000).toInt() + 1
-        val flakeChance = minOf(MAX_FLAKE_CHANCE, computedRate)
+        val flakeChance = minOf(maxFlakeChance, computedRate)
 
         val updatedParticles =
             particles.map { snow ->
-                val windEffect = Random.nextInt(-10, 11)
+                val windEffect = random.nextInt(-10, 11)
                 val windImpact = windEffect / 10
 
                 val newWindDirection =
@@ -91,10 +85,10 @@ class Snowfall : AbstractMenuAnimation() {
 
         val newParticles =
             (0..width).mapNotNull { x ->
-                val spawnSnow = Random.nextInt(1000) >= (1000 - flakeChance)
+                val spawnSnow = random.nextInt(1000) >= (1000 - flakeChance)
                 if (spawnSnow) {
-                    val offness = Random.nextInt(150)
-                    val speed = Random.nextDouble(0.3, 0.7)
+                    val offness = random.nextInt(150)
+                    val speed = random.nextDouble(0.3, 0.7)
                     Particle(speed, 0, x, 0.0, offWhite(offness))
                 } else {
                     null

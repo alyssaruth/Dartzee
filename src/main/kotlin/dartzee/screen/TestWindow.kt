@@ -40,13 +40,5 @@ class TestWindow : JFrame(), ActionListener {
         btnClear.addActionListener(this)
     }
 
-    override fun actionPerformed(e: ActionEvent?) {
-        when (e?.source) {
-            btnClear -> clear()
-        }
-    }
-
-    private fun clear() {
-        snowfall.reset()
-    }
+    override fun actionPerformed(e: ActionEvent?) {}
 }

@@ -41,11 +41,6 @@ class MenuScreen : EmbeddedScreen() {
         layout = null
         layoutScreen(1000, 663)
 
-        InjectedThings.theme?.menuAnimation?.let { animation ->
-            add(animation)
-            animation.start()
-        }
-
         add(dartboard)
 
         add(btnNewGame)
@@ -64,6 +59,11 @@ class MenuScreen : EmbeddedScreen() {
         getAllChildComponentsForType<JButton>().forEach { button ->
             button.size = Dimension(BUTTON_WIDTH, BUTTON_HEIGHT)
             button.addActionListener(this)
+        }
+
+        InjectedThings.theme?.menuAnimation?.let { animation ->
+            add(animation)
+            animation.start()
         }
 
         btnNewGame.icon = themedIcon("/buttons/newGame.png")
