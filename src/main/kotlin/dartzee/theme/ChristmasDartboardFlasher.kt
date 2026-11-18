@@ -46,6 +46,7 @@ class ChristmasDartboardFlasher(
     private val clickTimes = mutableListOf<Long>()
 
     init {
+        toggleButton.name = "FlashToggle"
         toggleButton.addActionListener(this)
         dartboard.add(toggleButton)
     }
@@ -111,10 +112,14 @@ class ChristmasDartboardFlasher(
             return
         }
 
-        cableBroken = true
+        breakCable()
         electricitySound?.playOnce()
-        g?.let(::paintCable)
         doExplosionAnimation()
+    }
+
+    fun breakCable() {
+        cableBroken = true
+        g?.let(::paintCable)
     }
 
     private fun doExplosionAnimation() {

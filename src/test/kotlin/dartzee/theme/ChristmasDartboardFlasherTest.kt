@@ -3,11 +3,15 @@ package dartzee.theme
 import com.github.romankh3.image.comparison.ImageComparison
 import com.github.romankh3.image.comparison.model.ImageComparisonState
 import dartzee.bean.PresentationDartboard
+import dartzee.screen.GameplayDartboard
+import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.shouldMatchImage
 import io.github.alyssaruth.swingtest.toBufferedImage
+import javax.swing.JButton
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 
 class ChristmasDartboardFlasherTest {
@@ -41,5 +45,21 @@ class ChristmasDartboardFlasherTest {
 
             lastImg = img
         }
+    }
+
+    @Test
+    @Tag("screenshot")
+    fun `Should match screenshot with cable`() {
+        val dartboard = GameplayDartboard(ChristmasDartboardPainter())
+        dartboard.background = christmasBackground
+        dartboard.isOpaque = true
+        dartboard.setBounds(0, 0, 500, 500)
+        val flasher = dartboard.setupFlasher()
+        dartboard.repaint()
+        dartboard.getChild<JButton>("FlashToggle").isVisible = false
+        dartboard.shouldMatchImage("cable")
+
+        flasher.breakCable()
+        dartboard.shouldMatchImage("broken-cable")
     }
 }

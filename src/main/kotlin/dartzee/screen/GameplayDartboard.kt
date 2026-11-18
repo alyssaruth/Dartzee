@@ -46,11 +46,9 @@ class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromP
         dartboard.addMouseListener(this)
 
         if (InjectedThings.theme?.dartboardFlasher ?: false) {
-            val flasher = ChristmasDartboardFlasher(dartboard, ::doDodgy, ::resetDodgy)
+            val flasher = setupFlasher()
             this.flasher = flasher
             flasher.startFlashing()
-
-            dartboard.paintExtraComponents = flasher::paintCable
         }
 
         addComponentListener(
@@ -60,6 +58,12 @@ class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromP
         )
 
         SwingUtilities.invokeLater { resized() }
+    }
+
+    fun setupFlasher(): ChristmasDartboardFlasher {
+        val flasher = ChristmasDartboardFlasher(dartboard, ::doDodgy, ::resetDodgy)
+        dartboard.paintExtraComponents = flasher::paintCable
+        return flasher
     }
 
     private fun resized() {

@@ -101,6 +101,14 @@ tasks.register("unitTest", Test::class) {
     classpath = derivedTestClasspath
 }
 
+tasks.register("verifyScreenshots", Test::class) {
+    group = "verification"
+    useJUnitPlatform { includeTags = setOf("screenshot") }
+
+    testClassesDirs = derviedTestClassesDirs
+    classpath = derivedTestClasspath
+}
+
 tasks.register("updateScreenshots", Test::class) {
     group = "verification"
     useJUnitPlatform { includeTags = setOf("screenshot") }
