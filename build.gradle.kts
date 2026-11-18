@@ -82,6 +82,7 @@ kover {
         instrumentation {
             disabledForTestTasks.add("test")
             disabledForTestTasks.add("updateScreenshots")
+            disabledForTestTasks.add("verifyScreenshots")
             disabledForTestTasks.add("integrationAndE2E")
         }
     }
