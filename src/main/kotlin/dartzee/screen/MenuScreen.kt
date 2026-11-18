@@ -41,8 +41,6 @@ class MenuScreen : EmbeddedScreen() {
         layout = null
         layoutScreen(1000, 663)
 
-        add(dartboard)
-
         add(btnNewGame)
         add(btnManagePlayers)
         add(btnLeaderboards)
@@ -65,6 +63,8 @@ class MenuScreen : EmbeddedScreen() {
             add(animation)
             animation.start()
         }
+
+        add(dartboard)
 
         btnNewGame.icon = themedIcon("/buttons/newGame.png")
         btnManagePlayers.icon = themedIcon("/buttons/playerManagement.png")

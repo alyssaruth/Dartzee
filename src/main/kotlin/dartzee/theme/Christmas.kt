@@ -67,7 +67,7 @@ val Themes.CHRISTMAS: Theme
         Theme(
             ThemeId.Christmas,
             "Ho ho ho",
-            Color.decode("#9e000e"),
+            Color.decode("#3b3101"),
             Color.decode("#73020c"),
             christmasBackground,
             Color.decode("#385025"),
