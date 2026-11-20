@@ -1,6 +1,6 @@
 package dartzee.screen.animation
 
-import javax.swing.ImageIcon
+import dartzee.theme.themedIcon
 
 interface IAnimation {
     fun getAnimation(): Animation
@@ -16,7 +16,7 @@ data class Animation(
     val text: String? = null,
     val xOffsetPercent: Double = 0.0,
 ) : IAnimation {
-    val img = imgResourcePath?.let { ImageIcon(javaClass.getResource(it)) }
+    val img = imgResourcePath?.let(::themedIcon)
 
     override fun getAnimation() = this
 

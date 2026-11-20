@@ -92,7 +92,7 @@ class GameplayDartboard(colourWrapper: IDartboardPainter = getColourWrapperFromP
             addDartLabel(pt)
         }
 
-        flasher?.dartThrown(pt.pt)
+        flasher?.dartThrown(pt)
 
         listeners.forEach { it.dartThrown(getDartForSegment(pt.segment)) }
     }

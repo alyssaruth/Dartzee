@@ -1,6 +1,7 @@
 package dartzee.theme
 
 import dartzee.bean.PresentationDartboard
+import dartzee.`object`.ComputedPoint
 import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.animation.Animation
@@ -15,7 +16,6 @@ import dartzee.utils.translatePoint
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
-import java.awt.Point
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.JButton
@@ -100,9 +100,9 @@ class ChristmasDartboardFlasher(
         t.start()
     }
 
-    fun dartThrown(pt: Point) {
-        val color = dartboard.colorAt(pt)
-        if (color == Color.BLACK) {
+    fun dartThrown(pt: ComputedPoint) {
+        val color = dartboard.colorAt(pt.pt)
+        if (color == Color.BLACK && pt.radius > UPPER_BOUND_OUTSIDE_BOARD_RATIO) {
             triggerExplosion()
         }
     }
