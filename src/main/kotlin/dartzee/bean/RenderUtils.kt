@@ -26,6 +26,10 @@ fun paintLabel(
     lbl.foreground = color
     lbl.horizontalAlignment = SwingConstants.CENTER
     lbl.font = font
+    lbl.putClientProperty(
+        RenderingHints.KEY_TEXT_ANTIALIASING,
+        RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB,
+    )
 
     // Work out the width for this label, based on the text
     val metrics = Canvas().getFontMetrics(font)
@@ -35,7 +39,6 @@ fun paintLabel(
     val lblX = center.getX().toInt() - lblWidth / 2
     val lblY = center.getY().toInt() - labelHeight / 2
 
-    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g.translate(lblX, lblY)
     lbl.paint(g)
     g.translate(-lblX, -lblY)

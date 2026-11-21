@@ -11,6 +11,7 @@ import dartzee.`object`.DartboardSegment
 import dartzee.`object`.SegmentType
 import dartzee.screen.game.FakeDartsScreen
 import dartzee.theme.BIRTHDAY
+import dartzee.theme.CHRISTMAS
 import dartzee.theme.DEFAULT_COLOUR_WRAPPER
 import dartzee.theme.IDartboardPainter
 import dartzee.theme.Themes
@@ -26,6 +27,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import io.mockk.verify
+import javax.swing.JButton
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
@@ -158,6 +160,13 @@ class TestGameplayDartboard : AbstractTest() {
         dartboard.setBounds(0, 0, 400, 400)
         flushEdt()
         dartboard.shouldMatchImage("darts-original-size")
+    }
+
+    @Test
+    fun `Should include christmas flasher if theme is set`() {
+        InjectedThings.theme = Themes.CHRISTMAS
+        val dartboard = factoryGameplayDartboard()
+        dartboard.findChild<JButton>("FlashToggle").shouldNotBeNull()
     }
 
     private fun factoryGameplayDartboard(

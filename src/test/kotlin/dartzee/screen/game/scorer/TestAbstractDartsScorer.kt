@@ -13,7 +13,10 @@ import dartzee.`object`.Dart
 import dartzee.screen.game.makeSingleParticipant
 import dartzee.screen.game.makeTeam
 import dartzee.shouldHaveColours
+import dartzee.theme.CHRISTMAS
+import dartzee.theme.Themes
 import dartzee.utils.DartsColour
+import dartzee.utils.InjectedThings
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -52,6 +55,19 @@ class TestAbstractDartsScorer : AbstractTest() {
 
         scorer.lblResult.shouldHaveColours(DartsColour.THIRD_COLOURS)
         scorer.lblResult.text shouldBe "30"
+    }
+
+    @Test
+    fun `Should convert score according to theme`() {
+        InjectedThings.theme = Themes.CHRISTMAS
+        val state = TestPlayerState(insertParticipant(finishingPosition = 3), scoreSoFar = 30)
+
+        val scorer = TestDartsScorer()
+        scorer.init()
+        scorer.stateChanged(state)
+
+        scorer.lblResult.shouldHaveColours(DartsColour.THIRD_COLOURS)
+        scorer.lblResult.text shouldBe "XXX "
     }
 
     @Test

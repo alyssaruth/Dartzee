@@ -1,3 +1,8 @@
+--------- v8.1.0 ---------
+
++ 1 Theme (just before we head into December... what could it be!?)
+= 94% test coverage (15424 / 16417 lines covered by 2595 tests)
+
 --------- v8.0.1 ---------
 
 = Empty release to test update process
@@ -7,7 +12,7 @@
 + 3 Themes (Dartzee, Birthday, ???)
 = Fixed update process for Windows, also now works on Linux
 = Attempted to make file logic more resilient during sync process
-= 93.9% test coverage (15026 / 16010 by 2577 tests)
+= 93.9% test coverage (15026 / 16010 lines covered by 2577 tests)
 
 --------- v7.3.0 ---------
 

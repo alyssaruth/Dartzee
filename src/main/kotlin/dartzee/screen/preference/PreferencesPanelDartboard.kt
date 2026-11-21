@@ -44,6 +44,7 @@ class PreferencesPanelDartboard : AbstractPreferencesPanel(), ColourSelectionLis
             textPane.text =
                 "${InjectedThings.theme?.name} theme is currently applied.\n\nTo apply your own dartboard colours, select a theme without its own dartboard theming."
             textPane.background = Color.decode("#FFEE8C")
+            textPane.foreground = Color.BLACK
             textPane.isEditable = false
             textPane.alignCentrally()
             textPane.setFontSize(16)

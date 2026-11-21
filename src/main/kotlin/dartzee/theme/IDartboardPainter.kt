@@ -8,8 +8,9 @@ interface IDartboardPainter {
     val outerDartboardColour: Color
     val missedBoardColour: Color
     val edgeColour: Color?
-    val fontColor: Color
     val font: Font
+
+    fun getFontColour(score: Int): Color
 
     fun getColour(segment: DartboardSegment): Color
 

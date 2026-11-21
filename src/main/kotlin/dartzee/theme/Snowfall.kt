@@ -1,0 +1,156 @@
+package dartzee.theme
+
+import dartzee.utils.DartsColour
+import java.awt.Color
+import java.awt.Graphics
+import java.awt.Graphics2D
+import javax.swing.SwingUtilities
+import kotlin.random.Random
+
+private const val MAX_FLAKE_CHANCE = 4
+
+class Snowfall(
+    private val snowHeap: MutableMap<Int, Int> = mutableMapOf(),
+    private var particles: List<Particle> = listOf(),
+    private val maxFlakeChance: Int = MAX_FLAKE_CHANCE,
+    private val random: Random = Random.Default,
+) : AbstractMenuAnimation() {
+    private val sync = Any()
+
+    var startTime: Long = -1
+
+    data class Particle(
+        val speed: Double,
+        val windEffect: Int,
+        val x: Int,
+        val y: Double,
+        val color: Color,
+    )
+
+    init {
+        isOpaque = false
+    }
+
+    override fun start() {
+        startTime = System.currentTimeMillis()
+
+        val r = Runnable {
+            while (true) {
+                Thread.sleep(10)
+                SwingUtilities.invokeAndWait { synchronized(sync) { doTick() } }
+            }
+        }
+
+        val t = Thread(r)
+        t.start()
+    }
+
+    override fun paintComponent(g: Graphics) {
+        super.paintComponent(g)
+        g as Graphics2D
+
+        g.color = DartsColour.TRANSPARENT
+        g.fillRect(0, 0, width, height)
+
+        particles.forEach { snow ->
+            g.paint = snow.color
+            g.drawLine(snow.x, snow.y.toInt(), snow.x, snow.y.toInt())
+        }
+
+        g.paint = Color.WHITE
+        snowHeap.forEach { (x, snowflakes) -> g.drawRect(x, height - snowflakes, 1, snowflakes) }
+    }
+
+    fun doTick() {
+        if (!active) {
+            return
+        }
+
+        val timePassed = System.currentTimeMillis() - startTime
+        val computedRate = (timePassed / 5000).toInt() + 1
+        val flakeChance = minOf(maxFlakeChance, computedRate)
+
+        val updatedParticles =
+            particles.map { snow ->
+                val windEffect = random.nextInt(-10, 11)
+                val windImpact = windEffect / 10
+
+                val newWindDirection =
+                    if (windImpact == 0) 0
+                    else if (snow.windEffect == -windImpact) 0 else windImpact
+                val newY = snow.y + snow.speed
+                val newX = snow.x + newWindDirection
+                snow.copy(x = newX, y = newY, windEffect = newWindDirection)
+            }
+
+        val newParticles =
+            (0..width).mapNotNull { x ->
+                val spawnSnow = random.nextInt(1000) >= (1000 - flakeChance)
+                if (spawnSnow) {
+                    val offness = random.nextInt(150)
+                    val speed = random.nextDouble(0.3, 0.7)
+                    Particle(speed, 0, x, 0.0, offWhite(offness))
+                } else {
+                    null
+                }
+            }
+
+        val newHeapParticles =
+            updatedParticles.filter {
+                (height - snowHeap.getSnowCount(it.x) == it.y.toInt() || it.y >= height)
+            }
+        val fallingParticles = updatedParticles - newHeapParticles
+
+        particles = fallingParticles + newParticles
+
+        newHeapParticles.forEach { snow ->
+            if (snow.x in 0..width) {
+                val current = snowHeap.getSnowCount(snow.x)
+                snowHeap[snow.x] = current + 1
+            }
+        }
+
+        smoothHeap()
+
+        repaint()
+    }
+
+    private fun offWhite(offness: Int): Color {
+        val actual = minOf(150, offness)
+        return Color(255 - actual, 255 - actual, 255 - actual)
+    }
+
+    private fun smoothHeap() {
+        val xValues = snowHeap.keys
+        val peaks =
+            xValues
+                .filter { x ->
+                    val height = snowHeap.getSnowCount(x)
+
+                    val left = snowHeap.getSnowCount(x - 1)
+                    val right = snowHeap.getSnowCount(x + 1)
+
+                    height > left + 1 || height > right + 1
+                }
+                .filter { x -> x in 0 until width }
+                .sortedByDescending { snowHeap.getValue(it) }
+
+        peaks.forEach { x ->
+            val current = snowHeap.getValue(x)
+
+            val left = snowHeap.getSnowCount(x - 1)
+            val right = snowHeap.getSnowCount(x + 1)
+
+            val step = (current - minOf(left, right)) / 2
+
+            snowHeap[x] = current - step
+            if (left > right) {
+                snowHeap[x + 1] = right + step
+            } else {
+                snowHeap[x - 1] = left + step
+            }
+        }
+    }
+
+    private fun MutableMap<Int, Int>.getSnowCount(x: Int) = getOrDefault(x, 0)
+}

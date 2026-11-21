@@ -1,5 +1,6 @@
 package dartzee.screen
 
+import dartzee.bean.PresentationDartboard
 import dartzee.helper.AbstractTest
 import dartzee.helper.makeTheme
 import dartzee.screen.dartzee.DartzeeTemplateSetupScreen
@@ -9,6 +10,7 @@ import dartzee.screen.reporting.ReportingSetupScreen
 import dartzee.screen.stats.overall.LeaderboardsScreen
 import dartzee.screen.stats.overall.SimplifiedLeaderboardScreen
 import dartzee.screen.sync.SyncManagementScreen
+import dartzee.theme.AbstractMenuAnimation
 import dartzee.theme.AudioClip
 import dartzee.utils.InjectedThings
 import io.github.alyssaruth.swingtest.clickChild
@@ -17,7 +19,9 @@ import io.github.alyssaruth.swingtest.findWindow
 import io.github.alyssaruth.swingtest.getChild
 import io.github.alyssaruth.swingtest.shouldBeVisible
 import io.github.alyssaruth.swingtest.shouldNotBeVisible
+import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.every
 import io.mockk.mockk
@@ -43,6 +47,32 @@ class MenuScreenTest : AbstractTest() {
 
         ScreenCache.switch<MenuScreen>()
         verify { music.loop() }
+    }
+
+    @Test
+    fun `Should include theme animation in correct layer, and pause and resume it`() {
+        val theme = spyk(makeTheme())
+        val animation = TestAnimation()
+        every { theme.menuAnimation } returns animation
+        InjectedThings.theme = theme
+
+        ScreenCache.switch<MenuScreen>()
+        animation.started shouldBe true
+
+        ScreenCache.switch<PreferencesScreen>()
+        animation.active shouldBe false
+
+        ScreenCache.switch<MenuScreen>()
+        animation.active shouldBe true
+
+        // Check layer order
+        val menuScreen = ScreenCache.currentScreen()
+        val dartboard = menuScreen.getChild<PresentationDartboard>()
+        val btnNewGame = menuScreen.getChild<JButton>(text = "New Game")
+
+        val components = menuScreen.components
+        components.indexOf(btnNewGame) shouldBeLessThan components.indexOf(animation)
+        components.indexOf(animation) shouldBeLessThan components.indexOf(dartboard)
     }
 
     @Test
@@ -158,5 +188,13 @@ class MenuScreenTest : AbstractTest() {
         scrn.getChild<JButton>(text = "Utilities").shouldNotBeVisible()
         scrn.getChild<JButton>(text = "Preferences").shouldNotBeVisible()
         scrn.getChild<JButton>(text = "Dartzee").shouldNotBeVisible()
+    }
+}
+
+private class TestAnimation : AbstractMenuAnimation() {
+    var started = false
+
+    override fun start() {
+        started = true
     }
 }

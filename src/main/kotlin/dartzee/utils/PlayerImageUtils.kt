@@ -5,15 +5,46 @@ import dartzee.core.bean.toBufferedImage
 import dartzee.db.PlayerEntity
 import dartzee.db.PlayerImageEntity
 import java.awt.Color
+import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
 import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.floor
 import kotlin.math.pow
+import kotlin.math.sin
 
 const val PLAYER_IMAGE_WIDTH = 150
 const val PLAYER_IMAGE_HEIGHT = 150
+
+fun rotateImageByDegrees(icon: ImageIcon, angle: Double): ImageIcon {
+    val img = icon.toBufferedImage(BufferedImage.TYPE_INT_ARGB)
+
+    val rads = Math.toRadians(angle)
+    val sin = abs(sin(rads))
+    val cos = abs(cos(rads))
+    val w = img.width
+    val h = img.height
+    val newWidth = floor(w * cos + h * sin).toInt()
+    val newHeight = floor(h * cos + w * sin).toInt()
+
+    val rotated = BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB)
+    val g2d = rotated.createGraphics()
+    val at = AffineTransform()
+    at.translate(((newWidth - w) / 2).toDouble(), ((newHeight - h) / 2).toDouble())
+
+    val x = w / 2
+    val y = h / 2
+
+    at.rotate(rads, x.toDouble(), y.toDouble())
+    g2d.transform = at
+    g2d.drawImage(img, 0, 0, null)
+    g2d.dispose()
+
+    return ImageIcon(rotated)
+}
 
 fun splitAvatar(
     playerOne: PlayerEntity,
