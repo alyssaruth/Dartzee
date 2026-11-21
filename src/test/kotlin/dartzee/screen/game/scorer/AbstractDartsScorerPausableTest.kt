@@ -9,7 +9,10 @@ import dartzee.helper.insertParticipant
 import dartzee.screen.game.GamePanelPausable
 import dartzee.screen.game.makeSingleParticipant
 import dartzee.shouldHaveColours
+import dartzee.theme.CHRISTMAS
+import dartzee.theme.Themes
 import dartzee.utils.DartsColour
+import dartzee.utils.InjectedThings
 import dartzee.utils.ResourceCache.ICON_PAUSE
 import dartzee.utils.ResourceCache.ICON_RESUME
 import io.github.alyssaruth.swingtest.clickChild
@@ -23,7 +26,7 @@ import io.mockk.verify
 import javax.swing.JButton
 import org.junit.jupiter.api.Test
 
-class TestAbstractDartsScorerPausable : AbstractTest() {
+class AbstractDartsScorerPausableTest : AbstractTest() {
     @Test
     fun `Should not be paused by default, when button is not visible`() {
         val scorer = factoryScorer()
@@ -41,6 +44,16 @@ class TestAbstractDartsScorerPausable : AbstractTest() {
         scorer.lblResult.text shouldBe "25 Darts"
         scorer.lblResult.shouldHaveColours(defaultLabelColours)
         scorer.getChild<JButton> { it.icon == ICON_RESUME }.shouldNotBeVisible()
+    }
+
+    @Test
+    fun `Should convert the result based on theme`() {
+        Themes.CHRISTMAS.also { InjectedThings.theme = it }
+        val scorer = factoryScorer()
+        val state = TestPlayerState(insertParticipant(), scoreSoFar = 25)
+        scorer.stateChanged(state)
+
+        scorer.lblResult.text shouldBe "XXV  Darts"
     }
 
     @Test

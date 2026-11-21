@@ -11,7 +11,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Test
 
-class TestAbstractScorer : AbstractTest() {
+class AbstractScorerTest : AbstractTest() {
     @Test
     fun `Should initialise correctly with a single participant`() {
         val player = insertPlayer(name = "Bob")

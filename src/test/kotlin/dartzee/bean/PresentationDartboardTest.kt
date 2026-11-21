@@ -21,6 +21,7 @@ import dartzee.theme.PRIDE
 import dartzee.theme.Theme
 import dartzee.theme.Themes
 import dartzee.theme.WIREFRAME_COLOUR_WRAPPER
+import dartzee.utils.DartsColour
 import dartzee.utils.InjectedThings
 import dartzee.utils.getAllNonMissSegments
 import dartzee.utils.isEven
@@ -275,5 +276,16 @@ class PresentationDartboardTest : AbstractTest() {
         dartboard.repaint()
 
         dartboard.shouldMatchImage("christmas-scores")
+    }
+
+    @Test
+    fun `Should report the correct colour at a given point`() {
+        val dartboard = PresentationDartboard(DEFAULT_COLOUR_WRAPPER)
+        dartboard.setBounds(0, 0, 500, 500)
+        dartboard.toBufferedImage()
+
+        dartboard.colorAt(Point(0, 0)) shouldBe DartsColour.TRANSPARENT
+        dartboard.colorAt(Point(250, 250)) shouldBe Color.RED
+        dartboard.colorAt(Point(250, 50)) shouldBe Color.BLACK
     }
 }

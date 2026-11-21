@@ -66,7 +66,7 @@ val Themes.CHRISTMAS: Theme
     get() =
         Theme(
             ThemeId.Christmas,
-            "Ho ho ho",
+            "Ho ho ho!",
             Color.decode("#3b3101"),
             Color.decode("#73020c"),
             christmasBackground,

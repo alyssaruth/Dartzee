@@ -12,6 +12,7 @@ import dartzee.screen.animation.BRUCEY_BAD_LUCK
 import dartzee.screen.animation.BadLuckTrigger
 import dartzee.screen.animation.CHUCKLEVISION
 import dartzee.screen.animation.DEFAULT_ANIMATIONS
+import dartzee.screen.animation.MISS_DEV
 import dartzee.screen.animation.TotalScoreTrigger
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.preferenceService
@@ -23,10 +24,12 @@ import io.github.alyssaruth.swingtest.shouldMatch
 import io.github.alyssaruth.swingtest.shouldMatchImage
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
+import java.awt.Dimension
 import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioInputStream
 import javax.sound.sampled.AudioSystem
@@ -135,6 +138,22 @@ class DartboardDodgyUtilTest : AbstractTest() {
         flushEdt()
 
         dartboard.dodgyLabel()!!.shouldMatchImage("animation-with-text")
+    }
+
+    @Test
+    fun `Should respect xOffset when set`() {
+        val animation = MISS_DEV.copy(xOffsetPercent = 0.2)
+        val dartboard = GameplayDartboard()
+        dartboard.size = Dimension(500, 500)
+        captureClip()
+        dartboard.doDodgy(animation)
+        flushEdt()
+
+        val center = 250 - (MISS_DEV.img!!.iconWidth / 2)
+        println(center)
+        val x = dartboard.dodgyLabel()!!.x
+
+        x shouldBe center + 100
     }
 
     @Test
