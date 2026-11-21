@@ -1,12 +1,11 @@
 package dartzee.theme
 
 import dartzee.core.util.runOnEventThreadBlocking
-import dartzee.screen.DartsApp
-import dartzee.screen.MenuScreen
 import dartzee.utils.rotateImageByDegrees
 import java.awt.Dimension
 import java.awt.Point
 import javax.swing.ImageIcon
+import javax.swing.JComponent
 import javax.swing.JLabel
 import kotlin.random.Random
 
@@ -18,7 +17,8 @@ enum class SlideMode {
 }
 
 class PopupSlider(
-    private val app: DartsApp,
+    private val app: JComponent,
+    private val shouldAnimate: () -> Boolean,
     imagePath: String,
     private val listener: PopupListener? = null,
     private val phasePause: Long = 1500,
@@ -38,7 +38,7 @@ class PopupSlider(
             while (true) {
                 Thread.sleep(1000)
                 val result = Random.nextInt(100)
-                if (result >= 90 && app.currentScreen !is MenuScreen) {
+                if (result >= 90 && shouldAnimate()) {
                     animate(SlideMode.entries.random())
                 }
             }

@@ -11,6 +11,7 @@ import dartzee.logging.KEY_CURRENT_SCREEN
 import dartzee.logging.LoggingCode
 import dartzee.main.exitApplication
 import dartzee.`object`.DartsClient
+import dartzee.theme.ISliderParent
 import dartzee.theme.PopupSlider
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
@@ -41,10 +42,14 @@ private const val CMD_DUMP_LOGS = "dump logs"
 
 val APP_SIZE = Dimension(1000, 700)
 
-class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener {
+class DartsApp(commandBar: CheatBar) :
+    AbstractDevScreen(commandBar), WindowListener, ISliderParent {
     override val windowName = "Main Window"
     var currentScreen: EmbeddedScreen = ScreenCache.get<MenuScreen>()
-    private val slider = InjectedThings.theme?.slideImage?.let { PopupSlider(this, it) }
+    private val slider =
+        InjectedThings.theme?.slideImage?.let {
+            PopupSlider(this.contentPane as JComponent, ::shouldAnimate, it)
+        }
 
     init {
         title = "Darts"
@@ -60,6 +65,8 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
 
         slider?.start()
     }
+
+    override fun shouldAnimate() = currentScreen !is MenuScreen
 
     fun init() {
         setIcon()
