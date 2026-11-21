@@ -38,6 +38,7 @@ data class Theme(
     val resultConverter: ((Int) -> String)? = null,
     val menuAnimation: AbstractMenuAnimation? = null,
     val dartboardFlasher: Boolean = false,
+    val slideImage: String? = null,
 ) {
     val name = id.name
     private val resourcePath = name.lowercase()

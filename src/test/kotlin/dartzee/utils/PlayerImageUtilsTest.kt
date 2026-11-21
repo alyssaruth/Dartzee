@@ -69,6 +69,15 @@ class PlayerImageUtilsTest : AbstractTest() {
 
     @Test
     @Tag("screenshot")
+    fun `Should be able to rotate an image`() {
+        val original = ImageIcon(javaClass.getResource("/theme/christmas/horrific/marta.png"))
+
+        rotateImageByDegrees(original, 90.0).toLabel().shouldMatchImage("marta-90")
+        rotateImageByDegrees(original, 135.0).toLabel().shouldMatchImage("marta-135")
+    }
+
+    @Test
+    @Tag("screenshot")
     fun `Should combine player flags`() {
         combinePlayerFlags(DEFAULT_HUMAN_ICON, PlayerEntity.ICON_AI)
             .toLabel()

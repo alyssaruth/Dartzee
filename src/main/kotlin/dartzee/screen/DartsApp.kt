@@ -11,6 +11,7 @@ import dartzee.logging.KEY_CURRENT_SCREEN
 import dartzee.logging.LoggingCode
 import dartzee.main.exitApplication
 import dartzee.`object`.DartsClient
+import dartzee.theme.PopupSlider
 import dartzee.utils.DevUtilities
 import dartzee.utils.InjectedThings
 import dartzee.utils.InjectedThings.gameLauncher
@@ -43,6 +44,7 @@ val APP_SIZE = Dimension(1000, 700)
 class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowListener {
     override val windowName = "Main Window"
     var currentScreen: EmbeddedScreen = ScreenCache.get<MenuScreen>()
+    private val slider = InjectedThings.theme?.slideImage?.let { PopupSlider(this, it) }
 
     init {
         title = "Darts"
@@ -55,6 +57,8 @@ class DartsApp(commandBar: CheatBar) : AbstractDevScreen(commandBar), WindowList
         defaultCloseOperation = DO_NOTHING_ON_CLOSE
 
         addWindowListener(this)
+
+        slider?.start()
     }
 
     fun init() {

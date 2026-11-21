@@ -82,6 +82,7 @@ val Themes.CHRISTMAS: Theme
             menuAnimation = Snowfall(),
             resultConverter = { toRomanNumerals(it) + " " },
             dartboardFlasher = true,
+            slideImage = "/theme/christmas/horrific/marta.png",
         )
 
 private fun findChristmas(year: Int) =
