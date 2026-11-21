@@ -1,6 +1,6 @@
 package dartzee.theme
 
-import dartzee.core.util.runOnEventThread
+import dartzee.core.util.runOnEventThreadBlocking
 import dartzee.screen.DartsApp
 import dartzee.screen.MenuScreen
 import dartzee.utils.rotateImageByDegrees
@@ -51,7 +51,7 @@ class PopupSlider(
     fun animate(mode: SlideMode) {
         val icon = imgMap.getValue(mode)
         val lblSizes = Dimension(icon.iconWidth, icon.iconHeight)
-        runOnEventThread {
+        runOnEventThreadBlocking {
             app.remove(lbl)
             lbl.icon = icon
             lbl.size = lblSizes
@@ -70,7 +70,7 @@ class PopupSlider(
     }
 
     private fun animate(start: Point, end: Point) {
-        runOnEventThread { app.add(lbl, 0) }
+        runOnEventThreadBlocking { app.add(lbl, 0) }
 
         animatePhase(start, end, "A")
 
@@ -78,7 +78,7 @@ class PopupSlider(
 
         animatePhase(end, start, "B")
 
-        runOnEventThread {
+        runOnEventThreadBlocking {
             app.remove(lbl)
             app.repaint()
         }
@@ -89,7 +89,7 @@ class PopupSlider(
         val yDiff = (end.y - start.y) / 20
 
         (0..20).forEach { step ->
-            runOnEventThread {
+            runOnEventThreadBlocking {
                 lbl.setLocation(start.x + (step * xDiff), start.y + (step * yDiff))
                 listener?.popupMoved(phaseName, step)
             }
